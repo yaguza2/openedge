@@ -30,13 +30,11 @@
  */
 package nl.openedge.maverick.framework;
 
-import java.io.IOException;
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServlet;
 
 import nl.openedge.access.AccessHelper;
 import nl.openedge.maverick.framework.converters.BooleanConverter;
@@ -54,9 +52,6 @@ import nl.openedge.util.hibernate.HibernateHelper;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.velocity.Template;
-import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
 
 /**
  * This servlet should startup first. Does initialisation and 
@@ -64,7 +59,7 @@ import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
  * event handlers
  * @author Eelco Hillenius
  */
-public class ApplicationServlet extends VelocityViewServlet 
+public class ApplicationServlet extends HttpServlet 
 {
 
 	/** logger */
@@ -153,59 +148,6 @@ public class ApplicationServlet extends VelocityViewServlet
 	protected void initOEModules(ServletConfig config) throws Exception
 	{
 		new JDOMConfigurator(config.getServletContext());
-	}
-	
-	/**
-	 *  Handles with both GET and POST requests
-	 *
-	 *  @param request  HttpServletRequest object containing client request
-	 *  @param response HttpServletResponse object for the response
-	 */
-	protected void doRequest(HttpServletRequest request, 
-							 HttpServletResponse response)
-		 throws ServletException, IOException
-	{
-		try
-		{
-			// first, get a context
-			Context context = createContext(request, response);
-            
-			// set the content type 
-			setContentType(request, response);
-
-			// get the template
-			Template template = handleRequest(request, response, context);
-			
-			Object model = request.getAttribute("model");
-
-			// bail if we can't find the template
-			if (template == null)
-			{
-				return;
-			}
-
-			// merge the template and context
-			mergeTemplate(template, context, response);
-
-			// call cleanup routine to let a derived class do some cleanup
-			requestCleanup(request, response, context);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			// call the error handler to let the derived class
-			// do something useful with this failure.
-			error(request, response, e);
-		}
-	}
-
-
-	/**
-	 * shutdown
-	 */
-	public void destroy() 
-	{
-		super.destroy();
 	}
 
 }
