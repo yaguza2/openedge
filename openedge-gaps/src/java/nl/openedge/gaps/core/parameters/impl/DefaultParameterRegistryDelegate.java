@@ -505,10 +505,28 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 
 	/**
 	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#createId(nl.openedge.gaps.core.parameters.Entity)
+	 * @param entity
+	 * @return id
 	 */
 	public String createId(Entity entity)
 	{
 		return EntityUtil.createId(entity);
 	}
 
+    /**
+     * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#removeParameterGroup(nl.openedge.gaps.core.groups.ParameterGroup)
+     */
+    public void removeParameterGroup(ParameterGroup group) 
+        throws NotFoundException, RegistryException {
+
+        try
+		{
+			groupDao.deleteGroup(group);
+		}
+		catch (GroupDAOException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new RegistryException(e);
+		}
+    }
 }
