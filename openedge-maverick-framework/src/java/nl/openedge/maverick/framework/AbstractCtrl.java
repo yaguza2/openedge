@@ -529,8 +529,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * localized message 'invalid.field.input' in the error map, and puts
 	 * the value in the failed field map.
 	 * 
-	 * The message is formatted with objects name, triedValue and t, so you can
-	 * use {0}, {1} and {2} resp. with your custom message
+	 * The message is formatted with objects triedValue, name and t, so you can
+	 * use {0}, {1} and {2} resp. with your custom message.
+	 * 
+	 * If there is an entry in the default resource bundle that has form:
+	 * 		formname.[name] (eg. formname.firstname and formname.lastname)
+	 * 		the name parameter {1} will be replaced with this value
 	 * 
 	 * @param cctx controller context
 	 * @param formBean form
@@ -558,8 +562,16 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				key = "invalid.field.input.integer";
 			}
 		
-			String msg = getLocalizedMessage(key
-				, new Object[]{triedValue, name, t});
+			String msg = null;
+			String msgName = getLocalizedMessage("formname." + name);
+			if(msgName != null)
+			{
+				msg = getLocalizedMessage(key, new Object[]{triedValue, msgName, t});	
+			}
+			else
+			{
+				msg = getLocalizedMessage(key, new Object[]{triedValue, name, t});
+			}
 
 			formBean.setError(name, msg);
 		
