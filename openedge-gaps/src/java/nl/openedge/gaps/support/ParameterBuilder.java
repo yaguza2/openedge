@@ -782,9 +782,14 @@ public class ParameterBuilder
 			boolean navigateTo) throws ParameterBuilderException, RegistryException,
 			SaveException
 	{
-		StructuralGroup group = buildStructuralGroup(name, description, navigateTo);
+		StructuralGroup group = buildStructuralGroup(name, description);
 		ParameterRegistry.saveGroup(group);
 		ParameterRegistry.saveGroup(getCurrentStructuralGroup()); // gewijzigde parent
+		if (navigateTo)
+		{
+			setStructuralGroup(group); // zet de huidige groep op de nieuw
+			// gemaakte
+		}
 		return group;
 	}
 
@@ -795,24 +800,7 @@ public class ParameterBuilder
 	 * @return een nieuwe groep
 	 * @throws ParameterBuilderException bij build fouten
 	 */
-	protected StructuralGroup buildStructuralGroup(String name, String description)
-			throws ParameterBuilderException
-	{
-		return buildStructuralGroup(name, description, false);
-	}
-
-	/**
-	 * Maakt een {@link StructuralGroup}.
-	 * @param name lokale naam van de groep, wordt gebruikt bij id generatie
-	 * @param description de omschrijving
-	 * @param navigateTo of de builder de nieuwe groep direct op de huidige dient te
-	 *            zetten (volgende groepen worden dan dus aan deze nieuw gemaakte
-	 *            toegevoegd)
-	 * @return een nieuwe groep
-	 * @throws ParameterBuilderException bij build fouten
-	 */
-	protected StructuralGroup buildStructuralGroup(String name, String description,
-			boolean navigateTo) throws ParameterBuilderException
+	protected StructuralGroup buildStructuralGroup(String name, String description) throws ParameterBuilderException
 	{
 	    StructuralGroup currentStructuralGroup = getCurrentStructuralGroup();
 		checkIdNotNull(name);
@@ -825,11 +813,6 @@ public class ParameterBuilder
 		String id = EntityUtil.createId(group);
 		group.setId(id);
 		currentStructuralGroup.addStructuralChild(group);
-		if (navigateTo)
-		{
-			setStructuralGroup(group); // zet de huidige groep op de nieuw
-			// gemaakte
-		}
 		return group;
 	}
 
@@ -895,9 +878,14 @@ public class ParameterBuilder
 			String description, boolean navigateTo) throws ParameterBuilderException
 	{
 		ParameterGroup group = buildParameterGroup(
-				extendsFrom, name, description, navigateTo);
+				extendsFrom, name, description);
 		ParameterRegistry.saveGroup(group);
 		ParameterRegistry.saveGroup(getCurrentStructuralGroup()); // gewijzigde parent
+		if (navigateTo)
+		{
+			setParameterGroup(group); // zet de huidige groep op de nieuw
+			// gemaakte
+		}
 		return group;
 	}
 
@@ -912,7 +900,21 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(String name, String description)
 			throws ParameterBuilderException
 	{
-		return buildParameterGroup(null, name, description, false);
+		return buildParameterGroup(null, name, description);
+	}
+
+	/**
+	 * Maakt een groep. Koppelt aan parent, en koppelt de parameters indien deze zijn
+	 * gegeven.
+	 * @param name lokale naam van de groep, wordt gebruikt bij id generatie
+	 * @param description de omschrijving van de groep
+	 * @return een instantie van {@link ParameterGroup}
+	 * @throws ParameterBuilderException indien id null is
+	 */
+	protected ParameterGroup buildParameterGroup(String name, String description,
+			boolean navigateTo) throws ParameterBuilderException
+	{
+		return buildParameterGroup(null, name, description);
 	}
 
 	/**
@@ -927,41 +929,6 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(ParameterGroup extendsFrom, String name,
 			String description) throws ParameterBuilderException
 	{
-		return buildParameterGroup(extendsFrom, name, description, false);
-	}
-
-	/**
-	 * Maakt een groep. Koppelt aan parent, en koppelt de parameters indien deze zijn
-	 * gegeven.
-	 * @param name lokale naam van de groep, wordt gebruikt bij id generatie
-	 * @param description de omschrijving van de groep
-	 * @param navigateTo of de builder de nieuwe groep direct op de huidige dient te
-	 *            zetten (volgende groepen worden dan dus aan deze nieuw gemaakte
-	 *            toegevoegd)
-	 * @return een instantie van {@link ParameterGroup}
-	 * @throws ParameterBuilderException indien id null is
-	 */
-	protected ParameterGroup buildParameterGroup(String name, String description,
-			boolean navigateTo) throws ParameterBuilderException
-	{
-		return buildParameterGroup(null, name, description, navigateTo);
-	}
-
-	/**
-	 * Maakt een groep. Koppelt aan parent, en koppelt de parameters indien deze zijn
-	 * gegeven.
-	 * @param extendsFrom de parametergroep waarvan de nieuwe groep dient te overerven
-	 * @param name lokale naam van de groep, wordt gebruikt bij id generatie
-	 * @param description de omschrijving van de groep
-	 * @param navigateTo of de builder de nieuwe groep direct op de huidige dient te
-	 *            zetten (volgende groepen worden dan dus aan deze nieuw gemaakte
-	 *            toegevoegd)
-	 * @return een instantie van {@link ParameterGroup}
-	 * @throws ParameterBuilderException indien id null is
-	 */
-	protected ParameterGroup buildParameterGroup(ParameterGroup extendsFrom, String name,
-			String description, boolean navigateTo) throws ParameterBuilderException
-	{
 	    StructuralGroup currentStructuralGroup = getCurrentStructuralGroup();
 		checkIdNotNull(name);
 		checkGroupLocalId(name);
@@ -975,11 +942,6 @@ public class ParameterBuilder
 		group.setId(id);
 		group.setSuperGroup(extendsFrom);
 		currentStructuralGroup.addParameterChild(group);
-		if (navigateTo)
-		{
-			setParameterGroup(group); // zet de huidige groep op de nieuw
-			// gemaakte
-		}
 		return group;
 	}
 

@@ -6,6 +6,7 @@
  */
 package nl.openedge.gaps.core.groups;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -390,16 +391,28 @@ public class StructuralGroup extends Group
 		this.structuralChildIds = structuralChildIds;
 	}
 
-	//    private void writeObject(ObjectOutputStream out)
-	//        throws IOException {
-	//
-	//        out.defaultWriteObject();
-	//    }
-	//
-	//    private void readObject(ObjectInputStream in)
-	//        throws IOException, ClassNotFoundException {
-	//
-	//        in.defaultReadObject();
-	//    }
-
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		StringBuffer b = new StringBuffer(super.toString());
+		b.append("[structChilds{");
+		for(Iterator i = structuralChildIds.iterator(); i.hasNext();)
+		{
+		    String id = (String)i.next();
+		    b.append(id);
+		    if(i.hasNext()) b.append(",");
+		}
+		b.append("}]");
+		b.append("[paramChilds{");
+		for(Iterator i = parameterChildIds.iterator(); i.hasNext();)
+		{
+		    String id = (String)i.next();
+		    b.append(id);
+		    if(i.hasNext()) b.append(",");
+		}
+		b.append("}]");
+		return b.toString();
+	}
 }

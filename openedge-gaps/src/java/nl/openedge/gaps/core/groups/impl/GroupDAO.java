@@ -88,6 +88,10 @@ public final class GroupDAO
 		{
 			CacheUtil.putObjectInCache(cacheKey, group, GROUPS_CACHE_NAME);
 		}
+		if (log.isDebugEnabled())
+		{
+			log.debug("groep " + group + " uit database geladen");
+		}
 		return group;
 	}
 
@@ -112,7 +116,6 @@ public final class GroupDAO
 	public GroupWrapper findGroupWrapper(String path, Version version)
 			throws GroupDAOException
 	{
-
 		GroupWrapper wrapper = null;
 		String cacheKey = null;
 		if(isUseCache())
@@ -165,7 +168,6 @@ public final class GroupDAO
 	 */
 	public Group unpackGroup(GroupWrapper wrapper) throws GroupDAOException
 	{
-
 		Group group = null;
 		if (wrapper != null)
 		{
@@ -201,7 +203,6 @@ public final class GroupDAO
 	 */
 	public GroupWrapper packGroup(Group group) throws GroupDAOException
 	{
-
 		GroupWrapper wrapper = null;
 		if (group != null)
 		{
@@ -327,6 +328,10 @@ public final class GroupDAO
 				cacheKey = getCacheKeyForGroups(group.getId(), group.getVersion());
 				CacheUtil.removeObjectFromCache(cacheKey, GROUPS_CACHE_NAME);
 				CacheUtil.removeObjectFromCache(cacheKey, GROUP_WRAPPERS_CACHE_NAME);
+			}
+			if (log.isDebugEnabled())
+			{
+				log.debug("groep " + group + " verwijderd");
 			}
 		}
 		catch (HibernateException e)

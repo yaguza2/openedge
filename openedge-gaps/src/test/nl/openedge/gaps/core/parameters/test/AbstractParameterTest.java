@@ -85,7 +85,6 @@ public abstract class AbstractParameterTest extends TestCase
 	 */
 	public void testGroepen() throws Exception
 	{
-
 		ParameterBuilder builder = new ParameterBuilder();
 		ParameterBrowser browser = new ParameterBrowser();
 
@@ -104,17 +103,19 @@ public abstract class AbstractParameterTest extends TestCase
 		cal.set(2004, 7, 31);
 		Version nieuweVersieSubParamGroep = VersionRegistry.createVersion(cal.getTime(),
 				"20040731", subParamGroep);
-		assertFalse("de versies zouden moeten verschillen", (oudeVersieSubgroep.getName()
-				.equals(nieuweVersieSubParamGroep.getName())));
+		assertFalse("de versies zouden moeten verschillen", (
+		        oudeVersieSubgroep.getName().equals(nieuweVersieSubParamGroep.getName())));
 
-		Parameter checkParam1 = (Parameter) browser
-				.navigate("/super/subgroep:subparamgroep/teststring");
-		assertTrue("de versies zouden gelijk moeten zijn", oudeVersieSubgroep.getName()
-				.equals(checkParam1.getVersion().getName()));
+		Parameter checkParam1 = (Parameter) browser.navigate(
+		        "/super/subgroep:subparamgroep/teststring");
+		assertTrue("de versies zouden gelijk moeten zijn",
+		        oudeVersieSubgroep.getName().equals(checkParam1.getVersion().getName()));
 		nieuweVersieSubParamGroep.setGoedgekeurd(true);
 		VersionRegistry.updateVersion(nieuweVersieSubParamGroep);
 //		Parameter checkParam2 = (Parameter) browser
 //				.navigate("/super/subgroep:subparamgroep/teststring");
+
+		CacheUtil.resetCache();
 
         Object pos = browser.navigate("/");
         assertNotNull(pos);
@@ -123,7 +124,7 @@ public abstract class AbstractParameterTest extends TestCase
         builder.createParameterGroup("rootParamGroup", "test voor groep direct onder root");
         // schoon caches, zodat we zeker weten dat de resultaten vers uit de database komen
         // zoals dit het geval zou zijn na een herstart van de applicatie
-        CacheUtil.resetCache();
+        //CacheUtil.resetCache();
 
         // navigeer naar root
         pos = browser.navigate("/");
@@ -160,9 +161,15 @@ public abstract class AbstractParameterTest extends TestCase
 		String localId = "test1";
 		// creeer en sla op dmv de builder
 		ParameterBuilder builder = new ParameterBuilder();
-		Parameter param = builder.createNumeric(localId, null);
+		Parameter param = builder.createNumeric(localId, "100");
 		String id = param.getId();
 		log.info("parameter aangemaakt, id == " + id);
+
+		// check
+		CacheUtil.resetCache();
+		ParameterBrowser browser = new ParameterBrowser();
+		Object pos = browser.navigate("/:DEFAULT/test1@value");
+		assertEquals(new Double(100), pos);
 
 		// verwijder weer
 		ParameterRegistry.removeParameter(param);

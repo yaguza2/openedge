@@ -328,13 +328,33 @@ public class ParameterGroup extends Group
 	 */
 	public String toString()
 	{
-		String repr = super.toString();
+		StringBuffer b = new StringBuffer(super.toString());
 		String superGID = getSuperGroupId();
 		if (superGID != null)
 		{
-			repr = repr + " -> " + superGID;
+			b.append(" -> ").append(superGID);
 		}
-		return repr;
+		b.append("[parameters{");
+		int counter = 0;
+		for(Iterator i = parameterIds.iterator(); i.hasNext();)
+		{
+		    String id = (String)i.next();
+		    b.append(id);
+		    if(i.hasNext())
+		    {
+			    if(counter > 4)
+			    {
+			        b.append("...");
+			        break;
+			    }
+			    else
+			    {
+			        b.append(",");
+			    }
+		    }
+		}
+		b.append("}]");
+		return b.toString();
 	}
 
     /** 
@@ -349,7 +369,7 @@ public class ParameterGroup extends Group
 	}
 
     /** 
-	 * Schrijft standaard velden weg.
+	 * Leest standaard velden in.
 	 * @param s object input stream
 	 * @serialData Lees de default serializable velden in, en vul de parameter ids
 	 * @throws IOException bij leesfouten
