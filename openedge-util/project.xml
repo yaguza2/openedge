@@ -129,87 +129,104 @@
 
 	<dependencies>
 
+		<!-- BEGIN Servlet API -->
 		<dependency>
 			<id>servletapi</id>
 			<version>2.3</version>
 		</dependency>
-
+		<!-- END Servlet API -->
+	
+		<!-- BEGIN Jakarta Commons -->
 		<dependency>
 			<id>commons-logging</id>
 			<version>1.1-dev</version>
 			<url>http://jakarta.apache.org/commons/logging/</url>
 		</dependency>
-
+	
 		<dependency>
 			<id>commons-httpclient</id>
 			<version>2.0</version>
 			<url>http://jakarta.apache.org/commons/httpclient/</url>
 		</dependency>
-
+	
 		<dependency>
 			<id>log4j</id>
 			<version>1.2.8</version>
 			<url>http://jakarta.apache.org/log4j/</url>
 		</dependency>
+		<!-- END Jakarta Commons -->
 
+		<!-- BEGIN Webapp stuff -->
 		<dependency>
-			<id>velocity-tools</id>
-			<version>1.0</version>
-			<url>http://jakarta.apache.org/velocity/toolsubproject.html</url>
+			<groupId>maverick</groupId>
+			<artifactId>maverick</artifactId>
+			<version>2.2.2</version>
+			<url>http://mav.sourceforge.net/</url>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>openedge</groupId>
 			<artifactId>baritus</artifactId>
 			<version>1.0.12</version>
 			<url>http://baritus.sourceforge.net</url>
 		</dependency>
-
+	
 		<dependency>
 			<groupId>ognl</groupId>
 			<artifactId>ognl</artifactId>
 			<version>2.6.5</version>
 			<url>http://ognl.org</url>
 		</dependency>
-		
+
 		<dependency>
-			<id>maverick</id>
-			<version>2.2.0</version>
-			<url>http://mav.sourceforge.net/</url>
+			<groupId>velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.4</version>
+			<url>http://jakarta.apache.org/velocity/</url>
 		</dependency>
 
+		<dependency>
+			<groupId>velocity-tools</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>1.1</version>
+			<url>http://jakarta.apache.org/velocity/tools/</url>
+		</dependency>
+		<!-- END Webapp stuff -->
+
+		<!-- BEGIN XML -->	
 		<dependency>
 			<id>jdom</id>
 			<version>b8</version>
 			<url>http://www.jdom.org/</url>
 		</dependency>
-
+		<!-- END XML -->
+	
 		<dependency>
 			<id>hibernate</id>
-			<version>2.1.3</version>
+			<version>2.1.4</version>
 			<url>http://www.hibernate.org/</url>
 		</dependency>
-
-        <!--
-            Begin Mock objects
-        -->
- 		<dependency>
+	
+	    <!--
+	        Begin Mock objects
+	    -->
+	 		<dependency>
 			<groupId>mockobjects</groupId>
 			<artifactId>mockobjects-core</artifactId>
 			<version>0.09</version>
 			<url>http://www.mockobjects.com/</url>
 		</dependency>
-		
- 		<dependency>
+			
+	 		<dependency>
 			<groupId>mockobjects</groupId>
 			<artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
 			<version>0.09</version>
 			<url>http://www.mockobjects.com/</url>
 		</dependency>
-        <!--
-            End Mock objects
-        -->
-
+	    <!--
+	        End Mock objects
+	    -->
+	
 		<!-- 
 			Begin Jetty Dependencies
 		-->
