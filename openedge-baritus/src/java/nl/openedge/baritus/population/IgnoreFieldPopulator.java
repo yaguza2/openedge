@@ -1,7 +1,7 @@
 /*
- * $Id: IgnoreFieldPopulator.java,v 1.1.1.1 2004-02-24 20:34:11 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:11 $
+ * $Id: IgnoreFieldPopulator.java,v 1.2 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -75,7 +75,7 @@ public final class IgnoreFieldPopulator implements FieldPopulator
 	 * @param cctx maverick context
 	 * @param form instance of the form to set the property on
 	 * @param name name of the property
-	 * @param value the value from the request. This is either a String or a String array (String[])
+	 * @param requestValue the value from the request. This is either a String or a String array (String[])
 	 * @param targetPropertyMeta an extra wrapper for the target
 	 * @param locale
 	 * @return boolean value of property fail. By default fail == false, which means that this method

@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.13 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.13 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: FormBeanCtrl.java,v 1.14 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.14 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -45,7 +45,12 @@ public abstract class FormBeanCtrl
 {
 
 	/**
-	 * @see ControllerSingleton@init
+	 * Guaranteed to be called once with the XML configuration of
+	 * the controller from the master config file.
+	 * 
+	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
+	 * @param controllerNode
+	 * @throws ConfigException
 	 */
 	public void init(Element controllerNode) throws ConfigException 
 	{

@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFormValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: AbstractFormValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,7 +37,7 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * convenience class with default error message handling
+ * Convenience class with default error message handling.
  * @author Eelco Hillenius
  */
 public abstract class AbstractFormValidator extends AbstractValidator
@@ -51,7 +51,7 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	private String errorKey = null;
 
 	/**
-	 * construct
+	 * Construct emtpy.
 	 */
 	public AbstractFormValidator()
 	{
@@ -59,7 +59,8 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 	
 	/**
-	 * @param rule
+	 * Construct with the given rule.
+	 * @param rule activation rule
 	 */
 	public AbstractFormValidator(ValidationActivationRule rule)
 	{
@@ -67,8 +68,9 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 
 	/**
-	 * @param messagePrefix
-	 * @param rule
+	 * Construct with message prefix and activation rule.
+	 * @param messagePrefix message prefix
+	 * @param rule activation rule
 	 */
 	public AbstractFormValidator(
 		String messagePrefix,
@@ -78,7 +80,7 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 
 	/**
-	 * construct with message prefix
+	 * Construct with message prefix.
 	 * @param messagePrefix message prefix
 	 */
 	public AbstractFormValidator(String messagePrefix)
@@ -87,7 +89,14 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 
 	/**
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * If the form is not valid, get custom error message here. Return null if
+	 * no message should be saved. 
+	 * @param cctx
+	 * @param formBeanContext
+	 * @param locale
+	 * @return String[] the message key ([0]) and the localized error message ([1])
+	 * or null if no message should be saved here.
+	 * @see nl.openedge.baritus.validation.FormValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.util.Locale)
 	 */
 	public String[] getErrorMessage(
 		ControllerContext cctx,
@@ -102,7 +111,7 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 
 	/**
-	 * get the key that will be used for storing the error message
+	 * Get the key that will be used for storing the error message.
 	 * if null or not provided, property messagePrefix will be used instead
 	 * @return String key that will be used for storing the error message
 	 */
@@ -112,7 +121,7 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 
 	/**
-	 * set the key that will be used for storing the error message
+	 * Set the key that will be used for storing the error message.
 	 * if null or not provided, property messagePrefix will be used instead
 	 * @param string the key that will be used for storing the error message
 	 */

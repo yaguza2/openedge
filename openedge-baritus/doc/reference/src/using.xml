@@ -41,10 +41,9 @@
 			<ulink url="http://mav.sourceforge.net/maverick-manual.html">Maverick tutorial</ulink>
 			first. After you know how to work with Maverick, you should create a web application
 			project in your favorite IDE, or you can download a stub project using Maverick, Baritus
-			and Velocity <ulink url="http://TODO">here</ulink>. The stub project is has a Maven
-			project descriptor in order to assist you with getting the dependencies you need fast.
-			Read more about Apache Maven
-			<ulink url="http://maven.apache.org">here</ulink>.
+			and Velocity <ulink url="http://sourceforge.net/project/showfiles.php?group_id=102886">here</ulink>. 
+			The stub project is has a Maven project descriptor in order to assist you with getting the dependencies 
+			you need fast. Read more about Apache Maven <ulink url="http://maven.apache.org">here</ulink>.
 		</para>
 		
 		<para>
@@ -285,7 +284,7 @@ public class ExampleBean
 		</para>
 		
 		<para>
-			To configure with <ulink url="http://logging.apache.org/log4j/">Log4J</ulink>, for instance, 
+			To configure with <ulink url="http://logging.apache.org/log4j/docs/index.html">Log4J</ulink>, for instance, 
 			you can add the following lines to your Log4J configuration file:
 		</para>
 			

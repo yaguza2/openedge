@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: AbstractValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,7 +38,7 @@ import nl.openedge.baritus.util.MessageUtils;
  * convenience class
  * @author Eelco Hillenius
  */
-public abstract class AbstractValidator
+public abstract class AbstractValidator implements ValidationRuleDependend
 {
 
 	private ValidationActivationRule validationActivationRule = null;
@@ -105,11 +105,9 @@ public abstract class AbstractValidator
 	}
 	
 	/**
-	 * get localized message for given key and locale
-	 * and format it with the given parameters. 
+	 * Get localized message for given key and format it with the given parameters. 
 	 * If locale is null, the default locale will be used
 	 * @param key key of message
-	 * @param locale locale for message
 	 * @param parameters parameters for the message
 	 * @return String localized message
 	 */
@@ -120,7 +118,7 @@ public abstract class AbstractValidator
 	}
 	
 	/**
-	 * get localized message for given key and locale
+	 * Get localized message for given key and locale
 	 * and format it with the given parameters. 
 	 * If locale is null, the default locale will be used
 	 * @param key key of message
@@ -135,8 +133,8 @@ public abstract class AbstractValidator
 	}
 
 	/**
-	 * get the prefix for error message keys
-	 * @return String
+	 * Get the prefix for error message keys.
+	 * @return String message prefix
 	 */
 	public String getMessagePrefix()
 	{
@@ -144,8 +142,8 @@ public abstract class AbstractValidator
 	}
 
 	/**
-	 * set the prefix for error message keys
-	 * @param string
+	 * Set the prefix for error message keys.
+	 * @param string message prefix
 	 */
 	public void setMessagePrefix(String string)
 	{

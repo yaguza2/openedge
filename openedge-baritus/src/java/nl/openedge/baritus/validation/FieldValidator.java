@@ -1,7 +1,7 @@
 /*
- * $Id: FieldValidator.java,v 1.1.1.1 2004-02-24 20:34:12 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:12 $
+ * $Id: FieldValidator.java,v 1.2 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -69,13 +69,18 @@ public interface FieldValidator
 		Object value);
 
 	/**
-	 * if value is not valid, get custom error message here
-	 * @param cctx maverick context
-	 * @param formBeanContext context for this currentRequest
-	 * @param fieldName field name of parameter
-	 * @param value the value of this parameter
-	 * @param locale the locale that should be used to get the message
-	 * @return String the localized error message
+	 * If the value did not pass validation, this method is called to get the
+	 * error message. Return null if no message should be saved 
+	 * (e.g. when you saved the error(s) in the isValid method.
+	 * 
+	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @param cctx controller context
+	 * @param formBeanContext form bean context
+	 * @param fieldName name of field
+	 * @param value value that did not pass validation
+	 * @param locale current locale
+	 * @return String the error message that should be saved or null if no message should
+	 * be saved.
 	 */		
 	public String getErrorMessage(
 		ControllerContext cctx,
@@ -86,7 +91,7 @@ public interface FieldValidator
 		
 	/**
 	 * if value is not valid, get the custom value to set as the field override
-	 * in the form
+	 * in the form.
 	 * @param value the original input value
 	 * @return the value that should be used as override value
 	 */

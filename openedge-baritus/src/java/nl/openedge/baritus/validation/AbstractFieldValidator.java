@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: AbstractFieldValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,7 +37,7 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * convenience class with default error message handling
+ * Convenience class with default error message handling.
  * @author Eelco Hillenius
  */
 public abstract class AbstractFieldValidator extends AbstractValidator
@@ -45,7 +45,7 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 {
 
 	/**
-	 * construct
+	 * Construct emtpy.
 	 */
 	public AbstractFieldValidator()
 	{
@@ -53,7 +53,8 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 	
 	/**
-	 * @param rule
+	 * Construct with the given rule.
+	 * @param rule activation rule
 	 */
 	public AbstractFieldValidator(ValidationActivationRule rule)
 	{
@@ -61,8 +62,9 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 
 	/**
-	 * @param messagePrefix
-	 * @param rule
+	 * Construct with message prefix and activation rule.
+	 * @param messagePrefix message prefix
+	 * @param rule activation rule
 	 */
 	public AbstractFieldValidator(
 		String messagePrefix,
@@ -72,19 +74,28 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 
 	/**
-	 * construct with message prefix
+	 * Construct with message prefix.
 	 * @param messagePrefix message prefix
 	 */
 	public AbstractFieldValidator(String messagePrefix)
 	{
 		super(messagePrefix);
 	}
-
+	
 	/**
-	 * get the error message. default returns the resource bundle message where
+	 * Get the error message. default returns the resource bundle message where
 	 * key = messagePrefix + fieldName, with {0} substituted with the value
-	 * and {1} substituted with the field name
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * and {1} substituted with the field name. Return null if no message
+	 * should be saved (e.g. when you saved the error(s) in the isValid method
+	 * 
+	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @param cctx controller context
+	 * @param formBeanContext form bean context
+	 * @param fieldName name of field
+	 * @param value value that did not pass validation
+	 * @param locale current locale
+	 * @return String the error message that should be saved or null if no message should
+	 * be saved.
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
@@ -99,7 +110,7 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 	
 	/**
-	 * get the override value. default returns the value unchanged
+	 * Get the override value. By default returns the value unchanged.
 	 * @return Object unchanged value
 	 * @see nl.openedge.baritus.validation.FieldValidator#getOverrideValue(java.lang.Object)
 	 */

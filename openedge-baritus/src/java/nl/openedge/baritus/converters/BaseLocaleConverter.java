@@ -1,7 +1,7 @@
 /*
- * $Id: BaseLocaleConverter.java,v 1.1.1.1 2004-02-24 20:34:05 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:05 $
+ * $Id: BaseLocaleConverter.java,v 1.2 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -44,9 +44,6 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 {
 
 	// ----------------------------------------------------- Instance Variables
-
-	/** The default value specified to our Constructor, if any. */
-	private Object defaultValue = null;
 
 	/** The locale specified to our Constructor, by default - system locale. */
 	protected Locale locale = Locale.getDefault();

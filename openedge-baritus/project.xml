@@ -28,7 +28,12 @@
 		</version>
 	</versions>
 	<branches />
-	<mailingLists />
+	<mailingLists>
+		<name>baritus-user</name>
+		<subscribe>http://lists.sourceforge.net/lists/listinfo/baritus-user</subscribe>
+		<!--<unsubscribe></unsubscribe>-->
+		<archive>http://www.mail-archive.com/baritus-user@lists.sourceforge.net/</archive>
+	</mailingLists>
 
 	<developers>
 		
@@ -76,7 +81,7 @@
 
 		<dependency>
 			<id>commons-beanutils</id>
-			<version>1.7dev</version>
+			<version>1.6.1</version>
 			<url>http://jakarta.apache.org/commons/beanutils/</url>
 		</dependency>
 
@@ -119,7 +124,7 @@
 		<dependency>
 			<id>log4j</id>
 			<version>1.2.8</version>
-			<url>http://jakarta.apache.org/log4j/</url>
+			<url>http://logging.apache.org/log4j/docs/index.html</url>
 		</dependency>
 		
  		<dependency>
@@ -184,7 +189,7 @@
 		<report>maven-license-plugin</report>
 		<report>maven-changes-plugin</report>
 		<!--<report>maven-checkstyle-plugin</report>-->
-		<report>maven-jdepend-plugin</report>
+		<!--<report>maven-jdepend-plugin</report>-->
 		<report>maven-junit-report-plugin</report>
 		<report>maven-linkcheck-plugin</report>
 		<report>maven-javadoc-plugin</report>

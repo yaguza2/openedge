@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.2 2004-03-09 08:26:14 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-09 08:26:14 $
+ * $Id: FormBeanCtrlBase.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -78,9 +78,6 @@ import org.infohazard.maverick.flow.ControllerContext;
  * specific for the ControllerSingleton that is implemented in FormBeanCtrl,
  * you do not have this method at your disposal here, hence you should do 
  * initialisation in your constructor instead.
- * 
- * @see org.infohazard.maverick.ctl.FormBeanUser
- * @see org.apache.commons.beanutils.BeanUtils
  * 
  * @author Eelco Hillenius
  */
@@ -164,7 +161,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @return String name of the view
 	 * @throws ServletException
 	 *
-	 * @see ControllerSingleton#perform
+	 * @see org.infohazard.maverick.flow.ControllerSingleton#go(org.infohazard.maverick.flow.ControllerContext)
 	 */
 	public final String go(ControllerContext cctx) throws ServletException 
 	{
@@ -383,7 +380,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			Map parameters = new HashMap(cctx.getControllerParams());
 
 			allParameters.putAll(parameters);
-			traceParameters(parameters, bean, traceMsg, "maverick controller params");
+			traceParameters(parameters, traceMsg, "maverick controller params");
 						
 			popSuccessCtrlParams = populateWithErrorReport(
 				cctx, formBeanContext, parameters, locale);
@@ -402,7 +399,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			}
 			
 			allParameters.putAll(parameters);
-			traceParameters(parameters, bean, traceMsg, "session attributes");
+			traceParameters(parameters, traceMsg, "session attributes");
 			
 			popSuccessSessionAttribs = populateWithErrorReport(
 				cctx, formBeanContext, parameters, locale);
@@ -414,7 +411,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		reqParameters.putAll(cctx.getRequest().getParameterMap());
 		
 		allParameters.putAll(reqParameters);
-		traceParameters(reqParameters, bean, traceMsg, "request parameters");
+		traceParameters(reqParameters, traceMsg, "request parameters");
 		
 		popSuccessRequestParams = populateWithErrorReport(
 			cctx, formBeanContext, reqParameters, locale);
@@ -440,7 +437,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			}
 			
 			allParameters.putAll(parameters);
-			traceParameters(parameters, bean, traceMsg, "request attributes");
+			traceParameters(parameters, traceMsg, "request attributes");
 			
 			popSuccessRequestAttribs = populateWithErrorReport(
 				cctx, formBeanContext, parameters, locale);
@@ -482,7 +479,6 @@ public abstract class FormBeanCtrlBase implements Controller
 	/* extra debug info */
 	private final void traceParameters(
 		Map parameters, 
-		Object bean, 
 		StringBuffer msg,
 		String parameterSet)
 	{
@@ -577,7 +573,6 @@ public abstract class FormBeanCtrlBase implements Controller
 							
 							keysToBeRemoved.add(name);
 	
-							TargetPropertyMeta propInfo = null;
 							try 
 							{
 								// get the descriptor
@@ -877,7 +872,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get the message bundle key for the given property name.
+	 * Get the message bundle key for the given property name.
 	 * 
 	 * @param name property name
 	 * @return String the message bundle key of the property, defaults to "formname." + name
@@ -888,7 +883,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get the message bundle key for a conversion error for the given type 
+	 * Get the message bundle key for a conversion error for the given type 
 	 * and field with the given name.
 	 * 
 	 * @param type type of the target property that threw the conversion error
@@ -934,7 +929,8 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * set override value for field. this method will be called if a property could not be
+	 * Set the override value for the provdied field name. 
+	 * This method will be called if a property could not be
 	 * set on the form or did not pass validation. by registering the 'original' value
 	 * (possibly modified by overrides of either this method or the 'getOverrideValue'
 	 * of the validator that was the cause of the validation failure) end users can have
@@ -1007,7 +1003,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	//**************************** validators ********************************************/
 	
 	/**
-	 * add a validator delegate.
+	 * Add a validator delegate.
 	 * ValidatorDelegates can do validation on input and populated form beans.
 	 * Besides the allways used DefaultValidatorDelegate, users of Baritus
 	 * can register additional delegates, for instance to be able to plug in
@@ -1025,7 +1021,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * remove a validator delegate.
+	 * Remove a validator delegate.
 	 * 
 	 * @param validatorDelegate
 	 */
@@ -1038,7 +1034,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get the list of registered validator delegates.
+	 * Get the list of registered validator delegates.
 	 * 
 	 * @return the list of registered validator delegates, possibly null.
 	 */
@@ -1048,7 +1044,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * register a field validator for the given fieldName. 
+	 * Register a field validator for the given fieldName. 
 	 * multiple fieldValidators for one key are allowed. 
 	 * 
 	 * @param fieldName name of field
@@ -1060,7 +1056,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * register a form validator.
+	 * Register a form validator.
 	 * form validators will be called after the field level validators executed
 	 * successfully, and thus can be used to check consistency etc.
 	 * 
@@ -1072,7 +1068,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * de-register the fieldValidators that were registered with the given fieldName.
+	 * De-register the fieldValidators that were registered with the given fieldName.
 	 * 
 	 * @param fieldName name of field
 	 */
@@ -1082,10 +1078,10 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * de-register the given validator that was registered with the given fieldName.
+	 * De-register the given validator that was registered with the given fieldName.
 	 * 
 	 * @param fieldName name of field
-	 * @param the validator to remove for the given field
+	 * @param validator the validator to remove for the given field
 	 */
 	protected void removeValidator(String fieldName, FieldValidator validator)
 	{
@@ -1093,7 +1089,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * de-register the given form level validator.
+	 * De-register the given form level validator.
 	 * 
 	 * @param validator form validator
 	 */
@@ -1103,10 +1099,9 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * register the rule for the whole form.
+	 * Register the rule for the whole form.
 	 * 
-	 * @param fieldName name of field
-	 * @param validator validator instance
+	 * @param rule activation rule
 	 */
 	protected void addValidationActivationRule(ValidationActivationRule rule)
 	{
@@ -1114,7 +1109,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * de-register the given rule for the whole form.
+	 * De-register the given rule for the whole form.
 	 * 
 	 * @param rule global rule to remove
 	 */
@@ -1124,7 +1119,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get the fieldValidators that were registered with the given fieldName.
+	 * Get the fieldValidators that were registered with the given fieldName.
 	 * 
 	 * @param fieldName name of the field
 	 * @return MultiMap the fieldValidators that were registered with the given fieldName
@@ -1151,7 +1146,7 @@ public abstract class FormBeanCtrlBase implements Controller
 
 	
 	/**
-	 * de-register the field populator that was registered with the given fieldName.
+	 * De-register the field populator that was registered with the given fieldName.
 	 * 
 	 * @param fieldName name of field
 	 */
@@ -1203,7 +1198,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	//**************************** interceptors *******************************************/
 	
 	/**
-	 * add an interceptor to the current list of interceptors.
+	 * Add an interceptor to the current list of interceptors.
 	 * 
 	 * @param interceptor the interceptor to add to the current list of interceptors
 	 */
@@ -1213,7 +1208,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * add an interceptor to the current list of interceptors at the specified position.
+	 * Add an interceptor to the current list of interceptors at the specified position.
 	 * 
 	 * @param index index position where to insert the interceptor
 	 * @param interceptor the interceptor to add to the current list of interceptors
@@ -1225,7 +1220,7 @@ public abstract class FormBeanCtrlBase implements Controller
 
 	
 	/**
-	 * remove an interceptor from the current list of interceptors.
+	 * Remove an interceptor from the current list of interceptors.
 	 * 
 	 * @param interceptor the interceptor to remove from the current list of interceptors
 	 */
@@ -1237,7 +1232,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	// ************************ misc utility- and property methods *********************/
 	
 	/**
-	 * check if the value is null or empty.
+	 * Check if the value is null or empty.
 	 * 
 	 * @param value object to check on
 	 * @return true if value is not null AND not empty 
@@ -1249,7 +1244,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get localized message for given key.
+	 * Get localized message for given key.
 	 * 
 	 * @param key key of message
 	 * @return String localized message
@@ -1260,7 +1255,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 
 	/**
-	 * get localized message for given key and locale. 
+	 * Get localized message for given key and locale. 
 	 * If locale is null, the default locale will be used.
 	 * 
 	 * @param key key of message
@@ -1273,12 +1268,11 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 
 	/**
-	 * get localized message for given key and locale
+	 * Get localized message for given key and locale
 	 * and format it with the given parameters. 
 	 * If locale is null, the default locale will be used.
 	 * 
 	 * @param key key of message
-	 * @param locale locale for message
 	 * @param parameters parameters for the message
 	 * @return String localized message
 	 */
@@ -1288,7 +1282,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 
 	/**
-	 * get localized message for given key and locale
+	 * Get localized message for given key and locale
 	 * and format it with the given parameters. 
 	 * If locale is null, the default locale will be used.
 	 * 
@@ -1306,7 +1300,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get the prefered locale for this currentRequest
+	 * Get the prefered locale for the current request.
 	 * IF a user is set in the form, the preferedLocale will be checked for this user.
 	 * IF a locale is found as an attribute in the session with key 
 	 * 		SESSION_KEY_CURRENT_LOCALE, the previous found locale(s) 
@@ -1337,7 +1331,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * get error view. 'error' by default.
+	 * Get error view. This is 'error' by default.
 	 * 
 	 * @param cctx controller context
 	 * @param formBeanContext context
@@ -1351,7 +1345,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 	
 	/**
-	 * set http response headers that indicate that this page should not be cached
+	 * Set http response headers that indicate that this page should not be cached.
 	 * @param cctx controller context
 	 */
 	protected void doSetNoCache(ControllerContext cctx)
@@ -1375,7 +1369,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	}
 
 	/**
-	 * set the execution params that are used to influence the execution
+	 * Set the execution params that are used to influence the execution
 	 * of the formBeanCtrl (like population, validation, etc).
 	 * 
 	 * @param params the execution params that are used to influence the execution

@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredFieldValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: RequiredFieldValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:54 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,16 +39,25 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * use this for fields that should have their lenghts checked
- * by default, the messagePrefix itself (or 'input.field.required' if you use the
- * default constructor) will be used to get the error message
+ * Use this for fields that should have a not null (empty string) input.
+ * Note that as this validator is a field validator, and thus is registered
+ * for a single field, it is only fired if a field (e.g. a request parameter)
+ * is actually provided. In other words: if an instance of a required field
+ * validator was registered for field name 'myprop', but 'myprop' is not part
+ * of the request parameters, this validator never fires. Hence, if you want
+ * to be REALLY sure that a property of the form is not null, use a form validator
+ * (PropertyNotNullValidator). RequiredFieldValidator works fine for most cases
+ * where you have a HTML form with a field that should have a non empty value, but
+ * that - if a user fools around - does not seriousely break anything when a value
+ * is not provided (e.g. you probably have not null constraint in you database as well).
+ * 
  * @author Eelco Hillenius
  */
 public class RequiredFieldValidator extends AbstractFieldValidator
 {
 
 	/**
-	 * construct
+	 * Construct using 'input.field.required' as the message prefix.
 	 */
 	public RequiredFieldValidator()
 	{
@@ -56,6 +65,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * Construct using the provided activation rule and 'input.field.required' as the message prefix.
 	 * @param rule
 	 */
 	public RequiredFieldValidator(ValidationActivationRule rule)
@@ -64,6 +74,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * Construct using messagePrefix and the activation rule
 	 * @param messagePrefix
 	 * @param rule
 	 */
@@ -75,8 +86,8 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * construct with message prefix for error message keys
-	 * @param messagePrefix
+	 * Construct with message prefix for error message keys.
+	 * @param messagePrefix message prefix
 	 */
 	public RequiredFieldValidator(String messagePrefix)
 	{
@@ -84,10 +95,22 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * checks whether the value is not null, and - if it is an instance of String - whether
-	 * the trimmed value is not an empty string
+	 * Checks whether the value is not null, and - if it is an instance of String - whether
+	 * the trimmed value is not an empty string.
+	 * Note that as this validator is a field validator, and thus is registered
+	 * for a single field, it is only fired if a field (e.g. a request parameter)
+	 * is actually provided. In other words: if an instance of a required field
+	 * validator was registered for field name 'myprop', but 'myprop' is not part
+	 * of the request parameters, this validator never fires. Hence, if you want
+	 * to be REALLY sure that a property of the form is not null, use a form validator
+	 * (PropertyNotNullValidator). RequiredFieldValidator works fine for most cases
+	 * where you have a HTML form with a field that should have a non empty value, but
+	 * that - if a user fools around - does not seriousely break anything when a value
+	 * is not provided (e.g. you probably have not null constraint in you database as well).
+	 * 
 	 * @return boolean true if not null or empty, false otherwise
-	 * @see nl.openedge.baritus.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 * 
+	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
@@ -114,10 +137,10 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * get the error message. default returns the resource bundle message where
-	 * key = messagePrefix, with {0} substituted with the field name
+	 * Get the error message. default returns the resource bundle message where
+	 * key = messagePrefix, with {0} substituted with the field name.
 	 * 
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,

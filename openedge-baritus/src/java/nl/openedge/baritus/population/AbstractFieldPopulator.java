@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldPopulator.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: AbstractFieldPopulator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,6 +41,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import nl.openedge.baritus.FormBeanCtrlBase;
 
 /**
+ * Convenience class for populators.
+ * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractFieldPopulator implements FieldPopulator

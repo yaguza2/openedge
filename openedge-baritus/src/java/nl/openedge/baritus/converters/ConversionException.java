@@ -1,7 +1,7 @@
 /*
- * $Id: ConversionException.java,v 1.1.1.1 2004-02-24 20:34:07 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:07 $
+ * $Id: ConversionException.java,v 1.2 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,7 +41,8 @@ public final class ConversionException
 	private String desiredPattern;
 
 	/**
-	 * @param message
+	 * Construct exception with message.
+	 * @param message message
 	 */
 	public ConversionException(String message)
 	{
@@ -49,8 +50,9 @@ public final class ConversionException
 	}
 	
 	/**
-	 * @param message
-	 * @param string the desired pattern
+	 * Construct exception with message and desired pattern.
+	 * @param message message
+	 * @param desiredPattern the desired pattern
 	 */
 	public ConversionException(String message, String desiredPattern)
 	{
@@ -59,8 +61,9 @@ public final class ConversionException
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Construct exception with message and cause.
+	 * @param message message
+	 * @param cause cause
 	 */
 	public ConversionException(String message, Throwable cause)
 	{
@@ -68,9 +71,10 @@ public final class ConversionException
 	}
 	
 	/**
-	 * @param message
-	 * @param cause
-	 * @param string the desired pattern
+	 * Construct exception with message, cause and desired pattern.
+	 * @param message message
+	 * @param cause cause
+	 * @param desiredPattern the desired pattern
 	 */
 	public ConversionException(String message, Throwable cause, String desiredPattern)
 	{
@@ -79,7 +83,8 @@ public final class ConversionException
 	}
 
 	/**
-	 * @param cause
+	 * Construct exception with cause.
+	 * @param cause cause
 	 */
 	public ConversionException(Throwable cause)
 	{
@@ -87,8 +92,9 @@ public final class ConversionException
 	}
 	
 	/**
-	 * @param cause
-	 * @param string the desired pattern
+	 * Construct exception with cause and desired pattern.
+	 * @param cause cause
+	 * @param desiredPattern the desired pattern
 	 */
 	public ConversionException(Throwable cause, String desiredPattern)
 	{
@@ -97,7 +103,7 @@ public final class ConversionException
 	}
 
 	/**
-	 * get the desired pattern
+	 * Get the desired pattern.
 	 * @return String optionally the desired pattern
 	 */
 	public String getDesiredPattern()
@@ -106,7 +112,7 @@ public final class ConversionException
 	}
 
 	/**
-	 * set the desired pattern
+	 * Set the desired pattern.
 	 * @param string the desired pattern
 	 */
 	public void setDesiredPattern(String string)
@@ -115,8 +121,8 @@ public final class ConversionException
 	}
 
 	/**
-	 * string rep
-	 * @return String string rep
+	 * String representation of the exception.
+	 * @return String string representation
 	 */
 	public String toString() 
 	{

@@ -1,7 +1,7 @@
 /*
- * $Id: ConverterRegistry.java,v 1.2 2004-03-29 08:11:50 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 08:11:50 $
+ * $Id: ConverterRegistry.java,v 1.3 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -484,8 +484,8 @@ public final class ConverterRegistry
 	 * 		the 'normal', not localized registry will be searched for an entry with
 	 * 		the given key. If this is not found either, null will be returned.
 	 * 
-	 * @param clazz Class for which to return a registered Converter
-	 * @param locale The Locale
+	 * @param key key that the formatter was registered with
+	 * @param locale the Locale
 	 */
 	public Formatter lookup(String key, Locale locale) 
 		throws NoSuchMethodException, 

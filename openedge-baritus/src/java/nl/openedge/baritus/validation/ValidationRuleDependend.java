@@ -1,7 +1,7 @@
 /*
- * $Id: ValidationRuleDependend.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: ValidationRuleDependend.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,19 +39,18 @@ package nl.openedge.baritus.validation;
 public interface ValidationRuleDependend
 {
 	/**
-	 * set the validation rule
+	 * Set the validation rule.
 	 * @param rule the rule
 	 */
 	public void setValidationRule(ValidationActivationRule rule);
 	
 	/**
-	 * remove the validation rule
-	 *
+	 * Remove the validation rule.
 	 */
 	public void removeValidationActivationRule();
 	
 	/**
-	 * get the registered validation rule
+	 * Get the registered validation rule.
 	 * @return the registered validation rule or null if none was registered
 	 */
 	public ValidationActivationRule getValidationActivationRule();

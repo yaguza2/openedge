@@ -1,7 +1,7 @@
 /*
- * $Id: FieldPopulator.java,v 1.1.1.1 2004-02-24 20:34:10 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:10 $
+ * $Id: FieldPopulator.java,v 1.2 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,6 +37,10 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
+ * A field populator knows how to populate properties from (request) parameters.
+ * Users can implement this interface to override the default population behaviour
+ * and register instances with field names.
+ * 
  * @author Eelco Hillenius
  */
 public interface FieldPopulator
@@ -46,7 +50,7 @@ public interface FieldPopulator
 	 * @param cctx maverick context
 	 * @param formBeanContext context with instance of the form to set the property on
 	 * @param name name of the property
-	 * @param value the value from the request. This is either a String or a String array (String[])
+	 * @param requestValue the value from the request. This is either a String or a String array (String[])
 	 * @param targetPropertyMeta an extra wrapper for the target
 	 * @param locale
 	 * @return boolean true if the property was set successfully, false otherwise

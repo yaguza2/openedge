@@ -1,7 +1,7 @@
 /*
- * $Id: InterceptorDelegate.java,v 1.1.1.1 2004-02-24 20:33:59 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:33:59 $
+ * $Id: InterceptorDelegate.java,v 1.2 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003
@@ -222,7 +222,6 @@ final class InterceptorDelegate
 		FlowInterceptorContext ctx) 
 		throws ServletException
 	{
-		String view = null;
 		FlowInterceptorResult result = null;
 		Interceptor[] commands = interceptorRegistry.getInterceptors(
 			BeforeMakeFormBeanFlowInterceptor.class);
@@ -253,7 +252,6 @@ final class InterceptorDelegate
 		FlowInterceptorContext ctx) 
 		throws ServletException
 	{
-		String view = null;
 		FlowInterceptorResult result = null;
 		Interceptor[] commands = interceptorRegistry.getInterceptors(
 			BeforePopulationFlowInterceptor.class);
@@ -284,7 +282,6 @@ final class InterceptorDelegate
 		FlowInterceptorContext ctx) 
 		throws ServletException
 	{
-		String view = null;
 		FlowInterceptorResult result = null;
 		Interceptor[] commands = interceptorRegistry.getInterceptors(
 			AfterPopulationFlowInterceptor.class);
@@ -315,7 +312,6 @@ final class InterceptorDelegate
 		FlowInterceptorContext ctx) 
 		throws ServletException
 	{
-		String view = null;
 		FlowInterceptorResult result = null;
 		Interceptor[] commands = interceptorRegistry.getInterceptors(
 			PopulationErrorFlowInterceptor.class);
@@ -346,7 +342,6 @@ final class InterceptorDelegate
 		FlowInterceptorContext ctx) 
 		throws ServletException
 	{
-		String view = null;
 		FlowInterceptorResult result = null;
 		Interceptor[] commands = interceptorRegistry.getInterceptors(
 			AfterPerformFlowInterceptor.class);
@@ -377,7 +372,6 @@ final class InterceptorDelegate
 		FlowInterceptorContext ctx) 
 		throws ServletException
 	{
-		String view = null;
 		FlowInterceptorResult result = null;
 		Interceptor[] commands = interceptorRegistry.getInterceptors(
 			PerformExceptionFlowInterceptor.class);

@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultFieldPopulator.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: DefaultFieldPopulator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,9 +41,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
-import nl.openedge.baritus.*;
+import nl.openedge.baritus.ConverterRegistry;
+import nl.openedge.baritus.ExecutionParams;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.LogConstants;
 
 /**
  * Default populator for bean properties. Tries to set a property using introspection
@@ -68,7 +70,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 	 * @param cctx maverick context
 	 * @param formBeanContext context with instance of the form bean to set the property on
 	 * @param name name of the property
-	 * @param value the value from the request. This is either a String or a String array (String[])
+	 * @param requestValue the value from the request. This is either a String or a String array (String[])
 	 * @param targetPropertyMeta an extra wrapper for the target
 	 * @param locale
 	 * @return boolean true if the property was set successfully, false otherwise
@@ -83,8 +85,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 		Locale locale)
 		throws Exception
 	{
-		Object bean = formBeanContext.getBean();
-		Object newValue = null;
+
 		boolean success = true;
 		Object target = targetPropertyMeta.getTarget();
 		PropertyDescriptor propertyDescriptor = targetPropertyMeta.getPropertyDescriptor();

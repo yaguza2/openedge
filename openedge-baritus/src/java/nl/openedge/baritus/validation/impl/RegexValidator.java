@@ -1,7 +1,7 @@
 /*
- * $Id: RegexValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: RegexValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:54 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -162,10 +162,10 @@ public class RegexValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * get the error message. default returns the resource bundle message where
+	 * Get the error message. By default returns the resource bundle message where
 	 * key = messagePrefixwith {0} substituted with the value
-	 * and {1} substituted with the field name
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * and {1} substituted with the field name.
+	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,

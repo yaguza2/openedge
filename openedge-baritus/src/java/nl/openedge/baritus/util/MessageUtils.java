@@ -1,7 +1,7 @@
 /*
- * $Id: MessageUtils.java,v 1.1.1.1 2004-02-24 20:34:12 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:12 $
+ * $Id: MessageUtils.java,v 1.2 2004-03-29 15:26:51 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:51 $
  *
  * ====================================================================
  * Copyright (c) 2003
@@ -27,7 +27,7 @@ public final class MessageUtils
 	private static Log log = LogFactory.getLog(MessageUtils.class);
 
 	/**
-	 * get localized message for given key
+	 * Get localized message for given key.
 	 * @param key key of message
 	 * @return String localized message
 	 */
@@ -37,8 +37,8 @@ public final class MessageUtils
 	}
 
 	/**
-	 * get localized message for given key and locale. 
-	 * If locale is null, the default locale will be used
+	 * Get localized message for given key and locale. 
+	 * If locale is null, the default locale will be used.
 	 * @param key key of message
 	 * @param locale locale for message
 	 * @return String localized message
@@ -61,11 +61,10 @@ public final class MessageUtils
 	}
 
 	/**
-	 * get localized message for given key and locale
+	 * Get localized message for given key and locale
 	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
+	 * If locale is null, the default locale will be used.
 	 * @param key key of message
-	 * @param locale locale for message
 	 * @param parameters parameters for the message
 	 * @return String localized message
 	 */
@@ -75,9 +74,9 @@ public final class MessageUtils
 	}
 
 	/**
-	 * get localized message for given key and locale
+	 * Get localized message for given key and locale
 	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
+	 * If locale is null, the default locale will be used.
 	 * @param key key of message
 	 * @param locale locale for message
 	 * @param parameters parameters for the message

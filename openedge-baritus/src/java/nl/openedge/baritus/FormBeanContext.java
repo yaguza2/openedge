@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.5 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: FormBeanContext.java,v 1.6 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -104,18 +104,10 @@ public final class FormBeanContext
 	 */
 	private boolean populateAndValidate = true;
 
-	/**
-	 * construct instance of FormBeanContext
-	 */
-	public FormBeanContext()
-	{
-		// do nothing	
-	}
-
 	//	----------------------- PROPERTY METHODS -----------------------------//
 
 	/**
-	 * get the current locale
+	 * Get the current locale.
 	 * @return Locale current locale
 	 */
 	public Locale getCurrentLocale()
@@ -124,7 +116,7 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * set the current locale
+	 * Set the current locale.
 	 * @param locale current locale
 	 */
 	public void setCurrentLocale(Locale locale)
@@ -133,8 +125,8 @@ public final class FormBeanContext
 	}
 	
 	/**
-	 * Get the form bean. This is the bean that will be populated, 
-	 * and that is returned by make formbean
+	 * Get the form bean. The current controll provided a bean to populate with method
+	 * makeFormBean. That bean is saved (before population) in the formBeanContext.
 	 * 
 	 * @return Object the bean that will be populated, and that is returned by makeFormbean
 	 */
@@ -145,7 +137,7 @@ public final class FormBeanContext
 
 	/** 
 	 * Set the form bean. This is the bean that will be populated, 
-	 * and that is returned by make formbean
+	 * and that is returned by make formbean.
 	 * 
 	 * @param bean the bean that will be populated, and that is returned by makeFormbean
 	 */
@@ -157,7 +149,8 @@ public final class FormBeanContext
 	//	----------------------- ERROR/ OVERRIDE METHODS -----------------------------//
 
 	/**
-	 * @return Map
+	 * Get the map with errors. Returns null if no errors are registered.
+	 * @return Map map with errors or null if no errors are registered.
 	 */
 	public Map getErrors()
 	{
@@ -165,9 +158,11 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * get error for field
-	 * @param field
-	 * @return String
+	 * Get the registered error for one field. Returns null if no error is registered
+	 * for the given field name.
+	 * @param field name of the field to lookup the error for.
+	 * @return String the error that was registered for the provided field name, or null
+	 * if no error was registered for the provided field name.
 	 */
 	public String getError(String field)
 	{
@@ -175,8 +170,8 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * Sets the errors.
-	 * @param errors The errors to set
+	 * Set the map of errors.
+	 * @param errors The map of errors to set
 	 */
 	public void setErrors(Map errors)
 	{
@@ -184,8 +179,9 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * either add this exception with the given key, or add the stacktrace
-	 * of this exception with the given key
+	 * Either add this exception with the given key, or add the stacktrace
+	 * of this exception with the given key. Any value that was registered with
+	 * the same key prior to this is overwritten.
 	 * @param key key to store error under
 	 * @param t exception
 	 * @param asStackTrace if true, the stacktrace is added; otherwise the exception
@@ -206,7 +202,8 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * add exception and its stacktrace
+	 * Add exception and its stacktrace. Any value that was registered with
+	 * the same key prior to this is overwritten.
 	 * @param exceptionKey key to use for exception
 	 * @param stackTraceKey key to use for stacktrace
 	 * @param t exception
@@ -223,8 +220,9 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * adds an exception with key 'exception' and adds the stacktrace
-	 * of this exception with key 'stacktrace'
+	 * Adds an exception with key 'exception' and adds the stacktrace
+	 * of this exception with key 'stacktrace'. Any value that was registered with
+	 * the same keys prior to this are overwritten.
 	 * @param t exception
 	 */
 	public void setError(Throwable t)
@@ -233,9 +231,10 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * adds an exception with key 'exception' and adds either the stacktrace
+	 * Adds an exception with key 'exception' and adds either the stacktrace
 	 * of this exception with key 'stacktrace' if asStackTrace is true, or add the
-	 * exception message with key 'exception' if asStackTrace is false
+	 * exception message with key 'exception' if asStackTrace is false.
+	 * Any value that was registered with the same keys prior to this are overwritten.
 	 * @param t exception
 	 * @param asStackTrace if true, the stacktrace is added; otherwise the exception
 	 */
@@ -244,7 +243,11 @@ public final class FormBeanContext
 		setError(ERROR_KEY_EXCEPTION, t, asStackTrace);
 	}
 
-	/** add or overwrite an error */
+	/**
+	 * Register (or overwrite) an error with the provided key and value.
+	 * @param key the key that the error should be registered with.
+	 * @param value the value (message) of the error.
+	 */
 	public void setError(String key, String value)
 	{
 		if (errors == null) errors = new HashMap();
@@ -252,7 +255,10 @@ public final class FormBeanContext
 		errors.put(key, value);
 	}
 
-	/** add or overwrite an error */
+	/**
+	 * De-register (remove) an error that was registered with the provided key.
+	 * @param key the key that the error was registered with.
+	 */
 	public void removeError(String key)
 	{
 		if (errors != null)
@@ -286,8 +292,8 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * get map of failed field values
-	 * @return Map
+	 * Get the map of failed field values.
+	 * @return Map map with override fields
 	 */
 	public Map getOverrideFields()
 	{
@@ -295,9 +301,9 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * set value of field that overrides. WILL overwrite allready registered override
+	 * Set value of field that overrides. WILL overwrite any allready registered override
 	 * @param name name of the field/ property
-	 * @param value the string value (from HTML field)
+	 * @param value usually the original input value
 	 */
 	public void setOverrideField(String name, Object value)
 	{
@@ -309,15 +315,15 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * get string value of field that overrides
+	 * Get the value of the field that was overridden.
 	 * E.g. we got in a formbean property 'myDate' of type date. 
 	 * If form submit gives 'blah', this cannot be parsed as a date.
 	 * Now, if setFailedField('myDate', 'blah') is called, 
 	 * the view can show the 'wrong' value transparently, as an 
 	 * Velocity EventCardridge will override any property with a 
 	 * failed field if set.
-	 * @param name
-	 * @return String
+	 * @param name name of the field/ property
+	 * @return Object usually the original input value
 	 */
 	public Object getOverrideField(String name)
 	{
@@ -325,9 +331,9 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * set values of fields that overrides. WILL NOT overwrite allready registered overrides
-	 * @param name name of the field/ property
-	 * @param value the string value (from HTML field)
+	 * Set values of fields that have overrides. 
+	 * This WILL NOT overwrite allready registered overrides.
+	 * @param fields map of fields to override the current values.
 	 */
 	public void setOverrideField(Map fields)
 	{
@@ -353,7 +359,7 @@ public final class FormBeanContext
 	}
 	
 	/**
-	 * are there any errors registered for this formBean?
+	 * Whether any errors were registered during population/ validation.
 	 * @return boolean are there any errors registered for this formBean? True if so, false otherwise.
 	 */
 	public boolean hasErrors()
@@ -364,7 +370,7 @@ public final class FormBeanContext
 	// ----------- execution parameters local for the current call ---------//
 
 	/**
-	 * get flag whether Baritus should try to populate the form bean.
+	 * Get flag whether Baritus should try to populate the form bean.
 	 * Setting this flag to false, and thus letting Baritus skip
 	 * population and validation can be usefull when you link commands
 	 * within the same request and want to reuse the allready populated
@@ -383,7 +389,7 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * set flag whether Baritus should try to populate the form bean.
+	 * Set flag whether Baritus should try to populate the form bean.
 	 * Setting this flag to false, and thus letting Baritus skip
 	 * population and validation can be usefull when you link commands
 	 * within the same request and want to reuse the allready populated
@@ -404,7 +410,7 @@ public final class FormBeanContext
 	// ----------------------- DISPLAY/ OUTPUT METHODS ---------------------//
 
 	/**
-	* get the display string of the property with the given name without using a pattern
+	* Get the display string of the property with the given name without using a pattern.
 	* 
 	* If an object was found for the given property name, it will be formatted with the 
 	* formatter found as follows:
@@ -416,10 +422,9 @@ public final class FormBeanContext
 	* (using the format(property, pattern) method). If not, ConvertUtils of the 
 	* BeanUtils package is used to get the string representation of the property.
 	* 
-	* Override this in your form if you want to customize
-	* 
 	* @param name name of the property
-	* @return String the display string
+	* @return String the formatted value of the property of the current bean instance
+	* or the registered override value if any was registered.
 	*/
 	public String displayProperty(String name)
 	{
@@ -442,11 +447,10 @@ public final class FormBeanContext
 	* (using the format(property, pattern) method). If not, ConvertUtils of the 
 	* BeanUtils package is used to get the string representation of the property.
 	* 
-	* Override this in your form if you want to customize
-	* 
 	* @param name name of the property
-	* @pattern optional pattern to use for formatting
-	* @return String
+	* @param pattern optional pattern to use for formatting
+	* @return String the formatted value (using the pattern) of the property of the 
+	* current bean instance or the registered override value if any was registered.
 	*/
 	public String displayProperty(String name, String pattern)
 	{
@@ -524,7 +528,7 @@ public final class FormBeanContext
 	}
 
 	/**
-	 * get the formatter for the given fieldname/ class/ locale
+	 * Get the formatter for the given fieldname/ class/ locale.
 	 * 
 	 * 	1. look in the ConverterRegistry if a formatter was stored with the formatterName
 	 * 			and optionally locale as key.
@@ -582,7 +586,8 @@ public final class FormBeanContext
 	// ----------------------- UTILITY METHODS -----------------------------//
 	
 	/**
-	 * Format the given value, independent of the current form.
+	 * Format the given value, independent of the current form, using the class
+	 * of the value to lookup a formatter.
 	 * @param value value to format
 	 * @return String formatted value
 	 */
@@ -592,9 +597,10 @@ public final class FormBeanContext
 	}
 	
 	/**
-	 * Format the given value, independent of the current form.
+	 * Format the given value, independent of the current form, using the class of the
+	 * value to lookup a formatter using the provided pattern.
 	 * @param value value to format
-	 * @param patttern pattern for format
+	 * @param pattern pattern for format
 	 * @return String formatted value
 	 */
 	public String format(Object value, String pattern)
@@ -603,8 +609,9 @@ public final class FormBeanContext
 	}
 	
 	/**
-	 * Format the given value, independent of the current form.
-	 * 
+	 * Format the given value, independent of the current form, using the provided
+	 * name of the formatter to lookup the formatter or - if no formatter was found -
+	 * using the class of the value to lookup the formatter.
 	 * @param formatterName name of formatter.
 	 * @param value value to format
 	 * @return String formatted value
@@ -615,8 +622,13 @@ public final class FormBeanContext
 	}
 	
 	/**
-	 * Format the given value, independent of the current form.
-	 * 
+	 * Format the given value, independent of the current form using:
+	 * 	1. look in the ConverterRegistry if a formatter was stored with the formatterName
+	 * 			and optionally locale as key;
+	 * 	2. if not found, look in the ConverterRegistry if a formatter was stored with
+	 * 			the pattern and optionally the locale as key;
+	 * 	3. if not found, look in the ConverterRegistry if a Converter was stored for the 
+	 * 			type of the property that implements Formatter (as well as Converter);
 	 * @param formatterName name of formatter.
 	 * @param value value to format
 	 * @param pattern pattern for format
@@ -660,7 +672,7 @@ public final class FormBeanContext
 	 * @param key key whose associated value is to be returned
 	 * @return Object the value to which the attributes map maps the specified key, 
 	 * or null if the map contains no mapping for this key.
-	 * @see java.util.HashMap#get(java.lang.Object)
+	 * @see java.util.Map#get(java.lang.Object)
 	 */
 	public Object get(Object key)
 	{
@@ -673,7 +685,7 @@ public final class FormBeanContext
 	 * is replaced by the specified value.
 	 * @param key key with which the specified value is to be associated.
 	 * @param value value to be associated with the specified key.
-	 * @see java.util.HashMap#put(java.lang.Object, java.lang.Object)
+	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	public void put(Object key, Object value)
 	{
@@ -684,7 +696,7 @@ public final class FormBeanContext
 	/**
 	 * get the attribute values
 	 * @return Collection the attribute values or null if no attributes were set
-	 * @see java.util.HashMap#values(Object)
+	 * @see java.util.Map#values()
 	 */
 	public Collection values()
 	{
@@ -694,7 +706,7 @@ public final class FormBeanContext
 	/**
 	 * get the key set of the attributes
 	 * @return Set the key set of the attributes or null if no attributes were set
-	 * @see java.util.HashMap#keySet()
+	 * @see java.util.Map#keySet()
 	 */
 	public Set keySet()
 	{
@@ -703,7 +715,7 @@ public final class FormBeanContext
 
 	/**
 	 * clear the attributes
-	 * @see java.util.HashMap#clear()
+	 * @see java.util.Map#clear()
 	 */
 	public void clear()
 	{
@@ -713,7 +725,7 @@ public final class FormBeanContext
 	/**
 	 * get the number of attributes
 	 * @return int the number of attributes
-	 * @see java.util.HashMap#size()
+	 * @see java.util.Map#size()
 	 */
 	public int size()
 	{
@@ -723,7 +735,7 @@ public final class FormBeanContext
 	/**
 	 * put the provided map in the attribute map 
 	 * @param t map to put in attributes
-	 * @see java.util.HashMap#putAll(java.util.Map)
+	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	public void putAll(Map t)
 	{
@@ -734,7 +746,7 @@ public final class FormBeanContext
 	/**
 	 * get the entries of the attributes
 	 * @return Set the entries of the attributes or null if no attributes were set
-	 * @see java.util.HashMap#entrySet()
+	 * @see java.util.Map#entrySet()
 	 */
 	public Set entrySet()
 	{
@@ -745,7 +757,7 @@ public final class FormBeanContext
 	 * is the provided key the key of an attribute
 	 * @param key the key to look for
 	 * @return boolean is the provided key the key of an attribute
-	 * @see java.util.HashMap#containsKey(java.lang.Object)
+	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
 	public boolean containsKey(Object key)
 	{
@@ -755,7 +767,7 @@ public final class FormBeanContext
 	/**
 	 * are there any attributes
 	 * @return boolean are there any attributes
-	 * @see java.util.HashMap#isEmpty()
+	 * @see java.util.Map#isEmpty()
 	 */
 	public boolean isEmpty()
 	{
@@ -766,7 +778,7 @@ public final class FormBeanContext
 	 * remove an attribute
 	 * @param key key of the attribute to remove
 	 * @return Object the object that was stored under the given key, if any
-	 * @see java.util.HashMap#remove(java.lang.Object)
+	 * @see java.util.Map#remove(java.lang.Object)
 	 */
 	public Object remove(Object key)
 	{
@@ -777,7 +789,7 @@ public final class FormBeanContext
 	 * is the provided value stored as an attribute
 	 * @param value the value to look for
 	 * @return boolean is the provided value stored as an attribute
-	 * @see java.util.HashMap#(java.lang.Object value)
+	 * @see java.util.Map#containsValue(java.lang.Object value)
 	 */
 	public boolean containsValue(Object value)
 	{

@@ -1,7 +1,7 @@
 /*
- * $Id: InterceptorRegistry.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: InterceptorRegistry.java,v 1.3 2004-03-29 15:26:52 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -127,39 +127,6 @@ final class InterceptorRegistry
 	{
 		return (flowInterceptors != null) ?
 			flowInterceptors[interceptionPoint] : null;
-	}
-	
-	/* check the interception point */
-	private void checkInterceptionPoint(int interceptionPoint)
-	{
-		if(interceptionPoint < 0 || interceptionPoint > 5)
-		{
-			throw new IllegalArgumentException(
-				"interceptionPoint must be the value of one " +
-				"of the public variables of FlowInterceptor");
-		}		
-	}
-	
-	/* get or create the list of flow interceptors at the given point */
-	private List getOrCreateInterceptorsAtPoint(int interceptionPoint)
-	{
-		List interceptorsAtPoint = null;
-		if(flowInterceptors == null)
-		{
-			flowInterceptors = new List[5];
-			interceptorsAtPoint = new ArrayList(1);
-			flowInterceptors[interceptionPoint] = interceptorsAtPoint;
-		}
-		else
-		{
-			interceptorsAtPoint = flowInterceptors[interceptionPoint];
-			if(interceptorsAtPoint == null)
-			{
-				interceptorsAtPoint = new ArrayList(1);
-				flowInterceptors[interceptionPoint] = interceptorsAtPoint;			
-			}
-		}
-		return interceptorsAtPoint;
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: LocaleFormatter.java,v 1.1.1.1 2004-02-24 20:34:07 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:07 $
+ * $Id: LocaleFormatter.java,v 1.2 2004-03-29 15:26:51 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:51 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -33,20 +33,19 @@ package nl.openedge.baritus.converters;
 import java.util.Locale;
 
 /**
- * a Formatter that uses a locale.
+ * Formatter that uses a locale.
  * @author Eelco Hillenius
  */
 public interface LocaleFormatter extends Formatter
 {
 	/**
-	 * set the locale for this instance
+	 * Set the locale for this instance.
 	 * @param locale the locale for this instance
 	 */
 	public void setLocale(Locale locale);
 	
 	/**
-	 * get the locale for this instance
-	 * @param locale the locale for this instance
+	 * Get the locale for this instance
 	 * @return Locale the locale for this instance
 	 */
 	public Locale getLocale();

@@ -1,7 +1,7 @@
 /*
- * $Id: FormValidator.java,v 1.2 2004-02-25 20:40:51 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-25 20:40:51 $
+ * $Id: FormValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -44,7 +44,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 public interface FormValidator
 {
 	/**
-	 * checks if form is valid
+	 * Checks if form is valid.
 	 * @param cctx maverick context
 	 * @param formBeanContext context with form for this currentRequest
 	 * @return true if valid, false if not.
@@ -54,11 +54,13 @@ public interface FormValidator
 		FormBeanContext formBeanContext);
 
 	/**
-	 * if form is not valid, get custom error message here
+	 * If the form is not valid, get custom error message here. Return null if
+	 * no message should be saved.
 	 * @param cctx maverick context
 	 * @param formBeanContext context for this currentRequest
 	 * @param locale the locale that should be used to get the message
-	 * @return String[] the message key and the localized error message
+	 * @return String[] the message key ([0]) and the localized error message ([1])
+	 * or null if no message should be saved here.
 	 */		
 	public String[] getErrorMessage(
 		ControllerContext cctx,

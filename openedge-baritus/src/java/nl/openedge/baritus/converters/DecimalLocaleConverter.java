@@ -1,7 +1,7 @@
 /*
- * $Id: DecimalLocaleConverter.java,v 1.2 2004-03-02 13:22:49 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-02 13:22:49 $
+ * $Id: DecimalLocaleConverter.java,v 1.3 2004-03-29 15:26:51 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-29 15:26:51 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -189,8 +189,7 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 				if(value instanceof String) stringval = (String)value;
 				else if(value instanceof String[]) stringval = ((String[])value)[0];
 				else stringval = String.valueOf(value);
-				
-				int length = stringval.length();
+
 				Matcher nonDigitMatcher = nonDigitPattern.matcher(stringval);
 				if(nonDigitMatcher.matches())
 				{

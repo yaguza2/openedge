@@ -1,7 +1,7 @@
 /*
- * $Id: MinimumFieldLengthValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: MinimumFieldLengthValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:54 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,7 +39,8 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * use this for fields that have a min length
+ * Use this validator for fields that have a minimum length.
+ * 
  * @author Eelco Hillenius
  */
 public final class MinimumFieldLengthValidator extends AbstractFieldValidator
@@ -50,7 +51,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	private int minLength = NO_MINIMUM;
 
 	/**
-	 * construct with key invalid.field.input.size for error messages
+	 * Construct with key invalid.field.input.size for error messages.
 	 */
 	public MinimumFieldLengthValidator()
 	{
@@ -58,8 +59,8 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * construct with message prefix for error message keys
-	 * @param messagePrefix
+	 * Construct with message prefix for error message keys.
+	 * @param messagePrefix message prefix
 	 */
 	public MinimumFieldLengthValidator(String messagePrefix)
 	{
@@ -67,9 +68,10 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * construct with message prefix for error message keys and set
-	 * checking on maximum length with given length of fields only
-	 * @param minLength maximum length allowed for values; use -1 for no maximum
+	 * Construct with message prefix for error message keys and set
+	 * checking on minimum length with given length of fields only.
+	 * @param messagePrefix message prefix
+	 * @param minLength minimum length allowed for values; use -1 for no minimum
 	 */
 	public MinimumFieldLengthValidator(String messagePrefix, int minLength)
 	{
@@ -78,7 +80,8 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * @param rule
+	 * Construct with activation rule and 'invalid.field.input.size' as message prefix.
+	 * @param rule activation rule
 	 */
 	public MinimumFieldLengthValidator(ValidationActivationRule rule)
 	{
@@ -86,8 +89,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * Construct with message prefix and activation rule.
 	 * @param messagePrefix
-	 * @param rule
+	 * @param rule activation rule
 	 */
 	public MinimumFieldLengthValidator(
 		String messagePrefix,
@@ -97,8 +101,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * set checking on maximum length with given length of fields only
-	 * @param minLength maximum length allowed for values; use -1 for no maximum
+	 * Construct with message prefix for error message keys and set
+	 * checking on minimum length with given length of fields only.
+	 * @param minLength minimum length allowed for values; use -1 for no minimum
 	 */
 	public MinimumFieldLengthValidator(int minLength)
 	{
@@ -106,13 +111,14 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * in case the value is an instance of string: checks whether the length of the string
-	 * is equal to or greater than the minimumLength property
-	 * in case the value is an instance of number: checks whether the length of the integer
-	 * value is equal to or greater than the minimumLength property
-	 * @return boolean true if the length of value is equal to or greater than the
+	 * Checks whether the provided value is greater than the minimum.
+	 * In case the value is an instance of string: checks whether the length of the string
+	 * is equal to or smaller than the minLength property.
+	 * In case the value is an instance of number: checks whether the length of the integer
+	 * value is equal to or smaller than the minLength property.
+	 * @return boolean true if the length of value is equal to or less than the
 	 * 	minLength property, false otherwise
-	 * @see nl.openedge.baritus.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
@@ -152,10 +158,10 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * get the error message. default returns the resource bundle message where
+	 * Get the error message. By default returns the resource bundle message where
 	 * key = messagePrefix, with {0} substituted with the value, {1} substituted 
-	 * with the field name and {2} substituted with the minimum length
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * with the field name and {2} substituted with the minimum length.
+	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
@@ -171,7 +177,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * @return int maximum length that is checked on
+	 * @return int minimum length that is checked on
 	 */
 	public int getMinLength()
 	{
@@ -179,7 +185,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * @param i maximum length that is checked on 
+	 * @param i minimum length that is checked on 
 	 */
 	public void setMinLength(int i)
 	{

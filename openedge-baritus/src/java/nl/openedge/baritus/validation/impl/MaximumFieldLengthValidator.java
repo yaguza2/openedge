@@ -1,7 +1,7 @@
 /*
- * $Id: MaximumFieldLengthValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: MaximumFieldLengthValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 15:26:54 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,7 +39,8 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * use this for fields that have a max length
+ * Use this validator for fields that have a maximum length.
+ * 
  * @author Eelco Hillenius
  */
 public final class MaximumFieldLengthValidator extends AbstractFieldValidator
@@ -50,7 +51,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	private int maxLength = NO_MAXIMUM;
 
 	/**
-	 * construct with key invalid.field.input.size for error messages
+	 * construct with 'invalid.field.input.size' as message prefix.
 	 */
 	public MaximumFieldLengthValidator()
 	{
@@ -58,7 +59,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * construct with message prefix for error message keys
+	 * Construct with message prefix for error message keys.
 	 * @param messagePrefix
 	 */
 	public MaximumFieldLengthValidator(String messagePrefix)
@@ -67,8 +68,9 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * construct with message prefix for error message keys and set
-	 * checking on maximum length with given length of fields only
+	 * Construct with message prefix for error message keys and set
+	 * checking on maximum length with given length of fields only.
+	 * @param messagePrefix message prefix
 	 * @param maxLength maximum length allowed for values; use -1 for no maximum
 	 */
 	public MaximumFieldLengthValidator(String messagePrefix, int maxLength)
@@ -78,7 +80,8 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * @param rule
+	 * Construct with activation rule and 'invalid.field.input.size' as message prefix.
+	 * @param rule activation rule
 	 */
 	public MaximumFieldLengthValidator(ValidationActivationRule rule)
 	{
@@ -86,8 +89,9 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * Construct with message prefix and activation rule.
 	 * @param messagePrefix
-	 * @param rule
+	 * @param rule activation rule
 	 */
 	public MaximumFieldLengthValidator(
 		String messagePrefix,
@@ -97,7 +101,8 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * set checking on maximum length with given length of fields only
+	 * Construct with message prefix for error message keys and set
+	 * checking on maximum length with given length of fields only.
 	 * @param maxLength maximum length allowed for values; use -1 for no maximum
 	 */
 	public MaximumFieldLengthValidator(int maxLength)
@@ -106,13 +111,14 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * in case the value is an instance of string: checks whether the length of the string
-	 * is equal to or smaller than the maximumLength property
-	 * in case the value is an instance of number: checks whether the length of the integer
-	 * value is equal to or smaller than the minimumLength property
+	 * Checks whether the provided value is less than the maximum.
+	 * In case the value is an instance of string: checks whether the length of the string
+	 * is equal to or smaller than the maximumLength property.
+	 * In case the value is an instance of number: checks whether the length of the integer
+	 * value is equal to or smaller than the maximumLength property.
 	 * @return boolean true if the length of value is equal to or less than the
 	 * 	maxLength property, false otherwise
-	 * @see nl.openedge.baritus.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
@@ -152,10 +158,10 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
-	 * get the error message. default returns the resource bundle message where
+	 * Get the error message. By default returns the resource bundle message where
 	 * key = messagePrefix, with {0} substituted with the value, {1} substituted 
-	 * with the field name and {2} substituted with the maximum length
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * with the field name and {2} substituted with the maximum length.
+	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
@@ -171,6 +177,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * Get maximum length that is checked on.
 	 * @return int maximum length that is checked on
 	 */
 	public int getMaxLength()
@@ -179,6 +186,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * Set maximum length that is checked on .
 	 * @param i maximum length that is checked on 
 	 */
 	public void setMaxLength(int i)
