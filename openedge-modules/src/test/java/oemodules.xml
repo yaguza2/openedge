@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<modules-config>
+	
+	<scheduler properties="/quartz.properties">
+
+		<trigger name="testTrigger" group="DEFAULT"
+				 class="org.quartz.SimpleTrigger">
+			<parameter name="repeatInterval" value="2000"/>
+			<parameter name="repeatCount" value="-1"/>	
+		</trigger>
+		
+		<jobExecutionMap>
+			<job trigger="testTrigger" module="QuartzTest" />
+		</jobExecutionMap>
+
+	</scheduler>
+	
+	<modules>
+		
+		<module name="ThrowAwayTest" 
+				class="nl.openedge.modules.test.ThrowAwayModuleImpl"/>
+		
+		<module name="SingletonTest" 
+				class="nl.openedge.modules.test.SingletonModuleImpl"/>
+				
+		<module name="ConfigurableTest" 
+				class="nl.openedge.modules.test.ConfigurableModuleImpl">	
+			<param1 attr="foo"/>
+			<param2>
+				Bar
+			</param2>		
+		</module>
+		
+		<module name="QuartzTest"
+				class="nl.openedge.modules.test.QuartzJobModuleImpl">
+				
+			<jobDetail group="DEFAULT">
+				<parameter name="msg" value="this is a test job"/>
+			</jobDetail>
+				
+		</module>
+		
+	</modules>
+	
+</modules-config>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src/main/java"/>
+    <classpathentry kind="src" output="src/test/build" path="src/test/java"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="lib/jdom-cvs-24012003.jar" sourcepath="/openedge-modules/libsrc/jdom-cvs-24012003-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-logging-02032003.jar" sourcepath="/openedge-modules/libsrc/commons-logging-02032003-src.jar"/>
+    <classpathentry kind="lib" path="lib/junit.jar" sourcepath="/openedge-modules/libsrc/junit-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-cli-1.0-beta-2-dev.jar" sourcepath="/openedge-modules/libsrc/commons-cli-1.0-beta-2-dev-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-dbcp-1.0.jar" sourcepath="/openedge-modules/libsrc/commons-dbcp-1.0-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-pool-1.0.jar"/>
+    <classpathentry kind="lib" path="lib/commons-beanutils-1.5.jar" sourcepath="/openedge-modules/libsrc/commons-beanutils-1.5-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-collections-2.0.jar"/>
+    <classpathentry kind="var" path="TOMCAT_HOME/common/lib/servlet.jar" sourcepath="SERVLET_SOURCE"/>
+    <classpathentry exported="true" kind="lib" path="lib/quartz.jar" sourcepath="/openedge-modules/libsrc/quartz-src.jar"/>
+    <classpathentry kind="output" path="build"/>
+</classpath>
