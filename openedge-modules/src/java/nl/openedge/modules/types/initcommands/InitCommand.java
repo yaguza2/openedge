@@ -32,7 +32,7 @@ package nl.openedge.modules.types.initcommands;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
 /**
@@ -53,7 +53,7 @@ public interface InitCommand
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentFactory moduleFactory)
+		ComponentRepository moduleFactory)
 		throws ConfigException; 
 	
 	/**

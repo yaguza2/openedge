@@ -36,8 +36,8 @@ package nl.openedge.modules.observers;
  * (like adding quartz calendars and global listeners etc. BEFORE
  *  jobs and triggers are actually scheduled by the module factory.
  * 
- * NOTE that contract depends on the implementation of the ComponentFactory,
- * so at this stage, only the DefaultComponentFactory guarantees this behaviour
+ * NOTE that contract depends on the implementation of the ComponentRepository,
+ * so at this stage, only the DefaultComponentRepository guarantees this behaviour
  * 
  * @author Eelco Hillenius
  */

@@ -42,8 +42,8 @@ import nl.openedge.access.*;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.util.PasswordHelper;
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.ComponentFactoryFactory;
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.RepositoryFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -167,8 +167,8 @@ public class LoginModuleImpl implements LoginModule
 
 		try
 		{
-			ComponentFactory mf = ComponentFactoryFactory.getInstance();
-			userManager = (UserManagerModule)mf.getModule(userManagerAlias);
+			ComponentRepository mf = RepositoryFactory.getInstance();
+			userManager = (UserManagerModule)mf.getComponent(userManagerAlias);
 		}
 		catch (Exception e)
 		{

@@ -33,7 +33,7 @@ package nl.openedge.modules;
 import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.impl.DefaultComponentFactory;
+import nl.openedge.modules.impl.DefaultComponentRepository;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,26 +45,26 @@ import org.jdom.Element;
  * module types
  * @author Eelco Hillenius
  */
-public class ComponentFactoryFactory
+public class RepositoryFactory
 {
 
 	/** class of the default implementation */
-	protected static String _implementingClass = DefaultComponentFactory.class.getName();
+	protected static String _implementingClass = DefaultComponentRepository.class.getName();
 	
 	/** instance of module factory */
-	protected static ComponentFactory moduleFactory = null;
+	protected static ComponentRepository moduleFactory = null;
 
 	/** is the factory factory wasAdded yet? */
 	private static boolean initialized = false;
 	
 	/* logger */
-	private static Log log = LogFactory.getLog(ComponentFactoryFactory.class);
+	private static Log log = LogFactory.getLog(RepositoryFactory.class);
 
 	/**
 	 * get the instance of the module factory
-	 * @return ComponentFactory
+	 * @return ComponentRepository
 	 */
-	public static ComponentFactory getInstance()
+	public static ComponentRepository getInstance()
 	{
 		
 		if(!initialized)
@@ -97,7 +97,7 @@ public class ComponentFactoryFactory
 	}
 	
 	/**
-	 * load/ instantiate the module factory
+	 * load/ instantiate the component repository
 	 * @param factoryNode configuration node
 	 * @param servletContext use null if not in servlet environment
 	 * @throws ComponentLookupException
@@ -107,17 +107,17 @@ public class ComponentFactoryFactory
 					Element factoryNode, ServletContext servletContext) 
 					throws ComponentLookupException, ConfigException
 	{
-		log.info("initializing module factory (" + _implementingClass + ")");
+		log.info("initializing component repository (" + _implementingClass + ")");
 		initialized = true;
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
 		{
-			classLoader = ComponentFactoryFactory.class.getClassLoader();
+			classLoader = RepositoryFactory.class.getClassLoader();
 		}
 		try
 		{
 			Class clazz = classLoader.loadClass(_implementingClass);
-			moduleFactory = (ComponentFactory)clazz.newInstance();
+			moduleFactory = (ComponentRepository)clazz.newInstance();
 			moduleFactory.start(factoryNode, servletContext);
 		}
 		catch(Exception e)

@@ -62,11 +62,11 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			ThrowAwayComponentImpl module1 = (ThrowAwayComponentImpl)
-					componentFactory.getModule("ThrowAwayTest");
+					componentFactory.getComponent("ThrowAwayTest");
 			assertNotNull(module1);
 			
 			ThrowAwayComponentImpl module2 = (ThrowAwayComponentImpl)
-					componentFactory.getModule("ThrowAwayTest");
+					componentFactory.getComponent("ThrowAwayTest");
 			assertNotNull(module2);
 			
 			assertNotSame(module1, module2);
@@ -86,11 +86,11 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			SingletonComponentImpl module1 = (SingletonComponentImpl)
-					componentFactory.getModule("SingletonTest");
+					componentFactory.getComponent("SingletonTest");
 			assertNotNull(module1);
 			
 			SingletonComponentImpl module2 = (SingletonComponentImpl)
-					componentFactory.getModule("SingletonTest");
+					componentFactory.getComponent("SingletonTest");
 			assertNotNull(module2);
 			
 			assertSame(module1, module2);
@@ -110,7 +110,7 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			ConfigurableComponentImpl module = (ConfigurableComponentImpl)
-					componentFactory.getModule("ConfigurableTest");
+					componentFactory.getComponent("ConfigurableTest");
 			assertNotNull(module);
 			
 			assertNotNull(module.getMessage());
@@ -130,7 +130,7 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			BeanComponentImpl module = (BeanComponentImpl)
-					componentFactory.getModule("BeanTest");
+					componentFactory.getComponent("BeanTest");
 			assertNotNull(module);
 
 			assertEquals(module.getMyString(), "test");
@@ -153,12 +153,12 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			ChainedEventCasterComponentImpl module = (ChainedEventCasterComponentImpl)
-					componentFactory.getModule("ChainedEventTest");
+					componentFactory.getComponent("ChainedEventTest");
 			assertNotNull(module);
 
 			// create and add observer
 			ChainedEventObserverImpl observer = (ChainedEventObserverImpl)
-					componentFactory.getModule("ChainedEventTestObserver");
+					componentFactory.getComponent("ChainedEventTestObserver");
 			
 			//module.addObserver(observer);
 			// call method that fires critical event
@@ -201,7 +201,7 @@ public class ComponentsTest extends AbstractTestBase
 	{
 		
 		BlancoComponentImpl module = (BlancoComponentImpl)
-				componentFactory.getModule("BlancoTest");
+				componentFactory.getComponent("BlancoTest");
 		assertNotNull(module);
 	}
 	
@@ -212,7 +212,7 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			SchedulerObserverImpl module = (SchedulerObserverImpl)
-					componentFactory.getModule("SchedulerObserverTest");
+					componentFactory.getComponent("SchedulerObserverTest");
 			assertNotNull(module);
 			assertNotNull(module.getEvt());
 
@@ -231,7 +231,7 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			ComponentsLoadedObserverImpl module = (ComponentsLoadedObserverImpl)
-					componentFactory.getModule("ComponentsLoadedObserverTest");
+					componentFactory.getComponent("ComponentsLoadedObserverTest");
 			assertNotNull(module);
 			assertNotNull(module.getEvt());
 
@@ -250,12 +250,12 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			List mods1 = 
-				componentFactory.getModulesByType(SingletonType.class, false);
+				componentFactory.getComponentsByType(SingletonType.class, false);
 			
 			assertTrue( mods1.size() > 1 );
 			
 			List mods2 =
-				componentFactory.getModulesByType(SingletonComponentImpl.class, false);
+				componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
 				
 			assertTrue( mods2.size() == 1 );
 
@@ -274,7 +274,7 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			DependentComponentImpl module = (DependentComponentImpl)
-				componentFactory.getModule("DependendComponentTest");
+				componentFactory.getComponent("DependendComponentTest");
 				
 			assertNotNull(module.getBeanComponent());
 			
@@ -329,7 +329,7 @@ public class ComponentsTest extends AbstractTestBase
 		public void run()
 		{
 			module1 = (ThreadSingletonComponentImpl)
-				componentFactory.getModule("ThreadSingletonTest");
+				componentFactory.getComponent("ThreadSingletonTest");
 		}
 		
 		public ThreadSingletonComponentImpl getModule1()

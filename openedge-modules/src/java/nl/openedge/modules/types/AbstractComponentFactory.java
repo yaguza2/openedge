@@ -30,42 +30,44 @@
  */
 package nl.openedge.modules.types;
 
-import nl.openedge.modules.ComponentFactory;
+import org.jdom.Element;
+
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * common base for module wrappers
+ * common base for component factories
  * @author Eelco Hillenius
  */
-public abstract class ComponentBuilder
+public abstract class AbstractComponentFactory implements ComponentFactory
 {
 
-	/** class of module */
-	protected Class moduleClass = null;
+	/** class of component */
+	protected Class componentClass = null;
 
-	/** name (alias) of module */
+	/** name (alias) of component */
 	protected String name = null;
 	
-	/** module factory for two way navigation */
-	protected ComponentFactory moduleFactory = null;
+	/** component repository for two way navigation */
+	protected ComponentRepository componentRepository = null;
 
 	/** init commands */
 	private InitCommand[] initCommands = null;
 
 	/**
 	 * construct with class
-	 * @param moduleClass	class of module
+	 * @param componentClass	class of component
 	 */
-	public void setModuleClass(Class moduleClass) throws ConfigException
+	public void setComponentClass(Class componentClass) throws ConfigException
 	{
 		// test first
 		Object instance = null;
 		try
 		{
-			instance = moduleClass.newInstance();
+			instance = componentClass.newInstance();
 		}
 		catch (InstantiationException ex)
 		{
@@ -75,7 +77,7 @@ public abstract class ComponentBuilder
 		{
 			throw new ConfigException(ex);
 		}
-		this.moduleClass = moduleClass;
+		this.componentClass = componentClass;
 	}
 
 	/**
@@ -116,30 +118,30 @@ public abstract class ComponentBuilder
 	}
 
 	/**
-	 * @return Class of module
+	 * @return Class of component
 	 */
-	public Class getModuleClass()
+	public Class getComponentClass()
 	
 	{
-		return moduleClass;
+		return componentClass;
 	}
 	
 	/**
-	 * get module factory
-	 * @return ComponentFactory
+	 * get component factory
+	 * @return ComponentRepository
 	 */
-	public ComponentFactory getModuleFactory()
+	public ComponentRepository getComponentRepository()
 	{
-		return moduleFactory;
+		return componentRepository;
 	}
 
 	/**
-	 * set module factory
-	 * @param factory module factory
+	 * set component factory
+	 * @param factory component factory
 	 */
-	public void setModuleFactory(ComponentFactory factory)
+	public void setComponentRepository(ComponentRepository factory)
 	{
-		moduleFactory = factory;
+		componentRepository = factory;
 	}
 
 	/**
@@ -158,7 +160,22 @@ public abstract class ComponentBuilder
 		this.initCommands = commands;
 	}
 	
-	/** get instantiated module */
-	public abstract Object getModule() throws ComponentLookupException;
+	/**
+	 * set config node
+	 * @param componentNode config node
+	 * @throws ConfigException
+	 */
+	public void setComponentNode(Element componentNode) 
+		throws ConfigException
+	{
+		// nothing by default
+	}
+	
+	/**
+	 * get component instance
+	 * @return instance of component
+	 * @throws ComponentLookupException
+	 */
+	public abstract Object getComponent() throws ComponentLookupException;
 
 }

@@ -30,7 +30,7 @@
  */
 package nl.openedge.modules.test;
 
-import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import nl.openedge.modules.observers.ComponentObserver;
 
@@ -51,8 +51,8 @@ public class ComponentsLoadedObserverImpl implements ComponentObserver
 	{
 		this.evt = evt;
 		
-		ComponentFactory mf = (ComponentFactory)evt.getSource();
-		String[] names = mf.getModuleNames();
+		ComponentRepository mf = (ComponentRepository)evt.getSource();
+		String[] names = mf.getComponentNames();
 		
 	}
 

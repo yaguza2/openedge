@@ -35,8 +35,8 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import nl.openedge.modules.JDOMConfigurator;
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.ComponentFactoryFactory;
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.URLHelper;
 
 /**
@@ -49,7 +49,7 @@ public abstract class AbstractTestBase extends TestCase
 {
 
 	/** access factory */
-	protected static ComponentFactory componentFactory;
+	protected static ComponentRepository componentFactory;
 	protected static boolean initialised = false;
 
 	/** construct */
@@ -88,7 +88,7 @@ public abstract class AbstractTestBase extends TestCase
 						null);
 
 				JDOMConfigurator c = new JDOMConfigurator(url);
-				componentFactory = ComponentFactoryFactory.getInstance();
+				componentFactory = RepositoryFactory.getInstance();
 
 			}
 			catch (Exception e)

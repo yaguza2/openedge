@@ -32,22 +32,77 @@ package nl.openedge.modules.types;
 
 import org.jdom.Element;
 
+import nl.openedge.modules.ComponentLookupException;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.initcommands.InitCommand;
 
 /**
- * Can construct adapters for a certain type
+ * A component factory knows how to construct components of a certain type
  * @author Eelco Hillenius
  */
-public interface BuilderFactory
+public interface ComponentFactory
 {
 	/**
-	 * constructs an adapter for a component
-	 * @param componentName name of component
-	 * @param componentNode xml config node of component
-	 * @return ComponentBuilder
+	 * construct with class
+	 * @param componentClass	class of component
+	 */
+	public void setComponentClass(Class componentClass) throws ConfigException;
+	
+	/**
+	 * gets the name from config
+	 * @return String
+	 */
+	public String getName();
+	
+	/**
+	 * sets the name from config
+	 * @param name	alias for this instance
+	 */
+	public void setName(String name);
+	
+	/**
+	 * get class of the component
+	 * @return Class of component
+	 */
+	public Class getComponentClass();
+	
+	/**
+	 * get component factory
+	 * @return ComponentRepository
+	 */
+	public ComponentRepository getComponentRepository();
+	
+	/**
+	 * set component factory
+	 * @param factory component factory
+	 */
+	public void setComponentRepository(ComponentRepository factory);
+	
+	/**
+	 * get init commands
+	 * @return InitCommand[] array of init commands
+	 */
+	public abstract InitCommand[] getInitCommands();
+	
+	/**
+	 * @param commands array of init commands
+	 */
+	public void setInitCommands(InitCommand[] commands);
+	
+	/**
+	 * get instantiated component 
+	 * @return Object instance
+	 * @throws ComponentLookupException
+	 */
+	public Object getComponent() throws ComponentLookupException;
+	
+	/**
+	 * set config node
+	 * @param componentNode config node
 	 * @throws ConfigException
 	 */
-	public ComponentBuilder constructAdapter(
-		String componentName, Element componentNode)
-		throws ConfigException; 
+	public void setComponentNode(Element componentNode) 
+		throws ConfigException;
+
 }

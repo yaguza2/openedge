@@ -35,7 +35,7 @@ import java.util.List;
 
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.ComponentBuilder;
+import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 import org.apache.commons.logging.Log;
@@ -48,20 +48,32 @@ import org.quartz.JobDataMap;
  * Jobs cannot 
  * @author Eelco Hillenius
  */
-public class JobTypeBuilder extends ComponentBuilder
+public class JobTypeFactory extends AbstractComponentFactory
 {
 
 	private JobDataMap jobData = null;
 	private String group;
 	
 	/* logger */
-	private static Log log = LogFactory.getLog(JobTypeBuilder.class);
+	private static Log log = LogFactory.getLog(JobTypeFactory.class);
+
+	/**
+	 * set config node
+	 * @param componentNode config node
+	 * @throws ConfigException
+	 */
+	public void setComponentNode(Element componentNode) 
+		throws ConfigException
+	{
+
+		initJobData(componentNode);	
+	}
 
 	/**
 	 * @throws ComponentLookupException allways, 
 	 * as you are not allowed to get a direct instance
 	 */
-	public Object getModule() throws ComponentLookupException
+	public Object getComponent() throws ComponentLookupException
 	{
 
 		log.error("getting jobs from the module factory has no effect " +
@@ -123,7 +135,9 @@ public class JobTypeBuilder extends ComponentBuilder
 	public void setInitCommands(InitCommand[] commands)
 	{
 		log.error("\ninitcommands will be ignored for Quartz jobs, as" +
-			" these jobs are managed by Quartz instead of a ComponentFactory\n");
+			" these jobs are managed by Quartz instead of a ComponentRepository\n");
 	}
+	
+
 
 }

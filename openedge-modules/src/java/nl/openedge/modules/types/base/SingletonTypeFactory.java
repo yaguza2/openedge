@@ -28,79 +28,63 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.base;
 
-import java.util.List;
-
-import javax.servlet.ServletContext;
-
+import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ChainedEventObserver;
-import nl.openedge.modules.observers.ComponentFactoryObserver;
-
-
-import org.jdom.Element;
-import org.quartz.Scheduler;
+import nl.openedge.modules.types.AbstractComponentFactory;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * The ComponentFactory constructs and initialises objects.
- * 
+ * wrapper for singleton components
  * @author Eelco Hillenius
  */
-public interface ComponentFactory extends ChainedEventObserver
+public class SingletonTypeFactory extends AbstractComponentFactory
 {
-	
-	/**
-	 * initialize the module factory
-	 * @param factoryNode
-	 * @param servletContext
-	 * @throws ConfigException
-	 */
-	public void start(
-			Element factoryNode, 
-			ServletContext servletContext) 
-			throws ConfigException;
+
+
+	/** the singleton instance */
+	protected Object singletonInstance;
 
 	/**
-	 * add observer of module factory events
-	 * @param observer
+	 * get instance of module
+	 * @return singleton instance
+	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
-	public void addObserver(ComponentFactoryObserver observer);
+	public Object getComponent() throws ComponentLookupException
+	{
+		synchronized(this)
+		{
+			if(this.singletonInstance == null)
+			{
 
-	/**
-	 * remove observer of module factory events
-	 * @param observer
-	 */
-	public void removeObserver(ComponentFactoryObserver observer);
+				try
+				{
+					singletonInstance = componentClass.newInstance();
+					
+					executeInitCommands(singletonInstance);
+				}
+				
+				catch (InstantiationException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+				catch (InitCommandException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+				catch (ConfigException e)
+				{
+					throw new ComponentLookupException(e);
+				}
 
-	/**
-	 * returns instance of module
-	 * can throw ComponentLookupException (runtime exception) if a loading or 
-	 * initialisation error occured or when no module was found stored 
-	 * under the given name
-	 * @param name the name (alias) of module
-	 * @return Object module instance
-	 */
-	public Object getModule(String name);
-	
-	/**
-	 * get all components that are instance of the given type
-	 * @param type the class
-	 * @param exact If true, only exact matches will be returned. If 
-	 * false, superclasses and interfaces will be taken into account
-	 * @return List list of components. Never null, possibly empty
-	 */
-	public List getModulesByType(Class type, boolean exact);
-	
-	/**
-	 * returns all known names
-	 * @return String[] names
-	 */
-	public String[] getModuleNames();
+			}
+		}
+		return singletonInstance;
+	}
 
-	/**
-	 * get the quartz sceduler
-	 * @return Scheduler
-	 */
-	public Scheduler getScheduler();
 }

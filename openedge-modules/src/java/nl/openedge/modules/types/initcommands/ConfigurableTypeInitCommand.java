@@ -32,7 +32,7 @@ package nl.openedge.modules.types.initcommands;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
 /**
@@ -46,12 +46,12 @@ public class ConfigurableTypeInitCommand implements InitCommand
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentFactory moduleFactory)
+		ComponentRepository moduleFactory)
 		throws ConfigException
 	{
 		this.componentNode = componentNode;

@@ -41,13 +41,13 @@ import org.quartz.Job;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventCaster;
 import nl.openedge.modules.observers.ComponentFactoryObserver;
-import nl.openedge.modules.types.base.JobTypeBuilderFactory;
+import nl.openedge.modules.types.base.JobTypeFactory;
 import nl.openedge.modules.types.base.SingletonType;
-import nl.openedge.modules.types.base.SingletonTypeBuilderFactory;
+import nl.openedge.modules.types.base.SingletonTypeFactory;
 import nl.openedge.modules.types.base.ThreadSingletonType;
-import nl.openedge.modules.types.base.ThreadSingletonTypeBuilderFactory;
+import nl.openedge.modules.types.base.ThreadSingletonTypeFactory;
 import nl.openedge.modules.types.base.ThrowAwayType;
-import nl.openedge.modules.types.base.ThrowAwayTypeBuilderFactory;
+import nl.openedge.modules.types.base.ThrowAwayTypeFactory;
 import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
@@ -71,10 +71,10 @@ public class TypesRegistry
 	private static List baseTypes = new ArrayList(3);
 	
 	/*
-	 * Map of adapter factories. Keyed on types, the values
+	 * Map of component factories. Keyed on types, the values
 	 * are instances of BuilderFactory
 	 */
-	private static Map baseTypeAdapterFactories = new HashMap(3);
+	private static Map componentFactories = new HashMap(3);
 	
 	/*
 	 * List of command types (Class). These types can do additional
@@ -93,12 +93,12 @@ public class TypesRegistry
 	private static Map initCommandClasses = new HashMap(2);
 	
 	/*
-	 * the default adapter factory will be used when the 
+	 * the default component factory class will be used when the 
 	 * component is not of a type registered as a base type
 	 * in this registry
 	 */
-	private static BuilderFactory defaultAdapterFactory = 
-		new SingletonTypeBuilderFactory();
+	private static Class defaultComponentFactoryClass = 
+		SingletonTypeFactory.class;
 
 	/*
 	 * set the defaults 
@@ -113,21 +113,21 @@ public class TypesRegistry
 		
 		// and the adapter factories for them
 		
-		baseTypeAdapterFactories.put(
+		componentFactories.put(
 			SingletonType.class, 
-			new SingletonTypeBuilderFactory());
+			SingletonTypeFactory.class);
 			
-		baseTypeAdapterFactories.put(
+		componentFactories.put(
 			ThreadSingletonType.class, 
-			new ThreadSingletonTypeBuilderFactory());
+			ThreadSingletonTypeFactory.class);
 			
-		baseTypeAdapterFactories.put(
+		componentFactories.put(
 			ThrowAwayType.class, 
-			new ThrowAwayTypeBuilderFactory());
+			ThrowAwayTypeFactory.class);
 			
-		baseTypeAdapterFactories.put(
+		componentFactories.put(
 			Job.class, 
-			new JobTypeBuilderFactory());
+			JobTypeFactory.class);
 			
 		
 		// add the default enhancer types
@@ -169,47 +169,79 @@ public class TypesRegistry
 	}
 	
 	/**
-	 * get the default adapter factory that is to be used when 
+	 * get the default component factory that is to be used when 
 	 * components are not of a type registered as a base type
 	 * in this registry
-	 * @return BuilderFactory
+	 * @return ComponentFactory
+	 * @throws RegistryException
 	 */
-	public static BuilderFactory getDefaultAdapterFactory()
+	public static ComponentFactory getDefaultComponentFactory()
+		throws RegistryException
 	{
-		return defaultAdapterFactory;
+		ComponentFactory factory = null;
+		try
+		{
+			factory = (ComponentFactory)
+				defaultComponentFactoryClass.newInstance();
+		}
+		catch (InstantiationException e)
+		{
+			throw new RegistryException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new RegistryException(e);
+		}
+			
+		return factory;
 	}
 
 	/**
-	 * set the default adapter factory that is to be used when 
+	 * set the default adapter factory class that is to be used when 
 	 * components are not of a type registered as a base type
 	 * in this registry
-	 * @param factory the default adapter factory
+	 * @param factoryClass the default component factory
 	 */
-	public static void setDefaultAdapterFactory(BuilderFactory factory)
+	public static void setDefaultComponentFactory(Class factoryClass)
 	{
-		defaultAdapterFactory = factory;
-	}
-
-	/**
-	 * get the adapter factory for the given type
-	 * @param clazz type to get adapter factory for
-	 * @return
-	 */
-	public static BuilderFactory getAdapterFactory(Class clazz)
-	{
-		return (BuilderFactory)baseTypeAdapterFactories.get(clazz);
+		defaultComponentFactoryClass = factoryClass;
 	}
 	
 	/**
-	 * register an adapter factory for the given class
-	 * @param clazz the class
-	 * @param adapterFactory the adapter factory
+	 * get the component factory for the given type
+	 * @param clazz type to get the factory for
+	 * @return ComponentFactory
 	 */
-	public static void registerAdapterFactory(
-		Class clazz, 
-		BuilderFactory adapterFactory)
+	public static ComponentFactory getComponentFactory(Class clazz)
+		throws RegistryException
 	{
-		baseTypeAdapterFactories.put(clazz, adapterFactory);
+		ComponentFactory factory = null;
+		try
+		{
+			Class factoryClass = (Class)componentFactories.get(clazz);
+			factory = (ComponentFactory)factoryClass.newInstance();
+		}
+		catch (InstantiationException e)
+		{
+			throw new RegistryException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new RegistryException(e);
+		}
+		return factory;
+	}
+	
+	/**
+	 * register an component factory class for the given type class
+	 * @param typeClass the class
+	 * @param componentFactoryClass the class of the component factory
+	 */
+	public static void registerComponentFactory(
+		Class typeClass, 
+		Class componentFactoryClass)
+	{
+		componentFactories.put(typeClass, componentFactoryClass);
 	}
 
 	/**

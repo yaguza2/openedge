@@ -28,32 +28,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.base;
-
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.BuilderFactory;
-import nl.openedge.modules.types.ComponentBuilder;
-
-import org.jdom.Element;
+package nl.openedge.modules.types;
 
 /**
- * Factory for Quartz job adapters
+ * will be thrown for exception that occur when using the types registry
  * @author Eelco Hillenius
  */
-public class JobTypeBuilderFactory implements BuilderFactory
+public class RegistryException extends RuntimeException
 {
 
 	/**
-	 * construct a new job adapter
-	 * @see nl.openedge.components.types.BuilderFactory#constructAdapter(java.lang.String, org.jdom.Element)
+	 * 
 	 */
-	public ComponentBuilder constructAdapter(String componentName, Element componentNode)
-		throws ConfigException
+	public RegistryException()
 	{
-		JobTypeBuilder adapter = new JobTypeBuilder();
-		((JobTypeBuilder)adapter).initJobData(componentNode);
-		
-		return adapter;
+		super();
+	}
+
+	/**
+	 * @param message
+	 */
+	public RegistryException(String message)
+	{
+		super(message);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public RegistryException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * @param cause
+	 */
+	public RegistryException(Throwable cause)
+	{
+		super(cause);
 	}
 
 }

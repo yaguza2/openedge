@@ -32,14 +32,14 @@ package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.ComponentBuilder;
+import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for singleton components per Thread
  * @author Eelco Hillenius
  */
-public class ThreadSingletonTypeBuilder extends ComponentBuilder
+public class ThreadSingletonTypeFactory extends AbstractComponentFactory
 {
 	
 	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
@@ -47,9 +47,9 @@ public class ThreadSingletonTypeBuilder extends ComponentBuilder
 	/**
 	 * get instance of module
 	 * @return new instance for each request
-	 * @see nl.openedge.components.ComponentBuilder#getModule()
+	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
-	public Object getModule() throws ComponentLookupException
+	public Object getComponent() throws ComponentLookupException
 	{
 		Object singletonInstance = singletonInstanceHolder.get();
 		
@@ -60,7 +60,7 @@ public class ThreadSingletonTypeBuilder extends ComponentBuilder
 
 				try
 				{
-					singletonInstance = moduleClass.newInstance();
+					singletonInstance = componentClass.newInstance();
 					
 					singletonInstanceHolder.set(singletonInstance);
 					

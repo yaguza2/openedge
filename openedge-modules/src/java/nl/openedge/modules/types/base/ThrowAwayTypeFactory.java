@@ -32,28 +32,27 @@ package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.ComponentBuilder;
+import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for throw away components
  * @author Eelco Hillenius
  */
-public class ThrowAwayTypeBuilder extends ComponentBuilder
+public class ThrowAwayTypeFactory extends AbstractComponentFactory
 {
-
 	/**
 	 * get instance of module
 	 * @return new instance for each request
-	 * @see nl.openedge.components.ComponentBuilder#getModule()
+	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
-	public Object getModule() throws ComponentLookupException
+	public Object getComponent() throws ComponentLookupException
 	{
 
 		Object instance = null;
 		try
 		{
-			instance = moduleClass.newInstance();
+			instance = componentClass.newInstance();
 		}
 		catch (InstantiationException ex)
 		{

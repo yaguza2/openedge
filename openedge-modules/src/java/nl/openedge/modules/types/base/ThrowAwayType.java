@@ -34,7 +34,7 @@ package nl.openedge.modules.types.base;
  * @author Eelco Hillenius
  * 
  * Modules that implement ThrowAwayType will be instantiated for each
- * request on the ComponentFactory  
+ * request on the ComponentRepository  
  */
 public interface ThrowAwayType
 {

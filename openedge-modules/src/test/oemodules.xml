@@ -75,7 +75,7 @@
 		
 		<component name="ThreadSingletonTest" 
 				class="nl.openedge.modules.test.ThreadSingletonComponentImpl"/>
-			
+	
 	</components>
 	
 </components-config>

@@ -46,7 +46,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import nl.openedge.modules.ComponentLookupException;
-import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.observers.ChainedEvent;
@@ -56,10 +56,9 @@ import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import nl.openedge.modules.observers.ComponentObserver;
 import nl.openedge.modules.observers.SchedulerObserver;
 import nl.openedge.modules.observers.SchedulerStartedEvent;
-import nl.openedge.modules.types.BuilderFactory;
-import nl.openedge.modules.types.ComponentBuilder;
+import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.TypesRegistry;
-import nl.openedge.modules.types.base.JobTypeBuilder;
+import nl.openedge.modules.types.base.JobTypeFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -74,11 +73,11 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 
 /**
- * Default implementation of ComponentFactory
+ * Default implementation of ComponentRepository
  * 
  * @author Eelco Hillenius
  */
-public class DefaultComponentFactory implements ComponentFactory
+public class DefaultComponentRepository implements ComponentRepository
 {
 
 	/** logger */
@@ -87,7 +86,7 @@ public class DefaultComponentFactory implements ComponentFactory
 	/** holder for component builders */
 	protected Map components = new HashMap();
 
-	/** holder for component adapters that implement job interface */
+	/** holder for component component factorys that implement job interface */
 	protected Map jobs = new HashMap();
 
 	/** holder for triggers */
@@ -102,7 +101,7 @@ public class DefaultComponentFactory implements ComponentFactory
 	/**
 	 * construct
 	 */
-	public DefaultComponentFactory() 
+	public DefaultComponentRepository() 
 	{
 		// nothing here
 	}
@@ -154,12 +153,12 @@ public class DefaultComponentFactory implements ComponentFactory
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
 		{
-			classLoader = ComponentFactory.class.getClassLoader();
+			classLoader = ComponentRepository.class.getClassLoader();
 		}
 		// get node for components
 		Element componentsNode = factoryNode.getChild("components");
 		// load components into components map
-		loadModules(componentsNode, classLoader);
+		addComponents(componentsNode, classLoader);
 		
 		// test the components first
 		try 
@@ -181,7 +180,7 @@ public class DefaultComponentFactory implements ComponentFactory
 		{
 
 			// load triggers into trigger map
-			this.triggers = getTriggers(schedulerNode, classLoader);
+			this.triggers = addTriggers(schedulerNode, classLoader);
 
 			try
 			{ 
@@ -222,12 +221,12 @@ public class DefaultComponentFactory implements ComponentFactory
 	protected void testModules() throws ComponentLookupException
 	{
 		
-		String[] names = getModuleNames();
+		String[] names = getComponentNames();
 		int size = names.length;
 		
 		for(int i = 0; i < size; i++)
 		{
-			Object o = getModule(names[i]);
+			Object o = getComponent(names[i]);
 			
 			if(log.isDebugEnabled())
 			{
@@ -252,7 +251,7 @@ public class DefaultComponentFactory implements ComponentFactory
 			try
 			{
 				URL urlproploc = URLHelper.convertToURL(
-					proploc, DefaultComponentFactory.class, context);
+					proploc, DefaultComponentRepository.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			}
@@ -296,7 +295,7 @@ public class DefaultComponentFactory implements ComponentFactory
 	 * @return array of maps; first has all components, second has subset of
 	 * components that are jobs
 	 */
-	private Map loadModules(			
+	protected Map addComponents(			
 			Element componentsNode, 
 			ClassLoader classLoader) 
 			throws ConfigException
@@ -326,7 +325,7 @@ public class DefaultComponentFactory implements ComponentFactory
 				throw new ConfigException(cnfe);
 			}
 			
-			addModule(name, clazz, node);
+			addComponent(name, clazz, node);
 
 		}
 		log.info("loading components done");
@@ -340,42 +339,42 @@ public class DefaultComponentFactory implements ComponentFactory
 	 * @param node
 	 * @throws ConfigException
 	 */
-	public void addModule(
+	protected void addComponent(
 		String name, 
 		Class clazz,
 		Element node)
 		throws ConfigException
 	{
-		ComponentBuilder adapter = getAdapter(name, clazz, node);
+		ComponentFactory factory = getComponentFactory(name, clazz, node);
 			
 		// store component
-		components.put(name, adapter);
+		components.put(name, factory);
 			
 		// special case: see if this is a job
 		if(Job.class.isAssignableFrom(clazz))
 		{
-			jobs.put(name, adapter);
+			jobs.put(name, factory);
 		}
 			
 		log.info("addedd " + clazz.getName() + " with name: " + name);
 	}
 	
 	/**
-	 * get the adapter
+	 * get the component factory
 	 * @param name component name
 	 * @param clazz component class
 	 * @param node configuration node
-	 * @return ComponentBuilder
+	 * @return ComponentFactory
 	 * @throws ConfigException
 	 */
-	protected ComponentBuilder getAdapter(
+	protected ComponentFactory getComponentFactory(
 		String name, 
 		Class clazz,
 		Element node)
 		throws ConfigException
 	{
 
-		ComponentBuilder adapter = null;
+		ComponentFactory factory = null;
 		
 		List baseTypes = TypesRegistry.getBaseTypes();
 		if(baseTypes == null)
@@ -398,30 +397,27 @@ public class DefaultComponentFactory implements ComponentFactory
 				}
 				wasFoundOnce = true;
 					
-				BuilderFactory adapterFactory =
-					TypesRegistry.getAdapterFactory(baseType);
-					
-				adapter = adapterFactory.constructAdapter(name, node);
+				factory = TypesRegistry.getComponentFactory(baseType);
 					
 			}
 		}
-		if(adapter == null)
-		{
-			BuilderFactory adapterFactory = 
-				TypesRegistry.getDefaultAdapterFactory();
+		if(factory == null)
+		{		
+			factory = TypesRegistry.getDefaultComponentFactory();
+			
 			log.warn(name + " is not of any know type... using " +
-				adapterFactory + " to construct an adapter");
-					
-			adapter = adapterFactory.constructAdapter(name, node);
+				factory + " as component factory");
 		}
-		adapter.setName(name);
-		adapter.setModuleFactory(this);
-			
-		addInitCommands(adapter, clazz, node);
-			
-		adapter.setModuleClass(clazz);
 		
-		return adapter;		
+		factory.setName(name);
+		factory.setComponentRepository(this);
+		factory.setComponentNode(node);
+			
+		addInitCommands(factory, clazz, node);
+			
+		factory.setComponentClass(clazz);
+		
+		return factory;		
 	}
 	
 	/**
@@ -432,7 +428,7 @@ public class DefaultComponentFactory implements ComponentFactory
 	 * @throws ConfigException
 	 */
 	protected void addInitCommands(
-		ComponentBuilder adapter, 
+		ComponentFactory adapter, 
 		Class clazz,
 		Element node)
 		throws ConfigException
@@ -470,7 +466,7 @@ public class DefaultComponentFactory implements ComponentFactory
 	 * get triggers from config
 	 * @return map of jobs
 	 */
-	protected Map getTriggers(Element schedulerNode, ClassLoader classLoader) 
+	protected Map addTriggers(Element schedulerNode, ClassLoader classLoader) 
 		throws ConfigException
 	{
 
@@ -545,19 +541,19 @@ public class DefaultComponentFactory implements ComponentFactory
 			{
 				throw new ConfigException(triggerName + " is not a registered trigger");
 			}
-			JobTypeBuilder job = (JobTypeBuilder)jobs.get(componentName);
+			JobTypeFactory job = (JobTypeFactory)jobs.get(componentName);
 			if (job == null)
 			{
 				throw new ConfigException(componentName + " is not a component");
 			}
-			if (!Job.class.isAssignableFrom(job.getModuleClass()))
+			if (!Job.class.isAssignableFrom(job.getComponentClass()))
 			{
 				throw new ConfigException(
 					"component " + componentName + " is not a job (does not implement " 
 					+ Job.class.getName() + ")");
 			}
 			JobDetail jobDetail = new JobDetail(
-				job.getName(), job.getGroup(), job.getModuleClass());
+				job.getName(), job.getGroup(), job.getComponentClass());
 			jobDetail.setJobDataMap(job.getJobData());
 			try
 			{ //start schedule job/trigger combination
@@ -580,7 +576,7 @@ public class DefaultComponentFactory implements ComponentFactory
 	 * 	will be of form: ${triggerName}_${jobDetail.getName()}
 	 * @throws SchedulerException
 	 */
-	public String sceduleJob(Trigger trigger, JobDetail jobDetail) 
+	protected String sceduleJob(Trigger trigger, JobDetail jobDetail) 
 		throws SchedulerException
 	{
 		String triggerName = trigger.getName();
@@ -686,22 +682,23 @@ public class DefaultComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * @see nl.openedge.components.ComponentFactory#getModule(java.lang.String)
+	 * @see nl.openedge.components.ComponentRepository#getModule(java.lang.String)
 	 */
-	public Object getModule(String name)
+	public Object getComponent(String name)
 	{
 
-		ComponentBuilder componentBuilder = (ComponentBuilder)components.get(name);
-		if (componentBuilder == null)
+		ComponentFactory componentFactory = 
+			(ComponentFactory)components.get(name);
+		if (componentFactory == null)
 		{
 			throw new ComponentLookupException(
 				"unable to find module with name: " + name);
 		}
-		return componentBuilder.getModule();
+		return componentFactory.getComponent();
 	}
 
 	/**
-	 * @see nl.openedge.components.ComponentFactory#getScheduler()
+	 * @see nl.openedge.components.ComponentRepository#getScheduler()
 	 */
 	public Scheduler getScheduler()
 	{
@@ -709,17 +706,17 @@ public class DefaultComponentFactory implements ComponentFactory
 	}
 	
 	/**
-	 * @see nl.openedge.components.ComponentFactory#getModuleNames()
+	 * @see nl.openedge.components.ComponentRepository#getModuleNames()
 	 */
-	public String[] getModuleNames()
+	public String[] getComponentNames()
 	{
 		return (String[])components.keySet().toArray(new String[components.size()]);
 	}
 	
 	/**
-	 * @see nl.openedge.components.ComponentFactory#getModulesByType(java.lang.Class, boolean)
+	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class, boolean)
 	 */
-	public List getModulesByType(Class type, boolean exact)
+	public List getComponentsByType(Class type, boolean exact)
 	{
 		List sublist = new ArrayList();
 		
@@ -733,10 +730,10 @@ public class DefaultComponentFactory implements ComponentFactory
 			for(Iterator i = components.values().iterator(); i.hasNext(); )
 			{
 		
-				ComponentBuilder adapter = (ComponentBuilder)i.next();
-				if(type.equals(adapter.getModuleClass()))
+				ComponentFactory adapter = (ComponentFactory)i.next();
+				if(type.equals(adapter.getComponentClass()))
 				{
-					sublist.add(getModule(adapter.getName()));
+					sublist.add(getComponent(adapter.getName()));
 				}	
 			}			
 		}
@@ -745,10 +742,10 @@ public class DefaultComponentFactory implements ComponentFactory
 			for(Iterator i = components.values().iterator(); i.hasNext(); )
 			{
 		
-				ComponentBuilder adapter = (ComponentBuilder)i.next();
-				if(type.isAssignableFrom(adapter.getModuleClass()))
+				ComponentFactory adapter = (ComponentFactory)i.next();
+				if(type.isAssignableFrom(adapter.getComponentClass()))
 				{
-					sublist.add(getModule(adapter.getName()));
+					sublist.add(getComponent(adapter.getName()));
 				}
 			}	
 		}

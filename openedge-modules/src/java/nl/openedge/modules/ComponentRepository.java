@@ -28,29 +28,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.base;
+package nl.openedge.modules;
+
+import java.util.List;
+
+import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.BuilderFactory;
-import nl.openedge.modules.types.ComponentBuilder;
+import nl.openedge.modules.observers.ChainedEventObserver;
+import nl.openedge.modules.observers.ComponentFactoryObserver;
+
 
 import org.jdom.Element;
+import org.quartz.Scheduler;
 
 /**
- * Factory for singleton types
+ * The ComponentRepository constructs and initialises objects.
+ * 
  * @author Eelco Hillenius
  */
-public class SingletonTypeBuilderFactory implements BuilderFactory
+public interface ComponentRepository extends ChainedEventObserver
 {
+	
+	/**
+	 * initialize the component repository
+	 * @param factoryNode
+	 * @param servletContext
+	 * @throws ConfigException
+	 */
+	public void start(
+			Element factoryNode, 
+			ServletContext servletContext) 
+			throws ConfigException;
 
 	/**
-	 * Just construct a new singleton adapter
-	 * @see nl.openedge.components.types.BuilderFactory#constructAdapter(java.lang.String, org.jdom.Element)
+	 * add observer of component repository events
+	 * @param observer
 	 */
-	public ComponentBuilder constructAdapter(String componentName, Element componentNode)
-		throws ConfigException
-	{
-		return new SingletonTypeBuilder();
-	}
+	public void addObserver(ComponentFactoryObserver observer);
 
+	/**
+	 * remove observer of component repository events
+	 * @param observer
+	 */
+	public void removeObserver(ComponentFactoryObserver observer);
+
+	/**
+	 * returns instance of component
+	 * can throw ComponentLookupException (runtime exception) if a loading or 
+	 * initialisation error occured or when no component was found stored 
+	 * under the given name
+	 * @param name the name (alias) of component
+	 * @return Object component instance
+	 */
+	public Object getComponent(String name);
+	
+	/**
+	 * get all components that are instance of the given type
+	 * @param type the class
+	 * @param exact If true, only exact matches will be returned. If 
+	 * false, superclasses and interfaces will be taken into account
+	 * @return List list of components. Never null, possibly empty
+	 */
+	public List getComponentsByType(Class type, boolean exact);
+	
+	/**
+	 * returns all known names
+	 * @return String[] names
+	 */
+	public String[] getComponentNames();
+
+	/**
+	 * get the quartz sceduler
+	 * @return Scheduler
+	 */
+	public Scheduler getScheduler();
 }

@@ -37,7 +37,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ComponentsLoadedEvent;
@@ -61,7 +61,7 @@ public class DependentTypeWrapper
 	protected static boolean modulesLoaded = false;
 	
 	/** instance of module factory */
-	protected ComponentFactory moduleFactory = null;
+	protected ComponentRepository moduleFactory = null;
 	
 	/** name of the component */
 	protected String componentName = null;
@@ -131,7 +131,7 @@ public class DependentTypeWrapper
 				}
 				
 				// get module
-				Object gotYa = moduleFactory.getModule(dep.getModuleName());
+				Object gotYa = moduleFactory.getComponent(dep.getModuleName());
 				
 				try
 				{
@@ -209,9 +209,9 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @return ComponentFactory module factory
+	 * @return ComponentRepository module factory
 	 */
-	public ComponentFactory getModuleFactory()
+	public ComponentRepository getModuleFactory()
 	{
 		return moduleFactory;
 	}
@@ -219,7 +219,7 @@ public class DependentTypeWrapper
 	/**
 	 * @param factory module factory
 	 */
-	public void setModuleFactory(ComponentFactory factory)
+	public void setModuleFactory(ComponentRepository factory)
 	{
 		moduleFactory = factory;
 		// register for components loaded event

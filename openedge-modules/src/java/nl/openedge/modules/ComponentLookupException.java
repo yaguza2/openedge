@@ -31,7 +31,7 @@
 package nl.openedge.modules;
 
 /**
- * ModuleExceptions can be thrown when query-ing the ComponentFactory for components. 
+ * ComponentLookupException can be thrown when query-ing the ComponentRepository for components. 
  * 
  * @author Eelco Hillenius
  */
