@@ -105,7 +105,7 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 				catch (HibernateException ex)
 				{
 					ex.printStackTrace();
-					throw new ServletException(ex);
+					//throw new ServletException(ex);
 				}
 			}
 		}
