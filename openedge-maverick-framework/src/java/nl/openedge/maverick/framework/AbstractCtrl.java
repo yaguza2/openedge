@@ -32,7 +32,6 @@ package nl.openedge.maverick.framework;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Locale;
@@ -261,9 +260,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	protected boolean populateWithErrorReport(ControllerContext cctx, 
 								AbstractForm formBean, Map properties)
-		throws NoSuchMethodException, 
-		InvocationTargetException,
-		IllegalAccessException 
 	{
 		
 		// Do nothing unless both arguments have been specified
@@ -294,7 +290,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				{
 					success = setSingleProperty(cctx, formBean, name, value);
 				} 
-				else if(value instanceof String[])
+				else if(value instanceof String[] && ((String[])value).length > 0)
 				{
 					Class type;
 					PropertyDescriptor propertyDescriptor;
@@ -319,7 +315,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}
 					catch (Exception e)
 					{
-						break; 
 						// Property does not exist in target object; ignore 
 					}
 				}
