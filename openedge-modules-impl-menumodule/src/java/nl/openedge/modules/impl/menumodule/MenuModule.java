@@ -86,6 +86,9 @@ public final class MenuModule
 
 	/* logger */
 	private static Log log = LogFactory.getLog(MenuModule.class);
+	/* performance log */
+	private static Log performanceLog = 
+		LogFactory.getLog("nl.openedge.modules.impl.menumodule.performance");
 	
 	/*
 	 * @TODO: zorg ervoor dat nadat sessies zijn verlopen, cache elementen worden verwijderd
@@ -486,7 +489,16 @@ public final class MenuModule
 		Map filterContext)
 	{
 		
+		long tsBegin = System.currentTimeMillis();
+		
 		addFilteredChilds(subject, currentNode, workNode, filterContext, requestScopedFilters);
+		
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("filtering took " + 
+				(tsEnd - tsBegin) + " miliseconds total");
+		}
 	}
 	
 	/* voeg childs to aan worknode voor filter */
@@ -545,8 +557,8 @@ public final class MenuModule
 				// recurse
 				addFilteredChilds(subject, childNode, newWorkNode, filterContext, filters);	
 			}
-			
-		}
+		}		
+		
 	}
 
 	/**
@@ -570,6 +582,9 @@ public final class MenuModule
 		Subject subject, 
 		String currentLink)
 	{
+		
+		long tsBegin = System.currentTimeMillis();
+		
 		if(currentLink == null)
 		{
 			currentLink = "/";
@@ -579,9 +594,25 @@ public final class MenuModule
 		workItem.setLink(currentLink);
 		List[] items = null;
 		
-		TreeModel model = getModelForSubject(subject);
+//		TreeModel model = getModelForSubject(subject);
 		TreeStateCache treeState = getTreeState(subject);
+		
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("got TreeState in " + 
+				(tsEnd - tsBegin) + " miliseconds");
+		}
+		
 		TreePath selection = treeState.findTreePath(workItem);
+		
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("got TreePath selection in " + 
+				(tsEnd - tsBegin) + " miliseconds");
+		}
+		
 		if(selection != null)
 		{
 
@@ -631,11 +662,26 @@ public final class MenuModule
 				}
 			}
 			
+			if(performanceLog.isDebugEnabled())
+			{
+				long tsEnd = System.currentTimeMillis();
+				performanceLog.debug("rendered working copy of tree in " + 
+					(tsEnd - tsBegin) + " miliseconds");
+			}
+			
 		}
 		else
 		{
 			items = new List[0];
 		}
+		
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("building menu tree took " + 
+				(tsEnd - tsBegin) + " miliseconds total");
+		}
+		
 		return items;
 	}
 	
