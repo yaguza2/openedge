@@ -1,6 +1,6 @@
 <project>
     <pomVersion>3</pomVersion>
-    <artifactId>openedge-gaps</artifactId>
+    <id>openedge-gaps</id>
     <name>OpenEdge GAPS</name>
     <groupId>openedge-gaps</groupId>
     <currentVersion>1.0.4</currentVersion>
@@ -11,7 +11,7 @@
     <inceptionYear>2004</inceptionYear>
     <package>nl.openedge.gaps</package>
     <logo>/images/logo.gif</logo>
-    <shortDescription>Generiek Applicatie Parameter Systeem</shortDescription>
+    <shortDescription>Generiek Applicatie Parameter Systeem (GAPS)</shortDescription>
     <repository/>
     <mailingLists>
         <mailingList>
@@ -24,9 +24,18 @@
     <developers>
         <developer>
             <name>Eelco Hillenius</name>
-            <id>eelco12</id>
+            <id>hillenius</id>
             <email>eelco.hillenius@topicus.nl</email>
             <organization>Topicus B.V.</organization>
+            <roles>
+                <role>ontwikkelaar</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Peter Venendaal</name>
+            <id>peterveenendaal</id>
+            <email>peterveenendaal@levob.nl</email>
+            <organization>Levob</organization>
             <roles>
                 <role>ontwikkelaar</role>
             </roles>
@@ -147,8 +156,8 @@
         <dependency>
             <groupId>openedge-util</groupId>
             <artifactId>openedge-util</artifactId>
-            <version>1.2.11</version>
-            <jar>openedge-util-1.2.11.jar</jar>
+            <version>1.2.12</version>
+            <jar>openedge-util-1.2.12.jar</jar>
             <type>jar</type>
             <properties/>
         </dependency>
