@@ -160,6 +160,7 @@ public class AfterValidator extends AbstractFieldValidator
 	/**
 	 * @return true if value is a Date or Calendar and is before before.
 	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
+	 * @throws IllegalArgumentException when value == null.
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
@@ -167,6 +168,10 @@ public class AfterValidator extends AbstractFieldValidator
 		String fieldName,
 		Object value)
 	{
+		if (value == null)
+		{
+			throw new IllegalArgumentException("Null cannot be validated.");
+		}
 		boolean after = false;
 		if (value instanceof Date)
 		{
