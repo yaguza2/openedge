@@ -1476,6 +1476,20 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		}
 		interceptors.add(interceptor);
 	}
+	
+	/**
+	 * add an interceptor to the current list of interceptors at the specified position
+	 * @param index index position where to insert the interceptor
+	 * @param interceptor the interceptor to add to the current list of interceptors
+	 */
+	protected void addInterceptor(int index, Interceptor interceptor)
+	{
+		if(interceptors == null)
+		{
+			interceptors = new ArrayList();
+		}
+		interceptors.add(index, interceptor);
+	}
 
 	
 	/**
