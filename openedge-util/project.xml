@@ -1,446 +1,458 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project>
-    <pomVersion>3</pomVersion>
-    <id>openedge-util</id>
-    <name>OpenEdge Util</name>
-    <groupId>openedge-util</groupId>
-    <currentVersion>1.2.12</currentVersion>
-    <organization>
-        <name>Open Edge</name>
-        <url>http://www.openedge.nl/</url>
-        <logo>http://www.openedge.nl/images/logo.jpg</logo>
-    </organization>
-    <inceptionYear>2003</inceptionYear>
-    <package>nl.openedge.util</package>
+  <pomVersion>3</pomVersion>
+  <id>openedge-util</id>
+  <name>OpenEdge Util</name>
+  <groupId>openedge-util</groupId>
+  <currentVersion>1.2.13</currentVersion>
+  <organization>
+    <name>Open Edge</name>
+    <url>http://www.openedge.nl/</url>
     <logo>http://www.openedge.nl/images/logo.jpg</logo>
-    <description> OpenEdge Utils is a project for reusable classes and 
-        components that are useful enough to share among projects, but are too 
-        small to have their own project </description>
-    <shortDescription>OpenEdge Util: set of reusable classes and 
-        components</shortDescription>
-    <url>http://maven.apache.org/</url>
-    <!-- http://bugs.topicus.nl/bug_view_page.php?bug_id= -->
-    <issueTrackingUrl>http://bugs.topicus.nl/</issueTrackingUrl>
-    <repository>
-        <connection> 
-            scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</connection>
-        <developerConnection> 
-            scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</developerConnection>
-    </repository>
-    <versions>
-        <version>
-            <id>1.2.12</id>
-            <name>1.2.12</name>
-            <tag>B1_2_12</tag>
-        </version>
-        <version>
-            <id>1.2.11</id>
-            <name>1.2.11</name>
-            <tag>B1_2_11</tag>
-        </version>
-        <version>
-            <id>1.2.10</id>
-            <name>1.2.10</name>
-            <tag>B1_2_10</tag>
-        </version>
-        <version>
-            <id>1.2.9</id>
-            <name>1.2.9</name>
-            <tag>B1_2_9</tag>
-        </version>
-        <version>
-            <id>1.2.8</id>
-            <name>1.2.8</name>
-            <tag>B1_2_8c</tag>
-        </version>
-        <version>
-            <id>1.2.7</id>
-            <name>1.2.7</name>
-            <tag>B1_2_7</tag>
-        </version>
-        <version>
-            <id>1.2.6</id>
-            <name>1.2.6</name>
-            <tag>B1_2_6</tag>
-        </version>
-        <version>
-            <id>1.2.5</id>
-            <name>1.2.5</name>
-            <tag>B1_2_5</tag>
-        </version>
-        <version>
-            <id>1.2.4</id>
-            <name>1.2.4</name>
-            <tag>B1_2_4</tag>
-        </version>
-        <version>
-            <id>1.2.3</id>
-            <name>1.2.3</name>
-            <tag>B1_2_3</tag>
-        </version>
-        <version>
-            <id>1.2.2</id>
-            <name>1.2.2</name>
-            <tag>B1_2_2</tag>
-        </version>
-        <version>
-            <id>1.2.1</id>
-            <name>1.2.1</name>
-            <tag>B1_2_1</tag>
-        </version>
-        <version>
-            <id>1.2</id>
-            <name>1.2</name>
-            <tag>B1_2</tag>
-        </version>
-        <version>
-            <id>1.1.6</id>
-            <name>1.1.6</name>
-            <tag>B1_1_6</tag>
-        </version>
-        <version>
-            <id>1.1.5</id>
-            <name>1.1.5</name>
-            <tag>B1_1_5</tag>
-        </version>
-        <version>
-            <id>1.1.2</id>
-            <name>1.1.2</name>
-            <tag>B1_1_2</tag>
-        </version>
-        <version>
-            <id>1.1.1</id>
-            <name>1.1.1</name>
-            <tag>B1_1_1</tag>
-        </version>
-        <version>
-            <id>1.1</id>
-            <name>1.1</name>
-            <tag>B1</tag>
-        </version>
-    </versions>
-    <branches />
-    <mailingLists></mailingLists>
-    <developers>
-        <developer>
-            <name>Eelco Hillenius</name>
-            <id>eelco</id>
-            <email>eelco.hillenius@openedge.nl</email>
-            <organization>Open Edge</organization>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <name>Sander Hofstee</name>
-            <id>sander</id>
-            <email>sander.hofstee@openedge.nl</email>
-            <organization>Open Edge</organization>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <name>Klaasjan Brand</name>
-            <id>kj</id>
-            <email>klaasjan.brand@openedge.nl</email>
-            <organization>Open Edge</organization>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
-    <dependencies>
-        <!-- BEGIN Servlet API -->
-        <dependency>
-            <id>servletapi</id>
-            <version>2.3</version>
-        </dependency>
-        <!-- END Servlet API -->
-        <!-- BEGIN Jakarta Commons -->
-        <dependency>
-            <id>commons-logging</id>
-            <version>1.1-dev</version>
-            <url>http://jakarta.apache.org/commons/logging/</url>
-        </dependency>
-        <dependency>
-            <id>commons-httpclient</id>
-            <version>2.0</version>
-            <url>http://jakarta.apache.org/commons/httpclient/</url>
-        </dependency>
-        <dependency>
-            <id>log4j</id>
-            <version>1.2.8</version>
-            <url>http://jakarta.apache.org/log4j/</url>
-        </dependency>
-        <!-- END Jakarta Commons -->
-        <!-- BEGIN Webapp stuff -->
-        <dependency>
-            <groupId>maverick</groupId>
-            <artifactId>maverick</artifactId>
-            <version>2.2.2</version>
-            <url>http://mav.sourceforge.net/</url>
-        </dependency>
-        <dependency>
-            <groupId>openedge</groupId>
-            <artifactId>baritus</artifactId>
-            <version>1.0.12</version>
-            <url>http://baritus.sourceforge.net</url>
-        </dependency>
-        <dependency>
-            <groupId>ognl</groupId>
-            <artifactId>ognl</artifactId>
-            <version>2.6.5</version>
-            <url>http://ognl.org</url>
-        </dependency>
-        <dependency>
-            <groupId>velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.4</version>
-            <url>http://jakarta.apache.org/velocity/</url>
-        </dependency>
-        <dependency>
-            <groupId>velocity-tools</groupId>
-            <artifactId>velocity-tools</artifactId>
-            <version>1.1</version>
-            <url>http://jakarta.apache.org/velocity/tools/</url>
-        </dependency>
-        <!-- END Webapp stuff -->
-        <!-- BEGIN XML -->
-        <dependency>
-            <id>jdom</id>
-            <version>b8</version>
-            <url>http://www.jdom.org/</url>
-        </dependency>
-        <!-- END XML -->
-        <!-- Begin afhankelijkheden SOAP -->
-        <dependency>
-            <groupId>axis</groupId>
-            <artifactId>axis</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>axis</groupId>
-            <artifactId>saaj</artifactId>
-            <version>1.1</version>
-            <type>jar</type>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>axis</groupId>
-            <artifactId>jaxrpc</artifactId>
-            <version>1.0</version>
-            <url>http://xml.apache.org/axis/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>wsdl4j</groupId>
-            <artifactId>wsdl4j</artifactId>
-            <version>1.4</version>
-            <url> 
-                http://oss.software.ibm.com/developerworks/projects/wsdl4j/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <!-- Einde afhankelijkheden SOAP -->
-        <!-- Begin Hibernate Afhankelijkheden -->
-        <dependency>
-            <groupId>hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>2.1.4</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>0.7</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-full</artifactId>
-            <version>2.0-RC2</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>jta</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>odmg</groupId>
-            <artifactId>odmg</artifactId>
-            <version>3.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.4</version>
-            <type>jar</type>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.0</version>
-            <type>jar</type>
-            <url>http://jakarta.apache.org/commons/lang/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.1</version>
-            <url>http://jakarta.apache.org/commons/dbcp/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <version>1.1</version>
-            <url>http://jakarta.apache.org/commons/pool/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <!-- Einde Hibernate Afhankelijkheden -->
-        <!--
+  </organization>
+  <inceptionYear>2003</inceptionYear>
+  <package>nl.openedge.util</package>
+  <logo>http://www.openedge.nl/images/logo.jpg</logo>
+  <description>OpenEdge Utils is a project for reusable classes and components that are useful enough to share among projects, but are too small to have their own project</description>
+  <shortDescription>OpenEdge Util: set of reusable classes and components</shortDescription>
+  <url>http://maven.apache.org/</url>
+  <!-- http://bugs.topicus.nl/bug_view_page.php?bug_id= -->
+
+  <issueTrackingUrl>http://bugs.topicus.nl/</issueTrackingUrl>
+  <repository>
+    <connection>scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</connection>
+    <developerConnection>scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</developerConnection>
+  </repository>
+  <versions>
+    <version>
+      <id>1.2.12</id>
+      <name>1.2.12</name>
+      <tag>B1_2_12</tag>
+    </version>
+    <version>
+      <id>1.2.11</id>
+      <name>1.2.11</name>
+      <tag>B1_2_11</tag>
+    </version>
+    <version>
+      <id>1.2.10</id>
+      <name>1.2.10</name>
+      <tag>B1_2_10</tag>
+    </version>
+    <version>
+      <id>1.2.9</id>
+      <name>1.2.9</name>
+      <tag>B1_2_9</tag>
+    </version>
+    <version>
+      <id>1.2.8</id>
+      <name>1.2.8</name>
+      <tag>B1_2_8c</tag>
+    </version>
+    <version>
+      <id>1.2.7</id>
+      <name>1.2.7</name>
+      <tag>B1_2_7</tag>
+    </version>
+    <version>
+      <id>1.2.6</id>
+      <name>1.2.6</name>
+      <tag>B1_2_6</tag>
+    </version>
+    <version>
+      <id>1.2.5</id>
+      <name>1.2.5</name>
+      <tag>B1_2_5</tag>
+    </version>
+    <version>
+      <id>1.2.4</id>
+      <name>1.2.4</name>
+      <tag>B1_2_4</tag>
+    </version>
+    <version>
+      <id>1.2.3</id>
+      <name>1.2.3</name>
+      <tag>B1_2_3</tag>
+    </version>
+    <version>
+      <id>1.2.2</id>
+      <name>1.2.2</name>
+      <tag>B1_2_2</tag>
+    </version>
+    <version>
+      <id>1.2.1</id>
+      <name>1.2.1</name>
+      <tag>B1_2_1</tag>
+    </version>
+    <version>
+      <id>1.2</id>
+      <name>1.2</name>
+      <tag>B1_2</tag>
+    </version>
+    <version>
+      <id>1.1.6</id>
+      <name>1.1.6</name>
+      <tag>B1_1_6</tag>
+    </version>
+    <version>
+      <id>1.1.5</id>
+      <name>1.1.5</name>
+      <tag>B1_1_5</tag>
+    </version>
+    <version>
+      <id>1.1.2</id>
+      <name>1.1.2</name>
+      <tag>B1_1_2</tag>
+    </version>
+    <version>
+      <id>1.1.1</id>
+      <name>1.1.1</name>
+      <tag>B1_1_1</tag>
+    </version>
+    <version>
+      <id>1.1</id>
+      <name>1.1</name>
+      <tag>B1</tag>
+    </version>
+    <version>
+      <id>1.2.13</id>
+      <name>1.2.13</name>
+      <tag>B1_2_13</tag>
+    </version>
+  </versions>
+  <branches/>
+  <mailingLists/>
+  <developers>
+    <developer>
+      <name>Eelco Hillenius</name>
+      <id>eelco</id>
+      <email>eelco.hillenius@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Sander Hofstee</name>
+      <id>sander</id>
+      <email>sander.hofstee@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Klaasjan Brand</name>
+      <id>kj</id>
+      <email>klaasjan.brand@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+  <dependencies>
+    <!-- BEGIN Servlet API -->
+
+    <dependency>
+      <id>servletapi</id>
+      <version>2.3</version>
+    </dependency>
+    <!-- END Servlet API -->
+    <!-- BEGIN Jakarta Commons -->
+
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.1-dev</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+    </dependency>
+    <dependency>
+      <id>commons-httpclient</id>
+      <version>2.0</version>
+      <url>http://jakarta.apache.org/commons/httpclient/</url>
+    </dependency>
+    <dependency>
+      <id>log4j</id>
+      <version>1.2.8</version>
+      <url>http://jakarta.apache.org/log4j/</url>
+    </dependency>
+    <!-- END Jakarta Commons -->
+    <!-- BEGIN Webapp stuff -->
+
+    <dependency>
+      <groupId>maverick</groupId>
+      <artifactId>maverick</artifactId>
+      <version>2.2.2</version>
+      <url>http://mav.sourceforge.net/</url>
+    </dependency>
+    <dependency>
+      <groupId>openedge</groupId>
+      <artifactId>baritus</artifactId>
+      <version>1.0.12</version>
+      <url>http://baritus.sourceforge.net</url>
+    </dependency>
+    <dependency>
+      <groupId>ognl</groupId>
+      <artifactId>ognl</artifactId>
+      <version>2.6.5</version>
+      <url>http://ognl.org</url>
+    </dependency>
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.4</version>
+      <url>http://jakarta.apache.org/velocity/</url>
+    </dependency>
+    <dependency>
+      <groupId>velocity-tools</groupId>
+      <artifactId>velocity-tools</artifactId>
+      <version>1.1</version>
+      <url>http://jakarta.apache.org/velocity/tools/</url>
+    </dependency>
+    <!-- END Webapp stuff -->
+    <!-- BEGIN XML -->
+
+    <dependency>
+      <id>jdom</id>
+      <version>b8</version>
+      <url>http://www.jdom.org/</url>
+    </dependency>
+    <!-- END XML -->
+    <!-- Begin afhankelijkheden SOAP -->
+
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.1</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>saaj</artifactId>
+      <version>1.1</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>jaxrpc</artifactId>
+      <version>1.0</version>
+      <url>http://xml.apache.org/axis/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>wsdl4j</groupId>
+      <artifactId>wsdl4j</artifactId>
+      <version>1.4</version>
+      <url>http://oss.software.ibm.com/developerworks/projects/wsdl4j/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <!-- Einde afhankelijkheden SOAP -->
+    <!-- Begin Hibernate Afhankelijkheden -->
+
+    <dependency>
+      <groupId>hibernate</groupId>
+      <artifactId>hibernate</artifactId>
+      <version>2.1.4</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>0.7</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-full</artifactId>
+      <version>2.0-RC2</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>jta</groupId>
+      <artifactId>jta</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>odmg</groupId>
+      <artifactId>odmg</artifactId>
+      <version>3.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.4</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <url>http://jakarta.apache.org/commons/lang/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <version>1.1</version>
+      <url>http://jakarta.apache.org/commons/dbcp/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-pool</groupId>
+      <artifactId>commons-pool</artifactId>
+      <version>1.1</version>
+      <url>http://jakarta.apache.org/commons/pool/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <!-- Einde Hibernate Afhankelijkheden -->
+    <!--
 			Util class voor generieke JavaBean populatie
 		-->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.6.1</version>
-            <url>http://jakarta.apache.org/commons/beanutils/</url>
-            <properties>
-                <war.bundle>true</war.bundle>
-            </properties>
-        </dependency>
-        <!--
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.6.1</version>
+      <url>http://jakarta.apache.org/commons/beanutils/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <!--
 	        Begin Mock objects
 	    -->
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-core</artifactId>
-            <version>0.09</version>
-            <url>http://www.mockobjects.com/</url>
-        </dependency>
-        <dependency>
-            <groupId>mockobjects</groupId>
-            <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
-            <version>0.09</version>
-            <url>http://www.mockobjects.com/</url>
-        </dependency>
-        <dependency>
-            <groupId>easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>1.0.1b</version>
-            <type>jar</type>
-            <properties>
-                <war.bundle>false</war.bundle>
-            </properties>
-        </dependency>
-        <!--
+
+    <dependency>
+      <groupId>mockobjects</groupId>
+      <artifactId>mockobjects-core</artifactId>
+      <version>0.09</version>
+      <url>http://www.mockobjects.com/</url>
+    </dependency>
+    <dependency>
+      <groupId>mockobjects</groupId>
+      <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
+      <version>0.09</version>
+      <url>http://www.mockobjects.com/</url>
+    </dependency>
+    <dependency>
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>1.0.1b</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>false</war.bundle>
+      </properties>
+    </dependency>
+    <!--
 	        End Mock objects
 	    -->
-        <!-- 
+    <!-- 
 			Begin Jetty Dependencies
 		-->
-        <dependency>
-            <groupId>jetty</groupId>
-            <artifactId>jetty-plus-all</artifactId>
-            <version>4.2.19</version>
-            <url>http://www.mortbay.com</url>
-        </dependency>
-        <!-- 
+
+    <dependency>
+      <groupId>jetty</groupId>
+      <artifactId>jetty-plus-all</artifactId>
+      <version>4.2.19</version>
+      <url>http://www.mortbay.com</url>
+    </dependency>
+    <!-- 
 			End Jetty Dependencies
 		-->
-        <!--
+    <!--
 			Database zaken
 		-->
-        <dependency>
-            <groupId>hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>1.7.1</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
-    <build>
-        <nagEmailAddress>info@openedge.nl</nagEmailAddress>
-        <sourceDirectory>src/java</sourceDirectory>
-        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
-        <unitTest>
-            <includes>
-                <include>**/*Test.java</include>
-            </includes>
-            <resources>
-                <resource>
-                    <directory>${basedir}/src/test</directory>
-                    <includes>
-                        <include>**/*.properties</include>
-                        <include>**/*.xml</include>
-                        <include>**/*.xsd</include>
-                        <include>**/*.dtd</include>
-                        <include>**/*.vm</include>
-                        <include>**/*.config</include>
-                        <include>**/*.cfg</include>
-                        <include>**/*.policy</include>
-                    </includes>
-                </resource>
-            </resources>
-        </unitTest>
-        <resources>
-            <resource>
-                <directory>${basedir}/src/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.xsd</include>
-                    <include>**/*.dtd</include>
-                    <include>**/*.vm</include>
-                    <include>**/*.config</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
-    <!-- Hierna is gedefinieerd welke rapportages aan staan -->
-    <reports>
-        <report>maven-changes-plugin</report>
-        <report>maven-checkstyle-plugin</report>
-        <report>maven-javadoc-plugin</report>
-        <report>maven-jcoverage-plugin</report>
-        <report>maven-junit-report-plugin</report>
-        <report>maven-jxr-plugin</report>
-        <report>maven-linkcheck-plugin</report>
-        <report>maven-tasklist-plugin</report>
-    </reports>
-    <!--
+
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.7.1</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <nagEmailAddress>info@openedge.nl</nagEmailAddress>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <resources>
+        <resource>
+          <directory>${basedir}/src/test</directory>
+          <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+            <include>**/*.xsd</include>
+            <include>**/*.dtd</include>
+            <include>**/*.vm</include>
+            <include>**/*.config</include>
+            <include>**/*.cfg</include>
+            <include>**/*.policy</include>
+          </includes>
+        </resource>
+      </resources>
+    </unitTest>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/java</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+          <include>**/*.xsd</include>
+          <include>**/*.dtd</include>
+          <include>**/*.vm</include>
+          <include>**/*.config</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+  <!-- Hierna is gedefinieerd welke rapportages aan staan -->
+
+  <reports>
+    <report>maven-changes-plugin</report>
+    <report>maven-checkstyle-plugin</report>
+    <report>maven-javadoc-plugin</report>
+    <report>maven-jcoverage-plugin</report>
+    <report>maven-junit-report-plugin</report>
+    <report>maven-jxr-plugin</report>
+    <report>maven-linkcheck-plugin</report>
+    <report>maven-tasklist-plugin</report>
+  </reports>
+  <!--
 		<report>maven-changelog-plugin</report>
 		<report>maven-developer-activity-plugin</report>
 		<report>maven-file-activity-plugin</report>
@@ -470,4 +482,5 @@
 		<report>maven-developer-activity-plugin</report>
 		<report>maven-file-activity-plugin</report>
 -->
+
 </project>
