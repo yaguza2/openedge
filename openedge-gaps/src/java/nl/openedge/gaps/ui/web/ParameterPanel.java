@@ -19,6 +19,7 @@ import java.util.Map;
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameter;
+import nl.openedge.gaps.support.ParameterBuilder;
 
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
@@ -38,6 +39,9 @@ import com.voicetribe.wicket.markup.html.table.Table;
  */
 public class ParameterPanel extends Panel
 {
+    /** de huidige parametergroep. */
+    private ParameterGroup group;
+
     /**
      * Construct.
      * @param componentName
@@ -46,6 +50,7 @@ public class ParameterPanel extends Panel
     public ParameterPanel(String componentName, ParameterGroup group)
     {
         super(componentName);
+        this.group = group;
         addParamComponents(group); // voeg de componenten toe
     }
 
@@ -130,13 +135,19 @@ public class ParameterPanel extends Panel
     /**
      * Form voor toevoegen parameters.
      */
-    private static class NewParameterForm extends Form
+    private class NewParameterForm extends Form
     {
         /** checkbox input voor value. */
         private CheckBox checkbox;
 
         /** text input voor value. */
         private TextField input;
+
+        /** text input voor naam. */
+        private TextField nameInput;
+
+        /** choice component. */
+        private TypeChoice typeChoice;
 
         /**
          * Construct.
@@ -147,11 +158,14 @@ public class ParameterPanel extends Panel
                 IValidationErrorHandler validationErrorHandler)
         {
             super(name, validationErrorHandler);
+            nameInput = new TextField("name", "");
+            add(nameInput);
             List typeChoiceModel = new ArrayList();
             typeChoiceModel.add("tekst");
             typeChoiceModel.add("numeriek");
             typeChoiceModel.add("logisch");
-            add(new TypeChoice("typeChoice", "", typeChoiceModel));
+            typeChoice = new TypeChoice("typeChoice", "", typeChoiceModel);
+            add(typeChoice);
             // voeg verschillende inputs toe. Uiteindelijk zal er 1 visible zijn
             checkbox = new CheckBox("checkbox", new Boolean(false));
             add(checkbox);
@@ -183,8 +197,24 @@ public class ParameterPanel extends Panel
          */
         public void handleSubmit(RequestCycle cycle)
         {
-            // op dit moment handelen de specifieke models achter de input
-            // velden alles af.
+            ParameterBuilder builder = new ParameterBuilder();
+            builder.setParameterGroup(group);
+            String type = (String)typeChoice.getModelObject();
+            String name = (String)nameInput.getModelObject();
+            
+            //TODO even kort door de bocht voor nu, doe dit netter
+            if("logisch".equals(type))
+            {
+                //builder.createBoolean(name, null);
+            }
+            else if("logisch".equals(type))
+            {
+                
+            }
+            else if("logisch".equals(type))
+            {
+                
+            } 
         }
 
         private class TypeChoice extends DropDownChoice implements IOnChangeListener
