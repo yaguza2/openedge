@@ -308,12 +308,36 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 		<title>ExecutionParams</title>
 		
 		<para>
-			ExecutionParams can used to tune the flow of execution. Every controller instance has
-			a private reference to its own instance of ExectionParams. You can get this instance
-			by calling method getExecutionParams. If you tune the exection parameters in
-			the controller constructor or in method init, all subsequent calls to the controller
-			will be influenced by the changed parameters. For more fine grained controll, you
-			can decide to override method getExectionParams instead of using the instance variable.
+			ExecutionParams can used to tune the flow of execution. 
+			The execution params can be tuned just for the local request, or for all subsequent requests handled
+			by the current controller.
+		</para>
+			
+		<para>
+			If you want to tune just for the current request, you can get a working
+			copy by calling 'getExecutionParams(cctx);', where cctx is the instance of the ControllerContext. If you
+			pass null instead of cctx, you will allways get a new copy, otherwise you will get the save params for
+			the current request. So, with chained controlls, the excecution params will be reused for the whole
+			server side processing. Thus, if control A chains control B (e.g. A has view '/to-b.m'), and A changes
+			the execution params, these changed params will be used when executing control B this request.
+		</para>
+		
+		<para>
+			If you want to fix/ change the execution parameters for all subsequent requests, you have to
+			call fixExecutionParams(params) in your control. For example:
+        <programlisting><![CDATA[
+public void init(Element controllerNode) throws ConfigException
+{			
+  ExecutionParams params = getExecutionParams(null);
+  params.setIncludeRequestAttributes(true);
+  fixExecutionParams(params);
+}
+]]></programlisting>
+		</para>
+			
+		<para>
+			For additional fine grained control, you can decide to override method getExectionParams 
+			instead of using the copy and the fix method.
 		</para>
 		
 		<sect2 id="using-s4a">
@@ -393,6 +417,26 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 					   of the population/ validation failure.
 	                </para>
 	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>strictPopulationMode</literal> (default: true).
+						When an unexpected error occurs, should that be interpreted as a failure,
+						or should it just be ignored. E.g. If you have request parameter
+						not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
+						In strict mode, this will have the effect that the population process is
+						marked as failed. If not in strict mode, the exception will be ignored.
+	                </para>
+	            </listitem>				
+		            <listitem>
+	                <para>
+	                   <literal>trimStringInputValues</literal> (default: true).
+						Whether string input values should be trimmed before conversion.
+						Note that the actual trimming depends on the used populator, so
+						setting this parameter does not garantee trimming for all parameters.
+	                </para>
+	            </listitem>					
+				
+				
 			</itemizedlist>
 		</sect2>
 		
