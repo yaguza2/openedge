@@ -19,6 +19,7 @@ import nl.openedge.gaps.support.ParameterBrowser;
 
 import com.voicetribe.util.collections.MicroMap;
 import com.voicetribe.wicket.RequestCycle;
+import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.panel.Panel;
@@ -30,11 +31,20 @@ import com.voicetribe.wicket.markup.html.table.Table;
  */
 public class GroupPanel extends Panel
 {
+    /** panel voor structuurgroepen. */
+    private final HtmlContainer sGroupPanel;
+
+    /** panel voor parametergroepen. */
+    private final HtmlContainer pGroupPanel;
+
     /** structuurgroep tabel. */
     private final SGroupTable sGroupTable;
 
     /** structuurgroep navigatie tabel. */
     private final SGroupPathNavigationTable sGroupPathNavTable;
+
+    /** parametergroep tabel. */
+    private final PGroupTable pGroupTable;
 
     /** parameter browser. */
     private final ParameterBrowser browser = new ParameterBrowser();
@@ -46,16 +56,26 @@ public class GroupPanel extends Panel
     public GroupPanel(String componentName, StructuralGroup group)
     {
         super(componentName);
-	    sGroupTable = new SGroupTable("structuralGroupChilds", group);
-	    add(sGroupTable);
+
 	    sGroupPathNavTable = new SGroupPathNavigationTable("structuralGroupPathNav", group);
 	    add(sGroupPathNavTable);
+
+	    sGroupPanel = new HtmlContainer("structGroupPanel");
+	    sGroupTable = new SGroupTable("structuralGroupChilds", group);
+	    sGroupPanel.add(sGroupTable);
+	    add(sGroupPanel);
+
+	    pGroupPanel = new HtmlContainer("paramGroupPanel");
+	    pGroupTable = new PGroupTable("parameterGroupChilds", group);
+	    pGroupPanel.add(pGroupTable);
+	    add(pGroupPanel);
     }
 
     /**
-     * @see nl.openedge.gaps.ui.web.SGroupSelectedListener#groupSelected(nl.openedge.gaps.ui.web.SGroupSelectedEvent)
+     * Selecteer een structuurgroep.
+     * @param expr gapspath expressie
      */
-    private void selectGroup(String expr)
+    private void selectStructuralGroup(String expr)
     {
        Object result = browser.evaluate(expr);
        if(!(result instanceof StructuralGroup))
@@ -65,6 +85,22 @@ public class GroupPanel extends Panel
        StructuralGroup group = (StructuralGroup)result;
        sGroupTable.setCurrentGroup(group);
        sGroupPathNavTable.setCurrentGroup(group);
+       pGroupTable.setCurrentGroup(group);
+    }
+
+    /**
+     * Selecteer een parametergroep.
+     * @param expr gapspath expressie
+     */
+    private void selectParameterGroup(String expr)
+    {
+       Object result = browser.evaluate(expr);
+       if(!(result instanceof ParameterGroup))
+       {
+           throw new RuntimeException(result + " is geen structuurgroep");
+       }
+       ParameterGroup group = (ParameterGroup)result;
+       //TODO invullen
     }
 
     /**
@@ -94,7 +130,7 @@ public class GroupPanel extends Panel
 
     	        public void linkClicked(RequestCycle cycle)
     	        {
-    	            selectGroup(group.getId());
+    	            selectStructuralGroup(group.getId());
     	        }
     		    
     		};
@@ -151,7 +187,7 @@ public class GroupPanel extends Panel
 
     	        public void linkClicked(RequestCycle cycle)
     	        {
-    	            selectGroup(group.getId());
+    	            selectStructuralGroup(group.getId());
     	        }
     		    
     		};
@@ -207,7 +243,7 @@ public class GroupPanel extends Panel
 
     	        public void linkClicked(RequestCycle cycle)
     	        {
-    	            selectGroup(group.getId());
+    	            selectStructuralGroup(group.getId());
     	        }
     		    
     		};
