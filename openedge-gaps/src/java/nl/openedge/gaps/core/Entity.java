@@ -24,7 +24,7 @@ public abstract class Entity implements Cloneable, Serializable
 {
 
 	/** versie van de entiteit. */
-	private Version version;
+	private Version version; 
 
 	/** de globaal unieke identifier voor deze entiteit. */
 	private String id;
