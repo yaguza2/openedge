@@ -40,8 +40,8 @@ import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.panel.Panel;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Panel voor parameters.
@@ -324,7 +324,7 @@ public class ParameterPanel extends Panel
     /**
      * Table voor niet-geneste parameters.
      */
-    private class PlainParameterTable extends Table
+    private class PlainParameterTable extends ListView
     {
         /**
          * Construct.
@@ -339,7 +339,7 @@ public class ParameterPanel extends Panel
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem cell)
         {
             final Parameter parameter = (Parameter)cell.getModelObject();
     		cell.add(new Label("name", parameter.getLocalId()));
@@ -390,7 +390,7 @@ public class ParameterPanel extends Panel
     /**
      * Table voor de parameter onderdelen.
      */
-    private static class NestedParametersOuterTable extends Table
+    private static class NestedParametersOuterTable extends ListView
     {
         /**
          * Construct.
@@ -405,7 +405,7 @@ public class ParameterPanel extends Panel
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem cell)
         {
             NestedParametersWrapper wrapper =
                 (NestedParametersWrapper)cell.getModelObject();
@@ -425,7 +425,7 @@ public class ParameterPanel extends Panel
          * UITGANGSPUNT is dat de rijen netjes zijn gegroepeerd, en dat we zodoende
          * gewoon de eerste rij kunnen pakken voor de kolomnamen.
          */
-        private static class NestedParameterHeaderTable extends Table
+        private static class NestedParameterHeaderTable extends ListView
         {
             /**
              * Construct.
@@ -440,7 +440,7 @@ public class ParameterPanel extends Panel
             /**
              * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
              */
-            protected void populateCell(Cell cell)
+            protected void populateItem(ListItem cell)
             {
                 Parameter parameter = (Parameter)cell.getModelObject();
                 cell.add(new Label("columnName", parameter.getLocalId()));
@@ -450,7 +450,7 @@ public class ParameterPanel extends Panel
         /**
          * Table voor geneste parameters.
          */
-        private static class NestedParameterTable extends Table
+        private static class NestedParameterTable extends ListView
         {
             /**
              * Construct.
@@ -465,7 +465,7 @@ public class ParameterPanel extends Panel
             /**
              * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
              */
-            protected void populateCell(Cell cell)
+            protected void populateItem(ListItem cell)
             {
                 NestedParameter parameter = (NestedParameter)cell.getModelObject();
                 List nestedModel = Arrays.asList(parameter.getNested());
@@ -477,7 +477,7 @@ public class ParameterPanel extends Panel
              * Table voor een rij/ geneste parameter waarbij een cell overeenkomt
              * met een geneste parameter. 
              */
-            private static class NestedParameterRowTable extends Table
+            private static class NestedParameterRowTable extends ListView
             {
                 /**
                  * Construct.
@@ -492,7 +492,7 @@ public class ParameterPanel extends Panel
                 /**
                  * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
                  */
-                protected void populateCell(Cell cell)
+                protected void populateItem(ListItem cell)
                 {
                     Parameter parameter = (Parameter)cell.getModelObject();
                     //cell.add(new TextField("value", new ParameterModel(parameter)));

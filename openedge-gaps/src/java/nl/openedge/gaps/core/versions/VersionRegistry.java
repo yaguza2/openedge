@@ -10,7 +10,6 @@ import java.util.Date;
 
 import nl.openedge.gaps.core.Entity;
 import nl.openedge.gaps.core.NotFoundException;
-import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.versions.impl.DefaultVersionRegistryDelegate;
 
 /**

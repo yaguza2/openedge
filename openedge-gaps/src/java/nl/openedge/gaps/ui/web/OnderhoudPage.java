@@ -23,8 +23,8 @@ import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
 import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * De GAPS onderhoud pagina.
@@ -105,7 +105,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
     /**
      * Tabel voor pad navigatie.
      */
-    class SGroupPathNavigationTable extends Table
+    class SGroupPathNavigationTable extends ListView
     {
         /**
          * Construct.
@@ -121,7 +121,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem cell)
         {
     		final StructuralGroup group = (StructuralGroup)cell.getModelObject();
     		Link actionLinkLocalId =

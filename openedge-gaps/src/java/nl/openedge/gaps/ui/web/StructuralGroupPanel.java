@@ -20,8 +20,8 @@ import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.panel.Panel;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Panel voor groepen.
@@ -67,7 +67,7 @@ public class StructuralGroupPanel extends Panel
     /**
      * Table voor structurele groepen.
      */
-    private static class SGroupTable extends Table
+    private static class SGroupTable extends ListView
     {
         /**
          * Construct.
@@ -82,7 +82,7 @@ public class StructuralGroupPanel extends Panel
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem cell)
         {
     		final StructuralGroup group = (StructuralGroup)cell.getModelObject();
     		cell.add(new Label("description", group.getDescription()));

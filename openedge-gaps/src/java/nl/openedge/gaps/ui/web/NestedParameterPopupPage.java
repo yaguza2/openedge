@@ -27,8 +27,8 @@ import com.voicetribe.wicket.markup.MarkupStream;
 import com.voicetribe.wicket.markup.html.HtmlComponent;
 import com.voicetribe.wicket.markup.html.HtmlPage;
 import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.Cell;
-import com.voicetribe.wicket.markup.html.table.Table;
+import com.voicetribe.wicket.markup.html.table.ListItem;
+import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Pagina voor geneste parameters.
@@ -109,7 +109,7 @@ public final class NestedParameterPopupPage extends HtmlPage
      * UITGANGSPUNT is dat de rijen netjes zijn gegroepeerd, en dat we zodoende
      * gewoon de eerste rij kunnen pakken voor de kolomnamen.
      */
-    private static class NestedParameterHeaderTable extends Table
+    private static class NestedParameterHeaderTable extends ListView
     {
         /**
          * Construct.
@@ -124,7 +124,7 @@ public final class NestedParameterPopupPage extends HtmlPage
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem cell)
         {
             Parameter parameter = (Parameter)cell.getModelObject();
             cell.add(new Label("columnName", parameter.getLocalId()));
@@ -134,7 +134,7 @@ public final class NestedParameterPopupPage extends HtmlPage
     /**
      * Table voor geneste parameters.
      */
-    private class NestedParameterTable extends Table
+    private class NestedParameterTable extends ListView
     {
         /**
          * Construct.
@@ -149,7 +149,7 @@ public final class NestedParameterPopupPage extends HtmlPage
         /**
          * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
          */
-        protected void populateCell(Cell cell)
+        protected void populateItem(ListItem cell)
         {
             NestedParameter parameter = (NestedParameter)cell.getModelObject();
             cell.add(new Label("name", parameter.getLocalId()));
