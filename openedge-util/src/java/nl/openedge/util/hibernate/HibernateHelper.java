@@ -35,6 +35,7 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
@@ -55,6 +56,13 @@ public abstract class HibernateHelper
 	public final static int ACTION_DISCONNECT = 2;
 
 	private static Log log = LogFactory.getLog(HibernateHelper.class);
+	
+	/**
+	 * The FlushMode for the Hibernate session default COMMIT,
+	 * see Hibernate documentation for other values.
+	 * 
+	 */
+	private static FlushMode flushMode = FlushMode.COMMIT;
 	
 	/**
 	 * config url
@@ -117,8 +125,9 @@ public abstract class HibernateHelper
 
 			sess = factory.openSession();
 			hibernateHolder.set(sess);
+			sess.setFlushMode(flushMode);
 		}
-
+		
 		return sess;
 	}
 	
@@ -241,6 +250,25 @@ public abstract class HibernateHelper
 	public static Configuration getConfiguration()
 	{
 		return configuration;
+	}
+	
+	/**
+	 * Sets the FlushMode used for the session. Default FlushMode.COMMIT
+	 * See the Hibernate documentation on different FlushModes.
+	 * @param mode the new FlushMode.
+	 */
+	public static void setFlushMode(FlushMode mode)
+	{
+		flushMode = mode;
+	}
+	
+	/**
+	 * Return the current FlushMode.
+	 * @return
+	 */
+	public static FlushMode getFlushMode()
+	{
+		return flushMode;
 	}
 
 }
