@@ -286,6 +286,7 @@ public class AccessFactory {
 	protected UserManager loadUserManager(Element configNode) 
 				throws ConfigException {
 	
+		if(configNode == null) return null;
 		UserManager manager = null;
 		String managerCls = XML.getValue(configNode, "class");
 		try {
