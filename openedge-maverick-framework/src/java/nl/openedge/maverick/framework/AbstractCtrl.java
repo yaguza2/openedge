@@ -30,8 +30,10 @@
  */
 package nl.openedge.maverick.framework;
 
+import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,10 +61,9 @@ import nl.openedge.maverick.framework.validation.*;
 
 import org.jdom.Element;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
@@ -108,6 +109,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 
 	/** Common name for the "redirect" view */
 	public static final String REDIRECT = "doredirect";
+	
+	public static final String SESSION_KEY_CURRENT_LOCALE = "_currentLocale";
 	
 	/** log for this class */
 	private static Log log = LogFactory.getLog(AbstractCtrl.class);
@@ -155,12 +158,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected MultiMap fieldValidators = null;
 	
 	/**
-	 * subclasses can register converters for custom conversion from string (currentRequest parameter)
-	 * to other types
-	 * registering a converter for a field will override the default (BeanUtils) conversion
-	 * 
+	 * Subclasses can register custom populators that override the default population
+	 * process for a given property. Custom populators are stored by name of the property. 
 	 */
-	protected Map fieldConverters = null;
+	protected Map fieldPopulators = null;
 	
 	/**
 	 * subclasses can register formValidators for custom validation on form level
@@ -279,6 +280,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 
 			cctx.setModel(formBean);
 			Locale locale = getLocaleForRequest(cctx, formBean);
+			formBean.setCurrentLocale(locale);
 			
 			// populate form
 			boolean populated = populateForm(cctx, formBean, locale);
@@ -406,6 +408,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	/**
 	 * get the prefered locale for this currentRequest
+	 * IF a user is set in the form, the preferedLocale will be checked for this user.
+	 * IF a locale is found as an attribute in the session with key 
+	 * 		SESSION_KEY_CURRENT_LOCALE, the previous found locale(s) 
+	 * 		will be replaced with this value
 	 * @param cctx controller context
 	 * @param form current form
 	 * @return Locale the prefered locale
@@ -413,6 +419,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected Locale getLocaleForRequest(ControllerContext cctx, AbstractForm form)
 	{
 		Locale locale = cctx.getRequest().getLocale();
+		
 		UserPrincipal up = form.getUser();
 		if(up != null)
 		{
@@ -420,6 +427,13 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			{
 				locale = up.getPreferedLocale();
 			}
+		}
+
+		HttpSession session = cctx.getRequest().getSession();
+		Locale temp = (Locale)session.getAttribute(SESSION_KEY_CURRENT_LOCALE);
+		if(temp != null)
+		{
+			locale = temp;
 		}
 		
 		return locale;		
@@ -509,43 +523,62 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			
 			if(value != null)
 			{
-
-				if(value instanceof String)
+				PropertyDescriptor propertyDescriptor = null;
+				TargetPropertyMeta targetPropertyMeta = null;
+				Class targetType = null;
+				try
 				{
-					success = setSingleProperty(cctx, formBean, name, value);
-				} 
-				else if(value instanceof String[] && ((String[])value).length > 0)
-				{
-					Class type;
-					PropertyDescriptor propertyDescriptor;
-					try
+					TargetPropertyMeta propInfo = null;
+					try 
 					{
-						propertyDescriptor =
+						// get the descriptor
+						propertyDescriptor = 
 							PropertyUtils.getPropertyDescriptor(formBean, name);
-						type = propertyDescriptor.getPropertyType();
-						
-						if(( type != null) && type.isArray())
+						if (propertyDescriptor == null) 
 						{
-							success = setArrayProperty(
-								cctx, propertyDescriptor, 
-								formBean, name, (String[])value);
-		
-						}
-						else // the target property is not an array; let BeanUtils
-							// handle the conversion
-						{
-							success = setSingleProperty(cctx, formBean, name, value);
+							continue; // Skip this property setter
 						}
 					}
-					catch (Exception e)
+					catch (NoSuchMethodException e) 
 					{
-						if(log.isDebugEnabled())
-						{
-							log.debug(name + 
-								" is a request parameter, but is not a property of form " + 
-								formBean);	
-						} 
+						continue; // Skip this property setter
 					}
+					
+					// resolve and get some more info we need for the target
+					targetPropertyMeta = PropertyUtil.calculate(formBean, name);
+					
+					if (propertyDescriptor instanceof MappedPropertyDescriptor) 
+					{
+						MappedPropertyDescriptor pd = 
+							(MappedPropertyDescriptor)propertyDescriptor;
+						if(pd.getMappedWriteMethod() == null) continue; // skip non-writeable
+						targetType = pd.getMappedPropertyType();
+					}
+					else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
+					{
+						IndexedPropertyDescriptor pd = 
+							(IndexedPropertyDescriptor)propertyDescriptor;
+						if(pd.getIndexedWriteMethod() == null) continue; // skip non-writeable
+						targetType = pd.getIndexedPropertyType();
+					}
+					else 
+					{
+						if(propertyDescriptor.getWriteMethod() == null) continue; // skip non-writeable
+						targetType = propertyDescriptor.getPropertyType();
+					}
+					
+					success = setPropertyOnForm(cctx, formBean, name, value, propertyDescriptor,
+						targetPropertyMeta, locale);
+					
+				}
+				catch (Exception e)
+				{
+					log.error(e);
+					if(log.isDebugEnabled())
+					{
+						e.printStackTrace();
+					}
+					continue;
 				}
 				if(!success)
 				{
@@ -565,119 +598,182 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/*
-	 * set an array property
-	 * @param cctx controller context
-	 * @param propertyDescriptor descriptor of property
-	 * @param formBean current form
-	 * @param name name of property
-	 * @param values array of values to set
-	 * @return true if successfull, false if not
+	 * Convert the specified value to the required type
 	 */
-	private boolean setArrayProperty(
-			ControllerContext cctx,
-			PropertyDescriptor propertyDescriptor,
-			AbstractForm formBean, 
-			String name, 
-			String[] values)
-	{		
+	private boolean setPropertyOnForm(
+		ControllerContext cctx,	
+		AbstractForm formBean,
+		String name,
+		Object value,
+		PropertyDescriptor propertyDescriptor,
+		TargetPropertyMeta targetPropertyMeta,
+		Locale locale)
+		throws Exception
+	{
+		Object newValue = null;
 		boolean success = true;
-		Class type = propertyDescriptor.getPropertyType();
-		if(type.isArray())
+		Object target = targetPropertyMeta.getTarget();
+		Class targetType = propertyDescriptor.getPropertyType();
+		Converter converter = null;
+		
+		if(targetType.isArray()) 
 		{
-			Class componentType = type.getComponentType();
-			Converter converter = ConvertUtils.lookup(componentType);
-			Object array = Array.newInstance(componentType, values.length);
+			Class componentType = targetType.getComponentType();
+
+			if(converter == null) converter = 
+				ConverterRegistry.getInstance().lookup(componentType, locale);
+
+			Method reader = propertyDescriptor.getReadMethod();
+			Object[] originalArray = (Object[])reader.invoke(target, new Object[]{});
 			
-			int i = 0;
-			for ( ; i < values.length; i++) 
+			if(targetPropertyMeta.getIndex() < 0)
+				// target is an array and name of property is not indexed 
+				// (a property is indexed in form: myproperty[1]; getIndex() would be 1 in 
+				//	this case and the actual property to navigate is an array element 
+				//	instead of the whole array).
 			{
-				try 
+				String[] values = null;
+				if(value instanceof String[]) values = (String[])value;
+				else values = new String[]{ String.valueOf(value) };
+				
+				Object[] array = null;
+				if((originalArray == null) || (originalArray.length < values.length)) 
+					// overwrite completely with a new or larger array
 				{
-					if(values[i] != null && (!values[i].trim().equals("")))
+					array = (Object[])Array.newInstance(componentType, values.length);
+					// set new array on target object
+					Method setter = propertyDescriptor.getWriteMethod();
+					setter.invoke(target, new Object[]{array});
+				}
+				else // use existing and overwrite first part or whole array if lengths are equal
+				{
+					array = originalArray;					
+				}
+			
+				int index = 0;
+				for ( ; index < values.length; index++) 
+				{
+					Object converted = null;
+					try 
 					{
-						Object converted = converter.convert(
-							componentType, values[i]);
-						Array.set(array, i, converted);							
-					}
-					else
-					{
-						if(isSetNullForEmptyString())
+					
+						if( (values[index] == null || (values[index].trim().equals(""))) 
+							&& isSetNullForEmptyString())
 						{
-							Array.set(array, i, null);		
+							converted = null;
 						}
 						else
 						{
-							Array.set(array, i, values[i]);	
-						}						
-					}	
-				} 
-				catch (ConversionException e) 
+							converted = converter.convert(componentType, values[index]);
+						}
+					
+						Array.set(array, index, converted);
+	
+					} 
+					catch (ConversionException e) 
+					{
+						String nameWithIndex = name + '[' + index + "]";
+						setConversionErrorForField(cctx, formBean, nameWithIndex, values[index], e);
+						setOverrideField(cctx, formBean, nameWithIndex, values[index], e, null);
+						success = false;
+					}
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+						String nameWithIndex = name + '[' + index + "]";
+						setConversionErrorForField(cctx, formBean, nameWithIndex, values[index], e);
+						setOverrideField(cctx, formBean, nameWithIndex, values[index], e, null);
+						success = false;
+					}
+				}				
+			}
+			else // the target is one specific element in the array
+			{
+				String stringValue = null;
+				if(value instanceof String[]) stringValue = ((String[])value)[0];
+				else stringValue = String.valueOf(value);
+				int index = targetPropertyMeta.getIndex();
+				Method setter = null;
+				Object converted = null;
+
+				try
 				{
-					setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
-					setOverrideField(cctx, formBean, (name + '|' + i), values[i], e, null);
-					success = false;
+					
+					if( (stringValue == null || (stringValue.trim().equals(""))) 
+						&& isSetNullForEmptyString())
+					{
+						converted = null;
+					}
+					else
+					{
+						converted = converter.convert(
+							targetType, stringValue);
+					}
+
+					// replace value in array
+					originalArray[index] = converted;
 				}
+				catch (ConversionException e)
+				{
+					setConversionErrorForField(cctx, formBean, name, stringValue, e);
+					setOverrideField(cctx, formBean, name, stringValue, e, null);
+					success = false;	
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					setConversionErrorForField(cctx, formBean, name, stringValue, e);
+					setOverrideField(cctx, formBean, name, stringValue, e, null);
+					success = false;	
+				}			
 			}
 			
+		}
+		else // it's not an array
+		{
+			String stringValue = null;
+			if(value instanceof String[]) stringValue = ((String[])value)[0];
+			else stringValue = String.valueOf(value);
+
+			if(converter == null) converter = 
+				ConverterRegistry.getInstance().lookup(targetType, locale);
+			
+			Method setter = null;
+			Object converted = null;
 			try
 			{
-				PropertyUtils.setProperty(formBean, name, array);
-			}
-			catch (Exception e)
-			{
-				//this should not happen as we did extensive checking allready.
-				// therefore print the stacktrace
-				e.printStackTrace();
-				setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
-				success = false;
-			}				
-		}
-		
-		return success;
-	}
-	
-	/*
-	 * set a single property
-	 * @param cctx controller context
-	 * @param formBean form
-	 * @param name name of property
-	 * @param value value of property
-	 * @return true if succeeded, false if not
-	 */
-	private boolean setSingleProperty(
-		ControllerContext cctx,	
-		AbstractForm formBean, String name, Object value)
-	{
-		boolean success = true;
-		String stringValue = null;
-		try
-		{
-			// check as string first
-			stringValue = ConvertUtils.convert(value);
-			if(stringValue != null && (!stringValue.trim().equals("")))
-			{
-				// Perform the assignment for this property
-				BeanUtils.setProperty(formBean, name, value);
-			}
-			else
-			{
-				if(isSetNullForEmptyString())
+				setter = propertyDescriptor.getWriteMethod();
+				
+				if( (stringValue == null || (stringValue.trim().equals(""))) 
+					&& isSetNullForEmptyString())
 				{
-					BeanUtils.setProperty(formBean, name, null);	
+					converted = null;
 				}
 				else
 				{
-					BeanUtils.setProperty(formBean, name, stringValue);
+					converted = converter.convert(
+						targetType, stringValue);
 				}
+				
+				setter.invoke(target, new Object[]{converted});
 			}
+			catch (ConversionException e)
+			{
+				setConversionErrorForField(cctx, formBean, name, stringValue, e);
+				setOverrideField(cctx, formBean, name, stringValue, e, null);
+				success = false;	
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				setConversionErrorForField(cctx, formBean, name, stringValue, e);
+				setOverrideField(cctx, formBean, name, stringValue, e, null);
+				success = false;	
+			}			
 		}
-		catch (Exception e)
-		{
-			setConversionErrorForField(cctx, formBean, name, stringValue, e);
-			setOverrideField(cctx, formBean, name, stringValue, e, null);
-			success = false;	
-		}
+
 		return success;
+
 	}
 	
 	/* handle custom validation for all fields */
@@ -922,13 +1018,21 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			String msgName = null;
 			msgName = getLocalizedMessage(getPropertyNameKey(name));
 
+			String desiredPattern = null;
+			if(t instanceof nl.openedge.maverick.framework.converters.ConversionException)
+			{
+				nl.openedge.maverick.framework.converters.ConversionException ex = 
+					(nl.openedge.maverick.framework.converters.ConversionException)t;
+				desiredPattern = ex.getDesiredPattern();
+			}
+
 			if(msgName != null)
 			{
-				msg = getLocalizedMessage(key, new Object[]{triedValue, msgName, t});	
+				msg = getLocalizedMessage(key, new Object[]{triedValue, msgName, t, desiredPattern});	
 			}
 			else
 			{
-				msg = getLocalizedMessage(key, new Object[]{triedValue, name, t});
+				msg = getLocalizedMessage(key, new Object[]{triedValue, name, t, desiredPattern});
 			}
 
 			formBean.setError(name, msg);
@@ -1144,84 +1248,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	{
 		this.needsValidUser = needsValidUser;
 	}
-	
-	/**
-	 * get localized message for given key
-	 * @param key key of message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(String key)
-	{
-		return getLocalizedMessage(key, Locale.getDefault());
-	}
-	
-	/**
-	 * get localized message for given key and locale. 
-	 * If locale is null, the default locale will be used
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(String key, Locale locale)
-	{	
-		String msg = null;
-		try
-		{
-			msg = getBundle(locale).getString(key);
-		}
-		catch (Exception e)
-		{
-			if(log.isDebugEnabled())
-			{
-				e.printStackTrace();
-			}
-		}
-		return msg;
-	}
-	
-	/**
-	 * get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @param parameters parameters for the message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(
-			String key, Object[] parameters)
-	{	
-		return getLocalizedMessage(key, null, parameters);
-	}
-	
-	/**
-	 * get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @param parameters parameters for the message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(
-			String key, Locale locale, Object[] parameters)
-	{
 		
-		String msg = null;
-		try
-		{
-			msg = getBundle(locale).getString(key);
-			msg = MessageFormat.format(msg, parameters);
-		}
-		catch (Exception e)
-		{
-			if(log.isDebugEnabled())
-			{
-				e.printStackTrace();
-			}
-		}
-		return msg;
-	}
+	//**************************** validators ********************************************/
 	
 	/**
 	 * register a field validator for the given fieldName. 
@@ -1327,6 +1355,92 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		return (fieldValidators != null) ? (Collection)fieldValidators.get(fieldName) : null;
 	}
 	
+	
+	//**************************** populators ********************************************/
+	
+	//TODO vul populators in... Locale sensitive!
+
+	//*************************** utility methods for localized messages ********************/
+	
+	/**
+	 * get localized message for given key
+	 * @param key key of message
+	 * @return String localized message
+	 */
+	public String getLocalizedMessage(String key)
+	{
+		return getLocalizedMessage(key, Locale.getDefault());
+	}
+	
+	/**
+	 * get localized message for given key and locale. 
+	 * If locale is null, the default locale will be used
+	 * @param key key of message
+	 * @param locale locale for message
+	 * @return String localized message
+	 */
+	public String getLocalizedMessage(String key, Locale locale)
+	{	
+		String msg = null;
+		try
+		{
+			msg = getBundle(locale).getString(key);
+		}
+		catch (Exception e)
+		{
+			if(log.isDebugEnabled())
+			{
+				e.printStackTrace();
+			}
+		}
+		return msg;
+	}
+	
+	/**
+	 * get localized message for given key and locale
+	 * and format it with the given parameters. 
+	 * If locale is null, the default locale will be used
+	 * @param key key of message
+	 * @param locale locale for message
+	 * @param parameters parameters for the message
+	 * @return String localized message
+	 */
+	public String getLocalizedMessage(
+			String key, Object[] parameters)
+	{	
+		return getLocalizedMessage(key, null, parameters);
+	}
+	
+	/**
+	 * get localized message for given key and locale
+	 * and format it with the given parameters. 
+	 * If locale is null, the default locale will be used
+	 * @param key key of message
+	 * @param locale locale for message
+	 * @param parameters parameters for the message
+	 * @return String localized message
+	 */
+	public String getLocalizedMessage(
+			String key, Locale locale, Object[] parameters)
+	{
+		
+		String msg = null;
+		try
+		{
+			msg = getBundle(locale).getString(key);
+			msg = MessageFormat.format(msg, parameters);
+		}
+		catch (Exception e)
+		{
+			if(log.isDebugEnabled())
+			{
+				e.printStackTrace();
+			}
+		}
+		return msg;
+	}
+
+	
 	/* get resource bundle */
 	private ResourceBundle getBundle(Locale locale)
 	{
@@ -1341,6 +1455,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		return res;		
 	}
+	
+	//************************ utility methods for escaping characters *******************/
 	
 	/**
 	 * Returns <tt>text</tt> performing the following substring
@@ -1388,6 +1504,29 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 	}
 	
+	/* helper method for escape characters */
+	private void escapeCharacters(StringBuffer w, String text)
+	{
+		for (int i = 0; i < text.length(); i++)
+		{
+			char c = text.charAt(i);
+			if (c == '&')
+				w.append("&amp;");
+			else if (c == '<')
+				w.append("&lt;");
+			else if (c == '>')
+				w.append("&gt;");
+			else if (c == '"')
+				w.append("&#034;");
+			else if (c == '\'')
+				w.append("&#039;");
+			else
+				w.append(c);
+		}	
+	}
+	
+	// ************************ other utility- and property methods *********************/
+	
 	/**
 	 * Get prefixed fields from a request. Handle checkboxes more easily
 	 * @param cctx maverick context
@@ -1411,27 +1550,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			}
 		}
 		return pks;
-	}
-	
-	/* helper method for escape characters */
-	private void escapeCharacters(StringBuffer w, String text)
-	{
-		for (int i = 0; i < text.length(); i++)
-		{
-			char c = text.charAt(i);
-			if (c == '&')
-				w.append("&amp;");
-			else if (c == '<')
-				w.append("&lt;");
-			else if (c == '>')
-				w.append("&gt;");
-			else if (c == '"')
-				w.append("&#034;");
-			else if (c == '\'')
-				w.append("&#039;");
-			else
-				w.append(c);
-		}	
 	}
 	
 	/*

@@ -30,68 +30,21 @@
  */
 package nl.openedge.maverick.framework.converters;
 
-
-import org.apache.commons.beanutils.Converter;
-
-
 /**
- * <p>{@link Converter} implementation that converts an incoming
- * String into a <code>java.lang.Short</code> object, 
- * throwing a {@link ConversionException} if a conversion
- * error occurs.</p>
- *
+ * Besides converting input, we want to format output as well. Hence this addition to the
+ * default BeanUtils framework
  * @author Eelco Hillenius
  */
-
-public final class ShortConverter implements Converter 
+public interface Formatter
 {
 
-    /**
-     * Create a {@link Converter} that will throw a {@link ConversionException}
-     * if a conversion error occurs.
-     */
-    public ShortConverter()
-    {
-
-    }
-
-    /**
-     * Convert the specified input object into an output object of the
-     * specified type.
-     *
-     * @param type Data type to which this value should be converted
-     * @param value The input value to be converted
-     *
-     * @exception ConversionException if conversion cannot be performed
-     *  successfully
-     */
-    public Object convert(Class type, Object value) 
-    {
-
-        if (value == null) 
-        {
-			return null;
-        }
-
-        if (value instanceof Short) 
-        {
-            return (value);
-        } 
-        else if (value instanceof Number) 
-        {
-            return new Short(((Number)value).shortValue());
-        }
-
-        try 
-        {
-            return (new Short(value.toString()));
-        } 
-        catch (Exception e) 
-        {
-        	throw new ConversionException(e);
-        }
-
-    }
-
-
+	/**
+	 * Convert the specified input object into a locale-sensitive output string
+	 *
+	 * @param value The input object to be formatted
+	 * @param pattern The pattern is used for the conversion
+	 *
+	 * @exception IllegalArgumentException if formatting cannot be performed successfully
+	 */
+	public String format(Object value, String pattern) throws IllegalArgumentException;
 }

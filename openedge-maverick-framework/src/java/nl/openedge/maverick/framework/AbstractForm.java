@@ -35,6 +35,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import nl.openedge.access.UserPrincipal;
@@ -65,6 +66,9 @@ public abstract class AbstractForm
 	/** validated user */
 	private UserPrincipal user = null;
 	
+	/** the current locale */
+	private Locale currentLocale = null; 
+	
 	/** errors */
 	private Map errors = null;
 	
@@ -84,6 +88,8 @@ public abstract class AbstractForm
 	{
 		// do nothing	
 	}
+	
+//	----------------------- PROPERTY METHODS -----------------------------//
 	
 	/**
 	 * @return String
@@ -136,6 +142,27 @@ public abstract class AbstractForm
 	{
 		this.user = user;
 	}
+	
+	/**
+	 * get the current locale
+	 * @return Locale current locale
+	 */
+	public Locale getCurrentLocale()
+	{
+		return currentLocale;
+	}
+
+	/**
+	 * set the current locale
+	 * @param locale current locale
+	 */
+	public void setCurrentLocale(Locale locale)
+	{
+		currentLocale = locale;
+	}
+
+
+//	----------------------- ERROR/ OVERRIDE METHODS -----------------------------//
 
 	/**
 	 * @return Map

@@ -30,6 +30,7 @@
  */
 package nl.openedge.maverick.framework;
 
+
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
@@ -39,23 +40,26 @@ import javax.servlet.http.HttpServlet;
 import nl.openedge.access.AccessHelper;
 import nl.openedge.maverick.framework.converters.BooleanConverter;
 import nl.openedge.maverick.framework.converters.ByteConverter;
+import nl.openedge.maverick.framework.converters.ByteLocaleConverter;
 import nl.openedge.maverick.framework.converters.CharacterConverter;
+import nl.openedge.maverick.framework.converters.DateLocaleConverter;
 import nl.openedge.maverick.framework.converters.DoubleConverter;
+import nl.openedge.maverick.framework.converters.DoubleLocaleConverter;
 import nl.openedge.maverick.framework.converters.FloatConverter;
+import nl.openedge.maverick.framework.converters.FloatLocaleConverter;
 import nl.openedge.maverick.framework.converters.IntegerConverter;
 import nl.openedge.maverick.framework.converters.LongConverter;
+import nl.openedge.maverick.framework.converters.LongLocaleConverter;
 import nl.openedge.maverick.framework.converters.ShortConverter;
+import nl.openedge.maverick.framework.converters.ShortLocaleConverter;
 import nl.openedge.modules.JDOMConfigurator;
-import nl.openedge.util.DateConverter;
 import nl.openedge.util.hibernate.HibernateHelper;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This servlet should startup first. Does initialisation and 
- * overrides the VelocityViewServlet to be able to hook 
+ * This servlet should startup first. Does initialisation
  * event handlers
  * @author Eelco Hillenius
  */
@@ -88,7 +92,7 @@ public class ApplicationServlet extends HttpServlet
 			initOEAccess(config);
 
 			// init beanutils for framework
-			initBeanUtils();
+			initConverters();
 			
 			// init Hibernate helper
 			HibernateHelper.init();
@@ -109,25 +113,51 @@ public class ApplicationServlet extends HttpServlet
 	 * that exceptions will be thrown for values that cannot be converted
 	 * instead of having default values
 	 */
-	protected void initBeanUtils()
+	protected void initConverters()
 	{
-		ConvertUtils.register(new BooleanConverter(), Boolean.TYPE);
-		ConvertUtils.register(new BooleanConverter(), Boolean.class);
-		ConvertUtils.register(new ByteConverter(), Byte.TYPE);
-		ConvertUtils.register(new ByteConverter(), Byte.class);
-		ConvertUtils.register(new CharacterConverter(), Character.TYPE);
-		ConvertUtils.register(new CharacterConverter(), Character.class);
-		ConvertUtils.register(new DoubleConverter(), Double.TYPE);
-		ConvertUtils.register(new DoubleConverter(), Double.class);
-		ConvertUtils.register(new FloatConverter(), Float.TYPE);
-		ConvertUtils.register(new FloatConverter(), Float.class);
-		ConvertUtils.register(new IntegerConverter(), Integer.TYPE);
-		ConvertUtils.register(new IntegerConverter(), Integer.class);	
-		ConvertUtils.register(new LongConverter(), Long.TYPE);
-		ConvertUtils.register(new LongConverter(), Long.class);
-		ConvertUtils.register(new ShortConverter(), Short.TYPE);
-		ConvertUtils.register(new ShortConverter(), Short.class);
-		ConvertUtils.register(new DateConverter(), Date.class);	
+		// get the converter registry
+		ConverterRegistry reg = ConverterRegistry.getInstance();
+		
+		// now, for all (basic) types, register a default converter and
+		// - if available - a localized converter
+		// NOTE: the localized versions precede the non-localized 
+		
+		reg.register(new BooleanConverter(), Boolean.TYPE);
+		reg.register(new BooleanConverter(), Boolean.class);
+		
+		reg.register(new ByteConverter(), Byte.TYPE);
+		reg.register(new ByteConverter(), Byte.class);
+		reg.register(new ByteLocaleConverter(), Byte.TYPE);
+		reg.register(new ByteLocaleConverter(), Byte.class);
+		
+		reg.register(new CharacterConverter(), Character.TYPE);
+		reg.register(new CharacterConverter(), Character.class);
+		
+		reg.register(new DoubleConverter(), Double.TYPE);
+		reg.register(new DoubleConverter(), Double.class);
+		reg.register(new DoubleLocaleConverter(), Double.TYPE);
+		reg.register(new DoubleLocaleConverter(), Double.class);
+
+		reg.register(new FloatConverter(), Float.TYPE);
+		reg.register(new FloatConverter(), Float.class);
+		reg.register(new FloatLocaleConverter(), Float.TYPE);
+		reg.register(new FloatLocaleConverter(), Float.class);		
+		
+		reg.register(new IntegerConverter(), Integer.TYPE);
+		reg.register(new IntegerConverter(), Integer.class);
+			
+		reg.register(new LongConverter(), Long.TYPE);
+		reg.register(new LongConverter(), Long.class);
+		reg.register(new LongLocaleConverter(), Long.TYPE);
+		reg.register(new LongLocaleConverter(), Long.class);
+		
+		reg.register(new ShortConverter(), Short.TYPE);
+		reg.register(new ShortConverter(), Short.class);
+		reg.register(new ShortLocaleConverter(), Short.TYPE);
+		reg.register(new ShortLocaleConverter(), Short.class);
+		
+		reg.register(new DateLocaleConverter(), Date.class);
+
 	}
 	
 	/**

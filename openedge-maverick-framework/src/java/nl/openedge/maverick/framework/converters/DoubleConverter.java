@@ -30,8 +30,6 @@
  */
 package nl.openedge.maverick.framework.converters;
 
-
-import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.Converter;
 
 
@@ -73,8 +71,7 @@ public final class DoubleConverter implements Converter
         {
             return null;
         }
-
-        if (value instanceof Double) 
+        else if (value instanceof Double) 
         {
             return (value);
         } 
@@ -82,17 +79,17 @@ public final class DoubleConverter implements Converter
         {
             return new Double(((Number)value).doubleValue());
         }
-            
-
-        try 
+        else
         {
-            return (new Double(value.toString()));
-        } 
-        catch (Exception e) 
-        {
-            throw new ConversionException(e);
+			try 
+			{
+				return (new Double(value.toString()));
+			} 
+			catch (Exception e) 
+			{
+				throw new ConversionException(e);
+			}        	
         }
-
     }
 
 

@@ -31,7 +31,6 @@
 package nl.openedge.maverick.framework.converters;
 
 
-import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.Converter;
 
 
