@@ -215,8 +215,37 @@ addValidator("myField", validator);
 		</para>
 		
 	</sect1>
-	
+
 	<sect1 id="validation-s5">
+        <title>Escaping validation</title>
+
+        <para>
+            By default, if population failed and/ or if you registered validators that
+            failed, the 'peform' method of your controller will not be called. Instead,
+            the errors and override fields are saved, and the error page is shown.
+        </para>
+        
+        <para>
+            Earlier, you have seen that the actual firing of Validators can be made
+            conditional by registering ValidatorActivationRules with your validators.
+            This works well for higher level validation that is dependent of e.g.
+            the value of one of the other request parameters.
+        </para>
+        
+        <para>
+            There are two ways of escaping the default mechanism of not performing the controller
+            command method.
+        </para>
+        
+        <para>
+            The first is to skip population and validation all together. In order to achieve this,
+            you can set property 'populateAndValidate' of the FormBeanContext to false.
+            Nothing 
+        </para>
+
+    </sect1>
+	
+	<sect1 id="validation-s6">
         <title>Validator implementations</title>
 
 		<para>

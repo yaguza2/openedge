@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.12 2004-05-23 10:26:57 eelco12 Exp $
- * $Revision: 1.12 $
- * $Date: 2004-05-23 10:26:57 $
+ * $Id: FormBeanCtrlBase.java,v 1.13 2004-06-03 17:01:55 eelco12 Exp $
+ * $Revision: 1.13 $
+ * $Date: 2004-06-03 17:01:55 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -199,7 +199,7 @@ public abstract class FormBeanCtrlBase implements Controller
 
 				// populate if property of formBeanContext populateAndValidate is true 
 				// (as it is by default)
-				if (formBeanContext.isPopulateAndValidate())
+				if (execParams.isPopulateAndValidate())
 				{
 					populated = populateFormBean(cctx, formBeanContext, execParams);
 				}

@@ -15,13 +15,12 @@
 				<ul>
 					<li>
 						<a href="http://java.sun.com/j2ee/javaserverfaces/index.jsp">Java Server Faces (JSF)</a>.
-						This will probably render the current frameworks, including Baritus, redundant in the second
-						half of 2004/ beginning of 2005. The standard for creating larger scaled webapplications
-						with Java finally arrived last April. <a href="http://www.myfaces.org/">MyFaces</a> is
-						the current OSS initiative. It is quite active and works better with a lot of different servers
-						than the 
+						This recent standard is aimed towards facilitating the development op Java
+						web application in a component oriented fashion.
+						<a href="http://www.myfaces.org/">MyFaces</a> is the current OSS initiative. 
+						It is quite active and works better with a lot of different servers than the 
 						<a href="http://java.sun.com/j2ee/javaserverfaces/download.html">JSF reference implementation</a>.
-						Too bad though, that currently JSF seems to be very JSP centric. Though implementations
+						IMHO it's too bad that currently JSF seems to be very JSP centric. Though implementations
 						do not have to be JSP based, that is probably where tool developpers will be heading.
 					</li>
 					<li>

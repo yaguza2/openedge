@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.10 2004-05-23 10:26:57 eelco12 Exp $
- * $Revision: 1.10 $
- * $Date: 2004-05-23 10:26:57 $
+ * $Id: ExecutionParams.java,v 1.11 2004-06-03 17:01:55 eelco12 Exp $
+ * $Revision: 1.11 $
+ * $Date: 2004-06-03 17:01:55 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -161,6 +161,21 @@ public final class ExecutionParams implements Serializable, Cloneable
 	 * setting this parameter does not garantee trimming for all parameters.
 	 */
 	private boolean trimStringInputValues = true;
+
+	
+	/**
+	 * flag whether Baritus should try to populate the form bean.
+	 * Setting this flag to false, and thus letting Baritus skip
+	 * population and validation can be usefull when you link commands
+	 * within the same request and want to reuse the allready populated
+	 * form bean without doing population and validation as well.<br>
+	 * <strong>BEWARE</strong> that this is also skips population of request attributes
+	 * etc. that were set by the controllers earlier in the command stack.<br>
+	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
+	 * population to be succesfull, even though the population of the
+	 * prior control might not have been.
+	 */
+	private boolean populateAndValidate = true;
 
 	/**
 	 * if true, the no cache headers will be set
@@ -448,6 +463,44 @@ public final class ExecutionParams implements Serializable, Cloneable
 	public void setTrimStringInputValues(boolean b)
 	{
 		trimStringInputValues = b;
+	}
+
+	/**
+	 * Get flag whether Baritus should try to populate the form bean.
+	 * Setting this flag to false, and thus letting Baritus skip
+	 * population and validation can be usefull when you link commands
+	 * within the same request and want to reuse the allready populated
+	 * form bean without doing population and validation as well.<br>
+	 * <strong>BEWARE</strong> that this is also skips population of request attributes
+	 * etc. that were set by the controllers earlier in the command stack.<br>
+	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
+	 * population to be succesfull, even though the population of the
+	 * prior control might not have been.
+	 * 
+	 * @return boolean whether Baritus should try to populate the form bean.
+	 */
+	public boolean isPopulateAndValidate()
+	{
+		return populateAndValidate;
+	}
+
+	/**
+	 * Set flag whether Baritus should try to populate the form bean.
+	 * Setting this flag to false, and thus letting Baritus skip
+	 * population and validation can be usefull when you link commands
+	 * within the same request and want to reuse the allready populated
+	 * form bean without doing population and validation as well.<br>
+	 * <strong>BEWARE</strong> that this is also skips population of request attributes
+	 * etc. that were set by the controllers earlier in the command stack.<br>
+	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
+	 * population to be succesfull, even though the population of the
+	 * prior control might not have been.
+	 * 
+	 * @param populateAndValidate whether Baritus should try to populate the form bean.
+	 */
+	public void setPopulateAndValidate(boolean populateAndValidate)
+	{
+		this.populateAndValidate = populateAndValidate;
 	}
     
     /**
