@@ -35,7 +35,7 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
-import nl.openedge.access.AccessFactory;
+import nl.openedge.access.AccessHelper;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.ComponentRepository;
@@ -52,7 +52,7 @@ public abstract class AbstractTestBase extends TestCase
 {
 
 	/** access factory */
-	protected AccessFactory accessFactory;
+	protected AccessHelper accessHelper;
 
 	/** access factory */
 	protected static ComponentRepository moduleFactory;
@@ -88,7 +88,7 @@ public abstract class AbstractTestBase extends TestCase
 	{
 		try
 		{
-			AccessFactory.reload(
+			AccessHelper.reload(
 				System.getProperty("configfile", "/oeaccess.properties"));
 		}
 		catch (Exception e)

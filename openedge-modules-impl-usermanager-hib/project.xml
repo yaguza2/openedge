@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>oe-usermanager-hib</id>
   <name>OpenEdge Modules UserManager Hibernate implementation</name>
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>1.1</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -47,7 +47,7 @@
 
     <dependency>
       <id>commons-beanutils</id>
-      <version>1.6.1</version>
+      <version>1.7dev</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
     </dependency>
     
@@ -65,7 +65,7 @@
 
     <dependency>
       <id>commons-dbcp</id>
-      <version>1.0</version>
+      <version>1.1</version>
       <url>http://jakarta.apache.org/commons/dbcp/</url>
     </dependency>
     
@@ -77,7 +77,7 @@
 
     <dependency>
       <id>commons-pool</id>
-      <version>1.0</version>
+      <version>1.1</version>
       <url>http://jakarta.apache.org/commons/pool/</url>
     </dependency>
     
@@ -107,7 +107,7 @@
 
     <dependency>
       <id>quartz</id>
-      <version>1.2.1</version>
+      <version>1.2.3</version>
       <url>http://www.part.net/quartz.html</url>
     </dependency>
     
@@ -153,20 +153,20 @@
     </dependency>
 
     <dependency>
-      <id>openedge-utils</id>
-      <version>SNAPSHOT</version>
+      <id>openedge-util</id>
+      <version>1.1</version>
       <url>http://www.openedge.nl</url>
     </dependency>
     
     <dependency>
       <id>openedge-modules</id>
-      <version>SNAPSHOT</version>
+      <version>1.1</version>
       <url>http://www.openedge.nl</url>
     </dependency>
     
     <dependency>
       <id>openedge-access</id>
-      <version>SNAPSHOT</version>
+      <version>1.1</version>
       <url>http://www.openedge.nl</url>
     </dependency>
     
