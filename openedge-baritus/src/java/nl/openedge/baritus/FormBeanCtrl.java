@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.8 2004-02-29 17:22:28 eelco12 Exp $
- * $Revision: 1.8 $
- * $Date: 2004-02-29 17:22:28 $
+ * $Id: FormBeanCtrl.java,v 1.9 2004-03-01 10:00:37 eelco12 Exp $
+ * $Revision: 1.9 $
+ * $Date: 2004-03-01 10:00:37 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -221,9 +221,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		} 
 		catch(Exception e)
 		{
-			// as we should normally not get here, give an extra warning
-			log.error("Unexpected exception " + e.getMessage() + 
-				" occured during form population.");
+			// as we should normally not get here, log stacktrace
+			log.error("Unexpected exception occured during form population.", e);
 				
 			internalPerformError(cctx, formBeanContext, e);
 			viewName = getErrorView(cctx, formBeanContext);

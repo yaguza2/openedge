@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.2 2004-02-29 13:51:24 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-29 13:51:24 $
+ * $Id: FormBeanContext.java,v 1.3 2004-03-01 10:00:24 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-01 10:00:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -319,11 +319,9 @@ public final class FormBeanContext
 	 * @param name
 	 * @return String
 	 */
-	public String getOverrideField(String name)
+	public Object getOverrideField(String name)
 	{
-		return (overrideFields != null)
-			? (String)overrideFields.get(name)
-			: null;
+		return (overrideFields != null) ? overrideFields.get(name) : null;
 	}
 
 	/**
