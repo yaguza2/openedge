@@ -10,5 +10,6 @@ CREATE TABLE email_queue (
   content_type varchar(20) NOT NULL default 'text/plain',
   status varchar(10) NOT NULL default 'new',
   status_detail long varchar,
+  attachments long varchar,
   PRIMARY KEY  (id)
 )

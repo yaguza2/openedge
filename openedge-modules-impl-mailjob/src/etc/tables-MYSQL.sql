@@ -13,6 +13,7 @@ CREATE TABLE email_queue (
   content_type varchar(20) NOT NULL default 'text/plain',
   status varchar(10) NOT NULL default 'new',
   status_detail text,
+  attachments text,
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
