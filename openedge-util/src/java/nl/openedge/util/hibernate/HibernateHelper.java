@@ -9,32 +9,35 @@
  */
 package nl.openedge.util.hibernate;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
-
-import javax.naming.InitialContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
+import nl.openedge.util.URLHelper;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Helper class to be able to transparantly obtain and configure Hibernate sessions.
- * 
+ * <p>
  * Before HibernateHelper can be used, HibernateHelper.init() should be called once.
  * After this, you can obtain the current session with HibernateHelper.getSession();
  * If you use the HibernateFiler from this package, you do not need to 
  * (or better you should never) close the session.
- * 
+ * </p>
+ * <p>
  * If you want to close the session, preferably use HibernateHelper.closeSession().
- * 
+ * </p>
+ * <p>
  * Some defaults can be overriden by:
- * 
+ * </p>
+ * <p>
  * providing hibernatehelper.properties in the classpath root with properties:
  * <ul>
  *  <li>
@@ -43,15 +46,20 @@ import net.sf.hibernate.cfg.Configuration;
  *      To override, eg: 'delegate=nl.levob.util.hibernate.HibernateHelperReloadConfigImpl'. 
  *  </li>
  *  <li>
- *      jndiConfigName: the JNDI name that should be used to lookup a possible override
- *      of the Hibernate config file location.
- *      The default JNDI name is: 'java:comp/env/hibernate/config'.
+ *      hibernateConfig: the url of the hibernate configuration to use.
  *  </li>
  * </ul>
- * 
+ * </p>
+ * <p>
+ * These overrides can be overriden by setting environment variables (like -Dfoo=bar).
+ * 'hibernatehelper.properties.delegate' for the delegate, and
+ * 'hibernatehelper.properties.hibernateConfig' for the hibernate configuration location.
+ * </p>
+ * <p>
  * Setting the config url like: HibernateHelper.setConfigURL(myUrl);
- * Note that this will override the possible JNDI override as well.
- * 
+ * Note that this will override the hibernateConfig variable as well.
+ * </p>
+ * <p>
  * By default, the configuration is loaded from the file 'hibernate.cfg.xml' in the classpath root.
  * 
  * @author Eelco Hillenius
@@ -60,14 +68,67 @@ public class HibernateHelper {
 	
     // log
     private static Log log = LogFactory.getLog(HibernateHelper.class);
+
+    /** close current session on setSession */
+    public final static int ACTION_CLOSE = 1;
+
+    /** disconnect current session on setSession */
+    public final static int ACTION_DISCONNECT = 2;
+
+    /**
+     * key of the system property for setting the delegate.
+     * value = hibernatehelper.properties.delegate
+     */
+    public final static String SYSTEM_PROPERTY_DELEGATE = 
+        "hibernatehelper.properties.delegate";
+
+    /**
+     * key of the system property for setting the hibernate config.
+     * value = hibernatehelper.properties.hibernateConfig
+     */
+    public final static String SYSTEM_PROPERTY_HIBERNATE_CONFIG = 
+        "hibernatehelper.properties.hibernateConfig";
+
+    /**
+     * key of the property (from file) for setting the delegate.
+     * value = delegate.
+     */
+    public final static String PROPERTY_DELEGATE = "delegate";
+
+    /**
+     * key of the property (from file) for setting the hibernate config.
+     * value = hibernateConfig.
+     */
+    public final static String PROPERTY_HIBERNATE_CONFIG = "hibernateConfig";
+
+    /**
+     * filename of properties for HibernateHelper. value = /hibernatehelper.properties
+     */
+    public final static String PROPERTIES_LOCATION = "/hibernatehelper.properties";
     
     // the implementation delegate; does the 'real' work for this class.
 	private static HibernateHelperDelegate delegate = null;
-	static
+	static // initialize the helper
 	{
-        String jndiConfigName = "java:comp/env/hibernate/config";
-		String filename = "/hibernatehelper.properties";
-		Properties props = new Properties();
+	    initialize();
+	}
+    
+	/**
+	 * Initialise.
+	 */
+	public static void init() throws Exception
+	{
+		delegate.init();
+	}
+
+	/**
+	 * Does initialization of the helper.
+	 */
+	private static void initialize()
+	{
+	    String filename = PROPERTIES_LOCATION;
+	    // first, see if there are system properties defined
+		Properties properties = new Properties();
 		InputStream is = null;
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		if (loader != null)
@@ -79,66 +140,91 @@ public class HibernateHelper {
 			is = HibernateHelper.class.getResourceAsStream(filename);
 		}
 		if(is != null)
-		{
+		{ // if an inputstream was found, try to read properties object from it
 			try
 			{
-				props.load(is);
-				String delegateImpl = props.getProperty("delegate");
-				if(delegateImpl != null)
-				{
-					Class clazz = loader.loadClass(delegateImpl);
-					delegate = (HibernateHelperDelegate)clazz.newInstance();
-				}
-                jndiConfigName = props.getProperty(
-                    "jndiConfigName", "java:comp/env/hibernate/config");
-			}
-			catch(Exception e)
+                properties.load(is);
+            }
+			catch (IOException e)
 			{
-				e.printStackTrace();
-			}
+                log.error(e.getMessage(), e);
+            }
 		}
-		if(delegate == null)
+		// do further initialization
+		initializeDelegate(properties);
+		initializeHibernateConfig(properties);
+	}
+
+	/**
+	 * Initialize the delegate.
+	 * @param properties the properties
+	 */
+	private static void initializeDelegate(Properties properties)
+	{
+	    String delegateImplClass = System.getProperty(SYSTEM_PROPERTY_DELEGATE);
+		if(delegateImplClass == null) // if not a system property
+		{
+		    delegateImplClass = properties.getProperty(PROPERTY_DELEGATE);    
+		}
+		if(delegateImplClass != null) // try to load the delegate
+		{
+		    try
+		    {
+		        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		        if(loader == null)
+		        {
+		            loader = HibernateHelper.class.getClassLoader();
+		        }
+				Class clazz = loader.loadClass(delegateImplClass);
+				delegate = (HibernateHelperDelegate)clazz.newInstance();
+		    }
+		    catch(Exception e)
+		    {
+		        log.error(e.getMessage(), e);
+		    }
+		}
+		if(delegate == null) // if no delegate was given or instantiation failed
 		{
 			log.info("fallback on default HibernateHelperDelegate implementation: " +
 				HibernateHelperThreadLocaleImpl.class.getName());
 			delegate = new HibernateHelperThreadLocaleImpl();
-		}
-        
-        // now, see if there's a JNDI var configured that overrides 
-        // the default configuration location
-        try 
-        {
-            InitialContext ctx = new InitialContext();
-            String hibernateConfig = (String)ctx.lookup(jndiConfigName);
-            if(hibernateConfig != null)
-            {
-                log.info("override Hibernate config from JNDI: " + hibernateConfig);
-                URL config = HibernateHelper.class.getResource(hibernateConfig);
-                setConfigURL(config);
-            }
-        } 
-        catch (Exception e) 
-        {
-            // ignore
-        }
-        
+		}    
 	}
-	
-	
-    /** close current session on setSession */
-    public final static int ACTION_CLOSE = 1;
 
-    /** disconnect current session on setSession */
-    public final static int ACTION_DISCONNECT = 2;
-    
 	/**
-	 * Initialise.
+	 * initialize hibernate config.
+	 * @param properties the properties
 	 */
-	public static void init() throws Exception
+	private static void initializeHibernateConfig(Properties properties)
 	{
-		delegate.init();
+	    String hibernateConfig = System.getProperty(SYSTEM_PROPERTY_HIBERNATE_CONFIG);
+        // is the default configuration location overriden?
+		if(hibernateConfig == null) // if not a system property
+		{
+		    hibernateConfig = properties.getProperty(PROPERTY_HIBERNATE_CONFIG);    
+		}
+		if(hibernateConfig != null)
+		{
+            log.info("using Hibernate config from URL: " + hibernateConfig);
+            try
+            {
+                URL config = URLHelper.convertToURL(hibernateConfig, HibernateHelper.class);
+                if(config != null)
+                {
+                    setConfigURL(config);   
+                }
+                else
+                {
+                    log.error("unable to construct URL from " + hibernateConfig);
+                }
+            }
+            catch(Exception e)
+            {
+                log.error(e.getMessage(), e);
+            }
+		}		    
 	}
-
+	
 	/**
 	 * Get session for this Thread.
 	 *
