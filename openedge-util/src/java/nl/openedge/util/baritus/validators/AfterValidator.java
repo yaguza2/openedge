@@ -52,17 +52,23 @@ import org.infohazard.maverick.flow.ControllerContext;
  */
 public class AfterValidator extends AbstractFieldValidator
 {
+	/**
+	 * Logger
+	 */
 	private Log log = LogFactory.getLog(AfterValidator.class);
 
+	/**
+	 * Error key
+	 */
 	private final static String DEFAULT_PREFIX = "invalid.field.input.after";
 
 	/**
-	 * The date check against.
+	 * The date to check against
 	 */
-	private Date before = new Date();
+	private Date before = null;
 
 	/** 
-	 * The pattern to use when parsing the date.
+	 * The pattern to use when parsing the date
 	 */
 	private String datePattern = "dd-MM-yyyy";
 
@@ -81,11 +87,10 @@ public class AfterValidator extends AbstractFieldValidator
 	/**
 	 * Creates a AfterValidator with the DEFAULT_PREFIX as error key
 	 * and today as the date to check against.
-	 *
 	 */
 	public AfterValidator()
 	{
-		this(DEFAULT_PREFIX, new Date());
+		super(DEFAULT_PREFIX);
 	}
 
 	/**
@@ -94,9 +99,9 @@ public class AfterValidator extends AbstractFieldValidator
 	 * @param prefix
 	 * @param before
 	 */
-	public AfterValidator(Date after)
+	public AfterValidator(Date before)
 	{
-		this(DEFAULT_PREFIX, after);
+		this(DEFAULT_PREFIX, before);
 	}
 
 	/**
@@ -151,17 +156,17 @@ public class AfterValidator extends AbstractFieldValidator
 	/**
 	 * @param before The before to set.
 	 */
-	public void setBefore(Date after)
+	public void setBefore(Date before)
 	{
-		if (after == null)
+		if (before == null)
 		{
 			throw new IllegalArgumentException("unable to validate null value");
 		}
-		this.before = after;
+		this.before = before;
 	}
 
 	/**
-	 * @return true if value is a Date or Calendar and is before before.
+	 * @return true if value is a Date or Calendar and is before or equal to before.
 	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 * @throws IllegalArgumentException when value == null.
 	 */
@@ -171,19 +176,34 @@ public class AfterValidator extends AbstractFieldValidator
 		String fieldName,
 		Object value)
 	{
+		boolean after = false;
+		Date compareBefore = null;
+		DateComparator comp = new DateComparator();
+
 		if (value == null)
 		{
 			throw new IllegalArgumentException("Null cannot be validated.");
 		}
-		boolean after = false;
-		DateComparator comp = new DateComparator();
+
+		// Als before datum niet is ingesteld (null) wordt de huidige datum
+		// genomen om mee te vergelijken.
+		if( before == null)
+		{
+			compareBefore = new Date();
+		}
+		else
+		{
+			compareBefore = before;
+		}
+
+		// vergelijk datums
 		if (value instanceof Date)
 		{
-			after = comp.compare((Date)value, before) <= 0;
+			after = comp.compare((Date)value, compareBefore) <= 0;
 		}
 		else if (value instanceof Calendar)
 		{
-			after = comp.compare(((Calendar)value).getTime(), before) <= 0;
+			after = comp.compare(((Calendar)value).getTime(), compareBefore) <= 0;
 		}
 		else
 		{
@@ -262,5 +282,4 @@ public class AfterValidator extends AbstractFieldValidator
 			locale,
 			new Object[] { getOverrideValue(value), fieldName });
 	}
-
 }

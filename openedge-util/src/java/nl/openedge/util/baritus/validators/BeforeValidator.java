@@ -52,17 +52,23 @@ import org.infohazard.maverick.flow.ControllerContext;
  */
 public class BeforeValidator extends AbstractFieldValidator
 {
+	/**
+	 * Logger
+	 */
 	private Log log = LogFactory.getLog(BeforeValidator.class);
 
+	/**
+	 * Error key
+	 */
 	private final static String DEFAULT_PREFIX = "invalid.field.input.before";
 
 	/**
-	 * The date check against.
+	 * The date to check against
 	 */
-	private Date after = new Date();
+	private Date after = null;
 
 	/** 
-	 * The pattern to use when parsing the date.
+	 * The pattern to use when parsing the date
 	 */
 	private String datePattern = "dd-MM-yyyy";
 
@@ -85,7 +91,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	 */
 	public BeforeValidator()
 	{
-		this(DEFAULT_PREFIX, new Date());
+		super(DEFAULT_PREFIX);
 	}
 
 	/**
@@ -106,7 +112,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	 */
 	public BeforeValidator(String prefix)
 	{
-		this(prefix, new Date());
+		super(prefix);
 	}
 
 	/**
@@ -171,20 +177,34 @@ public class BeforeValidator extends AbstractFieldValidator
 		String fieldName,
 		Object value)
 	{
+		boolean before = false;
+		Date compareAfter = null;
+		DateComparator comp = new DateComparator();
+
 		if (value == null)
 		{
 			throw new IllegalArgumentException("Null cannot be validated.");
 		}
-	
-		boolean before = false;
-		DateComparator comp = new DateComparator();
+
+		// Als before datum niet is ingesteld (null) wordt de huidige datum
+		// genomen om mee te vergelijken.
+		if( after == null)
+		{
+			compareAfter = new Date();
+		}
+		else
+		{
+			compareAfter = after;
+		}
+
+		// vergelijk datums
 		if (value instanceof Date)
 		{
-			before = comp.compare((Date)value, after) >= 0;
+			before = comp.compare((Date)value, compareAfter) >= 0;
 		}
 		else if (value instanceof Calendar)
 		{
-			before = comp.compare(((Calendar)value).getTime(), after) >= 0;
+			before = comp.compare(((Calendar)value).getTime(), compareAfter) >= 0;
 		}
 		else
 		{
