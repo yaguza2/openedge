@@ -13,16 +13,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import nl.openedge.gaps.core.groups.ParameterGroup;
+import nl.openedge.gaps.core.groups.StructuralGroup;
 import wicket.markup.html.HtmlContainer;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
-
-import nl.openedge.gaps.core.groups.ParameterGroup;
-import nl.openedge.gaps.core.groups.StructuralGroup;
 
 
 /**
@@ -90,7 +89,7 @@ public class ParameterGroupPanel extends Panel
             final ParameterGroup group = (ParameterGroup)cell.getModelObject();
     		cell.add(new Label("description", group.getDescription()));
     		Link actionLinkLocalId =
-    		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
+    		    new BookmarkablePageLink("groupLinkId", OnderhoudPage.class)
     		        .setParameter("browseexpr", group.getId())
     		        .setAutoEnable(false);
             actionLinkLocalId.add(new Label("localId", group.getLocalId()));

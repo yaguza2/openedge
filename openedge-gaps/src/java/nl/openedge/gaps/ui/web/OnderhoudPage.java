@@ -12,19 +12,18 @@ package nl.openedge.gaps.ui.web;
 import java.util.Arrays;
 import java.util.List;
 
-import wicket.PageParameters;
-import wicket.markup.html.basic.Label;
-import wicket.markup.html.link.ExternalPageLink;
-import wicket.markup.html.link.Link;
-import wicket.markup.html.table.ListItem;
-import wicket.markup.html.table.ListView;
-
 import nl.openedge.gaps.core.Entity;
 import nl.openedge.gaps.core.groups.Group;
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.support.ParameterBrowser;
+import wicket.PageParameters;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.table.ListItem;
+import wicket.markup.html.table.ListView;
 
 
 /**
@@ -126,7 +125,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
         {
     		final StructuralGroup group = (StructuralGroup)cell.getModelObject();
     		Link actionLinkLocalId =
-    		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
+    		    new BookmarkablePageLink("groupLinkId", OnderhoudPage.class)
     		        .setParameter("browseexpr", group.getId())
     		        .setAutoEnable(false);
             String labelText;

@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import wicket.Model;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -23,6 +22,7 @@ import wicket.markup.html.HtmlPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.table.ListItem;
 import wicket.markup.html.table.ListView;
+import wicket.model.Model;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.convert.FormattingUtils;
 
