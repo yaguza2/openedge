@@ -177,11 +177,11 @@ public class AfterValidator extends AbstractFieldValidator
 		DateComparator comp = new DateComparator();
 		if (value instanceof Date)
 		{
-			after = comp.compare((Date)value, before) >= 0;
+			after = comp.compare((Date)value, before) <= 0;
 		}
 		else if (value instanceof Calendar)
 		{
-			after = comp.compare(((Calendar)value).getTime(), before) >= 0;
+			after = comp.compare(((Calendar)value).getTime(), before) <= 0;
 		}
 		else
 		{
