@@ -16,6 +16,7 @@ import nl.openedge.gaps.support.gapspath.node.TEq;
 import nl.openedge.gaps.support.gapspath.node.TId;
 import nl.openedge.gaps.support.gapspath.node.TLBrace;
 import nl.openedge.gaps.support.gapspath.node.TLBracket;
+import nl.openedge.gaps.support.gapspath.node.TMinus;
 import nl.openedge.gaps.support.gapspath.node.TOr;
 import nl.openedge.gaps.support.gapspath.node.TQuote;
 import nl.openedge.gaps.support.gapspath.node.TRBrace;
@@ -140,6 +141,7 @@ public class Lexer
 
 		int[][][] gotoTable = Lexer.gotoTable[state.id()];
 		int[] accept = Lexer.accept[state.id()];
+        StringBuffer oldText = new StringBuffer(text.toString());
 		text.setLength(0);
 
 		while (true)
@@ -346,17 +348,23 @@ public class Lexer
 				}
 				else
 				{
-					if (text.length() > 0)
-					{
+					if (text.length() > 0 && text.toString().equals("-") &&
+                            !(oldText.toString().equals("'-"))) 
+                    {
+                        System.out.println(text.toString());
 						throw new LexerException("["
 								+ (start_line + 1) + "," + (start_pos + 1) + "]"
 								+ " Unknown token: " + text);
 					}
-					else
-					{
-						EOF token = new EOF(start_line + 1, start_pos + 1);
-						return token;
-					}
+                    if (text.toString().equals("-") && oldText.toString().equals("'-")) {
+                            Token token = new13(start_line + 1, start_pos + 1);
+                            pushBack(1);
+                            pos = start_pos + 1;
+                            line = start_line + 1;
+                            return token;
+                    } 
+                    EOF token = new EOF(start_line + 1, start_pos + 1);
+					return token;
 				}
 			}
 		}
@@ -427,6 +435,11 @@ public class Lexer
 		return new TBlank(text, line, pos);
 	}
 
+    Token new13(int line, int pos)
+    {
+        return new TMinus(line, pos);
+    }
+    
 	private int getChar() throws IOException
 	{
 		if (eof)

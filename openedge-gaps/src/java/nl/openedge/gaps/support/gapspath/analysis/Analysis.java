@@ -28,6 +28,7 @@ import nl.openedge.gaps.support.gapspath.node.TEq;
 import nl.openedge.gaps.support.gapspath.node.TId;
 import nl.openedge.gaps.support.gapspath.node.TLBrace;
 import nl.openedge.gaps.support.gapspath.node.TLBracket;
+import nl.openedge.gaps.support.gapspath.node.TMinus;
 import nl.openedge.gaps.support.gapspath.node.TOr;
 import nl.openedge.gaps.support.gapspath.node.TQuote;
 import nl.openedge.gaps.support.gapspath.node.TRBrace;
@@ -100,6 +101,8 @@ public interface Analysis extends Switch
 	void caseTQuote(TQuote node);
 
 	void caseTBlank(TBlank node);
+    
+    void caseTMinus(TMinus node);
 
 	void caseEOF(EOF node);
 }
