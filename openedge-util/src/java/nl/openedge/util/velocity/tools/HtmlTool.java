@@ -13,40 +13,50 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author shofstee
+ * Tool that has methods for creating valid HTML. It replaces special
+ * special HTML and Javascript characters in Java strings to valid HTML
+ * and Javascript characters.
  *
- * Tool that has methods for creating valid HTML.
+ * @author shofstee
  */
 public class HtmlTool
 {
 
 	/**
-	 * De Map met encodings bevat de characters waarvoor een andere
-	 * string ingevuld moet worden.
+	 * The Map with HTML-encodings the key-characters in this map
+	 * have to be replaced with the values to create a valid
+	 * HTML text.
 	 */
-	private static Map encoding;
+	private static Map htmlEncoding;
+	
+	/**
+	 * The Map with Javascript-encodings the key-characters in this map
+	 * have to be replaced with the values to create a valid
+	 * Javascript text.
+	 */
+	private static Map javascriptEncoding;
 
 	static
 	{
 		/*
-		 * Vul de encoding map.
+		 * Vul de htmlEncoding map.
 		 */
-		encoding = new HashMap();
-		encoding.put(new Character('<'), "&lt;");
-		encoding.put(new Character('>'), "&gt;");
-		encoding.put(new Character('&'), "&amp;");
-		encoding.put(new Character('"'), "&#034;");
-		encoding.put(new Character('\''), "&#039;");
-		encoding.put(new Character('ë'), "&euml;");
+		htmlEncoding = new HashMap();
+		htmlEncoding.put(new Character('<'), "&lt;");
+		htmlEncoding.put(new Character('>'), "&gt;");
+		htmlEncoding.put(new Character('&'), "&amp;");
+		htmlEncoding.put(new Character('"'), "&#034;");
+		htmlEncoding.put(new Character('\''), "&#039;");
+		htmlEncoding.put(new Character('ë'), "&euml;");
+		
+		javascriptEncoding = new HashMap();
+		javascriptEncoding.put(new Character('\''), "\\'");
 	}
 
 	/**
-	 * Vervangt alle characters in original die ook voorkomen in encoding
-	 * met de daaraan gekoppelde waarde.
-	 * @param original de string met speciale characters
-	 * @return string waarin de speciale characters vervangen zijn door 
-	 * 			HTML-vriendelijke characters. Als original null is wordt null terug
-	 * 			gegeven.
+	 * Replaces all characters in original with the value that it represents.
+	 * @param original the Java string that has special characters.
+	 * @return the HTML safe string with all special characters replaced.
 	 */
 	public static String parseText(String original)
 	{
@@ -61,9 +71,40 @@ public class HtmlTool
 		{
 			Character current = new Character(original.charAt(i));
 
-			if (encoding.containsKey(current))
+			if (htmlEncoding.containsKey(current))
 			{
-				encodedStr.append(encoding.get(current));
+				encodedStr.append(htmlEncoding.get(current));
+			}
+			else
+			{
+				encodedStr.append(current);
+			}
+		}
+
+		return encodedStr.toString();
+	}
+	
+	/**
+	 * Replaces all characters in original with the value that it represents.
+	 * @param original the Java string that has special characters.
+	 * @return the Javascript safe string with all special characters replaced.
+	 */
+	public static String parseJavascipt(String original)
+	{
+		if (original == null)
+		{
+			return original;
+		}
+		
+		StringBuffer encodedStr = new StringBuffer(original.length());		
+
+		for (int i = 0; i < original.length(); i++)
+		{
+			Character current = new Character(original.charAt(i));
+
+			if (javascriptEncoding.containsKey(current))
+			{
+				encodedStr.append(javascriptEncoding.get(current));
 			}
 			else
 			{
