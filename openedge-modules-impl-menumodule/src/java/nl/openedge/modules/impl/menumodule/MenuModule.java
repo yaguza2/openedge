@@ -69,6 +69,7 @@ import nl.openedge.util.tree.TreeStateCache;
  * voor specifieke gebruikers.
  * 
  * @author Eelco Hillenius
+ * @todo: TODO momenteel zit hier een hack in... verwijder voor efficient gedrag!
  */
 public final class MenuModule 
 	implements SingletonType, BeanType, ConfigurableType, ServletContextAwareType
