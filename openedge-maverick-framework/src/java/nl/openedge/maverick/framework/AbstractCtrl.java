@@ -42,6 +42,8 @@ import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 
 
+import nl.openedge.maverick.framework.util.UrlTool;
+
 import org.jdom.Element;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -126,7 +128,19 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			if(validateForm(cctx, formBean)) 
 			{
 				// passed validation, so execute 'normal' command
-				return this.perform(formBean, cctx);
+				
+				if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
+				{
+					this.perform(formBean, cctx);
+					String lq = formBean.getLastreq();
+					lq = UrlTool.replace(lq, "|amp|", "&"); 
+					cctx.setModel(lq);
+					return REDIRECT;	
+				} 
+				else 
+				{
+					return this.perform(formBean, cctx);
+				}
 			} 
 			else 
 			{
