@@ -34,24 +34,30 @@ import javax.security.auth.callback.*;
 
 /**
  * <p>
- * PassiveCallbackHandler has constructor that takes
+ * AccessCallbackHandler has constructor that takes
  * a username and password so its handle() method does
  * not have to prompt the user for input.
  * Useful for server-side applications.
+ * 
+ * Besides this the default username/ password, additional fields can be set
+ * using the delegate construction
  *
- * @author Paul Feuer and John Musser
+ * @author Eelco Hillenius
  */
 
-public class PassiveCallbackHandler implements CallbackHandler {
+public class AccessCallbackHandler implements CallbackHandler {
 
     private String username;
     char[] password;
 
-    /**
-     * <p>Creates a callback handler with the give username
+	/**
+	 * Creates a callback handler with the give username
      * and password.
-     */
-    public PassiveCallbackHandler(String user, String pass) {
+	 * @param user username
+	 * @param pass password
+	 */
+    public AccessCallbackHandler(String user, String pass) {
+    	
         this.username = user;
         this.password = (pass != null) ? pass.toCharArray() : null;
     }
@@ -69,8 +75,8 @@ public class PassiveCallbackHandler implements CallbackHandler {
      * instance of NameCallback or PasswordCallback
      */
     public void handle(Callback[] callbacks)
-        throws java.io.IOException, UnsupportedCallbackException
-    {
+        throws java.io.IOException, UnsupportedCallbackException {
+        	
         for (int i = 0; i < callbacks.length; i++) {
             if (callbacks[i] instanceof NameCallback) {
                 ((NameCallback)callbacks[i]).setName(username);

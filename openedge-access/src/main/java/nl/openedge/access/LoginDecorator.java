@@ -40,28 +40,28 @@ import java.security.Principal;
  * the JAAS configuration file.
  * 
  * The configured decorators are evaluated in the commit() method of the 
- * LoginModule for all <code>Principal</code>s. The returned principle 
- * that can be an 'enriched' instance of the given principal is stored with the
- * subject. DO NOT change the name of the principle! This makes it another 
- * principel effectively. The only reason that default constructors and 
- * <code>setName(String)</code> are supported in principals is to allow them 
+ * LoginModule for all &lt;code&gt;Principal&lt;/code&gt;s. The returned principals 
+ * that can be an 'enriched' instance of the given principal are stored with the
+ * subject. DO NOT change the name of the principals! This makes it other 
+ * principals effectively. The only reason that default constructors and 
+ * &lt;code&gt;setName(String)&lt;/code&gt; are supported in principals is to allow them 
  * to be handled by persistence engines like OJB.
  * 
  * The resulting Principals will be stored with the subject.
  * 
- * Note that, allthough the implementations of OpenEdge Access does support
- * this behaviour, the Implementors of the LogonModule could decide not to 
- * support it.
+ * Note that, allthough the implementations of OpenEdge Access do support
+ * &lt;code&gt;LoginDecorator&lt;/code&gt;s, the Implementors of the LogonModule 
+ * may not support it.
  * 
- * @author E.F. Hillenius
+ * @author Eelco Hillenius
  */
 public interface LoginDecorator {
 
 	/**
 	 * get extra principals for this subject
-	 * @param subject immutable subject
-	 * @return the decorated principal to be saved with the subject.
+	 * @param subject immutable set of principals
+	 * @return the decorated principals to be saved with the subject.
 	 */
-	public Principal decorate(final Principal principal);
+	public Principal[] decorate(final Principal[] principal);
 
 }

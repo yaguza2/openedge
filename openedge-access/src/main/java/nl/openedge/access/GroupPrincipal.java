@@ -31,14 +31,12 @@
 package nl.openedge.access;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <p> This class implements the <code>Principal</code> interface
- * and represents a user.
+ * and represents a group.
  *
- * <p> Principals such as this <code>UserPrincipal</code>
+ * <p> Principals such as this <code>RolePrincipal</code>
  * may be associated with a particular <code>Subject</code>
  * to augment that <code>Subject</code> with an additional
  * identity.  Refer to the <code>Subject</code> class for more information
@@ -49,38 +47,29 @@ import java.util.Set;
  * @see java.security.Principal
  * @see javax.security.auth.Subject
  */
-public class UserPrincipal implements Principal, java.io.Serializable {
+public class GroupPrincipal implements Principal, java.io.Serializable {
 
 	/** name */
 	protected String name;
-	
-	/** encrypted password... carefull with this */
-	protected String password;
-	
-	/** roles that user is member of */
-	protected Set roles;
-	
-	/** roles that user is member of */
-	protected Set groups;
-	
+
 	/**
 	 * Default constructor.
 	 */
-	public UserPrincipal() {
+	public GroupPrincipal() {
 		// do nothing here
 	}
 	
 	/**
-	 * Create a UserPrincipal with a username.
+	 * Create a RolePrincipal with a group name.
 	 *
 	 * <p>
 	 *
-	 * @param name the username for this user.
+	 * @param name the name of this group.
 	 *
 	 * @exception NullPointerException if the <code>name</code>
 	 *			is <code>null</code>.
 	 */
-	public UserPrincipal(String name) {
+	public GroupPrincipal(String name) {
 		
 		if (name == null) {
 			throw new NullPointerException("name is not allowed to be null");
@@ -89,11 +78,11 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	}
 	
 	/**
-	 * Return the username for this <code>UserPrincipal</code>.
+	 * Return the name for this <code>RolePrincipal</code>.
 	 *
 	 * <p>
 	 *
-	 * @return the username for this <code>UserPrincipal</code>
+	 * @return the name for this <code>RolePrincipal</code>
 	 */
 	public String getName() {
 		return name;
@@ -107,142 +96,29 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	}
 	
 	/**
-	 * @return String
-	 */
-	public String getPassword() {
-		return password;
-	}
-	
-	/**
-	 * @param password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * @return List
-	 */
-	public Set getRoles() {
-		return roles;
-	}
-
-	/**
-	 * Sets the roles.
-	 * @param roles The roles to set
-	 */
-	public void setRoles(Set roles) {
-		this.roles = roles;
-	}
-
-	/**
-	 * add role
-	 * @param role
-	 */
-	public void addRole(Principal role) {
-		if(role instanceof RolePrincipal) {
-			if(this.roles == null) {
-				this.roles = new HashSet();
-			}
-			this.roles.add(role);
-		}
-	}
-	
-	/**
-	 * remove role
-	 * @param role
-	 */
-	public void removeRole(Principal role) {
-		if(this.roles != null && (role instanceof RolePrincipal)) {
-			this.roles.remove(role);
-		}
-	}
-	
-	/**
-	 * does this user has given role?
-	 * @param role
-	 */
-	public boolean containsRole(Principal role) {
-		if(this.roles != null && (role instanceof RolePrincipal)) {
-			return this.roles.contains(role);
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * @return Set
-	 */
-	public Set getGroups() {
-		return groups;
-	}
-
-	/**
-	 * @param groups
-	 */
-	public void setGroups(Set groups) {
-		this.groups = groups;
-	}
-	
-	/**
-	 * add group
-	 * @param group
-	 */
-	public void addGroup(Principal group) {
-		if(group instanceof GroupPrincipal) {
-			if(this.groups == null) {
-				this.groups = new HashSet();
-			}
-			this.groups.add(group);
-		}
-	}
-	
-	/**
-	 * remove group
-	 * @param group
-	 */
-	public void removeGroup(Principal group) {
-		if(this.groups != null &&(group instanceof GroupPrincipal)) {
-			this.groups.remove(group);
-		}
-	}
-	
-	/**
-	 * does this user has given role?
-	 * @param group
-	 */
-	public boolean containsGroup(GroupPrincipal group) {
-		if(this.groups != null && (group instanceof GroupPrincipal)) {
-			return this.groups.contains(group);
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Return a string representation of this <code>UserPrincipal</code>.
+	 * Return a string representation of this <code>RolePrincipal</code>.
 	 *
 	 * <p>
 	 *
-	 * @return a string representation of this <code>UserPrincipal</code>.
+	 * @return a string representation of this <code>RolePrincipal</code>.
 	 */
 	public String toString() {
-		return "UserPrincipal: " + name;
+		return "RolePrincipal: " + name;
 	}
 	
 	/**
-	 * Compares the specified Object with this <code>UserPrincipal</code>
+	 * Compares the specified Object with this <code>RolePrincipal</code>
 	 * for equality.  Returns true if the given object is also a
-	 * <code>UserPrincipal</code> and the two UserPrincipals
+	 * <code>RolePrincipal</code> and the two GroupPrincipals
 	 * have the same username.
 	 *
 	 * <p>
 	 *
 	 * @param o Object to be compared for equality with this
-	 *		<code>UserPrincipal</code>.
+	 *		<code>RolePrincipal</code>.
 	 *
 	 * @return true if the specified Object is equal equal to this
-	 *		<code>UserPrincipal</code>.
+	 *		<code>RolePrincipal</code>.
 	 */
 	public boolean equals(Object o) {
 		if (o == null)
@@ -251,9 +127,9 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 			if (this == o)
 				return true;
 		 
-			if (!(o instanceof UserPrincipal))
+			if (!(o instanceof GroupPrincipal))
 				return false;
-			UserPrincipal that = (UserPrincipal)o;
+			GroupPrincipal that = (GroupPrincipal)o;
 		
 		if (this.getName().equals(that.getName()))
 			return true;
@@ -261,11 +137,11 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	}
 	 
 	/**
-	 * Return a hash code for this <code>UserPrincipal</code>.
+	 * Return a hash code for this <code>RolePrincipal</code>.
 	 *
 	 * <p>
 	 *
-	 * @return a hash code for this <code>UserPrincipal</code>.
+	 * @return a hash code for this <code>RolePrincipal</code>.
 	 */
 	public int hashCode() {
 		return name.hashCode();

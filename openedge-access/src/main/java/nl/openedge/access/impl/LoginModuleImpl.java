@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.access.impl.rdbms;
+package nl.openedge.access.impl;
 
 import java.security.Principal;
 import java.util.*;
@@ -42,18 +42,16 @@ import nl.openedge.access.*;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.util.PasswordHelper;
+import nl.openedge.modules.ModuleException;
+import nl.openedge.modules.ModuleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
- * RdbmsLoginModule is a LoginModule that authenticates
- * a given username/password credential against a JDBC
- * datasource.
- *
- * <p> This <code>LoginModule</code> interoperates with
- * any conformant JDBC datasource.
+ * LoginModuleImpl is a LoginModule that authenticates
+ * a given username/password credential using Hibernate.
  * 
  * If the user entered a valid username and password,
  * this <code>LoginModule</code> associates a
@@ -102,26 +100,25 @@ import org.apache.commons.logging.LogFactory;
  * @author  Eelco Hillenius
  */
 
-public class RdbmsLoginModule extends RdbmsUserManager 
-		implements LoginModule {
+public class LoginModuleImpl implements LoginModule {
 
     // initial state
-	private CallbackHandler callbackHandler;
-	private Subject subject;
-	private Map sharedState;
-	private Map options;
+	protected CallbackHandler callbackHandler;
+	protected Subject subject;
+	protected Map sharedState;
+	protected Map options;
     
-	private boolean useFirstPass = false;
-	private boolean tryFirstPass = false;
-	private boolean storePass = false;
-	private boolean clearPass = false;
+	protected boolean useFirstPass = false;
+	protected boolean tryFirstPass = false;
+	protected boolean storePass = false;
+	protected boolean clearPass = false;
 	
-	private String username;
-	private char[] password;
+	protected String username;
+	protected char[] password;
 	
 	// the authentication status
-	private boolean succeeded = false;
-	private boolean commitSucceeded = false;
+	protected boolean succeeded = false;
+	protected boolean commitSucceeded = false;
 	
 	public static final String NAME = "javax.security.auth.login.name";
 	public static final String PWD = "javax.security.auth.login.password";
@@ -130,19 +127,19 @@ public class RdbmsLoginModule extends RdbmsUserManager
     protected Vector tempCredentials;
     protected Vector tempPrincipals;
     
-    // decorator if provided
+    /** decorator if provided */
     protected LoginDecorator decorator = null;
-
     
-	/** logger */
-	private Log log = LogFactory.getLog(this.getClass());
-   
+    /** user manager, MUST be provided */
+    protected UserManagerModule userManager = null;
+
+	/* logger */
+	protected Log log = LogFactory.getLog(this.getClass());
 
     /**
-     * <p>Creates a login module that can authenticate against
-     * a JDBC datasource.
+     * <p>Creates a login module.
      */
-    public RdbmsLoginModule() {
+    public LoginModuleImpl() {
         
         tempCredentials = new Vector();
         tempPrincipals  = new Vector();
@@ -160,6 +157,15 @@ public class RdbmsLoginModule extends RdbmsUserManager
         this.sharedState = sharedState;
         this.options = options;
         
+		String userManagerAlias = (String)options.get("userManagerAlias");
+		ModuleFactory mf = ModuleFactory.getInstance();
+		try {
+			userManager = (UserManagerModule)mf.getModule(userManagerAlias);
+		} catch(ModuleException e) {
+			e.printStackTrace();
+			return;
+		}
+        
         // read options
 		tryFirstPass =
 			"true".equalsIgnoreCase((String)options.get("tryFirstPass"));
@@ -169,24 +175,24 @@ public class RdbmsLoginModule extends RdbmsUserManager
 			"true".equalsIgnoreCase((String)options.get("storePass"));
 		clearPass =
 			"true".equalsIgnoreCase((String)options.get("clearPass"));
-			
+		
+		ClassLoader classLoader =
+			Thread.currentThread().getContextClassLoader();
+		if (classLoader == null) {
+			classLoader = LoginModuleImpl.class.getClassLoader();
+		}		
 		// see if there's a LoginDecorater configured
 		String decoClass = (String)options.get("decorator");
 		if(decoClass != null) {
 			// got one, try to instantiate
-			try {
-				ClassLoader classLoader =
-					Thread.currentThread().getContextClassLoader();
-				if (classLoader == null) {
-					classLoader = RdbmsLoginModule.class.getClassLoader();
-				}	
+			try {	
 				Class cls = classLoader.loadClass(decoClass);
 				this.decorator = (LoginDecorator)cls.newInstance();
 			} catch(Exception e) {
 				e.printStackTrace();
-			}
-			
+			}	
 		}
+
     }
 
 	/**
@@ -288,7 +294,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 
             ((PasswordCallback)callbacks[1]).clearPassword();
 
-            succeeded = rdbmsValidate(username, password);
+            succeeded = validate(username, password);
 
             callbacks[0] = null;
             callbacks[1] = null;
@@ -316,57 +322,41 @@ public class RdbmsLoginModule extends RdbmsUserManager
     }
     
 	/**
-	 * Validate the given user and password against the JDBC datasource.
+	 * Validate the given user and password.
 	 * <p>
 	 *
 	 * @param user the username to be authenticated. <p>
 	 * @param pass the password to be authenticated. <p>
 	 * @exception Exception if the validation fails.
 	 */
-	private boolean rdbmsValidate(String username, char[] password) throws Exception {
+	protected boolean validate(String username, char[] password) throws Exception {
         
 		boolean passwordMatch = false;
 		String dbPassword = null;
 		String dbName = null;
 		boolean isEqual = false;
 
-		Object[] userParams = new Object[]{ username };
-		QueryResult result = excecuteQuery(
-			queries.getProperty("selectUserStmt"), userParams);
+		UserPrincipal user = (UserPrincipal)userManager.getUser(username);
 		
-		if(result.getRowCount() == 0) {
+		if(user == null) {
 			throw new LoginException("User " + username + " not found");
-		} else if(result.getRowCount() > 1) {
-			throw new LoginException("Ambiguous user (located more than once): " + username);	
 		}
-		
-		Map row = result.getRows()[0];
-		dbName = (String)row.get("name");
-		dbPassword = (String)row.get("password");
-
-		if(dbPassword == null)
-			throw new LoginException("UserPrincipal " + username + " not found");
 
 		String cryptedPassword = new String(
 					PasswordHelper.cryptPassword(password));
 
-		passwordMatch = new String(cryptedPassword).equals(dbPassword);
+		passwordMatch = new String(cryptedPassword).equals(user.getPassword());
 		if(passwordMatch) {
-            
-			RdbmsCredential rdbmsCredential = new RdbmsCredential();
-			this.tempCredentials.add(rdbmsCredential);
-    
-			// construct user        
-			UserPrincipal user = new UserPrincipal(dbName);
-			// add attributes
-			addAttributes(user);
-			// add roles
+
 			this.tempPrincipals.add(user);
-			
-			Set roles = listRolesForUser(user);
-			user.setRoles(roles);
-			this.tempPrincipals.addAll(roles);
-         
+			Set roles = userManager.listRolesForUser(user);
+			if(roles != null) {
+				this.tempPrincipals.addAll(roles);	
+			}
+			Set groups = userManager.listGroupsForUser(user);
+			if(groups != null) {
+				this.tempPrincipals.addAll(groups); 
+			}
 		} else {
 			//passwords do NOT match!
 		}
@@ -390,21 +380,25 @@ public class RdbmsLoginModule extends RdbmsUserManager
             	
 				Set principals = subject.getPrincipals();
                 if(decorator != null) { // decorate if a decorator was set 
+					// this gives use the chance to overload principals
+					// or maybe even add totally new ones
+	                Principal[] originals = (Principal[])tempPrincipals.toArray(
+	                		new Principal[tempPrincipals.size()]);
+	                
+	                Principal[] decorated = decorator.decorate(originals);
+	                if(decorated != null) {
+	                	for(int i = 0; i < decorated.length; i++) {
+	                		principals.add(decorated[i]);
+	                	}
+	                }
+	                // we now add all the prev loaded principals
+	                // if a principal was overloaded in the last block,
+	                // the Set.add(object) operation will leave the overloaded
+	                // principal in place (will not add the prev loaded principal)             
 	                Iterator it = tempPrincipals.iterator();
-	                while(it.hasNext()) {
-						
-						Principal original = (Principal)it.next();
-						Principal decorated = decorator.decorate(original);
-						
-						if(decorated != null) { 
-							// store the decorated principal instead of the original
-							principals.add(decorated);
-							if(log.isDebugEnabled()) 
-									log.debug("replaced principal " + original +
-											  " with " + decorated);
-						} else { // store the original principal
-							principals.add(original);
-						}
+	                while(it.hasNext()) {			
+						Principal p = (Principal)it.next();
+						principals.add(p);
 	                }
                 } else {
                 	// just add all the principals undecorated
@@ -417,8 +411,8 @@ public class RdbmsLoginModule extends RdbmsUserManager
                 tempPrincipals.clear();
                 tempCredentials.clear();
 
-                if(callbackHandler instanceof PassiveCallbackHandler)
-                    ((PassiveCallbackHandler)callbackHandler).clearPassword();
+                if(callbackHandler instanceof AccessCallbackHandler)
+                    ((AccessCallbackHandler)callbackHandler).clearPassword();
 
 				// in any case, clean out state
 				cleanState();
@@ -447,8 +441,8 @@ public class RdbmsLoginModule extends RdbmsUserManager
         tempPrincipals.clear();
         tempCredentials.clear();
 
-        if (callbackHandler instanceof PassiveCallbackHandler)
-            ((PassiveCallbackHandler)callbackHandler).clearPassword();
+        if (callbackHandler instanceof AccessCallbackHandler)
+            ((AccessCallbackHandler)callbackHandler).clearPassword();
 
         logout();
 
@@ -465,8 +459,8 @@ public class RdbmsLoginModule extends RdbmsUserManager
         tempPrincipals.clear();
         tempCredentials.clear();
 
-        if (callbackHandler instanceof PassiveCallbackHandler)
-            ((PassiveCallbackHandler)callbackHandler).clearPassword();
+        if (callbackHandler instanceof AccessCallbackHandler)
+            ((AccessCallbackHandler)callbackHandler).clearPassword();
 
         // remove the principals the login module added
         Iterator it = subject.getPrincipals(UserPrincipal.class).iterator();
@@ -476,19 +470,11 @@ public class RdbmsLoginModule extends RdbmsUserManager
             subject.getPrincipals().remove(p);
         }
 		it = subject.getPrincipals(RolePrincipal.class).iterator();
-				while (it.hasNext()) {
-					RolePrincipal p = (RolePrincipal)it.next();
-					if(log.isDebugEnabled()) log.debug("removing RolePrincipal " + p);
-					subject.getPrincipals().remove(p);
-				}
-
-        // remove the credentials the login module added
-        it = subject.getPublicCredentials(RdbmsCredential.class).iterator();
-        while (it.hasNext()) {
-            RdbmsCredential c = (RdbmsCredential)it.next();
-            if(log.isDebugEnabled()) log.debug("removing Credential " + c);
-            subject.getPrincipals().remove(c);
-        }
+		while (it.hasNext()) {
+			RolePrincipal p = (RolePrincipal)it.next();
+			if(log.isDebugEnabled()) log.debug("removing RolePrincipal " + p);
+			subject.getPrincipals().remove(p);
+		}
 
         return(true);
     }
@@ -507,7 +493,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 	 * @param getPasswdFromSharedState boolean that tells this method whether
 	 *		to retrieve the password from the sharedState.
 	 */
-	private void getUsernamePassword(boolean getPasswdFromSharedState)
+	protected void getUsernamePassword(boolean getPasswdFromSharedState)
 				throws LoginException {
 
 		if (getPasswdFromSharedState) {
@@ -521,7 +507,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 	/**
 	 * Clean out state because of a failed authentication attempt
 	 */
-	private void cleanState() {
+	protected void cleanState() {
 		username = null;
 		if (password != null) {
 			for (int i = 0; i < password.length; i++)

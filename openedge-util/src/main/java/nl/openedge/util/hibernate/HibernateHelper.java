@@ -28,23 +28,72 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.access;
+package nl.openedge.util.hibernate;
 
-import org.jdom.Element;
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.cfg.Configuration;
 
 /**
- * A class that is Configurable can be initialised with an XML node of
- * the main configuration file
- * 
- * @author E.F. Hillenius
+ * Manages a hibernate session with ThreadLocal.
+ *
+ * @author Eelco Hillenius
  */
-public interface Configurable {
-
+public abstract class HibernateHelper {
+	    
+    /**
+     * Holds the current hibernate session, if one has been created.
+     */
+    protected static ThreadLocal hibernateHolder = new ThreadLocal(); 
+    
+    /**
+     * Hibernate session factory
+     */
+    protected static SessionFactory factory;
+    
+    /**
+     * initialise
+     */
+     public static void init() throws Exception {
+        // Initialize hibernate
+		// configure; load mappings
+		Configuration ds = new Configuration().configure();
+		// build a SessionFactory		
+		factory = ds.buildSessionFactory(); 
+     }
+     
+    
+    /**
+     * Get session for this Thread
+     *
+     * @return an appropriate Session object
+     */
+    public static Session getSession() throws HibernateException {
+    	
+        Session sess = (Session)hibernateHolder.get();
+        
+        if (sess == null && factory != null) {
+        	
+            sess = factory.openSession();
+            hibernateHolder.set(sess);
+        }
+        
+        return sess;
+    }
+    
+    /**
+     * @return the hibernate session factory
+     */
+    public static SessionFactory getSessionFactory() {
+    	
+        return factory;
+    }
 	/**
-	 * initialise with xml element
-	 * @param configNode
-	 * @exception ConfigException
+	 * @param factory
 	 */
-	public void init(Element configNode) throws ConfigException;
+	public static void setSessionFactory(SessionFactory factory) {
+		HibernateHelper.factory = factory;
+	}
 
 }

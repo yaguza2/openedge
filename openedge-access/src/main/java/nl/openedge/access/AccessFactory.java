@@ -35,18 +35,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessControlException;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import java.security.Policy;
 
 import javax.servlet.ServletContext;
-import javax.sql.DataSource;
 
-import nl.openedge.access.impl.rdbms.RdbmsBase;
 import nl.openedge.access.util.*;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
@@ -100,9 +94,6 @@ public class AccessFactory {
 
 	/** save the reference if it is available */
 	protected ServletContext servletContext = null;
-	
-	/** concrete user manager */
-	protected UserManager userManager;
 			
 	/**
 	 * configuration document
@@ -145,41 +136,7 @@ public class AccessFactory {
 	private void internalInit() throws ConfigException {
 		
 		Element root = configuration.getRootElement();	
-		
-		// allthough using a datasource dependends on the implementation,
-		// it is probably that common that we'll try to load it is in the
-		// configuration
-		Element dsNode = root.getChild("datasource");
-		if(dsNode != null) {
-			String dataSourceRef = dsNode.getAttributeValue("reference");
-			if(dataSourceRef != null) {
-		
-				try {
-					Context ctx = new InitialContext();
-					DataSource ds = (DataSource)ctx.lookup(dataSourceRef);
-					RdbmsBase.setDataSource(ds);
-					log.info("datasource loaded from " + dataSourceRef);
-				} catch(Exception e) {
-					throw new ConfigException(e);
-				}
-			} else {
-				
-				try {
-		
-					BasicDataSource ds = new BasicDataSource();
-				
-					BeanUtils.populate(ds, XML.getParams(dsNode));
-					
-					RdbmsBase.setDataSource(ds);
-					log.info("datasource loaded from delegate" + ds);
-					
-				} catch(Exception e) {
-					throw new ConfigException(e);
-				}				
-			}
-					
-		}	
-		this.userManager = loadUserManager(root.getChild("user-manager"));
+
 		
 		// a client of this library does not have to configure the security
 		// element. For instance, it could be configured in the JDK settings
@@ -283,11 +240,11 @@ public class AccessFactory {
 	 * load and initialise access manager
 	 * @param config
 	 */
-	protected UserManager loadUserManager(Element configNode) 
+	protected UserManagerModule loadUserManager(Element configNode) 
 				throws ConfigException {
 	
 		if(configNode == null) return null;
-		UserManager manager = null;
+		UserManagerModule manager = null;
 		String managerCls = XML.getValue(configNode, "class");
 		try {
 			
@@ -298,10 +255,10 @@ public class AccessFactory {
 			}
 			Class cls = classLoader.loadClass(managerCls);	
 
-			manager = (UserManager)cls.newInstance();
-			manager.init(configNode);
+			manager = (UserManagerModule)cls.newInstance();
+			//manager.init(configNode);
 			
-			log.info(cls + " acting as UserManager");
+			log.info(cls + " acting as UserManagerModule");
 						
 		} catch(Exception e) {
 			throw new ConfigException(e);
@@ -408,13 +365,6 @@ public class AccessFactory {
 		} else {
 			return getClass().getResource(path);			
 		}
-	}
-
-	/**
-	 * @return UserManager
-	 */
-	public UserManager getUserManager() {
-		return userManager;
 	}
 
 }

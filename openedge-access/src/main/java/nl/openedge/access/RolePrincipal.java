@@ -34,7 +34,7 @@ import java.security.Principal;
 
 /**
  * <p> This class implements the <code>Principal</code> interface
- * and represents a group.
+ * and represents a role.
  *
  * <p> Principals such as this <code>RolePrincipal</code>
  * may be associated with a particular <code>Subject</code>
@@ -86,6 +86,13 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**
