@@ -10,11 +10,39 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
+			<subsection name="1.0.3">
+				<ul>
+					<li>removed redundant Locale parameter in ValidationDelegate interface and in some 
+							of the private methods of FormBeanCtrlBase.</li>
+					<li>removed redundant check on override field in DefaultValidatorDelegate.</li>
+					<li>added exception handling and logging for form validators.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.3">
+				<ul>
+					<li>Typo 'stictPopulationMode' should be 'strictPopulationMode', class ExcecutionParams.</li>
+					<li>Fix in OgnlFieldPopulator: conversion was done twice in some cases.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.2">
+				<ul>
+					<li>Removed call back getErrorMessage in Validator interfaces.</li>
+					<li>Added parameter stickPopulationMode.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.1">
+				<ul>
+					<li>Registries are now public, incl. option to set default populator with PopulatorRegistry.</li>
+					<li>Populators that were registered per field overrule regexpr registrated populators.</li>
+				</ul>
+			</subsection>
+			
 			<subsection name="1.0">
 				<ul>
-
 					<li>First public SourceForge release.</li>
-
 				</ul>
 			</subsection>
 

@@ -8,17 +8,17 @@
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
-		<logo>http://test.topicus.nl/maven/openedge-logo.jpg</logo>
+		<logo>http://test.topicus.nl/public_logos/openedge_logo.jpg</logo>
 	</organization>
 	<inceptionYear>2003</inceptionYear>
 	<package>nl.openedge.baritus</package>
-	<logo>http://test.topicus.nl/maven/openedge-logo.jpg</logo>
+	<logo>http://test.topicus.nl/public_logos/baritus_logo.jpg</logo>
 	<shortDescription>Baritus is an open source framework for building Java web applications.</shortDescription>
 	<description>
 		Baritus is an open source framework for building Java web applications. Baritus is a powerfull extension 
 		of Maverick that focussus on developing web applications using plain old java objects.
 	</description>
-	<url>http://maven.apache.org/</url>
+	<url>http://baritus.sourceforge.net/</url>
 
 	<versions>
 		<version>
@@ -49,10 +49,12 @@
 	</versions>
 	<branches />
 	<mailingLists>
-		<name>baritus-user</name>
-		<subscribe>http://lists.sourceforge.net/lists/listinfo/baritus-user</subscribe>
-		<!--<unsubscribe></unsubscribe>-->
-		<archive>http://www.mail-archive.com/baritus-user@lists.sourceforge.net/</archive>
+		 <mailingList>
+			<name>baritus-user</name>
+			<subscribe>http://lists.sourceforge.net/lists/listinfo/baritus-user</subscribe>
+			<!--<unsubscribe></unsubscribe>-->
+			<archive>http://www.mail-archive.com/baritus-user@lists.sourceforge.net/</archive>
+		 </mailingList>
 	</mailingLists>
 
 	<developers>
@@ -60,7 +62,7 @@
 		<developer>
 			<name>Eelco Hillenius</name>
 			<id>eelco</id>
-			<email>eelco.hillenius@topicus.nl</email>
+			<email>eelco12@sourceforge.net</email>
 			<organization>Topicus</organization>
 			<roles>
 				<role>Java Developer</role>
@@ -71,7 +73,7 @@
 		<developer>
 			<name>Sander Hofstee</name>
 			<id>sander</id>
-			<email>sander.hofstee@topicus.nl</email>
+			<email>the_ellessar@sourceforge.net</email>
 			<organization>Topicus</organization>
 			<roles>
 				<role>Java Developer</role>
@@ -82,7 +84,7 @@
 		<developer>
 			<name>Maurice Marrink</name>
 			<id>maurice</id>
-			<email>maurice.marrink@topicus.nl</email>
+			<email>mrmean@sourceforge.net</email>
 			<organization>Topicus</organization>
 			<roles>
 				<role>Java Developer</role>

@@ -152,8 +152,8 @@ public class FormWithMap
 
 		<programlisting><![CDATA[
 ...
-	addValidator("foo(bar)", myValidator);
-	addValidator("foo(someOtherKey", myOtherValidator);
+	addValidator("foo['bar']", myValidator);
+	addValidator("foo['someOtherKey']", myOtherValidator);
 ...
 ]]></programlisting>
 

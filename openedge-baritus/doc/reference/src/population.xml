@@ -17,6 +17,14 @@
 			properties of the form bean, converting the request parameters to the target property
 			type and setting the converted values on the form bean.
 	    </para>
+		
+	    <para>
+			By default, <a href="http://www.ognl.org">Ognl</a> is used to get and set properties.
+			It is possible to use a custom populator delegate instead of the default delegate
+			'nl.openedge.baritus.population.OgnlFieldPopulator'. See chapter six for the details,
+			and <a href="BeanUtilsFieldPopulator.java.txt">this BeanUtils populator</a> as
+			an example.
+	    </para>
 	
 	    <mediaobject>
 	        <imageobject role="fo">
