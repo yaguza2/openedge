@@ -107,8 +107,11 @@ public final class DateFormatHelper
 
 	/**
 	 * load from configuration file ALLE formatters isLenient(false).
-	 * @param filename file to load
-	 * @throws IOException when the file cannot be loaded
+	 * 
+	 * @param filename
+	 *            file to load
+	 * @throws IOException
+	 *             when the file cannot be loaded
 	 */
 	private static void loadFromFile(String filename) throws IOException
 	{
@@ -228,12 +231,14 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * Parse date with fallback option.
+	 * Parses a string for date information. Multiple patterns are tried. Stops matching after the
+	 * first match.
 	 * 
 	 * @param stringDate
 	 *            date as a string
 	 * @return Date parsed date or null if input was null or empty string
-	 * @throws ParseException when the stringdate could not be parsed
+	 * @throws ParseException
+	 *             when the stringdate could not be parsed
 	 */
 	public static Date fallbackParse(String stringDate) throws ParseException
 	{
@@ -246,7 +251,7 @@ public final class DateFormatHelper
 		SimpleDateFormat sdf = null;
 		Date date = null;
 
-		while (i.hasNext())
+		while (i.hasNext() && date == null)
 		{
 			try
 			{
@@ -288,10 +293,12 @@ public final class DateFormatHelper
 	 * @param stringDate
 	 *            date as a string
 	 * @return Date parsed date
-	 * @throws ParseException when the stringdate could not be parsed
-	 * @throws CheckException when the check failed
+	 * @throws ParseException
+	 *             when the stringdate could not be parsed
+	 * @throws CheckException
+	 *             when the check failed
 	 */
-	public static Date parse(String stringDate) throws CheckException, ParseException 
+	public static Date parse(String stringDate) throws CheckException, ParseException
 	{
 		return parse(stringDate, defaultFormatter);
 	}
@@ -305,7 +312,8 @@ public final class DateFormatHelper
 	 *            use fallback
 	 * @deprecated use fallbackParse
 	 * @return Date parsed date
-	 * @throws ParseException when the stringdate could not be parsed
+	 * @throws ParseException
+	 *             when the stringdate could not be parsed
 	 */
 	public static Date parse(String stringDate, boolean fallback) throws ParseException
 	{
@@ -321,10 +329,13 @@ public final class DateFormatHelper
 	 *            format
 	 * @see java.text.SimpleDateFormat
 	 * @return Date parsed date
-	 * @throws ParseException when the stringdate could not be parsed
-	 * @throws CheckException when the check failed
+	 * @throws ParseException
+	 *             when the stringdate could not be parsed
+	 * @throws CheckException
+	 *             when the check failed
 	 */
-	public static Date parse(String stringDate, String format) throws CheckException, ParseException
+	public static Date parse(String stringDate, String format) throws CheckException,
+			ParseException
 	{
 		DateFormat df = (DateFormat) formatters.get(format);
 		if (df == null)
@@ -345,8 +356,10 @@ public final class DateFormatHelper
 	 * @param df
 	 *            date formatter
 	 * @return Date parsed date
-	 * @throws ParseException when the stringdate could not be parsed
-	 * @throws CheckException when the check failed
+	 * @throws ParseException
+	 *             when the stringdate could not be parsed
+	 * @throws CheckException
+	 *             when the check failed
 	 */
 	protected static synchronized Date parse(String stringDate, DateFormat df)
 			throws CheckException, ParseException
@@ -416,7 +429,9 @@ public final class DateFormatHelper
 
 	/**
 	 * Set whether to check for chars.
-	 * @param b whether to check for chars
+	 * 
+	 * @param b
+	 *            whether to check for chars
 	 */
 	public static void setCheckForCharacters(boolean b)
 	{
@@ -425,6 +440,7 @@ public final class DateFormatHelper
 
 	/**
 	 * Get whether to check for size.
+	 * 
 	 * @return boolean check for unwanted size?
 	 */
 	public static boolean isCheckForSize()
@@ -434,7 +450,9 @@ public final class DateFormatHelper
 
 	/**
 	 * Set whether to check for size.
-	 * @param b whether to check for size
+	 * 
+	 * @param b
+	 *            whether to check for size
 	 */
 	public static void setCheckForSize(boolean b)
 	{
@@ -446,11 +464,14 @@ public final class DateFormatHelper
 /**
  * Special internal exception for checks.
  */
+
 class CheckException extends Exception
 {
 	/**
 	 * Construct.
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public CheckException(String message)
 	{

@@ -1,5 +1,11 @@
-1.2.9
+1.2.10
+
+- Changed DateFormatHelper to stop parsing after a match has been found.
+	Check youre dateformathelper.cfg to be sure you still get the results you want.
+
 -------------------------------------------------
+1.2.9
+
 - Removed JNDI config override option from HibernateHelper (was not actually that usefull)
 - Added HibernateHelper config override options with system parameters (-D stuff)
 - Added AXIS serializers/ deserializers and client utility for working with .ser package
