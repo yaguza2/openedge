@@ -1,0 +1,29 @@
+grant principal nl.openedge.access.UserPrincipal "chef"
+{  
+  permission javax.security.auth.AuthPermission "/admin.onderhoud.m";
+  permission javax.security.auth.AuthPermission "/admin.onderhoud.functie.m";
+  permission javax.security.auth.AuthPermission "/admin.onderhoud.functie.recursetest.m";
+  permission javax.security.auth.AuthPermission "/admin.onderhoud.praktijk.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.journaal.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.actuelemedicatie.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.contraindicaties.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.allergieen.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.probleemlijst.m";
+  permission javax.security.auth.AuthPermission "/zoeken.m";
+  permission javax.security.auth.AuthPermission "/zoeken.patient.m";
+  permission javax.security.auth.AuthPermission "/zoeken.passant.m";
+};
+
+grant principal nl.openedge.access.UserPrincipal "admin"
+{  
+  permission javax.security.auth.AuthPermission "/medischdossier.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.journaal.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.actuelemedicatie.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.contraindicaties.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.allergieen.m";
+  permission javax.security.auth.AuthPermission "/medischdossier.probleemlijst.m";
+  permission javax.security.auth.AuthPermission "/zoeken.m";
+  permission javax.security.auth.AuthPermission "/zoeken.patient.m";
+  permission javax.security.auth.AuthPermission "/zoeken.passant.m";
+};

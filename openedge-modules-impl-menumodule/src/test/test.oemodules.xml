@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<components-config>
+
+	<components>
+
+		<component name="MenuModule" class="nl.openedge.modules.impl.menumodule.MenuModule">
+			<property name="configLocation" value="test.usermenu.xml" />
+		</component>
+
+	</components>
+
+</components-config>
