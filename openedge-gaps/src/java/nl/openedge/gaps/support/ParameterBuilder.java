@@ -69,10 +69,10 @@ public class ParameterBuilder
 	private Version version = null;
 
 	/** Huidige structurele groep. */
-	private StructuralGroup structuralGroup = null;
+	private StructuralGroup currentStructuralGroup = null;
 
 	/** Huidige parameter groep. */
-	private ParameterGroup parameterGroup = null;
+	private ParameterGroup currentParameterGroup = null;
 
 	/** Parameter voor evt tijdelijk gebruik (generatie id's geneste parameters). */
 	private NestedParameter topParam = null;
@@ -88,8 +88,37 @@ public class ParameterBuilder
 	 */
 	public ParameterBuilder()
 	{
-		structuralGroup = ParameterRegistry.getRootGroup();
-		parameterGroup = structuralGroup.getParameterChilds()[0];
+	    // niets
+	}
+
+	/**
+	 * Geeft huidige structuurgroep of de root indien nog niet van buitenaf gezet.
+	 * @return huidige structuurgroep of de root indien nog niet van buitenaf gezet
+	 */
+	protected final StructuralGroup getCurrentStructuralGroup()
+	{
+	    if(currentStructuralGroup == null)
+	    {
+	        currentStructuralGroup = ParameterRegistry.getRootGroup();
+	    }
+	    return currentStructuralGroup;
+	}
+
+	/**
+	 * Geeft huidige parametergroep of de root indien nog niet van buitenaf gezet.
+	 * @return huidige parametergroep of de root indien nog niet van buitenaf gezet
+	 */
+	protected final ParameterGroup getCurrentParameterGroup()
+	{
+	    if(currentParameterGroup == null)
+	    {
+	        StructuralGroup structuralGroup = getCurrentStructuralGroup();
+	        currentParameterGroup = structuralGroup.getParameterChilds()[0];
+	        log.warn("geen huidige parametergroup gezet... beschouw "
+	                + currentParameterGroup + " van structuurgroep "
+	                + structuralGroup + " als huidige");
+	    }
+	    return currentParameterGroup;
 	}
 
 	/*
@@ -652,7 +681,7 @@ public class ParameterBuilder
 	protected void saveParameter(Parameter param) throws SaveException
 	{
 		ParameterRegistry.saveParameter(param);
-		ParameterRegistry.saveGroup(parameterGroup);
+		ParameterRegistry.saveGroup(getCurrentStructuralGroup());
 	}
 
 	/**
@@ -664,7 +693,7 @@ public class ParameterBuilder
 	protected void prepareParameterProperties(Parameter param, String localId)
 			throws ParameterBuilderException
 	{
-
+	    ParameterGroup parameterGroup = getCurrentParameterGroup();
 		if (parameterGroup == null)
 		{
 			throw new ParameterBuilderException(
@@ -696,7 +725,7 @@ public class ParameterBuilder
 		{
 			try
 			{
-				version = VersionRegistry.getCurrent(structuralGroup);
+				version = VersionRegistry.getCurrent(getCurrentStructuralGroup());
 			}
 			catch (NotFoundException e)
 			{
@@ -740,7 +769,7 @@ public class ParameterBuilder
 	{
 		StructuralGroup group = buildStructuralGroup(name, description, navigateTo);
 		ParameterRegistry.saveGroup(group);
-		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
+		ParameterRegistry.saveGroup(getCurrentStructuralGroup()); // gewijzigde parent
 		return group;
 	}
 
@@ -770,16 +799,17 @@ public class ParameterBuilder
 	protected StructuralGroup buildStructuralGroup(String name, String description,
 			boolean navigateTo) throws ParameterBuilderException
 	{
+	    StructuralGroup currentStructuralGroup = getCurrentStructuralGroup();
 		checkIdNotNull(name);
 		checkGroupLocalId(name);
 		StructuralGroup group = new StructuralGroup();
 		group.setLocalId(name);
 		group.setDescription(description);
 		group.setVersion(getVersionWithCheck());
-		group.setParent(structuralGroup);
+		group.setParent(currentStructuralGroup);
 		String id = EntityUtil.createId(group);
 		group.setId(id);
-		structuralGroup.addStructuralChild(group);
+		currentStructuralGroup.addStructuralChild(group);
 		if (navigateTo)
 		{
 			setStructuralGroup(group); // zet de huidige groep op de nieuw
@@ -852,7 +882,7 @@ public class ParameterBuilder
 		ParameterGroup group = buildParameterGroup(
 				extendsFrom, name, description, navigateTo);
 		ParameterRegistry.saveGroup(group);
-		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
+		ParameterRegistry.saveGroup(getCurrentStructuralGroup()); // gewijzigde parent
 		return group;
 	}
 
@@ -917,18 +947,19 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(ParameterGroup extendsFrom, String name,
 			String description, boolean navigateTo) throws ParameterBuilderException
 	{
+	    StructuralGroup currentStructuralGroup = getCurrentStructuralGroup();
 		checkIdNotNull(name);
 		checkGroupLocalId(name);
-		checkParentOfParameterGroup(structuralGroup);
+		checkParentOfParameterGroup(currentStructuralGroup);
 		ParameterGroup group = new ParameterGroup();
 		group.setLocalId(name);
 		group.setDescription(description);
 		group.setVersion(getVersionWithCheck());
-		group.setParent(structuralGroup);
+		group.setParent(currentStructuralGroup);
 		String id = EntityUtil.createId(group);
 		group.setId(id);
 		group.setSuperGroup(extendsFrom);
-		structuralGroup.addParameterChild(group);
+		currentStructuralGroup.addParameterChild(group);
 		if (navigateTo)
 		{
 			setParameterGroup(group); // zet de huidige groep op de nieuw
@@ -958,7 +989,7 @@ public class ParameterBuilder
 	 */
 	public ParameterGroup getParameterGroup()
 	{
-		return parameterGroup;
+		return getCurrentParameterGroup();
 	}
 
 	/**
@@ -968,10 +999,11 @@ public class ParameterBuilder
 	 */
 	public void setParameterGroup(ParameterGroup parameterGroup)
 	{
-		this.parameterGroup = parameterGroup;
+		this.currentParameterGroup = parameterGroup;
+		StructuralGroup currentStructuralGroup = getCurrentStructuralGroup();
 		if (parameterGroup != null)
 		{
-			if (!(parameterGroup.getParentId().equals(structuralGroup.getId())))
+			if (!(parameterGroup.getParentId().equals(currentStructuralGroup.getId())))
 			{
 				setStructuralGroup(parameterGroup.getParent());
 			}
@@ -984,7 +1016,7 @@ public class ParameterBuilder
 	 */
 	public StructuralGroup getStructuralGroup()
 	{
-		return structuralGroup;
+		return getCurrentStructuralGroup();
 	}
 
 	/**
@@ -994,7 +1026,7 @@ public class ParameterBuilder
 	public void setStructuralGroup(StructuralGroup structuralGroup)
 	{
 		checkGroupNotNull(structuralGroup);
-		this.structuralGroup = structuralGroup;
+		this.currentStructuralGroup = structuralGroup;
 	}
 
 	/**

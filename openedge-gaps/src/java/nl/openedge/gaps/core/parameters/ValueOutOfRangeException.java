@@ -12,8 +12,10 @@ package nl.openedge.gaps.core.parameters;
  */
 public class ValueOutOfRangeException extends InputException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 3832608304534188269L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public ValueOutOfRangeException()

@@ -11,8 +11,10 @@ package nl.openedge.gaps.support.gapspath;
  */
 public final class GPathBrowserException extends UncheckedParserException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -5782568395571108175L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public GPathBrowserException()

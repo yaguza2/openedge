@@ -26,8 +26,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class NumericParameter extends Parameter
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -7563705506686804258L;
 
-	/** Descriptor. */
+    /** Descriptor. */
 	private static final transient ParameterDescriptor DESCRIPTOR = new Descriptor();
 
 	/** Number format Nederlandse locale. */
@@ -141,8 +143,10 @@ public final class NumericParameter extends Parameter
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 1109118033916781622L;
 
-		/** toegestane input waarden. */
+        /** toegestane input waarden. */
 		private static final ParameterInput[] POSSIBLE_VALUES = new ParameterInput[] {new TextInput(
 				Descriptor.class)};
 

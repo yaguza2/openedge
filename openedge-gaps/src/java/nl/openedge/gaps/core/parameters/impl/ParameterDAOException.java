@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.ModelException;
  */
 public final class ParameterDAOException extends ModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 5721403905390598258L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public ParameterDAOException()

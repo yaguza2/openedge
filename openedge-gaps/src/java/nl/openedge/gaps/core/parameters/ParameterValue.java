@@ -16,8 +16,10 @@ import java.util.Map;
  */
 public class ParameterValue implements Cloneable, Serializable
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 8303854550708760832L;
 
-	/**
+    /**
 	 * De waarde.
 	 */
 	protected Object value;

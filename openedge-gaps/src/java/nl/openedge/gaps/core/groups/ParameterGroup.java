@@ -31,7 +31,10 @@ import nl.openedge.gaps.util.NotNullHashMap;
  */
 public class ParameterGroup extends Group
 {
-	/** Parameters. */
+    /** serial UUID. */
+	private static final long serialVersionUID = -5253412918735272837L;
+
+    /** Parameters. */
 	private transient List parameterIds = new NotNullArrayList();
 
 	/** map voor snel opzoeken. */

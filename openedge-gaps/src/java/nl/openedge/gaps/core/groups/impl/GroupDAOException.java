@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.ModelException;
  */
 public final class GroupDAOException extends ModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -2788524624115419696L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public GroupDAOException()

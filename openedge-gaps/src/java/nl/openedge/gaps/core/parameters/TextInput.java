@@ -13,8 +13,10 @@ package nl.openedge.gaps.core.parameters;
  */
 public class TextInput extends ParameterInput
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -7561585446264580685L;
 
-	/** Weergavenaam. */
+    /** Weergavenaam. */
 	private String displayName;
 
 	/**

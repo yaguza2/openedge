@@ -25,8 +25,10 @@ import nl.openedge.gaps.core.parameters.ValueOutOfRangeException;
  */
 public final class FixedSetParameter extends Parameter
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -6911591492130907986L;
 
-	/** Set geldige inputs. */
+    /** Set geldige inputs. */
 	private Set inputs = new HashSet();
 
 	/**
@@ -243,8 +245,10 @@ public final class FixedSetParameter extends Parameter
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = -7012789353316255983L;
 
-		/** de geldige waarden. */
+        /** de geldige waarden. */
 		private ParameterInput[] possibleValues;
 
 		/**

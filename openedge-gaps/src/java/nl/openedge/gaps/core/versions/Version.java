@@ -22,8 +22,10 @@ import java.util.Date;
  */
 public final class Version implements Cloneable, Serializable
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -2356934378890577111L;
 
-	/** interne id. */
+    /** interne id. */
 	private Long id;
 
 	/** datum (evt incl tijd) vanaf wanneer de versie geldig is. */

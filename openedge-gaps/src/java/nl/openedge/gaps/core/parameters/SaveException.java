@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.ModelException;
  */
 public class SaveException extends ModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 8563537895295086036L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public SaveException()

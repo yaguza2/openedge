@@ -14,8 +14,10 @@ import java.util.Map;
  */
 public class NotNullHashMap extends HashMap
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -839322130539266546L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public NotNullHashMap()

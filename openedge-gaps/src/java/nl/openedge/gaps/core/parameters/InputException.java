@@ -14,8 +14,10 @@ import nl.openedge.gaps.core.ModelException;
  */
 public class InputException extends ModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 5273363844911289697L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public InputException()

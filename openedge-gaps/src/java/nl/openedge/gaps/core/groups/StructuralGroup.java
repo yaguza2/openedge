@@ -8,6 +8,7 @@ package nl.openedge.gaps.core.groups;
 
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
@@ -23,8 +24,10 @@ import nl.openedge.gaps.util.NotNullHashMap;
  */
 public class StructuralGroup extends Group
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -1268659553007139260L;
 
-	/** Structural (sub)groepen. */
+    /** Structural (sub)groepen. */
 	private List structuralChildIds = new NotNullArrayList();
 
 	/** map voor snel opzoeken. */
@@ -263,6 +266,41 @@ public class StructuralGroup extends Group
 		}
 		path = path + getLocalId();
 		return path;
+	}
+
+	/**
+	 * Geeft het huidige pad als een array van strings waarbij ieder array element
+	 * in feite een lokaal id is van een van de parents of dit element.
+	 * @return huidige pad als een array van strings
+	 */
+	public String[] getPathParts()
+	{
+	    String theId = getId();
+	    if(theId == null)
+	    {
+	        return new String[0];
+	    }
+	    StringTokenizer tk = new StringTokenizer(theId, "/");
+	    String[] parts = new String[tk.countTokens()];
+	    int i = 0;
+	    while(tk.hasMoreTokens())
+	    {
+	        parts[i++] = tk.nextToken();
+	    }
+	    return parts;
+	}
+
+	/**
+	 * Geeft pad tot en met de root.
+	 * @return pad tot en met de root
+	 */
+	public StructuralGroup[] getPathToRoot()
+	{
+	    StructuralGroup[] parentPathToRoot = getParent().getPathToRoot();
+	    StructuralGroup[] path = new StructuralGroup[parentPathToRoot.length + 1];
+	    System.arraycopy(parentPathToRoot, 0, path, 0, parentPathToRoot.length);
+	    path[path.length - 1] = this;
+	    return path;
 	}
 
 	/**

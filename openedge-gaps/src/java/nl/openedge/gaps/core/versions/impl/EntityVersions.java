@@ -16,8 +16,10 @@ import java.util.Set;
  */
 public final class EntityVersions implements Cloneable, Serializable
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 9076433123056601346L;
 
-	/**
+    /**
 	 * Id van de entiteit.
 	 */
 	private String entityId;

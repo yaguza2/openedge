@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.ModelException;
  */
 public class ParameterBuilderException extends ModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 403982578729053436L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public ParameterBuilderException()

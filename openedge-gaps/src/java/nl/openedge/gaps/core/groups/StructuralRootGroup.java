@@ -11,8 +11,10 @@ package nl.openedge.gaps.core.groups;
  */
 public final class StructuralRootGroup extends StructuralGroup
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 6637125885899564646L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public StructuralRootGroup()
@@ -38,5 +40,14 @@ public final class StructuralRootGroup extends StructuralGroup
 	public StructuralGroup getParent()
 	{
 		return null;
+	}
+
+	/**
+	 * Geeft pad tot en met de root.
+	 * @return pad tot en met de root
+	 */
+	public StructuralGroup[] getPathToRoot()
+	{
+	    return new StructuralGroup[]{this};
 	}
 }

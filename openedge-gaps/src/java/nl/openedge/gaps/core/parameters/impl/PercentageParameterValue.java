@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.parameters.ParameterValue;
  */
 public final class PercentageParameterValue extends ParameterValue
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 8219029670786588105L;
 
-	/** Constante voor percentage deling. */
+    /** Constante voor percentage deling. */
 	private static final double PERCENTAGE_FACTOR = 100d;
 
 	/**

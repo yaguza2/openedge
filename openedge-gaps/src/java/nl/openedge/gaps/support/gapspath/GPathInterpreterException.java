@@ -12,8 +12,10 @@ package nl.openedge.gaps.support.gapspath;
  */
 public final class GPathInterpreterException extends ParserException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 6902056327112509701L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public GPathInterpreterException()

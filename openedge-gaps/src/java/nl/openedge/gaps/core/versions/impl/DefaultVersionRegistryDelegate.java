@@ -86,7 +86,6 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 				// sla ze zelf op (ipv via de parameter registry)
 				groupDao.saveOrUpdateGroup(root);
 				groupDao.saveOrUpdateGroup(paramGroup);
-				ParameterRegistry.setRootGroup(this, root);
 			}
 			catch (GroupDAOException e)
 			{

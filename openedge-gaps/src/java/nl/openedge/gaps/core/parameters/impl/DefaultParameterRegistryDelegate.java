@@ -15,7 +15,6 @@ import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.Group;
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
-import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.core.groups.impl.GroupDAO;
 import nl.openedge.gaps.core.groups.impl.GroupDAOException;
 import nl.openedge.gaps.core.parameters.Parameter;
@@ -23,7 +22,6 @@ import nl.openedge.gaps.core.parameters.ParameterRegistryDelegate;
 import nl.openedge.gaps.core.parameters.SaveException;
 import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.core.versions.VersionRegistry;
-import nl.openedge.gaps.core.versions.VersionRegistryDelegate;
 import nl.openedge.gaps.util.EntityUtil;
 
 import org.apache.commons.logging.Log;
@@ -41,9 +39,6 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 
 	/** map klasse - prototype. */
 	private Map mapClassPrototype = new HashMap();
-
-	/** de default root groep. */
-	private StructuralGroup root;
 
 	/** Data access object parameters. */
 	private ParameterDAO parameterDao = new ParameterDAO();
@@ -162,21 +157,18 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	 */
 	public StructuralGroup getRootGroup() throws RegistryException
 	{
-
-		return root;
-	}
-
-	/**
-	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#setRootGroup(nl.openedge.gaps.core.versions.VersionRegistryDelegate,
-	 *      nl.openedge.gaps.core.groups.StructuralRootGroup)
-	 */
-	public void setRootGroup(VersionRegistryDelegate callee, StructuralRootGroup rootGroup)
-	{
-		if (callee == null)
-		{
-			throw new IllegalStateException("ongeldige aanroeper voor setRootGroup");
-		}
-		this.root = rootGroup;
+		try
+        {
+            return getStructuralGroup("/");
+        }
+        catch (RegistryException e)
+        {
+            throw new RegistryException(e);
+        }
+        catch (NotFoundException e)
+        {
+            throw new RegistryException(e);
+        }
 	}
 
 	/**

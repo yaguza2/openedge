@@ -15,7 +15,10 @@ import nl.openedge.util.ser.SerializedAndZipped;
  */
 public final class GroupWrapper implements Serializable, Cloneable
 {
-	/** Opslag id. */
+    /** serial UUID. */
+    private static final long serialVersionUID = 6298681694257629044L;
+
+    /** Opslag id. */
 	private Long id;
 
 	/** Pad property. */

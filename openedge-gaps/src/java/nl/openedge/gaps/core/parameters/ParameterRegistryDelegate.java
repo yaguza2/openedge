@@ -11,9 +11,7 @@ import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
-import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.core.versions.Version;
-import nl.openedge.gaps.core.versions.VersionRegistryDelegate;
 
 /**
  * Interface voor ondersteuning van strategy pattern voor {@link ParameterRegistry}.<br>
@@ -95,14 +93,6 @@ public interface ParameterRegistryDelegate
 	 * @throws RegistryException bij onverwachte registry fouten
 	 */
 	StructuralGroup getRootGroup() throws RegistryException;
-
-	/**
-	 * Zet de root group; mag alleen gebeuren door version registry.
-	 * @param callee aanroeper (implementaties dienen additioneel een null check uit te
-	 *            voeren.
-	 * @param root de te zetten root
-	 */
-	void setRootGroup(VersionRegistryDelegate callee, StructuralRootGroup root);
 
 	/**
 	 * Geeft de groep met het gegeven id voor de gegeven versie.

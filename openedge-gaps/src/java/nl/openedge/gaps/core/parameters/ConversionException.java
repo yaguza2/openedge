@@ -12,8 +12,10 @@ package nl.openedge.gaps.core.parameters;
  */
 public class ConversionException extends InputException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -6646594930181802752L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public ConversionException()

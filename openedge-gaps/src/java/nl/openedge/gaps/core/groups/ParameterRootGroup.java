@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.Constants;
  */
 public final class ParameterRootGroup extends ParameterGroup
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 6322963661459651574L;
 
-	/**
+    /**
 	 * Construct.
 	 * @param parent de structural group.
 	 */

@@ -8,8 +8,10 @@ import java.util.ListIterator;
 
 public class TypedLinkedList extends LinkedList
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -2610160789340544685L;
 
-	Cast cast;
+    Cast cast;
 
 	public TypedLinkedList()
 	{

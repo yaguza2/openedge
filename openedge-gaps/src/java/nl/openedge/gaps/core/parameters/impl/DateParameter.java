@@ -27,8 +27,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class DateParameter extends Parameter
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -3110023660952168189L;
 
-	/** Descriptor. */
+    /** Descriptor. */
 	private static final transient ParameterDescriptor DESCRIPTOR = new Descriptor();
 
 	/** Date format voor parsen datum van strings. */
@@ -116,8 +118,10 @@ public final class DateParameter extends Parameter
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 3581484777664638910L;
 
-		/** toegestane input waarden. */
+        /** toegestane input waarden. */
 		private static final ParameterInput[] POSSIBLE_VALUES = new ParameterInput[] {new TextInput(
 				Descriptor.class)};
 

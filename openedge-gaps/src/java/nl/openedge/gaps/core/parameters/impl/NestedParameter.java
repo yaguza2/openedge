@@ -30,8 +30,10 @@ import nl.openedge.gaps.core.versions.Version;
  */
 public final class NestedParameter extends Parameter implements Externalizable
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 2826628444683510616L;
 
-	/**
+    /**
 	 * Tokens die de kolommen van elkaar scheiden bij input in de vorm van een enkele
 	 * string.
 	 */
@@ -249,8 +251,10 @@ public final class NestedParameter extends Parameter implements Externalizable
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 2688804199414583212L;
 
-		/** toegestane input waarden. */
+        /** toegestane input waarden. */
 		private Object[][] possibleValues = null;
 
 		/**

@@ -12,8 +12,10 @@ package nl.openedge.gaps.core;
  */
 public class RegistryException extends UncheckedModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 1707616735132487481L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public RegistryException()

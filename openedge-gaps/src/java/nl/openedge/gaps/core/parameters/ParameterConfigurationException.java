@@ -14,8 +14,10 @@ import nl.openedge.gaps.core.UncheckedModelException;
  */
 public class ParameterConfigurationException extends UncheckedModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 3552422758520965322L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public ParameterConfigurationException()

@@ -13,8 +13,10 @@ import nl.openedge.gaps.core.parameters.ParameterValue;
  */
 public final class NumericParameterValue extends ParameterValue
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 4222735569372954350L;
 
-	/**
+    /**
 	 * Construct.
 	 * @param value de waarde waarmee deze parameter dient te worden aangemaakt
 	 */

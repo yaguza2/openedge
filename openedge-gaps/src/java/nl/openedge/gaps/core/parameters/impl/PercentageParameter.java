@@ -26,8 +26,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class PercentageParameter extends Parameter
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -1670654801221521262L;
 
-	/** Descriptor. */
+    /** Descriptor. */
 	private static final transient ParameterDescriptor DESCRIPTOR = new Descriptor();
 
 	/** Number format Nederlandse locale. */
@@ -142,8 +144,10 @@ public final class PercentageParameter extends Parameter
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 5090568511210289068L;
 
-		/** toegestane input waarden. */
+        /** toegestane input waarden. */
 		private static final ParameterInput[] POSSIBLE_VALUES = new ParameterInput[] {new TextInput(
 				Descriptor.class)};
 

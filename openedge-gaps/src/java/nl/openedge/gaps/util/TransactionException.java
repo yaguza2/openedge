@@ -16,8 +16,10 @@ import nl.openedge.gaps.core.UncheckedModelException;
  */
 public class TransactionException extends UncheckedModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -3716882163087637370L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public TransactionException()

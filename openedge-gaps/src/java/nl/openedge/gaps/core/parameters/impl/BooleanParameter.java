@@ -19,8 +19,10 @@ import nl.openedge.gaps.core.parameters.ParameterValue;
  */
 public final class BooleanParameter extends Parameter
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 7323610389383248275L;
 
-	/** Descriptor. */
+    /** Descriptor. */
 	private static final transient ParameterDescriptor DESCRIPTOR = new Descriptor();
 
 	/**
@@ -83,8 +85,10 @@ public final class BooleanParameter extends Parameter
 	/** Input voor true. */
 	private static final class BooleanTrueInput extends ParameterInput
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 5330543003118537625L;
 
-		/**
+        /**
 		 * @see nl.openedge.gaps.core.parameters.ParameterInput#getValue()
 		 */
 		public Object getValue()
@@ -96,8 +100,10 @@ public final class BooleanParameter extends Parameter
 	/** Input voor false. */
 	private static final class BooleanFalseInput extends ParameterInput
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 8417932073470822941L;
 
-		/**
+        /**
 		 * @see nl.openedge.gaps.core.parameters.ParameterInput#getValue()
 		 */
 		public Object getValue()
@@ -111,8 +117,10 @@ public final class BooleanParameter extends Parameter
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = -4946883051756975846L;
 
-		/** toegestane input waarden. */
+        /** toegestane input waarden. */
 		private static final ParameterInput[] POSSIBLE_VALUES = new ParameterInput[] {
 				new BooleanTrueInput(), new BooleanFalseInput()};
 

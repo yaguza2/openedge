@@ -19,8 +19,10 @@ import nl.openedge.gaps.core.parameters.ParameterValue;
  */
 public final class NestedParameterValue extends ParameterValue
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 8761709155476410228L;
 
-	/** geneste parameter values. */
+    /** geneste parameter values. */
 	private List values;
 
 	/**

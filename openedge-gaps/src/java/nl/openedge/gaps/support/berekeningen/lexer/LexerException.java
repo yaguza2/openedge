@@ -4,8 +4,10 @@ package nl.openedge.gaps.support.berekeningen.lexer;
 
 public class LexerException extends Exception
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 8711639022789962902L;
 
-	public LexerException(String message)
+    public LexerException(String message)
 	{
 		super(message);
 	}

@@ -15,8 +15,10 @@ import nl.openedge.util.ser.SerializedAndZipped;
  */
 public final class ParameterWrapper implements Serializable, Cloneable
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 6018573415363562135L;
 
-	/** Opslag id. */
+    /** Opslag id. */
 	private Long id;
 
 	/** localId. */

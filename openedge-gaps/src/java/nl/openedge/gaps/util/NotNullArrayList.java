@@ -14,8 +14,10 @@ import java.util.Collection;
  */
 public class NotNullArrayList extends ArrayList
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -8068778915569133406L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public NotNullArrayList()

@@ -11,10 +11,8 @@ import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
-import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.core.parameters.impl.DefaultParameterRegistryDelegate;
 import nl.openedge.gaps.core.versions.Version;
-import nl.openedge.gaps.core.versions.VersionRegistryDelegate;
 
 /**
  * Registry voor parameters die de daadwerkelijke persistency stategie verbergt, en die,
@@ -133,18 +131,6 @@ public final class ParameterRegistry
 	public static StructuralGroup getRootGroup() throws RegistryException
 	{
 		return getDelegate().getRootGroup();
-	}
-
-	/**
-	 * Zet de root group; mag alleen gebeuren door version registry.
-	 * @param callee aanroeper (implementaties dienen additioneel een null check uit te
-	 *            voeren.
-	 * @param root de te zetten root
-	 */
-	public static void setRootGroup(VersionRegistryDelegate callee,
-			StructuralRootGroup root)
-	{
-		getDelegate().setRootGroup(callee, root);
 	}
 
 	/**

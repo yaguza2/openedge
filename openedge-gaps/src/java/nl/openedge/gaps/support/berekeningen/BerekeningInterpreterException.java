@@ -12,8 +12,10 @@ package nl.openedge.gaps.support.berekeningen;
  */
 public final class BerekeningInterpreterException extends ParserException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = 633801544596534032L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public BerekeningInterpreterException()

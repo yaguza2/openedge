@@ -11,8 +11,10 @@ package nl.openedge.gaps.core;
  */
 public class NotFoundException extends ModelException
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -1579898215791275517L;
 
-	/**
+    /**
 	 * Construct.
 	 */
 	public NotFoundException()

@@ -20,8 +20,10 @@ import nl.openedge.gaps.core.parameters.TextInput;
  */
 public final class StringParameter extends Parameter
 {
+    /** serial UUID. */
+	private static final long serialVersionUID = -6943082365260737173L;
 
-	/** Descriptor. */
+    /** Descriptor. */
 	private static final transient ParameterDescriptor DESCRIPTOR = new Descriptor();
 
 	/**
@@ -85,8 +87,10 @@ public final class StringParameter extends Parameter
 	 */
 	private static final class Descriptor extends ParameterDescriptor
 	{
+	    /** serial UUID. */
+		private static final long serialVersionUID = 5378817134678861151L;
 
-		/** toegestane input waarden. */
+        /** toegestane input waarden. */
 		private static final ParameterInput[] POSSIBLE_VALUES = new ParameterInput[] {new TextInput(
 				Descriptor.class)};
 
