@@ -11,13 +11,9 @@
       <p>
 		If you miss certain types or InitCommands, you can register your
 		own. Additionally, if you don't like the two default ComponentRepository
-		implementations, you can provide your own (though within some constraints)
-		version.
+		implementations, you can provide your own version
+		(though within some constraints).
       </p>
-	  <p>
-		In this document, we give some examples for the default, strong typed
-		implementation of ComponentRepository.
-	  </p>
 	  <subsection name="types registries">
 		<p>
 			The two default implementations of ComponentRepository use their
@@ -118,12 +114,12 @@ public class ThrowAwayTypeFactory extends AbstractComponentFactory
 }
 			]]></source><br/>
 		Now, if this was really a new type, we would have to register it with 
-		the respective TypesRegistry like:
+		the right TypesRegistry like:
 			<source><![CDATA[
 TypesRegistry.registerComponentType(ThrowAwayType.class, ThrowAwayTypeFactory.class);
 			]]></source><br/>
 		
-		You have to do this before initializing, or you have to call either <code>reload()</code>
+		You have to do this before initializing, or you call either <code>reload()</code>
 		on your instance of <code>JDOMConfigurator</code> or <code>reset()</code> on
 		on the <code>RepositoryFactory</code>.
 		</p><br/>

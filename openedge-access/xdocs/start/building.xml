@@ -10,20 +10,20 @@
     <section name="Using Maven">
       <p>
 		As we use Maven as our project build tool, you should have it
-		installed when you want to build OpenEdge Modules from source.
+		installed when you want to build OpenEdge Access from source.
 		Learn more about Maven <a target="_new" href="http://maven.apache.org">here</a>
       </p>
       
       <p>
         The downloaded install archive contains everything required to build
-        OpenEdge Modules. The install archive has a single top-level
+        OpenEdge Access. The install archive has a single top-level
         directory named <code>//TODO</code> with all the 
         project related files beneath that. You can now unpack the install
         archive.
       </p>
 
       <p>
-        The directory layout of OpenEdge Modules looks like this:
+        The directory layout of OpenEdge Access looks like this:
       </p>
         
       <source><![CDATA[

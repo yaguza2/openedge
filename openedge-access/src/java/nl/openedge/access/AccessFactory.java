@@ -255,7 +255,7 @@ public class AccessFactory
 		try
 		{
 			Policy policy = Policy.getPolicy();
-			
+
 			log.info("refreshing Policy");
 			
 			policy.refresh();

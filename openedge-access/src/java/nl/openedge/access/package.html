@@ -15,13 +15,13 @@ Authentication with JAAS is done by providing an implementation of the
 JAAS LoginModule. This framework not only gives you a default, ready to use 
 implementations of LoginModule, but also provides a mechanism to add LoginModule 
 implementations and policies to the JVM dynamically.<br>
-For authorisation in web application environments, the <code>javax.servlet.Filter</a> 
-implementation and <code>javax.security.auth.login.LoginContext</a> wrapper are 
+For authorisation in web application environments, the <code>javax.servlet.Filter</code> 
+implementation and <code>javax.security.auth.login.LoginContext</code> wrapper are 
 given to provide a default way of doing authorization. 
 <p>
-The non-JAAS interface <code>UserManager<code> and it's (possible) implementations 
-provide for simple user/ role managent. This gives users a ready out of the box 
-implementation of basic user- and role managent that, possibly combined with an 
+The non-JAAS interface <code>UserManager</code> and it's (possible) implementations 
+provide for default user/ role managent. This gives users an out of the box 
+implementation of basic user- and role managent that, possibly combined with a 
 application specific implementation of <code>LoginDecorator</code>, is 
 probably sufficient for most cases of authorisation in applications. 
 
