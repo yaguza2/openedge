@@ -12,6 +12,7 @@ package nl.openedge.util.test;
 import java.util.Date;
 
 import nl.openedge.util.DateComparator;
+import nl.openedge.util.DateHelper;
 import junit.framework.TestCase;
 
 /**
@@ -48,7 +49,7 @@ public class DateComparatorTest extends TestCase
 		Date date1 = new Date();
 		Date date2 = (Date)date1.clone();
 		assertEquals(0, comparator.compare(date1, date2));
-		date2.setHours(date2.getHours()-3);
+		date2 = DateHelper.addHours(date2, -3, true);
 		assertEquals(0, comparator.compare(date1, date2));
 	}
 	
@@ -59,21 +60,21 @@ public class DateComparatorTest extends TestCase
 	{
 		Date date1 = new Date();
 		Date date2 = (Date)date1.clone();
-		date1.setDate(date1.getDate() + 1);
+		date1 = DateHelper.addDaysInMonth(date1, 1, true);
 		
 		assertEquals(-1, comparator.compare(date1, date2));
 		
 		date1 = new Date();
-		date1.setMonth(date1.getMonth() + 1);
+		date1 = DateHelper.addMonths(date1, 1, true);
 		assertEquals(-1, comparator.compare(date1, date2));
 		
 		date1 = new Date();
-		date1.setYear(date1.getYear() + 1);
+		date1 = DateHelper.addYears(date1, 1, true);
 		assertEquals(-1, comparator.compare(date1, date2));
 		
 		date1 = new Date();
-		date1.setYear(date1.getYear() + 1);
-		date2.setMonth(date2.getMonth() + 1);
+		date1 = DateHelper.addYears(date1, 1, true);
+		date1 = DateHelper.addMonths(date1, 1, true);
 		assertEquals(-1, comparator.compare(date1, date2));
 		
 	}
@@ -85,21 +86,21 @@ public class DateComparatorTest extends TestCase
 	{
 		Date date1 = new Date();
 		Date date2 = (Date)date1.clone();
-		date1.setDate(date1.getDate() - 1);
+		date1 = DateHelper.addDaysInMonth(date1, -1, true);
 		
 		assertEquals(1, comparator.compare(date1, date2));
 		
 		date1 = new Date();
-		date1.setMonth(date1.getMonth() - 1);
+		date1 = DateHelper.addMonths(date1, -1, true);
 		assertEquals(1, comparator.compare(date1, date2));
 		
 		date1 = new Date();
-		date1.setYear(date1.getYear() - 1);
+		date1 = DateHelper.addYears(date1, -1, true);
 		assertEquals(1, comparator.compare(date1, date2));
 		
 		date1 = new Date();
-		date1.setYear(date1.getYear() - 1);
-		date2.setMonth(date2.getMonth() - 1);
+		date1 = DateHelper.addYears(date1, -1, true);
+		date1 = DateHelper.addMonths(date1, -1, true);
 		assertEquals(1, comparator.compare(date1, date2));
 		
 	}
