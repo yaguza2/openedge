@@ -122,17 +122,56 @@ public abstract class AbstractPerformanceTester
 	 */
 	public void testBatch() throws Exception
 	{
+		long begin;
+		long end;
 		InputStream is = null;
 		ParameterBuilder pb = new ParameterBuilder();
 		pb.beginBatch();
 		pb.createStructuralGroup("datatest", "test voor uploadfunctie", true);
 		pb.createParameterGroup("tabellen", "tabellen", true);
 		is = AbstractParameterTest.class.getResourceAsStream("batch1.txt");
-		long begin = System.currentTimeMillis();
+		begin = System.currentTimeMillis();
 		pb.createNumericData(null, is, 0, true, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
 		pb.commitBatch();
-		long end = System.currentTimeMillis();
-		log.info("batch (1000 entries) kostte: " + ((end - begin) / 1000d) + " sec.");
+		end = System.currentTimeMillis();
+		log.info("batch save (1000 entries) kostte: " + ((end - begin) / 1000d) + " sec.");
+		ParameterBrowser browser = new ParameterBrowser();
+		begin = System.currentTimeMillis();
+		String pname = "DAT_1_1";
+		String query = null;
+		Object value = null;
+		int j = 1;
+		int k = 1;
+		int l = 0;
+		for(int i = 0; i < 1000; i++)
+		{
+			pname = "DAT_" + k + "_" + j + "['" + l + "']";
+			query = "/datatest:tabellen/" + pname + "@value";
+			value = browser.navigate(query);
+			if(value == null)
+			{
+				throw new Exception("geen waarde voor " + query);
+			}
+			if(l == 9)
+			{
+				l = 0;
+				if(j == 10)
+				{
+					j = 1;
+					k++;
+				}
+				else
+				{
+					j++;
+				}
+			}
+			else
+			{
+				l++;
+			}
+		}
+		end = System.currentTimeMillis();
+		log.info("batch get met PB (1000 entries) kostte: " + ((end - begin) / 1000d) + " sec.");
 	}
 
 	/**
