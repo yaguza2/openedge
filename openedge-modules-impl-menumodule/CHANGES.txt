@@ -1,4 +1,13 @@
 -------------------------------------------------
+1.3
+
+- Added AttributeEnabledObject interface
+- Added Attributes to MenuFilters
+- Made abstract MenuFilter
+- Changed MenuItem to implement AttributeEnebledObject
+- deprecated MenuModule.getAttribute() for a cleaner method with the same name
+
+-------------------------------------------------
 1.2
 
 - Removed Commons BeanUtils/ Commons Collections dependency in favor of Ognl

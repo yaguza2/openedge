@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * Allways disables all
  * @author Sander Hofstee
  */
-public final class DisabledFilter implements RequestScopeMenuFilter
+public final class DisabledFilter extends AbstractMenuFilter implements RequestScopeMenuFilter
 {
 
 	private static Log log = LogFactory.getLog(DisabledFilter.class);

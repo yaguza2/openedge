@@ -36,7 +36,7 @@ import java.util.Map;
  * A menu filter can be used to filter menu items from the menu tree
  * @author Eelco Hillenius
  */
-public interface MenuFilter
+public interface MenuFilter extends AttributeEnabledObject
 {
 	/** special key to store a JAAS subject with in the context */
 	public final static String CONTEXT_KEY_SUBJECT = "subject";

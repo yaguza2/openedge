@@ -1,5 +1,5 @@
 <!ELEMENT menu-config (filter*,menu-item+)>
-<!ELEMENT filter EMPTY>
+<!ELEMENT filter (attribute*)>
 	<!ATTLIST filter class CDATA #REQUIRED>
 	<!-- filters worden gebruikt om menu's dynamisch op te bouwen per gebruiker/rechten -->
 <!ELEMENT menu-item (filter*,menu-item*,alias*,attribute*,parameter*)>

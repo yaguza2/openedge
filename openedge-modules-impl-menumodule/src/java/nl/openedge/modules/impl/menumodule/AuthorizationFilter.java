@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * Filters on authorisations with Access/ JAAS
  * @author Eelco Hillenius
  */
-public final class AuthorizationFilter implements SessionScopeMenuFilter
+public final class AuthorizationFilter extends AbstractMenuFilter implements SessionScopeMenuFilter
 {
 
 	private static Log log = LogFactory.getLog(AuthorizationFilter.class);

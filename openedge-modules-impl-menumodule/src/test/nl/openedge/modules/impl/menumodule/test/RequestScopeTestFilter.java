@@ -32,6 +32,7 @@ package nl.openedge.modules.impl.menumodule.test;
 
 import java.util.Map;
 
+import nl.openedge.modules.impl.menumodule.AbstractMenuFilter;
 import nl.openedge.modules.impl.menumodule.MenuItem;
 import nl.openedge.modules.impl.menumodule.RequestScopeMenuFilter;
 
@@ -41,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Eelco Hillenius
  */
-public final class RequestScopeTestFilter implements RequestScopeMenuFilter
+public final class RequestScopeTestFilter extends AbstractMenuFilter implements RequestScopeMenuFilter
 {
 
 	private static Log log = LogFactory.getLog(RequestScopeTestFilter.class);

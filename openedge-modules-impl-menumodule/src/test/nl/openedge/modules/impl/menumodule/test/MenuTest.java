@@ -257,8 +257,8 @@ public class MenuTest extends TestCase
 			// check:
 			// <attribute name="test1">value1</attribute>
 			// <attribute name="test2"><![CDATA[ test with CDATA: &'"<> ]]></attribute>
-			Object test1Val = item.get("test1");
-			Object test2Val = item.get("test2");
+			Object test1Val = item.getAttribute("test1");
+			Object test2Val = item.getAttribute("test2");
 			System.out.println("test1: " + test1Val + ", test2: " + test2Val);
 			
 			assertEquals("value1", test1Val);

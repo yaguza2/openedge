@@ -150,21 +150,22 @@ public final class MenuModule
 			Element filterNode = (Element)i.next();
 			String className = filterNode.getAttributeValue("class");
 			Class clazz = classLoader.loadClass(className);
-			
+			MenuFilter temp=(MenuFilter)clazz.newInstance();
+			addAttributes(temp,filterNode);
 			if(ApplicationScopeMenuFilter.class.isAssignableFrom(clazz))
 			{
-				applicationScopedFilters.add(clazz.newInstance());
-				log.info(className + " geregistreerd als als filter met applicatie scope");
+				applicationScopedFilters.add(temp);
+				log.info(className + " geregistreerd als filter met applicatie scope");
 			}
 			else if(SessionScopeMenuFilter.class.isAssignableFrom(clazz))
 			{
-				sessionScopedFilters.add(clazz.newInstance());
-				log.info(className + " geregistreerd als als filter met sessie scope");				
+				sessionScopedFilters.add(temp);
+				log.info(className + " geregistreerd als filter met sessie scope");				
 			}
 			else if(RequestScopeMenuFilter.class.isAssignableFrom(clazz))
 			{
-				requestScopedFilters.add(clazz.newInstance());
-				log.info(className + " geregistreerd als als filter met request scope");				
+				requestScopedFilters.add(temp);
+				log.info(className + " geregistreerd als filter met request scope");				
 			}
 			else
 			{
@@ -342,8 +343,8 @@ public final class MenuModule
 						childItem, childElement, childNode, classLoader, filterContext);
 						
 					// zet attributen indien gegeven
-					addAttributes(
-						childItem, childElement, childNode, classLoader, filterContext);					
+					//addAttributes(childItem, childElement, childNode, classLoader, filterContext);
+					addAttributes(childItem, childElement);					
 				}
 			}
 		}
@@ -369,10 +370,11 @@ public final class MenuModule
 				Element filterNode = (Element)i.next();
 				String className = filterNode.getAttributeValue("class");
 				Class clazz = classLoader.loadClass(className);
-			
+				MenuFilter temp=(MenuFilter)clazz.newInstance();
+				addAttributes(temp,filterNode);
 				if(RequestScopeMenuFilter.class.isAssignableFrom(clazz))
 				{
-					nodeFilters.add(clazz.newInstance());
+					nodeFilters.add(temp);
 					if(log.isDebugEnabled())
 					{
 						log.debug(className + 
@@ -393,6 +395,10 @@ public final class MenuModule
 	}
 	
 	/* voeg attributen voor node toe (nooit voor root) */
+	
+	/**
+	 * @deprecated use addAtttributes(AttributeEnabledObject Element)
+	 */
 	private void addAttributes(
 		MenuItem childItem,
 		Element currentElement,
@@ -421,6 +427,31 @@ public final class MenuModule
 			}			
 		}
 
+	}
+	/**
+	 * Registers attributes for objects
+	 * @param target
+	 * @param currentElement
+	 */
+	private void addAttributes(AttributeEnabledObject target, Element currentElement)
+	{
+		List attributes = currentElement.getChildren("attribute");
+		if(!attributes.isEmpty())
+		{
+			for(Iterator i = attributes.iterator(); i.hasNext(); )
+			{
+				Element attribNode = (Element)i.next();
+				String attribName = attribNode.getAttributeValue("name");
+				String attribValue = attribNode.getTextNormalize();
+				target.putAttribute(attribName, attribValue);
+				if(log.isDebugEnabled())
+				{
+					log.debug("attribute " + attribName + "{" +
+						attribValue + "} registered for " + 
+						target.getClass().getName());					
+				}
+			}			
+		}
 	}
 	private void addParameters(MenuItem childItem,Element currentElement)
 	{

@@ -19,6 +19,11 @@
 
   <versions>
 	<version>
+      <id>1.3</id>
+      <name>1.3</name>
+<!--      <tag>B1_3</tag>	-->
+    </version>
+	<version>
       <id>1.2</id>
       <name>1.2</name>
       <tag>B1_2</tag>

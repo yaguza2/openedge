@@ -42,7 +42,7 @@ import java.util.Properties;
  * An item that fits within a menu tree
  * @author Eelco Hillenius
  */
-public final class MenuItem implements Serializable
+public final class MenuItem implements Serializable, AttributeEnabledObject
 {
 	private String tag;
 	private String link;
@@ -120,6 +120,8 @@ public final class MenuItem implements Serializable
 	}
 	
 	/**
+	 * @deprecated replaced by getAttribute(String)
+	 * 
 	 * get attribute with given key
 	 * @param key key of attribute
 	 * @return Object attribute or null if not found
@@ -418,6 +420,25 @@ public final class MenuItem implements Serializable
 		if(parameters==null)
 			parameters=new Properties();
 		parameters.put(name,value);
+	}
+
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#getAttribute(java.lang.String)
+	 */
+	public Object getAttribute(String name)
+	{
+		return (attributes != null) ? attributes.get(name) : null;
+	}
+
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#putAllAttributes(java.util.Map)
+	 */
+	public void putAllAttributes(Map attributes)
+	{
+		if(this.attributes==null)
+			this.attributes=new HashMap(attributes);
+		else
+			this.attributes.putAll(attributes);
 	}
 
 }
