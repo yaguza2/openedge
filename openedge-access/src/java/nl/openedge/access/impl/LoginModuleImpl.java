@@ -33,6 +33,8 @@ package nl.openedge.access.impl;
 import java.security.Principal;
 import java.util.*;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.security.auth.spi.LoginModule;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.Subject;
@@ -42,7 +44,6 @@ import nl.openedge.access.*;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.util.PasswordHelper;
-import nl.openedge.modules.ModuleException;
 import nl.openedge.modules.ModuleFactory;
 
 import org.apache.commons.logging.Log;
@@ -129,9 +130,15 @@ public class LoginModuleImpl implements LoginModule {
     
     /** decorator if provided */
     protected LoginDecorator decorator = null;
-    
+   
     /** user manager, MUST be provided */
     protected UserManagerModule userManager = null;
+    
+    /** module alias for user manager: userManagerAlias */
+    public final static String USER_MANAGER_ALIAS = "userManagerAlias";
+    
+    /** jndi reference for module factory: factoryRef */
+    public final static String FACTORY_REF = "factoryRef";
 
 	/* logger */
 	protected Log log = LogFactory.getLog(this.getClass());
@@ -157,11 +164,14 @@ public class LoginModuleImpl implements LoginModule {
         this.sharedState = sharedState;
         this.options = options;
         
-		String userManagerAlias = (String)options.get("userManagerAlias");
-		ModuleFactory mf = ModuleFactory.getInstance();
+		String userManagerAlias = (String)options.get(USER_MANAGER_ALIAS);
+		String moduleFactoryRef = (String)options.get(FACTORY_REF);
+
 		try {
+			Context ctx = new InitialContext();
+			ModuleFactory mf = (ModuleFactory)ctx.lookup(moduleFactoryRef);
 			userManager = (UserManagerModule)mf.getModule(userManagerAlias);
-		} catch(ModuleException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			return;
 		}
