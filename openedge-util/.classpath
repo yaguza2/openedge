@@ -10,5 +10,8 @@
     <classpathentry kind="var" path="MAVEN_REPO/jakarta-taglibs-standard/jars/jakarta-taglibs-standard-1.0.3.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/ojb/jars/ojb-1.0pre-cvs.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.0rc2.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-3.0-dev.jar"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -99,6 +99,27 @@
     </dependency>
     
     <dependency>
+      <id>commons-collections</id>
+      <version>3.0-dev</version>
+      <properties>
+      	<war.bundle.jar>true</war.bundle.jar>
+      </properties>
+      <url>http://jakarta.apache.org/commons/collections/</url>
+    </dependency>
+    
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.1-dev</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+    </dependency>
+    
+    <dependency>
+      <id>jdom</id>
+      <version>b8</version>
+      <url>http://www.jdom.org/</url>
+    </dependency>
+    
+    <dependency>
       <id>jstl</id>
       <version>1.0</version>
       <url>http://java.sun.com/products/jsp/jstl/</url>
