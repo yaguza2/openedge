@@ -163,7 +163,7 @@ public class FieldTool
 		AbstractForm model = null;
 		if(bean instanceof AbstractForm)
 		{
-			model = (AbstractForm)model;
+			model = (AbstractForm)bean;
 		}
 		try
 		{
