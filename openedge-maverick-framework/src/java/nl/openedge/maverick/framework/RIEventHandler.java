@@ -42,7 +42,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 /**
  * @author Eelco Hillenius
  */
-public class RIEventHandler implements ReferenceInsertionEventHandler
+public final class RIEventHandler implements ReferenceInsertionEventHandler
 {
 	private AbstractForm model;
 	private Context context;
