@@ -54,6 +54,9 @@
 
 package nl.openedge.util.velocity.stringresources;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Factory for constructing and obtaining the instance of 
  * StringResourceRepository implementation
@@ -70,6 +73,8 @@ public final class StringResourceRepositoryFactory
 	 * is the factory initialised properly?
 	 */
 	private static boolean loaded = false;
+	
+	private static Log log = LogFactory.getLog(StringResourceRepositoryFactory.class);
 
 	/**
 	 * repository instance
@@ -88,12 +93,14 @@ public final class StringResourceRepositoryFactory
 	{
 		if (implementation != null)
 		{
+			log.info("using stringresource repo " + implementation);
 			ClassLoader classLoader = StringResourceRepositoryFactory.class.getClassLoader();
 			Class clazz = classLoader.loadClass(implementation);
 			repository = (StringResourceRepository)clazz.newInstance();
 		}
 		else
 		{
+			log.info("using stringresource repo " + StringResourceRepositoryImpl.class);
 			repository = new StringResourceRepositoryImpl();
 		}
 
@@ -109,7 +116,18 @@ public final class StringResourceRepositoryFactory
 	{
 		if (!loaded)
 		{
-			throw new StringResourceException("StringResourceRepositoryFactory was not properly set up");
+			log.info("not properly initialized; fallback to default implementation...");
+			try
+			{
+				init(null);
+				return repository;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				throw new StringResourceException(e.getMessage());
+			}
+			
 		}
 		else
 		{

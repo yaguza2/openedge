@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>openedge-util</id>
   <name>OpenEdge Util</name>
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.1.1</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -21,14 +21,19 @@
     <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
   </repository> -->
   
-  <versions>
-    <version>
-      <id>1.1</id>
-      <name>1.1</name>
-      <tag>B1</tag>
-    </version>
-  </versions>
-  <branches></branches>
+ 	<versions>
+		<version>
+			<id>1.1.1</id>
+			<name>1.1.1</name>
+			<tag>B1_1</tag>
+		</version>
+		<version>
+			<id>1.1</id>
+			<name>1.1</name>
+			<tag>B1</tag>
+		</version>
+	</versions>
+ <branches></branches>
   <mailingLists>
   </mailingLists>
   
@@ -82,7 +87,7 @@
 
     <dependency>
       <id>commons-beanutils</id>
-      <version>1.7dev</version>
+      <version>1.6.1</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
     </dependency>
 
