@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.3 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: DefaultValidatorDelegate.java,v 1.4 2004-04-01 09:13:01 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-01 09:13:01 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,6 +31,7 @@
  
 package nl.openedge.baritus;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -125,28 +126,9 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 						if(formBeanContext.getOverrideField(name) == null) 
 							// see if there allready was an error registered
 						{
-							Collection propertyValidators = 
-								(Collection)fieldValidators.get(name);
-							// these are the fieldValidators for one property
-							if(propertyValidators != null)
-							{
-								try
-								{
-									succeeded = doValidationForOneField(
-										cctx, formBeanContext, locale, succeeded, 
-										name, propertyValidators);
-								}
-								catch (Exception e)
-								{
-									if(populationLog.isDebugEnabled())
-									{
-										// when in debug mode, print the stacktrace
-										populationLog.error(e.getMessage(), e);
-									}
-									populationLog.error(e.getMessage());
-									// ignore
-								}
-							}	
+							succeeded = doValidationForOneField(
+								fieldValidators, cctx, formBeanContext, 
+								locale, succeeded, name);	
 						} // else an error allready occured; do not validate
 					}	
 				}
@@ -190,10 +172,103 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 					}
 				}
 			}
-
 		}
 		
 		return succeeded;
+	}
+	
+	/* execute validation for one field */
+	private boolean doValidationForOneField(
+		MultiMap fieldValidators,
+		ControllerContext cctx,
+		FormBeanContext formBeanContext,
+		Locale locale,
+		boolean succeeded,
+		String name)
+	{
+		if(formBeanContext.getOverrideField(name) == null) 
+			// see if there allready was an error registered
+		{
+			Collection propertyValidators = 
+				getFieldValidatorsForField(name, fieldValidators);
+			// these are the fieldValidators for one property
+			
+			if(propertyValidators != null)
+			{
+				try
+				{
+					succeeded = doValidationForOneField(
+						cctx, formBeanContext, locale, succeeded, 
+						name, propertyValidators);
+				}
+				catch (Exception e)
+				{
+					if(populationLog.isDebugEnabled())
+					{
+						// when in debug mode, print the stacktrace
+						populationLog.error(e.getMessage(), e);
+					}
+					populationLog.error(e.getMessage());
+					// ignore
+				}
+			}
+										
+		} // else an error allready occured; do not validate
+		
+		return succeeded;
+	}
+	
+	/* Get the validators for a field, possibly null. */
+	private List getFieldValidatorsForField(
+		String name, MultiMap fieldValidators)
+	{
+		List propertyValidators = null;
+		propertyValidators = getFieldValidatorsForFieldRecursively(
+			name, fieldValidators, propertyValidators);
+		return propertyValidators;	
+	}
+	
+	/* 
+	 * Get the validators for a field, null if none found.
+	 * work our way back to simple property name
+	 * e.g., take complex (bogus) case 'myproperty(key1)[1](key2)[2]',
+	 * we should be able to look for registered validators with:
+	 * 	- myproperty(key1)[1](key2)[2]
+	 * 	- myproperty(key1)[1](key2)
+	 * 	- myproperty(key1)[1]
+	 * 	- myproperty(key1)
+	 * 	- myproperty 
+	 */
+	private List getFieldValidatorsForFieldRecursively(
+		String currentName, MultiMap fieldValidators, List propertyValidators)
+	{
+		List validators = (List)fieldValidators.get(currentName);
+		if(validators != null)
+		{
+			if(propertyValidators == null) propertyValidators = new ArrayList();
+			propertyValidators.addAll(validators);
+		}
+		
+		int indexedDelim = currentName.lastIndexOf(PropertyUtils.INDEXED_DELIM);
+		int mappedDelim = currentName.lastIndexOf(PropertyUtils.MAPPED_DELIM);
+		int delim = 0;
+		if(indexedDelim > 0 && mappedDelim > 0)
+		{ // just take one of the delimiters
+			if(indexedDelim > mappedDelim) delim = indexedDelim;
+			else delim = mappedDelim;
+		}
+		else if(indexedDelim > 0) delim = indexedDelim;
+		else if(mappedDelim > 0) delim = mappedDelim;
+		
+		if(delim > 0)
+		{
+			// just cut off wihout further checking
+			currentName = currentName.substring(0, delim);
+			propertyValidators = getFieldValidatorsForFieldRecursively(
+				currentName, fieldValidators, propertyValidators);
+		}
+		
+		return propertyValidators;
 	}
 	
 	/* handle the custom validation for one field */
