@@ -30,7 +30,6 @@
  */
 package nl.openedge.maverick.framework.util;
 
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -39,12 +38,10 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import nl.openedge.maverick.framework.AbstractForm;
-import nl.openedge.util.DateFormatHelper;
 
 /**
  * @author Eelco Hillenius
@@ -191,6 +188,7 @@ public class FieldTool
 		boolean overridden = false;
 		if(model != null)
 		{
+			
 			Map overrideFields = model.getOverrideFields();
 			if( overrideFields != null ) 
 			{
@@ -211,31 +209,9 @@ public class FieldTool
 					converted = ConvertUtils.convert(storedRawValue);
 					overridden = true;
 				}
-				
-				/*
-				 * Probeer de geconverteerde string weer in het juiste formaat te gieten.
-				 */
-				try
-				{
-					String nameStr = StringUtils.capitalise(name);
-					Method getter = bean.getClass().getDeclaredMethod("get" + nameStr, new Class[0]);
-					
-					if (getter.getReturnType().equals(java.util.Date.class))
-					{
-						converted = DateFormatHelper.format(pattern, 
-							(java.util.Date)getter.invoke(bean, new Object[0]));
-					}				
-				}
-				catch(Exception e)
-				{
-					/*
-					 * Het was niet mogelijk de foutieve data naar een datum terug te parsen.
-					 * Doe niks.
-					 */
-				}
 			}	
 		}
-		if((value != null && (!overridden)))
+		if(value != null && (!overridden))
 		{
 			Formatter formatter = (Formatter)keyedFormatters.get(pattern);
 			if(formatter != null)
