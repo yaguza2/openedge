@@ -37,6 +37,7 @@ import com.voicetribe.wicket.markup.html.form.IOnChangeListener;
 import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
 import com.voicetribe.wicket.markup.html.link.IPageLink;
+import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.link.PageLink;
 import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
@@ -384,8 +385,7 @@ public class ParameterPanel extends Panel
             {
                 final NestedParameter parameter = (NestedParameter)cell.getModelObject();
                 cell.add(new Label("name", parameter.getLocalId()));
-                // Link to BookDetails page
-                cell.add(new PageLink("nestedLink", new IPageLink()
+                Link pageLink = new PageLink("nestedLink", new IPageLink()
                 {
                     public Page getPage()
                     {
@@ -397,7 +397,11 @@ public class ParameterPanel extends Panel
                     {
                         return NestedParameterPopupPage.class;
                     }
-                }));
+                }).setPopupDimensions(700, 500)
+                  .setPopupWindowName(parameter.getLocalId())
+                  .setPopupProperties(true, false, true, true, false);
+                pageLink.add(new Label("name", parameter.getLocalId()));
+                cell.add(pageLink);
             }
         }
     }
