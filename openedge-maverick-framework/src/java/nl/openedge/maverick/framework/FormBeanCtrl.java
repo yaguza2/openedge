@@ -187,6 +187,13 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * field validators failed. Default == true
 	 */
 	private boolean doFormValidationIfFieldValidationFailed = true;
+	
+	/**
+	 * Indicates whether the perform method of the control should be executed, even if the population/
+	 * validation failed. Use this only in very special cases; extended usage will
+	 * probably result in messy code. Default == false
+	 */
+	private boolean doPerformIfFieldValidationFailed = false;
 
 	/**
 	 * subclasses can register fieldValidators for custom validation on field level
@@ -291,7 +298,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			// populate form
 			boolean populated = populateFormBean(cctx, formBeanContext, locale);
 			// go on?
-			if(populated) 
+			if(populated || isDoPerformIfFieldValidationFailed()) 
 			{
 				// execute command
 				long tsBeginPerform = System.currentTimeMillis();
@@ -779,7 +786,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					}	
 				}
 				// if we are still successful so far, check with the form level validators
-				if( (doFormValidationIfFieldValidationFailed || succeeded) 
+				if( (succeeded || isDoFormValidationIfFieldValidationFailed()) 
 					&& (formValidators != null))
 				{
 					// check all registered until either all fired successfully or
@@ -1783,26 +1790,52 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 	/**
 	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true
+	 * field validators failed. Default == true.
 	 * 
 	 * @return boolean Whether the form validators should be executed when one of the 
-	 * 		field validators failed
+	 * 		field validators failed.
 	 */
-	public boolean isDoFormValidationIfFieldValidationFailed()
+	protected boolean isDoFormValidationIfFieldValidationFailed()
 	{
 		return doFormValidationIfFieldValidationFailed;
 	}
 
 	/**
 	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true
+	 * field validators failed. Default == true.
 	 * 
 	 * @param b whether the form validators should be executed when one of the 
-	 * 		field validators failed
+	 * 		field validators failed.
 	 */
-	public void setDoFormValidationIfFieldValidationFailed(boolean b)
+	protected void setDoFormValidationIfFieldValidationFailed(boolean b)
 	{
 		doFormValidationIfFieldValidationFailed = b;
+	}
+
+	/**
+	 * Whether the perform method of the control should be executed, even if the population/
+	 * validation failed. Use this only in very special cases; extended usage will
+	 * probably result in messy code. Default == false.
+	 * 
+	 * @return boolean whether the perform method of the control should be executed, even if the population/
+	 * validation failed.
+	 */
+	protected boolean isDoPerformIfFieldValidationFailed()
+	{
+		return doPerformIfFieldValidationFailed;
+	}
+
+	/**
+	 * Whether the perform method of the control should be executed, even if the population/
+	 * validation failed. Use this only in very special cases; extended usage will
+	 * probably result in messy code. Default == false.
+	 * 
+	 * @param b whether the perform method of the control should be executed, even if the population/
+	 * validation failed.
+	 */
+	protected void setDoPerformIfFieldValidationFailed(boolean b)
+	{
+		doPerformIfFieldValidationFailed = b;
 	}
 
 }

@@ -107,6 +107,28 @@ public final class FormBeanContext
 	{
 		currentLocale = locale;
 	}
+	
+	/**
+	 * Get the form bean. This is the bean that will be populated, 
+	 * and that is returned by make formbean
+	 * 
+	 * @return Object the bean that will be populated, and that is returned by makeFormbean
+	 */
+	public Object getBean()
+	{
+		return bean;
+	}
+
+	/** 
+	 * Set the form bean. This is the bean that will be populated, 
+	 * and that is returned by make formbean
+	 * 
+	 * @param bean the bean that will be populated, and that is returned by makeFormbean
+	 */
+	public void setBean(Object bean)
+	{
+		this.bean = bean;
+	}
 
 	//	----------------------- ERROR/ OVERRIDE METHODS -----------------------------//
 
@@ -306,6 +328,15 @@ public final class FormBeanContext
 				}
 			}
 		}
+	}
+	
+	/**
+	 * are there any errors registered for this formBean?
+	 * @return boolean are there any errors registered for this formBean? True if so, false otherwise.
+	 */
+	public boolean hasErrors()
+	{
+		return (errors != null && (!errors.isEmpty()));
 	}
 
 	// ----------------------- DISPLAY/ OUTPUT METHODS ---------------------//
@@ -543,28 +574,6 @@ public final class FormBeanContext
 			formatted = ConvertUtils.convert(value);
 		}
 		return formatted;
-	}
-
-	/**
-	 * Get the form bean. This is the bean that will be populated, 
-	 * and that is returned by make formbean
-	 * 
-	 * @return Object the bean that will be populated, and that is returned by makeFormbean
-	 */
-	public Object getBean()
-	{
-		return bean;
-	}
-
-	/** 
-	 * Set the form bean. This is the bean that will be populated, 
-	 * and that is returned by make formbean
-	 * 
-	 * @param bean the bean that will be populated, and that is returned by makeFormbean
-	 */
-	public void setBean(Object bean)
-	{
-		this.bean = bean;
 	}
 
 }

@@ -1,4 +1,12 @@
 -------------------------------------------------
+1.4.3
+
+- added property doPerformIfFieldValidationFailed (default == false). If true,
+	the perform method of the control will be executed, even if the population/
+	validation failed. Use this only in very special cases; extended usage will
+	probably result in messy code.
+
+-------------------------------------------------
 1.4.2
 
 - if a validator returns null with getErrorMessage, the error will not be
@@ -10,6 +18,10 @@
 	
 - extra debug info formatting; created special log for this with name:
 	'nl.openedge.maverick.framework.formatting'.
+	
+- added property doFormValidationIfFieldValidationFailed (default == true). If true,
+	the registered form validators will be executed even if the field validators
+	failed.
 
 -------------------------------------------------
 1.4.1
