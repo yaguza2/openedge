@@ -145,27 +145,15 @@
   <build>
     <nagEmailAddress>info@openedge.nl</nagEmailAddress>
     
-    <sourceDirectory>src/main/java</sourceDirectory>
-    <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
         <include>**/*Test.java</include>
       </includes>
       <resources>
         <resource>
-          <directory>${basedir}/src/test/java</directory>
-          <includes>
-          	<include>**/*.properties</include>
-          	<include>**/*.xml</include>
-          	<include>**/*.xsd</include>
-          	<include>**/*.dtd</include>
-          	<include>**/*.vm</include>
-          	<include>**/*.config</include>
-          	<include>**/*.policy</include>
-          </includes>
-        </resource>
-        <resource>
-          <directory>${basedir}/src/main/java</directory>
+          <directory>${basedir}/src/test</directory>
           <includes>
           	<include>**/*.properties</include>
           	<include>**/*.xml</include>
@@ -181,7 +169,7 @@
 
     <resources>
       <resource>
-        <directory>${basedir}/src/java/main</directory>
+        <directory>${basedir}/src/java</directory>
         <includes>
           <include>**/*.properties</include>
           <include>**/*.xml</include>
