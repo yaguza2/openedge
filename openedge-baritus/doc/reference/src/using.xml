@@ -1,0 +1,314 @@
+<chapter id="using">
+
+    <title>Using Baritus</title>
+	<para>
+		This chapter will show you the basics you need to know to get started with Baritus.
+	</para>
+	
+    <sect1 id="using-s1">
+        <title>Flow of execution</title>
+
+        <para>
+		This sequence diagram displays the commons flow of execution with Baritus.
+	    <mediaobject>
+	        <imageobject role="fo">
+	            <imagedata fileref="images/exec-sequence.gif" format="GIF" align="center"/>
+	        </imageobject>
+	        <imageobject role="html">
+	            <imagedata fileref="../images/exec-sequence.gif" format="GIF" align="center"/>
+	        </imageobject>
+	    </mediaobject>
+        </para>
+		
+		<para>
+			The minimal thing you have to do to use Baritus - besides using Maverick -, is to extend from 
+			<literal>nl.openedge.baritus.FormBeanCtrl</literal> and implement the two abstract
+			methods <literal>makeFormBean</literal> and <literal>perform</literal>.
+		</para>
+		
+	</sect1>
+	
+	<sect1 id="using-s2">
+		<title>A worked example</title>
+		
+		<para>
+			Let's start from the begining and work our way up to a working example.
+		</para>
+		
+		<para>
+			You should know how to work with Maverick. If you are not aquainted with Maverick
+			yet, please read the 
+			<ulink url="http://mav.sourceforge.net/maverick-manual.html">Maverick tutorial</ulink>
+			first. After you know how to work with Maverick, you should create a web application
+			project in your favorite IDE, or you can download a stub project using Maverick, Baritus
+			and Velocity <ulink url="http://TODO">here</ulink>. The stub project is has a Maven
+			project descriptor in order to assist you with getting the dependencies you need fast.
+			Read more about Apache Maven
+			<ulink url="http://maven.apache.org">here</ulink>.
+		</para>
+		
+		<para>
+			We begin by creating a command in the Maverick configuration. A command in Maverick
+			is the combination of a url-mapping (name), a controller class and one or more views.
+		</para>
+		
+        <programlisting><![CDATA[
+<command name="example">
+	<controller class="nl.topicus.examples.baritus.ExampleCtrl" />
+	<view name="success" path="/example1.vm"/>
+	<view name="error" path="/example1.vm"/>
+</command>
+]]></programlisting>
+		
+		<para>
+			Next, we create a controller class that extends from <literal>nl.openedge.baritus.FormBeanCtrl</literal>
+			and a bean that we will use for population.	
+		</para>
+
+        <programlisting><![CDATA[
+package nl.topicus.examples.baritus;
+
+import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.FormBeanCtrl;
+import org.infohazard.maverick.flow.ControllerContext;
+
+public class ExampleCtrl extends FormBeanCtrl
+{
+
+	protected String perform(FormBeanContext formBeanContext, ControllerContext cctx)
+		throws Exception
+	{
+
+		ExampleBean bean = (ExampleBean)formBeanContext.getBean();
+		
+		//... logic comes here...
+		
+		return "success";
+	}
+
+	protected Object makeFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
+	{
+		// create a new instance of the bean we want to populate
+		return new ExampleBean();
+	}
+}
+]]></programlisting>
+		
+        <programlisting><![CDATA[
+package nl.topicus.examples.baritus;
+
+public class ExampleBean
+{
+	private Integer myInteger;
+	
+	public Integer getMyInteger()
+	{
+		return myInteger;
+	}
+	
+	public void setMyInteger(Integer integer)
+	{
+		myInteger = integer;
+	}
+}
+]]></programlisting>
+		
+		<para>
+			And finally, we create a Velocity template. If you are new to Velocity, you can check out their
+			website <ulink url="http://jakarta.apache.org/velocity">here</ulink>.
+			Note that you can use whatever view type you like. We from OpenEdge mainly 
+			use Velocity, but you could use JSP's, XML/XSLT, 
+			<ulink url="http://www.webmacro.org/">webmacro</ulink>,
+			<ulink url="http://freemarker.sourceforge.net/">freemarker</ulink> etc. just the same. 
+		</para>
+		
+		<para>
+			Note that we use the default Maverick configuration, which saves the current instance of 
+			FormBeanContext as request attribute 'model'. 
+		</para>
+
+        <programlisting><![CDATA[
+<HTML>
+<head>
+	<title>First Baritus VM</title>
+</head>
+<body>
+	<form action="${request.contextPath}/example.m" method="POST">
+	
+		Please give an integer:
+		<input type="text" name="myInteger" size="20"
+			value="$!{model.bean.myInteger}"/>
+			
+		<br><br>
+		<input type="submit" value="save">
+		
+	</form>
+</body>
+</HTML>
+]]></programlisting>
+		
+		<para>
+			Actually, the above code only works when population and validation succeeded. If it did not,
+			the property myInteger was probably not set, and thus this example displays the old (null)
+			value in case of an error. If population or validation errors occure, the user input is saved
+			in a special map property 'overrideFields' in the FormBeanContext.
+		</para>
+			
+		<para>
+			Now, instead of using override fields directely, we can use one of the utility methods 
+			that are available in FormBeanContext
+			for displaying properties. In this case we use method 'displayProperty(String)', with 
+			the name of the form bean property to display as its parameter.
+		</para>
+		
+		<para>
+			Method 'displayProperty' will not only lookup if an override value should be displayed,
+			but also formats the output according to the current locale. For other formats, you can
+			use 'displayProperty(propertyName, format)', but more about formatting later on.
+			Here's our new version.
+		</para>
+		
+        <programlisting><![CDATA[
+<HTML>
+<head>
+	<title>First Baritus VM</title>
+</head>
+<body>
+	<form action="${request.contextPath}/example.m" method="POST">
+	
+		Please give an integer:
+		<input type="text" name="myInteger" size="20"
+			value="$!{model.displayProperty('myInteger')}"/>
+			
+		<br><br>
+		<input type="submit" value="save">
+		
+	</form>
+</body>
+</HTML>
+]]></programlisting>
+		
+		<para>
+			To further fine tune our displaying we will create a 
+			<ulink url="http://jakarta.apache.org/velocity/user-guide.html#Velocimacros">Velocity macro</ulink>.
+		</para>
+		
+        <programlisting><![CDATA[
+#macro( forminput $fieldname $type $size )
+
+<input type="${type}" name="${fieldname}" size="${size}" 
+	#if( $model.errors.get($fieldname) ) 
+		class="fielderror" 
+	#else 
+		class="field" 
+	#end
+	value="$!{model.displayProperty($fieldname)}">
+		
+#end
+]]></programlisting>
+		
+		<para>
+			And a cascading stylesheet definition file (we'll call it style.css here).
+		</para>
+
+        <programlisting><![CDATA[
+.field {
+	color: black;
+	background-color: white;
+}
+.fielderror {
+	color: white;
+	background-color: red;
+}
+.error {
+	color: red;
+}
+]]></programlisting>
+		
+		<para>
+			Now we change our Velcocity template, that now also includes the displaying of a list of error messages. 
+			Note that you probably create this only once, like in a footer (check out the Maverick transform options).
+		</para>
+		
+        <programlisting><![CDATA[
+<HTML>
+<head>
+	<title>First Baritus VM</title>
+	<link rel="stylesheet" type="text/css" href="${request.contextPath}/style.css">
+</head>
+<body>
+	<form action="${request.contextPath}/example.m" method="POST">
+	
+		Please give an integer:
+		#forminput( "myInteger" "text" 20 )
+			
+		<br><br>
+		<input type="submit" value="save">
+		
+	</form>
+	
+	#foreach( $err in $model.errors )
+		<span class="error">$!{err}</span><br>
+	#end
+	
+</body>
+</HTML>
+]]></programlisting>
+		
+		<para>
+			That's all there is to it. You should experiment yourself now. Try adding properties of
+			different types and try playing around with nested objects as well. 
+			
+		</para>
+		<para>
+			<emphasis>Be aware that nested objects that are null references will NOT get populated, so
+			be sure to provide instances of all the objects that you want to have populated. The only 
+			execption to this rule is working with arrays.</emphasis>
+		</para>
+		
+	</sect1>
+	
+	<sect1 id="using-s3">
+		<title>Logging</title>
+		
+		<para>
+			In order to help you debug your web applications more easily, the following loggers are
+			available. As a logging API Baritus uses 
+			<ulink url="http://jakarta.apache.org/commons/logging/">Jakarta Commons Logging</ulink>,
+			so you may use any of the logging mechanisms that are supported by Commons Logging.
+		</para>
+		
+		<para>
+			The two loggers currently in use are named 
+			'nl.openedge.baritus.population' and 'nl.openedge.baritus.formatting' and can be found
+			as constants in Interface <literal>nl.openedge.baritus.LogConstants</literal>.
+		</para>
+		
+		<para>
+			To configure with <ulink url="http://logging.apache.org/log4j/">Log4J</ulink>, for instance, 
+			you can add the following lines to your Log4J configuration file:
+		</para>
+			
+        <programlisting><![CDATA[
+log4j.logger.nl.openedge.baritus.population=DEBUG
+log4j.logger.nl.openedge.baritus.formatting=DEBUG
+]]></programlisting>	
+		
+		<para>
+			Currently, only DEBUG gives you run time logging. And, as it is quite a lot, you probably
+			do not want to turn it on in production systems.
+		</para>
+		
+	</sect1>
+	
+	<sect1 id="using-s4">
+		<title>FormBeanContext</title>
+		
+		<para>
+			In this section, we will look at the <literal>FormBeanContext</literal> in more detail.
+		</para>	
+		
+	</sect1>
+	
+</chapter>
+

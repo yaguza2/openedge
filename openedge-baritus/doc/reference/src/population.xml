@@ -1,0 +1,29 @@
+<chapter id="population">
+
+    <title>Population</title>
+    
+	<sect1 id="population-s1">
+        <title>Population process</title>
+		
+	    <para>
+			When building web applications with Java, one of the most commons things you want to
+			do is to translate user input, i.e. request parameters, into server side objects, like
+			objects from your domain model. Population is the process of matching request parameters
+			(and optionally configuration parameters, session attributes and request attributes) with
+			properties of the form bean, converting the request parameters to the target property
+			type and setting the converted values on the form bean.
+	    </para>
+	
+	    <mediaobject>
+	        <imageobject role="fo">
+	            <imagedata fileref="images/population.gif" format="GIF" align="center"/>
+	        </imageobject>
+	        <imageobject role="html">
+	            <imagedata fileref="../images/population.gif" format="GIF" align="center"/>
+	        </imageobject>
+	    </mediaobject>
+		
+	</sect1>
+
+</chapter>
+
