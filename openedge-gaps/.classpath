@@ -29,7 +29,7 @@
 	<classpathentry kind="lib" path="lib/hibern8ide/jgraph.jar"/>
 	<classpathentry kind="lib" path="lib/hibern8ide/looks-1.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/hibern8ide/pf-joi-full.jar"/>
-	<classpathentry kind="lib" path="lib/levob-gaps-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/levob-util-1.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/levob-gaps-1.0.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
