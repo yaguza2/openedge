@@ -47,51 +47,6 @@ public final class ScanReplaceClass {
    * @param replaceString
    * @return String
    */
-  public static String scanReplaceString(String scanString, String[] scanValue, String[] replaceString) {
-    for (int i=0; i < scanValue.length; i++) {
-      scanString = scanReplaceString(scanString, scanValue[i], replaceString[i]);
-    }
-    return scanString;
-  }
-
-  /**
-   * Replace scanValue in scanString with replaceString
-   * @param scanString
-   * @param scanValue
-   * @param replaceString
-   * @return String
-   */
-  public static String scanReplaceString(String scanString, String[] scanValue, String replaceString) {
-    for (int i=0; i < scanValue.length; i++) {
-      scanString = scanReplaceString(scanString, scanValue[i], replaceString);
-    }//TODO: Test voor Maven
-    return scanString;
-  }
-
-  /**
-   * Replace scanChar in scanString with replaceString
-   * @param scanString
-   * @param scanChar
-   * @param replaceString
-   * @return String
-   */
-  public static String scanReplaceString(String scanString, char scanChar, String replaceString) {
-    StringBuffer buf = new StringBuffer();
-    for (int i=0; i < scanString.length(); i++) {
-      if (scanString.charAt(i) == scanChar) buf.append(replaceString);
-      else  buf.append(scanString.charAt(i));
-    }
-
-    return buf.toString();
-  }
-
-  /**
-   * Replace scanValue in scanString with replaceString
-   * @param scanString
-   * @param scanValue
-   * @param replaceString
-   * @return String
-   */
   public static String scanReplaceString(String scanString, String scanValue, String replaceString) {
     String returnString = scanString;
     int strIndex = returnString.indexOf(scanValue);
