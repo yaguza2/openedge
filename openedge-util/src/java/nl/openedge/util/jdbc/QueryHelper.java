@@ -98,7 +98,7 @@ public class QueryHelper extends DataSourceBase {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 				
-		Connection conn = dataSource.getConnection();   
+		Connection conn = getDataSource().getConnection();   
 		try {
 				
 			pstmt = conn.prepareStatement(stmt);
@@ -130,7 +130,7 @@ public class QueryHelper extends DataSourceBase {
 		ResultSet rs = null;
 		int result;
 				
-		Connection conn = dataSource.getConnection();   
+		Connection conn = getDataSource().getConnection();   
 		try {
 			
 			pstmt = conn.prepareStatement(stmt);
@@ -192,7 +192,7 @@ public class QueryHelper extends DataSourceBase {
 			paramCounter++;
 		}		
 				
-		Connection conn = dataSource.getConnection();   
+		Connection conn = getDataSource().getConnection();   
 		try {
 			
 			String stmt = b.toString();
@@ -247,7 +247,7 @@ public class QueryHelper extends DataSourceBase {
 		}
 		b.append(")");
 				
-		Connection conn = dataSource.getConnection();   
+		Connection conn = getDataSource().getConnection();   
 		try {
 			
 			String stmt = b.toString();
@@ -299,7 +299,7 @@ public class QueryHelper extends DataSourceBase {
 			}
 		}		
 				
-		Connection conn = dataSource.getConnection();   
+		Connection conn = getDataSource().getConnection();   
 		try {
 			
 			String stmt = b.toString();
@@ -366,7 +366,7 @@ public class QueryHelper extends DataSourceBase {
 			}
 		}
 				
-		Connection conn = dataSource.getConnection();   
+		Connection conn = getDataSource().getConnection();   
 		try {
 				
 			String stmt = b.toString();

@@ -44,8 +44,10 @@ import org.apache.commons.dbcp.BasicDataSource;
  */
 public abstract class DataSourceBase {
 
+	private static boolean initialized = false;
+
 	/** datasource */
-	protected DataSource dataSource = null;
+	protected static DataSource _dataSource = null;
 	
 	/**
 	 * construct and get datasource from JNDI location
@@ -54,9 +56,8 @@ public abstract class DataSourceBase {
 	 */
 	public DataSourceBase(String jndiRef) throws Exception {
 		
-		Context ctx = new InitialContext();
-		this.dataSource = (DataSource)ctx.lookup(jndiRef);
-		
+			Context ctx = new InitialContext();
+			_dataSource = (DataSource)ctx.lookup(jndiRef);
 	}
 	
 	/**
@@ -64,7 +65,7 @@ public abstract class DataSourceBase {
 	 * @param dataSource
 	 */
 	public DataSourceBase(DataSource dataSource) throws Exception {
-		this.dataSource = dataSource;
+		_dataSource = dataSource;
 	}
 	
 	/**
@@ -84,8 +85,35 @@ public abstract class DataSourceBase {
 	 */
 	public DataSourceBase(Map constructionParameters) throws Exception {
 		
-		this.dataSource = new BasicDataSource();
-		BeanUtils.populate(dataSource, constructionParameters);
+		_dataSource = new BasicDataSource();
+		BeanUtils.populate(_dataSource, constructionParameters);
+		initialized = true;
+		
+	}
+	
+	/**
+	 * construct and create datasource with given parameters
+	 * Use a map like:
+	 * 
+	 *	driverClassName=org.gjt.mm.mysql.Driver
+	 *	url=jdbc:mysql://localhost:3306/foo_db
+	 *	username=root
+	 *	password=
+	 *	maxActive=20
+	 *	maxIdle=10
+	 *	maxWait=5000
+	 *	defaultAutoCommit=false
+	 * 
+	 * @param constructionParameters populated map to create datasource
+	 * @param createNew if true, we'll look if a datasource was allready initialized which can be used in that case 
+	 */
+	public DataSourceBase(Map constructionParameters, boolean createOnce) throws Exception {
+		
+		if(!initialized && createOnce) {
+			_dataSource = new BasicDataSource();
+			BeanUtils.populate(_dataSource, constructionParameters);
+			initialized = true;
+		}
 		
 	}
 	
@@ -94,14 +122,14 @@ public abstract class DataSourceBase {
 	 * @return DataSource
 	 */
 	public DataSource getDataSource() {
-		return dataSource;
+		return _dataSource;
 	}
 
 	/**
 	 * @param dataSource
 	 */
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+		_dataSource = dataSource;
 	}
 
 }
