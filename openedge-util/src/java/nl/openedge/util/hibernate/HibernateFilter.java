@@ -78,11 +78,23 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 		ServletResponse response, FilterChain chain)
 		throws IOException, ServletException
 	{
-		if (hibernateHolder.get() != null)
-			throw new IllegalStateException(
-				"A session is already associated with this thread!  "
-					+ "Someone must have called getSession() outside of the context "
-					+ "of a servlet request.");
+		Session session = (Session)hibernateHolder.get();
+		if (session != null)
+		{
+			log.warn("A session is already associated with this thread!  "
+			+ "Someone must have called getSession() outside of the context "
+			+ "of a servlet request; closing session");
+			try
+			{
+				session.close();
+			}
+			catch (HibernateException e)
+			{
+				e.printStackTrace();
+				throw new ServletException(e);
+			}
+			hibernateHolder.set(null);
+		}
 
 		try
 		{
