@@ -31,8 +31,10 @@
 package nl.openedge.modules.impl.menumodule;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Een item in een menu 
@@ -44,6 +46,7 @@ public final class MenuItem implements Serializable
 	private String link;
 	// als er aliases zijn, stoppen we die hier als String in
 	private HashSet aliases = null;
+	private Map attributes = null;
 	private String queryString;
 	private boolean enabled = true;
 	private String shortCutKey = null;
@@ -55,7 +58,7 @@ public final class MenuItem implements Serializable
 	private boolean active = false;
 
 	/**
-	 * @return
+	 * @return String
 	 */
 	public String getLink()
 	{
@@ -63,7 +66,7 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @return
+	 * @return String
 	 */
 	public String getTag()
 	{
@@ -84,6 +87,42 @@ public final class MenuItem implements Serializable
 	public void setTag(String string)
 	{
 		tag = string;
+	}
+	
+	/**
+	 * add/ update an attribute
+	 * @param key key to store attribute with
+	 * @param value value of attribute
+	 */
+	public void putAttribute(String key, Object value)
+	{
+		if(attributes == null)
+		{
+			attributes = new HashMap();
+		}
+		attributes.put(key, value);
+	}
+	
+	/**
+	 * delete attribute
+	 * @param key key of attribute
+	 */
+	public void removeAttribute(String key)
+	{
+		if(attributes != null)
+		{
+			attributes.remove(key);
+		}
+	}
+	
+	/**
+	 * get attribute with given key
+	 * @param key key of attribute
+	 * @return Object attribute or null if not found
+	 */
+	public Object get(String key)
+	{
+		return (attributes != null) ? attributes.get(key) : null;
 	}
 	
 	/**
@@ -151,7 +190,7 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @return
+	 * @return String
 	 */
 	public String getQueryString()
 	{
@@ -229,6 +268,22 @@ public final class MenuItem implements Serializable
 	public void setAliases(HashSet set)
 	{
 		aliases = set;
+	}
+
+	/**
+	 * @return Map
+	 */
+	public Map getAttributes()
+	{
+		return attributes;
+	}
+
+	/**
+	 * @param map
+	 */
+	public void setAttributes(Map map)
+	{
+		attributes = map;
 	}
 
 }

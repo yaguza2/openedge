@@ -235,6 +235,43 @@ public class MenuTest extends TestCase
 	}
 	
 	/**
+	 * test attributes
+	 *
+	 */
+	public void testAttribute()
+	{
+		System.out.println("");
+		Subject subject = new Subject();
+		Set principals = new HashSet();
+		principals.add(new UserPrincipal("admin"));
+		
+		subject.getPrincipals().addAll(principals);
+		try
+		{
+			List[] items = menuModule.getMenuItems(subject);
+			int size = items[0].size();
+
+			MenuItem item = (MenuItem)items[0].get(1);
+			System.out.println("menuitem: " + item);
+			
+			// check:
+			// <attribute name="test1">value1</attribute>
+			// <attribute name="test2"><![CDATA[ test with CDATA: &'"<> ]]></attribute>
+			Object test1Val = item.get("test1");
+			Object test2Val = item.get("test2");
+			System.out.println("test1: " + test1Val + ", test2: " + test2Val);
+			
+			assertEquals("value1", test1Val);
+			assertEquals("test with CDATA: &'\"<>", test2Val);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}		
+	}
+	
+	/**
 	 * test 'actief' marker
 	 *
 	 */

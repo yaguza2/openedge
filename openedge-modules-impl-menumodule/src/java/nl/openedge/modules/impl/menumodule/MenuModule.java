@@ -308,11 +308,17 @@ public final class MenuModule
 									+ currentNode.getUserObject());	
 					}
 					addChilds(childElement, childNode, classLoader, filterContext);
-									
+						
+					// voeg aliases toe indien gegeven			
 					addAliases(
 						childItem, childElement, childNode, classLoader, filterContext);
 										
+					// voeg filters toe indien gegeven
 					addNodeLevelFilters(
+						childItem, childElement, childNode, classLoader, filterContext);
+						
+					// zet attributen indien gegeven
+					addAttributes(
 						childItem, childElement, childNode, classLoader, filterContext);					
 				}
 			}
@@ -358,6 +364,37 @@ public final class MenuModule
 				}	
 			}
 			childItem.setFilters(nodeFilters);			
+		}
+
+	}
+	
+	/* voeg attributen voor node toe (nooit voor root) */
+	private void addAttributes(
+		MenuItem childItem,
+		Element currentElement,
+		DefaultMutableTreeNode currentNode,
+		ClassLoader classLoader,
+		Map filterContext)
+		throws Exception
+	{
+		
+		// voeg filters voor node toe indien aanwezig
+		List attributes = currentElement.getChildren("attribute");
+		if(!attributes.isEmpty())
+		{
+			for(Iterator i = attributes.iterator(); i.hasNext(); )
+			{
+				Element attribNode = (Element)i.next();
+				String attribName = attribNode.getAttributeValue("name");
+				String attribValue = attribNode.getTextNormalize();
+				childItem.putAttribute(attribName, attribValue);
+				if(log.isDebugEnabled())
+				{
+					log.debug("attribuut " + attribName + "{" +
+						attribValue + "} geregistreerd als een node filter voor " + 
+						childItem.getTag());					
+				}
+			}			
 		}
 
 	}
@@ -576,6 +613,7 @@ public final class MenuModule
 						childItem.setEnabled(tempItem.isEnabled());
 						childItem.setShortCutKey(tempItem.getShortCutKey());
 						childItem.setQueryString(tempItem.getQueryString());
+						childItem.setAttributes(tempItem.getAttributes());
 						
 						if(i < (depth - 1))
 						{
