@@ -31,6 +31,7 @@
 package nl.openedge.util.hibernate;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -58,16 +59,25 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 
 	/**
 	 * initialise
+	 * 
+	 * If an initparameter 'config' exists use the value to configure the
+	 * HibernateHelper.
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		// call to super will read config and create hibernate factory
 		try
 		{
+			String configUrl = filterConfig.getInitParameter("config");
+			if (configUrl != null)
+			{
+				super.setConfigURL(new URL(configUrl));
+			}
 			super.init();
 		}
 		catch (Exception e)
 		{
+			log.fatal(e.getMessage());
 			throw new ServletException(e);
 		}
 	}
@@ -90,7 +100,7 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 			}
 			catch (HibernateException e)
 			{
-				e.printStackTrace();
+				log.error(e);
 				throw new ServletException(e);
 			}
 			hibernateHolder.set(null);
@@ -116,7 +126,7 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 				}
 				catch (HibernateException ex)
 				{
-					ex.printStackTrace();
+					log.error(ex);
 					//throw new ServletException(ex);
 				}
 			}
