@@ -454,7 +454,7 @@ public final class MenuModule
 			// workrootnode is nu root van tree speciaal voor subject;
 			// zet model op met deze node
 			model = new DefaultTreeModel(workNode); // model voor session
-			userModelCache.put(subject, model);
+//			userModelCache.put(subject, model);
 		}
 		
 		// opbouw voor request
