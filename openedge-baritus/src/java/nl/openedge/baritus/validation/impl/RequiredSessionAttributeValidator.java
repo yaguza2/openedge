@@ -1,6 +1,6 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
+ * $Id: RequiredSessionAttributeValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.1 $
  * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
@@ -28,34 +28,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.baritus.validation;
+package nl.openedge.baritus.validation.impl;
 
-import java.util.Locale;
+import javax.servlet.http.HttpSession;
 
 import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.validation.AbstractFormValidator;
+import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * convenience class with default error message handling
+ * Checks whether a session attribute exists with the key
+ * that was set for property sessionAttributeKey 
  * @author Eelco Hillenius
  */
-public abstract class AbstractFieldValidator extends AbstractValidator
-	implements FieldValidator, ValidationRuleDependend
+public class RequiredSessionAttributeValidator extends AbstractFormValidator
 {
+
+	private String sessionAttributeKey = null;
 
 	/**
 	 * construct
 	 */
-	public AbstractFieldValidator()
+	public RequiredSessionAttributeValidator()
 	{
 		super();
+	}
+
+	/**
+	 * construct with message prefix
+	 * @param messagePrefix
+	 */
+	public RequiredSessionAttributeValidator(String messagePrefix)
+	{
+		super(messagePrefix);
 	}
 	
 	/**
 	 * @param rule
 	 */
-	public AbstractFieldValidator(ValidationActivationRule rule)
+	public RequiredSessionAttributeValidator(ValidationActivationRule rule)
 	{
 		super(rule);
 	}
@@ -64,7 +77,7 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	 * @param messagePrefix
 	 * @param rule
 	 */
-	public AbstractFieldValidator(
+	public RequiredSessionAttributeValidator(
 		String messagePrefix,
 		ValidationActivationRule rule)
 	{
@@ -72,40 +85,45 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 
 	/**
-	 * construct with message prefix
-	 * @param messagePrefix message prefix
+	 * construct with message prefix and session attribute key to check for
+	 * @param messagePrefix
 	 */
-	public AbstractFieldValidator(String messagePrefix)
+	public RequiredSessionAttributeValidator(String messagePrefix, String sessionAttributeKey)
 	{
 		super(messagePrefix);
+		setSessionAttributeKey(sessionAttributeKey);
+	} 
+
+	/* (non-Javadoc)
+	 * @see nl.openedge.baritus.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext)
+	 */
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext)
+	{
+		boolean valid = false;
+		HttpSession session = cctx.getRequest().getSession(false);
+		if(session != null)
+		{
+			valid = (session.getAttribute(sessionAttributeKey) != null);
+		}
+		return valid;
 	}
 
 	/**
-	 * get the error message. default returns the resource bundle message where
-	 * key = messagePrefix + fieldName, with {0} substituted with the value
-	 * and {1} substituted with the field name
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * get the session attribute key that will be checked for
+	 * @return String the session attribute key that will be checked for
 	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value,
-		Locale locale)
+	public String getSessionAttributeKey()
 	{
-		
-		String key = getMessagePrefix() + fieldName;
-		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
+		return sessionAttributeKey;
 	}
-	
+
 	/**
-	 * get the override value. default returns the value unchanged
-	 * @return Object unchanged value
-	 * @see nl.openedge.baritus.validation.FieldValidator#getOverrideValue(java.lang.Object)
+	 * set the session attribute key that will be checked for
+	 * @param string the session attribute key that will be checked for
 	 */
-	public Object getOverrideValue(Object value)
+	public void setSessionAttributeKey(String string)
 	{
-		return value;
+		sessionAttributeKey = string;
 	}
-	
+
 }

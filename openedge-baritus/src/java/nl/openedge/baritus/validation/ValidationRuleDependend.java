@@ -1,7 +1,7 @@
 /*
- * $Id: ValidationRuleDependend.java,v 1.1.1.1 2004-02-24 20:34:13 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:13 $
+ * $Id: ValidationRuleDependend.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -42,7 +42,7 @@ public interface ValidationRuleDependend
 	 * set the validation rule
 	 * @param rule the rule
 	 */
-	public void setValidationRule(ValidatorActivationRule rule);
+	public void setValidationRule(ValidationActivationRule rule);
 	
 	/**
 	 * remove the validation rule
@@ -54,5 +54,5 @@ public interface ValidationRuleDependend
 	 * get the registered validation rule
 	 * @return the registered validation rule or null if none was registered
 	 */
-	public ValidatorActivationRule getValidationActivationRule();
+	public ValidationActivationRule getValidationActivationRule();
 }

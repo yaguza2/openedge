@@ -1,6 +1,6 @@
 /*
- * $Id: AbstractFormValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
+ * $Id: PropertyNotNullFormValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.1 $
  * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
@@ -28,49 +28,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.baritus.validation;
-
-import java.util.Locale;
+package nl.openedge.baritus.validation.impl;
 
 import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.validation.AbstractFormValidator;
+import nl.openedge.baritus.validation.ValidationActivationRule;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * convenience class with default error message handling
+ * check whether the form contains a not null property with the name of property 
+ * propertyName
  * @author Eelco Hillenius
  */
-public abstract class AbstractFormValidator extends AbstractValidator
-	implements FormValidator, ValidationRuleDependend
+public class PropertyNotNullFormValidator extends AbstractFormValidator
 {
 	
-	/* 
-	 * key that will be used for storing the error message 
-	 * if null or not provided, property messagePrefix will be used instead
-	 */
-	private String errorKey = null;
+	private String propertyName;
 
 	/**
 	 * construct
 	 */
-	public AbstractFormValidator()
+	public PropertyNotNullFormValidator()
 	{
-		super();
+		super("object.not.found");
+	}
+
+	/**
+	 * construct with message prefix
+	 * @param messagePrefix
+	 */
+	public PropertyNotNullFormValidator(String messagePrefix)
+	{
+		super(messagePrefix);
 	}
 	
 	/**
 	 * @param rule
 	 */
-	public AbstractFormValidator(ValidationActivationRule rule)
+	public PropertyNotNullFormValidator(ValidationActivationRule rule)
 	{
-		super(rule);
+		super("object.not.found", rule);
 	}
 
 	/**
 	 * @param messagePrefix
 	 * @param rule
 	 */
-	public AbstractFormValidator(
+	public PropertyNotNullFormValidator(
 		String messagePrefix,
 		ValidationActivationRule rule)
 	{
@@ -78,47 +84,59 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 
 	/**
-	 * construct with message prefix
-	 * @param messagePrefix message prefix
+	 * construct with property name and message prefix
+	 * @param propertyName
+	 * @param messagePrefix
 	 */
-	public AbstractFormValidator(String messagePrefix)
+	public PropertyNotNullFormValidator(String propertyName, String messagePrefix)
 	{
 		super(messagePrefix);
+		setPropertyName(propertyName);
 	}
 
 	/**
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * check whether the form contains a not null property with the name of property 
+	 * propertyName
+	 * @return boolean true if property in form with name of property propertyName exists
+	 * 	and is not null, false otherwise
+	 * @see nl.openedge.baritus.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext)
 	 */
-	public String[] getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		Locale locale)
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
-		String key = getMessagePrefix();
-		String msg = getLocalizedMessage(key, locale);
-		String storeKey = getErrorKey();
-		if(storeKey == null) storeKey = key;
-		return new String[]{storeKey, msg};
+		Object bean = formBeanContext.getBean();
+		boolean valid = false;
+		try
+		{
+			if(PropertyUtils.getProperty(bean, propertyName) != null)
+			{
+				valid = true;		
+			}
+		}
+		catch (Exception e)
+		{
+			System.err.println(e.getMessage());
+		}
+
+		return valid;
+		
 	}
 
 	/**
-	 * get the key that will be used for storing the error message
-	 * if null or not provided, property messagePrefix will be used instead
-	 * @return String key that will be used for storing the error message
+	 * get the name of the property
+	 * @return String name of property
 	 */
-	public String getErrorKey()
+	public String getPropertyName()
 	{
-		return errorKey;
+		return propertyName;
 	}
 
 	/**
-	 * set the key that will be used for storing the error message
-	 * if null or not provided, property messagePrefix will be used instead
-	 * @param string the key that will be used for storing the error message
+	 * set the name of the property
+	 * @param string name of the property
 	 */
-	public void setErrorKey(String string)
+	public void setPropertyName(String string)
 	{
-		errorKey = string;
+		propertyName = string;
 	}
 
 }

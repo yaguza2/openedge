@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.1 2004-02-25 21:53:28 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-25 21:53:28 $
+ * $Id: DefaultValidatorDelegate.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,7 +41,7 @@ import nl.openedge.baritus.util.MessageUtils;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
 import nl.openedge.baritus.validation.ValidationRuleDependend;
-import nl.openedge.baritus.validation.ValidatorActivationRule;
+import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.MultiMap;
@@ -89,7 +89,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 		boolean succeeded)
 	{
 		
-		if(parameters == null || parameters.isEmpty()) return succeeded;
+		if(parameters == null) return succeeded;
 		
 		MultiMap fieldValidators = validatorRegistry.getFieldValidators();
 		List formValidators = validatorRegistry.getFormValidators();
@@ -106,7 +106,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 			{
 				for(Iterator i = globalValidatorActivationRules.iterator(); i.hasNext(); )
 				{
-					ValidatorActivationRule rule = (ValidatorActivationRule)i.next();
+					ValidationActivationRule rule = (ValidationActivationRule)i.next();
 					doCustomValidation = rule.allowValidation(cctx, formBeanContext); // fire rule
 					if(!doCustomValidation) break;
 				}
@@ -162,7 +162,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 						boolean fireValidator = true;
 						if(fValidator instanceof ValidationRuleDependend)
 						{
-							ValidatorActivationRule fRule = 
+							ValidationActivationRule fRule = 
 								((ValidationRuleDependend)fValidator).getValidationActivationRule();
 							if(fRule != null)
 							{
@@ -223,7 +223,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 								
 			if(validator instanceof ValidationRuleDependend) // should we execute rule
 			{
-				ValidatorActivationRule rule = 
+				ValidationActivationRule rule = 
 					((ValidationRuleDependend)validator)
 						.getValidationActivationRule();
 				if(rule != null)

@@ -1,6 +1,6 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
+ * $Id: RequiredFieldValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.1 $
  * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
@@ -28,43 +28,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.baritus.validation;
+package nl.openedge.baritus.validation.impl;
 
 import java.util.Locale;
 
 import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.validation.AbstractFieldValidator;
+import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * convenience class with default error message handling
+ * use this for fields that should have their lenghts checked
+ * by default, the messagePrefix itself (or 'input.field.required' if you use the
+ * default constructor) will be used to get the error message
  * @author Eelco Hillenius
  */
-public abstract class AbstractFieldValidator extends AbstractValidator
-	implements FieldValidator, ValidationRuleDependend
+public class RequiredFieldValidator extends AbstractFieldValidator
 {
 
 	/**
 	 * construct
 	 */
-	public AbstractFieldValidator()
+	public RequiredFieldValidator()
 	{
-		super();
+		super("input.field.required");
 	}
-	
+
 	/**
 	 * @param rule
 	 */
-	public AbstractFieldValidator(ValidationActivationRule rule)
+	public RequiredFieldValidator(ValidationActivationRule rule)
 	{
-		super(rule);
+		super("input.field.required", rule);
 	}
 
 	/**
 	 * @param messagePrefix
 	 * @param rule
 	 */
-	public AbstractFieldValidator(
+	public RequiredFieldValidator(
 		String messagePrefix,
 		ValidationActivationRule rule)
 	{
@@ -72,18 +75,48 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 
 	/**
-	 * construct with message prefix
-	 * @param messagePrefix message prefix
+	 * construct with message prefix for error message keys
+	 * @param messagePrefix
 	 */
-	public AbstractFieldValidator(String messagePrefix)
+	public RequiredFieldValidator(String messagePrefix)
 	{
 		super(messagePrefix);
 	}
 
 	/**
+	 * checks whether the value is not null, and - if it is an instance of String - whether
+	 * the trimmed value is not an empty string
+	 * @return boolean true if not null or empty, false otherwise
+	 * @see nl.openedge.baritus.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 */
+	public boolean isValid(
+		ControllerContext cctx,
+		FormBeanContext formBeanContext,
+		String fieldName,
+		Object value)
+	{
+		boolean isValid = true;
+		if(value == null)
+		{
+			isValid = false;
+		}
+		else
+		{
+			if(value instanceof String)
+			{
+				if("".equals(((String)value).trim()))
+				{
+					isValid = false;
+				}
+			}
+		}
+		return isValid;
+	}
+
+	/**
 	 * get the error message. default returns the resource bundle message where
-	 * key = messagePrefix + fieldName, with {0} substituted with the value
-	 * and {1} substituted with the field name
+	 * key = messagePrefix, with {0} substituted with the field name
+	 * 
 	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
@@ -93,19 +126,8 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 		Object value,
 		Locale locale)
 	{
-		
-		String key = getMessagePrefix() + fieldName;
-		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
+
+		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{fieldName});
 	}
-	
-	/**
-	 * get the override value. default returns the value unchanged
-	 * @return Object unchanged value
-	 * @see nl.openedge.baritus.validation.FieldValidator#getOverrideValue(java.lang.Object)
-	 */
-	public Object getOverrideValue(Object value)
-	{
-		return value;
-	}
-	
+
 }

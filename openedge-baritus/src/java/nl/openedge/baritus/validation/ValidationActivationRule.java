@@ -1,6 +1,6 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
+ * $Id: ValidationActivationRule.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.1 $
  * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
@@ -30,82 +30,28 @@
  */
 package nl.openedge.baritus.validation;
 
-import java.util.Locale;
-
 import nl.openedge.baritus.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * convenience class with default error message handling
+ * interface that can be used to switch whether validation with
+ * custom fieldValidators should be performed in the current request.
+ * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractFieldValidator extends AbstractValidator
-	implements FieldValidator, ValidationRuleDependend
+public interface ValidationActivationRule
 {
-
 	/**
-	 * construct
+	 * returns whether validation with custom fieldValidators should be 
+	 * performed in this currentRequest.
+	 * 
+	 * @param cctx maverick context
+	 * @param formBeanContext context with form for this currentRequest
+	 * @return whether validation with custom fieldValidators should be 
+	 * 	performed in this currentRequest.
 	 */
-	public AbstractFieldValidator()
-	{
-		super();
-	}
-	
-	/**
-	 * @param rule
-	 */
-	public AbstractFieldValidator(ValidationActivationRule rule)
-	{
-		super(rule);
-	}
-
-	/**
-	 * @param messagePrefix
-	 * @param rule
-	 */
-	public AbstractFieldValidator(
-		String messagePrefix,
-		ValidationActivationRule rule)
-	{
-		super(messagePrefix, rule);
-	}
-
-	/**
-	 * construct with message prefix
-	 * @param messagePrefix message prefix
-	 */
-	public AbstractFieldValidator(String messagePrefix)
-	{
-		super(messagePrefix);
-	}
-
-	/**
-	 * get the error message. default returns the resource bundle message where
-	 * key = messagePrefix + fieldName, with {0} substituted with the value
-	 * and {1} substituted with the field name
-	 * @see nl.openedge.baritus.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
+	public boolean allowValidation(
 		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value,
-		Locale locale)
-	{
-		
-		String key = getMessagePrefix() + fieldName;
-		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
-	}
-	
-	/**
-	 * get the override value. default returns the value unchanged
-	 * @return Object unchanged value
-	 * @see nl.openedge.baritus.validation.FieldValidator#getOverrideValue(java.lang.Object)
-	 */
-	public Object getOverrideValue(Object value)
-	{
-		return value;
-	}
-	
+		FormBeanContext formBeanContext);
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: ValidatorRegistry.java,v 1.1.1.1 2004-02-24 20:34:00 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:00 $
+ * $Id: ValidatorRegistry.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -36,7 +36,7 @@ import java.util.List;
 
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
-import nl.openedge.baritus.validation.ValidatorActivationRule;
+import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
@@ -126,7 +126,7 @@ final class ValidatorRegistry
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
-	public void addGlobalValidatorActivationRule(ValidatorActivationRule rule)
+	public void addValidationActivationRule(ValidationActivationRule rule)
 	{
 		if(globalValidatorActivationRules == null)
 		{
@@ -139,7 +139,7 @@ final class ValidatorRegistry
 	 * de-register the given rule for the whole form
 	 * @param fieldName
 	 */
-	public void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
+	public void removeValidationActivationRule(ValidationActivationRule rule)
 	{
 		if(globalValidatorActivationRules != null)
 		{

@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.3 2004-02-25 21:53:28 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-02-25 21:53:28 $
+ * $Id: FormBeanCtrl.java,v 1.4 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -58,7 +58,7 @@ import nl.openedge.baritus.util.MessageUtils;
 import nl.openedge.baritus.util.ValueUtils;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
-import nl.openedge.baritus.validation.ValidatorActivationRule;
+import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
@@ -1081,9 +1081,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
-	protected void addGlobalValidatorActivationRule(ValidatorActivationRule rule)
+	protected void addValidationActivationRule(ValidationActivationRule rule)
 	{
-		validatorRegistry.addGlobalValidatorActivationRule(rule);
+		validatorRegistry.addValidationActivationRule(rule);
 	}
 	
 	/**
@@ -1091,9 +1091,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * 
 	 * @param rule global rule to remove
 	 */
-	protected void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
+	protected void removeValidationActivationRule(ValidationActivationRule rule)
 	{
-		validatorRegistry.removeGlobalValidatorActivationRule(rule);
+		validatorRegistry.removeValidationActivationRule(rule);
 	}
 	
 	/**

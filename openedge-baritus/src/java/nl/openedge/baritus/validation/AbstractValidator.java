@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractValidator.java,v 1.1.1.1 2004-02-24 20:34:14 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:14 $
+ * $Id: AbstractValidator.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-27 08:24:18 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,7 +41,7 @@ import nl.openedge.baritus.util.MessageUtils;
 public abstract class AbstractValidator
 {
 
-	private ValidatorActivationRule validatorActivationRule = null;
+	private ValidationActivationRule validationActivationRule = null;
 
 	private String messagePrefix = "input.field.";
 
@@ -66,7 +66,7 @@ public abstract class AbstractValidator
 	 * construct with validator activation rule
 	 * @param rule validator activation rule
 	 */
-	public AbstractValidator(ValidatorActivationRule rule)
+	public AbstractValidator(ValidationActivationRule rule)
 	{
 		setValidationRule(rule);
 	}
@@ -76,7 +76,7 @@ public abstract class AbstractValidator
 	 * @param messagePrefix message prefix
 	 * @param rule validator activation rule
 	 */
-	public AbstractValidator(String messagePrefix, ValidatorActivationRule rule)
+	public AbstractValidator(String messagePrefix, ValidationActivationRule rule)
 	{
 		setValidationRule(rule);
 		setMessagePrefix(messagePrefix);
@@ -155,9 +155,9 @@ public abstract class AbstractValidator
 	/**
 	 * @see nl.openedge.baritus.validation.ValidationRuleDependend#getValidationActivationRule()
 	 */
-	public ValidatorActivationRule getValidationActivationRule()
+	public ValidationActivationRule getValidationActivationRule()
 	{
-		return this.validatorActivationRule;
+		return this.validationActivationRule;
 	}
 
 	/**
@@ -165,15 +165,15 @@ public abstract class AbstractValidator
 	 */
 	public void removeValidationActivationRule()
 	{
-		this.validatorActivationRule = null;
+		this.validationActivationRule = null;
 	}
 
 	/**
-	 * @see nl.openedge.baritus.validation.ValidationRuleDependend#setValidationRule(nl.openedge.baritus.validation.ValidatorActivationRule)
+	 * @see nl.openedge.baritus.validation.ValidationRuleDependend#setValidationRule(nl.openedge.baritus.validation.ValidationActivationRule)
 	 */
-	public void setValidationRule(ValidatorActivationRule rule)
+	public void setValidationRule(ValidationActivationRule rule)
 	{
-		this.validatorActivationRule = rule;
+		this.validationActivationRule = rule;
 	}
 
 }
