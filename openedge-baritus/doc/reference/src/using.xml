@@ -302,6 +302,15 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 	</sect1>
 	
 	<sect1 id="using-s4">
+		<title>ExecutionParams</title>
+		
+		<para>
+			Every
+		</para>
+		
+	</sect1>
+	
+	<sect1 id="using-s5">
 		<title>FormBeanContext</title>
 		
 		<para>
@@ -319,70 +328,128 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 			population/ validation process.
 		</para>
 		
-		<sect2 id="using-s4a">
+		<sect2 id="using-s5a">
 			<title>References</title>
 
-        <itemizedlist spacing="compact">
-            <listitem>
-                <para>
-					The form bean (property 'bean') is the object that you provided for population with
-					method 'makeFormBean'.
-                </para>
-            </listitem>
-            <listitem>
-                <para>
-                   Property 'currentLocale' is the locale that will be used for this request. FormBeanCtrl
-				   gets the locale by calling it protected method 'getLocaleForRequest' and sets it
-				   as currentLocale in the FormBeanContext right after creating the formBeanContext.
-                </para>
-            </listitem>
-        </itemizedlist>
+	        <itemizedlist spacing="compact">
+	            <listitem>
+	                <para>
+						The form bean (property 'bean') is the object that you provided for population with
+						method 'makeFormBean'.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   Property 'currentLocale' is the locale that will be used for this request. FormBeanCtrl
+					   gets the locale by calling it protected method 'getLocaleForRequest' and sets it
+					   as currentLocale in the FormBeanContext right after creating the formBeanContext.
+	                </para>
+	            </listitem>
+	        </itemizedlist>
 		
 		</sect2>
 		
-		<sect2 id="using-s4b">
+		<sect2 id="using-s5b">
 			<title>Attributes</title>
 
-        <itemizedlist spacing="compact">
-            <listitem>
-                <para>
-					Map property 'errors' is used to store errors that occure during population and
-					validation. You can use this map to store additional error messages as well.
-                </para>
-            </listitem>
-            <listitem>
-                <para>
-                   Map property 'overrideFields' is used to store the original input values when
-				   population or validation generated errors.
-                </para>
-            </listitem>
-            <listitem>
-                <para>
-					Map property 'attributes' can be used to store additional attributes that should
-					be available to the next controllers and views in the execution chain without it
-					having any effect on population and validation, like end-user messages that
-					are not errors. FormBeanContext acts as a wrapper for the attributes, so you
-					should use the map methods like get(key), set(key, value) etc. This has the advantage
-					of being able to compactely use these attributes in the view. E.g, say we have
-					attribute with name 'myAttrib' stored as a FormBeanContxt attribute, in Velocity
-					we could display this atribute like: '$model.myAttrib'.
-                </para>
-            </listitem>
-        </itemizedlist>
+	        <itemizedlist spacing="compact">
+	            <listitem>
+	                <para>
+						Map property 'errors' is used to store errors that occure during population and
+						validation. You can use this map to store additional error messages as well.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   Map property 'overrideFields' is used to store the original input values when
+					   population or validation generated errors.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+						Map property 'attributes' can be used to store additional attributes that should
+						be available to the next controllers and views in the execution chain without it
+						having any effect on population and validation, like end-user messages that
+						are not errors. FormBeanContext acts as a wrapper for the attributes, so you
+						should use the map methods like get(key), set(key, value) etc. This has the advantage
+						of being able to compactely use these attributes in the view. E.g, say we have
+						attribute with name 'myAttrib' stored as a FormBeanContxt attribute, in Velocity
+						we could display this atribute like: '$model.myAttrib'.
+	                </para>
+	            </listitem>
+	        </itemizedlist>
 		
 		</sect2>
 		
-		<sect2 id="using-s4b">
+		<sect2 id="using-s5c">
 			<title>Utility methods</title>
+			
+			<para>
+				The utility methods help you display properties. Allthough it is not nescesary to use
+				these methods, as you could directly use the form bean, it is advisable to do so,
+				as the utility methods help you look up override values and do formatting.
+			</para>
 
-        <itemizedlist spacing="compact">
-            <listitem>
-                <para>
-					TODO
-                </para>
-            </listitem>
-        </itemizedlist>
-		
+	        <itemizedlist spacing="compact">
+	            <listitem>
+	                <para>
+						<literal>displayProperty(String propertyName)</literal>. This method looks up 
+						the property with the provided propertyName from the form bean
+						and returns the property value as a string using default formatting. If an override
+						value is found, this value will be returned. Baritus will try to format override values.
+						If this fails (which is not unlikely as one of the reasons the override value was set
+						in the first place is that conversion to the target type failed), <literal>ConvertUtils</literal>
+						from the <literal>BeanUtils</literal>will be used to convert the value to a string.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+						<literal>displayProperty(String propertyName, String pattern)</literal>. 
+						This method does the same as <literal>displayProperty(String propertyName)</literal>,
+						but tries to use the provided pattern for formatting.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+						<literal>format(Object value)</literal>. 
+						The provided object is formatted using the Formatter that was registered
+						for its object type. If no formatter is found, just convert to a String using
+						<literal>ConvertUtils</literal>.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+						<literal>format(Object value, String pattern)</literal>. 
+						The provided object is formatted using the Formatter that was registered
+						for its object type and using the provided pattern with that formatter. 
+						If no formatter is found, just convert to a String using <literal>ConvertUtils</literal>.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+						<literal>format(String formatterName, Object value)</literal>. 
+						The provided object is formatted using the Formatter that was registered
+						for the provided formatterName. If no formatter is found, just convert to a String using
+						<literal>ConvertUtils</literal>.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+						<literal>format(String formatterName, Object value, pattern)</literal>. 
+						The provided object is formatted using the Formatter that was registered
+						for the provided formatterName and using the provided pattern with that
+						formatter. If no formatter is found, just convert to a String using
+						<literal>ConvertUtils</literal>.
+	                </para>
+	            </listitem>
+	        </itemizedlist>
+			
+			<para>
+				With all formatting the locale for the current request will be taken into account.
+				If localized formatters were registered, these will be used instead of non-localized
+				formatters.
+			</para>
+			
 		</sect2>
 		
 	</sect1>
