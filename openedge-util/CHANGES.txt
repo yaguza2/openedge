@@ -1,4 +1,9 @@
 -------------------------------------------------
+1.2.5
+
+- HibernateHelper now works with a pluggable delegate
+
+-------------------------------------------------
 1.2.4
 
 -added '\n' replacement <br> to parseText()

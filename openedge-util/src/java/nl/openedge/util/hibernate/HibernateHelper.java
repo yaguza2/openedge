@@ -4,310 +4,166 @@
  * $Date$
  *
  * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
+ * Copyright (c) 2003
  * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.util.hibernate;
 
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Interceptor;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
 
 /**
- * Manages a hibernate session with ThreadLocal.
- *
  * @author Eelco Hillenius
  */
-public abstract class HibernateHelper
-{
+public class HibernateHelper {
+	
+	private static HibernateHelperDelegate delegate = null;
+	static
+	{
+		String filename = "/hibernatehelper.properties";
+		Properties props = new Properties();
+		InputStream is = null;
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		if (loader != null)
+		{ // try to load with context class loader
+			is = loader.getResourceAsStream(filename);
+		}
+		if ((loader == null) || (is == null))
+		{ // classloader fallthrough
+			is = HibernateHelper.class.getResourceAsStream(filename);
+		}
+		if(is != null)
+		{
+			try
+			{
+				props.load(is);
+				String delegateImpl = props.getProperty("delegate");
+				if(delegateImpl != null)
+				{
+					Class clazz = loader.loadClass(delegateImpl);
+					delegate = (HibernateHelperDelegate)clazz.newInstance();
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		if(delegate == null)
+		{
+			System.err.println("fallback on default HibernateHelperDelegate implementation: " +
+				HibernateHelperThreadLocaleImpl.class.getName());
+			delegate = new HibernateHelperThreadLocaleImpl();
+		}
+	}
+	
+	
+    /** close current session on setSession */
+    public final static int ACTION_CLOSE = 1;
 
-	/** close current session on setSession */
-	public final static int ACTION_CLOSE = 1;
-	
-	/** disconnect current session on setSession */
-	public final static int ACTION_DISCONNECT = 2;
-
-	private static Log log = LogFactory.getLog(HibernateHelper.class);
-	
+    /** disconnect current session on setSession */
+    public final static int ACTION_DISCONNECT = 2;
+    
 	/**
-	 * The FlushMode for the Hibernate session default COMMIT,
-	 * see Hibernate documentation for other values.
-	 * 
-	 */
-	private static FlushMode flushMode = FlushMode.COMMIT;
-	
-	/**
-	 * config url
-	 */
-	protected static URL configURL = null;
-	
-	/**
-	 * Hibernate configuration object
-	 */
-	protected static Configuration configuration = null;
-
-	/**
-	 * Holds the current hibernate session, if one has been created.
-	 */
-	protected static ThreadLocal hibernateHolder = new ThreadLocal();
-
-	/**
-	 * Hibernate session factory
-	 */
-	protected static SessionFactory factory;
-	
-	/**
-	 * factory level interceptor class
-	 */	
-	protected static Class interceptorClass;
-	protected static String interceptorClassName;
-	
-	/** 
-	 * If true, only one instance will be created of the interceptor for all
-	 * sessions, if false, a new - and thus thread safe - instance will be created
-	 * for session.
-	 */
-	protected static boolean singleInterceptor;
-	
-	/** if singleInterceptor == true, this will be the instance that is used for all sessions */
-	protected static Interceptor staticInterceptor;
-
-	private static boolean wasInitialised = false;
-
-	/**
-	 * initialise
+	 * Initialise.
 	 */
 	public static void init() throws Exception
 	{
-
-		if (!wasInitialised)
-		{
-			wasInitialised = true;
-			// Initialize hibernate
-			// configure; load mappings
-			configuration = new Configuration();
-			if(configURL != null)
-			{
-				configuration.configure(configURL);	
-			}
-			else
-			{
-				configuration.configure();	
-			}
-			// build a SessionFactory		
-			factory = configuration.buildSessionFactory();
-		}
+		delegate.init();
 	}
 
 	/**
-	 * Get session for this Thread
+	 * Get session for this Thread.
 	 *
 	 * @return an appropriate Session object
 	 */
 	public static Session getSession() throws HibernateException
 	{
-
-		Session sess = (Session)hibernateHolder.get();
-		if (sess == null && factory != null)
-		{
-			if(interceptorClass != null)
-			{
-				Interceptor interceptor = null;
-				try
-				{
-					interceptor = getInterceptorInstance(interceptorClass);
-				}
-				catch (InstantiationException e)
-				{
-					log.error(e.getMessage(), e);
-					throw new HibernateException(e);
-				}
-				catch (IllegalAccessException e)
-				{
-					log.error(e.getMessage(), e);
-					throw new HibernateException(e);
-				}
-				sess = factory.openSession(interceptor);
-			}
-			else
-			{
-				sess = factory.openSession();
-			}
-			
-			hibernateHolder.set(sess);
-			sess.setFlushMode(flushMode);
-		}
-		
-		return sess;
+		return delegate.getSession();
 	}
 	
 	/**
-	 * close session for this Thread
+	 * Close session for this Thread.
 	 */
 	public static void closeSession() throws HibernateException
 	{
-		Session sess = (Session)hibernateHolder.get();
-		if (sess != null)
-		{
-			hibernateHolder.set(null);
-			try
-			{
-				sess.close();
-			}
-			catch (HibernateException ex)
-			{
-				log.error(ex);
-			}
-		}
+		delegate.closeSession();
 	}
 	
 	/**
-	 * disconnect session and remove from threadlocal for this Thread
+	 * disconnect session and remove from threadlocal for this Thread.
 	 */
 	public static void disconnectSession() throws HibernateException
 	{
-		Session sess = (Session)hibernateHolder.get();
-		if (sess != null)
-		{
-			hibernateHolder.set(null);
-			try
-			{
-				sess.disconnect();
-			}
-			catch (HibernateException ex)
-			{
-				log.error(ex);
-			}
-		}
+		delegate.disconnectSession();
 	}
 	
 	/**
-	 * set current session
+	 * Set current session.
 	 * @param session hibernate session
 	 * @param actionForCurrentSession one of the constants 
-	 * 		HibernateHelper.ACTION_CLOSE close current session
-	 * 		HibernateHelper.ACTION_DISCONNECT disconnect current session
+	 * 		HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current session
+	 * 		HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current session
 	 */
 	public static void setSession(Session session, int actionForCurrentSession)
 	{
-		Session sess = (Session)hibernateHolder.get();
-		if (sess != null)
-		{
-			if(actionForCurrentSession == ACTION_CLOSE)
-			{
-				try
-				{
-					sess.close();
-				}
-				catch (HibernateException ex)
-				{
-					log.error(ex);
-				}	
-			}
-			else if(actionForCurrentSession == ACTION_DISCONNECT)
-			{
-				try
-				{
-					sess.disconnect();
-				}
-				catch (HibernateException ex)
-				{
-					log.error(ex);
-				}				
-			}
-			else
-			{
-				throw new RuntimeException("invallid action " + actionForCurrentSession);
-			}
-		}
-		hibernateHolder.set(session);		
+		delegate.setSession(session, actionForCurrentSession);
 	}
 
 	/**
+	 * Get the Hibernate session factory.
+	 * 
 	 * @return the hibernate session factory
 	 */
 	public static SessionFactory getSessionFactory()
 	{
-		return factory;
+		return delegate.getSessionFactory();
 	}
+	
 	/**
-	 * @param factory
+	 * Set the Hibernate session factory.
+	 * 
+	 * @param factory the Hibernate session factory
 	 */
 	public static void setSessionFactory(SessionFactory factory)
 	{
-		HibernateHelper.factory = factory;
+		HibernateHelperThreadLocaleImpl.factory = factory;
 	}
 
 	/**
-	 * @return URL
+	 * Get the configuration URL.
+	 * 
+	 * @return URL the configuration URL
 	 */
 	public static URL getConfigURL()
 	{
-		return configURL;
+		return delegate.getConfigURL();
 	}
 
 	/**
-	 * @param url
+	 * Set the configuration URL.
+	 * 
+	 * @param url the configuration URL
 	 */
 	public static void setConfigURL(URL url)
 	{
-		configURL = url;
+		delegate.setConfigURL(url);
 	}
 
 	/**
-	 * @return
+	 * Get the Hibernate configuration object.
+	 * 
+	 * @return Configuration
 	 */
 	public static Configuration getConfiguration()
 	{
-		return configuration;
-	}
-	
-	/**
-	 * Sets the FlushMode used for the session. Default FlushMode.COMMIT
-	 * See the Hibernate documentation on different FlushModes.
-	 * @param mode the new FlushMode.
-	 */
-	public static void setFlushMode(FlushMode mode)
-	{
-		flushMode = mode;
-	}
-	
-	/**
-	 * Return the current FlushMode.
-	 * @return
-	 */
-	public static FlushMode getFlushMode()
-	{
-		return flushMode;
+		return delegate.getConfiguration();
 	}
 
 	/**
@@ -316,7 +172,7 @@ public abstract class HibernateHelper
 	 */
 	public static String getInterceptorClass()
 	{
-		return interceptorClassName;
+		return delegate.getInterceptorClass();
 	}
 
 	/**
@@ -325,64 +181,7 @@ public abstract class HibernateHelper
 	 */
 	public static void setInterceptorClass(String className)
 	{
-		// reset
-		interceptorClassName = null;
-		interceptorClass = null;
-		staticInterceptor = null;
-		
-		// try first
-		Interceptor instance = null;
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		if (classLoader == null)
-		{
-			classLoader = HibernateHelper.class.getClassLoader();
-		}
-		Class clazz = null;
-		try
-		{
-			clazz = classLoader.loadClass(className);
-			
-			instance = getInterceptorInstance(clazz);
-			
-			log.info("set hibernate interceptor to " + className + 
-				"; singleInterceptor == " + singleInterceptor);
-		}
-		catch (Exception e)
-		{
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e);
-		}
-		
-		interceptorClassName = className;
-		interceptorClass = clazz;
-	}
-	
-	/**
-	 * create a new instance of the interceptor with the provided class or,
-	 * if singleInterceptor == true, the singleton instance (which will be created
-	 * if it did not yet exist).
-	 * @param clazz class of interceptor
-	 * @return Interceptor new or singleton instance of Interceptor
-	 */
-	protected static Interceptor getInterceptorInstance(Class clazz) 
-		throws InstantiationException, 
-		IllegalAccessException
-	{
-		if(singleInterceptor)
-		{
-			synchronized(HibernateHelper.class)
-			{
-				if(staticInterceptor == null)
-				{
-					staticInterceptor = (Interceptor)clazz.newInstance();		
-				}
-				return staticInterceptor;
-			}
-		}
-		else
-		{
-			return (Interceptor)clazz.newInstance();	
-		}
+		delegate.setInterceptorClass(className);
 	}
 
 	/**
@@ -391,9 +190,9 @@ public abstract class HibernateHelper
 	 * for session.
 	 * @return boolean
 	 */
-	public boolean isSingleInterceptor()
+	public static boolean isSingleInterceptor()
 	{
-		return singleInterceptor;
+		return delegate.isSingleInterceptor();
 	}
 
 	/**
@@ -402,9 +201,19 @@ public abstract class HibernateHelper
 	 * for session.
 	 * @param b
 	 */
-	public void setSingleInterceptor(boolean b)
+	public static void setSingleInterceptor(boolean b)
 	{
-		singleInterceptor = b;
+		delegate.setSingleInterceptor(b);
 	}
+
+
+    /**
+     * Get the concrete instance of helper delegate.
+     * 
+     * @return HibernateHelperDelegate the concrete instance of helper delegate
+     */
+    public static HibernateHelperDelegate getDelegate() {
+        return delegate;
+    }
 
 }
