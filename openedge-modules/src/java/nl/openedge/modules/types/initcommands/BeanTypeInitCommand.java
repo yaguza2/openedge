@@ -216,6 +216,8 @@ public final class BeanTypeInitCommand implements InitCommand
 				} 
 				catch (ConversionException e) 
 				{
+					System.err.println("error populating property " + name + 
+						" on object " + componentInstance);
 					e.printStackTrace();
 					success = false;
 				}
@@ -227,6 +229,8 @@ public final class BeanTypeInitCommand implements InitCommand
 			}
 			catch (Exception e)
 			{
+				System.err.println("error populating property " + name + 
+					" on object " + componentInstance);
 				//this should not happen as we did extensive checking allready.
 				// therefore print the stacktrace
 				e.printStackTrace();
@@ -258,6 +262,8 @@ public final class BeanTypeInitCommand implements InitCommand
 		}
 		catch (Exception e)
 		{
+			System.err.println("error populating property " + name + 
+				" on object " + componentInstance);
 			e.printStackTrace();
 			success = false;	
 		}
