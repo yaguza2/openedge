@@ -30,32 +30,32 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.Converter;
-import org.apache.commons.beanutils.PropertyUtils;
+import ognl.Ognl;
+import ognl.OgnlException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
 /**
- * Command that populates instances using BeanUtils
+ * Command that populates instances using Ognl.
+ * 
  * @author Eelco Hillenius
  */
 public final class BeanTypeInitCommand implements InitCommand
 {
 	
 	private Map properties = null;
+	
+	private static Log log = LogFactory.getLog(BeanTypeInitCommand.class);
 
 	/**
 	 * initialize
@@ -73,10 +73,10 @@ public final class BeanTypeInitCommand implements InitCommand
 		{
 			for (Iterator j = pList.iterator(); j.hasNext();)
 			{
-
 				Element pElement = (Element)j.next();
-				properties.put(pElement.getAttributeValue("name"), 
-							pElement.getAttributeValue("value"));
+				properties.put(
+					pElement.getAttributeValue("name"), 
+					pElement.getAttributeValue("value"));
 			}
 				
 		}
@@ -89,23 +89,15 @@ public final class BeanTypeInitCommand implements InitCommand
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
-
 		if(properties != null)
 		{
-			boolean success = true;
-			// try to set its properties
 			try
 			{
-				success = populate(componentInstance, this.properties);
+				populate(componentInstance, this.properties);
 			}
 			catch (Exception e)
 			{
 				throw new ConfigException(e);
-			}
-			if(!success)
-			{
-				throw new ConfigException(
-					"there were errors during population of " + componentInstance);
 			}
 		}
 	}
@@ -116,158 +108,15 @@ public final class BeanTypeInitCommand implements InitCommand
 	 * @param properties
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected boolean populate(Object componentInstance, Map properties)
-		throws NoSuchMethodException, 
-		InvocationTargetException,
-		IllegalAccessException 
+	protected void populate(Object componentInstance, Map properties) 
+		throws OgnlException
 	{
-		
-		// Do nothing unless both arguments have been specified
-		if ((componentInstance == null) || (properties == null)) 
+		for(Iterator i = properties.keySet().iterator(); i.hasNext(); )
 		{
-			return true;
+			String key = (String)i.next();
+			Object value = properties.get(key);
+			Ognl.setValue(key, componentInstance, value);
 		}
-
-		boolean succeeded = true;
-		// Loop through the property name/value pairs to be set
-		Iterator names = properties.keySet().iterator();
-		while (names.hasNext()) 
-		{
-			boolean success = true;
-			// Identify the property name and value(s) to be assigned
-			String name = (String)names.next();
-			if (name == null) 
-			{
-				continue;
-			}
-			Object value = properties.get(name);
-			String stringValue = null;
-			
-			if(value != null)
-			{
-
-				if(value instanceof String)
-				{
-					success = setSingleProperty(componentInstance, name, value);
-				} 
-				else if(value instanceof String[])
-				{
-					Class type;
-					PropertyDescriptor propertyDescriptor;
-					try
-					{
-						propertyDescriptor =
-							PropertyUtils.getPropertyDescriptor(componentInstance, name);
-						type = propertyDescriptor.getPropertyType();
-						
-						if(type.isArray())
-						{
-							success = setArrayProperty(
-								propertyDescriptor, 
-								componentInstance, name, (String[])value);
-		
-						}
-						else // the target property is not an array; let BeanUtils
-							// handle the conversion
-						{
-							success = setSingleProperty(componentInstance, name, value);
-						}
-					}
-					catch (Exception e)
-					{
-						// Property does not exist in target object; ignore 
-					}
-				}
-				if(!success)
-				{
-					succeeded = false;
-				}
-			}
-		}
-		return succeeded;
-	}
-	
-	/**
-	 * set an array property
-	 */
-	private boolean setArrayProperty(
-			PropertyDescriptor propertyDescriptor,
-			Object componentInstance,
-			String name, 
-			String[] values)
-	{		
-		boolean success = true;
-		Class type = propertyDescriptor.getPropertyType();
-		if(type.isArray())
-		{
-			Class componentType = type.getComponentType();
-			Converter converter = ConvertUtils.lookup(componentType);
-			Object array = Array.newInstance(componentType, values.length);
-			
-			int i = 0;
-			for ( ; i < values.length; i++) 
-			{
-				try 
-				{
-					Object converted = converter.convert(
-						componentType, (String)values[i]);
-
-					Array.set(array, i, converted);		
-				} 
-				catch (ConversionException e) 
-				{
-					System.err.println("error populating property " + name + 
-						" on object " + componentInstance);
-					e.printStackTrace();
-					success = false;
-				}
-			}
-			
-			try
-			{
-				PropertyUtils.setProperty(componentInstance, name, array);
-			}
-			catch (Exception e)
-			{
-				System.err.println("error populating property " + name + 
-					" on object " + componentInstance);
-				//this should not happen as we did extensive checking allready.
-				// therefore print the stacktrace
-				e.printStackTrace();
-				success = false;
-			}				
-		}
-		
-		return success;
-	}
-	
-	/**
-	 * set a single property
-	 */
-	private boolean setSingleProperty(
-		Object componentInstance, String name, Object value)
-	{
-		boolean success = true;
-		String stringValue = null;
-		try
-		{
-			// check as string first
-			stringValue = ConvertUtils.convert(value);
-			if(stringValue != null && (!stringValue.trim().equals("")))
-			{
-				Object o = PropertyUtils.getProperty(componentInstance, name);
-				// Perform the assignment for this property
-				BeanUtils.setProperty(componentInstance, name, value);
-			}
-		}
-		catch (Exception e)
-		{
-			System.err.println("error populating property " + name + 
-				" on object " + componentInstance);
-			e.printStackTrace();
-			success = false;	
-		}
-		return success;
 	}
 
 }

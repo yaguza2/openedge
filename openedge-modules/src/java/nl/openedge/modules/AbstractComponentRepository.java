@@ -58,7 +58,9 @@ import nl.openedge.modules.observers.SchedulerStartedEvent;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.base.JobTypeFactory;
 
-import org.apache.commons.beanutils.BeanUtils;
+import ognl.Ognl;
+import ognl.OgnlException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
@@ -416,7 +418,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				}
 			try
 			{ // set parameters as properties of trigger
-				BeanUtils.populate(trigger, paramMap);
+
+				populate(trigger, paramMap);
 			}
 			catch (Exception e)
 			{
@@ -425,6 +428,22 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			triggers.put(name, trigger);
 		}
 		return triggers;
+	}
+	
+	/*
+	 * populate bean 
+	 * @param bean
+	 * @param parameters
+	 * @throws OgnlException
+	 */
+	private void populate(Object bean, Map parameters) throws OgnlException
+	{
+		for(Iterator i = parameters.keySet().iterator(); i.hasNext(); )
+		{
+			String key = (String)i.next();
+			Object value = parameters.get(key);
+			Ognl.setValue(key, bean, value);
+		}		
 	}
 
 	/*

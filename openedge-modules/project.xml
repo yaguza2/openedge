@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>openedge-modules</id>
   <name>OpenEdge Modules</name>
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.2</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -16,12 +16,13 @@
   <shortDescription>The OpenEdge Module framework provides a component factory and a wrapper for the Quartz sceduler</shortDescription>
   <description>The OpenEdge Module framework provides for an easy to use object factory that can build and configure instances of objects (Modules) from a configuration xml document. Clients can then ask the ModuleFactory for instances.</description>
   <url>http://maven.apache.org/</url>
-
-  <!-- <repository>
-    <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
-  </repository> -->
   
   <versions>
+    <version>
+      <id>1.2</id>
+      <name>1.2</name>
+      <tag>B1_2</tag>
+    </version>
     <version>
       <id>1.1</id>
       <name>1.1</name>
@@ -104,17 +105,11 @@
 
   <dependencies>
 
-    <dependency>
-      <id>commons-beanutils</id>
-      <version>1.6.1</version>
-      <url>http://jakarta.apache.org/commons/beanutils/</url>
-    </dependency>
-
-    <dependency>
-      <id>commons-collections</id>
-      <version>3.0-dev</version>
-      <url>http://jakarta.apache.org/commons/collections/</url>
-    </dependency>
+	<dependency>
+		<id>ognl</id>
+		<version>2.6.4</version>
+		<url>http://www.ognl.org/</url>
+	</dependency>
     
     <dependency>
       <id>commons-logging</id>

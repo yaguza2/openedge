@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.beanutils.BeanUtils;
+import ognl.Ognl;
 
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.ComponentLookupException;
@@ -139,7 +139,7 @@ public class DependentTypeWrapper
 			for(Iterator i = namedDependencies.iterator(); i.hasNext(); )
 			{
 				NamedDependency dep = (NamedDependency)i.next();
-				Object gotYa = null;
+				Object dependency = null;
 				if(references.contains(dep.getModuleName()))
 				{
 					// got a cycle!
@@ -156,23 +156,22 @@ public class DependentTypeWrapper
 					}
 					else
 					{
-						gotYa = resolved.get(dep.getModuleName());	
+						dependency = resolved.get(dep.getModuleName());	
 					}
 				}
 				else
 				{
 					references.add(dep.getModuleName());
 					// get module from repo
-					gotYa = moduleFactory.getComponent(dep.getModuleName());
+					dependency = moduleFactory.getComponent(dep.getModuleName());
 				}
 				
-				resolved.put(dep.getModuleName(), gotYa);
+				resolved.put(dep.getModuleName(), dependency);
 				
 				try
 				{
 					// set module as a property
-					BeanUtils.setProperty(
-						componentInstance, dep.getPropertyName(), gotYa);	
+					Ognl.setValue(dep.getPropertyName(), componentInstance, dependency);
 				}
 				catch(Exception e)
 				{
