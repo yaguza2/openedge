@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.6 2004-02-28 13:05:52 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-02-28 13:05:52 $
+ * $Id: FormBeanCtrl.java,v 1.7 2004-02-29 13:51:24 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-02-29 13:51:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -191,7 +191,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		Object bean = null;
 		Locale locale = null;
-		boolean populated = false;
+		boolean populated = true;
 		
 		try 
 		{	
@@ -211,8 +211,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			locale = getLocaleForRequest(cctx, formBeanContext); // get the locale
 			formBeanContext.setCurrentLocale(locale); // and set in context
 			
-			// populate
-			populated = populateFormBean(cctx, formBeanContext, locale, _execParams);
+			// populate if property of formBeanContext populateAndValidate is true 
+			// (as it is by default)
+			if(formBeanContext.isPopulateAndValidate())
+			{
+				populated = populateFormBean(cctx, formBeanContext, locale, _execParams);	
+			}
 			
 		} 
 		catch(Exception e)
@@ -235,7 +239,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		try
 		{	
-			// was the bean population successful?
+			// was the bean population successful or should we execute perform
+			// regardless of the population/ validation outcome?
 			if(populated || _execParams.isDoPerformIfPopulationFailed()) 
 			{
 				// flow intercept after population

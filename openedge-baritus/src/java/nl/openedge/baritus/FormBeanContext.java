@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.1.1.1 2004-02-24 20:33:53 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:33:53 $
+ * $Id: FormBeanContext.java,v 1.2 2004-02-29 13:51:24 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-29 13:51:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -57,31 +57,31 @@ import org.apache.commons.logging.LogFactory;
 public final class FormBeanContext
 {
 
-	/** the current locale */
+	/* the current locale */
 	private Locale currentLocale = null;
 	
-	/** 
+	/*
 	 * The form bean. This is the bean that will be populated, 
 	 * and that is returned by makeFormbean 
 	 */
 	private Object bean = null;
 
-	/** errors */
+	/* errors */
 	private Map errors = null;
 
-	/** overriden values as strings */
+	/* overriden values as strings */
 	private Map overrideFields = null;
 	
-	/** 
+	/* 
 	 * if, for some reason, you want to store extra attributes in this context
 	 * instead in the formBean, you can do this here (e.g. messages)
 	 */
 	private Map attributes = null;
 
-	/** log for this class */
+	/* log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
 	
-	/** format log */
+	/* format log */
 	private static Log formattingLog = LogFactory.getLog(LogConstants.FORMATTING_LOG);
 
 	/** error key for stacktrace if any */
@@ -89,9 +89,23 @@ public final class FormBeanContext
 
 	/** error key for stacktrace if any */
 	public final static String ERROR_KEY_EXCEPTION = "exception";
+	
+	/* 
+	 * flag whether Baritus should try to populate the form bean.
+	 * Setting this flag to false, and thus letting Baritus skip
+	 * population and validation can be usefull when you link commands
+	 * within the same request and want to reuse the allready populated
+	 * form bean without doing population and validation as well.<br>
+	 * <strong>BEWARE</strong> that this is also skips population of request attributes
+	 * etc. that were set by the controllers earlier in the command stack.<br>
+	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
+	 * population to be succesfull, even though the population of the
+	 * prior control might not have been.
+	 */
+	private boolean populateAndValidate = true;
 
 	/**
-	 * construct empty
+	 * construct instance of FormBeanContext
 	 */
 	public FormBeanContext()
 	{
@@ -347,6 +361,46 @@ public final class FormBeanContext
 	public boolean hasErrors()
 	{
 		return (errors != null && (!errors.isEmpty()));
+	}
+	
+	// ----------- execution parameters local for the current call ---------//
+
+	/**
+	 * get flag whether Baritus should try to populate the form bean.
+	 * Setting this flag to false, and thus letting Baritus skip
+	 * population and validation can be usefull when you link commands
+	 * within the same request and want to reuse the allready populated
+	 * form bean without doing population and validation as well.<br>
+	 * <strong>BEWARE</strong> that this is also skips population of request attributes
+	 * etc. that were set by the controllers earlier in the command stack.<br>
+	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
+	 * population to be succesfull, even though the population of the
+	 * prior control might not have been.
+	 * 
+	 * @return boolean whether Baritus should try to populate the form bean.
+	 */
+	public boolean isPopulateAndValidate()
+	{
+		return populateAndValidate;
+	}
+
+	/**
+	 * set flag whether Baritus should try to populate the form bean.
+	 * Setting this flag to false, and thus letting Baritus skip
+	 * population and validation can be usefull when you link commands
+	 * within the same request and want to reuse the allready populated
+	 * form bean without doing population and validation as well.<br>
+	 * <strong>BEWARE</strong> that this is also skips population of request attributes
+	 * etc. that were set by the controllers earlier in the command stack.<br>
+	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
+	 * population to be succesfull, even though the population of the
+	 * prior control might not have been.
+	 * 
+	 * @param populateAndValidate whether Baritus should try to populate the form bean.
+	 */
+	public void setPopulateAndValidate(boolean populateAndValidate)
+	{
+		this.populateAndValidate = populateAndValidate;
 	}
 
 	// ----------------------- DISPLAY/ OUTPUT METHODS ---------------------//
