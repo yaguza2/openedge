@@ -1,4 +1,0 @@
-#foreach( $error in $model.errors )
-#if($error != "")<div class="footererroritem">$!{error}</div><br/>#end
-#end
-#if ($model.statusmessage)<div class="foooterstatusitem">$!{model.statusmessage}</div>#end

@@ -1,4 +1,0 @@
-##<a href="$linkTool.setRelative('/home.m')" class="navitem">Home</a>&nbsp;&nbsp;&nbsp;
-##<a href="$linkTool.setRelative('/displayselecteerpolis.m')" class="navitem">Polis zoeken</a>&nbsp;&nbsp;&nbsp;
-##<a href="$linkTool.setRelative('/zet.nieuwe.polis.m')" class="navitem">Nieuwe Polis</a>&nbsp;&nbsp;&nbsp;
-##<span class="navitemdisabled">Afdrukken</span>&nbsp;&nbsp;&nbsp;
