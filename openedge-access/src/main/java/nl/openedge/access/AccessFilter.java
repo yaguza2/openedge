@@ -1,6 +1,9 @@
 package nl.openedge.access;
 
 import java.io.IOException;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.Permission;
 
 import javax.security.auth.Subject;
 import javax.servlet.Filter;
@@ -12,6 +15,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -31,6 +37,9 @@ public class AccessFilter implements Filter {
 
 	/** keep a reference to the config for later use */
 	protected FilterConfig config = null;
+
+	/** log */
+	protected Log log = LogFactory.getLog(getClass());
 
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -56,32 +65,37 @@ public class AccessFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpSession session = request.getSession();
 
-		// first check if this is a protected request
-		//UserManager um = accessFactory.getUserManager();
+		Subject subject = (Subject)session.getAttribute(
+								AUTHENTICATED_SUBJECT_KEY);
 		boolean needsAuthentication = false;
+		String uri = ((HttpServletRequest)req).getRequestURI();
+		try {
+			
+			Permission p = new NamedPermission(uri);
+			AccessController.checkPermission(p);
+			// if we get here, the user was authorised
+			chain.doFilter(req, res);
+			
+		} catch(AccessControlException e) {
+			if(log.isDebugEnabled()) log.debug("for subject '" + subject + 
+					"', uri '" + uri + "': " + e.getMessage());
+			if(subject == null) needsAuthentication = true;
+		}
 
 		// if this is a proctected request, try to retrieve subject from session
 		if(needsAuthentication) {
-			Subject subject = (Subject)session.getAttribute(
-			AUTHENTICATED_SUBJECT_KEY);
+			
 			if( subject == null) {
+				// redirect to login address
 				response.sendRedirect(response.encodeRedirectURL(
 					request.getContextPath() + loginRedirect));
-			} else {
-				
-				if(accessFactory == null) {
-					try {
-						accessFactory = new AccessFactory(config.getServletContext()); 
-					} catch(ConfigException e) {
-						e.printStackTrace();
-						throw new ServletException(e);
-					}
-				}
-				// go on with processing
-				chain.doFilter( req, res);
+			} else {				
+				// the subject was not authorised; send error
+				((HttpServletResponse)res).sendError(
+						HttpServletResponse.SC_FORBIDDEN);
 			}
 		} else {
-			chain.doFilter( req, res);	
+				
 		}
 	}
 

@@ -298,27 +298,40 @@ public final class AccessPermission extends BasicPermission {
 
 	/**
 	 * Return the canonical string representation of the actions.
-	 * Always returns present actions in the following order:
-	 * read, write.
+	 * Always returns present actions in the following order: 
+	 * read, write, execute, delete.
 	 *
 	 * @return the canonical string representation of the actions.
 	 */
 	static String getActions(int mask)
 	{
-	StringBuffer sb = new StringBuffer();
-		boolean comma = false;
+		StringBuffer sb = new StringBuffer();
+			boolean comma = false;
 
-	if ((mask & READ) == READ) {
-		comma = true;
-		sb.append("read");
-	}
+		if ((mask & READ) == READ) {
+			comma = true;
+			sb.append("read");
+		}
 
-	if ((mask & WRITE) == WRITE) {
-		if (comma) sb.append(',');
-			else comma = true;
-		sb.append("write");
-	}
-	return sb.toString();
+		if ((mask & WRITE) == WRITE) {
+			if (comma) sb.append(',');
+				else comma = true;
+			sb.append("write");
+		}
+
+		if ((mask & EXECUTE) == EXECUTE) {
+			if (comma) sb.append(',');
+				else comma = true;
+			sb.append("execute");
+		}
+
+		if ((mask & DELETE) == DELETE) {
+			if (comma) sb.append(',');
+				else comma = true;
+			sb.append("delete");
+		}
+
+		return sb.toString();
 	}
 
 	/**
