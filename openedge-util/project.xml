@@ -76,6 +76,11 @@
   <dependencies>
 
     <dependency>
+      <id>servletapi</id>
+      <version>2.3</version>
+    </dependency>
+
+    <dependency>
       <id>commons-beanutils</id>
       <version>1.5</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
@@ -109,6 +114,12 @@
       <id>ojb</id>
       <version>1.0pre-cvs</version>
       <url>http://db.apache.org/ojb/</url>
+    </dependency>
+    
+    <dependency>
+      <id>hibernate</id>
+      <version>2.0rc1</version>
+      <url>http://hibernate.bluemars.net/</url>
     </dependency>
 
   </dependencies>
