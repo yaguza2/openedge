@@ -177,5 +177,13 @@ public interface ParameterRegistryDelegate
 	 */
 	void removeGroup(StructuralGroup group)
 		throws NotFoundException, RegistryException;
-
+	
+	/**
+	 * Verwijder de gegeven ParameterGroup
+	 * @param group
+	 * @throws NotFoundException
+	 * @throws RegistryException
+	 */
+	void removeParameterGroup(ParameterGroup group)
+		throws NotFoundException, RegistryException;
 }
