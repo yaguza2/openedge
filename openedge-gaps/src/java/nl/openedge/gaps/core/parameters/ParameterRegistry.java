@@ -100,16 +100,15 @@ public final class ParameterRegistry
 	/**
 	 * Sla de gegeven parameter op in - evt persistente - store.
 	 * @param parameter de te bewaren parameter
-	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws SaveException indien er zich een fout voordoet bij het opslaan
 	 * @throws RegistryException indien de registry een gevraagde actie niet naar behoren
 	 *             heeft kunnen uitvoeren vanwege een onbekende/ generieke fout
 	 */
-	public static void saveParameter(Parameter parameter, boolean useTransaction)
+	public static void saveParameter(Parameter parameter)
 		throws SaveException, RegistryException
 	{
 
-		getDelegate().saveParameter(parameter, useTransaction);
+		getDelegate().saveParameter(parameter);
 	}
 
 	/**
@@ -117,14 +116,13 @@ public final class ParameterRegistry
 	 * verwijderd als deze nog niet in gebruik is, cq niet is gekoppeld aan een reeds
 	 * actieve versie.
 	 * @param parameter de te verwijderen parameter
-	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws SaveException indien de parameter niet kan worden verwijderd.
 	 */
-	public static void removeParameter(Parameter parameter, boolean useTransaction)
+	public static void removeParameter(Parameter parameter)
 		throws SaveException
 	{
 
-		getDelegate().removeParameter(parameter, useTransaction);
+		getDelegate().removeParameter(parameter);
 	}
 
 	/**
@@ -216,10 +214,10 @@ public final class ParameterRegistry
 	 * @param group de structuurgroep die dient te worden opgeslagen
 	 * @throws RegistryException bij onverwachte registry fouten
 	 */
-	public static void saveGroup(StructuralGroup group, boolean useTransaction)
+	public static void saveGroup(StructuralGroup group)
 		throws RegistryException
 	{
-		getDelegate().saveGroup(group, useTransaction);
+		getDelegate().saveGroup(group);
 	}
 
 	/**
@@ -245,9 +243,9 @@ public final class ParameterRegistry
 	 * @param group de parametergroep die dient te worden opgeslagen
 	 * @throws RegistryException bij onverwachte registry fouten
 	 */
-	public static void saveGroup(ParameterGroup group, boolean useTransaction) throws RegistryException
+	public static void saveGroup(ParameterGroup group) throws RegistryException
 	{
-		getDelegate().saveGroup(group, useTransaction);
+		getDelegate().saveGroup(group);
 	}
 
 	/**
@@ -256,12 +254,12 @@ public final class ParameterRegistry
 	 * @throws RegistryException bij onverwachte registry fouten
 	 * @throws NotFoundException indien de parameter niet kan worden gevonden
 	 */
-	public static void removeGroup(StructuralGroup group, boolean useTransaction)
+	public static void removeGroup(StructuralGroup group)
 		throws NotFoundException,
 			RegistryException
 	{
 
-		getDelegate().removeGroup(group, useTransaction);
+		getDelegate().removeGroup(group);
 	}
 
 	/**

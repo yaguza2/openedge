@@ -14,11 +14,11 @@ import java.util.zip.DataFormatException;
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
 import net.sf.hibernate.type.Type;
 import nl.openedge.gaps.core.groups.Group;
 import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.util.CacheUtil;
+import nl.openedge.gaps.util.TransactionUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
 import nl.openedge.util.ser.SerializeAndZipHelper;
 import nl.openedge.util.ser.SerializedAndZipped;
@@ -225,26 +225,25 @@ public final class GroupDAO
 	/**
 	 * Slaat de gegeven groep op in de database.
 	 * @param group de groep
-	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @return de evt bijgewerkte groep
 	 * @throws GroupDAOException bij onverwachte fouten
 	 */
-	public Group saveOrUpdateGroup(Group group, boolean useTransaction)
+	public Group saveOrUpdateGroup(Group group)
 		throws GroupDAOException
 	{
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		if (group == null)
 		{
 			return group;
 		}
 		Session session = null;
-		Transaction tx = null;
 		GroupWrapper wrapper = findGroupWrapper(group);
 		try
 		{
 			session = HibernateHelper.getSession();
 			if(useTransaction)
 			{
-				tx = session.beginTransaction();
+				TransactionUtil.begin(session);
 			}
 			if (wrapper != null)
 			{ // update; groep bestaat reeds
@@ -268,7 +267,7 @@ public final class GroupDAO
 			}
 			if(useTransaction)
 			{
-				tx.commit();
+				TransactionUtil.commit();
 			}
 			if(isUseCache())
 			{
@@ -283,7 +282,7 @@ public final class GroupDAO
 			log.error(e.getMessage(), e);
 			if(useTransaction)
 			{
-				rollback(tx);
+				TransactionUtil.rollback();
 			}
 		}
 		return group;
@@ -292,12 +291,11 @@ public final class GroupDAO
 	/**
 	 * Verwijderd de gegeven groep uit de database.
 	 * @param group de groep
-	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws GroupDAOException bij onverwachte fouten
 	 */
-	public void deleteGroup(Group group, boolean useTransaction) throws GroupDAOException
+	public void deleteGroup(Group group) throws GroupDAOException
 	{
-
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		//TODO check op actieve versie
 		// het verwijderen van een groep zal in
 		// praktijk slechts worden toegestaan indien de groep nog niet met
@@ -307,14 +305,13 @@ public final class GroupDAO
 			return;
 		}
 		Session session = null;
-		Transaction tx = null;
 		GroupWrapper wrapper = findGroupWrapper(group);
 		try
 		{
 			session = HibernateHelper.getSession();
 			if(useTransaction)
 			{
-				tx = session.beginTransaction();
+				TransactionUtil.begin(session);
 			}
 			if (wrapper != null)
 			{ // verwijder
@@ -322,7 +319,7 @@ public final class GroupDAO
 			}
 			if(useTransaction)
 			{
-				tx.commit();
+				TransactionUtil.commit();
 			}
 			if(isUseCache())
 			{
@@ -337,26 +334,7 @@ public final class GroupDAO
 			log.error(e.getMessage(), e);
 			if(useTransaction)
 			{
-				rollback(tx);
-			}
-		}
-	}
-
-	/**
-	 * Rollback transactie.
-	 * @param tx transactie
-	 */
-	private void rollback(Transaction tx)
-	{
-		if (tx != null)
-		{
-			try
-			{
-				tx.rollback();
-			}
-			catch (HibernateException e1)
-			{
-				log.error(e1.getMessage(), e1);
+				TransactionUtil.rollback();
 			}
 		}
 	}

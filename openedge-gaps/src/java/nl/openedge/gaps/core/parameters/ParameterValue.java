@@ -25,7 +25,7 @@ public class ParameterValue implements Cloneable, Serializable
 	/**
 	 * Attributen.
 	 */
-	protected Map attributes = new HashMap(0);
+	protected Map attributes = null;
 
 	/**
 	 * Construct.
@@ -53,6 +53,10 @@ public class ParameterValue implements Cloneable, Serializable
 	 */
 	public Object put(Object key, Object attribValue)
 	{
+		if(attributes == null)
+		{
+			attributes = new HashMap();
+		}
 		return attributes.put(key, attribValue);
 	}
 
@@ -62,7 +66,14 @@ public class ParameterValue implements Cloneable, Serializable
 	 */
 	public void putAll(Map newAttributes)
 	{
-		newAttributes.putAll(newAttributes);
+		if(attributes != null)
+		{
+			newAttributes.putAll(newAttributes);
+		}
+		else
+		{
+			attributes = newAttributes;
+		}
 	}
 
 	/**
@@ -72,7 +83,14 @@ public class ParameterValue implements Cloneable, Serializable
 	 */
 	public Object get(Object key)
 	{
-		return attributes.get(key);
+		if(attributes != null)
+		{
+			return attributes.get(key);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -90,7 +108,7 @@ public class ParameterValue implements Cloneable, Serializable
 	 */
 	public void setAttributes(Map attributes)
 	{
-
+		this.attributes = attributes;
 	}
 
 	/**

@@ -21,10 +21,6 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-import nl.openedge.gaps.core.Entity;
-import nl.openedge.gaps.core.groups.impl.GroupWrapper;
-import nl.openedge.gaps.core.parameters.impl.ParameterWrapper;
-import nl.openedge.gaps.core.versions.Version;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,6 +62,71 @@ public final class CacheUtil
 		Object result = null;
 		if(transactionCacheNames.contains(cacheName))
 		{
+			result = getObjectFromTransactionCache(cacheKey, cacheName);
+		}
+		else
+		{
+			result = getObjectFromEHCache(cacheKey, cacheName);
+		}
+		return result;
+	}
+
+	/**
+	 * Geeft object van cache manager.
+	 * @param cacheKey key cache
+	 * @param cacheName naam cache
+	 * @return cached object of null indien niet gevonden
+	 */
+	private static Object getObjectFromEHCache(
+			String cacheKey, String cacheName)
+	{
+		Object result = null;
+		try
+		{
+			CacheManager cacheManager = CacheManager.getInstance();
+			Cache cache = cacheManager.getCache(cacheName);
+			if (cache != null)
+			{
+				Element el = cache.get(cacheKey);
+				if (el != null)
+				{
+					result = el.getValue();
+					if(log.isDebugEnabled())
+					{
+						log.debug(result + " gevonden onder key " + cacheKey
+								+ " in cache " + cacheName);
+					}
+				}
+				else if(log.isDebugEnabled())
+				{
+					log.debug("geen object gevonden onder key " + cacheKey
+							+ " in cache " + cacheName);
+				}
+			}
+			else
+			{
+				throw new CacheException("cache " + cacheName + " niet gevonden");
+			}
+		}
+		catch (CacheException e)
+		{
+			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
+		}
+		return result;
+	}
+
+	/**
+	 * Haal object uit transactie cache.
+	 * @param cacheKey key cache
+	 * @param cacheName naam cache
+	 * @return cached object of niet indien niet gevonden of geen transactie bezig
+	 */
+	private static Object getObjectFromTransactionCache(
+			String cacheKey, String cacheName)
+	{
+		Object result = null;
+		if(TransactionUtil.isTransactionStarted())
+		{
 			Map txCache = (Map)txCacheHolder.get();
 			if(txCache != null)
 			{
@@ -86,42 +147,11 @@ public final class CacheUtil
 			}
 			else
 			{
-				log.warn("TRANSACTIE ThreadLocale nog niet aangemaakt voor Thread "
-						+ Thread.currentThread().getName());
-			}
-		}
-		else
-		{
-			try
-			{
-				CacheManager cacheManager = CacheManager.getInstance();
-				Cache cache = cacheManager.getCache(cacheName);
-				if (cache != null)
+				if(log.isDebugEnabled())
 				{
-					Element el = cache.get(cacheKey);
-					if (el != null)
-					{
-						result = el.getValue();
-						if(log.isDebugEnabled())
-						{
-							log.debug(result + " gevonden onder key " + cacheKey
-									+ " in cache " + cacheName);
-						}
-					}
-					else if(log.isDebugEnabled())
-					{
-						log.debug("geen object gevonden onder key " + cacheKey
-								+ " in cache " + cacheName);
-					}
+					log.debug("TRANSACTIE ThreadLocale nog niet aangemaakt voor Thread "
+							+ Thread.currentThread().getName());
 				}
-				else
-				{
-					throw new CacheException("cache " + cacheName + " niet gevonden");
-				}
-			}
-			catch (CacheException e)
-			{
-				log.error("cache " + cacheName + "is niet beschikbaar: ", e);
 			}
 		}
 		return result;
@@ -133,15 +163,64 @@ public final class CacheUtil
 	 * @param cacheName naam cache
 	 * @return het object of null indien niet in cache gevonden
 	 */
-	public static Object removeObjectFromCache(String cacheKey, String cacheName)
+	public static void removeObjectFromCache(String cacheKey, String cacheName)
 	{
-		Object result = null;
 		if(transactionCacheNames.contains(cacheName))
+		{
+			removeObjectFromTransactionCache(cacheKey, cacheName);
+		}
+		else
+		{
+			removeObjectFromEHCache(cacheKey, cacheName);
+		}
+	}
+
+	/**
+	 * Verwijderd object van cache manager.
+	 * @param cacheKey key cache
+	 * @param cacheName naam cache
+	 */
+	private static void removeObjectFromEHCache(String cacheKey, String cacheName)
+	{
+		try
+		{
+			CacheManager cacheManager = CacheManager.getInstance();
+			Cache cache = cacheManager.getCache(cacheName);
+			if (cache != null)
+			{
+				cache.remove(cacheKey);
+				if(log.isDebugEnabled())
+				{
+					log.debug("object met key " + cacheKey
+							+ " verwijderd uit cache " + cacheName);
+				}
+			}
+			else
+			{
+				throw new CacheException("cache " + cacheName + " niet gevonden");
+			}
+		}
+		catch (CacheException e)
+		{
+			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
+		}
+	}
+
+	/**
+	 * Verwijderd object uit transactie cache.
+	 * @param cacheKey key cache
+	 * @param cacheName naam cache
+	 * @return oude object of null
+	 */
+	private static void removeObjectFromTransactionCache(
+			String cacheKey, String cacheName)
+	{
+		if(TransactionUtil.isTransactionStarted())
 		{
 			Map txCache = (Map)txCacheHolder.get();
 			if(txCache != null)
 			{
-				result = txCache.remove(cacheKey);
+				txCache.remove(cacheKey);
 				if(log.isDebugEnabled())
 				{
 					log.debug("object met key " + cacheKey
@@ -150,36 +229,13 @@ public final class CacheUtil
 			}
 			else
 			{
-				log.error("TRANSACTIE ThreadLocale nog niet aangemaakt voor Thread "
-						+ Thread.currentThread().getName());
-			}
-		}
-		else
-		{
-			try
-			{
-				CacheManager cacheManager = CacheManager.getInstance();
-				Cache cache = cacheManager.getCache(cacheName);
-				if (cache != null)
+				if(log.isDebugEnabled())
 				{
-					cache.remove(cacheKey);
-					if(log.isDebugEnabled())
-					{
-						log.debug("object met key " + cacheKey
-								+ " verwijderd uit cache " + cacheName);
-					}
-				}
-				else
-				{
-					throw new CacheException("cache " + cacheName + " niet gevonden");
+					log.error("TRANSACTIE ThreadLocale nog niet aangemaakt voor Thread "
+							+ Thread.currentThread().getName());
 				}
 			}
-			catch (CacheException e)
-			{
-				log.error("cache " + cacheName + "is niet beschikbaar: ", e);
-			}
 		}
-		return result;
 	}
 
 	/**
@@ -189,6 +245,55 @@ public final class CacheUtil
 	public static void resetCache(String cacheName)
 	{
 		if(transactionCacheNames.contains(cacheName))
+		{
+			resetTransactionCache(cacheName);
+		}
+		else
+		{
+			resetEHCache(cacheName);
+		}
+	}
+
+	/**
+	 * Reset cache manager cache.
+	 * @param cacheName naam cache
+	 */
+	private static void resetEHCache(String cacheName)
+	{
+		try
+		{
+			CacheManager cacheManager = CacheManager.getInstance();
+			Cache cache = cacheManager.getCache(cacheName);
+			if (cache != null)
+			{
+				cache.removeAll();
+				if(log.isDebugEnabled())
+				{
+					log.debug("cache " + cacheName + " geschoond");
+				}
+			}
+			else
+			{
+				throw new CacheException("cache " + cacheName + " niet gevonden");
+			}
+		}
+		catch (CacheException e)
+		{
+			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
+		}
+		catch (IOException e)
+		{
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Reset transactie cache.
+	 * @param cacheName naam cache
+	 */
+	private static void resetTransactionCache(String cacheName)
+	{
+		if(TransactionUtil.isTransactionStarted())
 		{
 			Map txCache = (Map)txCacheHolder.get();
 			if(txCache != null)
@@ -202,36 +307,11 @@ public final class CacheUtil
 			}
 			else
 			{
-				log.error("TRANSACTIE ThreadLocale nog niet aangemaakt voor Thread "
-						+ Thread.currentThread().getName());
-			}
-		}
-		else
-		{
-			try
-			{
-				CacheManager cacheManager = CacheManager.getInstance();
-				Cache cache = cacheManager.getCache(cacheName);
-				if (cache != null)
+				if(log.isDebugEnabled())
 				{
-					cache.removeAll();
-					if(log.isDebugEnabled())
-					{
-						log.debug("cache " + cacheName + " geschoond");
-					}
+					log.warn("TRANSACTIE ThreadLocale nog niet aangemaakt voor Thread "
+							+ Thread.currentThread().getName());
 				}
-				else
-				{
-					throw new CacheException("cache " + cacheName + " niet gevonden");
-				}
-			}
-			catch (CacheException e)
-			{
-				log.error("cache " + cacheName + "is niet beschikbaar: ", e);
-			}
-			catch (IOException e)
-			{
-				log.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -247,6 +327,58 @@ public final class CacheUtil
 	{
 		if(transactionCacheNames.contains(cacheName))
 		{
+			putObjectInTransactionCache(cacheKey, toCache, cacheName);
+		}
+		else
+		{
+			putObjectInEHCache(cacheKey, toCache, cacheName);
+		}
+	}
+
+	/**
+	 * Stopt object in cache manager cache.
+	 * @param cacheKey key cache
+	 * @param toCache to cachen object
+	 * @param cacheName naam cache
+	 */
+	private static void putObjectInEHCache(
+			String cacheKey, Serializable toCache, String cacheName)
+	{
+		try
+		{
+			CacheManager cacheManager = CacheManager.getInstance();
+			Cache cache = cacheManager.getCache(cacheName);
+			if (cache != null)
+			{
+				Element el = new Element(cacheKey, toCache);
+				cache.put(el);
+				if(log.isDebugEnabled())
+				{
+					log.debug(toCache + " opgeslagen in cache "
+							+ cacheName + " met key " + cacheKey);
+				}
+			}
+			else
+			{
+				throw new CacheException("cache " + cacheName + " niet gevonden");
+			}
+		}
+		catch (CacheException e)
+		{
+			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
+		}
+	}
+
+	/**
+	 * Stopt object in transactie cache.
+	 * @param cacheKey key cache
+	 * @param toCache te cachen object
+	 * @param cacheName naam cache
+	 */
+	private static void putObjectInTransactionCache(String cacheKey, Serializable toCache, String cacheName)
+	{
+		if(TransactionUtil.isTransactionStarted())
+		{
 			Map txCache = (Map)txCacheHolder.get();
 			if(txCache == null)
 			{
@@ -258,32 +390,6 @@ public final class CacheUtil
 			{
 				log.debug(toCache + " opgeslagen in TRANSACTIE cache "
 						+ cacheName + " met key " + cacheKey);
-			}
-		}
-		else
-		{
-			try
-			{
-				CacheManager cacheManager = CacheManager.getInstance();
-				Cache cache = cacheManager.getCache(cacheName);
-				if (cache != null)
-				{
-					Element el = new Element(cacheKey, toCache);
-					cache.put(el);
-					if(log.isDebugEnabled())
-					{
-						log.debug(toCache + " opgeslagen in cache "
-								+ cacheName + " met key " + cacheKey);
-					}
-				}
-				else
-				{
-					throw new CacheException("cache " + cacheName + " niet gevonden");
-				}
-			}
-			catch (CacheException e)
-			{
-				log.error("cache " + cacheName + "is niet beschikbaar: ", e);
 			}
 		}
 	}

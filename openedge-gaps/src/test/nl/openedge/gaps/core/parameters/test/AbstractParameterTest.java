@@ -23,7 +23,6 @@ import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.ParameterInput;
 import nl.openedge.gaps.core.parameters.ParameterRegistry;
 import nl.openedge.gaps.core.parameters.ParameterValue;
-import nl.openedge.gaps.core.parameters.SaveException;
 import nl.openedge.gaps.core.parameters.ValueOutOfRangeException;
 import nl.openedge.gaps.core.parameters.impl.BooleanParameter;
 import nl.openedge.gaps.core.parameters.impl.DateParameter;
@@ -126,16 +125,12 @@ public abstract class AbstractParameterTest extends TestCase
 		String localId = "test1";
 		// creeer en sla op dmv de builder
 		ParameterBuilder builder = new ParameterBuilder();
-		Parameter paramOrig = builder.createNumeric(localId, null);
-		String id = paramOrig.getId();
+		Parameter param = builder.createNumeric(localId, null);
+		String id = param.getId();
 		log.info("parameter aangemaakt, id == " + id);
-		// haal werkkopie op
-		Parameter paramClone = ParameterRegistry.getParameter(id);
-		// test dat het een kopie is
-		assertNotSame(paramOrig, paramClone);
 
 		// verwijder weer
-		ParameterRegistry.removeParameter(paramOrig, true);
+		ParameterRegistry.removeParameter(param);
 		try
 		{
 			// en test
@@ -300,7 +295,7 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(225), result);
 
 		// verwijder weer
-		ParameterRegistry.removeParameter(numberParam, true);
+		ParameterRegistry.removeParameter(numberParam);
 		try
 		{
 			// en test

@@ -6,7 +6,6 @@
  */
 package nl.openedge.gaps.core.versions.impl;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
 import nl.openedge.gaps.core.Entity;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.Group;
@@ -23,6 +21,7 @@ import nl.openedge.gaps.core.groups.impl.GroupWrapper;
 import nl.openedge.gaps.core.parameters.impl.ParameterWrapper;
 import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.util.CacheUtil;
+import nl.openedge.gaps.util.TransactionUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 import org.apache.commons.logging.Log;
@@ -128,13 +127,19 @@ public final class VersionDAO
 	 */
 	public void updateVersion(Version version) throws VersionDAOException
 	{
-		Transaction tx = null;
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		try
 		{
 			Session session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				TransactionUtil.begin(session);
+			}
 			session.update(version);
-			tx.commit();
+			if(useTransaction)
+			{
+				TransactionUtil.commit();
+			}
 			if(isUseCache())
 			{
 				putVersionInCache(version);	
@@ -142,7 +147,10 @@ public final class VersionDAO
 		}
 		catch (HibernateException e)
 		{
-			rollback(tx);
+			if(useTransaction)
+			{
+				TransactionUtil.rollback();
+			}
 			throw new VersionDAOException(e);
 		}
 	}
@@ -152,19 +160,28 @@ public final class VersionDAO
 	 */
 	public void deleteVersion(Version version) throws VersionDAOException
 	{
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		// TODO dit dienen we alleen toe te staan voor een versie die nog
 		// niet actief is
-		Transaction tx = null;
 		try
 		{
 			Session session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				TransactionUtil.begin(session);
+			}
 			session.delete(version);
-			tx.commit();
+			if(useTransaction)
+			{
+				TransactionUtil.commit();
+			}
 		}
 		catch (HibernateException e)
 		{
-			rollback(tx);
+			if(useTransaction)
+			{
+				TransactionUtil.rollback();
+			}
 			throw new VersionDAOException(e);
 		}
 	}
@@ -175,13 +192,19 @@ public final class VersionDAO
 	 */
 	public void saveVersion(Version version) throws VersionDAOException
 	{
-		Transaction tx = null;
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		try
 		{
 			Session session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				TransactionUtil.begin(session);
+			}
 			session.save(version);
-			tx.commit();
+			if(useTransaction)
+			{
+				TransactionUtil.commit();
+			}
 			if(isUseCache())
 			{
 				CacheUtil.resetCache(ENTITY_VERSIONS_CACHE_NAME);
@@ -190,7 +213,10 @@ public final class VersionDAO
 		}
 		catch (HibernateException e)
 		{
-			rollback(tx);
+			if(useTransaction)
+			{
+				TransactionUtil.rollback();
+			}
 			throw new VersionDAOException(e);
 		}
 	}
@@ -308,25 +334,6 @@ public final class VersionDAO
 	public void resetEntityVersionsCache()
 	{
 		CacheUtil.resetCache(ENTITY_VERSIONS_CACHE_NAME);
-	}
-
-	/**
-	 * Rollback transactie.
-	 * @param tx transactie
-	 */
-	private void rollback(Transaction tx)
-	{
-		if (tx != null)
-		{
-			try
-			{
-				tx.rollback();
-			}
-			catch (HibernateException e1)
-			{
-				log.error(e1.getMessage(), e1);
-			}
-		}
 	}
 
 	/**

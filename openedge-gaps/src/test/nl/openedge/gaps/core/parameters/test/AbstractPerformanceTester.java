@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
@@ -30,8 +29,6 @@ import nl.openedge.util.ser.SerializedAndZipped;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.sun.rsasign.t;
 
 /**
  * Deze klasse voert performance testen uit.

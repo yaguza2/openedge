@@ -125,14 +125,14 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	}
 
 	/**
-	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#saveParameter(nl.openedge.gaps.core.parameters.Parameter, boolean)
+	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#saveParameter(nl.openedge.gaps.core.parameters.Parameter)
 	 */
-	public void saveParameter(Parameter parameter, boolean useTransaction) throws SaveException,
+	public void saveParameter(Parameter parameter) throws SaveException,
 			RegistryException
 	{
 		try
 		{
-			parameterDao.saveOrUpdateParameter(parameter, useTransaction);
+			parameterDao.saveOrUpdateParameter(parameter);
 		}
 		catch (ParameterDAOException e)
 		{
@@ -142,13 +142,13 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	}
 
 	/**
-	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#removeParameter(nl.openedge.gaps.core.parameters.Parameter, boolean)
+	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#removeParameter(nl.openedge.gaps.core.parameters.Parameter)
 	 */
-	public void removeParameter(Parameter parameter, boolean useTransaction) throws SaveException
+	public void removeParameter(Parameter parameter) throws SaveException
 	{
 		try
 		{
-			parameterDao.deleteParameter(parameter, useTransaction);
+			parameterDao.deleteParameter(parameter);
 		}
 		catch (ParameterDAOException e)
 		{
@@ -277,12 +277,12 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	/**
 	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#saveGroup(StructuralGroup)
 	 */
-	public void saveGroup(StructuralGroup group, boolean useTransaction)
+	public void saveGroup(StructuralGroup group)
 		throws RegistryException
 	{
 		try
 		{
-			groupDao.saveOrUpdateGroup(group, useTransaction);
+			groupDao.saveOrUpdateGroup(group);
 		}
 		catch (GroupDAOException e)
 		{
@@ -294,12 +294,12 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	/**
 	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#saveGroup(nl.openedge.gaps.core.parameters.groups.ParameterGroup)
 	 */
-	public void saveGroup(ParameterGroup group, boolean useTransaction)
+	public void saveGroup(ParameterGroup group)
 		throws RegistryException
 	{
 		try
 		{
-			groupDao.saveOrUpdateGroup(group, useTransaction);
+			groupDao.saveOrUpdateGroup(group);
 		}
 		catch (GroupDAOException e)
 		{
@@ -331,18 +331,18 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 		{
 			if (clone instanceof StructuralGroup)
 			{
-				saveGroup((StructuralGroup) clone, false);
+				saveGroup((StructuralGroup) clone);
 			}
 			else
 			{
-				saveGroup((ParameterGroup) clone, true);
+				saveGroup((ParameterGroup) clone);
 			}
 		}
 		else if (clone instanceof Parameter)
 		{
 			try
 			{
-				saveParameter((Parameter) clone, false);
+				saveParameter((Parameter) clone);
 			}
 			catch (SaveException e)
 			{
@@ -401,7 +401,7 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 					log.debug("kopieer "
 							+ groups[i].getId() + " voor nieuwe versie " + version);
 				}
-				saveGroup(clone, false);
+				saveGroup(clone);
 				createVersionForChilds(groups[i], version);
 			}
 		}
@@ -441,7 +441,7 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 		{
 			log.debug("kopieer " + group.getId() + " voor nieuwe versie " + version);
 		}
-		saveGroup(clone, true);
+		saveGroup(clone);
 		createVersionForParameters(group.getParameters(), version);
 	}
 
@@ -469,7 +469,7 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 				clone.setVersion(version);
 				try
 				{
-					saveParameter(clone, false);
+					saveParameter(clone);
 				}
 				catch (SaveException e)
 				{
@@ -480,14 +480,14 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	}
 
 	/**
-	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#removeGroup(nl.openedge.gaps.core.groups.StructuralGroup, boolean)
+	 * @see nl.openedge.gaps.core.parameters.ParameterRegistryDelegate#removeGroup(nl.openedge.gaps.core.groups.StructuralGroup)
 	 */
-	public void removeGroup(StructuralGroup group, boolean useTransaction)
+	public void removeGroup(StructuralGroup group)
 		throws NotFoundException, RegistryException
 	{
 		try
 		{
-			groupDao.deleteGroup(group, useTransaction);
+			groupDao.deleteGroup(group);
 		}
 		catch (GroupDAOException e)
 		{

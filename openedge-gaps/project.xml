@@ -219,8 +219,8 @@
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.7.2-RC6</version>
-            <jar>hsqldb-1.7.2-RC6.jar</jar>
+            <version>1.7.2_4</version>
+            <jar>hsqldb-1.7.2_4.jar</jar>
             <type>jar</type>
             <properties/>
         </dependency>

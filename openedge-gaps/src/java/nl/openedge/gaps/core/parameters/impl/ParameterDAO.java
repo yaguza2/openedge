@@ -14,12 +14,11 @@ import java.util.zip.DataFormatException;
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
 import net.sf.hibernate.type.Type;
-import nl.openedge.gaps.core.groups.impl.GroupWrapper;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.util.CacheUtil;
+import nl.openedge.gaps.util.TransactionUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
 import nl.openedge.util.ser.SerializeAndZipHelper;
 import nl.openedge.util.ser.SerializedAndZipped;
@@ -266,27 +265,25 @@ public final class ParameterDAO
 	/**
 	 * Slaat de gegeven parameter op in de database.
 	 * @param param de parameter
-	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @return de evt bijgewerkte parameter
 	 * @throws ParameterDAOException bij onverwachte fouten
 	 */
-	public Parameter saveOrUpdateParameter(Parameter param, boolean useTransaction)
+	public Parameter saveOrUpdateParameter(Parameter param)
 		throws ParameterDAOException
 	{
-
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		if (param == null)
 		{
 			return param;
 		}
 		Session session = null;
-		Transaction tx = null;
 		ParameterWrapper wrapper = findParameterWrapper(param);
 		try
 		{
 			session = HibernateHelper.getSession();
 			if(useTransaction)
 			{
-				tx = session.beginTransaction();
+				TransactionUtil.begin(session);
 			}
 			if (wrapper != null)
 			{ // update; parameter bestaat reeds
@@ -311,7 +308,7 @@ public final class ParameterDAO
 			}
 			if(useTransaction)
 			{
-				tx.commit();
+				TransactionUtil.commit();
 			}
 			if(isUseCache())
 			{
@@ -326,7 +323,7 @@ public final class ParameterDAO
 			log.error(e.getMessage(), e);
 			if(useTransaction)
 			{
-				rollback(tx);
+				TransactionUtil.rollback();
 			}
 		}
 		return param;
@@ -335,12 +332,12 @@ public final class ParameterDAO
 	/**
 	 * Verwijderd de gegeven parameter uit de database.
 	 * @param param de parameter
-	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws ParameterDAOException bij onverwachte fouten
 	 */
-	public void deleteParameter(Parameter param, boolean useTransaction)
+	public void deleteParameter(Parameter param)
 		throws ParameterDAOException
 	{
+		boolean useTransaction = !TransactionUtil.isTransactionStarted();
 		//TODO check op actieve versie
 		// het verwijderen van een parameter zal in
 		// praktijk slechts worden toegestaan indien de parameter nog niet met
@@ -350,14 +347,13 @@ public final class ParameterDAO
 			return;
 		}
 		Session session = null;
-		Transaction tx = null;
 		ParameterWrapper wrapper = findParameterWrapper(param);
 		try
 		{
 			session = HibernateHelper.getSession();
 			if(useTransaction)
 			{
-				tx = session.beginTransaction();
+				TransactionUtil.begin(session);
 			}
 			if (wrapper != null)
 			{ // verwijder
@@ -365,7 +361,7 @@ public final class ParameterDAO
 			}
 			if(useTransaction)
 			{
-				tx.commit();
+				TransactionUtil.commit();
 			}
 		}
 		catch (HibernateException e)
@@ -373,26 +369,7 @@ public final class ParameterDAO
 			log.error(e.getMessage(), e);
 			if(useTransaction)
 			{
-				rollback(tx);
-			}
-		}
-	}
-
-	/**
-	 * Rollback transactie.
-	 * @param tx transactie
-	 */
-	private void rollback(Transaction tx)
-	{
-		if (tx != null)
-		{
-			try
-			{
-				tx.rollback();
-			}
-			catch (HibernateException e1)
-			{
-				log.error(e1.getMessage(), e1);
+				TransactionUtil.rollback();
 			}
 		}
 	}

@@ -8,7 +8,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/commons-lang/jars/commons-lang-2.0.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/log4j-1.2.8-src.jar" kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
-	<classpathentry sourcepath="JAVA_SRC_JARS/openedge-util-1.2.10-src.jar" kind="var" path="MAVEN_REPO/openedge-util/jars/openedge-util-1.2.10.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/openedge-util-1.2.12-src.jar" kind="var" path="MAVEN_REPO/openedge-util/jars/openedge-util-1.2.12.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/jdom-b9-src.jar" kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/ehcache-13082004-src.jar" kind="var" path="MAVEN_REPO/ehcache/jars/ehcache-13082004.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/cglib-full-2.0.2-src.jar" kind="var" path="MAVEN_REPO/cglib/jars/cglib-full-2.0.2.jar"/>
@@ -26,7 +26,7 @@
 	<classpathentry sourcepath="JAVA_SRC_JARS/commons-fileupload-1.0-src.jar" kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/commons-digester-1.5-src.jar" kind="var" path="MAVEN_REPO/commons-digester/jars/commons-digester-1.5.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/commons-beanutils-1.6.1-src.jar" kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.6.1.jar"/>
-	<classpathentry sourcepath="JAVA_SRC_JARS/hsqldb-1.7.2-RC6-src.jar" kind="var" path="MAVEN_REPO/hsqldb/jars/hsqldb-1.7.2-RC6.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/hsqldb-1.7.2_4-src.jar" kind="var" path="MAVEN_REPO/hsqldb/jars/hsqldb-1.7.2_4.jar"/>
 	<classpathentry kind="lib" path="lib/hibern8ide/bsh-2.0b1.jar"/>
 	<classpathentry kind="lib" path="lib/hibern8ide/forms-1.0.3.jar"/>
 	<classpathentry sourcepath="lib/hibern8ide/hibern8ide-src.jar" kind="lib" path="lib/hibern8ide/hibern8ide.jar"/>

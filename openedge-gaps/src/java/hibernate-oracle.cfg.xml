@@ -17,10 +17,16 @@
 			TRANSACTION_SERIALIZABLE = 8
 		-->
 
+        <!--
 		<property name="connection.url">jdbc:oracle:thin:@veronique:1521:vero</property>
 		<property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
 		<property name="connection.username">scott</property>
 		<property name="connection.password">tiger</property>
+        -->
+		<property name="connection.url">jdbc:oracle:thin:@testserver:1521:ontw</property>
+		<property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
+		<property name="connection.username">GAPS_UNIT</property>
+		<property name="connection.password">GAPS_UNIT</property>
 		
 		<mapping resource="nl/openedge/gaps/core/parameters/impl/ParameterWrapper.hbm.xml"/>
 		<mapping resource="nl/openedge/gaps/core/groups/impl/GroupWrapper.hbm.xml"/>

@@ -16,12 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
 import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.Group;
@@ -40,7 +36,9 @@ import nl.openedge.gaps.core.parameters.impl.FixedSetParameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameterValue;
 import nl.openedge.gaps.core.parameters.impl.NumericParameter;
+import nl.openedge.gaps.core.parameters.impl.NumericParameterValue;
 import nl.openedge.gaps.core.parameters.impl.PercentageParameter;
+import nl.openedge.gaps.core.parameters.impl.PercentageParameterValue;
 import nl.openedge.gaps.core.parameters.impl.StringParameter;
 import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.core.versions.VersionRegistry;
@@ -48,9 +46,12 @@ import nl.openedge.gaps.support.gapspath.GPathInterpreter;
 import nl.openedge.gaps.support.gapspath.GPathInterpreterException;
 import nl.openedge.gaps.support.gapspath.lexer.LexerException;
 import nl.openedge.gaps.support.gapspath.parser.ParserException;
-import nl.openedge.gaps.util.CacheUtil;
 import nl.openedge.gaps.util.EntityUtil;
+import nl.openedge.gaps.util.TransactionUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Utility class voor het eenvoudig kunnen aanmaken van - mogelijk - complexe parameter
@@ -81,12 +82,6 @@ public class ParameterBuilder
 
 	/** Browser voor intern gebruik. */
 	private ParameterBrowser browser = new ParameterBrowser();
-
-	/** Of de builder op dit moment in batching mode staat. */
-	private boolean inBatchMode = false;
-
-	/** evt huidige transactie voor het geval we in batch mode werken. */
-	private Transaction transaction = null;
 
 	/**
 	 * Construct een builder instantie. NOTE: deze klasse is niet Threadsafe.
@@ -650,8 +645,8 @@ public class ParameterBuilder
 	 */
 	protected void saveParameter(Parameter param) throws SaveException
 	{
-		ParameterRegistry.saveParameter(param, (!isInBatchMode()));
-		ParameterRegistry.saveGroup(parameterGroup, (!isInBatchMode()));
+		ParameterRegistry.saveParameter(param);
+		ParameterRegistry.saveGroup(parameterGroup);
 	}
 
 	/**
@@ -739,8 +734,8 @@ public class ParameterBuilder
 	{
 
 		StructuralGroup group = buildStructuralGroup(name, description, navigateTo);
-		ParameterRegistry.saveGroup(group, (!isInBatchMode()));
-		ParameterRegistry.saveGroup(structuralGroup, (!isInBatchMode())); // gewijzigde parent
+		ParameterRegistry.saveGroup(group);
+		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
 		return group;
 	}
 
@@ -857,8 +852,8 @@ public class ParameterBuilder
 
 		ParameterGroup group = buildParameterGroup(
 				extendsFrom, name, description, navigateTo);
-		ParameterRegistry.saveGroup(group, (!isInBatchMode()));
-		ParameterRegistry.saveGroup(structuralGroup, (!isInBatchMode())); // gewijzigde parent
+		ParameterRegistry.saveGroup(group);
+		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
 		return group;
 	}
 
@@ -1118,39 +1113,20 @@ public class ParameterBuilder
 	}
 
 	/**
-	 * Geeft of de builder op dit moment in batching mode staat.
-	 * @return of de builder op dit moment in batching mode staat.
-	 */
-	public boolean isInBatchMode()
-	{
-		return inBatchMode;
-	}
-
-	/**
-	 * Zet of de builder op dit moment in batching mode staat.
-	 * @param inBatchMode of de builder op dit moment in batching mode staat
-	 */
-	protected void setInBatchMode(boolean inBatchMode)
-	{
-		this.inBatchMode = inBatchMode;
-	}
-
-	/**
 	 * Begin een batch van opdrachten.
 	 * @throws ParameterBuilderException bij transactie fouten
 	 */
 	public void beginBatch() throws ParameterBuilderException
 	{
-		if(transaction != null)
+		if(TransactionUtil.isTransactionStarted())
 		{
 			throw new ParameterBuilderException(
 					"reeds in batchmode of voorgaande batch is niet goed afgesloten");
 		}
-		setInBatchMode(true);
 		try
 		{
 			Session session = HibernateHelper.getSession();
-			this.transaction = session.beginTransaction();
+			TransactionUtil.begin(session);
 		}
 		catch (HibernateException e)
 		{
@@ -1164,19 +1140,17 @@ public class ParameterBuilder
 	 */
 	public void commitBatch() throws ParameterBuilderException
 	{
-		if(transaction == null)
+		if(!TransactionUtil.isTransactionStarted())
 		{
 			throw new ParameterBuilderException("niet in batchmode");
 		}
-		setInBatchMode(false);
 		try
 		{
-			this.transaction.commit();
-			this.transaction = null;
-			CacheUtil.flushTransactionCaches();
+			TransactionUtil.commit();
 		}
 		catch (HibernateException e)
 		{
+			TransactionUtil.rollback();
 			throw new ParameterBuilderException(e);
 		}
 
