@@ -136,6 +136,12 @@ public class AccessFilter implements Filter
 		String uri = ((HttpServletRequest)req).getRequestURI();
 		// strip contextpath
 		uri = uri.substring(request.getContextPath().length());
+		// strip sessionId
+		int sx = uri.indexOf(';');
+		if(sx > -1)
+		{
+			uri = uri.substring(0, sx);
+		}
 
 		UriAction action = new UriAction(uri);
 		try
