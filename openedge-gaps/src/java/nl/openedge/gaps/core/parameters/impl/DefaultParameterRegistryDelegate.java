@@ -18,6 +18,7 @@ import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.groups.impl.GroupDAO;
 import nl.openedge.gaps.core.groups.impl.GroupDAOException;
 import nl.openedge.gaps.core.parameters.Parameter;
+import nl.openedge.gaps.core.parameters.ParameterRegistry;
 import nl.openedge.gaps.core.parameters.ParameterRegistryDelegate;
 import nl.openedge.gaps.core.parameters.SaveException;
 import nl.openedge.gaps.core.versions.Version;
@@ -143,6 +144,10 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 	{
 		try
 		{
+		    ParameterGroup group = parameter.getParameterGroup();
+		    group = ParameterRegistry.getParameterGroup(group.getId());
+		    group.removeParameter(parameter);
+		    groupDao.saveOrUpdateGroup(group);
 			parameterDao.deleteParameter(parameter);
 		}
 		catch (ParameterDAOException e)
@@ -150,6 +155,16 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
 			log.error(e.getMessage(), e);
 			throw new RegistryException(e);
 		}
+        catch (GroupDAOException e)
+        {
+			log.error(e.getMessage(), e);
+			throw new RegistryException(e);
+        }
+        catch (NotFoundException e)
+        {
+			log.error(e.getMessage(), e);
+			throw new RegistryException(e);
+        }
 	}
 
 	/**

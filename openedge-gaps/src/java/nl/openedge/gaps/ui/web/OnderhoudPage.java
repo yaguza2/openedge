@@ -12,6 +12,7 @@ package nl.openedge.gaps.ui.web;
 import java.util.Arrays;
 import java.util.List;
 
+import nl.openedge.gaps.core.Entity;
 import nl.openedge.gaps.core.groups.Group;
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
@@ -46,6 +47,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
 	        expr = "/";
 	    }
 	    Object pos = browser.navigate(expr);
+	    addTitle((Entity)pos);
 	    Group group = (Group)pos;
 	    addStructGroupNavigation(group);
 	    StructuralGroup sgroup = null;
@@ -67,6 +69,16 @@ public final class OnderhoudPage extends SimpleBorderedPage
 	    ParameterPanel paramPanel = new ParameterPanel(
 	            "parameterPanel", pgroup);
 	    add(paramPanel);
+	}
+
+	/**
+	 * voeg titel toe.
+	 * @param pos positie
+	 */
+	private void addTitle(Entity pos)
+	{
+	    
+	    add(new Label("title", pos.getLocalId()));	    
 	}
 
     /**

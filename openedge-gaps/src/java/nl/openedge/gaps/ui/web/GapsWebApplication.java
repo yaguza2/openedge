@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.voicetribe.util.code.Code;
 import com.voicetribe.util.code.Log4JCodeListenerFactory;
+import com.voicetribe.util.convert.ConverterRegistry;
 import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.ApplicationSettings;
 import com.voicetribe.wicket.WebApplication;
@@ -38,6 +39,8 @@ public final class GapsWebApplication extends WebApplication
 		ApplicationSettings settings = getSettings();
 		settings.setHomePage(HomePage.class);
 		settings.setComponentUseCheck(false);
+		ConverterRegistry convReg = settings.getConverterRegistry();
+		convReg.setLocalizedDefaults();
 		if (!Boolean.getBoolean("cache-templates"))
 		{
 			Duration pollFreq = Duration.ONE_SECOND;

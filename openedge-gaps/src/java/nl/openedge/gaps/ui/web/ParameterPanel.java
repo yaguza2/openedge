@@ -11,6 +11,7 @@ package nl.openedge.gaps.ui.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Map;
 
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.parameters.Parameter;
+import nl.openedge.gaps.core.parameters.ParameterRegistry;
+import nl.openedge.gaps.core.parameters.SaveException;
 import nl.openedge.gaps.core.parameters.impl.BooleanParameter;
 import nl.openedge.gaps.core.parameters.impl.DateParameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameter;
@@ -26,7 +29,6 @@ import nl.openedge.gaps.core.parameters.impl.PercentageParameter;
 import nl.openedge.gaps.core.parameters.impl.StringParameter;
 import nl.openedge.gaps.support.ParameterBuilder;
 
-import com.voicetribe.wicket.Page;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
@@ -36,9 +38,7 @@ import com.voicetribe.wicket.markup.html.form.Form;
 import com.voicetribe.wicket.markup.html.form.IOnChangeListener;
 import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
-import com.voicetribe.wicket.markup.html.link.IPageLink;
 import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.link.PageLink;
 import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
@@ -72,6 +72,16 @@ public class ParameterPanel extends Panel
         TYPEMAP.put(TYPE_TEXT, StringParameter.class);
         TYPEMAP.put(TYPE_DATE, DateParameter.class);
         TYPEMAP.put(TYPE_PERCENTAGE, PercentageParameter.class);
+    }
+    /** volgorde. */
+    private static final List TYPEMAP_ORDER = new ArrayList();
+    static
+    {
+        TYPEMAP_ORDER.add(TYPE_TEXT);
+        TYPEMAP_ORDER.add(TYPE_NUMERIC);
+        TYPEMAP_ORDER.add(TYPE_BOOLEAN);
+        TYPEMAP_ORDER.add(TYPE_PERCENTAGE);
+        TYPEMAP_ORDER.add(TYPE_DATE);
     }
     
     /** de huidige parametergroep. */
@@ -196,7 +206,7 @@ public class ParameterPanel extends Panel
             nameInput = new TextField("name", "");
             add(nameInput);
             List typeChoiceModel = new ArrayList();
-            typeChoiceModel.addAll(TYPEMAP.keySet());
+            typeChoiceModel.addAll(TYPEMAP_ORDER);
             typeChoice = new TypeChoice("typeChoice", "", typeChoiceModel);
             add(typeChoice);
             // voeg verschillende inputs toe. Uiteindelijk zal er 1 visible zijn
@@ -229,14 +239,13 @@ public class ParameterPanel extends Panel
          * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
          */
         public void handleSubmit(RequestCycle cycle)
-        {
-            ParameterBuilder builder = new ParameterBuilder();
-            builder.setParameterGroup(group);
-            String type = (String)typeChoice.getModelObject();
-            String name = (String)nameInput.getModelObject();
-            
+        {   
             try
             {
+                ParameterBuilder builder = new ParameterBuilder();
+                builder.navigate(group.getId());
+                String type = (String)typeChoice.getModelObject();
+                String name = (String)nameInput.getModelObject();
                 String value = null;
                 Class parameterClass = (Class)TYPEMAP.get(type);
 	            if(TYPE_BOOLEAN.equals(type))
@@ -289,7 +298,7 @@ public class ParameterPanel extends Panel
     /**
      * Table voor niet-geneste parameters.
      */
-    private static class PlainParameterTable extends Table
+    private class PlainParameterTable extends Table
     {
         /**
          * Construct.
@@ -306,9 +315,25 @@ public class ParameterPanel extends Panel
          */
         protected void populateCell(Cell cell)
         {
-            Parameter parameter = (Parameter)cell.getModelObject();
+            final Parameter parameter = (Parameter)cell.getModelObject();
     		cell.add(new Label("name", parameter.getLocalId()));
     		cell.add(new TextField("value", new ParameterModel(parameter)));
+    		cell.add(new Link("delete") {
+                public void linkClicked(RequestCycle cycle)
+                {
+                    try
+                    {
+                        ParameterRegistry.removeParameter(parameter);
+                        ParameterPanel.this.removeAll();
+                        ParameterPanel.this.invalidateModel();
+                        addParamComponents(parameter.getParameterGroup());
+                    }
+                    catch (SaveException e)
+                    {
+                        throw new RuntimeException(e);
+                    }
+                }
+    		});
         }
     }
 
@@ -373,9 +398,9 @@ public class ParameterPanel extends Panel
              * @param componentName componentnaam
              * @param model list met parametergroepen
              */
-            public NestedParameterTable(String componentName, NestedParametersWrapper model)
+            public NestedParameterTable(String componentName, List model)
             {
-                super(componentName, (List)model);
+                super(componentName, model);
             }
 
             /**
@@ -383,27 +408,39 @@ public class ParameterPanel extends Panel
              */
             protected void populateCell(Cell cell)
             {
-                final NestedParameter parameter = (NestedParameter)cell.getModelObject();
+                NestedParameter parameter = (NestedParameter)cell.getModelObject();
+                List nestedModel = Arrays.asList(parameter.getNested());
                 cell.add(new Label("name", parameter.getLocalId()));
-                Link pageLink = new PageLink("nestedLink", new IPageLink()
-                {
-                    public Page getPage()
-                    {
-                        return new NestedParameterPopupPage(
-                                (NestedParametersWrapper)getModelObject());
-                    }
+        		cell.add(new NestedParameterRowTable("row", nestedModel));
+            }
 
-                    public Class getPageClass()
-                    {
-                        return NestedParameterPopupPage.class;
-                    }
-                }).setPopupDimensions(700, 500)
-                  .setPopupWindowName(parameter.getLocalId())
-                  .setPopupProperties(true, false, true, true, false);
-                pageLink.add(new Label("name", parameter.getLocalId()));
-                cell.add(pageLink);
+            /**
+             * Table voor een rij/ geneste parameter waarbij een cell overeenkomt
+             * met een geneste parameter. 
+             */
+            private static class NestedParameterRowTable extends Table
+            {
+                /**
+                 * Construct.
+                 * @param componentName componentnaam
+                 * @param model list met parametergroepen
+                 */
+                public NestedParameterRowTable(String componentName, List model)
+                {
+                    super(componentName, model);
+                }
+
+                /**
+                 * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+                 */
+                protected void populateCell(Cell cell)
+                {
+                    Parameter parameter = (Parameter)cell.getModelObject();
+            		cell.add(new Label("value", (Serializable)parameter.getValue().getValue()));
+                }
             }
         }
     }
+
 
 }

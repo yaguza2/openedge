@@ -37,7 +37,7 @@
                 <input id="wcn-value" type="text" size="20"/>
             </td>
             <td width="80">
-                <span id="deleteButton">(x)</span>
+                <a href="#" id="wcn-delete"><img src="images/delete.gif" border="0"/></a>
             </td>
           </tr>
         </tbody>
@@ -92,13 +92,16 @@
 
      <!-- body -->
      <span id="nestedParamScrollPane">
-      <table id="resultstable">
+      <table id="resultstable" border="2">
         <tfoot>
         </tfoot>
         <tbody>
           <tr id="wcn-nested">
             <td>
-                <a href="#" id="wcn-nestedLink"><span id="wcn-name">(name)</span></a>
+                <span id="wcn-name">(Naam)</span>
+            </td>
+            <td id="wcn-row">
+                <span id="wcn-value">(Waarde)</span>
             </td>
           </tr>
         </tbody>

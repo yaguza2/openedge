@@ -161,6 +161,26 @@ public class ParameterGroup extends Group
 	}
 
 	/**
+	 * Verwijder een parameter.
+	 * @param parameter te verwijderen parameter
+	 */
+	public void removeParameter(Parameter parameter)
+	{
+		String id = parameter.getId();
+		if (id == null)
+		{
+			throw new RegistryException("kan parameter "
+					+ parameter + " niet verwijderen; geen id gegeven");
+		}
+		String localId = parameter.getLocalId();
+		if (parameterIds.contains(id))
+		{
+			parameterIds.remove(id);
+			mapIdParameterIds.remove(localId);
+		}
+	}
+
+	/**
 	 * Geef een parameter van deze groep met het gegeven local id.
 	 * @param localId local id van de parameter
 	 * @return de parameter of null

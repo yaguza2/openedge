@@ -9,7 +9,6 @@
  */
 package nl.openedge.gaps.ui.web;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import nl.openedge.gaps.core.RegistryException;
@@ -67,19 +66,20 @@ public class ParameterModel extends DetachableModel
     /**
      * @see com.voicetribe.wicket.PropertyModel#setObject(java.io.Serializable)
      */
-    public void setObject(Serializable propertyValue)
+    public void setObject(Object object)
     {
-        if(propertyValue == null)
+        if(object == null)
         {
             return;
         }
         try
         {
-            Parameter parameter = (Parameter)getObject();
-            ParameterValue newValue = parameter.createValue(
-                    null, String.valueOf(propertyValue));
+            Parameter parameter = (Parameter)super.getObject();
+            ParameterValue newValue =
+                parameter.createValue(null, String.valueOf(object));
             parameter.setValue(newValue);
             ParameterRegistry.saveParameter(parameter);
+            super.setObject(parameter);
         }
         catch (InputException e)
         {
