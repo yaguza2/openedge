@@ -31,7 +31,6 @@
 package nl.openedge.modules.impl.menumodule;
 
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -257,14 +256,14 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @return all request parameters in a urlencoded string
+	 * @return all request parameters in a String (not urlencoded!) or null if there are no parameters
 	 */
 	public String getQueryString()
 	{
 		//TODO we might want to support keys with a String[] as value and have that parameter appear multiple times
 		//like p1=1&p1=2&p1=3
 		if(parameters==null || parameters.isEmpty())
-			return "";
+			return null;
 		else
 		{
 			StringBuffer result=new StringBuffer(25);
@@ -278,8 +277,8 @@ public final class MenuItem implements Serializable
 				if(tmp==null)
 					value="";
 				else
-					value=URLEncoder.encode(tmp.toString());
-				result.append(URLEncoder.encode(key)).append("=").append(value);
+					value=tmp.toString();
+				result.append(key).append("=").append(value);
 				if(it.hasNext())
 					result.append("&");
 			}

@@ -292,11 +292,11 @@ public final class MenuModule
 					if(ix < link.length())
 					{
 						String queryString = link.substring(ix+1, link.length());
-						childItem.addParameters(parseParameters(queryString));
-						addParameters(childItem, childElement);	
+						childItem.addParameters(parseParameters(queryString));	
 					}
 					link = link.substring(0, ix);
 				}
+				addParameters(childItem, childElement);
 				childItem.setLink(link);
 	
 				String key = childElement.getAttributeValue("key");

@@ -1,4 +1,11 @@
 -------------------------------------------------
+1.1.2 b (bug fixes)
+
+- changed parameters from Properties to Map for velocitys sake
+- removed the urlencoding which was probably overkill and was killing parnassays
+- fixed parameter element to always be included not just when there was a ? in the link
+
+-------------------------------------------------
 1.1.2
 
 - added dtd for the xml , dtd is not yet enforced by the code
