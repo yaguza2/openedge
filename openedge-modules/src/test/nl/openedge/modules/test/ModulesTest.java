@@ -285,5 +285,61 @@ public class ModulesTest extends AbstractTestBase
 			fail(e.getMessage());
 		}
 	}
+	
+	public void testThreadSingletonModule()
+	{
+		
+		ThreadSingletonThread t1 = new ThreadSingletonThread();
+		ThreadSingletonThread t2 = new ThreadSingletonThread();
+		
+		t1.start();
+		t2.start();
+		
+		try
+		{
+			t1.join();
+			t2.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+
+		assertNotNull(t1.getModule1());
+		assertNotNull(t1.getModule2());
+		
+		assertNotNull(t2.getModule1());
+		assertNotNull(t2.getModule2());
+
+		assertSame(t1.getModule1(), t1.getModule2());
+
+		assertNotSame(t1.getModule1(), t2.getModule1());
+		
+	}
+
+
+	class ThreadSingletonThread extends Thread
+	{
+		private ThreadSingletonModuleImpl module1 = null;
+		
+		private ThreadSingletonModuleImpl module2 = null;
+	
+		public void run()
+		{
+			module1 = (ThreadSingletonModuleImpl)
+				moduleFactory.getModule("ThreadSingletonTest");
+		}
+		
+		public ThreadSingletonModuleImpl getModule1()
+		{
+			return module1;
+		}
+		
+		public ThreadSingletonModuleImpl getModule2()
+		{
+			return module1;
+		}
+	}
 
 }
+

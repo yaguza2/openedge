@@ -30,45 +30,27 @@
  */
 package nl.openedge.modules.types.base;
 
-import nl.openedge.modules.ModuleLookupException;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.AdapterFactory;
 import nl.openedge.modules.types.ModuleAdapter;
 
+import org.jdom.Element;
+
 /**
- * wrapper for singleton modules
+ * Factory for thread singleton types
  * @author Eelco Hillenius
  */
-public class SingletonTypeAdapter extends ModuleAdapter
+public class ThreadSingletonTypeAdapterFactory implements AdapterFactory
 {
-	
-	/** the singleton instance */
-	protected Object singletonInstance;
 
 	/**
-	 * get instance of module
-	 * @return singleton instance
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
+	 * Just construct a new thread singleton adapter
+	 * @see nl.openedge.modules.types.AdapterFactory#constructAdapter(java.lang.String, org.jdom.Element)
 	 */
-	public Object getModule() throws ModuleLookupException
+	public ModuleAdapter constructAdapter(String componentName, Element componentNode)
+		throws ConfigException
 	{
-		synchronized(this)
-		{
-			if(this.singletonInstance == null)
-			{
-		
-				try
-				{
-					singletonInstance = moduleClass.newInstance();
-					
-					executeInitCommands(singletonInstance);
-					
-				}
-				catch (Exception ex)
-				{
-					throw new ModuleLookupException(ex);
-				}	
-			}
-		}
-		return singletonInstance;
+		return new ThreadSingletonTypeAdapter();
 	}
 
 }

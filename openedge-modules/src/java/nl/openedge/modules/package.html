@@ -16,35 +16,6 @@ Furthermore, the module framework allowes consistent and easy use of the Quartz
 framework for the handling of jobs (threaded modules).
 
 <p>
-Modules come in three main forms:<ul>
-<li>Modules that implement nl.openedge.modules.ThrowAwayModule. A new instance will
-be created for each request for a module.
-<li>Modules that implement nl.openedge.modules.SingletonModule. Exactely one instance
-will be created for each named module. This instance will be shared amongst all
-requestees.
-<li>Modules that implement org.quartz.Job. Job modules cannot be accessed directely
-through the module factory. Jobs will be instantiated with JobDescriptions en can 
-be coupled to Quartz triggers (see <a href="http://www.part.net/quartz_documentation.html">
-Quartz documentation</a>). Jobs can be accessed through the quartz scheduler that is
-provided by the module factory.
-</ul>
-<p>Modules can do their own configuration by implementing nl.openedge.modules.Configurable.
-Configurable modules get the xml node of their module.
-<p>Modules can have properties automatically set by implementing 
-nl.openedge.modules.BeanModule. Properties will be tried to set according to
-the given &lt;property&gt; child tags of the module in the configuration.
-<p>If a module is both a bean and is configurable, it's (bean) properties will
-be set prior to calling the Configurable.init(Element) method.
-<p>A module that implements CriticalEventCaster can throw events that are routed
-to CriticalEventListeners.
-
-<p>
-The main class for clients is the <code>ModuleFactory</code>. 
-This factory is used to instantiate and initialise concrete implementations,
-construct jobs, triggers and the map between those two and start the Quartz
-scheduler with that information
-<p>
-
 
 </body>
 </html>

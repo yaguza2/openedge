@@ -44,6 +44,8 @@ import nl.openedge.modules.observers.ModuleFactoryObserver;
 import nl.openedge.modules.types.base.JobTypeAdapterFactory;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.base.SingletonTypeAdapterFactory;
+import nl.openedge.modules.types.base.ThreadSingletonType;
+import nl.openedge.modules.types.base.ThreadSingletonTypeAdapterFactory;
 import nl.openedge.modules.types.base.ThrowAwayType;
 import nl.openedge.modules.types.base.ThrowAwayTypeAdapterFactory;
 import nl.openedge.modules.types.initcommands.BeanType;
@@ -105,13 +107,19 @@ public class TypesRegistry
 	{
 		// add the default basetypes
 		baseTypes.add(SingletonType.class);
+		baseTypes.add(ThreadSingletonType.class);
 		baseTypes.add(ThrowAwayType.class);
 		baseTypes.add(Job.class);
 		
 		// and the adapter factories for them
+		
 		baseTypeAdapterFactories.put(
 			SingletonType.class, 
 			new SingletonTypeAdapterFactory());
+			
+		baseTypeAdapterFactories.put(
+			ThreadSingletonType.class, 
+			new ThreadSingletonTypeAdapterFactory());
 			
 		baseTypeAdapterFactories.put(
 			ThrowAwayType.class, 
@@ -119,7 +127,8 @@ public class TypesRegistry
 			
 		baseTypeAdapterFactories.put(
 			Job.class, 
-			new JobTypeAdapterFactory()); 
+			new JobTypeAdapterFactory());
+			
 		
 		// add the default enhancer types
 		initCommandTypes.add(BeanType.class);

@@ -30,45 +30,13 @@
  */
 package nl.openedge.modules.types.base;
 
-import nl.openedge.modules.ModuleLookupException;
-import nl.openedge.modules.types.ModuleAdapter;
-
 /**
- * wrapper for singleton modules
  * @author Eelco Hillenius
+ * 
+ * Modules that implement SingletonType will be instantiated 
+ * exactly once a Thread for each configuration entry (name).
  */
-public class SingletonTypeAdapter extends ModuleAdapter
+public interface ThreadSingletonType
 {
-	
-	/** the singleton instance */
-	protected Object singletonInstance;
-
-	/**
-	 * get instance of module
-	 * @return singleton instance
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
-	 */
-	public Object getModule() throws ModuleLookupException
-	{
-		synchronized(this)
-		{
-			if(this.singletonInstance == null)
-			{
-		
-				try
-				{
-					singletonInstance = moduleClass.newInstance();
-					
-					executeInitCommands(singletonInstance);
-					
-				}
-				catch (Exception ex)
-				{
-					throw new ModuleLookupException(ex);
-				}	
-			}
-		}
-		return singletonInstance;
-	}
 
 }

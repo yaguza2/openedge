@@ -70,6 +70,9 @@
 			<dependency moduleName="ConfigurableTest" propertyName="configModule"/>
 			
 		</module>
+		
+		<module name="ThreadSingletonTest" 
+				class="nl.openedge.modules.test.ThreadSingletonModuleImpl"/>
 			
 	</modules>
 	

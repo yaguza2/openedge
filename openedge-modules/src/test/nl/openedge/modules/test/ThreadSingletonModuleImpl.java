@@ -28,47 +28,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.base;
+package nl.openedge.modules.test;
 
-import nl.openedge.modules.ModuleLookupException;
-import nl.openedge.modules.types.ModuleAdapter;
+import nl.openedge.modules.types.base.ThreadSingletonType;
 
 /**
- * wrapper for singleton modules
  * @author Eelco Hillenius
  */
-public class SingletonTypeAdapter extends ModuleAdapter
+public class ThreadSingletonModuleImpl implements ThreadSingletonType
 {
-	
-	/** the singleton instance */
-	protected Object singletonInstance;
 
-	/**
-	 * get instance of module
-	 * @return singleton instance
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
-	 */
-	public Object getModule() throws ModuleLookupException
+	public ThreadSingletonModuleImpl()
 	{
-		synchronized(this)
-		{
-			if(this.singletonInstance == null)
-			{
-		
-				try
-				{
-					singletonInstance = moduleClass.newInstance();
-					
-					executeInitCommands(singletonInstance);
-					
-				}
-				catch (Exception ex)
-				{
-					throw new ModuleLookupException(ex);
-				}	
-			}
-		}
-		return singletonInstance;
+		System.out.println(getClass().getName() + ": created");
 	}
 
 }

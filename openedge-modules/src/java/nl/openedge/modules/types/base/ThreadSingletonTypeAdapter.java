@@ -34,30 +34,33 @@ import nl.openedge.modules.ModuleLookupException;
 import nl.openedge.modules.types.ModuleAdapter;
 
 /**
- * wrapper for singleton modules
+ * wrapper for singleton modules per Thread
  * @author Eelco Hillenius
  */
-public class SingletonTypeAdapter extends ModuleAdapter
+public class ThreadSingletonTypeAdapter extends ModuleAdapter
 {
 	
-	/** the singleton instance */
-	protected Object singletonInstance;
+	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
 
 	/**
 	 * get instance of module
-	 * @return singleton instance
+	 * @return new instance for each request
 	 * @see nl.openedge.modules.ModuleAdapter#getModule()
 	 */
 	public Object getModule() throws ModuleLookupException
 	{
+		Object singletonInstance = singletonInstanceHolder.get();
+		
 		synchronized(this)
 		{
-			if(this.singletonInstance == null)
+			if(singletonInstance == null)
 			{
 		
 				try
 				{
 					singletonInstance = moduleClass.newInstance();
+					
+					singletonInstanceHolder.set(singletonInstance);
 					
 					executeInitCommands(singletonInstance);
 					
