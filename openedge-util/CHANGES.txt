@@ -1,4 +1,17 @@
 -------------------------------------------------
+1.1.6
+
+- Added utilities to be used with openedge Baritus. Hence,
+	this project now has a dependency on Baritus.
+	- FallbackDateConverter
+	- AfterValidator
+	- BeforeValidator
+
+-------------------------------------------------
+PLEASE, ANYBODY WHO MAKES CHANGES TO THIS PROJECT,
+UPDATE THIS DOCUMENT!!!!
+
+-------------------------------------------------
 1.1.2
 
 - SessionStats implements java.io.Serializable.
