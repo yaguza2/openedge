@@ -36,7 +36,7 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.ComponentFactory;
 import nl.openedge.modules.config.ConfigException;
 
 /**
@@ -46,7 +46,7 @@ import nl.openedge.modules.config.ConfigException;
 public class DependentTypeInitCommand implements InitCommand
 {
 	
-	private ModuleFactory moduleFactory = null;
+	private ComponentFactory moduleFactory = null;
 	
 	private List namedDependencies = null;
 	
@@ -55,12 +55,12 @@ public class DependentTypeInitCommand implements InitCommand
 
 	/**
 	 * initialize
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
 	 */
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ModuleFactory moduleFactory)
+		ComponentFactory moduleFactory)
 		throws ConfigException
 	{
 		
@@ -82,7 +82,7 @@ public class DependentTypeInitCommand implements InitCommand
 		{
 			
 			Element node = (Element)i.next();
-			String moduleName = node.getAttributeValue("moduleName");
+			String moduleName = node.getAttributeValue("componentName");
 			String propertyName = node.getAttributeValue("propertyName");
 			
 			namedDependencies.add(
@@ -92,9 +92,9 @@ public class DependentTypeInitCommand implements InitCommand
 	}
 
 	/**
-	 * create decorator that tries to solve the dependencies when all modules
+	 * create decorator that tries to solve the dependencies when all components
 	 * are loaded
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
+	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException, CyclicDependencyException
@@ -108,17 +108,9 @@ public class DependentTypeInitCommand implements InitCommand
 			solver.setComponentInstance((DependentType)componentInstance);
 			solver.setNamedDependencies(this.namedDependencies);
 			solver.setModuleFactory(this.moduleFactory);
-			
-//			try
-//			{
-				solver.execute(componentInstance);
-//			}
-//			catch(CyclicDependencyException e)
-//			{
-//				e.printStackTrace();
-//				throw new InitCommandException(e);
-//			}
-			
+
+			solver.execute(componentInstance);
+
 		}
 		else
 		{

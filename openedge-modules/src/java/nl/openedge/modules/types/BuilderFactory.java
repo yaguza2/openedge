@@ -28,51 +28,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.types;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ComponentFactory;
 import nl.openedge.modules.config.ConfigException;
 
 /**
- * Command for configurable types
+ * Can construct adapters for a certain type
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public interface BuilderFactory
 {
-	
-	private Element componentNode = null;
-
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * constructs an adapter for a component
+	 * @param componentName name of component
+	 * @param componentNode xml config node of component
+	 * @return ComponentBuilder
+	 * @throws ConfigException
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
-	{
-		this.componentNode = componentNode;
-	}
-
-	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
-	}
-
+	public ComponentBuilder constructAdapter(
+		String componentName, Element componentNode)
+		throws ConfigException; 
 }

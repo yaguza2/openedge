@@ -28,51 +28,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.test;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.initcommands.DependentType;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class DependentComponentImpl implements DependentType
 {
+
+	private BeanComponentImpl beanComponent = null;
 	
-	private Element componentNode = null;
+	private ConfigurableComponentImpl configComponent = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * @return
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public BeanComponentImpl getBeanComponent()
 	{
-		this.componentNode = componentNode;
+		return beanComponent;
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @return
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public ConfigurableComponentImpl getConfigComponent()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return configComponent;
+	}
+
+	/**
+	 * @param impl
+	 */
+	public void setBeanComponent(BeanComponentImpl impl)
+	{
+		beanComponent = impl;
+	}
+
+	/**
+	 * @param impl
+	 */
+	public void setConfigComponent(ConfigurableComponentImpl impl)
+	{
+		configComponent = impl;
 	}
 
 }

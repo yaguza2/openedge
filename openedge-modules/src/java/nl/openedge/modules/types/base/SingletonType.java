@@ -33,7 +33,7 @@ package nl.openedge.modules.types.base;
 /**
  * @author Eelco Hillenius
  * 
- * Modules that implement SingletonModuleImpl will be instantiated 
+ * Modules that implement SingletonComponentImpl will be instantiated 
  * exactly once for each configuration entry (name).
  */
 public interface SingletonType

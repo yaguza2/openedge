@@ -32,9 +32,9 @@ package nl.openedge.modules.types.initcommands;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.ComponentFactory;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.CriticalEventCaster;
+import nl.openedge.modules.observers.ChainedEventCaster;
 
 /**
  * Command that populates instances using BeanUtils
@@ -43,17 +43,17 @@ import nl.openedge.modules.observers.CriticalEventCaster;
 public class CriticalEventCasterInitCommand implements InitCommand
 {
 	
-	private ModuleFactory moduleFactory = null;
+	private ComponentFactory moduleFactory = null;
 	
 
 	/**
 	 * initialize
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
 	 */
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ModuleFactory moduleFactory)
+		ComponentFactory moduleFactory)
 		throws ConfigException
 	{
 		this.moduleFactory = moduleFactory;
@@ -61,21 +61,21 @@ public class CriticalEventCasterInitCommand implements InitCommand
 
 	/**
 	 * populate the component instance
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
+	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
 
-		if(componentInstance instanceof CriticalEventCaster)
+		if(componentInstance instanceof ChainedEventCaster)
 		{
-			((CriticalEventCaster)componentInstance)
+			((ChainedEventCaster)componentInstance)
 				.addObserver(this.moduleFactory);
 		}
 		else
 		{
 			throw new InitCommandException(
-			"component is not of type " + CriticalEventCaster.class.getName());	
+			"component is not of type " + ChainedEventCaster.class.getName());	
 		}
 
 	}

@@ -28,51 +28,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.test;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ComponentFactory;
 import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.base.SingletonType;
+import nl.openedge.modules.types.initcommands.ConfigurableType;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ConfigurableComponentImpl implements SingletonType, ConfigurableType
 {
-	
-	private Element componentNode = null;
 
-	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
-	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	private String message = null;
+
+	public ConfigurableComponentImpl()
 	{
-		this.componentNode = componentNode;
+		System.out.println(getClass().getName() + ": created");
+	}
+
+	public void init(Element configNode) throws ConfigException
+	{
+		System.out.println(getClass().getName() 
+			+ ": initialised with " + configNode);
+		Element p1 = configNode.getChild("param1");
+		if (p1 == null)
+			throw new ConfigException("where's param1?");
+		String attr = p1.getAttributeValue("attr");
+		if (attr == null)
+			throw new ConfigException("where's param1['attr']?");
+		Element p2 = configNode.getChild("param2");
+		if (p2 == null)
+			throw new ConfigException("where's param2?");
+		String val = p2.getTextNormalize();
+		if (val == null || (!val.equals("Bar")))
+			throw new ConfigException("value of param2 should be Bar!");
+			
+		this.message = "HELLO!";
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @return String
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public String getMessage()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return message;
 	}
 
 }

@@ -35,14 +35,14 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import nl.openedge.modules.JDOMConfigurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
+import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentFactoryFactory;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.types.initcommands.CyclicDependencyException;
 
 /**
- * modules related tests
+ * components related tests
  * 
  * @author E.F. Hillenius
  */
@@ -70,7 +70,7 @@ public class CyclicDepenencyThrowWayTypesTest extends TestCase
 					null);
 
 			JDOMConfigurator c = new JDOMConfigurator(url);
-			ModuleFactory moduleFactory = ModuleFactoryFactory.getInstance();
+			ComponentFactory moduleFactory = ComponentFactoryFactory.getInstance();
 
 			// if we get here, the cycle was not detected
 			fail("cycle was not detected!");

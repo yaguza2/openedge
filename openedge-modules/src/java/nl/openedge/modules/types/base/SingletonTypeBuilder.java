@@ -28,51 +28,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.types.base;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.ComponentBuilder;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * Command for configurable types
+ * wrapper for singleton components
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class SingletonTypeBuilder extends ComponentBuilder
 {
 	
-	private Element componentNode = null;
+	/** the singleton instance */
+	protected Object singletonInstance;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * get instance of module
+	 * @return singleton instance
+	 * @see nl.openedge.components.ComponentBuilder#getModule()
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public Object getModule() throws ComponentLookupException
 	{
-		this.componentNode = componentNode;
-	}
+		synchronized(this)
+		{
+			if(this.singletonInstance == null)
+			{
 
-	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
+				try
+				{
+					singletonInstance = moduleClass.newInstance();
+					
+					executeInitCommands(singletonInstance);
+				}
+				
+				catch (InstantiationException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+				catch (InitCommandException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+				catch (ConfigException e)
+				{
+					throw new ComponentLookupException(e);
+				}
+
+			}
 		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return singletonInstance;
 	}
 
 }

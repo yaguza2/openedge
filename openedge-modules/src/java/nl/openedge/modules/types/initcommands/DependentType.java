@@ -31,7 +31,7 @@
 package nl.openedge.modules.types.initcommands;
 
 /**
- * A dependent type uses other modules. An alternative is to use the
+ * A dependent type uses other components. An alternative is to use the
  * module factory directely to get the dependencies but then you loose:
  * <ul>
  * <li>startup checks on types and cyclic loops

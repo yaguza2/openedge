@@ -28,51 +28,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.observers;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+import java.util.EventObject;
 
 /**
- * Command for configurable types
+ * fired when all components are (re)loaded
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ComponentsLoadedEvent extends EventObject
 {
-	
-	private Element componentNode = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * @param source	sender of event
+	 * @param moduleFactory	instance of module factory
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public ComponentsLoadedEvent(Object source)
 	{
-		this.componentNode = componentNode;
-	}
-
-	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		super(source);
 	}
 
 }

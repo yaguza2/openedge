@@ -28,51 +28,65 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.observers;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 
 /**
- * Command for configurable types
+ * event that can be fired by implementors of ChainedEventCaster.
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ChainedExceptionEvent extends ChainedEvent
 {
-	
-	private Element componentNode = null;
+
+	private Throwable exception = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * @param source sender of event
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public ChainedExceptionEvent(Object source, Throwable exception)
 	{
-		this.componentNode = componentNode;
+		super(source);
+		this.exception = exception;
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * get the embedded exception
+	 * @return Throwable
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public Throwable getException()
 	{
-		if(componentInstance instanceof ConfigurableType)
+		return exception;
+	}
+
+	/**
+	 * return stacktrace as a string
+	 * @return String stacktrace as string
+	 */
+	public String getStackTraceAsString()
+	{
+
+		String errorMsg = "";
+		if (exception != null)
 		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
+			try
+			{
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				PrintWriter pw = new PrintWriter(bos);
+				exception.printStackTrace(pw);
+				pw.flush();
+				pw.close();
+				bos.flush();
+				bos.close();
+				errorMsg = bos.toString();
+			}
+			catch (Exception ex)
+			{
+				errorMsg = exception.getMessage();
+			}
 		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return errorMsg;
 	}
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<modules-config>
+<components-config>
 
 	<scheduler properties="/quartz.properties">
 
@@ -10,72 +10,72 @@
 		</trigger>
 		
 		<jobExecutionMap>
-			<job trigger="testTrigger" module="QuartzTest" />
+			<job trigger="testTrigger" component="QuartzTest" />
 		</jobExecutionMap>
 
 	</scheduler>
 	
-	<modules>
+	<components>
 		
-		<module name="ThrowAwayTest" 
-				class="nl.openedge.modules.test.ThrowAwayModuleImpl"/>
+		<component name="ThrowAwayTest" 
+				class="nl.openedge.modules.test.ThrowAwayComponentImpl"/>
 		
-		<module name="SingletonTest" 
-				class="nl.openedge.modules.test.SingletonModuleImpl"/>
+		<component name="SingletonTest" 
+				class="nl.openedge.modules.test.SingletonComponentImpl"/>
 				
-		<module name="ConfigurableTest" 
-				class="nl.openedge.modules.test.ConfigurableModuleImpl">	
+		<component name="ConfigurableTest" 
+				class="nl.openedge.modules.test.ConfigurableComponentImpl">	
 			<param1 attr="foo"/>
 			<param2>
 				Bar
 			</param2>		
-		</module>
+		</component>
 		
-		<module name="CriticalTest" 
-				class="nl.openedge.modules.test.CriticalModuleImpl"/>
+		<component name="ChainedEventTest" 
+				class="nl.openedge.modules.test.ChainedEventCasterComponentImpl"/>
 			
-		<module name="CriticalTestObserver" 
-				class="nl.openedge.modules.test.CriticalEventObserverImpl"/>
+		<component name="ChainedEventTestObserver" 
+				class="nl.openedge.modules.test.ChainedEventObserverImpl"/>
 		
-		<module name="BeanTest" 
-				class="nl.openedge.modules.test.BeanModuleImpl">
+		<component name="BeanTest" 
+				class="nl.openedge.modules.test.BeanComponentImpl">
 				
 			<property name="myString" value="test"/>
 			<property name="myInteger" value="12"/>
 			
 			<property name="nested.anotherString" value="anotherTest"/>
 		
-		</module>
+		</component>
 		
-		<module name="QuartzTest"
-				class="nl.openedge.modules.test.QuartzJobModuleImpl">
+		<component name="QuartzTest"
+				class="nl.openedge.modules.test.QuartzJobComponentImpl">
 				
 			<jobDetail group="DEFAULT">
 				<parameter name="msg" value="this is a test job"/>
 			</jobDetail>
 				
-		</module>
+		</component>
 		
-		<module name="BlancoTest"
-				class="nl.openedge.modules.test.BlancoTypeImpl"/>
+		<component name="BlancoTest"
+				class="nl.openedge.modules.test.BlancoComponentImpl"/>
 
-		<module name="SchedulerObserverTest"
+		<component name="SchedulerObserverTest"
 				class="nl.openedge.modules.test.SchedulerObserverImpl"/>
 	
-		<module name="ModulesLoadedObserverTest"
-				class="nl.openedge.modules.test.ModulesLoadedObserverImpl"/>
+		<component name="ComponentsLoadedObserverTest"
+				class="nl.openedge.modules.test.ComponentsLoadedObserverImpl"/>
 			
-		<module name="DependendModuleTest"
-				class="nl.openedge.modules.test.DependendModuleImpl">
+		<component name="DependendComponentTest"
+				class="nl.openedge.modules.test.DependentComponentImpl">
 				
-			<dependency moduleName="BeanTest" propertyName="beanModule"/>
-			<dependency moduleName="ConfigurableTest" propertyName="configModule"/>
+			<dependency componentName="BeanTest" propertyName="beanComponent"/>
+			<dependency componentName="ConfigurableTest" propertyName="configComponent"/>
 			
-		</module>
+		</component>
 		
-		<module name="ThreadSingletonTest" 
-				class="nl.openedge.modules.test.ThreadSingletonModuleImpl"/>
+		<component name="ThreadSingletonTest" 
+				class="nl.openedge.modules.test.ThreadSingletonComponentImpl"/>
 			
-	</modules>
+	</components>
 	
-</modules-config>
+</components-config>

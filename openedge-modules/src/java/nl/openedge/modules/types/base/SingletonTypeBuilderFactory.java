@@ -28,51 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.types.base;
+
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.BuilderFactory;
+import nl.openedge.modules.types.ComponentBuilder;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
-
 /**
- * Command for configurable types
+ * Factory for singleton types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class SingletonTypeBuilderFactory implements BuilderFactory
 {
-	
-	private Element componentNode = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * Just construct a new singleton adapter
+	 * @see nl.openedge.components.types.BuilderFactory#constructAdapter(java.lang.String, org.jdom.Element)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
+	public ComponentBuilder constructAdapter(String componentName, Element componentNode)
 		throws ConfigException
 	{
-		this.componentNode = componentNode;
-	}
-
-	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return new SingletonTypeBuilder();
 	}
 
 }

@@ -28,51 +28,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules;
+
+import java.util.List;
+
+import javax.servlet.ServletContext;
+
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ChainedEventObserver;
+import nl.openedge.modules.observers.ComponentFactoryObserver;
+
 
 import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+import org.quartz.Scheduler;
 
 /**
- * Command for configurable types
+ * The ComponentFactory constructs and initialises objects.
+ * 
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public interface ComponentFactory extends ChainedEventObserver
 {
 	
-	private Element componentNode = null;
+	/**
+	 * initialize the module factory
+	 * @param factoryNode
+	 * @param servletContext
+	 * @throws ConfigException
+	 */
+	public void start(
+			Element factoryNode, 
+			ServletContext servletContext) 
+			throws ConfigException;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * add observer of module factory events
+	 * @param observer
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
-	{
-		this.componentNode = componentNode;
-	}
+	public void addObserver(ComponentFactoryObserver observer);
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * remove observer of module factory events
+	 * @param observer
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
-	}
+	public void removeObserver(ComponentFactoryObserver observer);
 
+	/**
+	 * returns instance of module
+	 * can throw ComponentLookupException (runtime exception) if a loading or 
+	 * initialisation error occured or when no module was found stored 
+	 * under the given name
+	 * @param name the name (alias) of module
+	 * @return Object module instance
+	 */
+	public Object getModule(String name);
+	
+	/**
+	 * get all components that are instance of the given type
+	 * @param type the class
+	 * @param exact If true, only exact matches will be returned. If 
+	 * false, superclasses and interfaces will be taken into account
+	 * @return List list of components. Never null, possibly empty
+	 */
+	public List getModulesByType(Class type, boolean exact);
+	
+	/**
+	 * returns all known names
+	 * @return String[] names
+	 */
+	public String[] getModuleNames();
+
+	/**
+	 * get the quartz sceduler
+	 * @return Scheduler
+	 */
+	public Scheduler getScheduler();
 }

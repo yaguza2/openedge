@@ -28,51 +28,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import org.jdom.Element;
+package nl.openedge.modules.test;
 
 import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
+import nl.openedge.modules.observers.ComponentObserver;
+
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ComponentsLoadedObserverImpl implements ComponentObserver
 {
 	
-	private Element componentNode = null;
-
+	private ComponentsLoadedEvent evt;
+	
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * fired after all components are (re)loaded
+	 * @param evt event
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		this.componentNode = componentNode;
+		this.evt = evt;
+		
+		ComponentFactory mf = (ComponentFactory)evt.getSource();
+		String[] names = mf.getModuleNames();
+		
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @return SchedulerStartedEvent
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public ComponentsLoadedEvent getEvt()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return evt;
 	}
 
 }

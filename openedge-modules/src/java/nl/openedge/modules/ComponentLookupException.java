@@ -28,51 +28,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+package nl.openedge.modules;
 
 /**
- * Command for configurable types
+ * ModuleExceptions can be thrown when query-ing the ComponentFactory for components. 
+ * 
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ComponentLookupException extends RuntimeException
 {
-	
-	private Element componentNode = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * construct exception
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public ComponentLookupException()
 	{
-		this.componentNode = componentNode;
+		super();
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * construct exception with message
+	 * @param message
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public ComponentLookupException(String message)
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		super(message);
+	}
+
+	/**
+	 * construct exception with message and cause
+	 * @param message
+	 * @param cause
+	 */
+	public ComponentLookupException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * construct exception with cause
+	 * @param cause
+	 */
+	public ComponentLookupException(Throwable cause)
+	{
+		super(cause);
 	}
 
 }

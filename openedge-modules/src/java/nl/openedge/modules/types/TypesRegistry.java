@@ -39,15 +39,15 @@ import java.util.Map;
 import org.quartz.Job;
 
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.CriticalEventCaster;
-import nl.openedge.modules.observers.ModuleFactoryObserver;
-import nl.openedge.modules.types.base.JobTypeAdapterFactory;
+import nl.openedge.modules.observers.ChainedEventCaster;
+import nl.openedge.modules.observers.ComponentFactoryObserver;
+import nl.openedge.modules.types.base.JobTypeBuilderFactory;
 import nl.openedge.modules.types.base.SingletonType;
-import nl.openedge.modules.types.base.SingletonTypeAdapterFactory;
+import nl.openedge.modules.types.base.SingletonTypeBuilderFactory;
 import nl.openedge.modules.types.base.ThreadSingletonType;
-import nl.openedge.modules.types.base.ThreadSingletonTypeAdapterFactory;
+import nl.openedge.modules.types.base.ThreadSingletonTypeBuilderFactory;
 import nl.openedge.modules.types.base.ThrowAwayType;
-import nl.openedge.modules.types.base.ThrowAwayTypeAdapterFactory;
+import nl.openedge.modules.types.base.ThrowAwayTypeBuilderFactory;
 import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
@@ -55,7 +55,7 @@ import nl.openedge.modules.types.initcommands.ConfigurableTypeInitCommand;
 import nl.openedge.modules.types.initcommands.CriticalEventCasterInitCommand;
 import nl.openedge.modules.types.initcommands.DependentType;
 import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
-import nl.openedge.modules.types.initcommands.ModuleFactoryObserverInitCommand;
+import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 /**
@@ -72,7 +72,7 @@ public class TypesRegistry
 	
 	/*
 	 * Map of adapter factories. Keyed on types, the values
-	 * are instances of AdapterFactory
+	 * are instances of BuilderFactory
 	 */
 	private static Map baseTypeAdapterFactories = new HashMap(3);
 	
@@ -97,8 +97,8 @@ public class TypesRegistry
 	 * component is not of a type registered as a base type
 	 * in this registry
 	 */
-	private static AdapterFactory defaultAdapterFactory = 
-		new SingletonTypeAdapterFactory();
+	private static BuilderFactory defaultAdapterFactory = 
+		new SingletonTypeBuilderFactory();
 
 	/*
 	 * set the defaults 
@@ -115,26 +115,26 @@ public class TypesRegistry
 		
 		baseTypeAdapterFactories.put(
 			SingletonType.class, 
-			new SingletonTypeAdapterFactory());
+			new SingletonTypeBuilderFactory());
 			
 		baseTypeAdapterFactories.put(
 			ThreadSingletonType.class, 
-			new ThreadSingletonTypeAdapterFactory());
+			new ThreadSingletonTypeBuilderFactory());
 			
 		baseTypeAdapterFactories.put(
 			ThrowAwayType.class, 
-			new ThrowAwayTypeAdapterFactory());
+			new ThrowAwayTypeBuilderFactory());
 			
 		baseTypeAdapterFactories.put(
 			Job.class, 
-			new JobTypeAdapterFactory());
+			new JobTypeBuilderFactory());
 			
 		
 		// add the default enhancer types
 		initCommandTypes.add(BeanType.class);
 		initCommandTypes.add(ConfigurableType.class);
-		initCommandTypes.add(CriticalEventCaster.class);
-		initCommandTypes.add(ModuleFactoryObserver.class);
+		initCommandTypes.add(ChainedEventCaster.class);
+		initCommandTypes.add(ComponentFactoryObserver.class);
 		initCommandTypes.add(DependentType.class);
 
 		// and the commands for them
@@ -147,12 +147,12 @@ public class TypesRegistry
 			ConfigurableTypeInitCommand.class);
 			
 		initCommandClasses.put(
-			CriticalEventCaster.class, 
+			ChainedEventCaster.class, 
 			CriticalEventCasterInitCommand.class);
 			
 		initCommandClasses.put(
-			ModuleFactoryObserver.class, 
-			ModuleFactoryObserverInitCommand.class);
+			ComponentFactoryObserver.class, 
+			ComponentFactoryObserverInitCommand.class);
 			
 		initCommandClasses.put(
 			DependentType.class, 
@@ -172,9 +172,9 @@ public class TypesRegistry
 	 * get the default adapter factory that is to be used when 
 	 * components are not of a type registered as a base type
 	 * in this registry
-	 * @return AdapterFactory
+	 * @return BuilderFactory
 	 */
-	public static AdapterFactory getDefaultAdapterFactory()
+	public static BuilderFactory getDefaultAdapterFactory()
 	{
 		return defaultAdapterFactory;
 	}
@@ -185,7 +185,7 @@ public class TypesRegistry
 	 * in this registry
 	 * @param factory the default adapter factory
 	 */
-	public static void setDefaultAdapterFactory(AdapterFactory factory)
+	public static void setDefaultAdapterFactory(BuilderFactory factory)
 	{
 		defaultAdapterFactory = factory;
 	}
@@ -195,9 +195,9 @@ public class TypesRegistry
 	 * @param clazz type to get adapter factory for
 	 * @return
 	 */
-	public static AdapterFactory getAdapterFactory(Class clazz)
+	public static BuilderFactory getAdapterFactory(Class clazz)
 	{
-		return (AdapterFactory)baseTypeAdapterFactories.get(clazz);
+		return (BuilderFactory)baseTypeAdapterFactories.get(clazz);
 	}
 	
 	/**
@@ -207,7 +207,7 @@ public class TypesRegistry
 	 */
 	public static void registerAdapterFactory(
 		Class clazz, 
-		AdapterFactory adapterFactory)
+		BuilderFactory adapterFactory)
 	{
 		baseTypeAdapterFactories.put(clazz, adapterFactory);
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<modules-config>
+<components-config>
 
 	<scheduler properties="/quartz.properties">
 
@@ -10,75 +10,44 @@
 		</trigger>
 		
 		<jobExecutionMap>
-			<job trigger="testTrigger" module="QuartzTest" />
+			<job trigger="testTrigger" component="QuartzTest" />
 		</jobExecutionMap>
 
 	</scheduler>
 	
-	<modules>
+	<components>
 
 		
 		<!-- Test ThrowAways -->
-		<module name="CyclicThrowAwayTest1A"
+		<component name="CyclicThrowAwayTest1A"
 				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
 				
-			<dependency moduleName="CyclicThrowAwayTest1B" propertyName="reference"/>
+			<dependency componentName="CyclicThrowAwayTest1B" propertyName="reference"/>
 			
-		</module>
+		</component>
 		
-		<module name="CyclicThrowAwayTest1B"
+		<component name="CyclicThrowAwayTest1B"
 				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
 				
-			<dependency moduleName="CyclicThrowAwayTest1C" propertyName="reference"/>
+			<dependency componentName="CyclicThrowAwayTest1C" propertyName="reference"/>
 			
-		</module>
+		</component>
 		
-		<module name="CyclicThrowAwayTest1C"
+		<component name="CyclicThrowAwayTest1C"
 				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
 				
-			<dependency moduleName="CyclicThrowAwayTest1D" propertyName="reference"/>
+			<dependency componentName="CyclicThrowAwayTest1D" propertyName="reference"/>
 			
-		</module>
+		</component>
 		
-		<module name="CyclicThrowAwayTest1D"
+		<component name="CyclicThrowAwayTest1D"
 				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
 				
-			<dependency moduleName="CyclicThrowAwayTest1B" propertyName="reference"/>
+			<dependency componentName="CyclicThrowAwayTest1B" propertyName="reference"/>
 			
-		</module>
+		</component>
 		<!-- END Test ThrowAways -->
-		
-		<!-- Test Singletons -->
-		<!--<module name="CyclicSingletonTest1A"
-				class="nl.openedge.modules.test.CyclicModuleSingletonImpl">
-				
-			<dependency moduleName="CyclicSingletonTest1B" propertyName="reference"/>
 			
-		</module>
-		
-		
-		<module name="CyclicSingletonTest1B"
-				class="nl.openedge.modules.test.CyclicModuleSingletonImpl">
-				
-			<dependency moduleName="CyclicSingletonTest1C" propertyName="reference"/>
-			
-		</module>
-		
-		<module name="CyclicSingletonTest1C"
-				class="nl.openedge.modules.test.CyclicModuleSingletonImpl">
-				
-			<dependency moduleName="CyclicSingletonTest1D" propertyName="reference"/>
-			
-		</module>
-		
-		<module name="CyclicSingletonTest1D"
-				class="nl.openedge.modules.test.CyclicModuleSingletonImpl">
-				
-			<dependency moduleName="CyclicSingletonTest1B" propertyName="reference"/>
-			
-		</module>-->
-		<!-- END Test Singletons -->
-			
-	</modules>
+	</components>
 	
-</modules-config>
+</components-config>

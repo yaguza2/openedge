@@ -34,15 +34,17 @@ import org.jdom.Element;
 
 import nl.openedge.modules.ComponentFactory;
 import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ComponentFactoryObserver;
 
 /**
- * Command for configurable types
+ * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ComponentFactoryObserverInitCommand implements InitCommand
 {
 	
-	private Element componentNode = null;
+	protected ComponentFactory moduleFactory = null;
+	
 
 	/**
 	 * initialize
@@ -54,25 +56,28 @@ public class ConfigurableTypeInitCommand implements InitCommand
 		ComponentFactory moduleFactory)
 		throws ConfigException
 	{
-		this.componentNode = componentNode;
+		this.moduleFactory = moduleFactory;
 	}
 
 	/**
-	 * call init on the component instance
+	 * populate the component instance
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
-		if(componentInstance instanceof ConfigurableType)
+
+		if(componentInstance instanceof ComponentFactoryObserver)
 		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
+			moduleFactory.addObserver(
+				(ComponentFactoryObserver)componentInstance);
 		}
 		else
 		{
 			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
+			"component is not of type " + ComponentFactoryObserver.class.getName());	
 		}
+
 	}
 
 }

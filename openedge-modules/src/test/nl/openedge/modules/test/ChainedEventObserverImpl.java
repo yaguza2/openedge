@@ -28,51 +28,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.test;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentFactory;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ChainedEvent;
+import nl.openedge.modules.observers.ChainedEventObserver;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ChainedEventObserverImpl implements ChainedEventObserver
 {
-	
-	private Element componentNode = null;
+
+	// event
+	private ChainedEvent evt = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
+	 * @see nl.openedge.components.ChainedEventObserver#criticalEventOccured(nl.openedge.components.ChainedEvent)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentFactory moduleFactory)
-		throws ConfigException
+	public void recieveChainedEvent(ChainedEvent evt)
 	{
-		this.componentNode = componentNode;
+
+		System.out.println("critical event: " + evt + " received from " + evt.getSource());
+		this.evt = evt;
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * gets the event
+	 * @return ChainedEvent
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public ChainedEvent getCriticalEvent()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		return evt;
 	}
 
 }

@@ -38,7 +38,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.jdom.Element;
 
-import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.ComponentFactory;
 import nl.openedge.modules.config.ConfigException;
 
 /**
@@ -52,12 +52,12 @@ public class BeanTypeInitCommand implements InitCommand
 
 	/**
 	 * initialize
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentFactory)
 	 */
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ModuleFactory moduleFactory)
+		ComponentFactory moduleFactory)
 		throws ConfigException
 	{
 		this.properties = new HashMap();
@@ -77,7 +77,7 @@ public class BeanTypeInitCommand implements InitCommand
 
 	/**
 	 * populate the component instance
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
+	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException

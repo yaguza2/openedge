@@ -37,14 +37,14 @@ import java.util.TreeSet;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleLookupException;
+import nl.openedge.modules.ComponentFactory;
+import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ModulesLoadedEvent;
-import nl.openedge.modules.observers.ModulesLoadedObserver;
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
+import nl.openedge.modules.observers.ComponentObserver;
 
 /**
- * Tries to solve the dependencies after all modules have been loaded
+ * Tries to solve the dependencies after all components have been loaded
  * @author Eelco Hillenius
  */
 public class DependentTypeDeco
@@ -56,12 +56,12 @@ public class DependentTypeDeco
 	/** aliases of components that this component depends on */
 	protected List namedDependencies = null;
 	
-	/** just need to react to modules loaded event once */
+	/** just need to react to components loaded event once */
 	protected static boolean wasAdded = false;
 	protected static boolean modulesLoaded = false;
 	
 	/** instance of module factory */
-	protected ModuleFactory moduleFactory = null;
+	protected ComponentFactory moduleFactory = null;
 	
 	/** name of the component */
 	protected String componentName = null;
@@ -89,7 +89,7 @@ public class DependentTypeDeco
 		
 			setDependencies(componentInstance);	
 		} 
-		// else ignore until modules are loaded
+		// else ignore until components are loaded
 	}
 	
 	public void setDependencies(Object componentInstance)
@@ -142,7 +142,7 @@ public class DependentTypeDeco
 				catch(Exception e)
 				{
 					e.printStackTrace();
-					throw new ModuleLookupException(e);
+					throw new ComponentLookupException(e);
 				}
 			}
 			
@@ -209,9 +209,9 @@ public class DependentTypeDeco
 	}
 
 	/**
-	 * @return ModuleFactory module factory
+	 * @return ComponentFactory module factory
 	 */
-	public ModuleFactory getModuleFactory()
+	public ComponentFactory getModuleFactory()
 	{
 		return moduleFactory;
 	}
@@ -219,10 +219,10 @@ public class DependentTypeDeco
 	/**
 	 * @param factory module factory
 	 */
-	public void setModuleFactory(ModuleFactory factory)
+	public void setModuleFactory(ComponentFactory factory)
 	{
 		moduleFactory = factory;
-		// register for modules loaded event
+		// register for components loaded event
 		if(!wasAdded)
 		{
 			wasAdded = true;
@@ -232,16 +232,16 @@ public class DependentTypeDeco
 
 
 	/**
-	 * observe modules loaded event
+	 * observe components loaded event
 	 */
-	class RegisterOnce implements ModulesLoadedObserver
+	class RegisterOnce implements ComponentObserver
 	{
 
 		/**
-		 * fired after all modules are (re)loaded; 
+		 * fired after all components are (re)loaded; 
 		 * @param evt event
 		 */
-		public void modulesLoaded(ModulesLoadedEvent evt)
+		public void modulesLoaded(ComponentsLoadedEvent evt)
 		{
 			// set flag
 			DependentTypeDeco.modulesLoaded = true;

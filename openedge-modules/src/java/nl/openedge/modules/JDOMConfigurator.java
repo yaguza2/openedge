@@ -43,7 +43,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 /**
- * <p>Clients of the ModuleFactory should either construct the factory with an
+ * <p>Clients of the ComponentFactory should either construct the factory with an
  * instance of <code>javax.servlet.ServletContext</code> or with an instance
  * of <code>java.lang.String</code>. The first is for usage in a web application
  * environment and tries to read the location of the configuration document from
@@ -54,10 +54,10 @@ import org.jdom.Element;
  * overide this behaviour you can specify url's in the configuration document,
  * e.g: file://c:/mywinboxdrive/mydir/mymodules.xml. A third option is to load 
  * the configuration document from a custom location. This is done by 
- * constructing the URL yourself and constructing the ModuleFactory
+ * constructing the URL yourself and constructing the ComponentFactory
  * with this URL.
  * <p>In a web application environment, the constructed instance of this 
- * <code>ModuleFactory</code> will be saved in the <code>ServletContext</code>
+ * <code>ComponentFactory</code> will be saved in the <code>ServletContext</code>
  * under key 'oemodules.configFile'. 
  * 
  * @author Eelco Hillenius
@@ -137,7 +137,7 @@ public class JDOMConfigurator
 	{
 
 		Element factoryNode = configuration.getRootElement();
-		ModuleFactoryFactory.initialize(factoryNode, servletContext);
+		ComponentFactoryFactory.initialize(factoryNode, servletContext);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class JDOMConfigurator
 	 */
 	public void reload() throws ConfigException
 	{
-		ModuleFactoryFactory.reset();
+		ComponentFactoryFactory.reset();
 		Document configuration = null;
 		if (configURL != null)
 		{
