@@ -232,19 +232,23 @@ public final class AccessHelper
 	protected static void setAppNameSystemProperty(String applicationname) 
 		throws ConfigException
 	{
-		String key = "oeaccess.codesource." + applicationname;
-		String check = System.getProperty(applicationname);
-		
-		if(check != null)
+		if(applicationname != null)
 		{
-			throw new ConfigException(
-				"application " + key + " was allready defined in VM");
-		}
+			String key = "oeaccess.codesource." + applicationname;
+			String check = System.getProperty(applicationname);
 		
-		CodeSource cs = AccessHelper.class.getProtectionDomain().getCodeSource();
-		URL csurl = cs.getLocation();
-		System.out.println("cs loc: " + csurl);
-		System.setProperty(key, csurl.toString());
+			if(check != null)
+			{
+				throw new ConfigException(
+					"application " + key + " was allready defined in VM");
+			}
+			CodeSource cs = AccessHelper.class.getProtectionDomain().getCodeSource();
+			URL csurl = cs.getLocation();
+			log.info("setting applicationname to " + applicationname +
+				"; " + key + " will be expanded to " + csurl.toString());
+				
+			System.setProperty(key, csurl.toString());	
+		}
 	}
 
 	/* do 'real' initialisation */
