@@ -32,6 +32,7 @@ package nl.openedge.maverick.framework.util;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -49,9 +50,11 @@ public class FieldTool
 {
 	
 	/* prefix for form, default = "model" */
-	private String modelPrefix = "model.";
+	protected String modelPrefix = "model.";
 	
 	private static Log log = LogFactory.getLog(FieldTool.class);
+	
+	protected static Map keyedFormatters = new HashMap(); 
 
 	/**
 	 * print error message
@@ -152,7 +155,7 @@ public class FieldTool
 	 * get value from form as a String formatted as pattern
 	 * @param bean bean with field
 	 * @param name name of field
-	 * @param pattern for format
+	 * @param pattern for format or key under which a formatter is stored
 	 * @return String
 	 */	
 	public String getFormattedFormValueAsString(Object bean, String name, String pattern)
@@ -204,24 +207,33 @@ public class FieldTool
 		}
 		if(value != null)
 		{
-			if(value instanceof java.util.Date)
+			Formatter formatter = (Formatter)keyedFormatters.get(pattern);
+			if(formatter != null)
 			{
-				SimpleDateFormat df = new SimpleDateFormat(pattern);
-				converted = df.format((java.util.Date)value);
-			}
-			else if(value instanceof Number)
-			{
-				DecimalFormat df = new DecimalFormat(pattern);
-				converted = df.format(value);
+				converted = formatter.format(value, pattern);	
 			}
 			else
 			{
-				converted = ConvertUtils.convert(value);
-				System.err.println("unable to apply pattern to field " + name + " of object " +
-					bean + ": type " + value.getClass().getName() + 
-					" cannot be used with a pattern. default conversion: " +
-					value + "->" + converted);
-			}	
+				if(value instanceof java.util.Date)
+				{
+					SimpleDateFormat df = new SimpleDateFormat(pattern);
+					converted = df.format((java.util.Date)value);
+				}
+				else if(value instanceof Number)
+				{
+					DecimalFormat df = new DecimalFormat(pattern);
+					converted = df.format(value);
+				}
+				else
+				{
+					converted = ConvertUtils.convert(value);
+					System.err.println("unable to apply pattern to field " + name + " of object " +
+						bean + ": type " + value.getClass().getName() + 
+						" cannot be used with a pattern. default conversion: " +
+						value + "->" + converted);
+				}				
+			}
+	
 		}
 		return converted;
 	}
@@ -240,6 +252,25 @@ public class FieldTool
 	public void setModelPrefix(String string)
 	{
 		modelPrefix = string;
+	}
+	
+	/**
+	 * add/ register a formatter under the given key
+	 * @param key key formatter
+	 * @param formatter the formatter
+	 */
+	public static void addKeyedFormatter(String key, Formatter formatter)
+	{
+		keyedFormatters.put(key, formatter);
+	}
+	
+	/**
+	 * remove the formatter that was stored under the given key
+	 * @param key key formatter
+	 */
+	public static void removeKeyedFormatter(String key)
+	{
+		keyedFormatters.remove(key);
 	}
 
 }

@@ -563,7 +563,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			}
 		
 			String msg = null;
-			String msgName = getLocalizedMessage("formname." + name);
+			String msgName = null;
+			msgName = getLocalizedMessage("formname." + name);
+
 			if(msgName != null)
 			{
 				msg = getLocalizedMessage(key, new Object[]{triedValue, msgName, t});	
@@ -713,7 +715,19 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public String getLocalizedMessage(String key, Locale locale)
 	{	
-		return getBundle(locale).getString(key);
+		String msg = null;
+		try
+		{
+			msg = getBundle(locale).getString(key);
+		}
+		catch (RuntimeException e)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.warn(e.getMessage());
+			}
+		}
+		return msg;
 	}
 	
 	/**
