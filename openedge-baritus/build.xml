@@ -1,0 +1,137 @@
+<!--
+
+  Hibernate ANT build script.
+
+  (Originally contributed by Fabricio Goncalves) 
+
+-->
+
+<project name="Baritus" default="jar" basedir=".">
+
+	<!-- Give user a chance to override without editing this file or typing -D -->
+	<property file="build.properties"/>
+	<property file="${user.home}/.ant.properties"/>
+
+	<!-- Name of project and version, used to create filenames -->
+	<property name="Name" value="Baritus"/>
+	<property name="name" value="Baritus"/>
+	<property name="name2" value="Baritus"/>
+	<property name="version" value="1.0"/>
+		
+	<!-- set global properties for this build -->
+	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="build.dir" value="build"/>
+	<property name="dist.dir" value="xdocs"/>
+	<property name="doc.dir" value="doc"/>
+	<property name="doc.api.dir" value="${doc.dir}/api"/>
+	<property name="doc.ref.dir" value="${doc.dir}/reference"/>
+
+	<property name="dist.doc.dir"  value="${dist.dir}"/>
+	<property name="dist.ref.dir"  value="${dist.dir}/reference"/>
+
+	<property name="dist.src.dir" value="${dist.dir}/src"/>
+	<property name="dist.lib.dir" value="${dist.dir}/lib"/>
+	<property name="jar.name" value="${name2}"/>
+
+	<path id="lib.class.path">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<patternset id="support.files">
+		<include name="**/*.dtd"/>
+		<include name="**/*.xml"/>
+		<include name="**/*.xslt"/>
+		
+		<!-- exclude everything we don't want in the jar -->
+		<!--<exclude name="${build.dir}/**/*"/>
+		<exclude name="${doc.dir}/**/*"/>
+		<exclude name="classes/**/*"/>
+		<exclude name="build.xml"/>-->
+		<exclude name="**/*.properties"/>
+		<exclude name="**/*.ccf"/>
+		<exclude name="**/*.cfg.xml"/>
+	</patternset>
+
+	<patternset id="refdoc.files">
+		<include name="**/*.css"/>
+		<include name="**/*.jpg"/>
+		<include name="**/*.gif"/>
+		<include name="**/*.png"/>
+	</patternset>
+
+	<patternset id="source.files">
+		<!-- include everything we want in the src directory 
+		     that we didn't want in the jar itself -->
+		<include name="**/*.java"/>
+		<include name="**/*.properties"/>
+		<include name="**/*.ccf"/>
+		<include name="META-INF/ra.xml"/>
+	</patternset>
+
+	<!-- Documentation -->
+
+	<target name="docpdf" description="Compile reference documentation to pdf">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${doc.ref.dir}">
+			<classpath>
+				<fileset dir="${basedir}/${doc.ref.dir}/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<arg value="-o"/>
+			<arg value="${basedir}/${dist.ref.dir}/pdf/docbook_fop.tmp"/>
+			<arg value="${basedir}/${doc.ref.dir}/src/index.xml"/>
+			<arg value="${basedir}/${doc.ref.dir}/styles/fopdf.xsl"/>
+		</java>
+		<java classname="org.apache.fop.apps.Fop" fork="true" dir="${doc.ref.dir}">
+			<classpath>
+				<fileset dir="${basedir}/${doc.ref.dir}/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<arg value="${basedir}/${dist.ref.dir}/pdf/docbook_fop.tmp"/>
+			<arg value="${basedir}/${dist.ref.dir}/pdf/baritus_reference.pdf"/>
+		</java>
+		<delete file="${dist.ref.dir}/pdf/docbook_fop.tmp"/>
+	</target>
+
+	<target name="dochtml" description="Compile reference documentation to chunked html">
+		<mkdir dir="${dist.ref.dir}/html/"/>
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${dist.ref.dir}/html/">
+			<classpath>
+				<fileset dir="${basedir}/${doc.ref.dir}/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<arg value="${basedir}/${doc.ref.dir}/src/index.xml"/>
+			<arg value="${basedir}/${doc.ref.dir}/styles/html_chunk.xsl"/>
+		</java>
+	</target>
+
+	<target name="dochtmlsingle" description="Compile reference documentation to single html">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${doc.ref.dir}">
+			<classpath>
+				<fileset dir="${basedir}/${doc.dir}/reference/lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<arg value="-o"/>
+			<arg value="${basedir}/${dist.ref.dir}/html_single/index.html"/>
+			<arg value="${basedir}/${doc.ref.dir}/src/index.xml"/>
+			<arg value="${basedir}/${doc.ref.dir}/styles/html.xsl"/>
+		</java>
+	</target>
+
+	<target name="refdoc" 
+		depends="dochtml,dochtmlsingle,docpdf" 
+		description="Generate and copy reference documentation">
+		<copy todir="${dist.ref.dir}">
+			<fileset dir="${doc.ref.dir}">
+				<patternset refid="refdoc.files"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>

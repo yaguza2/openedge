@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<document>
+
+	<properties>
+		<title>Baritus Changelog</title>
+		<author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+	</properties>
+
+	<body>
+		<section name="Changelog">
+			<p>A short description of changes is given for each release</p>
+
+			<subsection name="1.0">
+				<ul>
+
+					<li>First public SourceForge release.</li>
+
+				</ul>
+			</subsection>
+
+		</section>
+	</body>
+</document>

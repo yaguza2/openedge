@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+	<pomVersion>3</pomVersion>
+	<groupId>openedge</groupId>
+	<id>baritus</id>
+	<name>OpenEdge Baritus</name>
+	<currentVersion>1.0</currentVersion>
+	<organization>
+		<name>Open Edge</name>
+		<url>http://www.openedge.nl/</url>
+		<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	</organization>
+	<inceptionYear>2003</inceptionYear>
+	<package>nl.openedge.baritus</package>
+	<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	<shortDescription>Baritus is an open source framework for building Java web applications.</shortDescription>
+	<description>
+		Baritus is an open source framework for building Java web applications. Baritus is a powerfull extension 
+		of Maverick that focussus on developing web applications using plain old java objects.
+	</description>
+	<url>http://maven.apache.org/</url>
+
+	<versions>
+		<version>
+			<id>1.0</id>
+			<name>1.0</name>
+			<tag>B1_0</tag>
+		</version>
+	</versions>
+	<branches />
+	<mailingLists />
+
+	<developers>
+		
+		<developer>
+			<name>Eelco Hillenius</name>
+			<id>eelco</id>
+			<email>eelco.hillenius@topicus.nl</email>
+			<organization>Topicus</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+
+		<developer>
+			<name>Sander Hofstee</name>
+			<id>sander</id>
+			<email>sander.hofstee@topicus.nl</email>
+			<organization>Topicus</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	
+		<developer>
+			<name>Maurice Marrink</name>
+			<id>maurice</id>
+			<email>marrink@topicus.nl</email>
+			<organization>Topicus</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	
+	</developers>
+
+	<dependencies>
+
+		<dependency>
+			<id>servletapi</id>
+			<version>2.3</version>
+		</dependency>
+
+		<dependency>
+			<id>commons-beanutils</id>
+			<version>1.7dev</version>
+			<url>http://jakarta.apache.org/commons/beanutils/</url>
+		</dependency>
+
+		<dependency>
+			<id>commons-collections</id>
+			<version>3.0-dev</version>
+			<url>http://jakarta.apache.org/commons/collections/</url>
+		</dependency>
+
+		<dependency>
+			<id>commons-logging</id>
+			<version>1.1-dev</version>
+			<url>http://jakarta.apache.org/commons/beanutils/</url>
+		</dependency>
+
+		<dependency>
+			<id>commons-lang</id>
+			<version>1.0.1</version>
+			<url>http://jakarta.apache.org/commons/lang/</url>
+		</dependency>
+
+		<dependency>
+			<id>jdom</id>
+			<version>b8</version>
+			<url>http://www.jdom.org/</url>
+		</dependency>
+
+		<dependency>
+			<id>maverick</id>
+			<version>2.2.0</version>
+			<url>http://mav.sourceforge.net/</url>
+		</dependency>
+
+		<dependency>
+			<id>velocity</id>
+			<version>1.4-dev</version>
+			<url>http://jakarta.apache.org/velocity/</url>
+		</dependency>
+		
+		<dependency>
+			<id>log4j</id>
+			<version>1.2.8</version>
+			<url>http://jakarta.apache.org/log4j/</url>
+		</dependency>
+		
+ 		<dependency>
+			<groupId>mockobjects</groupId>
+			<artifactId>mockobjects-core</artifactId>
+			<version>0.09</version>
+			<url>http://www.mockobjects.com/</url>
+		</dependency>
+		
+ 		<dependency>
+			<groupId>mockobjects</groupId>
+			<artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
+			<version>0.09</version>
+			<url>http://www.mockobjects.com/</url>
+		</dependency>
+
+		<dependency>
+			<id>openedge-util</id>
+			<version>1.1.1</version>
+			<url>http://www.openedge.nl</url>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<nagEmailAddress>eelco.hillenius@openedge.nl</nagEmailAddress>
+
+		<sourceDirectory>src/java</sourceDirectory>
+
+		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+		<unitTest>
+			<includes>
+				<include>**/*Test.java</include>
+			</includes>
+			<resources>
+				<resource>
+					<directory>${basedir}/src/test</directory>
+					<includes>
+						<include>**/*.properties</include>
+						<include>**/*.xml</include>
+						<include>**/*.xsd</include>
+						<include>**/*.dtd</include>
+						<include>**/*.vm</include>
+						<include>**/*.config</include>
+						<include>**/*.policy</include>
+					</includes>
+				</resource>
+			</resources>
+		</unitTest>
+		
+		<resources>
+			<resource>
+				<directory>${basedir}/src/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.xsd</include>
+					<include>**/*.dtd</include>
+					<include>**/*.vm</include>
+					<include>**/*.config</include>
+				</includes>
+			</resource>
+		</resources>
+
+	</build>
+	
+	<reports>
+		<report>maven-license-plugin</report>
+		<report>maven-changes-plugin</report>
+		<!--<report>maven-checkstyle-plugin</report>-->
+		<report>maven-jdepend-plugin</report>
+		<report>maven-junit-report-plugin</report>
+		<report>maven-linkcheck-plugin</report>
+		<report>maven-javadoc-plugin</report>
+		<report>maven-pmd-plugin</report>
+		<report>maven-tasklist-plugin</report>
+	</reports>
+
+</project>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Baritus</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Getting Started with Baritus">
+      <p>
+        This document (as well as the others in this section) provide
+        an introduction to Baritus and how to use it within a project.
+      </p>
+
+      <subsection name="Overview of the Getting Started Documentation">
+        <table>
+          <tr><th>Document</th><th>Description</th></tr>
+		  <tr><td><a href="download.html">Download</a></td>
+            <td>
+              This document provides links to the distributions available for Baritus.
+            </td>
+          </tr>
+          <tr><td><a href="build.html">Building</a></td>
+            <td>
+              For those who want to build Baritus from source, this document provides step-by-step 
+			  instructions on the build process.
+            </td>
+          </tr>
+          <tr><td><a href="../reference/html/index.html">Reference</a></td>
+            <td>
+              This document provides a reference of Baritus. 
+            </td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+
+</body>
+</document>
+
