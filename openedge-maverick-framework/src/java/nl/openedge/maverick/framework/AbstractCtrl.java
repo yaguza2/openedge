@@ -542,8 +542,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		
 		ResourceBundle res = getBundle(locale);
 		String msg = res.getString(key);
-		MessageFormat fmt = new MessageFormat(msg);
-
 		String formattedMessage = 
 			MessageFormat.format(msg, parameters);
 		
