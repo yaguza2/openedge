@@ -24,6 +24,35 @@
 		</ul>
       </p>
       <subsection name="How to use types and (init)commands">
+		<p>
+			The default implementation of OpenEdge Modules works with interfaces
+			to determine the handling of components. In the framework registered
+			interfaces are called types. A component is of a type when it 
+			implements its interface. There are two kinds of types, namely 
+			'base types' and '(init)commands'.
+		</p>
+		<p>
+			A component will be handled differently by the container (or actually
+			a creator delegate) according its type.
+			A component allways is-a base type. If a component does not yet have
+			a base type assigned, it will be handled as the default type. Also, a 
+			component can never be of more than one base type. For example, a
+			component never is both a singleton and a throwaway component.
+		</p>
+		<p>
+			The other types, InitCommands, are used for different purposes. A 
+			component does not have to have to be of a command type, but
+			can be of many, depending on the command implementations.
+		</p>
+		<p>
+			You use commands to be able to decorate components. Eg, a component
+			that implements <code>BeanType</code> will have its properties 
+			populated from configuration and a component that implements
+			<code>DependentType</code> will have its dependencies automatically
+			resolved and set as properties.
+		</p>
+	  </subsection>
+	  <subsection name="Default Types">
         <p>
 			When you want to use OpenEdge Modules you don't have to do anything... by default.
 			Classes that do not implement one of the registered interfaces will be handled as the
@@ -32,32 +61,29 @@
 		<ul>
 			<li>
 				ThrowAwayType<br/>
-				When you ask the ModuleFactory for a component of type ThrowAwayType 
-				you will get a new instance every time.
+				A new instance of the component will be created for each request.
 				<br/>
 			</li>
 			<li>
 				SingletonType (default)<br/>
-				A singleton component will be created once and only once 
-				on the first query for it on the ModuleFactory. In other words: all ModuleFactory
-				users share the same instance.
+				A singleton component will be created once and only once. 
+				All ModuleFactory users share the same instance.
 				<br/>
 			</li>
 			<li>
 				ThreadSingletonType<br/>
-				A thread singleton component will be created once and only once for each Thread
-				on the first query for it in a Thread on the ModuleFactory. In other words: 
-				The same instance will be shared in one Thread, but a different instance will
-				be used for each seperate Thread.
+				A thread singleton component will be created once and only once for each Thread.
+				The same instance will be shared in one Thread, but a different 
+				instance will be used for each seperate Thread.
 				<br/>
 			</li>
 			<li>
 				Job<br/>
-				This is exactly the same as a Quartz job. The only differences from Quartz in using 
-				the OpenEdge Modules framework are that:
+				This is exactly the same as a Quartz job. When using the OpenEdge Modules 
+				framework:
 				<ul>
 					<li>
-						when using OpenEdge Modules, you have a standard way of configuring Triggers
+						you have a standard way of configuring Triggers
 						on Jobs and passing parameters from configuration as JobDataMaps
 					</li>
 					<li>
@@ -73,13 +99,87 @@
 				from the ModuleFactory) has all the functionality you need when working 
 				with Jobs and Triggers.
 				<br/>
+				You still can use Quartz directly instead of through the ModuleFactory. You can even decide
+				whether Quartz will be started from the framework.
 			</li>
 		</ul>
         </p>
-		<p>
-			
-		</p>
       </subsection>
+	  <subsection name="Default Commands">
+        <p>
+			What follows is a list of currently available commands that can be implemented to
+			decorate components.
+		</p>
+		<ul>
+			<li>
+				BeanType<br/>
+				A <code>BeanType</code>will have its properties populated from configuration.
+				Take class:
+		      <source><![CDATA[
+public class BeanModuleImpl implements BeanType
+{
+  private String myString;
+  private Integer myInteger;
+
+  public Integer getMyInteger() { return myInteger; }
+  public String getMyString() {	return myString; }
+  public void setMyInteger(Integer integer) { myInteger = integer; }
+  public void setMyString(String string) { myString = string; }
+}	
+		      ]]></source>
+				With configuration snippet:
+		      <source><![CDATA[
+<module name="BeanTest" class="BeanModuleImpl">
+
+  <property name="myString" value="test"/>
+  <property name="myInteger" value="12"/>
+
+</module>
+		      ]]></source>
+				When you query ModuleFactory for 'BeanTest', you will get
+				an instance where the property myInteger has value 12, and
+				property myString has value test.
+			</li>
+		</ul><br/>
+		<ul>
+			<li>
+				ConfigurableType<br/>
+				A <code>ConfigurableType</code>will be initialised with its XML node of
+				the configuration file. Method init(Element) from the Configurable interface
+				will be called after creation of a new instance of classes of the ConfigurableType.
+				The component can then decide itself how it wants to
+				interprate the sub nodes.
+				Take class:
+		      <source><![CDATA[
+public class ConfigurableModuleImpl implements ConfigurableType
+{
+  public void init(Element configNode) throws ConfigException
+  {
+    Element p1 = configNode.getChild("param1");
+    String attr = p1.getAttributeValue("attr");
+    Element p2 = configNode.getChild("param2");
+    String val = p2.getTextNormalize();
+  }
+}
+		      ]]></source>
+				With configuration snippet:
+		      <source><![CDATA[
+<module name="ConfigurableTest" class="ConfigurableModuleImpl">	
+  
+  <param1 attr="foo"/>
+  <param2>
+    Bar
+  </param2>		
+
+</module>
+		      ]]></source>
+				ConfigurableModuleImpl.init(Element) will be called after a new
+				instance of ConfigurableModuleImpl is created. 
+			</li>
+		</ul><br/>
+	  </subsection>
+	  
+	  
    </section>
  </body>
 </document>
