@@ -30,6 +30,9 @@
  */
 package nl.openedge.modules.types;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jdom.Element;
 
 import nl.openedge.modules.ComponentRepository;
@@ -37,6 +40,7 @@ import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.InitCommandException;
+import nl.openedge.modules.types.initcommands.RequestLevelInitCommand;
 
 /**
  * common base for component factories
@@ -56,6 +60,9 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 
 	/** init commands */
 	private InitCommand[] initCommands = null;
+	
+	/** request level init commands */
+	private RequestLevelInitCommand[] reqInitCommands = null;
 
 	/**
 	 * construct with class
@@ -81,7 +88,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * execute the commands
+	 * execute the init commands
 	 * @param componentInstance instance to execute commands on
 	 * @throws InitCommandException
 	 * @throws ConfigException
@@ -95,6 +102,25 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 			for(int i = 0; i < initCommands.length; i++)
 			{
 				initCommands[i].execute(componentInstance);
+			}
+		}
+	}
+	
+	/**
+	 * execute the request level init commands
+	 * @param componentInstance instance to execute commands on
+	 * @throws InitCommandException
+	 * @throws ConfigException
+	 */
+	protected void executeRequestLevelInitCommands(Object componentInstance)
+		throws InitCommandException, ConfigException 
+	{
+		
+		if(reqInitCommands != null && (reqInitCommands.length > 0))
+		{
+			for(int i = 0; i < reqInitCommands.length; i++)
+			{
+				reqInitCommands[i].execute(componentInstance);
 			}
 		}
 	}
@@ -121,7 +147,6 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	 * @return Class of component
 	 */
 	public Class getComponentClass()
-	
 	{
 		return componentClass;
 	}
@@ -157,7 +182,29 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	 */
 	public void setInitCommands(InitCommand[] commands)
 	{
-		this.initCommands = commands;
+		List tempInit = new ArrayList();
+		List tempReqInit = new ArrayList();
+		if(commands != null)
+		{
+			for(int i = 0; i < commands.length; i++)
+			{
+				if(commands[i] instanceof RequestLevelInitCommand)
+				{
+					tempReqInit.add(commands[i]);	
+				}
+				else
+				{
+					tempInit.add(commands[i]);
+				}
+			}
+		}
+		InitCommand[] cmds = (InitCommand[])
+			tempInit.toArray(new InitCommand[tempInit.size()]);	
+		this.initCommands = cmds;
+		
+		RequestLevelInitCommand[] reqcmds = (RequestLevelInitCommand[])
+			tempReqInit.toArray(new RequestLevelInitCommand[tempReqInit.size()]);	
+		this.reqInitCommands = reqcmds;
 	}
 	
 	/**

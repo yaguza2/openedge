@@ -28,48 +28,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.base.ThreadSingletonType;
-import nl.openedge.modules.types.initcommands.ConfigurableType;
+package nl.openedge.modules.types.initcommands;
 
 /**
+ * Tagging interface for InitCommands that should be executed on each
+ * request for a component instead of just once for each instance
+ * as is the contract for the normal InitCommands
  * @author Eelco Hillenius
  */
-public class ThreadSingletonComponentImpl 
-	implements ThreadSingletonType, ConfigurableType
+public interface RequestLevelInitCommand extends InitCommand
 {
-
-	private int numberOfTimesInitialized = 0;
-
-	private static int numberOfTimesConstructed = 0;
-
-	public ThreadSingletonComponentImpl()
-	{
-		numberOfTimesConstructed++;
-		System.out.println(Thread.currentThread().getName() +
-			": created instance nbr " + 
-			numberOfTimesConstructed + 
-			" of class " + getClass().getName());
-	}
-	
-	/**
-	 * @return int
-	 */
-	public int getNumberOfTimesInitialized()
-	{
-		return numberOfTimesInitialized;
-	}
-	
-	/**
-	 * init
-	 */
-	public void init(Element configNode) throws ConfigException
-	{
-		this.numberOfTimesInitialized++;
-	}
 
 }

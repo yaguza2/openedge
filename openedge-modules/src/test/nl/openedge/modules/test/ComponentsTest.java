@@ -100,8 +100,8 @@ public class ComponentsTest extends AbstractTestBase
 			
 			assertSame(module1, module2);
 			
-			// test if this component was initialized exactely once
-//			assertEquals(1, module1.getNumberOfTimesInitialized());
+			// test whether this component was initialized exactely once
+			assertEquals(1, module1.getNumberOfTimesInitialized());
 
 		}
 		catch (Exception e)
@@ -284,12 +284,20 @@ public class ComponentsTest extends AbstractTestBase
 		try
 		{
 
-			DependentComponentImpl module = (DependentComponentImpl)
-				componentFactory.getComponent("DependendComponentTest");
-				
-			assertNotNull(module.getBeanComponent());
+			DependentSingletonComponentImpl module1 = (DependentSingletonComponentImpl)
+				componentFactory.getComponent("DependendSingletonComponentTest");	
+			assertNotNull(module1.getBeanComponent());
+			assertNotNull(module1.getConfigComponent());
+
+			DependentThreadSingletonComponentImpl module2 = (DependentThreadSingletonComponentImpl)
+				componentFactory.getComponent("DependendThreadSingletonComponentTest");	
+			assertNotNull(module2.getBeanComponent());
+			assertNotNull(module2.getConfigComponent());
 			
-			assertNotNull(module.getConfigComponent());
+			DependentThrowawayComponentImpl module3 = (DependentThrowawayComponentImpl)
+				componentFactory.getComponent("DependendThrowawayComponentTest");	
+			assertNotNull(module3.getBeanComponent());
+			assertNotNull(module3.getConfigComponent());
 
 		}
 		catch (Exception e)
@@ -348,6 +356,12 @@ public class ComponentsTest extends AbstractTestBase
 		
 		assertEquals(OtherThreadSingletonComponentImpl.class,
 			t1.getModule3().getClass());
+			
+		// test whether components was initialized exactely once
+		assertEquals(1, t1.getModule1().getNumberOfTimesInitialized());
+		assertEquals(1, t1.getModule2().getNumberOfTimesInitialized());
+		assertEquals(1, t2.getModule1().getNumberOfTimesInitialized());
+		assertEquals(1, t2.getModule2().getNumberOfTimesInitialized());
 		
 	}
 

@@ -127,6 +127,21 @@ public final class RemoteTypeFactory extends AbstractComponentFactory
 				}
 			}
 			
+			try
+			{
+				executeRequestLevelInitCommands(remoteInstance);	
+			}
+			catch (InitCommandException e)
+			{
+				e.printStackTrace();
+				throw new ComponentLookupException(e);
+			}
+			catch (ConfigException e)
+			{
+				e.printStackTrace();
+				throw new ComponentLookupException(e);
+			}
+			
 		}
 		
 		return remoteInstance;
@@ -174,9 +189,7 @@ public final class RemoteTypeFactory extends AbstractComponentFactory
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		// set flag
-		this.executeInitCommands = true;
-			
+		//noop
 	}
 
 }

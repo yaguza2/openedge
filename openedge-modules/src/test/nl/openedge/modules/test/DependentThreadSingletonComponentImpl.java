@@ -30,12 +30,13 @@
  */
 package nl.openedge.modules.test;
 
+import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.initcommands.DependentType;
 
 /**
  * @author Eelco Hillenius
  */
-public class DependentComponentImpl implements DependentType
+public class DependentThreadSingletonComponentImpl implements SingletonType, DependentType
 {
 
 	private BeanComponentImpl beanComponent = null;

@@ -69,8 +69,24 @@
 		<component name="ComponentsLoadedObserverTest"
 				class="nl.openedge.modules.test.ComponentsLoadedObserverImpl"/>
 			
-		<component name="DependendComponentTest"
-				class="nl.openedge.modules.test.DependentComponentImpl">
+		<component name="DependendSingletonComponentTest"
+				class="nl.openedge.modules.test.DependentSingletonComponentImpl">
+				
+			<dependency componentName="BeanTest" propertyName="beanComponent"/>
+			<dependency componentName="ConfigurableTest" propertyName="configComponent"/>
+			
+		</component>
+		
+		<component name="DependendThreadSingletonComponentTest"
+				class="nl.openedge.modules.test.DependentThreadSingletonComponentImpl">
+				
+			<dependency componentName="BeanTest" propertyName="beanComponent"/>
+			<dependency componentName="ConfigurableTest" propertyName="configComponent"/>
+			
+		</component>
+		
+		<component name="DependendThrowawayComponentTest"
+				class="nl.openedge.modules.test.DependentThrowawayComponentImpl">
 				
 			<dependency componentName="BeanTest" propertyName="beanComponent"/>
 			<dependency componentName="ConfigurableTest" propertyName="configComponent"/>

@@ -30,46 +30,49 @@
  */
 package nl.openedge.modules.test;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.base.ThreadSingletonType;
-import nl.openedge.modules.types.initcommands.ConfigurableType;
+import nl.openedge.modules.types.base.SingletonType;
+import nl.openedge.modules.types.initcommands.DependentType;
 
 /**
  * @author Eelco Hillenius
  */
-public class ThreadSingletonComponentImpl 
-	implements ThreadSingletonType, ConfigurableType
+public class DependentSingletonComponentImpl implements SingletonType, DependentType
 {
 
-	private int numberOfTimesInitialized = 0;
-
-	private static int numberOfTimesConstructed = 0;
-
-	public ThreadSingletonComponentImpl()
-	{
-		numberOfTimesConstructed++;
-		System.out.println(Thread.currentThread().getName() +
-			": created instance nbr " + 
-			numberOfTimesConstructed + 
-			" of class " + getClass().getName());
-	}
+	private BeanComponentImpl beanComponent = null;
 	
+	private ConfigurableComponentImpl configComponent = null;
+
 	/**
-	 * @return int
+	 * @return
 	 */
-	public int getNumberOfTimesInitialized()
+	public BeanComponentImpl getBeanComponent()
 	{
-		return numberOfTimesInitialized;
+		return beanComponent;
 	}
-	
+
 	/**
-	 * init
+	 * @return
 	 */
-	public void init(Element configNode) throws ConfigException
+	public ConfigurableComponentImpl getConfigComponent()
 	{
-		this.numberOfTimesInitialized++;
+		return configComponent;
+	}
+
+	/**
+	 * @param impl
+	 */
+	public void setBeanComponent(BeanComponentImpl impl)
+	{
+		beanComponent = impl;
+	}
+
+	/**
+	 * @param impl
+	 */
+	public void setConfigComponent(ConfigurableComponentImpl impl)
+	{
+		configComponent = impl;
 	}
 
 }

@@ -37,7 +37,8 @@ import nl.openedge.modules.config.ConfigException;
 
 /**
  * do some additional processing (like configurating) with types at 
- * initialization time
+ * initialization time. An initCommand is executed exactely once for
+ * each instance.
  * @author Eelco Hillenius
  */
 public interface InitCommand

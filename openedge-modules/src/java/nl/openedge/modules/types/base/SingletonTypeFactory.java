@@ -98,8 +98,22 @@ public final class SingletonTypeFactory extends AbstractComponentFactory
 					throw new ComponentLookupException(e);
 				}
 			}
-		
 			
+			try
+			{
+				executeRequestLevelInitCommands(singletonInstance);	
+			}
+			catch (InitCommandException e)
+			{
+				e.printStackTrace();
+				throw new ComponentLookupException(e);
+			}
+			catch (ConfigException e)
+			{
+				e.printStackTrace();
+				throw new ComponentLookupException(e);
+			}
+	
 		}
 		
 		return singletonInstance;
@@ -121,9 +135,7 @@ public final class SingletonTypeFactory extends AbstractComponentFactory
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		// set flag
-		this.executeInitCommands = true;
-			
+		//noop		
 	}
 
 }

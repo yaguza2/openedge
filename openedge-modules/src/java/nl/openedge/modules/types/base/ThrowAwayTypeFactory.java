@@ -78,6 +78,21 @@ public final class ThrowAwayTypeFactory extends AbstractComponentFactory
 			e.printStackTrace();
 			throw new ComponentLookupException(e);
 		}
+		
+		try
+		{
+			executeRequestLevelInitCommands(instance);	
+		}
+		catch (InitCommandException e)
+		{
+			e.printStackTrace();
+			throw new ComponentLookupException(e);
+		}
+		catch (ConfigException e)
+		{
+			e.printStackTrace();
+			throw new ComponentLookupException(e);
+		}
 
 
 		return instance;

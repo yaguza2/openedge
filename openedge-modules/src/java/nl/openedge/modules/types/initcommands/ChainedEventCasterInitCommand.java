@@ -122,9 +122,7 @@ public class ChainedEventCasterInitCommand
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		// set flag
-		this.executeInitCommands = true;
-			
+		//noop	
 	}
 
 }
