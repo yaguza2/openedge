@@ -262,6 +262,7 @@ public abstract class Parameter extends Entity implements Externalizable
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
 		out.writeObject(getId());
+		out.writeObject(getLocalId());
 		out.writeObject(getVersion().getName());
 		out.writeObject(getParameterGroupId());
 		out.writeObject(getValue());
@@ -276,6 +277,7 @@ public abstract class Parameter extends Entity implements Externalizable
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
 		setId((String) in.readObject());
+		setLocalId((String) in.readObject());
 		String versionId = (String) in.readObject();
 		String groupId = (String) in.readObject();
 		try

@@ -12,6 +12,8 @@ package nl.openedge.gaps.ui.web;
 import java.util.Arrays;
 import java.util.List;
 
+import nl.openedge.gaps.core.groups.Group;
+import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.support.ParameterBrowser;
@@ -44,28 +46,45 @@ public final class OnderhoudPage extends SimpleBorderedPage
 	        expr = "/";
 	    }
 	    Object pos = browser.navigate(expr);
-	    if(!(pos instanceof StructuralGroup))
-	    {
-	        throw new RuntimeException("expressie niet geldig voor structuurgroep");
-	        // TODO los op met msg panel ofzo
-	    }
-	    StructuralGroup group = (StructuralGroup)pos;
+	    Group group = (Group)pos;
 	    addStructGroupNavigation(group);
+	    StructuralGroup sgroup = null;
+	    ParameterGroup pgroup = null;
+	    if(pos instanceof StructuralGroup)
+	    {
+	        sgroup = (StructuralGroup)pos;
+	    }
+	    else
+	    {
+	        pgroup = (ParameterGroup)pos;
+	    }
 	    StructuralGroupPanel structGroupPanel = new StructuralGroupPanel(
-	            "structuralGroupPanel", group);
+	            "structuralGroupPanel", sgroup);
 	    add(structGroupPanel);
 	    ParameterGroupPanel paramGroupPanel = new ParameterGroupPanel(
-	            "parameterGroupPanel", group);
+	            "parameterGroupPanel", sgroup);
 	    add(paramGroupPanel);
+	    ParameterPanel paramPanel = new ParameterPanel(
+	            "parameterPanel", pgroup);
+	    add(paramPanel);
 	}
 
     /**
      * Voeg navigatiecomponenten voor navigatie structuurgroepen toe.
      * @param group de huidige structuurgroep
      */
-    private void addStructGroupNavigation(StructuralGroup group)
+    private void addStructGroupNavigation(Group group)
     {
-        StructuralGroup[] path = group.getPathToRoot();
+        final StructuralGroup sgroup;
+        if(group instanceof StructuralGroup)
+        {
+            sgroup = (StructuralGroup)group;
+        }
+        else
+        {
+            sgroup = ((ParameterGroup)group).getParent();
+        }
+        StructuralGroup[] path = sgroup.getPathToRoot();
         SGroupPathNavigationTable sGroupPathNavTable =
             new SGroupPathNavigationTable("structuralGroupPathNav", Arrays.asList(path));
 	    add(sGroupPathNavTable);

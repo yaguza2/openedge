@@ -10,6 +10,7 @@
 package nl.openedge.gaps.ui.web;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import nl.openedge.gaps.core.groups.StructuralGroup;
@@ -44,8 +45,16 @@ public class StructuralGroupPanel extends Panel
     private void addStructGroupComponents(StructuralGroup group)
     {
         HtmlContainer sGroupPanel = new HtmlContainer("structGroupPanel");
-	    StructuralGroup[] childs = group.getStructuralChilds();
-	    List list = Arrays.asList(childs);
+	    final List list;
+	    if(group != null)
+	    {
+		    StructuralGroup[] childs = group.getStructuralChilds();
+		    list = Arrays.asList(childs);
+	    }
+	    else
+	    {
+	        list = Collections.EMPTY_LIST;
+	    }
 	    SGroupTable sGroupTable = new SGroupTable("structuralGroupChilds", list);
 	    if(list.isEmpty())
 	    {
@@ -58,7 +67,7 @@ public class StructuralGroupPanel extends Panel
     /**
      * Table voor structurele groepen.
      */
-    class SGroupTable extends Table
+    private static class SGroupTable extends Table
     {
         /**
          * Construct.

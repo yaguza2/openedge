@@ -10,6 +10,7 @@
 package nl.openedge.gaps.ui.web;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import nl.openedge.gaps.core.groups.ParameterGroup;
@@ -46,8 +47,16 @@ public class ParameterGroupPanel extends Panel
     private void addParamGroupComponents(StructuralGroup group)
     {
         HtmlContainer pGroupPanel = new HtmlContainer("paramGroupPanel");
-	    ParameterGroup[] childs = group.getParameterChilds();
-	    List list = Arrays.asList(childs);
+	    final List list;
+	    if(group != null)
+	    {
+	        ParameterGroup[] childs = group.getParameterChilds();
+		    list = Arrays.asList(childs);
+	    }
+	    else
+	    {
+	        list = Collections.EMPTY_LIST;
+	    }
 	    PGroupTable sGroupTable = new PGroupTable("parameterGroupChilds", list);
 	    if(list.isEmpty())
 	    {
@@ -60,7 +69,7 @@ public class ParameterGroupPanel extends Panel
     /**
      * Table voor structurele groepen.
      */
-    class PGroupTable extends Table
+    private static class PGroupTable extends Table
     {
         /**
          * Construct.

@@ -417,6 +417,12 @@ public abstract class AbstractPerformanceTester
 		dropTestTabel(stmt);
 	}
 
+	/** test performance ophalen geneste parameter uit allureplan rekenmodule. */
+	public void testGetNestedAllureplan()
+	{
+	    
+	}
+
 	/**
 	 * @param stmt
 	 */

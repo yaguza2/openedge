@@ -68,7 +68,7 @@ public class ParameterGroup extends Group
 
 	/**
 	 * Geeft de parameters binnen deze groep.
-	 * @return de parametergroepen (mogelijk array length == 0)
+	 * @return de parameters (mogelijk array length == 0)
 	 */
 	public Parameter[] getParameters()
 	{
