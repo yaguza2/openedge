@@ -483,11 +483,11 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 	                <para>
 						<literal>displayProperty(String propertyName)</literal>. This method looks up 
 						the property with the provided propertyName from the form bean
-						and returns the property value as a string using default formatting. If an override
+						and returns the property value as a string using the type's default formatting. If an override
 						value is found, this value will be returned. Baritus will try to format override values.
 						If this fails (which is not unlikely as one of the reasons the override value was set
-						in the first place is that conversion to the target type failed), <literal>ConvertUtils</literal>
-						from the <literal>BeanUtils</literal>will be used to convert the value to a string.
+						in the first place is that conversion to the target type failed), the value will be
+						converted to a string without using Converters.
 	                </para>
 	            </listitem>
 	            <listitem>
