@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import wicket.RequestCycle;
+import nl.openedge.gaps.core.groups.ParameterGroup;
+import nl.openedge.gaps.core.parameters.Parameter;
+import nl.openedge.gaps.core.parameters.impl.NestedParameter;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.HtmlComponent;
@@ -25,10 +27,6 @@ import wicket.markup.html.table.ListView;
 import wicket.model.Model;
 import wicket.util.convert.ConverterRegistry;
 import wicket.util.convert.FormattingUtils;
-
-import nl.openedge.gaps.core.groups.ParameterGroup;
-import nl.openedge.gaps.core.parameters.Parameter;
-import nl.openedge.gaps.core.parameters.impl.NestedParameter;
 
 
 /**
@@ -188,20 +186,20 @@ public final class NestedParameterPopupPage extends HtmlPage
          * Allows modification of component tag.
          * @param cycle The request cycle
          * @param tag The tag to modify
-         * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)
+         * @see wicket.Component#handleComponentTag(wicket.markup.ComponentTag)
          */
-        protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
+        protected final void handleComponentTag(final ComponentTag tag)
         {
             //checkTag(tag, "tbody"); // wat te dwingend; hier niet nodig
-            super.handleComponentTag(cycle, tag);
+            super.handleComponentTag(tag);
         }
 
         /**
          * @see wicket.Component#handleBody(wicket.RequestCycle, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
          */
-        protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag openTag)
+        protected void handleBody(final MarkupStream markupStream, final ComponentTag openTag)
         {
-            replaceBody(cycle, markupStream, openTag, (String)getModelObject());
+            replaceBody(markupStream, openTag, (String)getModelObject());
         }
     }
 }

@@ -169,9 +169,9 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit()
          */
-        public void handleSubmit(RequestCycle cycle)
+        public void handleSubmit()
         {
             // op dit moment handelen de specifieke models achter de input
             // velden alles af.
@@ -195,9 +195,9 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit()
          */
-        public void handleSubmit(RequestCycle cycle)
+        public void handleSubmit()
         {
             // op dit moment handelen de specifieke models achter de input
             // velden alles af.
@@ -263,9 +263,9 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit()
          */
-        public void handleSubmit(RequestCycle cycle)
+        public void handleSubmit()
         {   
             try
             {
@@ -346,7 +346,7 @@ public class ParameterPanel extends Panel
     		cell.add(new Label("name", parameter.getLocalId()));
     		cell.add(new TextField("value", new ParameterModel(parameter)));
     		cell.add(new Link("delete") {
-                public void linkClicked(RequestCycle cycle)
+                public void linkClicked()
                 {
                     try
                     {
