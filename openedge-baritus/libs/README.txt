@@ -1,0 +1,1 @@
+For the non Maven users
