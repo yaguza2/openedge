@@ -18,9 +18,9 @@ import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.support.ParameterBrowser;
 
 import com.voicetribe.util.collections.MicroMap;
-import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
+import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
 import com.voicetribe.wicket.markup.html.link.Link;
 import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
@@ -116,9 +116,8 @@ public class GroupPanel extends Panel
            throw new RuntimeException(result + " is geen structuurgroep");
        }
        //invalidateModel();
-       StructuralGroup group = (StructuralGroup)result;
-
        removeAll();
+       StructuralGroup group = (StructuralGroup)result;
        addComponents(group);
     }
 
@@ -133,6 +132,8 @@ public class GroupPanel extends Panel
        {
            throw new RuntimeException(result + " is geen structuurgroep");
        }
+       //invalidateModel();
+       removeAll();
        ParameterGroup group = (ParameterGroup)result;
        //TODO invullen
     }
@@ -159,15 +160,10 @@ public class GroupPanel extends Panel
         {
     		final StructuralGroup group = (StructuralGroup)cell.getModel();
     		cell.add(new Label("description", group.getDescription()));
-    		Link actionLinkLocalId = new Link("groupLinkId") {
-
-    	        public void linkClicked(RequestCycle cycle)
-    	        {
-    	            selectStructuralGroup(group.getId());
-    	            cycle.setRedirect(true);
-    	        }
-    		    
-    		};
+    		Link actionLinkLocalId =
+    		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
+    		        .setParameter("browseexpr", group.getId())
+    		        .setAutoEnable(false);
             actionLinkLocalId.add(new Label("localId", group.getLocalId()));
             cell.add(actionLinkLocalId);
         }
@@ -195,15 +191,10 @@ public class GroupPanel extends Panel
         {
             final ParameterGroup group = (ParameterGroup)cell.getModel();
     		cell.add(new Label("description", group.getDescription()));
-    		Link actionLinkLocalId = new Link("groupLinkId") {
-
-    	        public void linkClicked(RequestCycle cycle)
-    	        {
-    	            selectStructuralGroup(group.getId());
-    	            cycle.setRedirect(true);
-    	        }
-    		    
-    		};
+    		Link actionLinkLocalId =
+    		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
+    		        .setParameter("browseexpr", group.getId())
+    		        .setAutoEnable(false);
             actionLinkLocalId.add(new Label("localId", group.getLocalId()));
             cell.add(actionLinkLocalId);
         }
@@ -231,14 +222,10 @@ public class GroupPanel extends Panel
         protected void populateCell(Cell cell)
         {
     		final StructuralGroup group = (StructuralGroup)cell.getModel();
-    		Link actionLinkLocalId = new Link("groupLinkId") {
-
-    	        public void linkClicked(RequestCycle cycle)
-    	        {
-    	            selectStructuralGroup(group.getId());
-    	            cycle.setRedirect(true);
-    	        }
-    		};
+    		Link actionLinkLocalId =
+    		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
+    		        .setParameter("browseexpr", group.getId())
+    		        .setAutoEnable(false);
             String labelText;
             if(group instanceof StructuralRootGroup)
             {
@@ -252,4 +239,5 @@ public class GroupPanel extends Panel
             cell.add(actionLinkLocalId);
         }
     }
+
 }
