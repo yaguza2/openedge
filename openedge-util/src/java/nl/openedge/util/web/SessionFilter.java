@@ -43,28 +43,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Simple filter that tracks sessions
+ * Simple filter that tracks sessions.
  * 
  * @author Eelco Hillenius
  */
 public class SessionFilter implements Filter
 {
-
-	public final static String SESSION_STATS_KEY = "_httpSessionStats";
-
-	/**
-	 * constructor
-	 */
-	public SessionFilter()
-	{
-		// nothing here
-	}
+	/** key for session stats objects. */
+	public static final String SESSION_STATS_KEY = "_httpSessionStats";
 
 	/**
 	 * The filter configuration object we are associated with. If this value is null, this filter
 	 * instance is not currently configured.
 	 */
 	private FilterConfig filterConfig = null;
+
+	/**
+	 * constructor.
+	 */
+	public SessionFilter()
+	{
+		// nothing here
+	}
 
 	/**
 	 * Take this filter out of service.
@@ -81,7 +81,7 @@ public class SessionFilter implements Filter
 	 * 
 	 * @param request
 	 *            The servlet request we are processing
-	 * @param result
+	 * @param response
 	 *            The servlet response we are creating
 	 * @param chain
 	 *            The filter chain we are processing
@@ -94,52 +94,38 @@ public class SessionFilter implements Filter
 			throws IOException, ServletException
 	{
 
-		try
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpSession session = httpRequest.getSession();
+		SessionStats stats = (SessionStats) session.getAttribute(SESSION_STATS_KEY);
+		if (stats == null)
 		{
-
-			HttpServletRequest httpRequest = (HttpServletRequest) request;
-			HttpSession session = httpRequest.getSession();
-
-			SessionStats stats = (SessionStats) session.getAttribute(SESSION_STATS_KEY);
-			if (stats == null)
-			{
-				stats = new SessionStats();
-				stats.setRemoteAddr(httpRequest.getRemoteAddr());
-				session.setAttribute(SESSION_STATS_KEY, stats);
-			}
-			else
-			{
-				stats.hit();
-			}
-
+			stats = new SessionStats();
+			stats.setRemoteAddr(httpRequest.getRemoteAddr());
+			session.setAttribute(SESSION_STATS_KEY, stats);
 		}
-		catch (Exception e)
+		else
 		{
-			e.printStackTrace();
+			stats.hit();
 		}
+
 		// Pass control on to the next filter
 		chain.doFilter(request, response);
 
 	}
 
 	/**
-	 * Place this filter into service.
-	 * 
-	 * @param filterConfig
-	 *            The filter configuration object
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
-	public void init(FilterConfig filterConfig) throws ServletException
+	public void init(FilterConfig theFilterConfig) throws ServletException
 	{
-
-		this.filterConfig = filterConfig;
+		this.filterConfig = theFilterConfig;
 	}
 
 	/**
-	 * Return a String representation of this object.
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
 	{
-
 		if (filterConfig == null)
 		{
 			return ("SessionFilter()");

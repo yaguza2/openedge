@@ -44,10 +44,10 @@ import org.jdom.Element;
  * 
  * @author Eelco Hillenius
  */
-public class AllwaysReloadControllerAdapter implements ControllerSingleton
+public final class AllwaysReloadControllerAdapter implements ControllerSingleton
 {
 	/** class of controller. */
-	protected Class controllerClass;
+	private Class controllerClass;
 
 	/** reference to the xml node of the controller. */
 	private Element controllerNode;
@@ -68,9 +68,9 @@ public class AllwaysReloadControllerAdapter implements ControllerSingleton
 	 * 
 	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
 	 */
-	public void init(Element controllerNode) throws ConfigException
+	public void init(Element configControllerNode) throws ConfigException
 	{
-		this.controllerNode = controllerNode;
+		this.controllerNode = configControllerNode;
 	}
 
 	/**
@@ -81,7 +81,8 @@ public class AllwaysReloadControllerAdapter implements ControllerSingleton
 	 * @param cctx
 	 *            the controller context.
 	 * @return String logical view name (result of command method call of controller)
-	 * @throws ServletException
+	 * @throws ServletException when the decorated controller threw a
+	 * 		servlet exception
 	 */
 	public String go(ControllerContext cctx) throws ServletException
 	{

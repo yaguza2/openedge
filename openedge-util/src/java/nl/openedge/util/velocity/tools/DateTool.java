@@ -31,6 +31,7 @@
 package nl.openedge.util.velocity.tools;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,20 +39,25 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import nl.openedge.util.DateFormatHelper;
 
 /**
+ * Velocity tool for handling dates.
  * @author Eelco Hillenius
  */
 public final class DateTool
 {
-
+	/** log. */
+	private static Log log = LogFactory.getLog(DateTool.class);
 	// ------------------------- system date access ------------------
 
 	/**
 	 * @return the system's current time as a {@link Date}
 	 */
-	public static final Date getSystemDate()
+	public static Date getSystemDate()
 	{
 		return getSystemCalendar().getTime();
 	}
@@ -59,7 +65,7 @@ public final class DateTool
 	/**
 	 * @return the system's current time as a {@link Calendar}
 	 */
-	public static final Calendar getSystemCalendar()
+	public static Calendar getSystemCalendar()
 	{
 		return Calendar.getInstance();
 	}
@@ -83,7 +89,7 @@ public final class DateTool
 	}
 
 	/**
-	 * Returns a {@link Date}derived from the result of {@link #getCalendar}
+	 * Returns a {@link Date}derived from the result of {@link #getCalendar}.
 	 * 
 	 * @return a {@link Date}derived from the result of {@link #getCalendar}
 	 */
@@ -212,34 +218,36 @@ public final class DateTool
 	 */
 	public static Date toDate(Object obj)
 	{
-		if (obj == null)
+		Date date = null;
+		if (obj != null)
 		{
-			return null;
-		}
-		if (obj instanceof Date)
-		{
-			return (Date) obj;
-		}
-		if (obj instanceof Calendar)
-		{
-			return ((Calendar) obj).getTime();
-		}
-		if (obj instanceof Long)
-		{
-			Date d = new Date();
-			d.setTime(((Long) obj).longValue());
-			return d;
-		}
-		try
-		{
+			if (obj instanceof Date)
+			{
+				date = (Date) obj;
+			}
+			if (obj instanceof Calendar)
+			{
+				date = ((Calendar) obj).getTime();
+			}
+			if (obj instanceof Long)
+			{
+				Date d = new Date();
+				d.setTime(((Long) obj).longValue());
+				date = d;
+			}
 			//try parsing the obj as String w/a DateFormat
 			DateFormat parser = DateFormat.getInstance();
-			return parser.parse(String.valueOf(obj));
+			try
+			{
+				date = parser.parse(String.valueOf(obj));
+			}
+			catch (ParseException e)
+			{
+				log.debug("DateTool.toDate(" + obj + "): " + e.getMessage());
+			}
+
 		}
-		catch (Exception e)
-		{
-			return null;
-		}
+		return date;
 	}
 
 	/**
@@ -280,14 +288,16 @@ public final class DateTool
 		{
 			return date;
 		}
+		//try parsing w/a customized SimpleDateFormat
+		SimpleDateFormat parser = new SimpleDateFormat(format, locale);
 		try
 		{
-			//try parsing w/a customized SimpleDateFormat
-			SimpleDateFormat parser = new SimpleDateFormat(format, locale);
 			return parser.parse(String.valueOf(obj));
 		}
-		catch (Exception e)
+		catch (ParseException e)
 		{
+			log.debug("DateTool.toDate( " + format + ", " + obj + ", "
+					+ locale + "): " + e.getMessage());
 			return null;
 		}
 	}
@@ -373,10 +383,10 @@ public final class DateTool
 	}
 
 	/**
-	 * get Date object for today plus addition, with hour set to one-o-clock am
+	 * get Date object for today plus addition, with hour set to one-o-clock am.
 	 * 
-	 * @param addition
-	 * @return Date
+	 * @param addition days to add
+	 * @return Date date with addition
 	 */
 	public static Date getOtherDay(int addition)
 	{
@@ -437,10 +447,10 @@ public final class DateTool
 	}
 
 	/**
-	 * return timestamp as a date
+	 * return timestamp as a date.
 	 * 
-	 * @param timeStamp
-	 * @return Date
+	 * @param timeStamp timestamp to convert
+	 * @return Date timestamp as a date
 	 */
 	public static Date asDate(Long timeStamp)
 	{
@@ -455,7 +465,7 @@ public final class DateTool
 	/**
 	 * Format with DateFormatHelper.
 	 * 
-	 * @param date
+	 * @param date date to format
 	 * @return String formatted date
 	 */
 	public static String format(Date date)
@@ -481,7 +491,7 @@ public final class DateTool
 	}
 
 	/**
-	 * Format with DateFormatHelper, using long format style
+	 * Format with DateFormatHelper, using long format style.
 	 * 
 	 * @param date
 	 *            date

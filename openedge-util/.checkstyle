@@ -6,5 +6,8 @@
         <file-match-pattern match-pattern="ImageInfo.java$" include-pattern="false"/>
         <file-match-pattern match-pattern="UUID" include-pattern="false"/>
         <file-match-pattern match-pattern="FallbackDateConverter" include-pattern="false"/>
+        <file-match-pattern match-pattern="JettyTestCase" include-pattern="true"/>
+        <file-match-pattern match-pattern="JettyMonitor.java$" include-pattern="false"/>
+        <file-match-pattern match-pattern="ImportTool" include-pattern="false"/>
     </fileset>
 </fileset-config>

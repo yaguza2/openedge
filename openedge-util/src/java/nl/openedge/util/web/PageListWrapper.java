@@ -35,44 +35,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Helper class for creating pagelists
+ * Helper class for creating pagelists.
  * 
  * @author Eelco Hillenius
  */
 public final class PageListWrapper
 {
 
-	/* rowcount for table */
+	/** rowcount for table. */
 	private int rowCount;
 
-	/* current position */
+	/** current position. */
 	private int currentRow;
 
-	/* how many rows should fit one page */
+	/** how many rows should fit one page. */
 	private int rowsEachPage;
 
-	/* total pages */
+	/** total pages. */
 	private int totalNbrOfPages;
 
-	/* page number current */
+	/** page number current. */
 	private int currentPagePosition;
 
-	/* pagewrappers before current page */
+	/** pagewrappers before current page. */
 	private List beforeCurrentPages;
 
-	/* pagewrappers after current page */
+	/** pagewrappers after current page. */
 	private List afterCurrentPages;
 
 	/**
-	 * construct wrapper
+	 * construct wrapper.
 	 * 
-	 * @param rowCount
-	 * @param currentRow
-	 * @param rowsEachPage
+	 * @param rowCount the row count
+	 * @param currentRow the current row
+	 * @param rowsEachPage rows per page
 	 */
 	public PageListWrapper(int rowCount, int currentRow, int rowsEachPage)
 	{
-
 		this.rowCount = rowCount;
 		this.currentRow = currentRow;
 		this.rowsEachPage = rowsEachPage;
@@ -105,7 +104,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return int
+	 * Get the current page position.
+	 * @return int the current page position
 	 */
 	public int getCurrentPagePosition()
 	{
@@ -113,7 +113,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return int
+	 * Get the current row.
+	 * @return int the current row
 	 */
 	public int getCurrentRow()
 	{
@@ -121,7 +122,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return int
+	 * Get row count.
+	 * @return int the row count.
 	 */
 	public int getRowCount()
 	{
@@ -129,7 +131,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return int
+	 * Get number of rows a page.
+	 * @return int number of rows a page
 	 */
 	public int getRowsEachPage()
 	{
@@ -137,7 +140,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return int
+	 * Get number of pages.
+	 * @return int number of pages
 	 */
 	public int getTotalNbrOfPages()
 	{
@@ -145,7 +149,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return List
+	 * Get pages after the current page.
+	 * @return List pages after the current page
 	 */
 	public List getAfterCurrentPages()
 	{
@@ -153,7 +158,8 @@ public final class PageListWrapper
 	}
 
 	/**
-	 * @return List
+	 * Get pages before the current page.
+	 * @return List pages before the current page
 	 */
 	public List getBeforeCurrentPages()
 	{

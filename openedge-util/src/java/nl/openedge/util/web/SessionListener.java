@@ -43,21 +43,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Keeps track of sessions
+ * Keeps track of sessions.
  * 
  * @author Eelco Hillenius
  */
 public class SessionListener implements HttpSessionListener, HttpSessionActivationListener
 {
+	/** sessions. */
+	private static List sessions = Collections.synchronizedList(new ArrayList());
 
-	/* logger */
+	/** logger. */
 	private Log log = LogFactory.getLog(SessionListener.class);
 
-	/* sessions */
-	private final static List sessions = Collections.synchronizedList(new ArrayList());
-
 	/**
-	 * default constructor
+	 * Constructor.
 	 */
 	public SessionListener()
 	{
@@ -65,7 +64,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	}
 
 	/**
-	 * Record the fact that a session has been created. add session to internal store
+	 * Record the fact that a session has been created. add session to internal store.
 	 * 
 	 * @param event
 	 *            session event
@@ -78,7 +77,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	}
 
 	/**
-	 * Record the fact that a session has been destroyed. Remove session from internal store
+	 * Record the fact that a session has been destroyed. Remove session from internal store.
 	 * 
 	 * @param event
 	 *            session event
@@ -91,7 +90,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	}
 
 	/**
-	 * Notification that the session is about to be passivated
+	 * Notification that the session is about to be passivated.
 	 * 
 	 * @param event
 	 *            session event
@@ -104,7 +103,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	}
 
 	/**
-	 * Notification that the session has just been activated
+	 * Notification that the session has just been activated.
 	 * 
 	 * @param event
 	 *            session event
@@ -117,7 +116,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	}
 
 	/**
-	 * get known sessions (for this server)
+	 * get known sessions (for this server).
 	 * 
 	 * @return List sessions known to this listener
 	 */

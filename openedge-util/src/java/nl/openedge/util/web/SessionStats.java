@@ -35,23 +35,26 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Records extra information about a session
+ * Records extra information about a session.
  * 
  * @author Eelco Hillenius
  */
 public class SessionStats implements Serializable
 {
-
+	/** the remote address. */
 	private String remoteAddr;
 
+	/** remote host. */
 	private String remoteHost;
 
+	/** hit count. */
 	private int hitCount = 0;
 
+	/** extra attributes. */
 	private HashMap attributes = new HashMap();
 
 	/**
-	 * default constructor
+	 * default constructor.
 	 */
 	public SessionStats()
 	{
@@ -60,7 +63,7 @@ public class SessionStats implements Serializable
 	}
 
 	/**
-	 * increase hitcount
+	 * increase hitcount.
 	 */
 	public void hit()
 	{
@@ -98,9 +101,13 @@ public class SessionStats implements Serializable
 		this.remoteAddr = new String(remoteAddr);
 	}
 
+	/**
+	 * Set attribute.
+	 * @param key attribute key
+	 * @param value attribute value
+	 */
 	public void setAttribute(String key, String value)
 	{
-
 		attributes.put(key, value);
 	}
 
@@ -115,7 +122,7 @@ public class SessionStats implements Serializable
 	}
 
 	/**
-	 * Get named attribute
+	 * Get named attribute.
 	 * 
 	 * @param key
 	 *            key (name) of attribute
@@ -127,7 +134,7 @@ public class SessionStats implements Serializable
 	}
 
 	/**
-	 * put (possibly overwrite) named attribute
+	 * put (possibly overwrite) named attribute.
 	 * 
 	 * @param key
 	 *            key (name) of attribute

@@ -64,6 +64,13 @@ public final class Rekenhulp
 	public static final double HON_PERCENT = 100d;
 
 	/**
+	 * Private Constructor i.v.m. Utility class.
+	 */
+	private Rekenhulp()
+	{
+	}
+
+	/**
 	 * Rondt <code>waarde</code> af op <code>posities</code> decimalen. Voorbeeld:
 	 * <ul>
 	 * <li><code>rondAf(2.5, 0) = 3</code></li>
@@ -304,7 +311,8 @@ public final class Rekenhulp
 	public static double interpoleerOverJaar(final int maandenEerstePeriode,
 			final double bedragEerstePeriode, final double bedragTweedePeriode)
 	{
-		double bedrag = (maandenEerstePeriode * bedragTweedePeriode + (YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR - maandenEerstePeriode)
+		double bedrag = (maandenEerstePeriode * bedragTweedePeriode
+				+ (YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR - maandenEerstePeriode)
 				* bedragEerstePeriode)
 				/ YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR;
 		return Rekenhulp.rondAf4(bedrag);
@@ -493,10 +501,4 @@ public final class Rekenhulp
 		return Math.pow(r, n1);
 	}
 
-	/**
-	 * Private Constructor i.v.m. Utility class.
-	 */
-	private Rekenhulp()
-	{
-	}
 }

@@ -46,14 +46,14 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 	public static final String COMPRESSED_DATA = "compressedData";
 
 	/**
-	 * zipped object data array.
-	 */
-	private byte[] compressedData;
-
-	/**
 	 * Member uncompressed data length, value = 'uncompressedDataLength'.
 	 */
 	public static final String UNCOMPRESSED_DATA_LENGTH = "uncompressedDataLength";
+
+	/**
+	 * zipped object data array.
+	 */
+	private byte[] compressedData;
 
 	/**
 	 * de original length of object data array.
@@ -71,8 +71,8 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 	/**
 	 * Construct with original length and compressed data.
 	 * 
-	 * @param uncompressedDataLength
-	 * @param compressedData
+	 * @param uncompressedDataLength original length of data
+	 * @param compressedData the compressed data
 	 */
 	public SerializedAndZipped(int uncompressedDataLength, byte[] compressedData)
 	{

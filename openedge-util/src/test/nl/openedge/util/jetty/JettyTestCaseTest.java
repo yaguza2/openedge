@@ -39,6 +39,9 @@ import nl.openedge.util.net.HttpHelper;
  */
 public class JettyTestCaseTest extends JettyTestCase
 {
+	/** port to use for testing. */
+	private static final int JETTY_TEST_PORT = 8098;
+
 	/** addres to ping. */
 	private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
 
@@ -63,8 +66,7 @@ public class JettyTestCaseTest extends JettyTestCase
 
 	/**
 	 * Test the ping page of the test webapp.
-	 * 
-	 * @throws Exception
+	 * @throws Exception whenever
 	 */
 	public void testPing() throws Exception
 	{
@@ -78,7 +80,7 @@ public class JettyTestCaseTest extends JettyTestCase
 	public void beforeSetUp()
 	{
 		setUseJettyPlus(true);
-		setPort(8098);
+		setPort(JETTY_TEST_PORT);
 		setWebappContextRoot("src/webapp");
 		setContextPath("/test");
 		this.theAddress = "http://localhost:8098/test/ping.txt";

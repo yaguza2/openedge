@@ -52,6 +52,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.tools.view.context.ViewContext;
 import org.apache.velocity.tools.view.tools.ViewTool;
 
@@ -61,18 +63,8 @@ import org.apache.velocity.tools.view.tools.ViewTool;
  *         2004/06/27 20:49:06 hillenius Exp $
  * @see org.apache.taglibs.standard.tag.common.core.ImportSupport
  */
-public class ImportTool implements ViewTool
+public final class ImportTool implements ViewTool
 {
-
-	/** A reference to the ServletContext */
-	protected ServletContext application;
-
-	/** A reference to the HttpServletRequest. */
-	protected HttpServletRequest request;
-
-	/** A reference to the HttpServletResponse. */
-	protected HttpServletResponse response;
-
 	/**
 	 * <p>
 	 * Valid characters in a scheme.
@@ -88,17 +80,36 @@ public class ImportTool implements ViewTool
 	 * We treat as absolute any URL that begins with such a scheme name, followed by a colon.
 	 * </p>
 	 */
-	public static final String VALID_SCHEME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
+	public static final String VALID_SCHEME_CHARS = 
+		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
 
 	/** Default character encoding for response. */
 	public static final String DEFAULT_ENCODING = "ISO-8859-1";
 
+	/** log. */
+	private static Log log = LogFactory.getLog(ImportTool.class);
+
+	/** A reference to the ServletContext. */
+	private ServletContext application;
+
+	/** A reference to the HttpServletRequest. */
+	private HttpServletRequest request;
+
+	/** A reference to the HttpServletResponse. */
+	private HttpServletResponse response;
+
+	/**
+	 * acquire the given url and return the result as a string.
+	 * @param url the url to acquire
+	 * @return String the result as a string
+	 */
 	public String get(String url)
 	{
-
 		// check the URL
 		if (url == null || url.equals(""))
+		{
 			return null;
+		}
 
 		// Record whether our URL is absolute or relative
 		boolean isAbsoluteUrl = isAbsoluteUrl(url);
@@ -106,9 +117,9 @@ public class ImportTool implements ViewTool
 		{
 			return acquireString(url, isAbsoluteUrl);
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return e.getMessage();
 		}
 	}
@@ -138,7 +149,8 @@ public class ImportTool implements ViewTool
 	//*********************************************************************
 	// Actual URL importation logic
 
-	/*
+	/**
+	 * Acquire the string.
 	 * Overall strategy: we have two entry points, acquireString() and acquireReader(). The latter
 	 * passes data through unbuffered if possible (but note that it is not always possible --
 	 * specifically for cases where we must use the RequestDispatcher. The remaining methods handle
@@ -147,8 +159,11 @@ public class ImportTool implements ViewTool
 	 * extra work, acquireString() and acquireReader() delegate to one another as appropriate.
 	 * (Perhaps I could have spelled things out more clearly, but I thought this implementation was
 	 * instructive, not to mention somewhat cute...)
+	 * @param url url to get
+	 * @param isAbsoluteUrl whether this is a absolute (true) or relative (false) url
+	 * @return String result as string
+	 * @throws IOException when there was a problem getting the url
 	 */
-
 	private String acquireString(String url, boolean isAbsoluteUrl) throws IOException
 	{
 		if (isAbsoluteUrl)

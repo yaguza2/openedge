@@ -50,7 +50,8 @@ import org.apache.axis.encoding.DeserializerFactory;
  * 	xmlns:xsi=&quot;http://www.w3.org/2000/10/XMLSchema-instance&quot;&gt;
  * 	&lt;service name=&quot;polisservice&quot; provider=&quot;java:RPC&quot;&gt;
  * 		&lt;parameter name=&quot;alias&quot; value=&quot;polisservice&quot;/&gt;
- * 		&lt;parameter name=&quot;className&quot; value=&quot;nl.levob.flexipluspensioen.webservices.PolisService&quot;/&gt;
+ * 		&lt;parameter name=&quot;className&quot;
+ * 			value=&quot;nl.levob.flexipluspensioen.webservices.PolisService&quot;/&gt;
  * 		&lt;parameter name=&quot;allowedMethods&quot; value=&quot;*&quot;/&gt;
  * 		&lt;parameter name=&quot;scope&quot; value=&quot;Request&quot;/&gt;
  * 		&lt;typeMapping xmlns:ns=&quot;http://levob/flexipluspensioen/&quot;
@@ -64,21 +65,25 @@ import org.apache.axis.encoding.DeserializerFactory;
  *  
  * </pre>
  * 
- * </p>
  * <p>
  * This can then be consumed by a AXIS client like:
  * 
  * <pre>
- * QName typeQName = new QName(&quot;http://levob/flexipluspensioen/&quot;, &quot;SerializedAndZipped&quot;);SerializedAndZipped serializedAndZipped = SerializeAndZipWSHelper.getRemoteObjects(endpoint, &quot;getPolissen&quot;, typeQName);
+ * QName typeQName = new QName(
+ * 		&quot;http://levob/flexipluspensioen/&quot;,&quot; SerializedAndZipped&quot;);
+ * SerializedAndZipped serializedAndZipped = SerializeAndZipWSHelper.getRemoteObjects(
+ * 		endpoint, &quot;getPolissen&quot;, typeQName);
  *  
  * </pre>
  * 
  * </p>
- * 
+ *
  * @author Eelco Hillenius
  */
 public class SerializedAndZippedDeserializerFactory implements DeserializerFactory
 {
+	/** SAX mechanisms. */
+	private List mechanisms = null;
 
 	/**
 	 * Construct.
@@ -87,9 +92,6 @@ public class SerializedAndZippedDeserializerFactory implements DeserializerFacto
 	{
 		// noop
 	}
-
-	/** SAX mechanisms. */
-	private List mechanisms = null;
 
 	/**
 	 * @see javax.xml.rpc.encoding.SerializerFactory#getSerializerAs(java.lang.String)

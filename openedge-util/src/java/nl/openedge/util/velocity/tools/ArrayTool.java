@@ -43,7 +43,7 @@ public class ArrayTool
 {
 
 	/**
-	 * Get the element at the given index
+	 * Get the element at the given index.
 	 * 
 	 * @param array
 	 *            Object array
@@ -63,10 +63,10 @@ public class ArrayTool
 	}
 
 	/**
-	 * wrap as list
+	 * wrap as list.
 	 * 
-	 * @param o1
-	 * @return
+	 * @param o1 object to wrap
+	 * @return object wrapped in a list
 	 */
 	public static List asList(Object o1)
 	{
@@ -76,11 +76,11 @@ public class ArrayTool
 	}
 
 	/**
-	 * wrap as list
+	 * wrap as list.
 	 * 
-	 * @param o1
-	 * @param o2
-	 * @return
+	 * @param o1 object to wrap
+	 * @param o2 object to wrap
+	 * @return objects wrapped in a list
 	 */
 	public static List asList(Object o1, Object o2)
 	{
@@ -91,12 +91,12 @@ public class ArrayTool
 	}
 
 	/**
-	 * wrap as list
+	 * wrap as list.
 	 * 
-	 * @param o1
-	 * @param o2
-	 * @param o3
-	 * @return
+	 * @param o1 object to wrap
+	 * @param o2 object to wrap
+	 * @param o3 object to wrap
+	 * @return objects wrapped in a list
 	 */
 	public static List asList(Object o1, Object o2, Object o3)
 	{
@@ -108,13 +108,13 @@ public class ArrayTool
 	}
 
 	/**
-	 * wrap as list
+	 * wrap as list.
 	 * 
-	 * @param o1
-	 * @param o2
-	 * @param o3
-	 * @param o4
-	 * @return
+	 * @param o1 object to wrap
+	 * @param o2 object to wrap
+	 * @param o3 object to wrap
+	 * @param o4 object to wrap
+	 * @return objects wrapped in a list
 	 */
 	public static List asList(Object o1, Object o2, Object o3, Object o4)
 	{
@@ -129,7 +129,7 @@ public class ArrayTool
 	/**
 	 * the length of the input array.
 	 * 
-	 * @param array
+	 * @param array array to get the size of
 	 * @return the length of the input array. if array == null return -1.
 	 */
 	public static int size(Object[] array)
@@ -144,16 +144,23 @@ public class ArrayTool
 	/**
 	 * Uses elementAt to return the last element in array.
 	 * 
-	 * @param array
-	 * @return
+	 * @param array the array to get the last element from
+	 * @return the last object in the array or null if the array is null or has no elements
 	 */
 	public static Object getLast(Object[] array)
 	{
-		return elementAt(array, array.length - 1);
+		if (array == null || array.length == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return elementAt(array, array.length - 1);	
+		}
 	}
 
 	/**
-	 * pretty print the contents of an array
+	 * pretty print the contents of an array.
 	 * 
 	 * @param array
 	 *            array
@@ -176,7 +183,7 @@ public class ArrayTool
 	}
 
 	/**
-	 * pretty print the contents of a Collection
+	 * pretty print the contents of a Collection.
 	 * 
 	 * @param c
 	 *            collection

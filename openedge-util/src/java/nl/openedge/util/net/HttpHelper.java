@@ -30,10 +30,15 @@
  */
 package nl.openedge.util.net;
 
+import java.io.IOException;
+
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Helper class for Http related things.
@@ -42,9 +47,10 @@ import org.apache.commons.httpclient.methods.GetMethod;
  */
 public final class HttpHelper
 {
-
+	/** Log. */
+	private static Log log = LogFactory.getLog(HttpHelper.class);
 	/**
-	 * Hidden constructor
+	 * Hidden constructor.
 	 */
 	private HttpHelper()
 	{
@@ -65,9 +71,9 @@ public final class HttpHelper
 		GetMethod get = null;
 		HttpClient client = new HttpClient(new SimpleHttpConnectionManager());
 		String body = null;
+		get = new GetMethod(url);
 		try
 		{
-			get = new GetMethod(url);
 			int resultcode = client.executeMethod(get);
 			body = get.getResponseBodyAsString();
 			if (resultcode != HttpStatus.SC_OK)
@@ -75,8 +81,14 @@ public final class HttpHelper
 				throw new HttpHelperException("resultcode was " + resultcode + ", error:\n" + body);
 			}
 		}
-		catch (Exception e)
+		catch (HttpException e)
 		{
+			log.error(e.getMessage(), e);
+			throw new HttpHelperException(e);
+		}
+		catch (IOException e)
+		{
+			log.error(e.getMessage(), e);
 			throw new HttpHelperException(e);
 		}
 		finally

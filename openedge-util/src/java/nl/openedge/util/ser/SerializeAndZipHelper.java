@@ -52,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
 public final class SerializeAndZipHelper
 {
 	/** a percentage factor. */
-	private static final int PERC_FACTOR = 100;
+	static final int PERC_FACTOR = 100;
 
 	/**
 	 * Logger.

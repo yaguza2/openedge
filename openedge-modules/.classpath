@@ -5,11 +5,11 @@
     <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
     <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b9-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar" sourcepath="JAVA_SRC_JARS/jdom-b9-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/quartz-1.2.3-src.jar"/>
+        path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar" sourcepath="JAVA_SRC_JARS/quartz-1.2.3-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/ognl/jars/ognl-2.6.4.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/ognl-2.6.4-src.jar"/>
+        path="MAVEN_REPO/ognl/jars/ognl-2.6.4.jar" sourcepath="JAVA_SRC_JARS/ognl-2.6.4-src.jar"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
