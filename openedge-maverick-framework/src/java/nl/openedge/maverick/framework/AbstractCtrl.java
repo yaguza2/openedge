@@ -625,7 +625,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				} 
 				catch (ConversionException e) 
 				{
-					setErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
+					setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
 					setOverrideField(cctx, formBean, (name + '|' + i), values[i], e, null);
 					success = false;
 				}
@@ -640,7 +640,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				//this should not happen as we did extensive checking allready.
 				// therefore print the stacktrace
 				e.printStackTrace();
-				setErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
+				setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
 				success = false;
 			}				
 		}
@@ -686,7 +686,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		catch (Exception e)
 		{
-			setErrorForField(cctx, formBean, name, stringValue, e);
+			setConversionErrorForField(cctx, formBean, name, stringValue, e);
 			setOverrideField(cctx, formBean, name, stringValue, e, null);
 			success = false;	
 		}
@@ -728,12 +728,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * Set error for field with name 'name'. As a default, this puts the
-	 * localized message 'invalid.field.input' in the error map, and puts
-	 * the value in the failed field map.
+	 * Set error for field with name 'name' in case of a conversion error. 
+	 * uses getConversionErrorLabelKey to get the specific label.
+	 * NOTE: this will be used in case of conversion errors ONLY. If a validator
+	 * causes an error (after normal conversion) the error message of the validator
+	 * will be used, not this method
 	 * 
-	 * The message is formatted with objects triedValue, name and t, so you can
-	 * use {0}, {1} and {2} resp. with your custom message.
+	 * The message is formatted with objects triedValue, name (by calling getPropertyNameKey)
+	 * and t, so you can use {0}, {1} and {2} resp. with your custom message.
 	 * 
 	 * If there is an entry in the default resource bundle that has form:
 	 * 		formname.[name] (eg. formname.firstname and formname.lastname)
@@ -745,7 +747,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param triedValue value that was tried for population
 	 * @param t exception
 	 */
-	protected void setErrorForField(
+	protected void setConversionErrorForField(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		String name, 
@@ -757,20 +759,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		{
 			PropertyDescriptor descriptor = 
 				PropertyUtils.getPropertyDescriptor(formBean, name);
-			String key = "invalid.field.input"; 
-			if (descriptor.getPropertyType().equals(Date.class))
-			{
-				key = "invalid.field.input.date";
-			}
-			else if(descriptor.getPropertyType().getName().equals("int") 
-				|| descriptor.getPropertyType().getName().equals("java.lang.Integer"))
-			{
-				key = "invalid.field.input.integer";
-			}
+			String key = getConversionErrorLabelKey(
+				descriptor.getPropertyType(), name, triedValue);
 		
 			String msg = null;
 			String msgName = null;
-			msgName = getLocalizedMessage("formname." + name);
+			msgName = getLocalizedMessage(getPropertyNameKey(name));
 
 			if(msgName != null)
 			{
@@ -786,10 +780,79 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		catch (Exception e)
 		{
 			log.error(e.getMessage());
+			formBean.setError(name, e.getMessage());
 		}
 	}
 	
+	/**
+	 * get the message bundle key for the given property name
+	 * @param name property name
+	 * @return String the message bundle key of the property, defaults to "formname." + name
+	 */
+	protected String getPropertyNameKey(String name)
+	{
+		return "formname." + name;
+	}
 	
+	/**
+	 * get the message bundle key for a conversion error for the given type 
+	 * and field with the given name
+	 * @param type type of the target property that threw the conversion error
+	 * @param name name of the target property
+	 * @param triedValue the value that could not be converted to the type of the 
+	 * 	target property
+	 * @return String message bundle key
+	 */
+	protected String getConversionErrorLabelKey(Class type, String name, Object triedValue)
+	{
+		String key = null; 
+		
+		if(Date.class.isAssignableFrom(type))
+		{
+			key = "invalid.field.input.date";
+		}
+		else if(Integer.TYPE.isAssignableFrom(type) 
+			|| (Integer.class.isAssignableFrom(type)))
+		{
+			key = "invalid.field.input.integer";
+		}
+		else if(Double.TYPE.isAssignableFrom(type) 
+			|| (Double.class.isAssignableFrom(type)))
+		{
+			key = "invalid.field.input.double";
+		}
+		else if(Long.TYPE.isAssignableFrom(type) 
+			|| (Long.class.isAssignableFrom(type)))
+		{
+			key = "invalid.field.input.long";
+		}
+		else if(Boolean.TYPE.isAssignableFrom(type) 
+			|| (Boolean.class.isAssignableFrom(type)))
+		{
+			key = "invalid.field.input.boolean";
+		}
+		else
+		{
+			key = "invalid.field.input";
+		}
+		
+		return key;		
+	}
+	
+	/**
+	 * set override value for field. this method will be called if a property could not be
+	 * set on the form or did not pass validation. by registering the 'original' value
+	 * (possibly modified by overrides of either this method or the 'getOverrideValue'
+	 * of the validator that was the cause of the validation failure) end users can have
+	 * their 'wrong' input value shown
+	 * @param cctx controller context
+	 * @param formBean form
+	 * @param name name of the field
+	 * @param triedValue the user input value/ request parameter
+	 * @param t exception if known (may be null)
+	 * @param validator the validator that was the cause of the validation failure, if one
+	 * 	(is null if this was a conversion error)
+	 */
 	protected void setOverrideField(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
