@@ -526,7 +526,6 @@ public final class ImageInfo {
 				}
 				String comment = new String(chars, "iso-8859-1");
 				comment = comment.trim();
-				System.out.println(comment);
 				addComment(comment);
 			}
 			else
