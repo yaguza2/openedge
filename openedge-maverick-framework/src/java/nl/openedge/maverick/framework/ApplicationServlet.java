@@ -50,8 +50,8 @@ import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
@@ -67,8 +67,8 @@ import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
 public class ApplicationServlet extends VelocityViewServlet 
 {
 
-	/** log4j logger */
-	private Logger logger = null;
+	/** logger */
+	private static Log log = LogFactory.getLog(ApplicationServlet.class);
 
 	/**
 	 * initialise app
@@ -79,14 +79,12 @@ public class ApplicationServlet extends VelocityViewServlet
 
 		// init superclass
 		super.init(config);
-		// init logging
-		initLogging(config);
 
 		String realpath = config.getServletContext().getRealPath("/");
 
 		try 
 		{
-			logger.info("initialise");
+			log.info("initialise");
 
 			// init OpenEdge components
 			initOEModules(config);
@@ -100,7 +98,7 @@ public class ApplicationServlet extends VelocityViewServlet
 			// init Hibernate helper
 			HibernateHelper.init();
 
-			logger.info("initialised");
+			log.info("initialised");
 
 		} 
 		catch (Exception e) 
@@ -134,28 +132,6 @@ public class ApplicationServlet extends VelocityViewServlet
 		ConvertUtils.register(new LongConverter(), Long.class);
 		ConvertUtils.register(new ShortConverter(), Short.TYPE);
 		ConvertUtils.register(new ShortConverter(), Short.class);	
-	}
-
-	/**
-	 * Initialize log4j component from web.xml configuration
-	 */
-	protected void initLogging(ServletConfig config) 
-	{
-
-		String prefix = config.getServletContext().getRealPath("/");
-		String file = config.getInitParameter("log4j-init-file");
-
-		// if the log4j-init-file is not set, then no point in trying
-		if (file != null) 
-		{
-			//PropertyConfigurator.configure( prefix+file );
-			long delay = 1000 * 60;
-			// check één keer per minuut of de properties voor logging zijn gewijzigd
-			PropertyConfigurator.configureAndWatch(prefix + file, delay);
-			// initialize log4j
-		}
-
-		logger = Logger.getLogger(this.getClass());
 	}
 	
 	/**

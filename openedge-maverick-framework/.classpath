@@ -15,8 +15,6 @@
         path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-logging-1.1-dev-src.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/commons-lang/jars/commons-lang-1.0.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-lang-1.0.1-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/log4j-1.2.8-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b8-src.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/dom4j/jars/dom4j-1.4-dev-8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/dom4j-1.4-dev-8-src.jar"/>

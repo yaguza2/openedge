@@ -94,15 +94,6 @@
 		</dependency>
 
 		<dependency>
-			<id>log4j</id>
-			<version>1.2.8</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://jakarta.apache.org/log4j/docs/index.html</url>
-		</dependency>
-
-		<dependency>
 			<id>jdom</id>
 			<version>b8</version>
 			<properties>

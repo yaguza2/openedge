@@ -57,7 +57,8 @@ import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.ControllerContext;
@@ -83,7 +84,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	public static final String REDIRECT = "doredirect";
 	
 	/** log for this class */
-	private static Logger log = Logger.getLogger(AbstractCtrl.class);
+	private static Log log = LogFactory.getLog(AbstractCtrl.class);
 	
 	/** if true, the no cache headers will be set */
 	private boolean noCache = true;

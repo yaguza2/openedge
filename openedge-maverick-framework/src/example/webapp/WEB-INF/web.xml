@@ -43,10 +43,6 @@
 	<servlet>
 		<servlet-name>Application</servlet-name>
 		<servlet-class>nl.promedico.asp.authotest.web.ApplicationServlet</servlet-class>
-		<init-param>
-			<param-name>log4j-init-file</param-name>
-			<param-value>WEB-INF/log4j.properties</param-value>
-		</init-param>
 		<!--OpenEdge libs -->
 		<init-param>
 			<param-name>oeaccess.configFile</param-name>
