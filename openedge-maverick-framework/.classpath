@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src/java"/>
+    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/servletapi-2.3-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.7dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-beanutils-1.7dev-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/commons-collections/jars/commons-collections-3.0-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-collections-3.0-dev-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/commons-digester/jars/commons-digester-1.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-digester-1.3-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-logging-1.1-dev-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/commons-lang/jars/commons-lang-1.0.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-lang-1.0.1-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/log4j-1.2.8-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b8-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/dom4j/jars/dom4j-1.4-dev-8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/dom4j-1.4-dev-8-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/hibernate/jars/hibernate-2.0.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/hibernate-2.0.1-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/odmg/jars/odmg-3.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/odmg-3.0-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/bcel/jars/bcel-5.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/bcel-5.1-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/cglib/jars/cglib-1.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/cglib-1.0-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/maverick/jars/maverick-2.2.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/maverick-2.2.0-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/velocity/jars/velocity-1.4-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/velocity-1.4-dev-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/velocity-tools/jars/velocity-tools-0.9.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/velocity-tools-0.9-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/jaf/jars/activation-1.0.2.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/activation-1.0.2-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/javamail/jars/javamail-1.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/javamail-1.3-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/quartz/jars/quartz-1.2.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/quartz-1.2.0-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-modules-SNAPSHOT-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/openedge-access/jars/openedge-access-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-access-SNAPSHOT-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/oe-mailjob/jars/oe-mailjob-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-mailjob-SNAPSHOT-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/oe-usermanager-hib/jars/oe-usermanager-hib-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-usermanager-hib-SNAPSHOT-src.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/openedge-utils/jars/openedge-utils-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
+    <classpathentry kind="output" path="target/classes"/>
+</classpath>
