@@ -56,15 +56,6 @@ public final class DateFormatHelper {
 	 */
 	public DateFormatHelper() {}
 	
-	/**
-	 * constructor
-	 * @param loadFromConfig
-	 * @deprecated this constructor will not be used anymore
-	 */
-	public DateFormatHelper(boolean loadFromConfig) {
-		// do nothing
-	}
-	
 	/*
 	 * load formatters from config file
 	 */
@@ -74,6 +65,7 @@ public final class DateFormatHelper {
 			loadFromFile("/dateformathelper.cfg");
 		}
         catch (Exception e) {
+        	System.err.println("");
         	try {
         		loadFromFile("dateformathelper.default.cfg");
         	}
@@ -90,8 +82,28 @@ public final class DateFormatHelper {
 	 */
 	private static void loadFromFile(String filename) throws IOException
 	{
-		BufferedReader br = new BufferedReader( new InputStreamReader(
-				DateFormatHelper.class.getResourceAsStream(filename)) );
+		if(filename == null) {
+			throw new IOException("cannot load file 'null'");
+		}
+		InputStream is = null;
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		if(loader != null) { // try to load with context class loader
+			is = loader.getResourceAsStream(filename);
+		}
+		if((loader == null) || (is == null)) { // first classloader fallthrough
+			is = DateFormatHelper.class.getResourceAsStream(filename);
+		}
+		if(is == null) { // still null? try a hack
+			if(!filename.startsWith("/")) {
+				loadFromFile("/" + filename);
+			} // else... give up
+		}
+		
+		if(is == null) {
+			throw new IOException("unable to load " + filename + " from classpath");
+		}
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+				
 		String format = new String();
 		SimpleDateFormat formatter;
 		boolean defaultSet = false;
@@ -169,11 +181,13 @@ public final class DateFormatHelper {
 	 * parse date with fallback option
 	 * @param stringDate		date as a string
 	 * @param fallback			use all formatters before fail
-	 * @return parsed date
+	 * @return parsed date or null if input was null or empty string
 	 */
 	public static Date fallbackParse( String stringDate ) throws ParseException {
-		if( stringDate == null)
-			throw new ParseException( "null is not a valid date", 0);
+		
+		if( stringDate == null || "".equals(stringDate.trim())) {
+			return null;
+		}
 
 		Iterator i = formatters.values().iterator();
 		DateFormat df = null;
@@ -222,7 +236,7 @@ public final class DateFormatHelper {
 			df = new SimpleDateFormat( format );		
 		}
 		Date date = df.parse( stringDate );
-		// geen exception? bewaar dateformat
+		// no exception? keep dateformat
 		formatters.put( format, df );
 		return date;	
 	}

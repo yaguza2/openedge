@@ -30,14 +30,14 @@
  */
 package nl.openedge.util;
 
-import java.sql.Time;
 import java.text.ParseException;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.Converter;
 
 /**
- * @author		Klaasjan Brand
+ * @author Klaasjan Brand
+ * @author Eelco Hillenius
  */
 public final class DateConverter implements Converter {
 
@@ -45,23 +45,41 @@ public final class DateConverter implements Converter {
 	 * @see Converter#convert(Class, Object)
 	 */
 	public Object convert(Class type, Object value) {
-		String sDate = (String) value;
-		if(sDate == null || "".equals(sDate.trim()) ) return null;
-
+		
+		if(value == null) {
+			return null;
+		} 
 		java.util.Date stdDate = null;
-
-		try {
-			stdDate = DateFormatHelper.fallbackParse(sDate);
-		} catch ( ParseException e) {
-			throw new ConversionException("Can't convert " + sDate + " to a date");
+		if(value instanceof String) {
+			
+			String sDate = String.valueOf(value);
+			if("".equals(sDate.trim()) ) {
+				return null;
+			} 
+			try {
+				stdDate = DateFormatHelper.fallbackParse(sDate);
+			} catch ( ParseException e) {
+				throw new ConversionException("Can't convert " + sDate + " to a date");
+			}
+		} else if(value instanceof java.util.Date) {
+			return value;
+		} else if(value instanceof java.sql.Date) {
+			stdDate = new java.util.Date(((java.sql.Date)value).getTime());
+		} else if(value instanceof Long) {
+			stdDate = new java.util.Date(((Long)(value)).longValue());
+		} else if(value instanceof java.sql.Time) {
+			
 		}
-
-		if ( type == java.sql.Date.class) {
-			return new java.sql.Date( stdDate.getTime());
-		} else if ( type == Time.class) {
-			return new Time(stdDate.getTime());
+		
+		if ( type == java.util.Date.class) {
+			return stdDate;
+		} else if ( type == java.sql.Date.class) {
+			return new java.sql.Date(stdDate.getTime());
+		} else if ( type == java.sql.Time.class) {
+			return new java.sql.Time(stdDate.getTime());
+		} else {
+			throw new ConversionException(type + " is an unsupported type");
 		}
-		return stdDate;
 	}
 
 }
