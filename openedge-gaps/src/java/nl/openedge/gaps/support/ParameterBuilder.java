@@ -19,6 +19,9 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Session;
+import net.sf.hibernate.Transaction;
 import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.Group;
@@ -45,11 +48,13 @@ import nl.openedge.gaps.support.gapspath.GPathInterpreter;
 import nl.openedge.gaps.support.gapspath.GPathInterpreterException;
 import nl.openedge.gaps.support.gapspath.lexer.LexerException;
 import nl.openedge.gaps.support.gapspath.parser.ParserException;
+import nl.openedge.gaps.util.CacheUtil;
 import nl.openedge.gaps.util.EntityUtil;
+import nl.openedge.util.hibernate.HibernateHelper;
 
 /**
  * Utility class voor het eenvoudig kunnen aanmaken van - mogelijk - complexe parameter
- * structuren. <br/>
+ * structuren.
  */
 public class ParameterBuilder
 {
@@ -76,6 +81,12 @@ public class ParameterBuilder
 
 	/** Browser voor intern gebruik. */
 	private ParameterBrowser browser = new ParameterBrowser();
+
+	/** Of de builder op dit moment in batching mode staat. */
+	private boolean inBatchMode = false;
+
+	/** evt huidige transactie voor het geval we in batch mode werken. */
+	private Transaction transaction = null;
 
 	/**
 	 * Construct een builder instantie. NOTE: deze klasse is niet Threadsafe.
@@ -229,31 +240,12 @@ public class ParameterBuilder
 	/**
 	 * Leest bestand in van inputstream en converteer naar een array van nested data en
 	 * registreert deze parameters.
-	 * @param localId het lokale id van deze parameter
-	 * @param inputStream inputstream
-	 * @return array van nested parameters
-	 * @throws RegistryException bij onverwachte fouten
-	 * @throws SaveException indien de rij niet goed kon worden opgeslagen
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	public NestedParameter[] createNumericData(
-			String localId, InputStream inputStream) throws RegistryException,
-			SaveException, InputException, ParameterBuilderException
-	{
-
-		return createNumericData(localId, inputStream, 0, false, TAB_EN_SPACE_CHARS);
-	}
-
-	/**
-	 * Leest bestand in van inputstream en converteer naar een array van nested data en
-	 * registreert deze parameters.
 	 * @param localId het lokale id van deze parameter; wordt genegeerd indien
 	 *   parameter 'rowIdInFirstColumn' true is
 	 * @param inputStream inputstream
 	 * @param startcolumn eerste kolom waar de parameters beginnen
 	 * @param rowIdInFirstColumn het rij-id staat in de eerste kolom (== startrij!!).
+	 * @param colIdsInFirstRow de kolomkoppen staan in de eerste rij
 	 * @param tokens de tokens die gebruikt dienen te worden als scheidingsteken(s)
 	 * @return array van nested parameters
 	 * @throws RegistryException bij onverwachte fouten
@@ -264,26 +256,46 @@ public class ParameterBuilder
 	 */
 	public NestedParameter[] createNumericData(
 			String localId, InputStream inputStream,
-			int startcolumn, boolean rowIdInFirstColumn, String tokens)
+			int startcolumn, boolean rowIdInFirstColumn,
+			boolean colIdsInFirstRow, String tokens)
 			throws RegistryException, SaveException,
 			InputException, ParameterBuilderException
 	{
 		List parameters = new ArrayList();
 		LineNumberReader reader = null;
+		String[] columnNames = null;
 		try
 		{
 			reader = new LineNumberReader(new InputStreamReader(inputStream));
-			String line;
 			int row = 0;
+			boolean isFirst = true;
+			String line;
 			while ((line = reader.readLine()) != null)
 			{
 				line = line.trim();
 				if ((!line.startsWith("#")) && (!"".equals(line)))
 				{
-					NestedParameter parameter = createRowFromLine(
-							localId, line, tokens, startcolumn, rowIdInFirstColumn, row);
-					parameters.add(parameter);
-					row++;
+					if(colIdsInFirstRow && (isFirst))
+					{
+						isFirst = false;
+						columnNames = getColumnNames(line);
+					}
+					else
+					{
+						isFirst = false;
+						if((!rowIdInFirstColumn) && (row > 0))
+						{
+							throw new ParameterBuilderException(
+									"als een rijnaam niet dient te worden gelezen uit het"
+									+ " bestand maar is gegeven, kan de upload maar voor"
+									+ " een enkele rij gelden");
+						}
+						NestedParameter parameter = createRowFromLine(
+								localId, line, tokens, startcolumn,
+								rowIdInFirstColumn, columnNames, row);
+						parameters.add(parameter);
+						row++;
+					}
 				}
 			}
 		}
@@ -309,6 +321,24 @@ public class ParameterBuilder
 	}
 
 	/**
+	 * Haal de kolomnamen uit de regel.
+	 * @param line de regel
+	 * @return array met kolomnamen
+	 */
+	private String[] getColumnNames(String line)
+	{
+		String[] columnNames;
+		StringTokenizer tk = new StringTokenizer(line);
+		int tokenCount = tk.countTokens();
+		columnNames = new String[tokenCount];
+		for(int i = 0; i < tokenCount; i++)
+		{
+			columnNames[i] = tk.nextToken();
+		}
+		return columnNames;
+	}
+
+	/**
 	 * Leest een rij in vanuit de gegeven regel en creeert een
 	 * {@link NestedParameter} met de ingelezen informatie.
 	 * @param localId het lokale id van deze parameter; wordt genegeerd indien
@@ -317,6 +347,7 @@ public class ParameterBuilder
 	 * @param tokens tokens te gebruiken als scheidingsteken(s)
 	 * @param startColumn eerste kolom waar de parameters beginnen
 	 * @param rowIdInFirstColumn het rij-id staat in de eerste kolom
+	 * @param columnNames de kolomkoppen; als null, dan worden de kolomnummers gebruikt
 	 * @param row de huidige rij (nummer)
 	 * @return een rijparameter
 	 * @throws SaveException indien de rij niet goed kon worden opgeslagen
@@ -326,7 +357,8 @@ public class ParameterBuilder
 	 */
 	protected NestedParameter createRowFromLine(
 			String localId, String line, String tokens,
-			int startColumn, boolean rowIdInFirstColumn, int row)
+			int startColumn, boolean rowIdInFirstColumn,
+			String[] columnNames, int row)
 			throws SaveException, InputException, ParameterBuilderException
 	{
 
@@ -339,14 +371,18 @@ public class ParameterBuilder
 		}
 		int arrayLen;
 		arrayLen = nbrOfTokens - startColumn - rowIdInFirstColumnModifier;
-		String[] ids = new String[arrayLen];
+		String[] ids = null;
+		if(columnNames == null)
+		{
+			ids = new String[arrayLen];
+		}
+		else
+		{
+			ids = columnNames;
+		}
 		String[] values = new String[arrayLen];
 		int kol = 0;
 		String parameterName = null;
-		if(rowIdInFirstColumn)
-		{
-			parameterName = String.valueOf(row);	
-		}
 		while (tk.hasMoreTokens())
 		{
 			String token = tk.nextToken().trim();
@@ -359,7 +395,10 @@ public class ParameterBuilder
 				else
 				{
 					int arrayCol = kol - startColumn - rowIdInFirstColumnModifier;
-					ids[arrayCol] = String.valueOf(arrayCol);
+					if(columnNames == null)
+					{
+						ids[arrayCol] = String.valueOf(arrayCol);
+					}
 					values[arrayCol] = token;	
 				}
 			}
@@ -611,8 +650,8 @@ public class ParameterBuilder
 	 */
 	protected void saveParameter(Parameter param) throws SaveException
 	{
-		ParameterRegistry.saveParameter(param);
-		ParameterRegistry.saveGroup(parameterGroup);
+		ParameterRegistry.saveParameter(param, (!isInBatchMode()));
+		ParameterRegistry.saveGroup(parameterGroup, (!isInBatchMode()));
 	}
 
 	/**
@@ -700,8 +739,8 @@ public class ParameterBuilder
 	{
 
 		StructuralGroup group = buildStructuralGroup(name, description, navigateTo);
-		ParameterRegistry.saveGroup(group);
-		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
+		ParameterRegistry.saveGroup(group, (!isInBatchMode()));
+		ParameterRegistry.saveGroup(structuralGroup, (!isInBatchMode())); // gewijzigde parent
 		return group;
 	}
 
@@ -816,10 +855,10 @@ public class ParameterBuilder
 			String description, boolean navigateTo) throws ParameterBuilderException
 	{
 
-		ParameterGroup group = buildParameterGroup(extendsFrom, name, description,
-				navigateTo);
-		ParameterRegistry.saveGroup(group);
-		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
+		ParameterGroup group = buildParameterGroup(
+				extendsFrom, name, description, navigateTo);
+		ParameterRegistry.saveGroup(group, (!isInBatchMode()));
+		ParameterRegistry.saveGroup(structuralGroup, (!isInBatchMode())); // gewijzigde parent
 		return group;
 	}
 
@@ -1078,4 +1117,68 @@ public class ParameterBuilder
 		this.context = context;
 	}
 
+	/**
+	 * Geeft of de builder op dit moment in batching mode staat.
+	 * @return of de builder op dit moment in batching mode staat.
+	 */
+	public boolean isInBatchMode()
+	{
+		return inBatchMode;
+	}
+
+	/**
+	 * Zet of de builder op dit moment in batching mode staat.
+	 * @param inBatchMode of de builder op dit moment in batching mode staat
+	 */
+	protected void setInBatchMode(boolean inBatchMode)
+	{
+		this.inBatchMode = inBatchMode;
+	}
+
+	/**
+	 * Begin een batch van opdrachten.
+	 * @throws ParameterBuilderException bij transactie fouten
+	 */
+	public void beginBatch() throws ParameterBuilderException
+	{
+		if(transaction != null)
+		{
+			throw new ParameterBuilderException(
+					"reeds in batchmode of voorgaande batch is niet goed afgesloten");
+		}
+		setInBatchMode(true);
+		try
+		{
+			Session session = HibernateHelper.getSession();
+			this.transaction = session.beginTransaction();
+		}
+		catch (HibernateException e)
+		{
+			throw new ParameterBuilderException(e);
+		}
+	}
+
+	/**
+	 * Beeindig een batch van opdrachten.
+	 * @throws ParameterBuilderException bij transactie fouten
+	 */
+	public void commitBatch() throws ParameterBuilderException
+	{
+		if(transaction == null)
+		{
+			throw new ParameterBuilderException("niet in batchmode");
+		}
+		setInBatchMode(false);
+		try
+		{
+			this.transaction.commit();
+			this.transaction = null;
+			CacheUtil.flushTransactionCaches();
+		}
+		catch (HibernateException e)
+		{
+			throw new ParameterBuilderException(e);
+		}
+
+	}
 }

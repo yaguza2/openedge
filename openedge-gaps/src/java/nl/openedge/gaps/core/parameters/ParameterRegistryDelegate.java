@@ -73,21 +73,24 @@ public interface ParameterRegistryDelegate
 	 * bewaard, en evt bewerkingen op de meegegeven instantie zullen geen effect hebben op
 	 * de opgeslagen parameter.
 	 * @param parameter de te bewaren parameter
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws SaveException indien er zich een fout voordoet bij het opslaan
 	 * @throws RegistryException indien de registry een gevraagde actie niet naar behoren
 	 *             heeft kunnen uitvoeren vanwege een onbekende/ generieke fout
 	 */
-	void saveParameter(Parameter parameter) throws SaveException, RegistryException;
+	void saveParameter(Parameter parameter, boolean useTransaction)
+		throws SaveException, RegistryException;
 
 	/**
 	 * Verwijder de gegeven parameter indien mogelijk. Een parameter kan alleen worden
 	 * verwijderd als deze nog niet in gebruik is, cq niet is gekoppeld aan een reeds
 	 * actieve versie.
 	 * @param parameter de te verwijderen parameter
-	 * @throws SaveException TODO
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws SaveException indien de parameter niet kan worden verwijderd.
 	 */
-	void removeParameter(Parameter parameter) throws SaveException;
+	void removeParameter(Parameter parameter, boolean useTransaction) throws SaveException;
 
 	/**
 	 * Geeft de root parameter groep.
@@ -143,8 +146,8 @@ public interface ParameterRegistryDelegate
 	 * @throws RegistryException bij onverwachte registry fouten
 	 * @throws NotFoundException indien de parameter niet kan worden gevonden
 	 */
-	ParameterGroup getParameterGroup(String groupId) throws RegistryException,
-			NotFoundException;
+	ParameterGroup getParameterGroup(String groupId)
+		throws RegistryException, NotFoundException;
 
 	/**
 	 * Sla de gegeven structuur groep op in - evt persistente - store. LET OP: het
@@ -153,9 +156,11 @@ public interface ParameterRegistryDelegate
 	 * aangeboden wordt bewaard, en evt bewerkingen op de meegegeven instantie zullen geen
 	 * effect hebben op de opgeslagen groep.
 	 * @param group de groep die dient te worden opgeslagen
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws RegistryException bij onverwachte registry fouten
 	 */
-	void saveGroup(StructuralGroup group) throws RegistryException;
+	void saveGroup(StructuralGroup group, boolean useTransaction)
+		throws RegistryException;
 
 	/**
 	 * Sla de gegeven parameter groep op in - evt persistente - store. LET OP: het
@@ -164,9 +169,11 @@ public interface ParameterRegistryDelegate
 	 * aangeboden wordt bewaard, en evt bewerkingen op de meegegeven instantie zullen geen
 	 * effect hebben op de opgeslagen groep.
 	 * @param group de groep die dient te worden opgeslagen
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws RegistryException bij onverwachte registry fouten
 	 */
-	void saveGroup(ParameterGroup group) throws RegistryException;
+	void saveGroup(ParameterGroup group, boolean useTransaction)
+		throws RegistryException;
 
 	/**
 	 * Creeer een kopie van de gegeven groep (of root indien group null is) en alle
@@ -180,9 +187,11 @@ public interface ParameterRegistryDelegate
 	/**
 	 * Verwijder de gegeven structuur groep.
 	 * @param group de te verwijderen groep
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws RegistryException bij onverwachte registry fouten
 	 * @throws NotFoundException indien de parameter niet kan worden gevonden
 	 */
-	void removeGroup(StructuralGroup group) throws NotFoundException, RegistryException;
+	void removeGroup(StructuralGroup group, boolean useTransaction)
+		throws NotFoundException, RegistryException;
 
 }

@@ -48,8 +48,7 @@ public class HSQLPerformanceTester extends AbstractPerformanceTester
 
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
 			Date vdate = Util.getTestDatum();
-			Version version = VersionRegistry.createVersion(vdate, sdf.format(vdate),
-					null);
+			Version version = VersionRegistry.createVersion(vdate, sdf.format(vdate), null);
 			version.setGoedgekeurd(true);
 			VersionRegistry.updateVersion(version);
 
@@ -62,7 +61,12 @@ public class HSQLPerformanceTester extends AbstractPerformanceTester
 		AbstractPerformanceTester tester = new HSQLPerformanceTester();
 		try
 		{
-			tester.testParameterToevoegingen(1000);
+//			tester.testParameterToevoegingen(1000);
+			tester.testBatch();
+//			tester.testSimple1();
+//			tester.testSimple2();
+//			tester.testSimple3();
+//			tester.testSimple4();
 			HibernateHelper.closeSession();
 		}
 		catch (Exception e)

@@ -23,6 +23,7 @@ import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.ParameterInput;
 import nl.openedge.gaps.core.parameters.ParameterRegistry;
 import nl.openedge.gaps.core.parameters.ParameterValue;
+import nl.openedge.gaps.core.parameters.SaveException;
 import nl.openedge.gaps.core.parameters.ValueOutOfRangeException;
 import nl.openedge.gaps.core.parameters.impl.BooleanParameter;
 import nl.openedge.gaps.core.parameters.impl.DateParameter;
@@ -36,6 +37,7 @@ import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.core.versions.VersionRegistry;
 import nl.openedge.gaps.support.ParameterBrowser;
 import nl.openedge.gaps.support.ParameterBuilder;
+import nl.openedge.gaps.support.ParameterBuilderException;
 import nl.openedge.gaps.support.berekeningen.BerekeningInterpreter;
 
 import org.apache.commons.logging.Log;
@@ -110,8 +112,8 @@ public abstract class AbstractParameterTest extends TestCase
 				.equals(checkParam1.getVersion().getName()));
 		nieuweVersieSubParamGroep.setGoedgekeurd(true);
 		VersionRegistry.updateVersion(nieuweVersieSubParamGroep);
-		Parameter checkParam2 = (Parameter) browser
-				.navigate("/super/subgroep:subparamgroep/teststring");
+//		Parameter checkParam2 = (Parameter) browser
+//				.navigate("/super/subgroep:subparamgroep/teststring");
 	}
 
 	/**
@@ -133,7 +135,7 @@ public abstract class AbstractParameterTest extends TestCase
 		assertNotSame(paramOrig, paramClone);
 
 		// verwijder weer
-		ParameterRegistry.removeParameter(paramOrig);
+		ParameterRegistry.removeParameter(paramOrig, true);
 		try
 		{
 			// en test
@@ -298,7 +300,7 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(225), result);
 
 		// verwijder weer
-		ParameterRegistry.removeParameter(numberParam);
+		ParameterRegistry.removeParameter(numberParam, true);
 		try
 		{
 			// en test
@@ -470,7 +472,7 @@ public abstract class AbstractParameterTest extends TestCase
 		pb.createParameterGroup("tabellen", "tabellen", true);
 
 		is = AbstractParameterTest.class.getResourceAsStream("dat1.txt");
-		pb.createNumericData(null, is, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		pb.createNumericData(null, is, 0, true, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
 		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_1");
 		assertNotNull(np);
 		result = browser.navigate("/datatest:tabellen/DAT_1['0']@value");
@@ -481,7 +483,7 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(10), result);
 
 		is = AbstractParameterTest.class.getResourceAsStream("dat2.txt");
-		pb.createNumericData("DAT_2", is, 0, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		pb.createNumericData("DAT_2", is, 0, false, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
 		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_2");
 		assertNotNull(np);
 		result = browser.navigate("/datatest:tabellen/DAT_2['0']@value");
@@ -492,7 +494,7 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(20), result);
 
 		is = AbstractParameterTest.class.getResourceAsStream("dat3.txt");
-		pb.createNumericData(null, is, 2, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		pb.createNumericData(null, is, 2, true, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
 		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_3");
 		assertNotNull(np);
 		result = browser.navigate("/datatest:tabellen/DAT_3['0']@value");
@@ -503,7 +505,7 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(30), result);
 
 		is = AbstractParameterTest.class.getResourceAsStream("dat4.txt");
-		pb.createNumericData("DAT_4", is, 2, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		pb.createNumericData("DAT_4", is, 2, false, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
 		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_4");
 		assertNotNull(np);
 		result = browser.navigate("/datatest:tabellen/DAT_4['0']@value");
@@ -512,6 +514,41 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(36), result);
 		result = browser.navigate("/datatest:tabellen/DAT_4['9']@value");
 		assertEquals(new Double(40), result);
+
+		is = AbstractParameterTest.class.getResourceAsStream("dat5.txt");
+		pb.createNumericData(null, is, 0, true, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_5_1");
+		assertNotNull(np);
+		result = browser.navigate("/datatest:tabellen/DAT_5_4['0']@value");
+		assertEquals(new Double(31), result);
+		result = browser.navigate("/datatest:tabellen/DAT_5_4['5']@value");
+		assertEquals(new Double(36), result);
+		result = browser.navigate("/datatest:tabellen/DAT_5_4['9']@value");
+		assertEquals(new Double(40), result);
+
+		is = AbstractParameterTest.class.getResourceAsStream("dat6.txt");
+		pb.createNumericData(null, is, 0, true, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_5_1");
+		assertNotNull(np);
+		result = browser.navigate("/datatest:tabellen/DAT_6_4['een']@value");
+		assertEquals(new Double(31), result);
+		result = browser.navigate("/datatest:tabellen/DAT_6_4['zes']@value");
+		assertEquals(new Double(36), result);
+		result = browser.navigate("/datatest:tabellen/DAT_6_4['tien']@value");
+		assertEquals(new Double(40), result);
+
+		try
+		{
+			is = AbstractParameterTest.class.getResourceAsStream("dat7.txt");
+			pb.createNumericData("DAT_7", is, 0, false, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
+			fail("dat7.txt zou een exception moeten geven: bij een gegeven rijnaam met "
+					+ " parameter 'rowIdInFirstColumn' op false is werken met meer dan "
+					+ " een enkele rij niet toegestaan");
+		}
+		catch (ParameterBuilderException e)
+		{
+			log.debug("test geslaagd: " + e.getMessage());
+		}
 
 	}
 

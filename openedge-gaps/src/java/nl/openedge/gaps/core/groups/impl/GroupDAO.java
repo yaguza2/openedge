@@ -18,6 +18,7 @@ import net.sf.hibernate.Transaction;
 import net.sf.hibernate.type.Type;
 import nl.openedge.gaps.core.groups.Group;
 import nl.openedge.gaps.core.versions.Version;
+import nl.openedge.gaps.util.CacheUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
 import nl.openedge.util.ser.SerializeAndZipHelper;
 import nl.openedge.util.ser.SerializedAndZipped;
@@ -30,9 +31,28 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class GroupDAO
 {
+	/** naam van group cache. */
+	public static final String GROUPS_CACHE_NAME =
+		"nl.openedge.gaps.core.groups.custcache.Groups";
+
+	/**
+	 * naam van groupwrapper cache; LET OP: dit dient een
+	 * cache voor 'slechts' transactiegebruik te zijn.
+	 */
+	private static final String GROUP_WRAPPERS_CACHE_NAME =
+		"nl.openedge.gaps.core.groups.custcache.GroupWrappers";
+
+	static
+	{
+		// registreer als een speciale transactie cache
+		CacheUtil.addTransactionCacheName(GROUP_WRAPPERS_CACHE_NAME);
+	}
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(GroupDAO.class);
+
+	/** of de cache gebruikt wordt. */
+	private boolean useCache = true;
 
 	/**
 	 * Construct.
@@ -51,9 +71,23 @@ public final class GroupDAO
 	 */
 	public Group findGroup(String path, Version version) throws GroupDAOException
 	{
-
+		Group group = null;
+		String cacheKey = null;
+		if(isUseCache())
+		{
+			cacheKey = getCacheKeyForGroups(path, version);
+			group = (Group)CacheUtil.getObjectFromCache(cacheKey, GROUPS_CACHE_NAME);
+		}
+		if(group != null)
+		{
+			return group;
+		}
 		GroupWrapper wrapper = findGroupWrapper(path, version);
-		Group group = unpackGroup(wrapper);
+		group = unpackGroup(wrapper);
+		if(isUseCache())
+		{
+			CacheUtil.putObjectInCache(cacheKey, group, GROUPS_CACHE_NAME);
+		}
 		return group;
 	}
 
@@ -65,7 +99,6 @@ public final class GroupDAO
 	 */
 	public GroupWrapper findGroupWrapper(Group group) throws GroupDAOException
 	{
-
 		return findGroupWrapper(group.getId(), group.getVersion());
 	}
 
@@ -81,6 +114,17 @@ public final class GroupDAO
 	{
 
 		GroupWrapper wrapper = null;
+		String cacheKey = null;
+		if(isUseCache())
+		{
+			cacheKey = getCacheKeyForGroups(path, version);
+			wrapper = (GroupWrapper)CacheUtil.getObjectFromCache(
+					cacheKey, GROUP_WRAPPERS_CACHE_NAME);
+		}
+		if(wrapper != null)
+		{
+			return wrapper;
+		}
 		Session session = null;
 		try
 		{
@@ -98,6 +142,11 @@ public final class GroupDAO
 							"meer dan 1 resultaat gevonden; database state is ambigu!");
 				}
 				wrapper = (GroupWrapper) results.get(0);
+				if(isUseCache())
+				{
+					CacheUtil.putObjectInCache(
+							cacheKey, wrapper, GROUP_WRAPPERS_CACHE_NAME);
+				}
 			}
 		}
 		catch (HibernateException e)
@@ -176,12 +225,13 @@ public final class GroupDAO
 	/**
 	 * Slaat de gegeven groep op in de database.
 	 * @param group de groep
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @return de evt bijgewerkte groep
 	 * @throws GroupDAOException bij onverwachte fouten
 	 */
-	public Group saveOrUpdateGroup(Group group) throws GroupDAOException
+	public Group saveOrUpdateGroup(Group group, boolean useTransaction)
+		throws GroupDAOException
 	{
-
 		if (group == null)
 		{
 			return group;
@@ -192,13 +242,14 @@ public final class GroupDAO
 		try
 		{
 			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				tx = session.beginTransaction();
+			}
 			if (wrapper != null)
 			{ // update; groep bestaat reeds
-				Long wrapperId = wrapper.getId();
-				session.evict(wrapper);
-				wrapper = packGroup(group); // zip/ serialiseer de groep
-				wrapper.setId(wrapperId);
+				GroupWrapper newWrapper = packGroup(group); // zip/ serialiseer de groep
+				wrapper.setData(newWrapper.getData());
 				session.update(wrapper);
 				if (log.isDebugEnabled())
 				{
@@ -215,12 +266,25 @@ public final class GroupDAO
 					log.debug("groep " + group + " toegevoegd (intern id = " + id + ")");
 				}
 			}
-			tx.commit();
+			if(useTransaction)
+			{
+				tx.commit();
+			}
+			if(isUseCache())
+			{
+				String cacheKey;
+				cacheKey = getCacheKeyForGroups(group.getId(), group.getVersion());
+				CacheUtil.putObjectInCache(cacheKey, group, GROUPS_CACHE_NAME);
+				CacheUtil.putObjectInCache(cacheKey, wrapper, GROUP_WRAPPERS_CACHE_NAME);
+			}
 		}
 		catch (HibernateException e)
 		{
 			log.error(e.getMessage(), e);
-			rollback(tx);
+			if(useTransaction)
+			{
+				rollback(tx);
+			}
 		}
 		return group;
 	}
@@ -228,9 +292,10 @@ public final class GroupDAO
 	/**
 	 * Verwijderd de gegeven groep uit de database.
 	 * @param group de groep
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws GroupDAOException bij onverwachte fouten
 	 */
-	public void deleteGroup(Group group) throws GroupDAOException
+	public void deleteGroup(Group group, boolean useTransaction) throws GroupDAOException
 	{
 
 		//TODO check op actieve versie
@@ -247,17 +312,33 @@ public final class GroupDAO
 		try
 		{
 			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				tx = session.beginTransaction();
+			}
 			if (wrapper != null)
 			{ // verwijder
 				session.delete(wrapper);
 			}
-			tx.commit();
+			if(useTransaction)
+			{
+				tx.commit();
+			}
+			if(isUseCache())
+			{
+				String cacheKey;
+				cacheKey = getCacheKeyForGroups(group.getId(), group.getVersion());
+				CacheUtil.removeObjectFromCache(cacheKey, GROUPS_CACHE_NAME);
+				CacheUtil.removeObjectFromCache(cacheKey, GROUP_WRAPPERS_CACHE_NAME);
+			}
 		}
 		catch (HibernateException e)
 		{
 			log.error(e.getMessage(), e);
-			rollback(tx);
+			if(useTransaction)
+			{
+				rollback(tx);
+			}
 		}
 	}
 
@@ -278,5 +359,36 @@ public final class GroupDAO
 				log.error(e1.getMessage(), e1);
 			}
 		}
+	}
+
+	/**
+	 * Geeft cachekey voor groepen.
+	 * @param path pad
+	 * @param version versie
+	 * @return de cache key voor het gegeven pad/ groep
+	 */
+	private String getCacheKeyForGroups(String path, Version version)
+	{
+		String cacheKey;
+		cacheKey = path + "|" + version.getName();
+		return cacheKey;
+	}
+
+	/**
+	 * Geeft of caching wordt gebruikt.
+	 * @return of caching wordt gebruikt.
+	 */
+	public boolean isUseCache()
+	{
+		return useCache;
+	}
+
+	/**
+	 * Zet of caching wordt gebruikt.
+	 * @param useCache of caching wordt gebruikt.
+	 */
+	public void setUseCache(boolean useCache)
+	{
+		this.useCache = useCache;
 	}
 }

@@ -16,8 +16,10 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import net.sf.hibernate.type.Type;
+import nl.openedge.gaps.core.groups.impl.GroupWrapper;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.versions.Version;
+import nl.openedge.gaps.util.CacheUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
 import nl.openedge.util.ser.SerializeAndZipHelper;
 import nl.openedge.util.ser.SerializedAndZipped;
@@ -30,9 +32,28 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class ParameterDAO
 {
+	/** naam van parameter cache. */
+	public static final String PARAMETERS_CACHE_NAME =
+		"nl.openedge.gaps.core.parameters.custcache.Parameters";
+
+	/**
+	 * naam van parameterwrapper cache; LET OP: dit dient een
+	 * cache voor 'slechts' transactiegebruik te zijn.
+	 */
+	private static final String PARAMETER_WRAPPERS_CACHE_NAME =
+		"nl.openedge.gaps.core.groups.custcache.ParametersWrappers";
+
+	static
+	{
+		// registreer als een speciale transactie cache
+		CacheUtil.addTransactionCacheName(PARAMETER_WRAPPERS_CACHE_NAME);
+	}
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(ParameterDAO.class);
+
+	/** of de cache gebruikt wordt. */
+	private boolean useCache = true;
 
 	/**
 	 * Construct.
@@ -52,9 +73,24 @@ public final class ParameterDAO
 	public Parameter findParameter(String path, Version version)
 			throws ParameterDAOException
 	{
-
+		Parameter param = null;
+		String cacheKey = null;
+		if(isUseCache())
+		{
+			cacheKey = getCacheKeyForParameters(path, version);
+			param = (Parameter)CacheUtil.getObjectFromCache(
+					cacheKey, PARAMETERS_CACHE_NAME);
+		}
+		if(param != null)
+		{
+			return param;
+		}
 		ParameterWrapper wrapper = findParameterWrapper(path, version);
-		Parameter param = unpackParameter(wrapper);
+		param = unpackParameter(wrapper);
+		if(isUseCache())
+		{
+			CacheUtil.putObjectInCache(cacheKey, param, PARAMETERS_CACHE_NAME);
+		}
 		return param;
 	}
 
@@ -83,6 +119,17 @@ public final class ParameterDAO
 	{
 
 		ParameterWrapper wrapper = null;
+		String cacheKey = null;
+		if(isUseCache())
+		{
+			cacheKey = getCacheKeyForParameters(path, version);
+			wrapper = (ParameterWrapper)CacheUtil.getObjectFromCache(
+					cacheKey, PARAMETER_WRAPPERS_CACHE_NAME);
+		}
+		if(wrapper != null)
+		{
+			return wrapper;
+		}
 		Session session = null;
 		try
 		{
@@ -100,6 +147,11 @@ public final class ParameterDAO
 							"meer dan 1 resultaat gevonden; database state is ambigu!");
 				}
 				wrapper = (ParameterWrapper) results.get(0);
+				if(isUseCache())
+				{
+					CacheUtil.putObjectInCache(
+							cacheKey, wrapper, PARAMETER_WRAPPERS_CACHE_NAME);
+				}
 			}
 		}
 		catch (HibernateException e)
@@ -214,10 +266,12 @@ public final class ParameterDAO
 	/**
 	 * Slaat de gegeven parameter op in de database.
 	 * @param param de parameter
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @return de evt bijgewerkte parameter
 	 * @throws ParameterDAOException bij onverwachte fouten
 	 */
-	public Parameter saveOrUpdateParameter(Parameter param) throws ParameterDAOException
+	public Parameter saveOrUpdateParameter(Parameter param, boolean useTransaction)
+		throws ParameterDAOException
 	{
 
 		if (param == null)
@@ -230,13 +284,14 @@ public final class ParameterDAO
 		try
 		{
 			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				tx = session.beginTransaction();
+			}
 			if (wrapper != null)
 			{ // update; parameter bestaat reeds
-				Long wrapperId = wrapper.getId();
-				session.evict(wrapper);
-				wrapper = packParameter(param); // zip/ serialiseer de groep
-				wrapper.setId(wrapperId);
+				ParameterWrapper newWrapper = packParameter(param); // zip/ serialiseer de groep
+				wrapper.setData(newWrapper.getData());
 				session.update(wrapper);
 				if (log.isDebugEnabled())
 				{
@@ -254,12 +309,25 @@ public final class ParameterDAO
 							+ param + " toegevoegd (intern id = " + id + ")");
 				}
 			}
-			tx.commit();
+			if(useTransaction)
+			{
+				tx.commit();
+			}
+			if(isUseCache())
+			{
+				String cacheKey;
+				cacheKey = getCacheKeyForParameters(param.getId(), param.getVersion());
+				CacheUtil.putObjectInCache(cacheKey, param, PARAMETERS_CACHE_NAME);
+				CacheUtil.putObjectInCache(cacheKey, wrapper, PARAMETER_WRAPPERS_CACHE_NAME);
+			}
 		}
 		catch (HibernateException e)
 		{
 			log.error(e.getMessage(), e);
-			rollback(tx);
+			if(useTransaction)
+			{
+				rollback(tx);
+			}
 		}
 		return param;
 	}
@@ -267,9 +335,11 @@ public final class ParameterDAO
 	/**
 	 * Verwijderd de gegeven parameter uit de database.
 	 * @param param de parameter
+	 * @param useTransaction of deze methode een transactie dient te gebruiken
 	 * @throws ParameterDAOException bij onverwachte fouten
 	 */
-	public void deleteParameter(Parameter param) throws ParameterDAOException
+	public void deleteParameter(Parameter param, boolean useTransaction)
+		throws ParameterDAOException
 	{
 		//TODO check op actieve versie
 		// het verwijderen van een parameter zal in
@@ -285,17 +355,26 @@ public final class ParameterDAO
 		try
 		{
 			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
+			if(useTransaction)
+			{
+				tx = session.beginTransaction();
+			}
 			if (wrapper != null)
 			{ // verwijder
 				session.delete(wrapper);
 			}
-			tx.commit();
+			if(useTransaction)
+			{
+				tx.commit();
+			}
 		}
 		catch (HibernateException e)
 		{
 			log.error(e.getMessage(), e);
-			rollback(tx);
+			if(useTransaction)
+			{
+				rollback(tx);
+			}
 		}
 	}
 
@@ -316,5 +395,36 @@ public final class ParameterDAO
 				log.error(e1.getMessage(), e1);
 			}
 		}
+	}
+
+	/**
+	 * Geeft cachekey voor parameters.
+	 * @param path pad
+	 * @param version versie
+	 * @return de cache key voor het gegeven pad/ parameter
+	 */
+	private String getCacheKeyForParameters(String path, Version version)
+	{
+		String cacheKey;
+		cacheKey = path + "|" + version.getName();
+		return cacheKey;
+	}
+
+	/**
+	 * Geeft of caching wordt gebruikt.
+	 * @return of caching wordt gebruikt.
+	 */
+	public boolean isUseCache()
+	{
+		return useCache;
+	}
+
+	/**
+	 * Zet of caching wordt gebruikt.
+	 * @param useCache of caching wordt gebruikt.
+	 */
+	public void setUseCache(boolean useCache)
+	{
+		this.useCache = useCache;
 	}
 }

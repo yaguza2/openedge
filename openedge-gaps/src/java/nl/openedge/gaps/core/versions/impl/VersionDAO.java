@@ -7,14 +7,9 @@
 package nl.openedge.gaps.core.versions.impl;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheException;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
@@ -27,6 +22,7 @@ import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.groups.impl.GroupWrapper;
 import nl.openedge.gaps.core.parameters.impl.ParameterWrapper;
 import nl.openedge.gaps.core.versions.Version;
+import nl.openedge.gaps.util.CacheUtil;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 import org.apache.commons.logging.Log;
@@ -38,18 +34,18 @@ import org.apache.commons.logging.LogFactory;
 public final class VersionDAO
 {
 	/** naam van entity versions cache. */
-	private static final String ENTITY_VERSIONS_CACHE_NAME =
+	public static final String ENTITY_VERSIONS_CACHE_NAME =
 		"nl.openedge.gaps.core.versions.custcache.EntityVersions";
 
 	/** naam van entity versions cache. */
-	private static final String VERSION_CACHE_NAME =
+	public static final String VERSION_CACHE_NAME =
 		"nl.openedge.gaps.core.versions.custcache.Version";
-
-	/** of de cache gebruikt wordt. */
-	private boolean useCache = false;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(VersionDAO.class);
+
+	/** of de cache gebruikt wordt. */
+	private boolean useCache = true;
 
 	/**
 	 * Construct.
@@ -88,7 +84,7 @@ public final class VersionDAO
 	public Version getVersion(String versionName) throws VersionDAOException
 	{
 		Version version = null;
-		if(useCache)
+		if(isUseCache())
 		{
 			version = getVersionFromCache(versionName);
 		}
@@ -114,7 +110,7 @@ public final class VersionDAO
 			else
 			{
 				version = (Version) result.get(0);
-				if(useCache)
+				if(isUseCache())
 				{
 					putVersionInCache(version);	
 				}
@@ -139,7 +135,7 @@ public final class VersionDAO
 			tx = session.beginTransaction();
 			session.update(version);
 			tx.commit();
-			if(useCache)
+			if(isUseCache())
 			{
 				putVersionInCache(version);	
 			}
@@ -186,9 +182,9 @@ public final class VersionDAO
 			tx = session.beginTransaction();
 			session.save(version);
 			tx.commit();
-			if(useCache)
+			if(isUseCache())
 			{
-				resetVersionCache();
+				CacheUtil.resetCache(ENTITY_VERSIONS_CACHE_NAME);
 				putVersionInCache(version);
 			}
 		}
@@ -210,7 +206,7 @@ public final class VersionDAO
 	{
 		String entityId = entity.getId();
 		EntityVersions entityVersions = null;
-		if(useCache)
+		if(isUseCache())
 		{
 			getEntityVersionsFromCache(entity);
 		}
@@ -240,7 +236,7 @@ public final class VersionDAO
 			query.setString(0, entityId);
 			List result = query.list();
 			entityVersions.setVersionIds(new HashSet(result));
-			if(useCache)
+			if(isUseCache())
 			{
 				putEntityVersionsInCache(entity, entityVersions);	
 			}
@@ -259,7 +255,7 @@ public final class VersionDAO
 	 */
 	private void putVersionInCache(Version version)
 	{
-		putObjectInCache(version.getName(), version, VERSION_CACHE_NAME);
+		CacheUtil.putObjectInCache(version.getName(), version, VERSION_CACHE_NAME);
 	}
 
 	/**
@@ -269,31 +265,7 @@ public final class VersionDAO
 	 */
 	private void putEntityVersionsInCache(Entity entity, EntityVersions entityVersions)
 	{
-		putObjectInCache(entity.getId(), entityVersions, ENTITY_VERSIONS_CACHE_NAME);
-	}
-
-	/**
-	 * Stopt object in gegeven cache.
-	 * @param id cache id
-	 * @param toCache te cachen object
-	 * @param cacheName naam cache
-	 */
-	private void putObjectInCache(String id, Serializable toCache, String cacheName)
-	{
-		try
-		{
-			CacheManager cacheManager = CacheManager.getInstance();
-			Cache cache = cacheManager.getCache(cacheName);
-			if (cache != null)
-			{
-				Element el = new Element(id, toCache);
-				cache.put(el);	
-			}
-		}
-		catch (CacheException e)
-		{
-			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
-		}
+		CacheUtil.putObjectInCache(entity.getId(), entityVersions, ENTITY_VERSIONS_CACHE_NAME);
 	}
 
 	/**
@@ -306,7 +278,7 @@ public final class VersionDAO
 	{
 		String id = entity.getId();
 		EntityVersions entityVersions = (EntityVersions)
-			getObjectFromCache(id, ENTITY_VERSIONS_CACHE_NAME);
+			CacheUtil.getObjectFromCache(id, ENTITY_VERSIONS_CACHE_NAME);
 		return entityVersions;
 	}
 
@@ -317,37 +289,8 @@ public final class VersionDAO
 	 */
 	private Version getVersionFromCache(String versionName)
 	{
-		Version version = (Version)getObjectFromCache(versionName, VERSION_CACHE_NAME);
+		Version version = (Version)CacheUtil.getObjectFromCache(versionName, VERSION_CACHE_NAME);
 		return version;
-	}
-
-	/**
-	 * Haalt de versie met de gegeven naam op uit de cache.
-	 * @param id cache id
-	 * @param cacheName naam cache
-	 * @return het Versie object of null indien niet in cache gevonden
-	 */
-	private Object getObjectFromCache(String id, String cacheName)
-	{
-		Object result = null;
-		try
-		{
-			CacheManager cacheManager = CacheManager.getInstance();
-			Cache cache = cacheManager.getCache(cacheName);
-			if (cache != null)
-			{
-				Element el = cache.get(id);
-				if (el != null)
-				{
-					result = el.getValue();	
-				}	
-			}
-		}
-		catch (CacheException e)
-		{
-			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
-		}
-		return result;
 	}
 
 	/**
@@ -356,7 +299,7 @@ public final class VersionDAO
 	 */
 	private void resetVersionCache(Version version)
 	{
-		resetCache(VERSION_CACHE_NAME);
+		CacheUtil.resetCache(VERSION_CACHE_NAME);
 	}
 
 	/**
@@ -364,56 +307,7 @@ public final class VersionDAO
 	 */
 	public void resetEntityVersionsCache()
 	{
-		resetCache(ENTITY_VERSIONS_CACHE_NAME);
-	}
-
-	/**
-	 * Schoon cache met gegeven naam.
-	 * @param cacheName te schonen cache
-	 */
-	private void resetCache(String cacheName)
-	{
-		try
-		{
-			CacheManager cacheManager = CacheManager.getInstance();
-			Cache cache = cacheManager.getCache(cacheName);
-			if (cache != null)
-			{
-				cache.removeAll();
-			}
-		}
-		catch (CacheException e)
-		{
-			log.error("cache " + cacheName + "is niet beschikbaar: ", e);
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * Leeg versie cache.
-	 */
-	public void resetVersionCache()
-	{
-		try
-		{
-			CacheManager cacheManager = CacheManager.getInstance();
-			Cache cache = cacheManager.getCache(ENTITY_VERSIONS_CACHE_NAME);
-			if (cache != null)
-			{
-				cache.removeAll();
-			}
-		}
-		catch (CacheException e)
-		{
-			log.error("cache " + VERSION_CACHE_NAME + "is niet beschikbaar: ", e);
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-		}
+		CacheUtil.resetCache(ENTITY_VERSIONS_CACHE_NAME);
 	}
 
 	/**
@@ -436,8 +330,8 @@ public final class VersionDAO
 	}
 
 	/**
-	 * Get useCache.
-	 * @return useCache.
+	 * Geeft of caching wordt gebruikt.
+	 * @return of caching wordt gebruikt.
 	 */
 	public boolean isUseCache()
 	{
@@ -445,8 +339,8 @@ public final class VersionDAO
 	}
 
 	/**
-	 * Set useCache.
-	 * @param useCache useCache.
+	 * Zet of caching wordt gebruikt.
+	 * @param useCache of caching wordt gebruikt.
 	 */
 	public void setUseCache(boolean useCache)
 	{

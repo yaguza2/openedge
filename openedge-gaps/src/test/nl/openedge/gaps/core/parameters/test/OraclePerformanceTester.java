@@ -61,7 +61,15 @@ public class OraclePerformanceTester extends AbstractPerformanceTester
 		AbstractPerformanceTester tester = new OraclePerformanceTester();
 		try
 		{
-			tester.testParameterToevoegingen(1000);
+//			tester.testParameterToevoegingen(1000);
+			tester.testBatch();
+//			tester.testSimple1();
+//			tester.testSimple2();
+//			tester.testSimple3();
+//			tester.testSimple4();
+//			tester.testSimple5();
+//			tester.testSimple6();
+//			tester.testSimple7();
 			HibernateHelper.closeSession();
 		}
 		catch (Exception e)
