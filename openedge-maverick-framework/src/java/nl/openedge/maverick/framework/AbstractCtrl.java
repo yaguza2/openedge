@@ -218,7 +218,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 					viewName = getErrorView(cctx, formBean);
 				}
-			} 
+			}
+			else
+			{
+				viewName = this.perform(formBean, cctx);
+			}
 		} 
 		catch (Exception e) 
 		{
