@@ -2,19 +2,19 @@
 <project>
 	<pomVersion>3</pomVersion>
 	<id>oe-thumbs</id>
-	<name>OpenEdge Thumbnails & file resources</name>
-  <currentVersion>1.0</currentVersion>
-  <organization>
-    <name>Open Edge</name>
-    <url>http://www.openedge.nl/</url>
-    <logo>http://www.openedge.nl/images/logo.jpg</logo>
-  </organization>
-  <inceptionYear>2003</inceptionYear>
-  <package>nl.openedge.modules.impl.menumodule</package>
-  <logo>http://www.openedge.nl/images/logo.jpg</logo>
-  <shortDescription>Menu Module</shortDescription>
-  <description></description>
-  <url>http://maven.apache.org/</url>
+	<name>OpenEdge Thumbnails and file resources</name>
+	<currentVersion>1.0</currentVersion>
+	<organization>
+		<name>Open Edge</name>
+		<url>http://www.openedge.nl/</url>
+		<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	</organization>
+	<inceptionYear>2003</inceptionYear>
+	<package>nl.openedge.modules.impl.menumodule</package>
+	<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	<shortDescription>Menu Module</shortDescription>
+	<description />
+	<url>http://maven.apache.org/</url>
 
 	<!-- <repository>
 		<connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
@@ -28,7 +28,7 @@
 		</version>
 	</versions>
 	<branches />
-	<mailingLists></mailingLists>
+	<mailingLists />
 
 	<developers>
 		<developer>
@@ -88,7 +88,7 @@
 				<war.bundle>true</war.bundle>
 			</properties>
 		</dependency>
-		
+
 		<dependency>
 			<id>openedge-utils</id>
 			<version>SNAPSHOT</version>
