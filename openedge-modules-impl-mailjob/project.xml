@@ -11,7 +11,7 @@
     <logo>http://www.openedge.nl/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
-  <package>nl.openedge.modules</package>
+  <package>nl.openedge.modules.impl.mailjob</package>
   <logo>http://www.openedge.nl/images/logo.jpg</logo>
   <shortDescription>e-mail job and module implementation(s)</shortDescription>
   <description></description>

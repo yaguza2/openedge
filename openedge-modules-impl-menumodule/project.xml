@@ -11,7 +11,7 @@
     <logo>http://www.openedge.nl/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
-  <package>nl.openedge.modules</package>
+  <package>nl.openedge.modules.impl.menumodule</package>
   <logo>http://www.openedge.nl/images/logo.jpg</logo>
   <shortDescription>Menu Module</shortDescription>
   <description></description>

@@ -11,7 +11,7 @@
     <logo>http://www.openedge.nl/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
-  <package>nl.openedge.modules.impl</package>
+  <package>nl.openedge.modules.impl.usermanager</package>
   <logo>http://www.openedge.nl/images/logo.jpg</logo>
   <shortDescription>Hibernate implementation of OpenEdge Access UserManager</shortDescription>
   <description></description>
