@@ -1,111 +1,80 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <document>
-	<properties>
-		<title>OpenEdge Util changes</title>
-		<author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
-	</properties>
-	<body>
-		<release version="1.2.15" date="23 september 2004" description="bugfixes in hibernate utilities">
-			<action type="fix" dev="dashorst">Fixed closing of HibernateSession after exception in database command execution.</action>
-			<action type="fix" dev="dashorst">Fixed jar:deploy behaviour that the deprecated method of deployment is no longer used.</action>
-			<action type="update" dev="dashorst">Moved from changes.txt to <a href="http://maven.apache.org/reference/plugins/changes/">
-				Maven changes plugin</a>.</action>
-		</release>
-		
-        <release version="1.2.14" date="21 september 2004" description="additions for FINAN project" >
-            <action type="add" dev="dashorst">added DeleteObjectsCommand to hibernate utilities.</action>
-        </release>
-        
-        <release version="1.2.13" description="integration with Levob utils">
-        	<action type="add" dev="dashorst">added command pattern for Hibernate usage.</action>
-        </release>
-        
-        <release version="1.2.12">
-            <action type="fix">Fixed bug that prevented patterns like yyyy-MM-dd'T'HH:mm:ss to be parsed correctly
-              See SimpleDateFormat for supported patterns.</action>
-        </release>
-
-        <release version="1.2.11">
-            <action type="fix">Changed throws clause in Hibernate packages from Maverick ConfigException
-                to OpenEdge ConfigException</action>
-        </release>
-
-        <release version="1.2.10">
-            <action type="fix">Changed DateFormatHelper to stop parsing after a match has been found.
-            	Check youre dateformathelper.cfg to be sure you still get the results you want.
-            </action>
-        </release>
-
-        <release version="1.2.9">
-            <action type="fix">Removed JNDI config override option from HibernateHelper (was not actually that usefull)</action>
-            <action type="fix">Added HibernateHelper config override options with system parameters (-D stuff)</action>
-            <action type="fix">Added AXIS serializers/ deserializers and client utility for working with .ser package</action>
-        </release>
-
-        <release version="1.2.8">
-            <action type="update">updated Before and After validators to Baritus 1.0.12</action>
-            <action type="add">added package nl.openedge.util.ser</action>
-            <action type="add">added package nl.openedge.util.rekenen</action>
-            <action type="add">added Jetty utilities</action>
-            <action type="add">added package nl.openedge.util.mock</action>
-            <action type="add">added package nl.openedge.util.baritus</action>
-            <action type="add">added package nl.openedge.util.maverick</action>
-        
-        </release>
-
-        <release version="1.2.7">
-            <action type="fix">JettyVariableService removed again as it was not needed.</action>
-        </release>
-
-        <release version="1.2.6">
-            <action type="fix">HibernateHelper can have its config location overriden by 
-            	JNDI (by default using name java:comp/env/hibernate/config).
-            	</action>
-            <action type="fix">Added JettyVariableService to be able to add simple variables
-            	the the JNDI context.
-            </action>
-        </release>
-
-        <release version="1.2.5">
-            <action type="fix">HibernateHelper now works with a pluggable delegate</action>
-        </release>
-
-        <release version="1.2.4">
-            <action type="add"><![CDATA[added '\n' replacement <br> to parseText()]]></action>
-        </release>
-
-        <release version="1.2.1">
-            <action type="fix">Added Hibernate interceptor to HibernateHelper</action>
-        </release>
-
-        <release version="1.2">
-            <action type="fix">Removed Commons BeanUtils/ Commons Collections dependency in favor of Ognl</action>
-        </release>
-
-        <release version="1.1.6">
-            <action type="fix">Added utilities to be used with openedge Baritus. Hence,
-            	this project now has a dependency on Baritus.
-            </action>
-        	<action type="fix">FallbackDateConverter</action>
-        	<action type="fix">AfterValidator</action>
-        	<action type="fix">BeforeValidator</action>
-        </release>
-
-        <release version="1.1.2">
-            <action type="fix">SessionStats implements java.io.Serializable.</action>
-        </release>
-
-        <release version="1.1.1">
-            <action type="fix">Moved Velocity tools from project OpenEdge maverick framework to this project.
-            	(was package nl.openedge.maverick.framework.velocity.tools, is now
-            	 package nl.openedge.util.velocity.tools)
-            </action>
-            <action type="fix">Velocity String resources is a separate project now (openedge-velocity-stringresources)</action>
-            <action type="fix">Did some cleaning up of classes that were not used (anymore) in order to get the project
-        	leaner. </action>
-        </release>
-        
-        <release version="1.0" description="First production release">
-        </release>
-	</body>
+  <properties>
+    <title>OpenEdge Util changes</title>
+    <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+  </properties>
+  <body>
+    <release version="1.2.15" date="2004-09-23" description="bugfixes in hibernate utilities">
+      <action type="fix" dev="dashorst">Fixed closing of HibernateSession after exception in database command execution.</action>
+      <action type="fix" dev="dashorst">Fixed jar:deploy behaviour that the deprecated method of deployment is no longer used.</action>
+      <action type="update" dev="dashorst">Moved from changes.txt to
+        <a href="http://maven.apache.org/reference/plugins/changes/">Maven changes plugin</a>.
+      </action>
+    </release>
+    <release version="1.2.14" date="21 september 2004" description="additions for FINAN project">
+      <action type="add" dev="dashorst">added DeleteObjectsCommand to hibernate utilities.</action>
+    </release>
+    <release version="1.2.13" description="integration with Levob utils">
+      <action type="add" dev="dashorst">added command pattern for Hibernate usage.</action>
+    </release>
+    <release version="1.2.12">
+      <action type="fix">Fixed bug that prevented patterns like yyyy-MM-dd'T'HH:mm:ss to be parsed correctly See SimpleDateFormat for supported patterns.</action>
+    </release>
+    <release version="1.2.11">
+      <action type="fix">Changed throws clause in Hibernate packages from Maverick ConfigException to OpenEdge ConfigException</action>
+    </release>
+    <release version="1.2.10">
+      <action type="fix">Changed DateFormatHelper to stop parsing after a match has been found. Check youre dateformathelper.cfg to be sure you still get the results you want.</action>
+    </release>
+    <release version="1.2.9">
+      <action type="fix">Removed JNDI config override option from HibernateHelper (was not actually that usefull)</action>
+      <action type="fix">Added HibernateHelper config override options with system parameters (-D stuff)</action>
+      <action type="fix">Added AXIS serializers/ deserializers and client utility for working with .ser package</action>
+    </release>
+    <release version="1.2.8">
+      <action type="update">updated Before and After validators to Baritus 1.0.12</action>
+      <action type="add">added package nl.openedge.util.ser</action>
+      <action type="add">added package nl.openedge.util.rekenen</action>
+      <action type="add">added Jetty utilities</action>
+      <action type="add">added package nl.openedge.util.mock</action>
+      <action type="add">added package nl.openedge.util.baritus</action>
+      <action type="add">added package nl.openedge.util.maverick</action>
+    </release>
+    <release version="1.2.7">
+      <action type="fix">JettyVariableService removed again as it was not needed.</action>
+    </release>
+    <release version="1.2.6">
+      <action type="fix">HibernateHelper can have its config location overriden by JNDI (by default using name java:comp/env/hibernate/config).</action>
+      <action type="fix">Added JettyVariableService to be able to add simple variables the the JNDI context.</action>
+    </release>
+    <release version="1.2.5">
+      <action type="fix">HibernateHelper now works with a pluggable delegate</action>
+    </release>
+    <release version="1.2.4">
+      <action type="add"><![CDATA[added '\n' replacement <br> to parseText()]]></action>
+    </release>
+    <release version="1.2.1">
+      <action type="fix">Added Hibernate interceptor to HibernateHelper</action>
+    </release>
+    <release version="1.2">
+      <action type="fix">Removed Commons BeanUtils/ Commons Collections dependency in favor of Ognl</action>
+    </release>
+    <release version="1.1.6">
+      <action type="fix">Added utilities to be used with openedge Baritus. Hence, this project now has a dependency on Baritus.</action>
+      <action type="fix">FallbackDateConverter</action>
+      <action type="fix">AfterValidator</action>
+      <action type="fix">BeforeValidator</action>
+    </release>
+    <release version="1.1.2">
+      <action type="fix">SessionStats implements java.io.Serializable.</action>
+    </release>
+    <release version="1.1.1">
+      <action type="fix">Moved Velocity tools from project OpenEdge maverick framework to this project. (was package nl.openedge.maverick.framework.velocity.tools, is now package nl.openedge.util.velocity.tools)</action>
+      <action type="fix">Velocity String resources is a separate project now (openedge-velocity-stringresources)</action>
+      <action type="fix">Did some cleaning up of classes that were not used (anymore) in order to get the project leaner.</action>
+    </release>
+    <release version="1.0" description="First production release"></release>
+  </body>
 </document>
