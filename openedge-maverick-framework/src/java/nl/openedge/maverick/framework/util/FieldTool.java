@@ -238,7 +238,10 @@ public class FieldTool
 						value + "->" + converted);
 				}				
 			}
-	
+		}
+		else
+		{
+			converted = (value != null) ? value.toString() : null;
 		}
 		return converted;
 	}
