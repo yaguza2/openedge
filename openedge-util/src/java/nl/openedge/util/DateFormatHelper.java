@@ -50,6 +50,8 @@ public final class DateFormatHelper
 	
 	/* test for unwanted characters ? */
 	private static boolean checkForCharacters = true;
+	/* test for unwanted length of dd, MM, yyyy */
+	private static boolean checkForSize = true;
 
 	static {
 		loadFormatters();
@@ -315,6 +317,8 @@ public final class DateFormatHelper
 		throws CheckException, ParseException
 	{
 		Date date = df.parse(stringDate);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
 		
 		if(checkForCharacters)
 		{
@@ -327,6 +331,15 @@ public final class DateFormatHelper
 					throw new CheckException(stringDate + " is not a valid date");
 				}
 			}	
+		}
+		
+		if(checkForSize)
+		{
+			int year = cal.get(Calendar.YEAR);
+			if (year > 9999)
+			{
+				throw new CheckException(stringDate + " has an invalid year, use YY or YYYY");
+			}
 		}
 		
 		System.out.println("used " + ((SimpleDateFormat)df).toPattern()
@@ -370,6 +383,22 @@ public final class DateFormatHelper
 	public static void setCheckForCharacters(boolean b)
 	{
 		checkForCharacters = b;
+	}
+
+	/**
+	 * @return boolean check for unwanted size?
+	 */
+	public static boolean isCheckForSize()
+	{
+		return checkForSize;
+	}
+
+	/**
+	 * @param b
+	 */
+	public static void setCheckForSize(boolean b)
+	{
+		checkForSize = b;
 	}
 
 }
