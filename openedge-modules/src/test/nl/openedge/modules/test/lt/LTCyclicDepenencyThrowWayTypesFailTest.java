@@ -33,9 +33,8 @@ package nl.openedge.modules.test.lt;
 import java.net.URL;
 
 import junit.framework.TestCase;
-
-import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
@@ -53,6 +52,7 @@ public class LTCyclicDepenencyThrowWayTypesFailTest extends TestCase
 
 	/**
 	 * construct with name
+	 * 
 	 * @param name
 	 */
 	public LTCyclicDepenencyThrowWayTypesFailTest(String name) throws Exception
@@ -65,13 +65,10 @@ public class LTCyclicDepenencyThrowWayTypesFailTest extends TestCase
 		try
 		{
 			DependentTypeWrapper.setFailOnCycle(true);
-			URL url =
-				URLHelper.convertToURL("/cyclic-throwaway-oeltmodules.xml",
-					AbstractTestBase.class,
-					null);
+			URL url = URLHelper.convertToURL("/cyclic-throwaway-oeltmodules.xml",
+					AbstractTestBase.class, null);
 
-			RepositoryFactory.setImplementingClass(
-				LooselyTypedComponentRepository.class.getName());
+			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
 			JDOMConfigurator c = new JDOMConfigurator(url);
 			ComponentRepository cRepo = RepositoryFactory.getRepository();
 			// if we get here, the cycle was not detected
@@ -80,16 +77,14 @@ public class LTCyclicDepenencyThrowWayTypesFailTest extends TestCase
 		}
 		catch (ConfigException e)
 		{
-			if(e.getCause() instanceof CyclicDependencyException)
+			if (e.getCause() instanceof CyclicDependencyException)
 			{
-				System.err.println(
-					"successfully detected cycle during startup\n" 
-					+ e.getMessage());	
+				System.err.println("successfully detected cycle during startup\n" + e.getMessage());
 			}
 			else
 			{
 				e.printStackTrace();
-				fail(e.getMessage());	
+				fail(e.getMessage());
 			}
 		}
 	}

@@ -40,9 +40,8 @@ import nl.openedge.modules.observers.ObserveException;
 /**
  * @author Eelco Hillenius
  */
-public class ComponentObserverDecorator 
-	extends ComponentFactoryObserverDecorator 
-	implements ComponentObserver
+public class ComponentObserverDecorator extends ComponentFactoryObserverDecorator implements
+		ComponentObserver
 {
 
 	/**
@@ -55,17 +54,20 @@ public class ComponentObserverDecorator
 
 	/**
 	 * fired after all components are (re)loaded
-	 * @param evt event
+	 * 
+	 * @param evt
+	 *            event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		
+
 		Class clazz = decorated.getClass();
 		try
 		{
-			Method initMethod = clazz.getMethod(
-				"modulesLoaded",new Class[]{ComponentsLoadedEvent.class});
-			initMethod.invoke(decorated, new Object[]{evt});
+			Method initMethod = clazz.getMethod("modulesLoaded", new Class[]
+				{ComponentsLoadedEvent.class});
+			initMethod.invoke(decorated, new Object[]
+				{evt});
 		}
 		catch (SecurityException e)
 		{

@@ -50,14 +50,13 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.observers.ChainedEvent;
 import nl.openedge.modules.observers.ChainedEventObserver;
+import nl.openedge.modules.observers.ComponentObserver;
 import nl.openedge.modules.observers.ComponentRepositoryObserver;
 import nl.openedge.modules.observers.ComponentsLoadedEvent;
-import nl.openedge.modules.observers.ComponentObserver;
 import nl.openedge.modules.observers.SchedulerObserver;
 import nl.openedge.modules.observers.SchedulerStartedEvent;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.base.JobTypeFactory;
-
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -72,91 +71,98 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 
 /**
- * Abstract base for implementations of ComponentRepository
+ * Abstract base for implementations of ComponentRepository.
  * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractComponentRepository implements ComponentRepository
 {
-
-	/** logger */
+	/** default number of seconds to wait until the scheduler starts up. */
+	private static final int DEFAULT_WAIT_UNTIL_SCHEDULER_STARTUP = 20;
+	/** logger. */
 	private static Log log = LogFactory.getLog(AbstractComponentRepository.class);
 
-	/** holder for component builders */
-	protected Map components = Collections.synchronizedMap(new HashMap());
+	/** holder for component builders. */
+	private Map components = Collections.synchronizedMap(new HashMap());
 
-	/** holder for component component factorys that implement job interface */
-	protected Map jobs = Collections.synchronizedMap(new HashMap());
+	/** holder for component component factorys that implement job interface. */
+	private Map jobs = Collections.synchronizedMap(new HashMap());
 
-	/** holder for triggers */
-	protected Map triggers = null;
+	/** holder for triggers. */
+	private Map triggers = null;
 
-	/** quartz scheduler */
-	protected Scheduler scheduler;
+	/** quartz scheduler. */
+	private Scheduler scheduler;
 
-	/** observers for component factory events */
-	protected List observers = Collections.synchronizedList(new ArrayList());
-	
-	/** servlet context if provided */
-	protected ServletContext servletContext = null;
-	
+	/** observers for component factory events. */
+	private List observers = Collections.synchronizedList(new ArrayList());
+
+	/** servlet context if provided. */
+	private ServletContext servletContext = null;
+
 	/**
-	 * construct
+	 * construct.
 	 */
-	public AbstractComponentRepository() 
+	public AbstractComponentRepository()
 	{
 		// nothing here
 	}
 
 	/**
-	 * add observer of component factory events
+	 * add observer of component factory events.
+	 * 
 	 * @param observer
+	 *            event observer
 	 */
 	public void addObserver(ComponentRepositoryObserver observer)
 	{
 		if (observer != null)
 		{
-			synchronized(observers)
+			synchronized (observers)
 			{
-				if(!observers.contains(observer))
+				if (!observers.contains(observer))
 				{
-					this.observers.add(observer);		
-				}	
+					this.observers.add(observer);
+				}
 			}
 		}
 	}
 
 	/**
-	 * remove observer of component factory events
-	 * @param observer
+	 * remove observer of component factory events.
+	 * 
+	 * @param observer event observer
 	 */
 	public void removeObserver(ComponentRepositoryObserver observer)
 	{
 		if (observer != null)
 			this.observers.remove(observer);
 	}
-	
+
 	/**
-	 * initialize the component factory
-	 * @param rootNode
-	 * @param servletContext
+	 * initialize the component factory.
+	 * 
+	 * @param rootNode root node
+	 * @param theServletContext servlet context
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	public void start(
-			Element rootNode, 
-			ServletContext servletContext) 
-			throws ConfigException
+	public void start(Element rootNode, ServletContext theServletContext) throws ConfigException
 	{
-		this.servletContext = servletContext;
-		internalInit(rootNode, servletContext);
+		this.servletContext = theServletContext;
+		internalInit(rootNode, theServletContext);
 	}
 
 	//-------------------------------------- INIT METHODS -------------------------//
 
-	/* do 'real' initialisation */
-	private void internalInit(
-			Element rootNode, 
-			ServletContext servletContext) 
+	/**
+	 * Initialize.
+	 * @param rootNode root node
+	 * @param theServletContext servlet context
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 */
+	private void internalInit(Element rootNode, ServletContext theServletContext)
 			throws ConfigException
 	{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -168,18 +174,18 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		Element componentsNode = rootNode.getChild("components");
 		// load components into components map
 		addComponents(componentsNode, classLoader);
-		
+
 		// test the components first
-		try 
+		try
 		{
 			testModules();
-		} 
-		catch(ComponentLookupException e)
+		}
+		catch (ComponentLookupException e)
 		{
 			e.printStackTrace();
-			throw new ConfigException(e);	
+			throw new ConfigException(e);
 		}
-		
+
 		// fire components loaded event
 		fireModulesLoadedEvent();
 
@@ -191,13 +197,13 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			this.triggers = addTriggers(schedulerNode, classLoader);
 
 			try
-			{ 
+			{
 				// initialise quartz
-				initQuartz(schedulerNode, servletContext);
-				
+				initQuartz(schedulerNode, theServletContext);
+
 				// notify observers
 				fireSchedulerStartedEvent(scheduler);
-				
+
 				if (!jobs.isEmpty() && !triggers.isEmpty())
 				{
 					// finally, schedule the jobs/ triggers
@@ -205,10 +211,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				}
 				else
 				{
-					log.warn("sceduler was started but " +
-						"there are no jobs to scedule");
+					log.warn("sceduler was started but " + "there are no jobs to scedule");
 				}
-				
+
 			}
 			catch (SchedulerException e)
 			{
@@ -218,36 +223,40 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		}
 		else
 		{
-			log.info("scheduler node was not found; " +
-				"scheduler will not be started");
+			log.info("scheduler node was not found; " + "scheduler will not be started");
 		}
 	}
-	
+
 	/**
-	 * test all loaded components by getting them
+	 * test all loaded components by getting them.
+	 * @throws ComponentLookupException when the component could not be found
 	 */
-	protected void testModules() throws ComponentLookupException
+	protected void testModules()
 	{
 		String[] names = getComponentNames();
 		int size = names.length;
-		
-		for(int i = 0; i < size; i++)
+
+		for (int i = 0; i < size; i++)
 		{
 			Object o = getComponent(names[i]);
-			
-			if(log.isDebugEnabled())
+
+			if (log.isDebugEnabled())
 			{
-				log.debug("name " + names[i] + " tested (" + o + ")");	
+				log.debug("name " + names[i] + " tested (" + o + ")");
 			}
 		}
 	}
 
 	/**
-	 * initialise the quartz scheduler
-	 * @throws Exception
+	 * initialise the quartz scheduler.
+	 * @param node config node
+	 * @param context servlet context
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 * @throws SchedulerException on quartz errors
 	 */
-	protected void initQuartz(Element node, ServletContext context) 
-		throws ConfigException, SchedulerException
+	protected void initQuartz(Element node, ServletContext context) throws ConfigException,
+			SchedulerException
 	{
 		Properties properties = null;
 		if (node != null)
@@ -256,8 +265,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			String proploc = node.getAttributeValue("properties");
 			try
 			{
-				URL urlproploc = URLHelper.convertToURL(
-					proploc, AbstractComponentRepository.class, context);
+				URL urlproploc = URLHelper.convertToURL(proploc, AbstractComponentRepository.class,
+						context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			}
@@ -288,34 +297,35 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				{
 					scheduler.shutdown(true);
 				}
-				catch (Exception e)
+				catch (SchedulerException e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 		});
 		log.info("Quartz started");
 	}
 
-	/* get components from config 
-	 * @return array of maps; first has all components, second has subset of
-	 * components that are jobs
+	/**
+	 * get components from config.
+	 * @param componentsNode config node of components
+	 * @param classLoader class loader
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 * @return components
 	 */
-	protected Map addComponents(			
-			Element componentsNode, 
-			ClassLoader classLoader) 
+	protected Map addComponents(Element componentsNode, ClassLoader classLoader)
 			throws ConfigException
 	{
 		// iterate components
 		List componentNodes = componentsNode.getChildren("component");
 		for (Iterator i = componentNodes.iterator(); i.hasNext();)
 		{
-			Element node = (Element)i.next();
+			Element node = (Element) i.next();
 			String name = node.getAttributeValue("name");
 			if (components.get(name) != null)
 			{
-				throw new ConfigException(
-						"names of components have to be unique!" 
+				throw new ConfigException("names of components have to be unique!"
 						+ name + " is used more than once");
 			}
 			String className = node.getAttributeValue("class");
@@ -328,80 +338,100 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			{
 				throw new ConfigException(cnfe);
 			}
-			
+
 			addComponent(name, clazz, node);
 		}
 		log.info("loading components done");
 		return components;
 	}
-	
+
 	/**
-	 * add one component
-	 * @param name
-	 * @param clazz
-	 * @param node
-	 * @throws ConfigException
-	 */
-	protected abstract void addComponent(
-		String name, 
-		Class clazz,
-		Element node)
-		throws ConfigException;
-	
-	/**
-	 * get the component factory
+	 * add one component.
+	 * 
 	 * @param name component name
 	 * @param clazz component class
-	 * @param node configuration node
+	 * @param node component config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 */
+	protected abstract void addComponent(String name, Class clazz, Element node)
+			throws ConfigException;
+
+	/**
+	 * get the component factory.
+	 * 
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            configuration node
 	 * @return ComponentFactory
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected abstract ComponentFactory getComponentFactory(
-		String name, 
-		Class clazz,
-		Element node)
-		throws ConfigException;
-	
-	/**
-	 * add initialization commands
-	 * @param factory factory
-	 * @param node config node
-	 * @param clazz component class
-	 * @throws ConfigException
-	 */
-	protected abstract void addInitCommands(
-		ComponentFactory factory, 
-		Class clazz,
-		Element node)
-		throws ConfigException;
+	protected abstract ComponentFactory getComponentFactory(String name, Class clazz, Element node)
+			throws ConfigException;
 
-	/*
-	 * get triggers from config
-	 * @return map of jobs
+	/**
+	 * add initialization commands.
+	 * 
+	 * @param factory
+	 *            factory
+	 * @param node
+	 *            config node
+	 * @param clazz
+	 *            component class
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected Map addTriggers(Element schedulerNode, ClassLoader classLoader) 
-		throws ConfigException
+	protected abstract void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+			throws ConfigException;
+
+	/**
+	 * get triggers from config.
+	 * @param schedulerNode scheduler config node
+	 * @param classLoader class loader
+	 * @return map of jobs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 */
+	protected Map addTriggers(Element schedulerNode, ClassLoader classLoader)
+			throws ConfigException
 	{
-		Map triggers = Collections.synchronizedMap(new HashMap());
+		Map workTriggers = Collections.synchronizedMap(new HashMap());
 		List trigs = schedulerNode.getChildren("trigger");
 		for (Iterator i = trigs.iterator(); i.hasNext();)
 		{
 			Trigger trigger = null;
-			Element triggerNode = (Element)i.next();
+			Element triggerNode = (Element) i.next();
 			String name = triggerNode.getAttributeValue("name");
 			String group = triggerNode.getAttributeValue("group");
 			String className = triggerNode.getAttributeValue("class");
 			Class clazz = null;
+
 			try
 			{
 				clazz = classLoader.loadClass(className);
-				trigger = (Trigger)clazz.newInstance();
+				trigger = (Trigger) clazz.newInstance();
 			}
-			catch (Exception e)
+			catch (ClassNotFoundException e)
 			{
+				log.error(e.getMessage(), e);
 				throw new ConfigException(e);
 			}
-			trigger.setName(name); 
+			catch (InstantiationException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new ConfigException(e);
+			}
+			catch (IllegalAccessException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new ConfigException(e);
+			}
+
+			trigger.setName(name);
 			// this is the 'base' name, as another name will be
 			// used for the actual sceduling;
 			// the name will be a combination of:
@@ -412,73 +442,77 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			if (parameters != null)
 				for (Iterator j = parameters.iterator(); j.hasNext();)
 				{
-					Element pNode = (Element)j.next();
-					paramMap.put(pNode.getAttributeValue("name"), 
-						pNode.getAttributeValue("value"));
+					Element pNode = (Element) j.next();
+					paramMap.put(pNode.getAttributeValue("name"), pNode.getAttributeValue("value"));
 				}
 			try
-			{ // set parameters as properties of trigger
-
+			{
+				// set parameters as properties of trigger
 				populate(trigger, paramMap);
 			}
-			catch (Exception e)
+			catch (OgnlException e)
 			{
+				log.error(e.getMessage(), e);
 				throw new ConfigException(e);
 			}
-			triggers.put(name, trigger);
+			workTriggers.put(name, trigger);
 		}
-		return triggers;
+		return workTriggers;
 	}
-	
-	/*
-	 * populate bean 
-	 * @param bean
-	 * @param parameters
-	 * @throws OgnlException
+
+	/**
+	 * populate bean.
+	 * @param bean the bean
+	 * @param parameters the parameters
+	 * @throws OgnlException on population errors
 	 */
 	private void populate(Object bean, Map parameters) throws OgnlException
 	{
-		for(Iterator i = parameters.keySet().iterator(); i.hasNext(); )
+		for (Iterator i = parameters.keySet().iterator(); i.hasNext();)
 		{
-			String key = (String)i.next();
+			String key = (String) i.next();
 			Object value = parameters.get(key);
 			Ognl.setValue(key, bean, value);
-		}		
+		}
 	}
 
-	/*
-	 * schedule jobs
+	/**
+	 * schedule jobs.
+	 * @param schedulerNode config node of scheduler
+	 * @param classLoader class loader
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader) 
-		throws ConfigException
+	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader)
+			throws ConfigException
 	{
 		//get job excecution map from config
 		Element execNode = schedulerNode.getChild("jobExecutionMap");
 		List execs = execNode.getChildren("job");
 		for (Iterator i = execs.iterator(); i.hasNext();)
 		{
-			Element e = (Element)i.next();
+			Element e = (Element) i.next();
 			String triggerName = e.getAttributeValue("trigger");
 			String componentName = e.getAttributeValue("component");
 			// look up trigger and (job)component
-			Trigger trigger = (Trigger) ((Trigger)triggers.get(triggerName)).clone();
+			Trigger trigger = (Trigger) ((Trigger) triggers.get(triggerName)).clone();
 			if (trigger == null)
 			{
 				throw new ConfigException(triggerName + " is not a registered trigger");
 			}
-			JobTypeFactory job = (JobTypeFactory)jobs.get(componentName);
+			JobTypeFactory job = (JobTypeFactory) jobs.get(componentName);
 			if (job == null)
 			{
 				throw new ConfigException(componentName + " is not a component");
 			}
 			if (!Job.class.isAssignableFrom(job.getComponentClass()))
 			{
-				throw new ConfigException(
-					"component " + componentName + " is not a job (does not implement " 
-					+ Job.class.getName() + ")");
+				throw new ConfigException("component "
+						+ componentName + " is not a job (does not implement "
+						+ Job.class.getName() + ")");
 			}
-			JobDetail jobDetail = new JobDetail(
-				job.getName(), job.getGroup(), job.getComponentClass());
+			JobDetail jobDetail = new JobDetail(job.getName(), job.getGroup(), job
+					.getComponentClass());
 			jobDetail.setJobDataMap(job.getJobData());
 			try
 			{ //start schedule job/trigger combination
@@ -493,48 +527,49 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	}
 
 	/**
-	 * scedule a Quartz job
-	 * @param triggerName name of the trigger
-	 * @param trigger the trigger
-	 * @param jobDetail the job
-	 * @return actual name used to scedule the trigger
-	 * 	will be of form: ${triggerName}_${jobDetail.getName()}
-	 * @throws SchedulerException
+	 * scedule a Quartz job.
+	 *
+	 * @param trigger
+	 *            the trigger
+	 * @param jobDetail
+	 *            the job
+	 * @return actual name used to scedule the trigger will be of form:
+	 *         ${triggerName}_${jobDetail.getName()}
+	 * @throws SchedulerException on Quartz exceptions
 	 */
-	protected String sceduleJob(Trigger trigger, JobDetail jobDetail) 
-		throws SchedulerException
+	protected String sceduleJob(Trigger trigger, JobDetail jobDetail) throws SchedulerException
 	{
 		String triggerName = trigger.getName();
 		String sceduleName = triggerName + "_" + jobDetail.getName();
 		trigger.setName(sceduleName);
-		
+
 		if (trigger.getStartTime() == null)
 		{
-			log.info("start time not set for trigger " +
-				triggerName + "... trying to set to immediate execution");
+			log.info("start time not set for trigger "
+					+ triggerName + "... trying to set to immediate execution");
 			try
 			{
-				// a bit of a hack as the implementors of abstract class 
-				// org.quartz.Trigger have method setStartTime(Date), whereas 
+				// a bit of a hack as the implementors of abstract class
+				// org.quartz.Trigger have method setStartTime(Date), whereas
 				// the base class itself lacks this method
 				// set startup to twenty seconds from now
 				Class clazz = trigger.getClass();
 				Calendar start = new GregorianCalendar();
 				start.setLenient(true);
-				start.add(Calendar.SECOND, 20);
-				Method setMethod = clazz.getMethod(
-					"setStartTime", new Class[] { Date.class });
-				setMethod.invoke(trigger, new Object[] { start.getTime()});
+				start.add(Calendar.SECOND, DEFAULT_WAIT_UNTIL_SCHEDULER_STARTUP);
+				Method setMethod = clazz.getMethod("setStartTime", new Class[]
+					{Date.class});
+				setMethod.invoke(trigger, new Object[]
+					{start.getTime()});
 			}
 			catch (Exception e)
 			{ // too bad. Let's hope the trigger will fire anyway
 				log.error("\tcould not set start time, cause: " + e.getMessage());
 			}
 		}
-		
-		log.info("schedule " + jobDetail.getFullName() + 
-			" with trigger " + sceduleName);
-		
+
+		log.info("schedule " + jobDetail.getFullName() + " with trigger " + sceduleName);
+
 		scheduler.scheduleJob(jobDetail, trigger);
 		return sceduleName;
 	}
@@ -542,48 +577,50 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	//--------------------------- NON-INIT METHODS -----------------------------//
 
 	/**
-	 * notify observers that scheduler was started
-	 * @param scheduler
+	 * notify observers that scheduler was started.
+	 * 
+	 * @param theScheduler the scheduler
 	 */
-	protected void fireSchedulerStartedEvent(Scheduler scheduler)
+	protected void fireSchedulerStartedEvent(Scheduler theScheduler)
 	{
-		SchedulerStartedEvent evt = new SchedulerStartedEvent(this, scheduler);
-		synchronized(observers)
+		SchedulerStartedEvent evt = new SchedulerStartedEvent(this, theScheduler);
+		synchronized (observers)
 		{
 			for (Iterator i = observers.iterator(); i.hasNext();)
 			{
-				ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
+				ComponentRepositoryObserver mo = (ComponentRepositoryObserver) i.next();
 				if (mo instanceof SchedulerObserver)
 				{
-					((SchedulerObserver)mo).schedulerStarted(evt);
+					((SchedulerObserver) mo).schedulerStarted(evt);
 				}
-			}	
-		}
-	}
-	
-	/**
-	 * notify observers that all components ware (re)loaded
-	 * @param scheduler
-	 */
-	protected void fireModulesLoadedEvent()
-	{
-		ComponentsLoadedEvent evt = new ComponentsLoadedEvent(this);
-		synchronized(observers)
-		{
-			for (Iterator i = observers.iterator(); i.hasNext();)
-			{
-				ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
-				if (mo instanceof ComponentObserver)
-				{
-					((ComponentObserver)mo).modulesLoaded(evt);
-				}
-			}	
+			}
 		}
 	}
 
 	/**
-	 * fired when (according to the implementing component) a critical event occured
-	 * @param evt the critical event
+	 * notify observers that all components ware (re)loaded.
+	 */
+	protected void fireModulesLoadedEvent()
+	{
+		ComponentsLoadedEvent evt = new ComponentsLoadedEvent(this);
+		synchronized (observers)
+		{
+			for (Iterator i = observers.iterator(); i.hasNext();)
+			{
+				ComponentRepositoryObserver mo = (ComponentRepositoryObserver) i.next();
+				if (mo instanceof ComponentObserver)
+				{
+					((ComponentObserver) mo).modulesLoaded(evt);
+				}
+			}
+		}
+	}
+
+	/**
+	 * fired when (according to the implementing component) a critical event occured.
+	 * 
+	 * @param evt
+	 *            the critical event
 	 */
 	public void recieveChainedEvent(ChainedEvent evt)
 	{
@@ -591,21 +628,22 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	}
 
 	/**
-	 * notify observers that a critical event occured
-	 * @param scheduler
+	 * notify observers that a critical event occured.
+	 * 
+	 * @param evt the event
 	 */
 	protected void fireCriticalEvent(ChainedEvent evt)
 	{
-		synchronized(observers)
+		synchronized (observers)
 		{
 			for (Iterator i = observers.iterator(); i.hasNext();)
 			{
-				ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
+				ComponentRepositoryObserver mo = (ComponentRepositoryObserver) i.next();
 				if (mo instanceof ChainedEventObserver)
 				{
-					((ChainedEventObserver)mo).recieveChainedEvent(evt);
+					((ChainedEventObserver) mo).recieveChainedEvent(evt);
 				}
-			}	
+			}
 		}
 	}
 
@@ -614,12 +652,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	public Object getComponent(String name)
 	{
-		ComponentFactory componentFactory = 
-			(ComponentFactory)components.get(name);
+		ComponentFactory componentFactory = (ComponentFactory) components.get(name);
 		if (componentFactory == null)
 		{
-			throw new ComponentLookupException(
-				"unable to find module with name: " + name);
+			throw new ComponentLookupException("unable to find module with name: " + name);
 		}
 		return componentFactory.getComponent();
 	}
@@ -631,7 +667,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	{
 		return scheduler;
 	}
-	
+
 	/**
 	 * @see nl.openedge.modules.ComponentRepository#getServletContext()
 	 */
@@ -639,13 +675,52 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	{
 		return servletContext;
 	}
-	
+
 	/**
 	 * @see nl.openedge.components.ComponentRepository#getModuleNames()
 	 */
 	public String[] getComponentNames()
 	{
-		return (String[])components.keySet().toArray(new String[components.size()]);
+		return (String[]) components.keySet().toArray(new String[components.size()]);
 	}
 
+	/**
+	 * Get components.
+	 * 
+	 * @return the components.
+	 */
+	public Map getComponents()
+	{
+		return components;
+	}
+
+	/**
+	 * Get jobs.
+	 * 
+	 * @return the jobs.
+	 */
+	public Map getJobs()
+	{
+		return jobs;
+	}
+
+	/**
+	 * Get observers.
+	 * 
+	 * @return the observers.
+	 */
+	public List getObservers()
+	{
+		return observers;
+	}
+
+	/**
+	 * Get triggers.
+	 * 
+	 * @return the triggers.
+	 */
+	public Map getTriggers()
+	{
+		return triggers;
+	}
 }

@@ -37,12 +37,14 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for throw away components
+ * 
  * @author Eelco Hillenius
  */
 public final class ThrowAwayTypeFactory extends AbstractComponentFactory
 {
 	/**
 	 * get instance of module
+	 * 
 	 * @return new instance for each request
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
@@ -62,10 +64,10 @@ public final class ThrowAwayTypeFactory extends AbstractComponentFactory
 		{
 			throw new ComponentLookupException(ex);
 		}
-		
+
 		try
 		{
-			executeRequestLevelInitCommands(instance);	
+			executeRequestLevelInitCommands(instance);
 		}
 		catch (InitCommandException e)
 		{

@@ -46,7 +46,7 @@ public class QuartzJobComponentImpl implements Job
 	public void execute(JobExecutionContext context) throws JobExecutionException
 	{
 
-		String msg = (String)context.getJobDetail().getJobDataMap().get("msg");
+		String msg = (String) context.getJobDetail().getJobDataMap().get("msg");
 		System.err.println("\n---" + context.getJobDetail().getFullName() + " msg: " + msg);
 
 	}

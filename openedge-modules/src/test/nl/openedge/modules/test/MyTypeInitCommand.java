@@ -30,12 +30,12 @@
  */
 package nl.openedge.modules.test;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.InitCommandException;
+
+import org.jdom.Element;
 
 /**
  * @author Eelco Hillenius
@@ -45,33 +45,31 @@ public class MyTypeInitCommand implements InitCommand
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	public void init(String componentName, Element componentNode, ComponentRepository moduleFactory)
+			throws ConfigException
 	{
 		// nothing here
 	}
 
 	/**
 	 * set message on component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
-		if(componentInstance instanceof MyType)
+		if (componentInstance instanceof MyType)
 		{
-			((MyType)componentInstance).setMessage("Hello World");	
+			((MyType) componentInstance).setMessage("Hello World");
 		}
 		else
 		{
-			throw new ConfigException(
-				"loosely typed components are not supported for this case");
-	
+			throw new ConfigException("loosely typed components are not supported for this case");
+
 		}
 	}
 

@@ -40,7 +40,7 @@ public class DependentThreadSingletonComponentImpl implements SingletonType, Dep
 {
 
 	private BeanComponentImpl beanComponent = null;
-	
+
 	private ConfigurableComponentImpl configComponent = null;
 
 	/**

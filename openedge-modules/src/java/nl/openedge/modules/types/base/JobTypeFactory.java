@@ -44,29 +44,32 @@ import org.jdom.Element;
 import org.quartz.JobDataMap;
 
 /**
- * Wrapper for jobs
- * Jobs cannot 
+ * Wrapper for jobs Jobs cannot
+ * 
  * @author Eelco Hillenius
  */
 public final class JobTypeFactory extends AbstractComponentFactory
 {
 
 	private JobDataMap jobData = null;
+
 	private String group;
-	
+
 	/* logger */
 	private static Log log = LogFactory.getLog(JobTypeFactory.class);
 
 	/**
 	 * set config node
-	 * @param componentNode config node
+	 * 
+	 * @param componentNode
+	 *            config node
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	public void setComponentNode(Element componentNode) 
-		throws ConfigException
+	public void setComponentNode(Element componentNode) throws ConfigException
 	{
 
-		initJobData(componentNode);	
+		initJobData(componentNode);
 	}
 
 	/**
@@ -79,7 +82,9 @@ public final class JobTypeFactory extends AbstractComponentFactory
 
 	/**
 	 * init job using the configuration node
-	 * @param configNode	configuration element for this job
+	 * 
+	 * @param configNode
+	 *            configuration element for this job
 	 */
 	public void initJobData(Element configNode) throws ConfigException
 	{
@@ -87,27 +92,26 @@ public final class JobTypeFactory extends AbstractComponentFactory
 		Element detailNode = configNode.getChild("jobDetail");
 		if (detailNode == null)
 		{
-			throw new ConfigException(
-				"jobs must have a job detail configured " 
-				+ "(element <jobDetail>)");
+			throw new ConfigException("jobs must have a job detail configured "
+					+ "(element <jobDetail>)");
 		}
 		this.group = detailNode.getAttributeValue("group");
 
 		List parameters = detailNode.getChildren("parameter");
 		jobData = new JobDataMap();
-		
+
 		if (parameters != null)
 			for (Iterator i = parameters.iterator(); i.hasNext();)
 			{
-				Element node = (Element)i.next();
-				jobData.put(node.getAttributeValue("name"), 
-					node.getAttributeValue("value"));
+				Element node = (Element) i.next();
+				jobData.put(node.getAttributeValue("name"), node.getAttributeValue("value"));
 			}
 
 	}
 
 	/**
 	 * get group
+	 * 
 	 * @return String
 	 */
 	public String getGroup()
@@ -117,22 +121,21 @@ public final class JobTypeFactory extends AbstractComponentFactory
 
 	/**
 	 * get JobData
+	 * 
 	 * @return JobDataMap
 	 */
 	public JobDataMap getJobData()
 	{
 		return jobData;
 	}
-	
+
 	/**
 	 * @param commands
 	 */
 	public void setInitCommands(InitCommand[] commands)
 	{
-		log.error("\ninitcommands will be ignored for Quartz jobs, as" +
-			" these jobs are managed by Quartz instead of a ComponentRepository\n");
+		log.error("\ninitcommands will be ignored for Quartz jobs, as"
+				+ " these jobs are managed by Quartz instead of a ComponentRepository\n");
 	}
-	
-
 
 }

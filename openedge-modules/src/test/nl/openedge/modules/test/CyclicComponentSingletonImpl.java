@@ -36,8 +36,7 @@ import nl.openedge.modules.types.initcommands.DependentType;
 /**
  * @author Eelco Hillenius
  */
-public class CyclicComponentSingletonImpl 
-	implements DependentType, SingletonType
+public class CyclicComponentSingletonImpl implements DependentType, SingletonType
 {
 
 	private DependentType reference = null;

@@ -40,7 +40,7 @@ public class DependentThrowawayComponentImpl implements SingletonType, Dependent
 {
 
 	private BeanComponentImpl beanComponent = null;
-	
+
 	private ConfigurableComponentImpl configComponent = null;
 
 	/**

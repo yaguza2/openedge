@@ -32,6 +32,7 @@ package nl.openedge.modules.observers;
 
 /**
  * Exception that is used for observer related exceptions.
+ * 
  * @author Eelco Hillenius
  */
 public class ObserveException extends RuntimeException

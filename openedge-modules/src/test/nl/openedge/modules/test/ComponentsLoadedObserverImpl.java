@@ -31,29 +31,30 @@
 package nl.openedge.modules.test;
 
 import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import nl.openedge.modules.observers.ComponentObserver;
-
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
 
 /**
  * @author Eelco Hillenius
  */
 public class ComponentsLoadedObserverImpl implements ComponentObserver
 {
-	
+
 	private ComponentsLoadedEvent evt;
-	
+
 	/**
 	 * fired after all components are (re)loaded
-	 * @param evt event
+	 * 
+	 * @param evt
+	 *            event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
 		this.evt = evt;
-		
-		ComponentRepository mf = (ComponentRepository)evt.getSource();
+
+		ComponentRepository mf = (ComponentRepository) evt.getSource();
 		String[] names = mf.getComponentNames();
-		
+
 	}
 
 	/**

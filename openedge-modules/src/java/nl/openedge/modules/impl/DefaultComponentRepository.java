@@ -46,194 +46,193 @@ import org.jdom.Element;
 import org.quartz.Job;
 
 /**
- * Default implementation of ComponentRepository.
- * This implementation looks for interfaces that are implemented
- * by the components for the coupling to the framework types
- * and InitCommands.
+ * Default implementation of ComponentRepository. This implementation looks for interfaces that are
+ * implemented by the components for the coupling to the framework types and InitCommands.
  * 
  * @author Eelco Hillenius
  */
 public class DefaultComponentRepository extends AbstractComponentRepository
 {
 
-	/** logger */
+	/** logger. */
 	private static Log log = LogFactory.getLog(DefaultComponentRepository.class);
-	
+
 	/**
-	 * construct
+	 * construct.
 	 */
-	public DefaultComponentRepository() 
+	public DefaultComponentRepository()
 	{
 		// nothing here
 	}
-	
+
 	/**
-	 * add one component
+	 * add one component.
+	 * 
 	 * @param name
+	 *            component name
 	 * @param clazz
+	 *            component class
 	 * @param node
+	 *            component config node
 	 * @throws ConfigException
+	 *             when an configuration error occurs when an configuration error occurs
 	 */
-	protected void addComponent(
-		String name, 
-		Class clazz,
-		Element node)
-		throws ConfigException
+	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
-			
+
 		// store component
-		components.put(name, factory);
-			
+		getComponents().put(name, factory);
+
 		// special case: see if this is a job
-		if(Job.class.isAssignableFrom(clazz))
+		if (Job.class.isAssignableFrom(clazz))
 		{
-			jobs.put(name, factory);
+			getJobs().put(name, factory);
 		}
-			
+
 		log.info("addedd " + clazz.getName() + " with name: " + name);
 	}
-	
+
 	/**
-	 * get the component factory
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node configuration node
+	 * get the component factory.
+	 * 
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            configuration node
 	 * @return ComponentFactory
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected ComponentFactory getComponentFactory(
-		String name, 
-		Class clazz,
-		Element node)
-		throws ConfigException
+	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
+			throws ConfigException
 	{
 
 		ComponentFactory factory = null;
-		
+
 		Set baseTypes = TypesRegistry.getBaseTypes();
-		if(baseTypes == null)
+		if (baseTypes == null)
 		{
-			throw new ConfigException(
-				"there are no base types registered!");
+			throw new ConfigException("there are no base types registered!");
 		}
-			
+
 		boolean wasFoundOnce = false;
-		for(Iterator j = baseTypes.iterator(); j.hasNext(); )
+		for (Iterator j = baseTypes.iterator(); j.hasNext();)
 		{
-			Class baseType = (Class)j.next();
-			if(baseType.isAssignableFrom(clazz))
+			Class baseType = (Class) j.next();
+			if (baseType.isAssignableFrom(clazz))
 			{
-				if(wasFoundOnce) // more than one base type!
+				if (wasFoundOnce) // more than one base type!
 				{
-					throw new ConfigException(
-						"component " + name + 
-						" is of more than one registered base type!");
+					throw new ConfigException("component "
+							+ name + " is of more than one registered base type!");
 				}
 				wasFoundOnce = true;
-					
+
 				factory = TypesRegistry.getComponentFactory(baseType);
-					
+
 			}
 		}
-		if(factory == null)
-		{		
+		if (factory == null)
+		{
 			factory = TypesRegistry.getDefaultComponentFactory();
-			
-			log.warn(name + " is not of any know type... using " +
-				factory + " as component factory");
+
+			log.warn(name
+					+ " is not of any know type... using " + factory + " as component factory");
 		}
-		
+
 		factory.setName(name);
 		factory.setComponentRepository(this);
 		factory.setComponentNode(node);
-			
+
 		addInitCommands(factory, clazz, node);
-			
+
 		factory.setComponentClass(clazz);
-		
-		return factory;		
+
+		return factory;
 	}
-	
+
 	/**
-	 * add initialization commands
-	 * @param factory factory
-	 * @param node config node
-	 * @param clazz component class
+	 * add initialization commands.
+	 * 
+	 * @param factory
+	 *            factory
+	 * @param node
+	 *            config node
+	 * @param clazz
+	 *            component class
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void addInitCommands(
-		ComponentFactory factory, 
-		Class clazz,
-		Element node)
-		throws ConfigException
+	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+			throws ConfigException
 	{
 		List initCommands = TypesRegistry.getInitCommandTypes();
-		if(initCommands != null)
+		if (initCommands != null)
 		{
 			List commands = new ArrayList();
-			for(Iterator j = initCommands.iterator(); j.hasNext(); )
+			for (Iterator j = initCommands.iterator(); j.hasNext();)
 			{
-				Class type = (Class)j.next();
-				if(type.isAssignableFrom(clazz))
+				Class type = (Class) j.next();
+				if (type.isAssignableFrom(clazz))
 				{
 					// get command for this class
-					InitCommand initCommand = 
-						TypesRegistry.getInitCommand(type);
+					InitCommand initCommand = TypesRegistry.getInitCommand(type);
 					// initialize the command
 					initCommand.init(factory.getName(), node, this);
 					// add command to the list
 					commands.add(initCommand);
 				}
 			}
-				
-			InitCommand[] cmds = (InitCommand[])
-				commands.toArray(new InitCommand[commands.size()]);
-				
-			if(cmds.length > 0)
+
+			InitCommand[] cmds = (InitCommand[]) commands.toArray(new InitCommand[commands.size()]);
+
+			if (cmds.length > 0)
 			{
-				factory.setInitCommands(cmds);	
+				factory.setInitCommands(cmds);
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class, boolean)
 	 */
 	public List getComponentsByType(Class type, boolean exact)
 	{
 		List sublist = new ArrayList();
-		
-		if(type == null)
+
+		if (type == null)
 		{
 			return sublist;
 		}
-		
-		if(exact)
+
+		if (exact)
 		{
-			for(Iterator i = components.values().iterator(); i.hasNext(); )
+			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
 			{
-		
-				ComponentFactory factory = (ComponentFactory)i.next();
-				if(type.equals(factory.getComponentClass()))
-				{
-					sublist.add(getComponent(factory.getName()));
-				}	
-			}			
-		}
-		else
-		{
-			for(Iterator i = components.values().iterator(); i.hasNext(); )
-			{
-		
-				ComponentFactory factory = (ComponentFactory)i.next();
-				if(type.isAssignableFrom(factory.getComponentClass()))
+
+				ComponentFactory factory = (ComponentFactory) i.next();
+				if (type.equals(factory.getComponentClass()))
 				{
 					sublist.add(getComponent(factory.getName()));
 				}
-			}	
+			}
 		}
-		
+		else
+		{
+			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
+			{
+
+				ComponentFactory factory = (ComponentFactory) i.next();
+				if (type.isAssignableFrom(factory.getComponentClass()))
+				{
+					sublist.add(getComponent(factory.getName()));
+				}
+			}
+		}
+
 		return sublist;
 	}
 

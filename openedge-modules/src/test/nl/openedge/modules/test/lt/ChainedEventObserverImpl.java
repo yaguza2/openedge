@@ -53,6 +53,7 @@ public class ChainedEventObserverImpl
 
 	/**
 	 * gets the event
+	 * 
 	 * @return ChainedEvent
 	 */
 	public ChainedEvent getCriticalEvent()

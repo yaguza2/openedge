@@ -53,6 +53,7 @@ public class ComponentsTest extends AbstractTestBase
 
 	/**
 	 * construct with name
+	 * 
 	 * @param name
 	 */
 	public ComponentsTest(String name) throws Exception
@@ -66,14 +67,14 @@ public class ComponentsTest extends AbstractTestBase
 		try
 		{
 
-			ThrowAwayComponentImpl module1 = (ThrowAwayComponentImpl)
-					componentFactory.getComponent("ThrowAwayTest");
+			ThrowAwayComponentImpl module1 = (ThrowAwayComponentImpl) componentFactory
+					.getComponent("ThrowAwayTest");
 			assertNotNull(module1);
-			
-			ThrowAwayComponentImpl module2 = (ThrowAwayComponentImpl)
-					componentFactory.getComponent("ThrowAwayTest");
+
+			ThrowAwayComponentImpl module2 = (ThrowAwayComponentImpl) componentFactory
+					.getComponent("ThrowAwayTest");
 			assertNotNull(module2);
-			
+
 			assertNotSame(module1, module2);
 
 		}
@@ -90,16 +91,16 @@ public class ComponentsTest extends AbstractTestBase
 		try
 		{
 
-			SingletonComponentImpl module1 = (SingletonComponentImpl)
-					componentFactory.getComponent("SingletonTest");
+			SingletonComponentImpl module1 = (SingletonComponentImpl) componentFactory
+					.getComponent("SingletonTest");
 			assertNotNull(module1);
-			
-			SingletonComponentImpl module2 = (SingletonComponentImpl)
-					componentFactory.getComponent("SingletonTest");
+
+			SingletonComponentImpl module2 = (SingletonComponentImpl) componentFactory
+					.getComponent("SingletonTest");
 			assertNotNull(module2);
-			
+
 			assertSame(module1, module2);
-			
+
 			// test whether this component was initialized exactely once
 			assertEquals(1, module1.getNumberOfTimesInitialized());
 
@@ -117,10 +118,10 @@ public class ComponentsTest extends AbstractTestBase
 		try
 		{
 
-			ConfigurableComponentImpl module = (ConfigurableComponentImpl)
-					componentFactory.getComponent("ConfigurableTest");
+			ConfigurableComponentImpl module = (ConfigurableComponentImpl) componentFactory
+					.getComponent("ConfigurableTest");
 			assertNotNull(module);
-			
+
 			assertNotNull(module.getMessage());
 
 		}
@@ -137,13 +138,13 @@ public class ComponentsTest extends AbstractTestBase
 		try
 		{
 
-			BeanComponentImpl module = (BeanComponentImpl)
-					componentFactory.getComponent("BeanTest");
+			BeanComponentImpl module = (BeanComponentImpl) componentFactory
+					.getComponent("BeanTest");
 			assertNotNull(module);
 
 			assertEquals(module.getMyString(), "test");
 			assertEquals(module.getMyInteger(), new Integer(12));
-			
+
 			assertEquals(module.getNested().getAnotherString(), "anotherTest");
 
 		}
@@ -160,21 +161,21 @@ public class ComponentsTest extends AbstractTestBase
 		try
 		{
 
-			ChainedEventCasterComponentImpl module = (ChainedEventCasterComponentImpl)
-					componentFactory.getComponent("ChainedEventTest");
+			ChainedEventCasterComponentImpl module = (ChainedEventCasterComponentImpl) componentFactory
+					.getComponent("ChainedEventTest");
 			assertNotNull(module);
 
 			// create and add observer
-			ChainedEventObserverImpl observer = (ChainedEventObserverImpl)
-					componentFactory.getComponent("ChainedEventTestObserver");
-			
+			ChainedEventObserverImpl observer = (ChainedEventObserverImpl) componentFactory
+					.getComponent("ChainedEventTestObserver");
+
 			//module.addObserver(observer);
 			// call method that fires critical event
 			module.doFoo();
 			// the observer should now have received a critical event
 			ChainedEvent evt = observer.getCriticalEvent();
 			assertNotNull(evt);
-			
+
 			assertEquals(1, ChainedEventObserverImpl.getNumberOfEventsReceived());
 
 		}
@@ -192,11 +193,11 @@ public class ComponentsTest extends AbstractTestBase
 		{
 
 			Scheduler scheduler = componentFactory.getScheduler();
-			assertNotNull(scheduler);			
+			assertNotNull(scheduler);
 
 			JobDetail jd = scheduler.getJobDetail("QuartzTest", "DEFAULT");
 			assertNotNull(jd);
-			
+
 			Trigger t = scheduler.getTrigger("testTrigger_QuartzTest", "DEFAULT");
 			assertNotNull(t);
 
@@ -207,23 +208,23 @@ public class ComponentsTest extends AbstractTestBase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testBlancoComponent()
 	{
-		
-		BlancoComponentImpl module = (BlancoComponentImpl)
-				componentFactory.getComponent("BlancoTest");
+
+		BlancoComponentImpl module = (BlancoComponentImpl) componentFactory
+				.getComponent("BlancoTest");
 		assertNotNull(module);
 	}
-	
+
 	public void testScedulerObserver()
 	{
 
 		try
 		{
 
-			SchedulerObserverImpl module = (SchedulerObserverImpl)
-					componentFactory.getComponent("SchedulerObserverTest");
+			SchedulerObserverImpl module = (SchedulerObserverImpl) componentFactory
+					.getComponent("SchedulerObserverTest");
 			assertNotNull(module);
 			assertNotNull(module.getEvt());
 
@@ -234,15 +235,15 @@ public class ComponentsTest extends AbstractTestBase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testComponentsLoadedObserver()
 	{
 
 		try
 		{
 
-			ComponentsLoadedObserverImpl module = (ComponentsLoadedObserverImpl)
-					componentFactory.getComponent("ComponentsLoadedObserverTest");
+			ComponentsLoadedObserverImpl module = (ComponentsLoadedObserverImpl) componentFactory
+					.getComponent("ComponentsLoadedObserverTest");
 			assertNotNull(module);
 			assertNotNull(module.getEvt());
 
@@ -253,22 +254,20 @@ public class ComponentsTest extends AbstractTestBase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testGetComponentsByType()
 	{
 
 		try
 		{
 
-			List mods1 = 
-				componentFactory.getComponentsByType(SingletonType.class, false);
-			
-			assertTrue( mods1.size() > 1 );
-			
-			List mods2 =
-				componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
-				
-			assertTrue( mods2.size() == 1 );
+			List mods1 = componentFactory.getComponentsByType(SingletonType.class, false);
+
+			assertTrue(mods1.size() > 1);
+
+			List mods2 = componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
+
+			assertTrue(mods2.size() == 1);
 
 		}
 		catch (Exception e)
@@ -277,25 +276,25 @@ public class ComponentsTest extends AbstractTestBase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testDependentComponent()
 	{
 
 		try
 		{
 
-			DependentSingletonComponentImpl module1 = (DependentSingletonComponentImpl)
-				componentFactory.getComponent("DependendSingletonComponentTest");	
+			DependentSingletonComponentImpl module1 = (DependentSingletonComponentImpl) componentFactory
+					.getComponent("DependendSingletonComponentTest");
 			assertNotNull(module1.getBeanComponent());
 			assertNotNull(module1.getConfigComponent());
 
-			DependentThreadSingletonComponentImpl module2 = (DependentThreadSingletonComponentImpl)
-				componentFactory.getComponent("DependendThreadSingletonComponentTest");	
+			DependentThreadSingletonComponentImpl module2 = (DependentThreadSingletonComponentImpl) componentFactory
+					.getComponent("DependendThreadSingletonComponentTest");
 			assertNotNull(module2.getBeanComponent());
 			assertNotNull(module2.getConfigComponent());
-			
-			DependentThrowawayComponentImpl module3 = (DependentThrowawayComponentImpl)
-				componentFactory.getComponent("DependendThrowawayComponentTest");	
+
+			DependentThrowawayComponentImpl module3 = (DependentThrowawayComponentImpl) componentFactory
+					.getComponent("DependendThrowawayComponentTest");
 			assertNotNull(module3.getBeanComponent());
 			assertNotNull(module3.getConfigComponent());
 
@@ -306,34 +305,34 @@ public class ComponentsTest extends AbstractTestBase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testJndiRef()
 	{
-		try 
+		try
 		{
 			String name = "componentsRepository";
 			Context ctx = new InitialContext();
 			Object o = ctx.lookup(name);
-			
+
 			assertNotNull(o);
 			System.out.println("found " + o + " with name " + name);
-		} 
-		catch (NamingException e) 
+		}
+		catch (NamingException e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-	
+
 	public void testThreadSingletonComponent()
 	{
-		
+
 		ThreadSingletonThread t1 = new ThreadSingletonThread();
 		ThreadSingletonThread t2 = new ThreadSingletonThread();
-		
+
 		t1.start();
 		t2.start();
-		
+
 		try
 		{
 			t1.join();
@@ -346,58 +345,59 @@ public class ComponentsTest extends AbstractTestBase
 
 		assertNotNull(t1.getModule1());
 		assertNotNull(t1.getModule2());
-		
+
 		assertNotNull(t2.getModule1());
 		assertNotNull(t2.getModule2());
 
 		assertSame(t1.getModule1(), t1.getModule2());
 
 		assertNotSame(t1.getModule1(), t2.getModule1());
-		
-		assertEquals(OtherThreadSingletonComponentImpl.class,
-			t1.getModule3().getClass());
-			
+
+		assertEquals(OtherThreadSingletonComponentImpl.class, t1.getModule3().getClass());
+
 		// test whether components was initialized exactely once
 		assertEquals(1, t1.getModule1().getNumberOfTimesInitialized());
 		assertEquals(1, t1.getModule2().getNumberOfTimesInitialized());
 		assertEquals(1, t2.getModule1().getNumberOfTimesInitialized());
 		assertEquals(1, t2.getModule2().getNumberOfTimesInitialized());
-		
-	}
 
+	}
 
 	class ThreadSingletonThread extends Thread
 	{
 		private ThreadSingletonComponentImpl module1 = null;
-		
+
 		private ThreadSingletonComponentImpl module2 = null;
-		
+
 		private OtherThreadSingletonComponentImpl module3 = null;
-	
+
 		public void run()
 		{
 			try
 			{
-				module1 = (ThreadSingletonComponentImpl)
-					componentFactory.getComponent("ThreadSingletonTest");
-				module2 = (ThreadSingletonComponentImpl)
-					componentFactory.getComponent("ThreadSingletonTest");
-				module3 = (OtherThreadSingletonComponentImpl)
-					componentFactory.getComponent("OtherThreadSingletonTest");
+				module1 = (ThreadSingletonComponentImpl) componentFactory
+						.getComponent("ThreadSingletonTest");
+				module2 = (ThreadSingletonComponentImpl) componentFactory
+						.getComponent("ThreadSingletonTest");
+				module3 = (OtherThreadSingletonComponentImpl) componentFactory
+						.getComponent("OtherThreadSingletonTest");
 			}
 			catch (RuntimeException e)
 			{
 				e.printStackTrace();
 			}
 		}
+
 		public ThreadSingletonComponentImpl getModule1()
 		{
 			return module1;
 		}
+
 		public ThreadSingletonComponentImpl getModule2()
 		{
 			return module2;
 		}
+
 		public OtherThreadSingletonComponentImpl getModule3()
 		{
 			return module3;

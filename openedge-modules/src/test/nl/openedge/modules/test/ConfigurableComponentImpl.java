@@ -30,11 +30,11 @@
  */
 package nl.openedge.modules.test;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
+
+import org.jdom.Element;
 
 /**
  * @author Eelco Hillenius
@@ -51,8 +51,7 @@ public class ConfigurableComponentImpl implements SingletonType, ConfigurableTyp
 
 	public void init(Element configNode) throws ConfigException
 	{
-		System.out.println(getClass().getName() 
-			+ ": initialised with " + configNode);
+		System.out.println(getClass().getName() + ": initialised with " + configNode);
 		Element p1 = configNode.getChild("param1");
 		if (p1 == null)
 			throw new ConfigException("where's param1?");
@@ -65,7 +64,7 @@ public class ConfigurableComponentImpl implements SingletonType, ConfigurableTyp
 		String val = p2.getTextNormalize();
 		if (val == null || (!val.equals("Bar")))
 			throw new ConfigException("value of param2 should be Bar!");
-			
+
 		this.message = "HELLO!";
 	}
 

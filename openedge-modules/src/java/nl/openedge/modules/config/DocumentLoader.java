@@ -42,6 +42,7 @@ import org.jdom.input.SAXBuilder;
 
 /**
  * Helper class for loading jdom documents
+ * 
  * @author Eelco Hillenius
  */
 public final class DocumentLoader
@@ -58,12 +59,10 @@ public final class DocumentLoader
 
 		try
 		{
-			URL configURL = URLHelper.convertToURL(
-				configDocument, DocumentLoader.class, null);
+			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class, null);
 
 			if (configURL == null)
-				throw new ConfigException(configDocument 
-					+ " should be a document but is empty");
+				throw new ConfigException(configDocument + " should be a document but is empty");
 			log.info("Loading config from " + configURL);
 
 			return internalLoad(configURL);
@@ -82,8 +81,7 @@ public final class DocumentLoader
 	{
 
 		if (configURL == null)
-			throw new ConfigException(configURL 
-				+ " should be a document but is empty");
+			throw new ConfigException(configURL + " should be a document but is empty");
 		log.info("Loading config from " + configURL);
 
 		return internalLoad(configURL);
@@ -92,20 +90,18 @@ public final class DocumentLoader
 	/**
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	public static Document loadDocument(String configFile, 
-								ServletContext servletContext)
-								throws ConfigException
+	public static Document loadDocument(String configFile, ServletContext servletContext)
+			throws ConfigException
 	{
 
 		try
 		{
 
-			URL configURL = URLHelper.convertToURL(configFile, 
-				DocumentLoader.class, servletContext);
+			URL configURL = URLHelper
+					.convertToURL(configFile, DocumentLoader.class, servletContext);
 
 			if (configURL == null)
-				throw new ConfigException(configFile 
-					+ " should be a document but is empty");
+				throw new ConfigException(configFile + " should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());
 
 			return internalLoad(configURL);
@@ -129,8 +125,7 @@ public final class DocumentLoader
 			try
 			{
 				SAXBuilder builder = new SAXBuilder();
-				return builder.build(
-					configURL.openStream(), configURL.toString());
+				return builder.build(configURL.openStream(), configURL.toString());
 			}
 			catch (org.jdom.JDOMException jde)
 			{

@@ -37,7 +37,7 @@ public class DependentComponentImpl
 {
 
 	private BeanComponentImpl beanComponent = null;
-	
+
 	private ConfigurableComponentImpl configComponent = null;
 
 	/**

@@ -35,13 +35,14 @@ import java.lang.reflect.Method;
 
 import javax.servlet.ServletContext;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
+import org.jdom.Element;
+
 /**
  * Command for components that want to be aware of the servlet context
+ * 
  * @author Eelco Hillenius
  */
 public final class ServletContextAwareTypeInitCommand implements InitCommand
@@ -51,42 +52,40 @@ public final class ServletContextAwareTypeInitCommand implements InitCommand
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.componentRepository = componentRepository;
 	}
 
 	/**
 	 * call init on the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
-		
+
 		ServletContext servletContext = componentRepository.getServletContext();
-		
-		if(componentInstance instanceof ServletContextAwareType)
+
+		if (componentInstance instanceof ServletContextAwareType)
 		{
-			((ServletContextAwareType)componentInstance).setServletContext(
-				servletContext);
+			((ServletContextAwareType) componentInstance).setServletContext(servletContext);
 		}
 		else
 		{
-			
+
 			Class clazz = componentInstance.getClass();
 			try
 			{
-				Method initMethod = clazz.getMethod(
-					"setServletContext",new Class[]{ServletContext.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{servletContext});
+				Method initMethod = clazz.getMethod("setServletContext", new Class[]
+					{ServletContext.class});
+				initMethod.invoke(componentInstance, new Object[]
+					{servletContext});
 			}
 			catch (SecurityException e)
 			{
@@ -108,7 +107,7 @@ public final class ServletContextAwareTypeInitCommand implements InitCommand
 			{
 				throw new ConfigException(e);
 			}
-	
+
 		}
 	}
 

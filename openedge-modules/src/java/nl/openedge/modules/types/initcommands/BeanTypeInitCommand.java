@@ -35,15 +35,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.config.ConfigException;
 import ognl.Ognl;
 import ognl.OgnlException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
-
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
 
 /**
  * Command that populates instances using Ognl.
@@ -52,20 +51,19 @@ import nl.openedge.modules.config.ConfigException;
  */
 public final class BeanTypeInitCommand implements InitCommand
 {
-	
+
 	private Map properties = null;
-	
+
 	private static Log log = LogFactory.getLog(BeanTypeInitCommand.class);
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.properties = new HashMap();
 		List pList = componentNode.getChildren("property");
@@ -73,23 +71,22 @@ public final class BeanTypeInitCommand implements InitCommand
 		{
 			for (Iterator j = pList.iterator(); j.hasNext();)
 			{
-				Element pElement = (Element)j.next();
-				properties.put(
-					pElement.getAttributeValue("name"), 
-					pElement.getAttributeValue("value"));
+				Element pElement = (Element) j.next();
+				properties.put(pElement.getAttributeValue("name"), pElement
+						.getAttributeValue("value"));
 			}
-				
+
 		}
 	}
 
 	/**
 	 * populate the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
-		if(properties != null)
+		if (properties != null)
 		{
 			try
 			{
@@ -101,19 +98,19 @@ public final class BeanTypeInitCommand implements InitCommand
 			}
 		}
 	}
-	
+
 	/**
 	 * default populate of form: BeanUtils way; set error if anything goes wrong
+	 * 
 	 * @param componentInstance
 	 * @param properties
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected void populate(Object componentInstance, Map properties) 
-		throws OgnlException
+	protected void populate(Object componentInstance, Map properties) throws OgnlException
 	{
-		for(Iterator i = properties.keySet().iterator(); i.hasNext(); )
+		for (Iterator i = properties.keySet().iterator(); i.hasNext();)
 		{
-			String key = (String)i.next();
+			String key = (String) i.next();
 			Object value = properties.get(key);
 			Ognl.setValue(key, componentInstance, value);
 		}

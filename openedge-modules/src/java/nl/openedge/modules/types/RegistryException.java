@@ -32,6 +32,7 @@ package nl.openedge.modules.types;
 
 /**
  * will be thrown for exception that occur when using the types registry
+ * 
  * @author Eelco Hillenius
  */
 public class RegistryException extends RuntimeException

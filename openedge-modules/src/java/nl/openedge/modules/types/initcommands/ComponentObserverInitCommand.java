@@ -30,55 +30,53 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ComponentObserver;
 
+import org.jdom.Element;
+
 /**
  * Command that populates instances using BeanUtils
+ * 
  * @author Eelco Hillenius
  */
 public final class ComponentObserverInitCommand implements InitCommand
 {
-	
+
 	private ComponentRepository componentRepository = null;
-	
+
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.componentRepository = componentRepository;
 	}
 
 	/**
 	 * populate the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 
-		if(componentInstance instanceof ComponentObserver)
+		if (componentInstance instanceof ComponentObserver)
 		{
-			componentRepository.addObserver(
-				(ComponentObserver)componentInstance);
+			componentRepository.addObserver((ComponentObserver) componentInstance);
 		}
 		else
 		{
-			ComponentObserverDecorator deco = 
-				new ComponentObserverDecorator();
-			
+			ComponentObserverDecorator deco = new ComponentObserverDecorator();
+
 			deco.setDecorated(componentInstance);
-			
-			componentRepository.addObserver(deco);		
+
+			componentRepository.addObserver(deco);
 		}
 
 	}

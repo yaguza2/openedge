@@ -41,119 +41,93 @@ import nl.openedge.modules.types.base.SingletonTypeFactory;
 import nl.openedge.modules.types.base.ThreadSingletonTypeFactory;
 import nl.openedge.modules.types.base.ThrowAwayTypeFactory;
 import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
+import nl.openedge.modules.types.initcommands.ChainedEventCasterInitCommand;
 import nl.openedge.modules.types.initcommands.ChainedEventObserverInitCommand;
+import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.ComponentObserverInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableTypeInitCommand;
-import nl.openedge.modules.types.initcommands.ChainedEventCasterInitCommand;
 import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
-import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.SchedulerObserverInitCommand;
 import nl.openedge.modules.types.initcommands.ServletContextAwareTypeInitCommand;
 
 /**
- * Registry for types and init commands that can be used with
- * the loosely typed implementation of the component repository.
- * Couples on strings
+ * Registry for types and init commands that can be used with the loosely typed implementation of
+ * the component repository. Couples on strings.
+ * 
  * @author Eelco Hillenius
  */
 public final class TypesRegistry
 {
-
-	/** default class */
-	protected static Class defaultComponentFactoryClass =
-		SingletonTypeFactory.class;
-		
-	/** 
-	 * If true, the default factory will be used for types that
-	 * are not of any know type. Otherwise (if false), an 
-	 * exception will be thrown when a component is not of any
-	 * known type
-	 */
-	protected static boolean useDefaultFactory = true;
+	/** default number of component factories. */
+	private static final int DFT_TYPE_SIZE = 5;
+	/** default number of command types. */
+	private static final int DFT_CMD_SIZE = 9;
+	/** default class. */
+	private static Class defaultComponentFactoryClass = SingletonTypeFactory.class;
 
 	/**
-	 * map of component factories
+	 * If true, the default factory will be used for types that are not of any know type. Otherwise
+	 * (if false), an exception will be thrown when a component is not of any known type.
 	 */
-	protected static Map componentFactories = new HashMap(5);
-	
+	private static boolean useDefaultFactory = true;
+
 	/**
-	 * map of init commands
+	 * map of component factories.
 	 */
-	private static Map initCommandClasses = new HashMap(9);
-	
+	private static Map componentFactories = new HashMap(DFT_TYPE_SIZE);
+
+	/**
+	 * map of init commands.
+	 */
+	private static Map initCommandClasses = new HashMap(DFT_CMD_SIZE);
+
 	// initialize defaults
 	static
 	{
 		// set default factories
-		
-		componentFactories.put(
-				"singleton", 
-				SingletonTypeFactory.class);
-			
-		componentFactories.put(
-			"threadSingleton", 
-			ThreadSingletonTypeFactory.class);
-		
-		componentFactories.put(
-			"throwaway", 
-			ThrowAwayTypeFactory.class);
-		
-		componentFactories.put(
-			"job", 
-			JobTypeFactory.class);
-			
-		initCommandClasses.put(
-			"bean", 
-			BeanTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			"dependent", 
-			DependentTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			"servletContextAware",
-			ServletContextAwareTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			"configurable", 
-			ConfigurableTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			"chainedEventCaster", 
-			ChainedEventCasterInitCommand.class);
-			
-		initCommandClasses.put(
-			"componentFactoryObserver", 
-			ComponentFactoryObserverInitCommand.class);
-			
-		initCommandClasses.put(
-			"chainedEventObserver",
-			ChainedEventObserverInitCommand.class);
-			
-		initCommandClasses.put(
-			"schedulerObserver",
-			SchedulerObserverInitCommand.class);
-			
-		initCommandClasses.put(
-			"componentObserver",
-			ComponentObserverInitCommand.class);
+
+		componentFactories.put("singleton", SingletonTypeFactory.class);
+
+		componentFactories.put("threadSingleton", ThreadSingletonTypeFactory.class);
+
+		componentFactories.put("throwaway", ThrowAwayTypeFactory.class);
+
+		componentFactories.put("job", JobTypeFactory.class);
+
+		initCommandClasses.put("bean", BeanTypeInitCommand.class);
+
+		initCommandClasses.put("dependent", DependentTypeInitCommand.class);
+
+		initCommandClasses.put("servletContextAware", ServletContextAwareTypeInitCommand.class);
+
+		initCommandClasses.put("configurable", ConfigurableTypeInitCommand.class);
+
+		initCommandClasses.put("chainedEventCaster", ChainedEventCasterInitCommand.class);
+
+		initCommandClasses.put("componentFactoryObserver",
+				ComponentFactoryObserverInitCommand.class);
+
+		initCommandClasses.put("chainedEventObserver", ChainedEventObserverInitCommand.class);
+
+		initCommandClasses.put("schedulerObserver", SchedulerObserverInitCommand.class);
+
+		initCommandClasses.put("componentObserver", ComponentObserverInitCommand.class);
 	}
-	
+
 	/**
-	 * get the default component factory that is to be used when 
-	 * components are not of any known type and use default == true
+	 * get the default component factory that is to be used when components are not of any known
+	 * type and use default == true
+	 * 
 	 * @return ComponentFactory
-	 * @throws RegistryException
+	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getDefaultComponentFactory()
-		throws RegistryException
+	public static ComponentFactory getDefaultComponentFactory() throws RegistryException
 	{
 		ComponentFactory factory = null;
 		try
 		{
-			factory = (ComponentFactory)
-				defaultComponentFactoryClass.newInstance();
+			factory = (ComponentFactory) defaultComponentFactoryClass.newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -163,38 +137,42 @@ public final class TypesRegistry
 		{
 			throw new RegistryException(e);
 		}
-			
+
 		return factory;
 	}
 
 	/**
-	 * set the default adapter factory class that is to be used when 
-	 * components are not of any known type and use default == true
-	 * @param factoryClass the default component factory
+	 * set the default adapter factory class that is to be used when components are not of any known
+	 * type and use default == true
+	 * 
+	 * @param factoryClass
+	 *            the default component factory
 	 */
 	public static void setDefaultComponentFactory(Class factoryClass)
 	{
 		defaultComponentFactoryClass = factoryClass;
 	}
-	
+
 	/**
 	 * get the component factory for the given type name
-	 * @param typeName name of the type to get the factory for
+	 * 
+	 * @param typeName
+	 *            name of the type to get the factory for
 	 * @return ComponentFactory
+	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getComponentFactory(String typeName)
-		throws RegistryException
+	public static ComponentFactory getComponentFactory(String typeName) throws RegistryException
 	{
-		if(typeName == null)
+		if (typeName == null)
 		{
 			return null;
 		}
-		
+
 		ComponentFactory factory = null;
 		try
 		{
-			Class factoryClass = (Class)componentFactories.get(typeName);
-			factory = (ComponentFactory)factoryClass.newInstance();
+			Class factoryClass = (Class) componentFactories.get(typeName);
+			factory = (ComponentFactory) factoryClass.newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -206,44 +184,50 @@ public final class TypesRegistry
 		}
 		return factory;
 	}
-	
+
 	/**
 	 * register an component factory class for the given type name
-	 * @param typeName the name of the type
-	 * @param componentFactoryClass the class of the component factory
+	 * 
+	 * @param typeName
+	 *            the name of the type
+	 * @param componentFactoryClass
+	 *            the class of the component factory
 	 */
-	public static void registerComponentType(
-		String typeName, 
-		Class componentFactoryClass)
+	public static void registerComponentType(String typeName, Class componentFactoryClass)
 	{
 		componentFactories.put(typeName, componentFactoryClass);
 	}
-	
+
 	/**
 	 * de-register an component type with the given name
-	 * @param typeName the name of the type
+	 * 
+	 * @param typeName
+	 *            the name of the type
 	 */
-	public static void deRegisterComponentType(
-		String typeName)
+	public static void deRegisterComponentType(String typeName)
 	{
 		componentFactories.remove(typeName);
 	}
 
 	/**
 	 * get the init command with the given name
-	 * @param commandName the name of the command
+	 * 
+	 * @param commandName
+	 *            the name of the command
 	 * @return InitCommand the command
-	 * @throws ConfigException if no command was found or instantiation failed
+	 * @throws ConfigException
+	 *             when an configuration error occurs if no command was found or instantiation
+	 *             failed
 	 */
 	public static InitCommand getInitCommand(String commandName) throws ConfigException
 	{
-		
-		Class c = (Class)initCommandClasses.get(commandName);
-		if(c != null)
+
+		Class c = (Class) initCommandClasses.get(commandName);
+		if (c != null)
 		{
 			try
 			{
-				return (InitCommand)c.newInstance();	
+				return (InitCommand) c.newInstance();
 			}
 			catch (Exception e)
 			{
@@ -252,30 +236,32 @@ public final class TypesRegistry
 		}
 		else
 		{
-			throw new ConfigException(
-				"init command with name " + commandName + " not found");
+			throw new ConfigException("init command with name " + commandName + " not found");
 		}
 	}
-	
+
 	/**
 	 * register an init command for the given name
-	 * @param commandName the name of the command
-	 * @param initCommandClass class of the command
+	 * 
+	 * @param commandName
+	 *            the name of the command
+	 * @param initCommandClass
+	 *            class of the command
 	 */
-	public static void registerInitCommand(
-		Class commandName, 
-		Class initCommandClass)
+	public static void registerInitCommand(Class commandName, Class initCommandClass)
 	{
 		initCommandClasses.put(commandName, initCommandClass);
 	}
-	
+
 	/**
 	 * de-register an init command for the given name
-	 * @param commandName the name of the command
-	 * @param initCommandClass class of the command
+	 * 
+	 * @param commandName
+	 *            the name of the command
+	 * @param initCommandClass
+	 *            class of the command
 	 */
-	public static void deRegisterInitCommand(
-		Class commandName)
+	public static void deRegisterInitCommand(Class commandName)
 	{
 		initCommandClasses.remove(commandName);
 	}

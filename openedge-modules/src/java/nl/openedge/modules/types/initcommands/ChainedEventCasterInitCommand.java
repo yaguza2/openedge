@@ -33,8 +33,6 @@ package nl.openedge.modules.types.initcommands;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventCaster;
@@ -42,55 +40,56 @@ import nl.openedge.modules.observers.ChainedEventObserver;
 import nl.openedge.modules.observers.ComponentObserver;
 import nl.openedge.modules.observers.ComponentsLoadedEvent;
 
+import org.jdom.Element;
+
 /**
  * Command that populates instances using BeanUtils
+ * 
  * @author Eelco Hillenius
  */
-public class ChainedEventCasterInitCommand 
-	implements InitCommand, ComponentObserver
+public class ChainedEventCasterInitCommand implements InitCommand, ComponentObserver
 {
-	
+
 	private ComponentRepository componentRepository = null;
+
 	private boolean executeInitCommands = true;
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-			String componentName, 
-			Element componentNode,
-			ComponentRepository componentRepository)
-			throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.componentRepository = componentRepository;
 	}
 
 	/**
 	 * populate the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
-		if(executeInitCommands)
+		if (executeInitCommands)
 		{
 			executeInitCommands = false;
-			
-			if(componentInstance instanceof ChainedEventCaster)
+
+			if (componentInstance instanceof ChainedEventCaster)
 			{
-				((ChainedEventCaster)componentInstance)
-					.addObserver(this.componentRepository);
+				((ChainedEventCaster) componentInstance).addObserver(this.componentRepository);
 			}
 			else
 			{
 				Class clazz = componentInstance.getClass();
 				try
 				{
-					Method initMethod = clazz.getMethod(
-						"addObserver",new Class[]{ChainedEventObserver.class});
-					initMethod.invoke(componentInstance, 
-						new Object[]{this.componentRepository});
+					Method initMethod = clazz.getMethod("addObserver", new Class[]
+						{ChainedEventObserver.class});
+					initMethod.invoke(componentInstance, new Object[]
+						{this.componentRepository});
 				}
 				catch (SecurityException e)
 				{
@@ -112,17 +111,19 @@ public class ChainedEventCasterInitCommand
 				{
 					throw new ConfigException(e);
 				}
-			}	
+			}
 		}
 	}
-	
+
 	/**
-	 * fired after all components are (re)loaded; 
-	 * @param evt event
+	 * fired after all components are (re)loaded;
+	 * 
+	 * @param evt
+	 *            event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		//noop	
+		//noop
 	}
 
 }

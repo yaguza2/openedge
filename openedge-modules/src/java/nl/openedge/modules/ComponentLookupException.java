@@ -31,8 +31,8 @@
 package nl.openedge.modules;
 
 /**
- * ComponentLookupException can be thrown when querying 
- * the ComponentRepository for components. 
+ * ComponentLookupException can be thrown when querying the
+ * ComponentRepository for components.
  * 
  * @author Eelco Hillenius
  */
@@ -40,7 +40,7 @@ public class ComponentLookupException extends RuntimeException
 {
 
 	/**
-	 * construct exception
+	 * construct exception.
 	 */
 	public ComponentLookupException()
 	{
@@ -48,8 +48,9 @@ public class ComponentLookupException extends RuntimeException
 	}
 
 	/**
-	 * construct exception with message
-	 * @param message
+	 * construct exception with message.
+	 * 
+	 * @param message the message
 	 */
 	public ComponentLookupException(String message)
 	{
@@ -57,9 +58,10 @@ public class ComponentLookupException extends RuntimeException
 	}
 
 	/**
-	 * construct exception with message and cause
-	 * @param message
-	 * @param cause
+	 * construct exception with message and cause.
+	 * 
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public ComponentLookupException(String message, Throwable cause)
 	{
@@ -67,8 +69,9 @@ public class ComponentLookupException extends RuntimeException
 	}
 
 	/**
-	 * construct exception with cause
-	 * @param cause
+	 * construct exception with cause.
+	 * 
+	 * @param cause the cause
 	 */
 	public ComponentLookupException(Throwable cause)
 	{

@@ -33,22 +33,22 @@ package nl.openedge.modules.test;
 import java.net.URL;
 
 import junit.framework.TestCase;
-
-import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.URLHelper;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
+ * This is the baseclass for testcases. It does some initialisation and provides additional test
+ * methods
  * 
  * @author E.F. Hillenius
  */
 public abstract class AbstractTestBase extends TestCase
 {
-	
+
 	protected static ComponentRepository componentFactory;
+
 	protected static boolean initialised = false;
 
 	/** construct */
@@ -58,7 +58,7 @@ public abstract class AbstractTestBase extends TestCase
 		init();
 	}
 
-	/** 
+	/**
 	 * initialise
 	 */
 	protected void init() throws Exception
@@ -69,6 +69,7 @@ public abstract class AbstractTestBase extends TestCase
 
 	/**
 	 * load the module factory
+	 * 
 	 * @throws Exception
 	 */
 	protected void loadComponentFactory() throws Exception
@@ -80,10 +81,8 @@ public abstract class AbstractTestBase extends TestCase
 			try
 			{
 
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
+				URL url = URLHelper.convertToURL(
+						System.getProperty("configfile", "/oemodules.xml"), AbstractTestBase.class,
 						null);
 
 				JDOMConfigurator c = new JDOMConfigurator(url);

@@ -35,16 +35,17 @@ import nl.openedge.modules.config.ConfigException;
 import org.jdom.Element;
 
 /**
- * A class that is ConfigurableType can be initialised with an XML node of
- * the main configuration file
+ * A class that is ConfigurableType can be initialised with an XML node of the main configuration
+ * file
  * 
  * @author E.F. Hillenius
  */
-public interface ConfigurableType 
+public interface ConfigurableType
 {
 
 	/**
 	 * initialise with xml element
+	 * 
 	 * @param configNode
 	 * @exception ConfigException
 	 */

@@ -30,22 +30,22 @@
  */
 package nl.openedge.modules.test;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.DependentType;
 
+import org.jdom.Element;
+
 /**
  * @author Eelco Hillenius
  */
-public class DependentSingletonComponentImpl 
-	implements SingletonType, DependentType, ConfigurableType
+public class DependentSingletonComponentImpl implements SingletonType, DependentType,
+		ConfigurableType
 {
 
 	private BeanComponentImpl beanComponent = null;
-	
+
 	private ConfigurableComponentImpl configComponent = null;
 
 	/**
@@ -79,11 +79,11 @@ public class DependentSingletonComponentImpl
 	{
 		configComponent = impl;
 	}
-	
+
 	public void init(Element configNode) throws ConfigException
 	{
 		// check if both components are allready set by now
-		if(beanComponent == null || configComponent == null)
+		if (beanComponent == null || configComponent == null)
 		{
 			throw new ConfigException("components were not yet set!");
 		}

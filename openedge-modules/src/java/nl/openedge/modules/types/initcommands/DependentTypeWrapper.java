@@ -37,64 +37,60 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import nl.openedge.modules.ComponentLookupException;
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ComponentObserver;
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import ognl.Ognl;
 
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.ComponentLookupException;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ComponentsLoadedEvent;
-import nl.openedge.modules.observers.ComponentObserver;
-
 /**
- * Tries to solve the dependencies after all components have been loaded.<br>
- * Users can set the static property 'failOnCycle' to true if they want the resolving 
- * of dependencies stopped (and thus stop the loading of the component repository)
- * when a circular dependency is detected. Be sure to set this property BEFORE initialising
- * the component repository.<br>
- * 
- * If 'failOnCycle' is false (the default),
- * the resolving of dependencies will not stop when a circular dependency is detected.
- * In this case, instead of getting the instance of the component for which the circular
- * dependency was detected from the repository, a cached instance will be used for
- * setting the dependency of the current dependent component.<br>
- * 
- * WARNING: as dependencies are potentially loaded from a temporary cache instead of via
- * the component repository when 'failOnCycle' is false, it is not safe to work with
- * components with state (ThrowAwayTypes). If there a cycle was detected, the same instance
- * of a component is shared by more than one module, even if the normal behaviour of the
- * type factory would be to create a new intance (like with ThrowAwayTypes). In most cases,
- * this probably would not be a problem, but if it is, consider setting the 'failOnCycle'
- * property to true or just using the component repository directely in the components
- * that have dependencies instead tagging it as a dependent type.
+ * Tries to solve the dependencies after all components have been loaded. <br>
+ * Users can set the static property 'failOnCycle' to true if they want the resolving of
+ * dependencies stopped (and thus stop the loading of the component repository) when a circular
+ * dependency is detected. Be sure to set this property BEFORE initialising the component
+ * repository. <br>
+ * If 'failOnCycle' is false (the default), the resolving of dependencies will not stop when a
+ * circular dependency is detected. In this case, instead of getting the instance of the component
+ * for which the circular dependency was detected from the repository, a cached instance will be
+ * used for setting the dependency of the current dependent component. <br>
+ * WARNING: as dependencies are potentially loaded from a temporary cache instead of via the
+ * component repository when 'failOnCycle' is false, it is not safe to work with components with
+ * state (ThrowAwayTypes). If there a cycle was detected, the same instance of a component is shared
+ * by more than one module, even if the normal behaviour of the type factory would be to create a
+ * new intance (like with ThrowAwayTypes). In most cases, this probably would not be a problem, but
+ * if it is, consider setting the 'failOnCycle' property to true or just using the component
+ * repository directely in the components that have dependencies instead tagging it as a dependent
+ * type.
  * 
  * @author Eelco Hillenius
  */
 public class DependentTypeWrapper
 {
-	
+
 	private static boolean failOnCycle = false;
-	
+
 	/** the decorated instance */
 	protected Object componentInstance;
-	
+
 	/** aliases of components that this component depends on */
 	protected List namedDependencies = null;
-	
+
 	/** just need to react to components loaded event once */
 	protected static boolean wasAdded = false;
-	
+
 	/** instance of module factory */
 	protected ComponentRepository moduleFactory = null;
-	
+
 	/** name of the component */
 	protected String componentName = null;
-	
+
 	/** used for cycle check */
 	protected static ThreadLocal referenceHolder = new ThreadLocal();
-	
+
 	/** used for temporary storing of resolved dependencies */
-	protected static ThreadLocal resolvedComponentsHolder = new ThreadLocal(); 
-	
+	protected static ThreadLocal resolvedComponentsHolder = new ThreadLocal();
+
 	/**
 	 * construct
 	 */
@@ -102,61 +98,59 @@ public class DependentTypeWrapper
 	{
 		// nothing here
 	}
-	
+
 	/**
 	 * execute command
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 
-		setDependencies(componentInstance);	
+		setDependencies(componentInstance);
 	}
-	
-	public void setDependencies(Object componentInstance)
-		throws CyclicDependencyException
+
+	public void setDependencies(Object componentInstance) throws CyclicDependencyException
 	{
 
-		if(namedDependencies != null && (namedDependencies.size() > 0))
+		if (namedDependencies != null && (namedDependencies.size() > 0))
 		{
-	
-			Set references = (Set)referenceHolder.get();
-			if(references == null)
+
+			Set references = (Set) referenceHolder.get();
+			if (references == null)
 			{
 				references = new TreeSet();
 				references.add(componentName);
 				referenceHolder.set(references);
 			}
-			
-			Map resolved = (Map)resolvedComponentsHolder.get();
-			if(resolved == null)
+
+			Map resolved = (Map) resolvedComponentsHolder.get();
+			if (resolved == null)
 			{
 				resolved = new HashMap();
 				resolved.put(componentName, componentInstance);
 				resolvedComponentsHolder.set(resolved);
 			}
-			
-			for(Iterator i = namedDependencies.iterator(); i.hasNext(); )
+
+			for (Iterator i = namedDependencies.iterator(); i.hasNext();)
 			{
-				NamedDependency dep = (NamedDependency)i.next();
+				NamedDependency dep = (NamedDependency) i.next();
 				Object dependency = null;
-				if(references.contains(dep.getModuleName()))
+				if (references.contains(dep.getModuleName()))
 				{
 					// got a cycle!
-					if(failOnCycle)
+					if (failOnCycle)
 					{
 						String name = dep.getModuleName();
-						String message = "\ncomponent with name " +
-							this.componentName + " has a cyclic dependency:" +
-							" component with name " + name + 
-							" was allready referenced. \nHere's a list of" +
-							" references where the cycle was detected:\n" +
-							references.toString() + " -> " + name + "\n";
-						throw new CyclicDependencyException(message);	
+						String message = "\ncomponent with name "
+								+ this.componentName + " has a cyclic dependency:"
+								+ " component with name " + name
+								+ " was allready referenced. \nHere's a list of"
+								+ " references where the cycle was detected:\n"
+								+ references.toString() + " -> " + name + "\n";
+						throw new CyclicDependencyException(message);
 					}
 					else
 					{
-						dependency = resolved.get(dep.getModuleName());	
+						dependency = resolved.get(dep.getModuleName());
 					}
 				}
 				else
@@ -165,26 +159,26 @@ public class DependentTypeWrapper
 					// get module from repo
 					dependency = moduleFactory.getComponent(dep.getModuleName());
 				}
-				
+
 				resolved.put(dep.getModuleName(), dependency);
-				
+
 				try
 				{
 					// set module as a property
 					Ognl.setValue(dep.getPropertyName(), componentInstance, dependency);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					e.printStackTrace();
 					throw new ComponentLookupException(e);
 				}
 			}
-			
+
 			referenceHolder.set(null);
 			resolvedComponentsHolder.set(null);
 		}
 	}
-	
+
 	/**
 	 * @return DependentType the wrapped instance
 	 */
@@ -194,7 +188,8 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param instance the instance to wrap
+	 * @param instance
+	 *            the instance to wrap
 	 */
 	public void setComponentInstance(Object instance)
 	{
@@ -210,7 +205,8 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param list name dependencies
+	 * @param list
+	 *            name dependencies
 	 */
 	public void setNamedDependencies(List namedDependencies)
 	{
@@ -224,9 +220,10 @@ public class DependentTypeWrapper
 	{
 		return wasAdded;
 	}
-	
+
 	/**
 	 * get component name
+	 * 
 	 * @return String
 	 */
 	public String getComponentName()
@@ -236,7 +233,9 @@ public class DependentTypeWrapper
 
 	/**
 	 * set component name
-	 * @param componentName name of the component
+	 * 
+	 * @param componentName
+	 *            name of the component
 	 */
 	public void setComponentName(String componentName)
 	{
@@ -252,19 +251,19 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param factory module factory
+	 * @param factory
+	 *            module factory
 	 */
 	public void setModuleFactory(ComponentRepository factory)
 	{
 		moduleFactory = factory;
 		// register for components loaded event
-		if(!wasAdded)
+		if (!wasAdded)
 		{
 			wasAdded = true;
 			moduleFactory.addObserver(new RegisterOnce());
 		}
 	}
-
 
 	/**
 	 * observe components loaded event
@@ -273,14 +272,16 @@ public class DependentTypeWrapper
 	{
 
 		/**
-		 * fired after all components are (re)loaded; 
-		 * @param evt event
+		 * fired after all components are (re)loaded;
+		 * 
+		 * @param evt
+		 *            event
 		 */
 		public void modulesLoaded(ComponentsLoadedEvent evt)
 		{
 			// test it
 			setDependencies(componentInstance);
-		}	
+		}
 	}
 
 	/**

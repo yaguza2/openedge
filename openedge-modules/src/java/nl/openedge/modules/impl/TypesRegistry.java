@@ -37,8 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.quartz.Job;
-
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventCaster;
 import nl.openedge.modules.observers.ComponentRepositoryObserver;
@@ -53,78 +51,72 @@ import nl.openedge.modules.types.base.ThrowAwayType;
 import nl.openedge.modules.types.base.ThrowAwayTypeFactory;
 import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
+import nl.openedge.modules.types.initcommands.ChainedEventCasterInitCommand;
+import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ConfigurableTypeInitCommand;
-import nl.openedge.modules.types.initcommands.ChainedEventCasterInitCommand;
 import nl.openedge.modules.types.initcommands.DependentType;
 import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
-import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.ServletContextAwareType;
 import nl.openedge.modules.types.initcommands.ServletContextAwareTypeInitCommand;
 
+import org.quartz.Job;
+
 /**
- * Registry for types and init commands.
- * Couples on classes
+ * Registry for types and init commands. Couples on classes.
+ * 
  * @author Eelco Hillenius
  */
 public final class TypesRegistry
 {
-	/*
-	 * Map of component factories. Keyed on types, the values
-	 * are instances of BuilderFactory
+	/** default number of component factories. */
+	private static final int DFT_TYPE_SIZE = 5;
+	/** default number of command types. */
+	private static final int DFT_CMD_SIZE = 6;
+	/**
+	 * Map of component factories.
+	 * Keyed on types, the values are instances of BuilderFactory.
 	 */
-	private static Map componentFactories = new HashMap(5);
-	
-	/*
-	 * List of command types (Class). These types can do additional
-	 * processing (like configurating) with types at initialization time
-	 * NOTE: order can matter here! 
-	 * E.g. its best to first add BeanType, and then ConfigurableType
-	 * as usually it's handy to have a component populated first
-	 * and then do some more initialization with it
+	private static Map componentFactories = new HashMap(DFT_TYPE_SIZE);
+
+	/**
+	 * List of command types (Class). These types can do additional processing (like configurating)
+	 * with types at initialization time NOTE: order can matter here! E.g. its best to first add
+	 * BeanType, and then ConfigurableType as usually it's handy to have a component populated first
+	 * and then do some more initialization with it.
 	 */
-	private static List initCommandTypes = new ArrayList(5);
-	
-	/*
-	 * Map of init commands. Keyed on types, the values
-	 * are classes of commands for the types
+	private static List initCommandTypes = new ArrayList(DFT_TYPE_SIZE);
+
+	/**
+	 * Map of init commands. Keyed on types, the values are classes of commands for
+	 * the types.
 	 */
-	private static Map initCommandClasses = new HashMap(6);
-	
-	/*
-	 * the default component factory class will be used when the 
-	 * component is not of a type registered as a base type
-	 * in this registry
+	private static Map initCommandClasses = new HashMap(DFT_CMD_SIZE);
+
+	/**
+	 * the default component factory class will be used when the component is not of a type
+	 * registered as a base type in this registry.
 	 */
-	private static Class defaultComponentFactoryClass = 
-		SingletonTypeFactory.class;
+	private static Class defaultComponentFactoryClass = SingletonTypeFactory.class;
 
 	/*
-	 * set the defaults 
+	 * set the defaults
 	 */
-	static 
+	static
 	{
-		
+
 		// the component factories
-		componentFactories.put(
-			SingletonType.class, 
-			SingletonTypeFactory.class);
-			
-		componentFactories.put(
-			ThreadSingletonType.class, 
-			ThreadSingletonTypeFactory.class);
-			
-		componentFactories.put(
-			ThrowAwayType.class, 
-			ThrowAwayTypeFactory.class);
-			
-		componentFactories.put(
-			Job.class, 
-			JobTypeFactory.class);		
-		
+		componentFactories.put(SingletonType.class, SingletonTypeFactory.class);
+
+		componentFactories.put(ThreadSingletonType.class, ThreadSingletonTypeFactory.class);
+
+		componentFactories.put(ThrowAwayType.class, ThrowAwayTypeFactory.class);
+
+		componentFactories.put(Job.class, JobTypeFactory.class);
+
 		// add the default enhancer types
-		// we use this to have ordering in the commands		
+		// we use this to have ordering in the commands
 		initCommandTypes.add(BeanType.class);
 		initCommandTypes.add(DependentType.class);
 		initCommandTypes.add(ServletContextAwareType.class);
@@ -133,55 +125,44 @@ public final class TypesRegistry
 		initCommandTypes.add(ComponentRepositoryObserver.class);
 
 		// and the commands for them
-		initCommandClasses.put(
-			BeanType.class, 
-			BeanTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			DependentType.class, 
-			DependentTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			ServletContextAwareType.class,
-			ServletContextAwareTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			ConfigurableType.class, 
-			ConfigurableTypeInitCommand.class);
-			
-		initCommandClasses.put(
-			ChainedEventCaster.class, 
-			ChainedEventCasterInitCommand.class);
-			
-		initCommandClasses.put(
-			ComponentRepositoryObserver.class, 
-			ComponentFactoryObserverInitCommand.class);
+		initCommandClasses.put(BeanType.class, BeanTypeInitCommand.class);
+
+		initCommandClasses.put(DependentType.class, DependentTypeInitCommand.class);
+
+		initCommandClasses.put(ServletContextAwareType.class,
+				ServletContextAwareTypeInitCommand.class);
+
+		initCommandClasses.put(ConfigurableType.class, ConfigurableTypeInitCommand.class);
+
+		initCommandClasses.put(ChainedEventCaster.class, ChainedEventCasterInitCommand.class);
+
+		initCommandClasses.put(ComponentRepositoryObserver.class,
+				ComponentFactoryObserverInitCommand.class);
 	}
 
 	/**
-	 * get the base types
-	 * @return List
+	 * get the base types.
+	 * 
+	 * @return List base types
 	 */
 	public static Set getBaseTypes()
 	{
 		return Collections.unmodifiableSet(componentFactories.keySet());
 	}
-	
+
 	/**
-	 * get the default component factory that is to be used when 
-	 * components are not of a type registered as a base type
-	 * in this registry
+	 * get the default component factory that is to be used when components are not of a type
+	 * registered as a base type in this registry.
+	 * 
 	 * @return ComponentFactory
-	 * @throws RegistryException
+	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getDefaultComponentFactory()
-		throws RegistryException
+	public static ComponentFactory getDefaultComponentFactory() throws RegistryException
 	{
 		ComponentFactory factory = null;
 		try
 		{
-			factory = (ComponentFactory)
-				defaultComponentFactoryClass.newInstance();
+			factory = (ComponentFactory) defaultComponentFactoryClass.newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -191,34 +172,37 @@ public final class TypesRegistry
 		{
 			throw new RegistryException(e);
 		}
-			
+
 		return factory;
 	}
 
 	/**
-	 * set the default adapter factory class that is to be used when 
-	 * components are not of a type registered as a base type
-	 * in this registry
-	 * @param factoryClass the default component factory
+	 * set the default adapter factory class that is to be used when components are not of a type
+	 * registered as a base type in this registry
+	 * 
+	 * @param factoryClass
+	 *            the default component factory
 	 */
 	public static void setDefaultComponentFactory(Class factoryClass)
 	{
 		defaultComponentFactoryClass = factoryClass;
 	}
-	
+
 	/**
 	 * get the component factory for the given type
-	 * @param clazz type to get the factory for
+	 * 
+	 * @param clazz
+	 *            type to get the factory for
 	 * @return ComponentFactory
+	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getComponentFactory(Class clazz)
-		throws RegistryException
+	public static ComponentFactory getComponentFactory(Class clazz) throws RegistryException
 	{
 		ComponentFactory factory = null;
 		try
 		{
-			Class factoryClass = (Class)componentFactories.get(clazz);
-			factory = (ComponentFactory)factoryClass.newInstance();
+			Class factoryClass = (Class) componentFactories.get(clazz);
+			factory = (ComponentFactory) factoryClass.newInstance();
 		}
 		catch (InstantiationException e)
 		{
@@ -230,53 +214,60 @@ public final class TypesRegistry
 		}
 		return factory;
 	}
-	
+
 	/**
 	 * register an component type and factory class for the given class
-	 * @param typeClass the class
-	 * @param componentFactoryClass the class of the component factory
+	 * 
+	 * @param typeClass
+	 *            the class
+	 * @param componentFactoryClass
+	 *            the class of the component factory
 	 */
-	public static void registerComponentType(
-		Class typeClass, 
-		Class componentFactoryClass)
+	public static void registerComponentType(Class typeClass, Class componentFactoryClass)
 	{
 		componentFactories.put(typeClass, componentFactoryClass);
 	}
-	
+
 	/**
 	 * de-register an component type with the given type class
-	 * @param typeClass the class
+	 * 
+	 * @param typeClass
+	 *            the class
 	 */
-	public static void deRegisterComponentType(
-		Class typeClass)
+	public static void deRegisterComponentType(Class typeClass)
 	{
 		componentFactories.remove(typeClass);
 	}
 
 	/**
 	 * get the init commands
+	 * 
 	 * @return List command types
 	 */
 	public static List getInitCommandTypes()
 	{
 		return Collections.unmodifiableList(initCommandTypes);
 	}
-	
+
 	/**
 	 * get the init command for the given type
-	 * @param clazz the type to get the init command for
+	 * 
+	 * @param clazz
+	 *            the type to get the init command for
 	 * @return InitCommand the command
-	 * @throws ConfigException if no command was found or instantiation failed
+	 * @throws ConfigException
+	 *             when an configuration error occurs if no command was found or instantiation
+	 *             failed
 	 */
 	public static InitCommand getInitCommand(Class clazz) throws ConfigException
 	{
-		
-		Class c = (Class)initCommandClasses.get(clazz);
-		if(c != null)
+
+		Class c = (Class) initCommandClasses.get(clazz);
+		if (c != null)
 		{
 			try
 			{
-				return (InitCommand)c.newInstance();	
+				return (InitCommand) c.newInstance();
 			}
 			catch (Exception e)
 			{
@@ -285,45 +276,47 @@ public final class TypesRegistry
 		}
 		else
 		{
-			throw new ConfigException(
-				"init command for " + clazz.getName() + " not found");
+			throw new ConfigException("init command for " + clazz.getName() + " not found");
 		}
 	}
-	
+
 	/**
-	 * register an init command for the given class
-	 * @param clazz the type class
-	 * @param initCommandClass the class of the command
+	 * register an init command for the given class.
+	 * 
+	 * @param typeClass
+	 *            the type class
+	 * @param initCommandClass
+	 *            the class of the command
 	 */
-	public static void registerInitCommand(
-		Class typeClass, 
-		Class initCommandClass)
+	public static void registerInitCommand(Class typeClass, Class initCommandClass)
 	{
 		initCommandTypes.add(typeClass);
 		initCommandClasses.put(typeClass, initCommandClass);
 	}
-	
+
 	/**
 	 * register an init command for the given class at location index
-	 * @param clazz the type class
-	 * @param initCommandClass the class of the command
-	 * @param index location in command list
+	 * 
+	 * @param clazz
+	 *            the type class
+	 * @param initCommandClass
+	 *            the class of the command
+	 * @param index
+	 *            location in command list
 	 */
-	public static void registerInitCommand(
-		Class typeClass, 
-		Class initCommandClass,
-		int index)
+	public static void registerInitCommand(Class typeClass, Class initCommandClass, int index)
 	{
 		initCommandTypes.add(index, typeClass);
 		initCommandClasses.put(typeClass, initCommandClass);
 	}
-	
+
 	/**
 	 * de-register an init command
-	 * @param clazz the type class
+	 * 
+	 * @param clazz
+	 *            the type class
 	 */
-	public static void deRegisterInitCommand(
-		Class typeClass)
+	public static void deRegisterInitCommand(Class typeClass)
 	{
 		initCommandTypes.remove(typeClass);
 		initCommandClasses.remove(typeClass);

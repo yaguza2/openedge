@@ -40,9 +40,8 @@ import nl.openedge.modules.observers.ObserveException;
 /**
  * @author Eelco Hillenius
  */
-public class ChainedEventObserverDecorator 
-	extends ComponentFactoryObserverDecorator
-	implements ChainedEventObserver
+public class ChainedEventObserverDecorator extends ComponentFactoryObserverDecorator implements
+		ChainedEventObserver
 {
 
 	/**
@@ -50,13 +49,14 @@ public class ChainedEventObserverDecorator
 	 */
 	public void recieveChainedEvent(ChainedEvent evt)
 	{
-		
+
 		Class clazz = decorated.getClass();
 		try
 		{
-			Method initMethod = clazz.getMethod(
-				"recieveChainedEvent",new Class[]{ChainedEvent.class});
-			initMethod.invoke(decorated, new Object[]{evt});
+			Method initMethod = clazz.getMethod("recieveChainedEvent", new Class[]
+				{ChainedEvent.class});
+			initMethod.invoke(decorated, new Object[]
+				{evt});
 		}
 		catch (SecurityException e)
 		{
@@ -78,7 +78,7 @@ public class ChainedEventObserverDecorator
 		{
 			throw new ObserveException(e);
 		}
-		
+
 	}
 
 }

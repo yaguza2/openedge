@@ -40,10 +40,11 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for singleton components
+ * 
  * @author Eelco Hillenius
  */
-public final class SingletonTypeFactory extends AbstractComponentFactory
-	implements ComponentObserver
+public final class SingletonTypeFactory extends AbstractComponentFactory implements
+		ComponentObserver
 {
 
 	/** the singleton instance */
@@ -53,21 +54,22 @@ public final class SingletonTypeFactory extends AbstractComponentFactory
 
 	/**
 	 * get instance of module
+	 * 
 	 * @return singleton instance
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
 	public Object getComponent() throws ComponentLookupException
 	{
-		synchronized(this)
+		synchronized (this)
 		{
-			if(this.singletonInstance == null)
+			if (this.singletonInstance == null)
 			{
-				
+
 				try
 				{
 					singletonInstance = componentClass.newInstance();
 				}
-				
+
 				catch (InstantiationException e)
 				{
 					throw new ComponentLookupException(e);
@@ -78,10 +80,10 @@ public final class SingletonTypeFactory extends AbstractComponentFactory
 				}
 
 			}
-			
+
 			try
 			{
-				executeRequestLevelInitCommands(singletonInstance);	
+				executeRequestLevelInitCommands(singletonInstance);
 			}
 			catch (InitCommandException e)
 			{
@@ -93,14 +95,14 @@ public final class SingletonTypeFactory extends AbstractComponentFactory
 				e.printStackTrace();
 				throw new ComponentLookupException(e);
 			}
-			
-			if(executeInitCommands)
+
+			if (executeInitCommands)
 			{
 				executeInitCommands = false;
-			
+
 				try
 				{
-					executeInitCommands(singletonInstance);	
+					executeInitCommands(singletonInstance);
 				}
 				catch (InitCommandException e)
 				{
@@ -114,27 +116,31 @@ public final class SingletonTypeFactory extends AbstractComponentFactory
 				}
 			}
 		}
-		
+
 		return singletonInstance;
 	}
-	
+
 	/**
 	 * set component factory
-	 * @param componentRepository component repository
+	 * 
+	 * @param componentRepository
+	 *            component repository
 	 */
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
 		this.componentRepository = componentRepository;
 		componentRepository.addObserver(this);
 	}
-	
+
 	/**
-	 * fired after all components are (re)loaded; 
-	 * @param evt event
+	 * fired after all components are (re)loaded;
+	 * 
+	 * @param evt
+	 *            event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		//noop		
+		//noop
 	}
 
 }

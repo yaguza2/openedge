@@ -36,12 +36,12 @@ package nl.openedge.modules.test;
 public class MyTypeImpl implements MyType
 {
 	private String message = null;
-	
+
 	public void setMessage(String message)
 	{
 		this.message = message;
 	}
-	
+
 	public String getMessage()
 	{
 		return message;

@@ -31,19 +31,25 @@
 package nl.openedge.modules.types.initcommands;
 
 /**
- * A component that implement this interface will be populated (using BeanUtils).
- * E.g: take module mypackage.Foo with property Integer bar, the following
- * configuration fragment will have setBar(Integer val) called with value 12.
- * <p><pre>
- *		&lt;component name="FooModule" 
- *				class="mypackage.Foo"&gt;
- *			&lt;property name="bar" value="12"/&gt;		
- *		&lt;/component&gt;
+ * A component that implement this interface will be populated (using BeanUtils). E.g: take module
+ * mypackage.Foo with property Integer bar, the following configuration fragment will have
+ * setBar(Integer val) called with value 12.
+ * <p>
+ * 
+ * <pre>
+ * 
+ *  
+ *  		&lt;component name=&quot;FooModule&quot; 
+ *  				class=&quot;mypackage.Foo&quot;&gt;
+ *  			&lt;property name=&quot;bar&quot; value=&quot;12&quot;/&gt;		
+ *  		&lt;/component&gt;
+ *   
+ *  
  * </pre>
  * 
  * @author Eelco Hillenius
  */
-public interface BeanType 
+public interface BeanType
 {
 
 }

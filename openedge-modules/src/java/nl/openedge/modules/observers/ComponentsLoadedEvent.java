@@ -34,14 +34,17 @@ import java.util.EventObject;
 
 /**
  * fired when all components are (re)loaded
+ * 
  * @author Eelco Hillenius
  */
 public class ComponentsLoadedEvent extends EventObject
 {
 
 	/**
-	 * @param source	sender of event
-	 * @param componentFactory	instance of module factory
+	 * @param source
+	 *            sender of event
+	 * @param componentFactory
+	 *            instance of module factory
 	 */
 	public ComponentsLoadedEvent(Object source)
 	{

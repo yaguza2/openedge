@@ -30,57 +30,54 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventObserver;
 
+import org.jdom.Element;
+
 /**
  * Command that populates instances using BeanUtils
+ * 
  * @author Eelco Hillenius
  */
 public final class ChainedEventObserverInitCommand implements InitCommand
 {
-	
+
 	protected ComponentRepository componentRepository = null;
-	
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.componentRepository = componentRepository;
 	}
 
 	/**
 	 * populate the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 
-		if(componentInstance instanceof ChainedEventObserver)
+		if (componentInstance instanceof ChainedEventObserver)
 		{
-			componentRepository.addObserver(
-				(ChainedEventObserver)componentInstance);
+			componentRepository.addObserver((ChainedEventObserver) componentInstance);
 		}
 		else
 		{
-			ChainedEventObserverDecorator deco = 
-				new ChainedEventObserverDecorator();
-			
+			ChainedEventObserverDecorator deco = new ChainedEventObserverDecorator();
+
 			deco.setDecorated(componentInstance);
-			
+
 			componentRepository.addObserver(deco);
-				
+
 		}
 
 	}

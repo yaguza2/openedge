@@ -40,8 +40,9 @@ public class BeanComponentImpl implements BeanType, SingletonType
 {
 
 	private String myString;
+
 	private Integer myInteger;
-	
+
 	private BeanComponentImplNested nested = new BeanComponentImplNested();
 
 	public BeanComponentImpl()

@@ -31,92 +31,107 @@
 
 //got this class from Tyrex (Exolab, http://www.exolab.org/)
 //... made a few cosmetic enhancements
-
 package nl.openedge.modules.util.jndi;
 
 import java.util.Hashtable;
+
+import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.NamingException;
-import javax.naming.CompositeName;
 import javax.naming.NotContextException;
 import javax.naming.spi.InitialContextFactory;
 
 /**
  * Implements a context factory for {@link MemoryContext}. When set properly
- * {@link javax.naming.InitialContext} will return a {@link
- * MemoryContext} referencing the named path in the shared memory space.
+ * {@link javax.naming.InitialContext}will return a {@linkMemoryContext}referencing the named path
+ * in the shared memory space.
  * <p>
- * To use this context factory the JNDI properties file must include
- * the following properties:
- * <pre>
- * java.naming.factory.initial=tyrex.naming.MemoryContextFactory
- * java.naming.provider.url=
- * </pre>
- * Any non-empty URL will return a context to that path in the object tree,
- * relative to the same shared root. The returned context is read/write.
+ * To use this context factory the JNDI properties file must include the following properties:
  * 
- *
- * @author <a href="arkin@intalio.com">Assaf Arkin</a>
+ * <pre>
+ * 
+ *  
+ *   java.naming.factory.initial=tyrex.naming.MemoryContextFactory
+ *   java.naming.provider.url=
+ *   
+ *  
+ * </pre>
+ * 
+ * Any non-empty URL will return a context to that path in the object tree, relative to the same
+ * shared root. The returned context is read/write.
+ * 
+ * @author <a href="arkin@intalio.com">Assaf Arkin </a>
  * @author Eelco Hillenius
  */
-public final class MemoryContextFactory implements InitialContextFactory {
+public final class MemoryContextFactory implements InitialContextFactory
+{
 
-    /* The shared root of the binding tree. */
-    private static final MemoryBinding contextRoot = new MemoryBinding();
+	/* The shared root of the binding tree. */
+	private static final MemoryBinding contextRoot = new MemoryBinding();
 
-    /**
-     * Returns a binding in the specified path. If the binding does
-     * not exist, the full path is created and a new binding is returned.
-     * The binding is always obtained from the shared root.
-     *
-     * @param path The path
-     * @return The memory binding for the path
-     * @throws NamingException Name is invalid
-     */
-    synchronized static MemoryBinding getBindings( String path )
-        					throws NamingException {
-        	
-        MemoryBinding binding;
-        MemoryBinding newBinding;
-        CompositeName name;
-        int i;
-        
-        name = new CompositeName( path );
-        binding = contextRoot;
-        for ( i = 0 ; i < name.size() ; ++i ) {
-            if ( name.get( i ).length() > 0 ) {
-                try {
-                    newBinding = (MemoryBinding) binding.get( name.get( i ) );
-                    if ( newBinding == null ) {
-                        newBinding = new MemoryBinding();
-                        binding.put( name.get( i ), newBinding );
-                    }
-                    binding = newBinding;
-                } catch ( ClassCastException except ) {
-                    throw new NotContextException( path + " does not specify a context" );
-                }
-            }
-        }
-        return binding;
-    }
+	/**
+	 * Returns a binding in the specified path. If the binding does not exist, the full path is
+	 * created and a new binding is returned. The binding is always obtained from the shared root.
+	 * 
+	 * @param path
+	 *            The path
+	 * @return The memory binding for the path
+	 * @throws NamingException
+	 *             Name is invalid
+	 */
+	synchronized static MemoryBinding getBindings(String path) throws NamingException
+	{
 
+		MemoryBinding binding;
+		MemoryBinding newBinding;
+		CompositeName name;
+		int i;
 
-    /**
-     * @see InitialContextFactory#getInitialContext(Hashtable)
-     */
-    public Context getInitialContext(Hashtable env) throws NamingException {
-    	
-        String url = null;
+		name = new CompositeName(path);
+		binding = contextRoot;
+		for (i = 0; i < name.size(); ++i)
+		{
+			if (name.get(i).length() > 0)
+			{
+				try
+				{
+					newBinding = (MemoryBinding) binding.get(name.get(i));
+					if (newBinding == null)
+					{
+						newBinding = new MemoryBinding();
+						binding.put(name.get(i), newBinding);
+					}
+					binding = newBinding;
+				}
+				catch (ClassCastException except)
+				{
+					throw new NotContextException(path + " does not specify a context");
+				}
+			}
+		}
+		return binding;
+	}
+
+	/**
+	 * @see InitialContextFactory#getInitialContext(Hashtable)
+	 */
+	public Context getInitialContext(Hashtable env) throws NamingException
+	{
+
+		String url = null;
 		Context ctx = null;
-        if ( env.get( Context.PROVIDER_URL ) != null )
-            url = env.get( Context.PROVIDER_URL ).toString();
-        if ( url == null || url.length() == 0 ) {
-            ctx = new MemoryContext( new MemoryBinding(), env );
-        } else {
-            ctx = new MemoryContext( getBindings( url ), env );
-        }
-        return ctx;
-    }
+		if (env.get(Context.PROVIDER_URL) != null)
+			url = env.get(Context.PROVIDER_URL).toString();
+		if (url == null || url.length() == 0)
+		{
+			ctx = new MemoryContext(new MemoryBinding(), env);
+		}
+		else
+		{
+			ctx = new MemoryContext(getBindings(url), env);
+		}
+		return ctx;
+	}
 
 }
 

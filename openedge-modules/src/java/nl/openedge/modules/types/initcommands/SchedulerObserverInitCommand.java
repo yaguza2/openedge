@@ -30,55 +30,53 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.SchedulerObserver;
 
+import org.jdom.Element;
+
 /**
  * Command that populates instances using BeanUtils
+ * 
  * @author Eelco Hillenius
  */
 public class SchedulerObserverInitCommand implements InitCommand
 {
-	
+
 	private ComponentRepository componentRepository = null;
-	
+
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.componentRepository = componentRepository;
 	}
 
 	/**
 	 * populate the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 
-		if(componentInstance instanceof SchedulerObserver)
+		if (componentInstance instanceof SchedulerObserver)
 		{
-			componentRepository.addObserver(
-				(SchedulerObserver)componentInstance);
+			componentRepository.addObserver((SchedulerObserver) componentInstance);
 		}
 		else
 		{
-			ChainedEventObserverDecorator deco = 
-				new ChainedEventObserverDecorator();
-			
+			ChainedEventObserverDecorator deco = new ChainedEventObserverDecorator();
+
 			deco.setDecorated(componentInstance);
-			
-			componentRepository.addObserver(deco);		
+
+			componentRepository.addObserver(deco);
 		}
 
 	}

@@ -34,70 +34,70 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
+import org.jdom.Element;
+
 /**
  * Command that populates instances using BeanUtils
+ * 
  * @author Eelco Hillenius
  */
 public final class DependentTypeInitCommand implements RequestLevelInitCommand
 {
-	
+
 	private ComponentRepository componentRepository = null;
-	
+
 	private List namedDependencies = null;
-	
+
 	private String componentName;
-	
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
-		
+
 		this.componentRepository = componentRepository;
 		this.componentName = componentName;
 		loadDependencies(componentNode);
 	}
-	
+
 	/**
 	 * load dependencies
-	 * @param componentNode configuration node
+	 * 
+	 * @param componentNode
+	 *            configuration node
 	 */
 	protected void loadDependencies(Element componentNode)
 	{
 		List namedDeps = componentNode.getChildren("dependency");
 		namedDependencies = new ArrayList(namedDeps.size());
-		
-		for(Iterator i = namedDeps.iterator(); i.hasNext(); )
+
+		for (Iterator i = namedDeps.iterator(); i.hasNext();)
 		{
-			
-			Element node = (Element)i.next();
+
+			Element node = (Element) i.next();
 			String moduleName = node.getAttributeValue("componentName");
 			String propertyName = node.getAttributeValue("propertyName");
-			
-			namedDependencies.add(
-				new NamedDependency(moduleName, propertyName));
+
+			namedDependencies.add(new NamedDependency(moduleName, propertyName));
 		}
-			
+
 	}
 
 	/**
-	 * create decorator that tries to solve the dependencies when all components
-	 * are loaded
+	 * create decorator that tries to solve the dependencies when all components are loaded
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException, CyclicDependencyException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException,
+			CyclicDependencyException
 	{
 
 		DependentTypeWrapper solver = new DependentTypeWrapper();
@@ -107,7 +107,7 @@ public final class DependentTypeInitCommand implements RequestLevelInitCommand
 		solver.setModuleFactory(this.componentRepository);
 
 		solver.execute(componentInstance);
-		
+
 	}
 
 }

@@ -81,7 +81,7 @@ public class ChainedEventCasterComponentImpl implements SingletonType, ChainedEv
 		for (Iterator i = observers.iterator(); i.hasNext();)
 		{
 
-			ChainedEventObserver observer = (ChainedEventObserver)i.next();
+			ChainedEventObserver observer = (ChainedEventObserver) i.next();
 			observer.recieveChainedEvent(new ChainedExceptionEvent(this, e));
 		}
 	}

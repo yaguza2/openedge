@@ -37,8 +37,9 @@ public class BeanComponentImpl
 {
 
 	private String myString;
+
 	private Integer myInteger;
-	
+
 	private BeanComponentImplNested nested = new BeanComponentImplNested();
 
 	public BeanComponentImpl()

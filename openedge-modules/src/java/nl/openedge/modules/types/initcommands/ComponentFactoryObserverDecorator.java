@@ -35,8 +35,7 @@ import nl.openedge.modules.observers.ComponentRepositoryObserver;
 /**
  * @author Eelco Hillenius
  */
-public class ComponentFactoryObserverDecorator 
-	implements ComponentRepositoryObserver
+public class ComponentFactoryObserverDecorator implements ComponentRepositoryObserver
 {
 
 	protected Object decorated;
@@ -50,7 +49,8 @@ public class ComponentFactoryObserverDecorator
 	}
 
 	/**
-	 * @param object the object to decorate
+	 * @param object
+	 *            the object to decorate
 	 */
 	public void setDecorated(Object object)
 	{

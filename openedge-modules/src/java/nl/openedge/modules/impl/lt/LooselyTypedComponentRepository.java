@@ -45,87 +45,85 @@ import org.jdom.Element;
 import org.quartz.Job;
 
 /**
- * Loosely typed implementation of ComponentRepository. If this
- * component repository is used, components do not have to 
- * implement any interface at all, as all type information and 
- * coupling to InitCommands will be read from the configuration file.
+ * Loosely typed implementation of ComponentRepository. If this component repository is used,
+ * components do not have to implement any interface at all, as all type information and coupling to
+ * InitCommands will be read from the configuration file.
  * 
  * @author Eelco Hillenius
  */
-public class LooselyTypedComponentRepository 
-	extends AbstractComponentRepository
+public class LooselyTypedComponentRepository extends AbstractComponentRepository
 {
 
-	/** logger */
+	/** logger. */
 	private Log log = LogFactory.getLog(this.getClass());
-		
+
 	/**
-	 * construct
+	 * construct.
 	 */
-	public LooselyTypedComponentRepository() 
+	public LooselyTypedComponentRepository()
 	{
 		// nothing here
-	}	
-	
-	/**
-	 * add one component
-	 * @param name
-	 * @param clazz
-	 * @param node
-	 * @throws ConfigException
-	 */
-	protected void addComponent(
-		String name, 
-		Class clazz,
-		Element node)
-		throws ConfigException
-	{
-		ComponentFactory factory = getComponentFactory(name, clazz, node);
-			
-		// store component
-		components.put(name, factory);
-			
-		// special case: see if this is a job
-		if(Job.class.isAssignableFrom(clazz))
-		{
-			jobs.put(name, factory);
-		}
-		
-		// NOTE: in the 'loosely typed' case like this factory, 
-		// Jobs still have to implement the Job interface, as
-		// this is a requirement of the Quartz framework
-			
-		log.info("addedd " + clazz.getName() + " with name: " + name);
 	}
-	
+
 	/**
-	 * get the component factory
+	 * add one component.
+	 * 
 	 * @param name component name
 	 * @param clazz component class
-	 * @param node configuration node
+	 * @param node component config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 */
+	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
+	{
+		ComponentFactory factory = getComponentFactory(name, clazz, node);
+
+		// store component
+		getComponents().put(name, factory);
+
+		// special case: see if this is a job
+		if (Job.class.isAssignableFrom(clazz))
+		{
+			getJobs().put(name, factory);
+		}
+
+		// NOTE: in the 'loosely typed' case like this factory,
+		// Jobs still have to implement the Job interface, as
+		// this is a requirement of the Quartz framework
+
+		log.info("addedd " + clazz.getName() + " with name: " + name);
+	}
+
+	/**
+	 * get the component factory.
+	 * 
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            configuration node
 	 * @return ComponentFactory
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected ComponentFactory getComponentFactory(
-		String name, 
-		Class clazz,
-		Element node)
-		throws ConfigException
+	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
+			throws ConfigException
 	{
 
 		ComponentFactory factory = null;
 		String typeName = node.getAttributeValue("type");
-		
+
 		factory = TypesRegistry.getComponentFactory(typeName);
-		
-		if(factory == null)
-		{		
-			if(TypesRegistry.isUseDefaultFactory())
+
+		if (factory == null)
+		{
+			if (TypesRegistry.isUseDefaultFactory())
 			{
 				factory = TypesRegistry.getDefaultComponentFactory();
-			
-				log.warn(name + " is not of any know type... using " +
-					factory + " as component factory");	
+
+				log.warn(name
+						+ " is not of any know type... using " + factory + " as component factory");
 			}
 			else
 			{
@@ -136,98 +134,99 @@ public class LooselyTypedComponentRepository
 		factory.setName(name);
 		factory.setComponentRepository(this);
 		factory.setComponentNode(node);
-			
+
 		addInitCommands(factory, clazz, node);
-			
+
 		factory.setComponentClass(clazz);
-		
-		return factory;		
+
+		return factory;
 	}
-	
+
 	/**
-	 * add initialization commands
-	 * @param factory factory
-	 * @param node config node
-	 * @param clazz component class
+	 * add initialization commands.
+	 * 
+	 * @param factory
+	 *            factory
+	 * @param node
+	 *            config node
+	 * @param clazz
+	 *            component class
 	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void addInitCommands(
-		ComponentFactory factory, 
-		Class clazz,
-		Element node)
-		throws ConfigException
+	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+			throws ConfigException
 	{
-		
+
 		Element cmdNode = node.getChild("init-commands");
-		if(cmdNode != null)
+		if (cmdNode != null)
 		{
 			List commands = new ArrayList();
 			List cmdList = cmdNode.getChildren("command");
-		
-			for(Iterator i = cmdList.iterator(); i.hasNext(); )
+
+			for (Iterator i = cmdList.iterator(); i.hasNext();)
 			{
-				Element cnode = (Element)i.next();
+				Element cnode = (Element) i.next();
 				String commandName = cnode.getTextNormalize();
-			
-				InitCommand initCommand = (InitCommand)
-					TypesRegistry.getInitCommand(commandName);
-					
+
+				InitCommand initCommand = (InitCommand) TypesRegistry.getInitCommand(commandName);
+
 				// initialize the command
 				initCommand.init(factory.getName(), node, this);
 				// add command to the list
 				commands.add(initCommand);
-				
-				InitCommand[] cmds = (InitCommand[])
-					commands.toArray(new InitCommand[commands.size()]);
-				
-				if(cmds.length > 0)
+
+				InitCommand[] cmds = (InitCommand[]) commands.toArray(new InitCommand[commands
+						.size()]);
+
+				if (cmds.length > 0)
 				{
-					factory.setInitCommands(cmds);	
+					factory.setInitCommands(cmds);
 				}
-				
+
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class, boolean)
 	 */
 	public List getComponentsByType(Class type, boolean exact)
 	{
 		List sublist = new ArrayList();
-		
-		if(type == null)
+
+		if (type == null)
 		{
 			return sublist;
 		}
-		
-		if(exact)
+
+		if (exact)
 		{
-			for(Iterator i = components.values().iterator(); i.hasNext(); )
+			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
 			{
-		
-				ComponentFactory factory = (ComponentFactory)i.next();
-				if(type.equals(factory.getComponentClass()))
-				{
-					sublist.add(getComponent(factory.getName()));
-				}	
-			}			
-		}
-		else
-		{
-			for(Iterator i = components.values().iterator(); i.hasNext(); )
-			{
-		
-				ComponentFactory factory = (ComponentFactory)i.next();
-				if(type.isAssignableFrom(factory.getComponentClass()))
+
+				ComponentFactory factory = (ComponentFactory) i.next();
+				if (type.equals(factory.getComponentClass()))
 				{
 					sublist.add(getComponent(factory.getName()));
 				}
-			}	
+			}
 		}
-		
+		else
+		{
+			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
+			{
+
+				ComponentFactory factory = (ComponentFactory) i.next();
+				if (type.isAssignableFrom(factory.getComponentClass()))
+				{
+					sublist.add(getComponent(factory.getName()));
+				}
+			}
+		}
+
 		return sublist;
 	}
 

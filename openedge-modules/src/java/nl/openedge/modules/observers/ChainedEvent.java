@@ -34,14 +34,16 @@ import java.util.EventObject;
 
 /**
  * high-level event that can be fired by implementors of ChainedEventCaster
+ * 
  * @author Eelco Hillenius
  */
-public class ChainedEvent extends EventObject 
-{	
+public class ChainedEvent extends EventObject
+{
 	/**
-	 * @param source sender of event
+	 * @param source
+	 *            sender of event
 	 */
-	public ChainedEvent(Object source) 
+	public ChainedEvent(Object source)
 	{
 		super(source);
 	}

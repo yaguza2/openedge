@@ -33,54 +33,54 @@ package nl.openedge.modules.types.initcommands;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.jdom.Element;
-
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
+import org.jdom.Element;
+
 /**
  * Command for configurable types
+ * 
  * @author Eelco Hillenius
  */
 public final class ConfigurableTypeInitCommand implements InitCommand
 {
-	
+
 	private Element componentNode = null;
 
 	/**
 	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
+	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository componentRepository) throws ConfigException
 	{
 		this.componentNode = componentNode;
 	}
 
 	/**
 	 * call init on the component instance
+	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
-		if(componentInstance instanceof ConfigurableType)
+		if (componentInstance instanceof ConfigurableType)
 		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
+			((ConfigurableType) componentInstance).init(this.componentNode);
 		}
 		else
 		{
-			
+
 			Class clazz = componentInstance.getClass();
 			try
 			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
+				Method initMethod = clazz.getMethod("init", new Class[]
+					{Element.class});
+				initMethod.invoke(componentInstance, new Object[]
+					{this.componentNode});
 			}
 			catch (SecurityException e)
 			{
@@ -102,7 +102,7 @@ public final class ConfigurableTypeInitCommand implements InitCommand
 			{
 				throw new ConfigException(e);
 			}
-	
+
 		}
 	}
 

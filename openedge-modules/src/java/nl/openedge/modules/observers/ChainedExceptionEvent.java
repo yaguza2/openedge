@@ -35,6 +35,7 @@ import java.io.PrintWriter;
 
 /**
  * event that can be fired by implementors of ChainedEventCaster.
+ * 
  * @author Eelco Hillenius
  */
 public class ChainedExceptionEvent extends ChainedEvent
@@ -43,7 +44,8 @@ public class ChainedExceptionEvent extends ChainedEvent
 	private Throwable exception = null;
 
 	/**
-	 * @param source sender of event
+	 * @param source
+	 *            sender of event
 	 */
 	public ChainedExceptionEvent(Object source, Throwable exception)
 	{
@@ -53,6 +55,7 @@ public class ChainedExceptionEvent extends ChainedEvent
 
 	/**
 	 * get the embedded exception
+	 * 
 	 * @return Throwable
 	 */
 	public Throwable getException()
@@ -62,6 +65,7 @@ public class ChainedExceptionEvent extends ChainedEvent
 
 	/**
 	 * return stacktrace as a string
+	 * 
 	 * @return String stacktrace as string
 	 */
 	public String getStackTraceAsString()

@@ -33,9 +33,8 @@ package nl.openedge.modules.test;
 import java.net.URL;
 
 import junit.framework.TestCase;
-
-import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
@@ -51,6 +50,7 @@ public class CyclicDepenencyThrowWayTypesNoFailTest extends TestCase
 
 	/**
 	 * construct with name
+	 * 
 	 * @param name
 	 */
 	public CyclicDepenencyThrowWayTypesNoFailTest(String name) throws Exception
@@ -63,10 +63,8 @@ public class CyclicDepenencyThrowWayTypesNoFailTest extends TestCase
 		try
 		{
 			DependentTypeWrapper.setFailOnCycle(false);
-			URL url =
-				URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml",
-					AbstractTestBase.class,
-					null);
+			URL url = URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml",
+					AbstractTestBase.class, null);
 
 			JDOMConfigurator c = new JDOMConfigurator(url);
 			ComponentRepository moduleFactory = RepositoryFactory.getRepository();
@@ -74,7 +72,7 @@ public class CyclicDepenencyThrowWayTypesNoFailTest extends TestCase
 		catch (ConfigException e)
 		{
 			e.printStackTrace();
-			fail(e.getMessage());	
+			fail(e.getMessage());
 		}
 	}
 

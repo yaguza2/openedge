@@ -11,7 +11,7 @@ package nl.openedge.modules.test.lt;
 public class BeanComponentImplNested
 {
 	private String anotherString;
-	
+
 	/**
 	 * @return String
 	 */

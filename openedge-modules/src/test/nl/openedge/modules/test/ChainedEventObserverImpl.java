@@ -41,6 +41,7 @@ public class ChainedEventObserverImpl implements ChainedEventObserver
 
 	// event
 	private ChainedEvent evt = null;
+
 	private static int numberOfEventsReceived = 0;
 
 	/**
@@ -56,6 +57,7 @@ public class ChainedEventObserverImpl implements ChainedEventObserver
 
 	/**
 	 * gets the event
+	 * 
 	 * @return ChainedEvent
 	 */
 	public ChainedEvent getCriticalEvent()

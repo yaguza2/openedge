@@ -32,12 +32,12 @@ package nl.openedge.modules.test;
 
 import java.net.URL;
 
+import junit.framework.TestCase;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.impl.TypesRegistry;
-import junit.framework.TestCase;
 
 /**
  * components related tests
@@ -49,6 +49,7 @@ public class ExtendingTheFrameworkTest extends TestCase
 
 	/**
 	 * construct with name
+	 * 
 	 * @param name
 	 */
 	public ExtendingTheFrameworkTest(String name) throws Exception
@@ -61,21 +62,15 @@ public class ExtendingTheFrameworkTest extends TestCase
 
 		try
 		{
-			URL url =
-				URLHelper.convertToURL("/oemodulesext.xml",
-					AbstractTestBase.class,
-					null);
+			URL url = URLHelper.convertToURL("/oemodulesext.xml", AbstractTestBase.class, null);
 
-			TypesRegistry.registerInitCommand(
-				MyType.class, MyTypeInitCommand.class);
+			TypesRegistry.registerInitCommand(MyType.class, MyTypeInitCommand.class);
 
 			JDOMConfigurator c = new JDOMConfigurator(url);
-			ComponentRepository crep = 
-				RepositoryFactory.getRepository();
+			ComponentRepository crep = RepositoryFactory.getRepository();
 
-			MyTypeImpl module = (MyTypeImpl)
-					crep.getComponent("MyTypeTest");
-			
+			MyTypeImpl module = (MyTypeImpl) crep.getComponent("MyTypeTest");
+
 			assertNotNull(module);
 			assertNotNull(module.getMessage());
 

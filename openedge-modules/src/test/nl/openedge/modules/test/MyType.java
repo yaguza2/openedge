@@ -35,6 +35,6 @@ package nl.openedge.modules.test;
  */
 public interface MyType
 {
-	
+
 	public void setMessage(String message);
 }

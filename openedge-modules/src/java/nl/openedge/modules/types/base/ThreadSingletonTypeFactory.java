@@ -40,32 +40,34 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for singleton components per Thread
+ * 
  * @author Eelco Hillenius
  */
-public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
-	implements ComponentObserver
+public final class ThreadSingletonTypeFactory extends AbstractComponentFactory implements
+		ComponentObserver
 {
-	
+
 	protected ThreadLocal singletonInstanceHolder = new ThreadLocal();
 
 	private boolean executeInitCommands = true;
 
 	/**
 	 * get instance of module
+	 * 
 	 * @return new instance for each request
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
 	public Object getComponent() throws ComponentLookupException
 	{
 		Object singletonInstance = singletonInstanceHolder.get();
-		
-		synchronized(this)
+
+		synchronized (this)
 		{
-			if(singletonInstance == null)
+			if (singletonInstance == null)
 			{
 				try
 				{
-					singletonInstance = componentClass.newInstance();	
+					singletonInstance = componentClass.newInstance();
 					singletonInstanceHolder.set(singletonInstance);
 				}
 				catch (InstantiationException e)
@@ -76,10 +78,10 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 				{
 					throw new ComponentLookupException(e);
 				}
-				
+
 				try
 				{
-					executeRequestLevelInitCommands(singletonInstance);	
+					executeRequestLevelInitCommands(singletonInstance);
 				}
 				catch (InitCommandException e)
 				{
@@ -91,12 +93,12 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 					e.printStackTrace();
 					throw new ComponentLookupException(e);
 				}
-				
-				if(executeInitCommands)
+
+				if (executeInitCommands)
 				{
 					try
 					{
-						executeInitCommands(singletonInstance);	
+						executeInitCommands(singletonInstance);
 					}
 					catch (InitCommandException e)
 					{
@@ -110,30 +112,33 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 					}
 				}
 			}
-			
+
 		}
-		
+
 		return singletonInstance;
 	}
 
 	/**
 	 * set component factory
-	 * @param componentRepository component repository
+	 * 
+	 * @param componentRepository
+	 *            component repository
 	 */
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
 		this.componentRepository = componentRepository;
 		componentRepository.addObserver(this);
 	}
-	
+
 	/**
-	 * fired after all components are (re)loaded; 
-	 * @param evt event
+	 * fired after all components are (re)loaded;
+	 * 
+	 * @param evt
+	 *            event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
 		//noop
 	}
-
 
 }

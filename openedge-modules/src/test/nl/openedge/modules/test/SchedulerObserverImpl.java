@@ -38,13 +38,15 @@ import nl.openedge.modules.observers.SchedulerStartedEvent;
  */
 public class SchedulerObserverImpl implements SchedulerObserver
 {
-	
+
 	private SchedulerStartedEvent evt;
-	
+
 	/**
-	 * fired after initialisation and startup of the Quartz scheduler, 
-	 * before the actual scheduling of jobs and triggers
-	 * @param evt holds instance of scheduler
+	 * fired after initialisation and startup of the Quartz scheduler, before the actual scheduling
+	 * of jobs and triggers
+	 * 
+	 * @param evt
+	 *            holds instance of scheduler
 	 */
 	public void schedulerStarted(SchedulerStartedEvent evt)
 	{

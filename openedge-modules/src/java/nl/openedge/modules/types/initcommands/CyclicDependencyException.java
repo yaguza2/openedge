@@ -32,6 +32,7 @@ package nl.openedge.modules.types.initcommands;
 
 /**
  * Thrown when a cyclic dependency is detected
+ * 
  * @author Eelco Hillenius
  */
 public class CyclicDependencyException extends RuntimeException
@@ -47,6 +48,7 @@ public class CyclicDependencyException extends RuntimeException
 
 	/**
 	 * construct with message
+	 * 
 	 * @param message
 	 */
 	public CyclicDependencyException(String message)
@@ -56,6 +58,7 @@ public class CyclicDependencyException extends RuntimeException
 
 	/**
 	 * construct with message and cause
+	 * 
 	 * @param message
 	 * @param cause
 	 */
@@ -66,6 +69,7 @@ public class CyclicDependencyException extends RuntimeException
 
 	/**
 	 * construct with cause
+	 * 
 	 * @param cause
 	 */
 	public CyclicDependencyException(Throwable cause)
