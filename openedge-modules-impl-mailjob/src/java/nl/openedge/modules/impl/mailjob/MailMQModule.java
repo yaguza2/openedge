@@ -78,4 +78,11 @@ public interface MailMQModule
 	 * @throws Exception
 	 */
 	public void removeFromQueue(List messagesToRemove) throws Exception;
+	/**
+	 * Returns a list of failed messages.
+	 * 
+	 * @return a list of messages or an empty list if no message failed.
+	 * @throws Exception
+	 */
+	public List getFailedMessages()throws Exception;
 }

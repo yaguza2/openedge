@@ -31,12 +31,14 @@
 package nl.openedge.modules.impl.mailjob.hib;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import nl.openedge.modules.types.base.SingletonType;
@@ -54,7 +56,10 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 
 	// object query to get new messages
 	private static final String listNewMessages =
-		"from m in class " + MailMessage.class.getName() + " where m.status = 'new'";
+		"from m in class " + MailMessage.class.getName() + " where m.status = '"+MailMessage.STATUS_NEW+"'";
+	
+	private static final String listFailedMessages =
+		"from m in class " + MailMessage.class.getName() + " where m.status = '"+MailMessage.STATUS_FAILED+"'";
 
 	/* if true, delete messages from store, if not set flag to succeeded */
 	private boolean deleteOnRemove = true;
@@ -158,25 +163,27 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 						+ msg.getId()
 						+ " was not found in the persistent store");
 			}
-
-			String errorMsg;
-			try
+			if(t!=null)
 			{
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				PrintWriter pw = new PrintWriter(bos);
-				t.printStackTrace(pw);
-				pw.flush();
-				pw.close();
-				bos.flush();
-				bos.close();
-				errorMsg = bos.toString();
-			}
-			catch (Exception ex)
-			{
-				errorMsg = t.getMessage();
+				String errorMsg;
+				try
+				{
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					PrintWriter pw = new PrintWriter(bos);
+					t.printStackTrace(pw);
+					pw.flush();
+					pw.close();
+					bos.flush();
+					bos.close();
+					errorMsg = bos.toString();
+				}
+				catch (Exception ex)
+				{
+					errorMsg = t.getMessage();
+				}
+				msg.setStatusDetail(errorMsg);
 			}
 			msg.setStatus(MailMessage.STATUS_FAILED);
-			msg.setStatusDetail(errorMsg);
 			tx.commit();
 
 		}
@@ -205,47 +212,7 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 	public synchronized List popQueue() throws Exception
 	{
 
-		List messages = null;
-
-		Session session = HibernateHelper.getSessionFactory().openSession();
-		Transaction tx = null;
-		try
-		{
-			tx = session.beginTransaction();
-
-			messages = session.find(listNewMessages);
-			if (messages != null)
-			{
-				for (Iterator i = messages.iterator(); i.hasNext();)
-				{
-
-					MailMessage message = (MailMessage)i.next();
-					// set flag to 'read'
-					message.setStatus(MailMessage.STATUS_READ);
-					// persist change
-					session.saveOrUpdate(message);
-				}
-			}
-
-			tx.commit();
-
-		}
-		catch (Exception e)
-		{
-			log.fatal("Exception: ", e);
-			if (tx != null)
-			{
-			
-				tx.rollback();
-			}
-			throw e;
-		}
-		finally
-		{
-			session.close();
-		}
-
-		return messages;
+		return getMailMessages(listNewMessages);
 	}
 
 	/**
@@ -329,4 +296,85 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		this.deleteOnRemove = deleteOnRemove;
 	}
 
+	/**
+	 * @see nl.openedge.modules.impl.mailjob.MailMQModule#getFailedMessages()
+	 */
+	public List getFailedMessages() throws Exception
+	{
+		return getMailMessages(listFailedMessages);
+	}
+	/**
+	 * returns the messages specified in the query, messages are marked as read!
+	 * 
+	 * @param query the query specifying what messages to get
+	 * @return a list of messages or an empty list if no messages matches the criteria.
+	 * @throws Exception
+	 */
+	private List getMailMessages(String query)throws Exception
+	{
+		List messages = null;
+
+		Session session = null;
+		Transaction tx = null;
+		try
+		{
+			session = HibernateHelper.getSessionFactory().openSession();
+			tx = session.beginTransaction();
+			messages = session.find(query);
+			if (messages != null)
+			{
+				for (Iterator i = messages.iterator(); i.hasNext();)
+				{
+					MailMessage message = (MailMessage)i.next();
+					// set flag to 'read'
+					message.setStatus(MailMessage.STATUS_READ);
+				}
+			}
+			tx.commit();
+
+		}
+		catch (HibernateException e)
+		{
+			log.error("Exception: ", e);
+			if (tx != null )
+			{
+				try
+				{
+					tx.rollback();
+				}
+				catch (HibernateException err)
+				{
+					log.error("Rollback failed: ",err);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			log.fatal("Exception: ",e);
+			if(tx!=null && session!=null && session.isConnected())
+				try
+				{
+					tx.rollback();
+				}
+				catch (HibernateException err)
+				{
+					log.error("Rollback failed: ",err);
+				}
+			throw e;
+		}
+		finally
+		{
+			try
+			{
+				session.close();
+			}
+			catch (HibernateException e)
+			{
+				log.error("Rollback failed: ",e);
+			}
+		}
+		if(messages==null)
+			messages=new ArrayList();
+		return messages;
+	}
 }

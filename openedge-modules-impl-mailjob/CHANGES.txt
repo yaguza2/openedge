@@ -1,4 +1,10 @@
 -------------------------------------------------
+1.6
+
+- Hopefully improved on the exceptionhandling.
+- Added the possibility to send failed messages again.
+
+-------------------------------------------------
 1.5
 
 - Add attachments

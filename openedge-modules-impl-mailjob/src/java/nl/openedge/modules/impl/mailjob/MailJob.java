@@ -112,6 +112,23 @@ public final class MailJob implements StatefulJob
 	 * MailMQModule implementation: mailMQModuleAlias
 	 */ 
 	public static final String PARAMETER_KEY_MAILMQMODULE_ALIAS = "mailMQModuleAlias";
+	
+	/**
+	 * The least amount of time that should be between two retry attempts.
+	 * The maximum amount of time between two retry attempts is RETRY_TIME + job execution interval + delay from waiting for previous job execution to finish
+	 * If 0 or null (not specified), no retry is attempted.
+	 */
+	public static final String PARAMETER_KEY_RETRY_TIME = "retryTime";
+	/**
+	 * The last time messages were resend, or was checked if there were any messages that needed to be send again.
+	 */
+	public static final String PARAMETER_KEY_LAST_RETRY_TIME = "lastRetryTime";
+	/**
+	 * The maximum age of a message before it is classified as a lost cause and will no longer be send.
+	 * The age of a message is determined by the time of creation of the message.
+	 */
+	public static final String PARAMETER_KEY_MAX_RETRY_AGE = "maxRetryAge";
+	
 	/** alias of MailMQModule implementation */
 	protected static String mailMQModuleAlias = null;
 	/* logger */
@@ -209,11 +226,75 @@ public final class MailJob implements StatefulJob
 		// send current queue
 		try 
 		{
-			sendMessages(session, mqMod);
+			sendMessages(session, mqMod,mqMod.popQueue());
 		} 
 		catch(Exception e) 
 		{
 			log.fatal("Exception: ", e);
+		}
+		Object temp=parameters.get(PARAMETER_KEY_RETRY_TIME);
+		if(temp instanceof String)
+		{
+			try
+			{
+				parameters.put(PARAMETER_KEY_RETRY_TIME,new Long(temp.toString()));
+				log.info("retry time set to "+temp.toString()+" ms.");
+			}
+			catch (NumberFormatException e)
+			{
+				log.error("retry time is not a valid long",e);
+				parameters.put(PARAMETER_KEY_RETRY_TIME,new Long(0));
+			}
+		}
+		Long retryTime=(Long)parameters.get(PARAMETER_KEY_RETRY_TIME);
+		if(retryTime==null)
+			retryTime=new Long(0);
+		temp=parameters.get(PARAMETER_KEY_MAX_RETRY_AGE);
+		if(temp instanceof String)
+		{
+			try
+			{
+				parameters.put(PARAMETER_KEY_MAX_RETRY_AGE,new Long(temp.toString()));
+				log.info("max retry age set to "+temp.toString()+" ms.");
+			}
+			catch (NumberFormatException e)
+			{
+				log.error("max retry age is not a valid long",e);
+				parameters.put(PARAMETER_KEY_MAX_RETRY_AGE,new Long(0));
+			}
+		}
+		Long retryAge=(Long)parameters.get(PARAMETER_KEY_MAX_RETRY_AGE);
+		if(retryAge==null)
+			retryAge=new Long(0);
+		Long lastRetry=(Long)parameters.get(PARAMETER_KEY_LAST_RETRY_TIME);
+		if(retryTime.longValue()>0 &&(lastRetry==null || System.currentTimeMillis()-lastRetry.longValue() >=retryTime.longValue()));
+		{
+			parameters.put(PARAMETER_KEY_LAST_RETRY_TIME,new Long(System.currentTimeMillis()));
+			try 
+			{
+				long maxAge=retryAge.longValue();
+				long now=System.currentTimeMillis();
+				List all=mqMod.getFailedMessages();
+				List filtered=all;
+				if(maxAge>0)
+				{
+					filtered=new ArrayList();
+					MailMessage tmp=null;
+					for(int i=0;i<all.size();i++)
+					{
+						tmp=(MailMessage)all.get(i);
+						if(now-tmp.getCreated().longValue()<maxAge)
+							filtered.add(tmp);
+						else
+							mqMod.flagFailedMessage(tmp,null);
+					}
+				}
+				sendMessages(session, mqMod,filtered);
+			} 
+			catch(Exception e) 
+			{
+				log.fatal("Exception: ", e);
+			}
 		}
 
 	}
@@ -221,13 +302,12 @@ public final class MailJob implements StatefulJob
 	/**
 	 * send messages from queue
 	 */
-	private void sendMessages(Session session, MailMQModule mqMod) 
+	private void sendMessages(Session session, MailMQModule mqMod,List messages) 
 		throws Exception 
 	{
 		List succeeded = new ArrayList();
 		try 
 		{
-			List messages = mqMod.popQueue();
 			log.info("Loaded " + messages.size() + " MailMessages from the database.");
 			if(messages != null)  
 			{	
