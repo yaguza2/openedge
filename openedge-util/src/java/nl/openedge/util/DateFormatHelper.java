@@ -43,8 +43,8 @@ import java.text.*;
  */
 public final class DateFormatHelper
 {
-
 	private static HashMap formatters = new HashMap();
+	private static ArrayList sequence = new ArrayList();	// used for sequential lookup
 	private static SimpleDateFormat defaultFormatter = null;
 	private static String defaultFormatterString = null;
 
@@ -128,6 +128,7 @@ public final class DateFormatHelper
 				formatter = new SimpleDateFormat(format);
 				formatter.setLenient(false);
 				formatters.put(format, formatter);
+				sequence.add(formatter);	// add formatter ...
 				if (!defaultSet)
 				{
 					defaultFormatter = formatter;
@@ -213,14 +214,13 @@ public final class DateFormatHelper
 			return null;
 		}
 
-		Iterator i = formatters.values().iterator();
 		DateFormat df = null;
 
-		while (i.hasNext())
+		for (int i=0 ; i<sequence.size() ; i++)
 		{
 			try
 			{
-				df = (DateFormat)i.next();
+				df = (DateFormat)sequence.get(i);
 				return df.parse(stringDate);
 			}
 			catch (ParseException e)
@@ -230,6 +230,7 @@ public final class DateFormatHelper
 		}
 		throw new ParseException(stringDate + " is not a valid date", 0);
 	}
+
 
 	/**
 	 * parse date using default formatter
