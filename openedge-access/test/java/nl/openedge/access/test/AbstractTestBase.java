@@ -1,7 +1,5 @@
 package nl.openedge.access.test;
 
-import java.util.Enumeration;
-
 import javax.naming.InitialContext;
 
 import junit.framework.TestCase;
@@ -14,9 +12,6 @@ import org.gjt.mm.mysql.jdbc2.optional.MysqlConnectionPoolDataSource;
  * based on example from Jakarta Commons DBCP project
  */
 public abstract class AbstractTestBase extends TestCase {
-
-
-	public static final String DATASOURCE_NAME = "jdbc/openedge";
 
 	/** construct */
 	public AbstractTestBase(String name) throws Exception {
@@ -34,11 +29,11 @@ public abstract class AbstractTestBase extends TestCase {
 		
 		MysqlConnectionPoolDataSource ds = 
 				new MysqlConnectionPoolDataSource();
-		String connAlias = "openedge_website";
-		String url = "jdbc:mysql://baas:3306/openedge_website";	
-		String port = null;// = "3306";
-		String user = "root";
-		String password = "";
+		String url = System.getProperty("dburl", 
+			"jdbc:mysql://baas:3306/openedge_website");	
+		String port = System.getProperty("dbport", "3306");
+		String user = System.getProperty("dbuser", "root");
+		String password = System.getProperty("dbpassword", "");
 					
 		ds.setUser( user );
 		ds.setPassword( password );
@@ -48,15 +43,8 @@ public abstract class AbstractTestBase extends TestCase {
 							ds.setPort( Integer.parseInt(port) );
 					
 		ds.getConnection(); // check
-		ctx.rebind("jdbc/openedge", ds);
-		
-		Enumeration en = ctx.list("");
-		System.out.println("list rmi: -------------------------------------------");
-		while(en.hasMoreElements()) {
-			System.out.println("el: " + en.nextElement());
-		}
-		System.out.println("{end} list rmi: -------------------------------------------");
-		
+		ctx.rebind(System.getProperty("datasource", "jdbc/openedge"), ds);
+			
 	}
 
 }

@@ -11,7 +11,7 @@
 	
 	<user-manager class="nl.openedge.access.impl.rdbms.RdbmsUserManager">
 		<!-- <param name="environmentContext" value="java:comp/env"/> -->
-		<param name="environmentContext" value="java:comp/env"/>
+		<param name="environmentContext" value=""/>
 		<param name="datasource" value="jdbc/openedge"/>
 	</user-manager>
 	
