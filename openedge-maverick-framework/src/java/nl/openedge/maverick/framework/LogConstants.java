@@ -32,13 +32,24 @@ package nl.openedge.maverick.framework;
 
 /**
  * Holder for constants for logging
+ * 
  * @author Eelco Hillenius
  */
 public interface LogConstants
 {
 	/** 
 	 * log name for performance logging, value: nl.openedge.maverick.framework.performance
-	 * 
 	 */
 	public final static String PERFORMANCE_LOG = "nl.openedge.maverick.framework.performance";
+	
+	/** 
+	 * log name for population logging, value: nl.openedge.maverick.framework.population
+	 */
+	public final static String POPULATION_LOG = "nl.openedge.maverick.framework.population";
+
+	/** 
+	 * log name for format logging, value: nl.openedge.maverick.framework.formatting
+	 */
+	public final static String FORMATTING_LOG = "nl.openedge.maverick.framework.formatting";
+
 }

@@ -5,7 +5,11 @@
 	set in the formBeanContext (and thus will not set any previous message
 	to null).
 	
-- extra debug info population and validation
+- extra debug info population and validation; created special log for this with name:
+	'nl.openedge.maverick.framework.population'.
+	
+- extra debug info formatting; created special log for this with name:
+	'nl.openedge.maverick.framework.formatting'.
 
 -------------------------------------------------
 1.4.1

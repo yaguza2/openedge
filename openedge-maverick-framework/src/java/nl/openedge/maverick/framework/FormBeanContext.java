@@ -70,6 +70,9 @@ public final class FormBeanContext
 
 	/** log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
+	
+	/** format log */
+	private static Log formattingLog = LogFactory.getLog(LogConstants.FORMATTING_LOG);
 
 	/** error key for stacktrace if any */
 	public final static String ERROR_KEY_STACKTRACE = "stacktrace";
@@ -198,8 +201,8 @@ public final class FormBeanContext
 	/** add or overwrite an error */
 	public void setError(String key, String value)
 	{
-		if (errors == null)
-			errors = new HashMap();
+		if (errors == null) errors = new HashMap();
+		
 		errors.put(key, value);
 	}
 
@@ -384,6 +387,12 @@ public final class FormBeanContext
 					displayString = storedValue;
 				}
 			}
+			
+			if(formattingLog.isDebugEnabled())
+			{
+				formattingLog.debug(
+					"using override for property " + name + ": " + displayString);
+			}
 		}
 		
 		if(!wasOverriden) // no override value found?
@@ -516,10 +525,21 @@ public final class FormBeanContext
 		
 		if (formatter != null)
 		{
+			if(formattingLog.isDebugEnabled())
+			{
+				formattingLog.debug(
+					"using formatter " + formatter +
+					" for property " + fieldname);
+			}
 			formatted = formatter.format(value, null);
 		}
 		else
 		{
+			if(formattingLog.isDebugEnabled())
+			{
+				formattingLog.debug(
+					"using default convertUtils formatter for property " + fieldname);
+			}
 			formatted = ConvertUtils.convert(value);
 		}
 		return formatted;
@@ -540,11 +560,11 @@ public final class FormBeanContext
 	 * Set the form bean. This is the bean that will be populated, 
 	 * and that is returned by make formbean
 	 * 
-	 * @param object the bean that will be populated, and that is returned by makeFormbean
+	 * @param bean the bean that will be populated, and that is returned by makeFormbean
 	 */
-	public void setBean(Object object)
+	public void setBean(Object bean)
 	{
-		bean = object;
+		this.bean = bean;
 	}
 
 }

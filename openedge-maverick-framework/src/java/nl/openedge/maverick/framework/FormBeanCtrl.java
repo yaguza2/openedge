@@ -118,6 +118,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/** log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
 	
+	/** population log */
+	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
+
 	/** special performance log */
 	private static Log performanceLog = 
 		LogFactory.getLog(LogConstants.PERFORMANCE_LOG);
@@ -417,7 +420,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			}
 		}
 		
-		if(log.isDebugEnabled())
+		if(populationLog.isDebugEnabled())
 		{
 			traceParameters(parameters, formBeanContext.getBean());
 		}
@@ -438,14 +441,15 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/* extra debug info */
 	private final void traceParameters(Map parameters, Object bean)
 	{
-		log.debug("trace ctrl " + this + "; populate of bean " + bean + " with parameters:");
+		populationLog.debug("trace ctrl " + this + "; populate of bean " 
+			+ bean + " with parameters:");
 		for(Iterator i = parameters.keySet().iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			Object value = parameters.get(key);
-			log.debug("\t " + key + " == " + ConvertUtils.convert(value));
+			populationLog.debug("\t " + key + " == " + ConvertUtils.convert(value));
 		}
-		log.debug("----------------------------------------------------------");
+		populationLog.debug("----------------------------------------------------------");
 	}
 	
 	/*
@@ -559,8 +563,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 								}
 								catch (Exception e)
 								{
-									log.error(e);
-									if(log.isDebugEnabled())
+									populationLog.error(e);
+									if(populationLog.isDebugEnabled())
 									{
 										e.printStackTrace();
 									}
@@ -659,8 +663,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				}
 				catch (Exception e)
 				{
-					log.error(e);
-					if(log.isDebugEnabled())
+					populationLog.error(e);
+					if(populationLog.isDebugEnabled())
 					{
 						e.printStackTrace();
 					}
@@ -764,9 +768,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 								}
 								catch (Exception e)
 								{
-									if(log.isDebugEnabled())
+									if(populationLog.isDebugEnabled())
 									{
-										log.debug(e.getMessage());
+										populationLog.debug(e.getMessage());
 									}
 									// ignore
 								}
@@ -837,7 +841,13 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Collection propertyValidators)
 		throws Exception
 	{
-		//TODO dat kan efficienter?
+		// get target value;
+		// this could be done a bit more efficient, as we allready had
+		// the (converted) value when populating. Working more efficient 
+		// (like with a converted value cache) would make the API of
+		// populators less straightforward, and by getting the property
+		// from the bean instead of using the converted value, we are
+		// sure that we get the property the proper (java beans) way.
 		Object value = PropertyUtils.getProperty(formBeanContext.getBean(), name);
 		
 		// for all validators for this field
@@ -855,9 +865,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				{
 					validateField = rule.allowValidation(cctx, formBeanContext); //test
 					
-					if(log.isDebugEnabled())
+					if(populationLog.isDebugEnabled())
 					{
-						log.debug( "rule " + rule + 
+						populationLog.debug( "rule " + rule + 
 							((validateField) ? " ALLOWS" : " DISALLOWS") +
 							" validation with " + validator);
 					}
@@ -869,11 +879,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				// execute validation method
 				boolean success = validator.isValid(cctx, formBeanContext, name, value);
 				
-				if(log.isDebugEnabled())
+				if(populationLog.isDebugEnabled())
 				{
-					log.debug( "validation" +
+					populationLog.debug( "validation" +
 						((success) ? " PASSED" : " FAILED") +
-						" passed for field " + name);
+						" for field " + name + " using validator " + validator);
 				}
 				
 				if(!success)
@@ -892,13 +902,13 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					}
 					catch (Exception e)
 					{
-						if(log.isDebugEnabled())
+						if(populationLog.isDebugEnabled())
 						{
 							e.printStackTrace();	
 						}
 						else
 						{
-							log.warn(e.getMessage(), e);
+							populationLog.warn(e.getMessage(), e);
 						}
 						formBeanContext.setError(name, e.getMessage());
 					}
@@ -927,7 +937,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		// first, set overrides for the current request parameters
 		formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	
 		
-		if(log.isDebugEnabled()) traceErrors(formBeanContext);
+		if(populationLog.isDebugEnabled()) traceErrors(formBeanContext);
 		
 		// do further (possibly user specific) error handling and/ or
 		// view preparing
@@ -940,16 +950,16 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Map errors = formBeanContext.getErrors();
 		if(errors != null)
 		{
-			log.debug("population of bean " + formBeanContext.getBean() + 
+			populationLog.debug("population of bean " + formBeanContext.getBean() + 
 				" did not succeed; errors:");
 				
 			for(Iterator i = errors.keySet().iterator(); i.hasNext(); )
 			{
 				Object key = i.next();
 				Object value = errors.get(key);
-				log.debug("\t " + key + " == " + ConvertUtils.convert(value));
+				populationLog.debug("\t " + key + " == " + ConvertUtils.convert(value));
 			}
-			log.debug("----------------------------------------------------------");	
+			populationLog.debug("----------------------------------------------------------");	
 		}
 	}
 	

@@ -52,7 +52,7 @@ import nl.openedge.maverick.framework.FormBeanContext;
 public final class DefaultFieldPopulator extends AbstractFieldPopulator implements FieldPopulator
 {
 
-	private static Log log = LogFactory.getLog(DefaultFieldPopulator.class);
+	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
 
 	/**
 	 * construct with reference to the control
@@ -142,9 +142,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 						else
 						{
 							
-							if(log.isDebugEnabled())
+							if(populationLog.isDebugEnabled())
 							{
-								log.debug("using converter " + converter + 
+								populationLog.debug("using converter " + converter + 
 									" for indexed property " + name +
 									" (type " + componentType + ")");
 							}
@@ -193,9 +193,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 					else
 					{
 						
-						if(log.isDebugEnabled())
+						if(populationLog.isDebugEnabled())
 						{
-							log.debug("using converter " + converter + 
+							populationLog.debug("using converter " + converter + 
 								" for indexed property " + name +
 								" (type " + targetType + ")");
 						}
@@ -246,9 +246,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				}
 				else
 				{
-					if(log.isDebugEnabled())
+					if(populationLog.isDebugEnabled())
 					{
-						log.debug("using converter " + converter + " for property " + name +
+						populationLog.debug("using converter " + converter + " for property " + name +
 							" (type " + targetType + ")");
 					}
 					
