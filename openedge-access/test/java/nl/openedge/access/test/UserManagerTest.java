@@ -1,13 +1,10 @@
-/*
- * Created on 7-apr-2003
- */
 package nl.openedge.access.test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import nl.openedge.access.GroupPrincipal;
+import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.UserManager;
 
@@ -18,8 +15,8 @@ import nl.openedge.access.UserManager;
 public class UserManagerTest extends AbstractTestBase {
 
 	protected String username = "eelco";
-	protected String groupname1 = "testgroup1";
-	protected String groupname2 = "testgroup2";
+	protected String rolename1 = "testrole1";
+	protected String rolename2 = "testrole2";
 
 	/**
 	 * @param name
@@ -48,97 +45,97 @@ public class UserManagerTest extends AbstractTestBase {
 	public void testListUsers() {
 		
 		UserManager userManager = accessFactory.getUserManager();
-		List groups = null;
+		List roles = null;
 		try {
-			groups = userManager.listUsers();
-			assertNotNull("groups should be created", groups);
-			assertFalse("groups should be not empty", groups.isEmpty());
+			roles = userManager.listUsers();
+			assertNotNull("roles should be created", roles);
+			assertFalse("roles should be not empty", roles.isEmpty());
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 	
-	/** create a group */
-	public void testCreateGroup() {
+	/** create a role */
+	public void testCreateRole() {
 		
 		UserManager userManager = accessFactory.getUserManager();
-		GroupPrincipal group1 = null;
-		GroupPrincipal group2 = null;
+		RolePrincipal role1 = null;
+		RolePrincipal role2 = null;
 		try {
-			group1 = userManager.createGroup(groupname1);
-			assertNotNull("group1 should be created", group1);
-			group2 = userManager.createGroup(groupname2);
-			assertNotNull("group1 should be created", group2);
+			role1 = userManager.createRole(rolename1);
+			assertNotNull("role1 should be created", role1);
+			role2 = userManager.createRole(rolename2);
+			assertNotNull("role1 should be created", role2);
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 	
-	/** get a group */
-	public void testGetGroup() {
+	/** get a role */
+	public void testGetRole() {
 		
 		UserManager userManager = accessFactory.getUserManager();
-		GroupPrincipal group1 = null;
+		RolePrincipal role1 = null;
 		try {
-			group1 = userManager.getGroup(groupname1);
-			assertNotNull("group1 should exist", group1);
+			role1 = userManager.getRole(rolename1);
+			assertNotNull("role1 should exist", role1);
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 	
-	/** list groups */
-	public void testListGroups() {
+	/** list roles */
+	public void testListRoles() {
 		
 		UserManager userManager = accessFactory.getUserManager();
-		List groups = null;
+		List roles = null;
 		try {
-			groups = userManager.listGroups();
-			assertNotNull("groups should exist", groups);
-			assertFalse("groups should exist", groups.isEmpty());
+			roles = userManager.listRoles();
+			assertNotNull("roles should exist", roles);
+			assertFalse("roles should exist", roles.isEmpty());
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 	
-	/** add a user to a group */
-	public void testUserGroupMaps() {
+	/** add a user to a role */
+	public void testUserRoleMaps() {
 		
 		UserManager userManager = accessFactory.getUserManager();
 		UserPrincipal user = new UserPrincipal(username);
-		GroupPrincipal group1 = new GroupPrincipal(groupname1);
-		GroupPrincipal group2 = new GroupPrincipal(groupname2);
+		RolePrincipal role1 = new RolePrincipal(rolename1);
+		RolePrincipal role2 = new RolePrincipal(rolename2);
 		try {
-			userManager.addUserToGroup(user, group1);
-			userManager.addUserToGroup(user, group2);			
-			List testGroups = new ArrayList(2);
-			testGroups.add(group1);
-			testGroups.add(group2);
+			userManager.addUserToRole(user, role1);
+			userManager.addUserToRole(user, role2);			
+			List testRoles = new ArrayList(2);
+			testRoles.add(role1);
+			testRoles.add(role2);
 			
-			List groups = userManager.listGroupsForUser(user);			
-			assertSameContents("test groups and current groups should be same",
-				groups, testGroups);		
-			userManager.removeUserFromGroup(user, group2);
+			List roles = userManager.listRolesForUser(user);			
+			assertSameContents("test roles and current roles should be same",
+				roles, testRoles);		
+			userManager.removeUserFromRole(user, role2);
 
-			groups = userManager.listGroupsForUser(user);
-			assertNotSameContents("test groups and current groups should differ",
-				groups, testGroups);
+			roles = userManager.listRolesForUser(user);
+			assertNotSameContents("test roles and current roles should differ",
+				roles, testRoles);
 
-			testGroups.remove(group2);
-			assertSameContents("test groups and current groups should be same",
-				groups, testGroups);			
+			testRoles.remove(role2);
+			assertSameContents("test roles and current roles should be same",
+				roles, testRoles);			
 			
-			userManager.deleteGroup(group2);
+			userManager.deleteRole(role2);
 			
 			List testUsers = new ArrayList(1);
 			testUsers.add(user);
-			userManager.listUsersInGroup(group1);
+			userManager.listUsersInRole(role1);
 			assertSameContents("test users and current users should be same",
-				groups, testGroups);
+				roles, testRoles);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -175,8 +172,8 @@ public class UserManagerTest extends AbstractTestBase {
 			Map attribs = userManager.getUserAttributes(dummy);
 			assertTrue(attribs.values().isEmpty());
 			
-			List groups = userManager.listGroupsForUser(dummy);
-			assertTrue(groups.isEmpty());
+			List roles = userManager.listRolesForUser(dummy);
+			assertTrue(roles.isEmpty());
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -185,15 +182,15 @@ public class UserManagerTest extends AbstractTestBase {
 	}
 
 	/* get a user */
-	public void testDeleteGroup() {
+	public void testDeleteRole() {
 		
 		UserManager userManager = accessFactory.getUserManager();
-		GroupPrincipal group = new GroupPrincipal(groupname1);
+		RolePrincipal role = new RolePrincipal(rolename1);
 		try {
-			userManager.deleteGroup(group);
+			userManager.deleteRole(role);
 			
-			group = userManager.getGroup(groupname1);
-			assertNull("group should be non existent", group);
+			role = userManager.getRole(rolename1);
+			assertNull("role should be non existent", role);
 			
 		} catch(Exception e) {
 			e.printStackTrace();

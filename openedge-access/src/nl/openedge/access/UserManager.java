@@ -1,7 +1,3 @@
-	/*
- * Created on 21-mrt-2003
- *
- */
 package nl.openedge.access;
 
 import java.util.List;
@@ -10,8 +6,8 @@ import java.util.Map;
 /**
  * @author vries
  *
- * this manager manages the users and groups, it can create, and
- * remove users and groups, and add users to groups
+ * this manager manages the users and roles, it can create, and
+ * remove users and roles, and add users to roles
  */
 public interface UserManager extends Configurable {
 	
@@ -33,12 +29,12 @@ public interface UserManager extends Configurable {
 	public void resetPassword(UserPrincipal user, String newPassword) throws AccessException;
 	
 	/**
-	 * creates a new GroupPrincipal object
+	 * creates a new RolePrincipal object
 	 * @param id
 	 * @param name
-	 * @return GroupPrincipal
+	 * @return RolePrincipal
 	 */
-	public GroupPrincipal createGroup(String name) throws AccessException;
+	public RolePrincipal createRole(String name) throws AccessException;
 	
 	/**
 	 * returns a user with this name
@@ -90,11 +86,11 @@ public interface UserManager extends Configurable {
 	public void removeUserAttribute(UserPrincipal user) throws AccessException;
 	
 	/**
-	 * returns a group with this id
+	 * returns a role with this id
 	 * @param id
-	 * @return GroupPrincipal
+	 * @return RolePrincipal
 	 */	
-	public GroupPrincipal getGroup(String name) throws AccessException;
+	public RolePrincipal getRole(String name) throws AccessException;
 	
 	/**
 	 * list all current users
@@ -103,46 +99,46 @@ public interface UserManager extends Configurable {
 	public List listUsers() throws AccessException;
 	
 	/**
-	 * list all current groups
+	 * list all current roles
 	 * @return List
 	 */
-	public List listGroups() throws AccessException;
+	public List listRoles() throws AccessException;
 	
 	/**
-	 * list users from this group
-	 * @param group
+	 * list users from this role
+	 * @param role
 	 * @return List
 	 */
-	public List listUsersInGroup(GroupPrincipal group) throws AccessException;
+	public List listUsersInRole(RolePrincipal role) throws AccessException;
 	
 	/**
-	 * list all groups this user belongs to
+	 * list all roles this user belongs to
 	 * @param user
 	 * @return List
 	 */
-	public List listGroupsForUser(UserPrincipal user) throws AccessException;
+	public List listRolesForUser(UserPrincipal user) throws AccessException;
 	
 	/**
-	 * checks if user is in group group
+	 * checks if user is in role
 	 * @param user
-	 * @param group
+	 * @param role
 	 * @return boolean
 	 */
-	public boolean isUserInGroup(UserPrincipal user, GroupPrincipal group) throws AccessException;
+	public boolean isUserInRole(UserPrincipal user, RolePrincipal role) throws AccessException;
 	
 	/**
-	 * adds user to group
+	 * adds user to role
 	 * @param user
-	 * @param group
+	 * @param role
 	 */	
-	public void addUserToGroup(UserPrincipal user, GroupPrincipal group) throws AccessException;
+	public void addUserToRole(UserPrincipal user, RolePrincipal role) throws AccessException;
 	
 	/**
-	 * removes user from group
+	 * removes user from role
 	 * @param user
-	 * @param group
+	 * @param role
 	 */
-	public void removeUserFromGroup(UserPrincipal user, GroupPrincipal group) throws AccessException;
+	public void removeUserFromRole(UserPrincipal user, RolePrincipal role) throws AccessException;
 	
 	/**
 	 * remove user from users
@@ -151,8 +147,8 @@ public interface UserManager extends Configurable {
 	public void deleteUser(UserPrincipal user) throws AccessException;
 	
 	/**
-	 * remove group from groups
-	 * @param group
+	 * remove role from roles
+	 * @param role
 	 */
-	public void deleteGroup(GroupPrincipal group) throws AccessException;
+	public void deleteRole(RolePrincipal role) throws AccessException;
 }

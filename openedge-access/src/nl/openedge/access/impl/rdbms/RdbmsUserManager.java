@@ -1,6 +1,3 @@
-/*
- * Created on 5-apr-2003
- */
 package nl.openedge.access.impl.rdbms;
 
 import java.sql.SQLException;
@@ -19,7 +16,7 @@ import org.jdom.Element;
 
 import nl.openedge.access.AccessException;
 import nl.openedge.access.ConfigException;
-import nl.openedge.access.GroupPrincipal;
+import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.UserManager;
 import nl.openedge.access.util.PasswordHelper;
@@ -100,7 +97,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	
 	/**
 	 * @see nl.openedge.access.UserManager#getUser(java.lang.Integer)
-	 * loads user, user attributes and groups that user is member of
+	 * loads user, user attributes and roles that user is member of
 	 */
 	public UserPrincipal getUser(String name) throws AccessException {
 
@@ -118,8 +115,8 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 				user = new UserPrincipal((String)row.get("name"));
 				// add attributes
 				addAttributes(user);
-				// add groups
-				addGroups(user);
+				// add roles
+				addRoles(user);
 			}
 		} catch(SQLException e) {
 			throw new AccessException(e);
@@ -322,58 +319,58 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#createGroup(java.lang.String)
+	 * @see nl.openedge.access.UserManager#createRole(java.lang.String)
 	 */
-	public GroupPrincipal createGroup(String name) throws AccessException {
+	public RolePrincipal createRole(String name) throws AccessException {
 
-		GroupPrincipal group = null;
+		RolePrincipal role = null;
 		try {
 			HashMap fields = new HashMap(1);
 			fields.put("name", name);
-			int result = insert("oeaccess_group", fields);
+			int result = insert("oeaccess_role", fields);
 			if(result == 1) {
-				group = new GroupPrincipal(name);
+				role = new RolePrincipal(name);
 			} else {
 				throw new AccessException("query failed for an unknown reason");
 			}
 		} catch(Exception e) {
 			throw new AccessException(e);
 		}
-		return group;
+		return role;
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#getGroup(java.lang.Integer)
+	 * @see nl.openedge.access.UserManager#getRole(java.lang.Integer)
 	 */
-	public GroupPrincipal getGroup(String name) throws AccessException {
+	public RolePrincipal getRole(String name) throws AccessException {
 		
-		GroupPrincipal group = null;
+		RolePrincipal role = null;
 		try {
 			HashMap keyFields = new HashMap(1);
 			keyFields.put("name", name);
-			QueryResult result = select("oeaccess_group", keyFields);
+			QueryResult result = select("oeaccess_role", keyFields);
 			if(result != null && result.getRowCount() == 1) {
 				
 				Map row = result.getRows()[0];
-				group = new GroupPrincipal((String)row.get("name"));
+				role = new RolePrincipal((String)row.get("name"));
 			}
 		} catch(SQLException e) {
 			throw new AccessException(e);
 		}		
-		return group;
+		return role;
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#removeGroup(nl.openedge.access.GroupPrincipal)
+	 * @see nl.openedge.access.UserManager#removeRole(nl.openedge.access.RolePrincipal)
 	 */
-	public void deleteGroup(GroupPrincipal group) throws AccessException {
+	public void deleteRole(RolePrincipal role) throws AccessException {
 
-		if(group == null) return;
+		if(role == null) return;
 		try {
 		
-			Object[] params = new Object[]{ group.getName() };
+			Object[] params = new Object[]{ role.getName() };
 			int result = excecuteUpdate(
-				queries.getProperty("deleteGroupCompletely"), params);
+				queries.getProperty("deleteRoleCompletely"), params);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}		
@@ -383,50 +380,50 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 
 	/**
-	 * add groups that user is member of to user
+	 * add roles that user is member of to user
 	 * @param user
 	 * @throws SQLException
 	 */
-	protected void addGroups(UserPrincipal user) throws AccessException {
+	protected void addRoles(UserPrincipal user) throws AccessException {
          
-		user.setGroups(listGroupsForUser(user));	
+		user.setRoles(listRolesForUser(user));	
 	}
 
 
 	/**
-	 * @see nl.openedge.access.UserManager#listGroups()
+	 * @see nl.openedge.access.UserManager#listRoles()
 	 */
-	public List listGroups() throws AccessException {
+	public List listRoles() throws AccessException {
 
-		List groups = new ArrayList();
+		List roles = new ArrayList();
 		try {
-			QueryResult result = select("oeaccess_group", new HashMap(0));
+			QueryResult result = select("oeaccess_role", new HashMap(0));
 			if(result != null) {
 				
 				Map[] rows = result.getRows();
 				if(rows != null) for(int i = 0; i < rows.length; i++) {
-					GroupPrincipal group = new GroupPrincipal(
+					RolePrincipal role = new RolePrincipal(
 						(String)rows[i].get("name"));
-					groups.add(group);
+					roles.add(role);
 				}
 			}
 		} catch(SQLException e) {
 			throw new AccessException(e);
 		}
-		return groups;
+		return roles;
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#listUsersInGroup(nl.openedge.access.GroupPrincipal)
+	 * @see nl.openedge.access.UserManager#listUsersInRole(nl.openedge.access.RolePrincipal)
 	 */
-	public List listUsersInGroup(GroupPrincipal group) throws AccessException {
+	public List listUsersInRole(RolePrincipal role) throws AccessException {
 		
 		List users = new ArrayList();
-		if(group == null) return users;
+		if(role == null) return users;
 		try {
-			Object[] params = new Object[]{ group.getName() };
+			Object[] params = new Object[]{ role.getName() };
 			QueryResult result = excecuteQuery(
-				queries.getProperty("selectUsersInGroupStmt"), params);
+				queries.getProperty("selectUsersInRoleStmt"), params);
 			if(result != null) {
 				
 				Map[] rows = result.getRows();
@@ -443,39 +440,39 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#listGroupsForUsers(nl.openedge.access.UserPrincipal)
+	 * @see nl.openedge.access.UserManager#listRolesForUsers(nl.openedge.access.UserPrincipal)
 	 */
-	public List listGroupsForUser(UserPrincipal user) throws AccessException {
+	public List listRolesForUser(UserPrincipal user) throws AccessException {
 		
-		List groups = new ArrayList();
-		if(user == null) return groups;
+		List roles = new ArrayList();
+		if(user == null) return roles;
 		try {
 			Object[] params = new Object[]{ user.getName() };
-			QueryResult groupResult = excecuteQuery(
-				queries.getProperty("selectUserGroupsStmt"), params);
-			Map[] rows = groupResult.getRows();
+			QueryResult roleResult = excecuteQuery(
+				queries.getProperty("selectUserRolesStmt"), params);
+			Map[] rows = roleResult.getRows();
 			if(rows != null) for(int i = 0; i < rows.length; i++) {
-				GroupPrincipal group = new GroupPrincipal(
+				RolePrincipal role = new RolePrincipal(
 					(String)rows[i].get("name"));
-				groups.add(group); 
+				roles.add(role); 
 			} 
 		} catch(SQLException e) {
 			throw new AccessException(e);
 		}
-		return groups;
+		return roles;
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#isUserInGroup(nl.openedge.access.UserPrincipal, nl.openedge.access.GroupPrincipal)
+	 * @see nl.openedge.access.UserManager#isUserInRole(nl.openedge.access.UserPrincipal, nl.openedge.access.RolePrincipal)
 	 */
-	public boolean isUserInGroup(UserPrincipal user, GroupPrincipal group) throws AccessException {
+	public boolean isUserInRole(UserPrincipal user, RolePrincipal role) throws AccessException {
 
 		boolean result = false;
 		try {
-			Object[] params = new Object[]{ user.getName(), group.getName() };
-			QueryResult groupResult = excecuteQuery(
-				queries.getProperty("selectUserGroupStmt"), params);
-			Map[] rows = groupResult.getRows();
+			Object[] params = new Object[]{ user.getName(), role.getName() };
+			QueryResult roleResult = excecuteQuery(
+				queries.getProperty("selectUserRoleStmt"), params);
+			Map[] rows = roleResult.getRows();
 			if(rows != null && rows[0] != null) {
 				result = true;
 			} 
@@ -486,16 +483,16 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#addUserToGroup(nl.openedge.access.UserPrincipal, nl.openedge.access.GroupPrincipal)
+	 * @see nl.openedge.access.UserManager#addUserToRole(nl.openedge.access.UserPrincipal, nl.openedge.access.RolePrincipal)
 	 */
-	public void addUserToGroup(UserPrincipal user, GroupPrincipal group) throws AccessException {
+	public void addUserToRole(UserPrincipal user, RolePrincipal role) throws AccessException {
 
-		if(user == null || group == null) return;
+		if(user == null || role == null) return;
 		try {
 			HashMap fields = new HashMap(2);
 			fields.put("user_name", user.getName());
-			fields.put("group_name", group.getName());
-			int result = insert("oeaccess_user_group", fields);
+			fields.put("role_name", role.getName());
+			int result = insert("oeaccess_user_role", fields);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}
@@ -505,16 +502,16 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#removeUserFromGroup(nl.openedge.access.UserPrincipal, nl.openedge.access.GroupPrincipal)
+	 * @see nl.openedge.access.UserManager#removeUserFromRole(nl.openedge.access.UserPrincipal, nl.openedge.access.RolePrincipal)
 	 */
-	public void removeUserFromGroup(UserPrincipal user, GroupPrincipal group) throws AccessException {
+	public void removeUserFromRole(UserPrincipal user, RolePrincipal role) throws AccessException {
 		
-		if(user == null || group == null) return;
+		if(user == null || role == null) return;
 		try {
 			HashMap keyFields = new HashMap(2);
 			keyFields.put("user_name", user.getName());
-			keyFields.put("group_name", group.getName());
-			int result = delete("oeaccess_user_group", keyFields);
+			keyFields.put("role_name", role.getName());
+			int result = delete("oeaccess_user_role", keyFields);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}

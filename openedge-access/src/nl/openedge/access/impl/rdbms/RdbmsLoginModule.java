@@ -7,7 +7,7 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.*;
 
-import nl.openedge.access.GroupPrincipal;
+import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 
 import org.apache.commons.logging.Log;
@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * If the user entered a valid username and password,
  * this <code>LoginModule</code> associates a
- * <code>UserPrincipal</code> and the relevant <code>GroupPrincipals</code>
+ * <code>UserPrincipal</code> and the relevant <code>RolePrincipals</code>
  * with the <code>Subject</code>.
  * 
  * <p> This LoginModule also recognizes the following <code>Configuration</code>
@@ -303,12 +303,12 @@ public class RdbmsLoginModule extends RdbmsUserManager implements LoginModule {
 			UserPrincipal user = new UserPrincipal(dbName);
 			// add attributes
 			addAttributes(user);
-			// add groups
+			// add roles
 			this.tempCredentials.add(user);
 			
-			List groups = listGroupsForUser(user);
-			user.setGroups(groups);
-			this.tempPrincipals.addAll(groups);
+			List roles = listRolesForUser(user);
+			user.setRoles(roles);
+			this.tempPrincipals.addAll(roles);
          
 		} else {
 			if(log.isDebugEnabled()) log.debug("passwords do NOT match!");
@@ -402,7 +402,7 @@ public class RdbmsLoginModule extends RdbmsUserManager implements LoginModule {
             if(log.isDebugEnabled()) log.debug("removing UserPrincipal " + p);
             subject.getPrincipals().remove(p);
         }
-		it = subject.getPrincipals(GroupPrincipal.class).iterator();
+		it = subject.getPrincipals(RolePrincipal.class).iterator();
 				while (it.hasNext()) {
 					UserPrincipal p = (UserPrincipal)it.next();
 					if(log.isDebugEnabled()) log.debug("removing UserPrincipal " + p);

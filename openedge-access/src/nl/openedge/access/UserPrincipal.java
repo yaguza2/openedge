@@ -27,8 +27,8 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	/** attributes for this user */
 	protected Map attributes;
 	
-	/** groups that user is member of */
-	protected List groups;
+	/** roles that user is member of */
+	protected List roles;
 	
 	/**
 	 * Create a UserPrincipal with a username.
@@ -121,8 +121,8 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	/**
 	 * @return List
 	 */
-	public List getGroups() {
-		return groups;
+	public List getRoles() {
+		return roles;
 	}
 
 	/**
@@ -134,11 +134,11 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	}
 
 	/**
-	 * Sets the groups.
-	 * @param groups The groups to set
+	 * Sets the roles.
+	 * @param roles The roles to set
 	 */
-	public void setGroups(List groups) {
-		this.groups = groups;
+	public void setRoles(List groups) {
+		this.roles = groups;
 	}
 
 }

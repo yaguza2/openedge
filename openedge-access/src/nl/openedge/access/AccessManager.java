@@ -5,7 +5,7 @@ package nl.openedge.access;
  *
  * this manager manages the resources, it can check if a user 
  * or group has permissions on a resource and change permissions
- * on resources for groups and users 
+ * on resources for roles and users 
  */
 public interface AccessManager extends Configurable {
 	

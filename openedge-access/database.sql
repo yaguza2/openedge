@@ -6,10 +6,10 @@
 
 
 #
-# Table structure for table 'oeaccess_group'
+# Table structure for table 'oeaccess_role'
 #
 
-CREATE TABLE `oeaccess_group` (
+CREATE TABLE `oeaccess_role` (
   `name` varchar(30) NOT NULL default '',
   PRIMARY KEY  (`name`),
   UNIQUE KEY `name` (`name`),
@@ -19,15 +19,15 @@ CREATE TABLE `oeaccess_group` (
 
 
 #
-# Table structure for table 'oeaccess_group_permission'
+# Table structure for table 'oeaccess_role_permission'
 #
 
-CREATE TABLE `oeaccess_group_permission` (
+CREATE TABLE `oeaccess_role_permission` (
   `resource_name` varchar(250) NOT NULL default '',
-  `group_name` varchar(30) NOT NULL default '',
+  `role_name` varchar(30) NOT NULL default '',
   `permission` varchar(30) NOT NULL default '',
-  PRIMARY KEY  (`resource_name`,`group_name`),
-  KEY `resource_name` (`resource_name`,`group_name`)
+  PRIMARY KEY  (`resource_name`,`role_name`),
+  KEY `resource_name` (`resource_name`,`role_name`)
 ) TYPE=MyISAM;
 
 
@@ -76,14 +76,14 @@ CREATE TABLE `oeaccess_user_attribs` (
 
 
 #
-# Table structure for table 'oeaccess_user_group'
+# Table structure for table 'oeaccess_user_role'
 #
 
-CREATE TABLE `oeaccess_user_group` (
-  `group_name` varchar(30) NOT NULL default '',
+CREATE TABLE `oeaccess_user_role` (
+  `role_name` varchar(30) NOT NULL default '',
   `user_name` varchar(30) NOT NULL default '',
-  PRIMARY KEY  (`group_name`,`user_name`),
-  UNIQUE KEY `user_group` (`user_name`,`group_name`)
+  PRIMARY KEY  (`role_name`,`user_name`),
+  UNIQUE KEY `user_role` (`user_name`,`role_name`)
 ) TYPE=MyISAM;
 
 
