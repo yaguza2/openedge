@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>Levob-Gaps</title>
+</head>
+<body>
+			<h1><big>Levob Gaps</big></h1>
+			<h3>Gaps = generiek applicatie parameter systeem</h3>
+			<br>
+			<big>Parameter databasetool</big>
+			<b>version 1.0.3</b>
+			<br><br>
+
+			Met deze tool kun je:
+			<ul class="noindent">
+			<li>Een Levob parameterdatabase aanmaken</li>
+			<li>Een import van een file naar de database uitvoeren</li>
+			<li>Een export van de database naar een file schrijven</li>
+			<li style="list-style: none"><br>
+			</li>
+			</ul>
+			
+			<h2>Opbouw Levob database</h2>
+			Een parameter is een object wat een unieke naam heeft t.o.v. andere
+			parameters en een waarde heeft welke zowel numeriek als 
+			alfanumeriek kan zijn. Parameters worden gegroepeerd in parametergroepen.
+			Zijn alle parameters van een zelfde type dan kunnen deze gegroepeerd 
+			worden in een rijparameter waarbij elke parameter een eigen unieke
+			index krijgt.	Deze index kan zowel numeriek als alfanumeriek zijn en kan 
+			gezien worden	als de naam van de parameter.	Een rijparameter is te zien 
+			als een array (of lijst) van parameters. De rijparameter kan niet op 
+			zichzelf staan maar moet gekoppeld zijn	aan	een parametergroep.
+			In de Levob database kunnen per parametergroep of een groep parameters 
+			of <b>&eacute;&eacute;n</b> rijparameter hieraan worden gekoppeld. 
+			Parametergroepen worden op hun beurt weer gegroepeerd in structuurgroepen 
+			of onder de	speciale structuurgroep: de wortel van de database ookwel de 
+			root genoemd.	Een parametergroep kan <b>niet</b> gekoppeld worden aan een 
+			andere parametergroep.	Structuurgroepen kunnen wel gekoppeld worden aan 
+			anderestructuurgroepen en aan de root natuurlijk.<br>
+			De root heeft alleen verwijzingen naar kinderobjecten dit zijn de objecten 
+			die direct aan de root gekoppeld zijn en dat kunnen alleen verwijzingen 
+			naar structuurgroepen of parametergroepen zijn.<br> 
+			Behalve de root hebben alle objecten 1 verwijzing naar een parentobject 
+			dit	is het object waaraan dit object gekoppeld is.<br>	
+			<br>
+			Een voorbeeld:<br>
+			De rijparameter GBM9095 met daaraan gekoppeld een array van 121 parameters 
+			(index 0 t/m index 120) waarbij elke parameter het aantal levenden van een 
+			bepaalde leeftijd bevat is gekoppeld aan de parametergroep GBM9095 
+			(De rijparameter en de parametergroep krijgen dezelfde naam).<br>
+			De parametergroep GBM9095 is gekoppeld aan de structuurgroep 
+			Sterftetafels.<br>
+			De structuurgroep Sterftetafels is gekoppeld aan de structuurgroep 
+			Tabellen.<br>
+			De structuurgroep Tabellen is gekoppeld aan de structuurgroep 
+			Algemeen.<br>
+			De structuurgroep Algemeen is tenslotte gekoppeld aan de root.<br>
+
+			<h2>Ophalen van parameters</h2>
+			<i>Bestemd voor javaprogrammeurs.</i> <br>
+			Met 'ParameterBrowser browser = new ParameterBrowser();' wordt een object 
+			aangemaakt waarmee databaseobjecten opgehaald kunnen worden of de 
+			databasecursor naar een parentobject in de database laten wijzen.<br>
+			Met de functie browser.navigate(~pad~) kan de root, een structuurgroep, 
+			een parametergroep, een parameter of zelfs direkt een waarde worden 
+			opgehaald. De functie retourneert een van de hierboven beschreven objecten 
+			maar kan natuurlijk ook als void gebruikt worden om enkel de 
+			databasecursor naar een parentobject te laten wijzen.	Om het 
+			databaseobject te koppelen aan een java-object dan moet er altijd gecast 
+			worden naar dat java-object.<br>
+			Het ~pad~ is opgebouwd volgens een vast bepaalde syntax en moet altijd 
+			vanaf de root worden doorgegeven:
+			<ul class="noindent">
+			<li>Het ophalen van de rootstructuurgroep:<br>
+				StructuralRootGroup root = <br> 
+					(StructuralRootGroup) browser.navigate("/");</li>
+			<li>Het ophalen van een structuurgroep die gekoppeld is aan de root:<br>
+				StructuralGroup groep = <br>
+					(Structural) browser.navigate("/~naam structuurgroep~");</li>
+			<li>Het ophalen van een structuurgroep die gekoppeld is aan een andere
+				structuurgroep: <br>
+				StructuralGroup groep = <br> 
+					(Structuralgroup) browser.navigate(
+						"/~naam parent structuurgroep~/~naam structuurgroep~);</li>
+			<li>Het ophalen van een parametergroep die gekoppeld is aan de root:<br>
+				ParameterGroup groep = <br>
+					(Parametergroup) browser.navigate(
+						"/:~naam parametergroep~</li>
+			<li>Het ophalen van een parametergroep die gekoppeld is aan een 
+			    structuurgroep: <br>
+				ParameterGroup = <br> 
+					(ParameterGroep) browser.navigate("{...}/~naam structuurgroep~:
+						~naam parametergroep~");<br>
+				{...} = mogelijke structuurgroep waaraan de structuurgroep op zijn
+				beurt is gekoppeld tot aan de root.</li>							
+			<li>Het ophalen van een rijparameter:<br>
+				NestedParameter rijparameter = <br>
+					(NestedParameter) browser.navigate("{...}/~naam structuurgroep~:
+						~naam parametergroep~/~naam rijparameter~");</li>
+			<li>Het ophalen van een parameter binnen een parametergroep:
+				Parameter parameter = <br>
+					(Parameter) browser.navigate("{...}/~naam
+						structuurgroep~:~naam parametergroep~/~naam parameter~);</li>
+			<li>Het ophalen van een parameter binnen een rijparameter: <br>
+				Parameter parameter = <br>
+					(Parameter) browser.navigate("{...}/~naam
+						structuurgroep~:~naam parametergroep~/~naam rijparameter~[~index 
+							parameter~]");</li>  													
+			<li>Het direct ophalen van een waarde: <br>
+				Zelfde syntax als het ophalen van een parameter met als toevoeging
+					"@value".</li>
+			<li style="list-style: none"><br>		
+			een voorbeeld:<br>
+			Geef uit de tabel GBM9095 de waarde van een 47-jarige: <br>
+			Double waarde = <br>
+						 (Double) browser.navigate(
+  						 "/algemeen/tabellen/sterftetafels:GBM9095/GBM9095[47]@value");
+			<br>
+			</li>
+			</ul>
+			
+			<h2>Een Levob parameterdatabase aanmaken</h2>
+			<i>Bestemd voor javaprogrammeurs.</i> <br>
+			Met de java-applicaties CreateParametersHSQL of met CreateParameterOracle 
+			kan een standaard Levob database worden aangemaakt.<br>
+			Om zelf parameters, rijparameters, parametergroepen of structuurgroepen 
+			toe te voegen moet er gebruik worden gemaakt van een ParameterBuilder 
+			i.p.v. een ParameterBrowser. 
+			Met 'ParameterBuilder builder = new ParameterBuilder();' wordt een object
+			aangemaakt waarmee alle database-objecten aangemaakt kunnen worden en/of
+			de databasecursor naar het een parentobject te laten wijzen.<br>
+			<ul class="noindent">
+			<li>Met builder.navigate("~pad~" kan de cursor naar het gewenste 
+				parentobject in de database laten wijzen.</li>
+			<li>Met de functie<br> 
+				builder.CreateStructuralGroup("~naam~", "~omschrijving~, setcursor); 
+				kan een structuurgroep aan de root of een andere	structuurgroep worden 
+				gekoppeld. Met setcursor = true wijst de databasecursor naar de nieuwe 
+				structuurgroep.</li>
+			<li>Met de functie<br> 
+			  builder.CreateParameterGroup("~kopie of null~, "~naam~,	"~omschrijving~, 
+				setcursor); kan een parametergroep aan de root of een structuurgroep 
+				worden gekoppeld.	'null' geeft aan dat het een heel nieuwe 
+				parametergroep is. De kopie kan een al eerder ingevoerde parametergroep 
+				zijn, de kinderobjecten van het ingevoerde object worden dan 
+				gekopi&euml;erd	onder de nieuwe parametergroep.</li>
+			<li>Met de functie<br> 
+			  builder.CreateNumeric("~naam~", "~waarde~") kan een 
+				numerieke parameter aan een parametergroep worden gekoppeld.
+				De waarde wordt ook als string doorgegeven met de nederlandse opmaak.
+				voorbeeld: builder.createNumeric("vrijstel_uitvaart", "6.244,00");
+				(waarbij de databasecursor wijst naar de parametergroep 
+				"fiscaal2004")</li>
+			<li>Met de functie<br> 
+			  builder.CreateString("~naam~", "~waarde~") kan een 
+				stringparameter aan een parametergroep worden gekoppeld. </li>
+			<li>Met de functie builder.CreateNumericRow("~naam~", ~array van indexen 
+			  als	array van strings~, ~array van waarden als een array van strings
+				met nederlandse opmaak~) kan een rijparameter met numerieke waarden 
+				worden gekoppeld aan een parametergroep.</li>
+			<li>Met de functie builder.CreateRow(StringParameter.class, ~naam~, ~array 
+				van indexen als array van strings, ~array van waarden als array van
+				strings) kan een rijparameter met alfanumeriek waarden worden gekoppeld
+				aan een parametergroep. </li>
+			<li>Met de functie builder.CreateRow(Array of parameterclasses, ~naam~, 
+				~array van indexen als array van strings, ~array van waarden als array
+				van strings) kan een rijparameter met zowel numerieke- als alfanumerieke
+				waarden worden gekoppeld aan een parametegroep.</li>
+			<li style="list-style: none"><br>
+			</li>
+			</ul>
+			
+			<h2>Een import van een file naar de database uitvoeren</h2>
+			Deze functie is alleen voor het aanmaken van nieuwe parametergroepen.<br>
+			Per file kan er maar <b>&eacute;&eacute;n</b> parametergroep worden 
+			aangemaakt. In de punt-komma begrensde file moet het volledige pad 
+			inclusief root naar de parametergroep worden opgegeven.<br>
+			Op elke regel komt een (root)structuurgroep, de parametergroep, 
+			eventueel de rijparameter of een parameter met naam of index en zijn 
+			waarde volgens de volgende vast bepaalde syntax:
+			<ul class="noindent">
+			<li>root: {/}; </li>
+			<li>structuurgroep: {~naam structuurgroep~};~omschrijving~ of ~;~</li>
+			<li>parametergroep: (~naam parametergroep~);~omschrijving~ of ~;~</li>
+			<li>rijparameter: &lt;~naam rijparameter~&gt;;</li>
+			<li>parameter: ~naam parameter of index~;~waarde~<li>
+			Let op!!!, indien de waarde numeriek is dan moet deze ingevoerd worden 
+			volgende de nederlandse opmaak.<br>
+			<br>
+			voorbeeld:<br>
+			Sterftetafel GBM9500 importeren.<br>
+			~importfile~<br>
+			{/};<br>
+			{algemeen};<br>
+			{tabellen};<br>
+			{sterftetafels};<br>
+			(GBM9500);GBM1995-2000<br>
+			&lt;GBM9500&gt;;<br>
+			0;10.000.000,00<br>
+			1;9.996.699,00<br>
+			.<br>
+			.<br>
+			.<br>
+			119;1,00<br>
+			120;0,00<br>
+			<br>
+			~einde file<br>
+			<br>
+			<b>N.B.</b>	
+			<li>De punten in de getallen zijn niet noodzakelijk.</li>	
+			<li>Inden een numerieke waarde of numerieke index negatief moet zijn dan 
+			  het	minteken voor het getal plaatsen.</li>
+			<li>Het pad naar de parametergroep kan samengevoegd worden.</li>
+			<li style="list-style: none"><br>			
+			voorbeeld:<br>
+			Sterftetafel GBM9500 importeren.<br>
+			~importfile~<br>
+			{/}{algemeen}{tabellen}{sterftetafels}
+			(GBM9500);GBM1995-2000;&lt;GBM9500&gt;<br>
+			0;10.000.000,00<br>
+			1;9.996.699,00<br>
+			2;9.996.199,00<br>
+			.<br>
+			.<br>
+			.<br>
+			119;1,00<br>
+			120;0,00<br>
+			<br>
+			~einde file<br>
+			<br>
+			De import wordt geactiveerd door de applicatie ImportText2DB.main aan te 
+			roepen met als parameter de naam van de file inclusief de plek waar deze
+			zich bevindt.<br>
+			Met een eveuntuele 2e parameter kan bepaald worden of de import vanaf een 
+			bepaalde parentobject in de database moet plaats vinden.
+			De syntax van deze 2e parameter is gelijk aan de syntax zoals deze is 
+			beschreven bij de import van een file echter in <b>&eacute;&eacute;n</b> 
+			enkele opdracht. Je kan alleen structuurgroepen opnemen in deze opdracht 
+			(door het hiervoor beschreven gedeelte zal duidelijk worden waarom).<br>
+			<i>Bestemd voor javaprogrammeurs.</i><br>
+			Deze functionaliteit is aan te roepen vanuit een java-applicatie met<br>
+			ImportText2DB.importDataBase(~naam van de file~, 
+				~startpath in de database~ of null);<br> 
+			</li>
+			</ul>
+						   
+			<h2>Een export van de database naar een file schrijven</h2>
+			Met deze functie kan de database worden ge&euml;xporteerd naar een 
+			textfile.<br>
+			Elk opbject uit de database komt op een eigen regel en er wordt 
+			ingesprongen bij de kinderobjecten van een object.<br>
+			De export heeft ook een vastgelegde syntax:
+			<ul class="noindent">
+			<li>root: {/},~omschrijving~</li>
+			<li>structuurgroep: {~naam structuurgroep~},~omschrijving~</li>
+			<li>parametergroep: (~naam parametergroep~),~omschrijving~</li>
+			<li>rijparameter: &lt;~naam rijparameter~&gt;</li>
+			<li>parameter: [~naam of index parameter~]:~waarde~</li>
+			<li style="list-style: none"><br>	
+			De export wordt geactiveerd door de applicatie ExportDB2Text.main aan te
+			roepen met als parameter de naam van de exportfile inclusief de plek waar
+			deze terecht moet koemen.<br></br>
+			Met een eventuele 2e parameter kan bepaald worden of een export vanaf een 
+			bepaald parentobject in de database moet beginnen.
+			De syntax van deze 2e parameter is gelijk aan de sysntax zoals deze is 
+			beschreven bij de import van een file echter in <b>&eacute;&eacute;n</b> 
+			enkele opdracht. Je kan tot en met een parametergroep opgeven in de 
+			opdracht.<br>	
+			<i>Bestemd voor javaprogrammeurs.</i><br>
+			Deze functionaliteit is aan te roepen vanuit een java-applicatie met
+			ExportDB2Text.exportDataBase(~naam van de file~, 
+				~startpath in de database~ of null); 
+			</li>
+			</ul>			   
+</body>
+</html>
