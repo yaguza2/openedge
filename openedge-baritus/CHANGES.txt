@@ -1,3 +1,9 @@
+1.0.10
+-------------------------------------------------
+Fixed a small but SERIOUS bug that prevented using a deep copy
+of the ExecutionParams for the current request, but instead
+used the controller instance variable.
+
 1.0.9
 -------------------------------------------------
 - Refactored populateAndValidate from FormBeanContext to ExecutionParams.

@@ -13,6 +13,16 @@
             <subsection name="1.0.9">
                 <ul>
                 	<li>
+                	    Fixed a small but SERIOUS bug that prevented using a deep copy
+                	    of the ExecutionParams for the current request, but instead
+                	    used the controller instance variable.
+                	</li>
+                </ul>
+            </subsection>
+
+            <subsection name="1.0.9">
+                <ul>
+                	<li>
                 	    Refactored populateAndValidate from FormBeanContext to ExecutionParams.
                 	</li>
                 </ul>

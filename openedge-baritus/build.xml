@@ -1,8 +1,8 @@
 <!--
 
-  Hibernate ANT build script.
+  Baritus ANT build script.
 
-  (Originally contributed by Fabricio Goncalves) 
+  (Originally contributed by Fabricio Goncalves for Hibernate (www.hibernate.org) 
 
 -->
 
@@ -16,7 +16,7 @@
 	<property name="Name" value="Baritus"/>
 	<property name="name" value="Baritus"/>
 	<property name="name2" value="Baritus"/>
-	<property name="version" value="1.0"/>
+	<property name="version" value="1.0.10"/>
 		
 	<!-- set global properties for this build -->
 	<property name="src.dir" value="src"/>

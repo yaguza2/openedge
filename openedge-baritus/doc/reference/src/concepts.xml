@@ -149,17 +149,14 @@
 			 executed on pre-defined points in the line of execution.
 		</para>
 		<para>
-			 There are two kinds of interceptors. The first type are interceptors that
-			 can be used to 'enrich' de model (formBeanContext), eg. load data, save session
-			 attributes, etc. The second type of interceptors are interceptors that can
-			 have an effect on the flow. These 'flow interceptors' can overrule the command
-			 (perform method) and redirect to another view. The latter type can be used to
-			 work with multi page forms coupled to one command or for instance implementing
-			 a generic 'system error' type of view.
-		</para>
-		<para>
-			 The first type of interceptors are allways called before the second type. 
-			 Besides that, the interception points are exactely the same for both types.
+			 Interceptors can be used to 'enrich' de model (formBeanContext), 
+			 eg. load data, save session attributes, etc.
+			 Furthermore, as interceptors can throw 'FlowExceptions', interceptors can
+			 have an effect on the flow. They can overrule the command
+			 (perform method) and redirect to another view or do an arbitrairy redirect
+			 right away. This behaviour can be used to work with multi page forms 
+			 coupled to one command or for instance implementing a generic
+			 'system error' type of view.
 		</para>
 		
 	</sect1>
