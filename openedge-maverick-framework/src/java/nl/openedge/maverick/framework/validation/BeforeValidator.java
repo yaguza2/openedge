@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 import nl.openedge.util.DateFormatHelper;
 
 import org.apache.commons.logging.Log;
@@ -159,9 +159,9 @@ public class BeforeValidator extends AbstractFieldValidator
 
 	/**
 	 * @return true if value is a Date or Calendar and is before after.
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
-	public boolean isValid(ControllerContext cctx, FormBean form, String fieldName, Object value)
+	public boolean isValid(ControllerContext cctx, FormBeanContext form, String fieldName, Object value)
 	{
 		boolean before = false;
 		if (value instanceof Date)
@@ -231,7 +231,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBean form,
+		FormBeanContext form,
 		String fieldName,
 		Object value,
 		Locale locale)

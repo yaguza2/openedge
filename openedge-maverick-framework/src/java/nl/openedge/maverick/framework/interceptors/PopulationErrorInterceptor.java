@@ -28,56 +28,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.validation;
+package nl.openedge.maverick.framework.interceptors;
 
-import java.util.Locale;
+import javax.servlet.ServletException;
 
 import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Use this for custom validation
+ * Registered instances will have their command method executed if 
+ * the model failed to populate, or did not pass validation
+ * 
  * @author Eelco Hillenius
  */
-public interface FieldValidator
+public interface PopulationErrorInterceptor extends Interceptor
 {
-	/**
-	 * checks if value is valid
-	 * @param cctx maverick context
-	 * @param form form for this currentRequest
-	 * @param fieldName field name of parameter
-	 * @param value the value of this parameter
-	 * @return true if valid, false if not.
-	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext form,
-		String fieldName,
-		Object value);
 
 	/**
-	 * if value is not valid, get custom error message here
+	 * prepare error model for view.
+	 * This method will be called if the model failed to populate,
+	 * or did not pass validation
+	 * override this method to 'enrich' the error model
 	 * @param cctx maverick context
-	 * @param form form for this currentRequest
-	 * @param fieldName field name of parameter
-	 * @param value the value of this parameter
-	 * @param locale the locale that should be used to get the message
-	 * @return String the localized error message
-	 */		
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext form,
-		String fieldName,
-		Object value,
-		Locale locale);
-		
-	/**
-	 * if value is not valid, get the custom value to set as the field override
-	 * in the form
-	 * @param value the original input value
-	 * @return the value that should be used as override value
+	 * @param formBeanContext context with form bean that failed to populate
 	 */
-	public Object getOverrideValue(Object value);
-	
+	public void performError(
+		ControllerContext cctx, 
+		FormBeanContext formBeanContext)
+		throws ServletException;
+
 }

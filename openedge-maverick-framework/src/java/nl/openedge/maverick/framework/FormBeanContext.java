@@ -32,8 +32,6 @@ package nl.openedge.maverick.framework;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.security.Principal;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -48,30 +46,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * FormBean is a base class to be used with FormBeanCtrl.
- * Using this form, you (or better FormBeanCtrl) can save errors,
- * save override fields and save the current user.
- * 
- * Override fields are filled with the string values from the HttpServletRequest
- * if conversion the the target type (e.g. an integer) in the form failed.
- * For example: if you have a form with property 'myinteger' and send the currentRequest
- * parameter 'myinteger=foo', 'foo' will be saved as an override field with key
- * 'myinteger'. On top of this, an error will be registered (stored in map errors)
- * for this conversion failure, default with key 'myinteger'.
+ * FormBeanContext wraps the form bean, errors the current locale and overrideFields.
  * 
  * @author Eelco Hillenius
  */
-public abstract class FormBean
+public final class FormBeanContext
 {
-
-	/** last currentRequest */
-	private String lastreq;
-
-	/** validated user principal */
-	private Principal user = null;
 
 	/** the current locale */
 	private Locale currentLocale = null;
+	
+	/** 
+	 * The form bean. This is the bean that will be populated, 
+	 * and that is returned by makeFormbean 
+	 */
+	private Object bean = null;
 
 	/** errors */
 	private Map errors = null;
@@ -91,47 +80,12 @@ public abstract class FormBean
 	/**
 	 * construct empty
 	 */
-	public FormBean()
+	public FormBeanContext()
 	{
 		// do nothing	
 	}
 
 	//	----------------------- PROPERTY METHODS -----------------------------//
-
-	/**
-	 * @return String
-	 */
-	public String getLastreq()
-	{
-		return lastreq;
-	}
-
-	/**
-	 * Sets the lastreq.
-	 * @param lastreq The lastreq to set
-	 */
-	public void setLastreq(String lastreq)
-	{
-		this.lastreq = lastreq;
-	}
-
-	/**
-	 * get user
-	 * @return UserPrincipal
-	 */
-	public Principal getUser()
-	{
-		return user;
-	}
-
-	/**
-	 * set user
-	 * @param user 
-	 */
-	public void setUser(Principal user)
-	{
-		this.user = user;
-	}
 
 	/**
 	 * get the current locale
@@ -436,7 +390,7 @@ public abstract class FormBean
 		{
 			try
 			{
-				Object _value = PropertyUtils.getProperty(this, name); // get the property value
+				Object _value = PropertyUtils.getProperty(bean, name); // get the property value
 				if (_value != null)
 				{
 					// format string
@@ -510,32 +464,6 @@ public abstract class FormBean
 	}
 
 	// ----------------------- UTILITY METHODS -----------------------------//
-
-	/**
-	 * check if the value is null or empty
-	 * @param value object to check on
-	 * @return true if value is not null AND not empty (e.g. 
-	 * in case of a String or Collection)
-	 */
-	public boolean isNullOrEmpty(Object value)
-	{
-		if (value instanceof String)
-		{
-			return (value == null || (((String)value).trim().equals("")));
-		}
-		else if (value instanceof Collection)
-		{
-			return (value == null || (((Collection)value).isEmpty()));
-		}
-		else if (value instanceof Map)
-		{
-			return (value == null || (((Map)value).isEmpty()));
-		}
-		else
-		{
-			return (value == null);
-		}
-	}
 	
 	/**
 	 * Format the given value, independent of the current form.
@@ -595,6 +523,28 @@ public abstract class FormBean
 			formatted = ConvertUtils.convert(value);
 		}
 		return formatted;
+	}
+
+	/**
+	 * Get the form bean. This is the bean that will be populated, 
+	 * and that is returned by make formbean
+	 * 
+	 * @return Object the bean that will be populated, and that is returned by makeFormbean
+	 */
+	public Object getBean()
+	{
+		return bean;
+	}
+
+	/** 
+	 * Set the form bean. This is the bean that will be populated, 
+	 * and that is returned by make formbean
+	 * 
+	 * @param object the bean that will be populated, and that is returned by makeFormbean
+	 */
+	public void setBean(Object object)
+	{
+		bean = object;
 	}
 
 }

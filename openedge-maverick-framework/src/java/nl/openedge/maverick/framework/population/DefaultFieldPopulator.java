@@ -43,10 +43,10 @@ import org.infohazard.maverick.flow.ControllerContext;
 
 import nl.openedge.maverick.framework.*;
 import nl.openedge.maverick.framework.FormBeanCtrl;
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 /**
- * 
+ * Default populator for bean properties. Tries to set a property using introspection
  * @author Eelco Hillenius
  */
 public final class DefaultFieldPopulator extends AbstractFieldPopulator implements FieldPopulator
@@ -66,7 +66,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 	/**
 	 * set a property on the given form
 	 * @param cctx maverick context
-	 * @param form instance of the form to set the property on
+	 * @param formBeanContext context with instance of the form bean to set the property on
 	 * @param name name of the property
 	 * @param value the value from the request. This is either a String or a String array (String[])
 	 * @param targetPropertyMeta an extra wrapper for the target
@@ -76,13 +76,14 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 	 */
 	public boolean setProperty(
 		ControllerContext cctx,	
-		FormBean form,
+		FormBeanContext formBeanContext,
 		String name,
 		Object requestValue,
 		TargetPropertyMeta targetPropertyMeta,
 		Locale locale)
 		throws Exception
 	{
+		Object bean = formBeanContext.getBean();
 		Object newValue = null;
 		boolean success = true;
 		Object target = targetPropertyMeta.getTarget();
@@ -109,7 +110,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				//	instead of the whole array).
 			{
 				String[] values = null;
-				if(requestValue instanceof String[]) values = (String[])requestValue;
+				if(requestValue instanceof String[])values = (String[])requestValue;
 				else values = new String[]{ String.valueOf(requestValue) };
 				
 				Object[] array = null;
@@ -149,16 +150,18 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 					catch (ConversionException e) 
 					{
 						String nameWithIndex = name + '[' + index + "]";
-						ctrl.setConversionErrorForField(cctx, form, nameWithIndex, values[index], e);
-						ctrl.setOverrideField(cctx, form, nameWithIndex, values[index], e, null);
+						ctrl.setConversionErrorForField(
+							cctx, formBeanContext, target, nameWithIndex, values[index], e);
+						ctrl.setOverrideField(cctx, formBeanContext, nameWithIndex, values[index], e, null);
 						success = false;
 					}
 					catch (Exception e) 
 					{
 						e.printStackTrace();
 						String nameWithIndex = name + '[' + index + "]";
-						ctrl.setConversionErrorForField(cctx, form, nameWithIndex, values[index], e);
-						ctrl.setOverrideField(cctx, form, nameWithIndex, values[index], e, null);
+						ctrl.setConversionErrorForField(
+							cctx, formBeanContext, target, nameWithIndex, values[index], e);
+						ctrl.setOverrideField(cctx, formBeanContext, nameWithIndex, values[index], e, null);
 						success = false;
 					}
 				}				
@@ -190,15 +193,19 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				}
 				catch (ConversionException e)
 				{
-					ctrl.setConversionErrorForField(cctx, form, name, stringValue, e);
-					ctrl.setOverrideField(cctx, form, name, stringValue, e, null);
+					ctrl.setConversionErrorForField(
+						cctx, formBeanContext, target, name, stringValue, e);
+						
+					ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 					success = false;	
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					ctrl.setConversionErrorForField(cctx, form, name, stringValue, e);
-					ctrl.setOverrideField(cctx, form, name, stringValue, e, null);
+					ctrl.setConversionErrorForField(
+						cctx, formBeanContext, target, name, stringValue, e);
+						
+					ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 					success = false;	
 				}			
 			}
@@ -231,15 +238,19 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 			}
 			catch (ConversionException e)
 			{
-				ctrl.setConversionErrorForField(cctx, form, name, stringValue, e);
-				ctrl.setOverrideField(cctx, form, name, stringValue, e, null);
+				ctrl.setConversionErrorForField(
+					cctx, formBeanContext, target, name, stringValue, e);
+					
+				ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 				success = false;	
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				ctrl.setConversionErrorForField(cctx, form, name, stringValue, e);
-				ctrl.setOverrideField(cctx, form, name, stringValue, e, null);
+				ctrl.setConversionErrorForField(
+					cctx, formBeanContext, target, name, stringValue, e);
+					
+				ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 				success = false;	
 			}			
 		}

@@ -34,7 +34,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.infohazard.maverick.flow.ControllerContext;
@@ -143,11 +143,11 @@ public class RegexValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBean form,
+		FormBeanContext form,
 		String fieldName,
 		Object value)
 	{
@@ -163,11 +163,11 @@ public class RegexValidator extends AbstractFieldValidator
 	 * get the error message. default returns the resource bundle message where
 	 * key = messagePrefixwith {0} substituted with the value
 	 * and {1} substituted with the field name
-	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBean form,
+		FormBeanContext form,
 		String fieldName,
 		Object value,
 		Locale locale)

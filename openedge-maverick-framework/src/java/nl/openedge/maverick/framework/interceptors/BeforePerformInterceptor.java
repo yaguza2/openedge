@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.interceptors;
 
 import javax.servlet.ServletException;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -57,7 +57,7 @@ public interface BeforePerformInterceptor extends Interceptor
 	 */
 	public void doBeforePerform(
 		ControllerContext cctx,
-		FormBean formBean) 
+		FormBeanContext formBean) 
 		throws ServletException;
 
 }

@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>openedge-maverick-framework</id>
 	<name>openedge-maverick-framework</name>
-	<currentVersion>1.3</currentVersion>
+	<currentVersion>1.4</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -16,6 +16,11 @@
 	<url>http://maven.apache.org/</url>
 
 	<versions>
+		<version>
+			<id>1.4</id>
+			<name>1.4</name>
+			<tag>B1_4</tag>
+		</version>
 		<version>
 			<id>1.3</id>
 			<name>1.3</name>
@@ -149,17 +154,8 @@
 		</dependency>
 
 		<dependency>
-			<id>openedge-access</id>
-			<version>1.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://www.openedge.nl</url>
-		</dependency>
-
-		<dependency>
 			<id>openedge-util</id>
-			<version>1.1</version>
+			<version>1.1.1</version>
 			<properties>
 				<war.bundle.jar>true</war.bundle.jar>
 			</properties>

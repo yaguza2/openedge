@@ -1,4 +1,28 @@
 -------------------------------------------------
+1.4
+
+- renamed FormBean to FormBeanContext.
+
+- FormBeanContext is now a wrapper for the bean that should be populated. Clients of this
+	project are now free to use whatever bean they want to populate; it is not nescesarry
+	(or even permitted) to extend FormBeanContext anymore. The only class that clients must
+	extends in order to use this framework is FormBeanCtrl.
+
+- moved isNullOrEmpty from FormBeanContext to FormBeanCtrl.
+
+- removed application specific behaviour:
+	- property needsValidUser in FormBeanCtrl 
+	- property userPrincipal in FormBeanContext.
+	
+- changed signature of perform; formBean -> formBeanContext
+	
+- removed dependency on openedge-access.
+
+- fixed various inefficiencies.
+
+- added interceptor for error population.
+
+-------------------------------------------------
 1.3
 
 - AbstractCtrl renamed to FormBeanCtrl and AbstractForm renamed to FormBean.

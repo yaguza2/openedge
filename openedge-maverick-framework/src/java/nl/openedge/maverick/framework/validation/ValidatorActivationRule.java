@@ -30,7 +30,7 @@
  */
 package nl.openedge.maverick.framework.validation;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -49,5 +49,5 @@ public interface ValidatorActivationRule
 	 */
 	public boolean allowValidation(
 		ControllerContext cctx,
-		FormBean form);
+		FormBeanContext form);
 }

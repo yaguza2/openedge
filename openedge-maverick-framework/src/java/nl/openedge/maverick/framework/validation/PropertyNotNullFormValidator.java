@@ -30,7 +30,7 @@
  */
 package nl.openedge.maverick.framework.validation;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.infohazard.maverick.flow.ControllerContext;
@@ -97,14 +97,15 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 	 * propertyName
 	 * @return boolean true if property in form with name of property propertyName exists
 	 * 	and is not null, false otherwise
-	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean)
+	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext)
 	 */
-	public boolean isValid(ControllerContext cctx, FormBean form)
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
+		Object bean = formBeanContext.getBean();
 		boolean valid = false;
 		try
 		{
-			if(PropertyUtils.getProperty(form, propertyName) != null)
+			if(PropertyUtils.getProperty(bean, propertyName) != null)
 			{
 				valid = true;		
 			}

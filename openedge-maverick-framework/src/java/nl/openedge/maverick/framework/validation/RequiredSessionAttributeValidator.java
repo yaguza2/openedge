@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.validation;
 
 import javax.servlet.http.HttpSession;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -93,9 +93,9 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 	} 
 
 	/* (non-Javadoc)
-	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean)
+	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext)
 	 */
-	public boolean isValid(ControllerContext cctx, FormBean form)
+	public boolean isValid(ControllerContext cctx, FormBeanContext form)
 	{
 		boolean valid = false;
 		HttpSession session = cctx.getRequest().getSession(false);

@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.population;
 
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -83,11 +83,11 @@ public final class IgnoreFieldPopulator implements FieldPopulator
 	 * 		and thus the population process is flagged as failed.
 	 * @throws Exception never
 	 * 
-	 * @see nl.openedge.maverick.framework.population.FieldPopulator#setProperty(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object, nl.openedge.maverick.framework.population.TargetPropertyMeta, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.population.FieldPopulator#setProperty(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, nl.openedge.maverick.framework.population.TargetPropertyMeta, java.util.Locale)
 	 */
 	public boolean setProperty(
 		ControllerContext cctx,
-		FormBean form,
+		FormBeanContext form,
 		String name,
 		Object requestValue,
 		TargetPropertyMeta targetPropertyMeta,

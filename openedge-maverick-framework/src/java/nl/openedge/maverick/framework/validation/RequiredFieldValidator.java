@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.validation;
 
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.FormBean;
+import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -85,11 +85,11 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	 * checks whether the value is not null, and - if it is an instance of String - whether
 	 * the trimmed value is not an empty string
 	 * @return boolean true if not null or empty, false otherwise
-	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBean form,
+		FormBeanContext form,
 		String fieldName,
 		Object value)
 	{
@@ -115,11 +115,11 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	 * get the error message. default returns the resource bundle message where
 	 * key = messagePrefix, with {0} substituted with the field name
 	 * 
-	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBean form,
+		FormBeanContext form,
 		String fieldName,
 		Object value,
 		Locale locale)
