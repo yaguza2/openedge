@@ -43,7 +43,23 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
-    <developer>
+	
+  </developers>
+  
+  <contributors>
+	
+	 <contributor>
+      <name>Hugo Brand</name>
+      <id>hugo</id>
+      <email>hugo.brand@topicus.nl</email>
+      <organization>Topicus</organization>
+      <roles>
+        <role>Contributor</role>
+      </roles>
+      <timezone>+1</timezone>
+    </contributor>
+	
+    <contributor>
       <name>Sander Hofstee</name>
       <id>sander</id>
       <email>sander.hofstee@openedge.nl</email>
@@ -52,8 +68,9 @@
         <role>Contributor</role>
       </roles>
       <timezone>+1</timezone>
-    </developer>
-    <developer>
+    </contributor>
+	
+    <contributor>
       <name>Klaasjan Brand</name>
       <id>kj</id>
       <email>klaasjan.brand@openedge.nl</email>
@@ -62,8 +79,9 @@
         <role>Contributor</role>
       </roles>
       <timezone>+1</timezone>
-    </developer>
-    <developer>
+    </contributor>
+	
+    <contributor>
       <name>Johan Compagner</name>
       <id>candyman</id>
       <email>jcompagner@j-com.nl</email>
@@ -72,8 +90,9 @@
         <role>Contributor</role>
       </roles>
       <timezone>+1</timezone>
-    </developer>
-  </developers>
+    </contributor>
+	
+  </contributors>
 
   <!-- <licenses>
     <license>
