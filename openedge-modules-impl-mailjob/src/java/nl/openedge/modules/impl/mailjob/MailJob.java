@@ -87,8 +87,8 @@ import org.quartz.StatefulJob;
  *				<parameter name="mailSessionRef" 
  *						   value="java:comp/env/mail/burgerweeshuis"/>
  *			OR
- *				<parameter name="mail.smtp.host" 
- *						   value="mailprop.mymail.host.com"/>
+ *				<parameter name="mailprop.mail.smtp.host" 
+ *						   value="mymail.host.com"/>
  *
  *				<parameter name="mailMQModuleAlias"
  *						   value="MailMQModule"/>
