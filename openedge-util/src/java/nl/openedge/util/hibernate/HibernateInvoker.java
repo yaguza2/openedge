@@ -50,6 +50,7 @@ public class HibernateInvoker
 
 		log.trace("Enter");
 		Session session;
+		boolean exceptionOccurred = false;
 		try
 		{
 			session = getSession();
@@ -57,6 +58,7 @@ public class HibernateInvoker
 		}
 		catch (Throwable e)
 		{
+			exceptionOccurred = true;
 			log.error("Fout bij het uitvoeren van HibernateCommand " + command, e);
 			if (e instanceof HibernateCommandException)
 			{
@@ -71,7 +73,7 @@ public class HibernateInvoker
 		{
 			try
 			{
-				closeResources();
+				closeResources(exceptionOccurred);
 			}
 			catch (HibernateException e)
 			{
@@ -95,18 +97,31 @@ public class HibernateInvoker
 
 	/**
 	 * Sluit resources indien huidige HibernateHelper delegate instantie is van
-	 * HibernateHelperReloadConfigImpl, sluit dan resources; anders: ignore.
+	 * HibernateHelperReloadConfigImpl, sluit dan resources; anders: als er een exception opgetreden
+	 * is, wordt de sessie gesloten, als er geen exceptie afgehandeld wordt, wordt er niets
+	 * ondernomen. Dit laatste betekent dat voor de HibernateFilter implementatie, de Hibernate
+	 * resources opgeruimd worden na het beeindigen van het request.
+	 * 
+	 * @param exceptionOccurred
+	 *            als <code>true</code> dan de sessie sluiten (Hibernate kan er niet tegen als er
+	 *            nog een sessie actief is).
 	 * 
 	 * @throws HibernateException
 	 *             indien resources niet kunnen worden gesloten door Hibernate
 	 */
-	protected void closeResources() throws HibernateException
+	protected void closeResources(boolean exceptionOccurred) throws HibernateException
 	{
 		HibernateHelperDelegate delegate = HibernateHelper.getDelegate();
 		if (delegate instanceof HibernateHelperReloadConfigImpl)
 		{
 			((HibernateHelperReloadConfigImpl) delegate).closeResources();
 		}
+		else
+		{
+			if (exceptionOccurred)
+			{
+				HibernateHelper.closeSession();
+			}
+		}
 	}
-
 }

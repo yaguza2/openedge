@@ -30,6 +30,11 @@ public class HibernateInvokerTest extends TestCase
 	boolean closeResourcesAangeroepen = false;
 
 	/**
+	 * Vlag voor het doorgeven van de waarde van de exceptionOccurred parameter van closeresources.
+	 */
+	boolean inException = false;
+
+	/**
 	 * Mock object voor HibernateInvoker.
 	 */
 	private final class MockHibernateHelper extends HibernateInvoker
@@ -54,9 +59,10 @@ public class HibernateInvokerTest extends TestCase
 		/**
 		 * @see nl.openedge.util.hibernate.HibernateInvoker#closeResources()
 		 */
-		protected void closeResources() throws HibernateException
+		protected void closeResources(boolean x) throws HibernateException
 		{
 			closeResourcesAangeroepen = true;
+			inException = x;
 		}
 	}
 
@@ -138,6 +144,7 @@ public class HibernateInvokerTest extends TestCase
 		hibernateHelper.execute(mockCommand);
 
 		assertTrue("Aanroep van closeResources", closeResourcesAangeroepen);
+		assertFalse("Exception occurred parameter", inException);
 
 		mockSessionControl.verify();
 		mockQueryControl.verify();
@@ -177,12 +184,12 @@ public class HibernateInvokerTest extends TestCase
 		}
 		catch (RuntimeException e1)
 		{
-			assertTrue("exception zou van type "
-					+ HibernateCommandException.class.getName() + " moeten zijn",
-					(e1 instanceof HibernateCommandException));
+			assertTrue("exception zou van type " + HibernateCommandException.class.getName()
+					+ " moeten zijn", (e1 instanceof HibernateCommandException));
 		}
 
 		assertTrue("Aanroep van closeResources", closeResourcesAangeroepen);
+		assertTrue("Exception occurred parameter", inException);
 
 		mockSessionControl.verify();
 		mockQueryControl.verify();
