@@ -189,34 +189,36 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			}
 			// else the form was populated succesfully
 
-			if(validateForm(cctx, formBean)) 
+			if( formBean != null)
 			{
-				// passed validation, so execute 'normal' command
-				
-				if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
+				if( validateForm(cctx, formBean)) 
 				{
-					this.perform(formBean, cctx);
-					String lq = formBean.getLastreq();
-					lq = UrlTool.replace(lq, "|amp|", "&"); 
-					cctx.setModel(lq);
+					// passed validation, so execute 'normal' command
 					
-					viewName = REDIRECT;	
-				} 
+					if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
+					{
+						this.perform(formBean, cctx);
+						String lq = formBean.getLastreq();
+						lq = UrlTool.replace(lq, "|amp|", "&"); 
+						cctx.setModel(lq);
+						
+						viewName = REDIRECT;	
+					} 
+					else 
+					{
+	
+						viewName = this.perform(formBean, cctx);
+					}
+				}
 				else 
 				{
-
-					viewName = this.perform(formBean, cctx);
+					// did not pass validation, so prepare for error command 
+					// and execute it
+					internalPerformError(cctx, formBean);
+	
+					viewName = getErrorView(cctx, formBean);
 				}
 			} 
-			else 
-			{
-				// did not pass validation, so prepare for error command 
-				// and execute it
-				internalPerformError(cctx, formBean);
-
-				viewName = getErrorView(cctx, formBean);
-			}
-
 		} 
 		catch (Exception e) 
 		{
