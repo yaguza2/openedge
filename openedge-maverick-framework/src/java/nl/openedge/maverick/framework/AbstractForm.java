@@ -34,7 +34,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import nl.openedge.access.UserPrincipal;
@@ -274,34 +273,6 @@ public abstract class AbstractForm
 			overrideFields = new HashMap();
 		}
 		overrideFields.put(name, value);
-	}
-	
-	/**
-	 * set values of fields that overrides. WILL NOT overwrite allready registered overrides
-	 * @param name name of the field/ property
-	 * @param value the string value (from HTML field)
-	 */
-	public void setOverrideField(Map fields) 
-	{
-		if(fields != null)
-		{
-			if(overrideFields == null) 
-			{
-				overrideFields = new HashMap();
-				overrideFields.putAll(fields);
-			}
-			else
-			{
-				for(Iterator i = fields.keySet().iterator(); i.hasNext(); )
-				{
-					String key = (String)i.next();
-					if(!overrideFields.containsKey(key))
-					{
-						overrideFields.put(key, fields.get(key));
-					}
-				}	
-			}	
-		}
 	}
 	
 	/**

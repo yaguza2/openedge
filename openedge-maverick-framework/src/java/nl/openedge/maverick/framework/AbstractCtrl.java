@@ -97,7 +97,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	/** special performance log */
 	private static Log performanceLog = 
-		LogFactory.getLog("nl.openedge.maverick.framework.performance");
+		LogFactory.getLog(LogConstants.PERFORMANCE_LOG);
 	
 	/** if true, the no cache headers will be set */
 	private boolean noCache = true;
@@ -109,16 +109,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	private boolean needsValidUser = false;
 	
 	/**
-	 * Should the command NOT be executed if the form population fails?
-	 * the default (false) has the effect that perform() will be executed
-	 * even if the populate failed. Also, if this is false, no field
-	 * overrides will be set for the fields that failed 
-	 */
-	private boolean failOnPopulateError = false;
-	
-	/**
-	 * If we get an empty string it should be translated to a null (true) or to
-	 * an empty String false. This property is true by default
+	 * If we get an empty string, should it be translated to a null (true) or should
+	 * the empty String be kept (false). This property is true by default
 	 */
 	private boolean setNullForEmptyString = true;
 	
@@ -135,6 +127,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * subclasses can register fieldValidators for custom validation on field level
 	 */
 	protected MultiMap fieldValidators = null;
+	
+	/**
+	 * subclasses can register converters for custom conversion from string (request parameter)
+	 * to other types
+	 * registering a converter for a field will override the default (BeanUtils) conversion
+	 * 
+	 */
+	protected Map fieldConverters = null;
 	
 	/**
 	 * subclasses can register formValidators for custom validation on form level
@@ -257,7 +257,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			// populate form
 			boolean populated = populateForm(cctx, formBean, locale);
 			// go on?
-			if(!populated && isFailOnPopulateError()) // an error occured
+			if(!populated) // an error occured
 			{
 				// prepare for error command and execute it
 				internalPerformError(cctx, formBean);
@@ -448,7 +448,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 	}
 	
-	/**
+	/*
 	 * default populate of form: BeanUtils way; set error if anything goes wrong
 	 * @param cctx controller context
 	 * @param formBean form current form
@@ -456,7 +456,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param locale the prefered locale
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected boolean populateWithErrorReport(
+	private boolean populateWithErrorReport(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		Map properties,
@@ -513,7 +513,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}
 					catch (Exception e)
 					{
-						log.error( "Property " + name + " not found"); 
+						if(log.isDebugEnabled())
+						{
+							log.debug(name + 
+								" is a request parameter, but is not a property of form " + 
+								formBean);	
+						} 
 					}
 				}
 				if(!success)
@@ -531,6 +536,122 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		
 		return succeeded;
+	}
+	
+	/*
+	 * set an array property
+	 * @param cctx controller context
+	 * @param propertyDescriptor descriptor of property
+	 * @param formBean current form
+	 * @param name name of property
+	 * @param values array of values to set
+	 * @return true if successfull, false if not
+	 */
+	private boolean setArrayProperty(
+			ControllerContext cctx,
+			PropertyDescriptor propertyDescriptor,
+			AbstractForm formBean, 
+			String name, 
+			String[] values)
+	{		
+		boolean success = true;
+		Class type = propertyDescriptor.getPropertyType();
+		if(type.isArray())
+		{
+			Class componentType = type.getComponentType();
+			Converter converter = ConvertUtils.lookup(componentType);
+			Object array = Array.newInstance(componentType, values.length);
+			
+			int i = 0;
+			for ( ; i < values.length; i++) 
+			{
+				try 
+				{
+					if(values[i] != null && (!values[i].trim().equals("")))
+					{
+						Object converted = converter.convert(
+							componentType, values[i]);
+						Array.set(array, i, converted);							
+					}
+					else
+					{
+						if(isSetNullForEmptyString())
+						{
+							Array.set(array, i, null);		
+						}
+						else
+						{
+							Array.set(array, i, values[i]);	
+						}						
+					}	
+				} 
+				catch (ConversionException e) 
+				{
+					setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
+					setOverrideField(cctx, formBean, (name + '|' + i), values[i], e, null);
+					success = false;
+				}
+			}
+			
+			try
+			{
+				PropertyUtils.setProperty(formBean, name, array);
+			}
+			catch (Exception e)
+			{
+				//this should not happen as we did extensive checking allready.
+				// therefore print the stacktrace
+				e.printStackTrace();
+				setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
+				success = false;
+			}				
+		}
+		
+		return success;
+	}
+	
+	/*
+	 * set a single property
+	 * @param cctx controller context
+	 * @param formBean form
+	 * @param name name of property
+	 * @param value value of property
+	 * @return true if succeeded, false if not
+	 */
+	private boolean setSingleProperty(
+		ControllerContext cctx,	
+		AbstractForm formBean, String name, Object value)
+	{
+		boolean success = true;
+		String stringValue = null;
+		try
+		{
+			// check as string first
+			stringValue = ConvertUtils.convert(value);
+			if(stringValue != null && (!stringValue.trim().equals("")))
+			{
+				// Perform the assignment for this property
+				BeanUtils.setProperty(formBean, name, value);
+			}
+			else
+			{
+				if(isSetNullForEmptyString())
+				{
+					BeanUtils.setProperty(formBean, name, null);	
+				}
+				else
+				{
+					BeanUtils.setProperty(formBean, name, stringValue);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			setConversionErrorForField(cctx, formBean, name, stringValue, e);
+			setOverrideField(cctx, formBean, name, stringValue, e, null);
+			success = false;	
+		}
+		return success;
 	}
 	
 	/* handle custom validation for all fields */
@@ -698,122 +819,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * set an array property
-	 * @param cctx controller context
-	 * @param propertyDescriptor descriptor of property
-	 * @param formBean current form
-	 * @param name name of property
-	 * @param values array of values to set
-	 * @return true if successfull, false if not
-	 */
-	protected boolean setArrayProperty(
-			ControllerContext cctx,
-			PropertyDescriptor propertyDescriptor,
-			AbstractForm formBean, 
-			String name, 
-			String[] values)
-	{		
-		boolean success = true;
-		Class type = propertyDescriptor.getPropertyType();
-		if(type.isArray())
-		{
-			Class componentType = type.getComponentType();
-			Converter converter = ConvertUtils.lookup(componentType);
-			Object array = Array.newInstance(componentType, values.length);
-			
-			int i = 0;
-			for ( ; i < values.length; i++) 
-			{
-				try 
-				{
-					if(values[i] != null && (!values[i].trim().equals("")))
-					{
-						Object converted = converter.convert(
-							componentType, values[i]);
-						Array.set(array, i, converted);							
-					}
-					else
-					{
-						if(isSetNullForEmptyString())
-						{
-							Array.set(array, i, null);		
-						}
-						else
-						{
-							Array.set(array, i, values[i]);	
-						}						
-					}	
-				} 
-				catch (ConversionException e) 
-				{
-					setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
-					setOverrideField(cctx, formBean, (name + '|' + i), values[i], e, null);
-					success = false;
-				}
-			}
-			
-			try
-			{
-				PropertyUtils.setProperty(formBean, name, array);
-			}
-			catch (Exception e)
-			{
-				//this should not happen as we did extensive checking allready.
-				// therefore print the stacktrace
-				e.printStackTrace();
-				setConversionErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
-				success = false;
-			}				
-		}
-		
-		return success;
-	}
-	
-	/**
-	 * set a single property
-	 * @param cctx controller context
-	 * @param formBean form
-	 * @param name name of property
-	 * @param value value of property
-	 * @return true if succeeded, false if not
-	 */
-	protected boolean setSingleProperty(
-		ControllerContext cctx,	
-		AbstractForm formBean, String name, Object value)
-	{
-		boolean success = true;
-		String stringValue = null;
-		try
-		{
-			// check as string first
-			stringValue = ConvertUtils.convert(value);
-			if(stringValue != null && (!stringValue.trim().equals("")))
-			{
-				// Perform the assignment for this property
-				BeanUtils.setProperty(formBean, name, value);
-			}
-			else
-			{
-				if(isSetNullForEmptyString())
-				{
-					BeanUtils.setProperty(formBean, name, null);	
-				}
-				else
-				{
-					BeanUtils.setProperty(formBean, name, stringValue);
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			setConversionErrorForField(cctx, formBean, name, stringValue, e);
-			setOverrideField(cctx, formBean, name, stringValue, e, null);
-			success = false;	
-		}
-		return success;
-	}
-	
-	/**
 	 * Called when populating the form failed.
 	 * @param cctx
 	 * @param formBean
@@ -823,8 +828,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		AbstractForm formBean)
 	{
 		if(formBean == null) return;
-		// first, set overrides for the current request parameters
-		formBean.setOverrideField(cctx.getRequest().getParameterMap());
 		// set the current model
 		cctx.setModel(formBean);
 		// do further (possibly user specific) error handling and/ or
@@ -973,7 +976,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param validator the validator that was the cause of the validation failure, if one
 	 * 	(is null if this was a conversion error)
 	 */
-	protected void setOverrideField(
+	private void setOverrideField(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		String name, 
@@ -988,16 +991,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		else
 		{
-			// if fail on populate, set the override field so that the input
-			// value can be displayed
-			if(isFailOnPopulateError())
-			{
-				formBean.setOverrideField(name, triedValue);	
-			}	
+			formBean.setOverrideField(name, triedValue);
 		}
 	}
 	
-	/**
+	/*
 	 * users can override this method to do custom populating. Call super first if you want the defaults to be set
 	 * @param cctx controller context
 	 * @param formBean bean to populate
@@ -1005,7 +1003,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @throws Exception
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected boolean populateForm(
+	private boolean populateForm(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		Locale locale) 
@@ -1094,35 +1092,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * Should the command NOT be executed if the form population fails?
-	 * the default (false) has the effect that perform() will be executed
-	 * even if the populate failed. Also, if this is false, no field
-	 * overrides will be set for the fields that failed 
-	 * @return if true, the command will not be executed
-	 */
-	protected boolean isFailOnPopulateError()
-	{
-		return failOnPopulateError;
-	}
-
-	/**
-	 * Should the command NOT be executed if the form population fails?
-	 * the default (false) has the effect that perform() will be executed
-	 * even if the populate failed. Also, if this is false, no field
-	 * overrides will be set for the fields that failed 
-	 * @param failOnPopulateError if true, the command will not be executed
-	 */
-	protected void setFailOnPopulateError(boolean failOnPopulateError)
-	{
-		this.failOnPopulateError = failOnPopulateError;
-	}
-
-	/**
 	 * sub classes can override this value. If it is true and a valid user
 	 * was not found in the session, an error will be returned to the client
 	 * @return boolean
 	 */
-	public boolean isNeedsValidUser()
+	protected boolean isNeedsValidUser()
 	{
 		return needsValidUser;
 	}
@@ -1133,7 +1107,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param needsValidUser does the control need a valid user before
 	 * execution is tried?
 	 */
-	public void setNeedsValidUser(boolean needsValidUser)
+	protected void setNeedsValidUser(boolean needsValidUser)
 	{
 		this.needsValidUser = needsValidUser;
 	}
@@ -1193,7 +1167,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
-	public void addValidator(String fieldName, FieldValidator validator)
+	protected void addValidator(String fieldName, FieldValidator validator)
 	{
 		if(fieldValidators == null)
 		{
@@ -1208,7 +1182,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * successfully, and thus can be used to check consistency etc.
 	 * @param validator the form level validator
 	 */
-	public void addValidator(FormValidator validator)
+	protected void addValidator(FormValidator validator)
 	{
 		if(formValidators == null)
 		{
@@ -1221,7 +1195,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * de-register the fieldValidators that were registered with the given fieldName
 	 * @param fieldName name of field
 	 */
-	public void removeValidators(String fieldName)
+	protected void removeValidators(String fieldName)
 	{
 		if(fieldValidators != null)
 		{
@@ -1234,7 +1208,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param fieldName name of field
 	 * @param the validator to remove for the given field
 	 */
-	public void removeValidator(String fieldName, FieldValidator validator)
+	protected void removeValidator(String fieldName, FieldValidator validator)
 	{
 		if(fieldValidators != null)
 		{
@@ -1246,7 +1220,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * de-register the given form level validator
 	 * @param validator form validator
 	 */
-	public void removeValidator(FormValidator validator)
+	protected void removeValidator(FormValidator validator)
 	{
 		if(formValidators != null)
 		{
@@ -1259,7 +1233,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
-	public void addGlobalValidatorActivationRule(ValidatorActivationRule rule)
+	protected void addGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
 		if(globalValidatorActivationRules == null)
 		{
@@ -1272,7 +1246,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * de-register the given rule for the whole form
 	 * @param fieldName
 	 */
-	public void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
+	protected void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
 		if(globalValidatorActivationRules != null)
 		{
@@ -1406,7 +1380,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * if true, the no cache headers will be set
 	 * @return boolean
 	 */
-	public boolean isNoCache()
+	protected boolean isNoCache()
 	{
 		return noCache;
 	}
@@ -1415,7 +1389,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * if true, the no cache headers will be set
 	 * @param noCache
 	 */
-	public void setNoCache(boolean noCache)
+	protected void setNoCache(boolean noCache)
 	{
 		this.noCache = noCache;
 	}
@@ -1425,7 +1399,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * an empty String false. This property is true by default
 	 * @return boolean
 	 */
-	public boolean isSetNullForEmptyString()
+	protected boolean isSetNullForEmptyString()
 	{
 		return setNullForEmptyString;
 	}
@@ -1435,7 +1409,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * an empty String false. This property is true by default
 	 * @param b
 	 */
-	public void setSetNullForEmptyString(boolean b)
+	protected void setSetNullForEmptyString(boolean b)
 	{
 		setNullForEmptyString = b;
 	}
@@ -1448,7 +1422,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * NOTE: request attributes OVERRIDE request parameters
 	 * @return boolean
 	 */
-	public boolean isIncludeRequestAttributes()
+	protected boolean isIncludeRequestAttributes()
 	{
 		return includeRequestAttributes;
 	}
@@ -1461,7 +1435,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * NOTE: request attributes OVERRIDE request parameters
 	 * @param b
 	 */
-	public void setIncludeRequestAttributes(boolean b)
+	protected void setIncludeRequestAttributes(boolean b)
 	{
 		includeRequestAttributes = b;
 	}

@@ -115,11 +115,17 @@ public final class ThumbnailFileCacheModule implements SingletonType, BeanType
 					log.debug("removing " + files[i] + " from cache");
 				}
 				File toDelete = new File(cacheDir, files[i]);
-				boolean success = toDelete.delete();
-				if (!success)
+				if(!toDelete.delete()) // delete current file
 				{
-					log.error("deleting " + files[i] + 
-						" failed! Clean cache manually");
+					// fix for java/win bug
+					// see: http://forum.java.sun.com/thread.jsp?forum=4&thread=158689&tstart=0&trange=15
+					System.gc();
+					try { Thread.sleep(100); } catch (InterruptedException e) {}
+					if(!toDelete.delete())
+					{
+						log.error("deleting " + files[i] + 
+							" failed! Clean cache manually");	
+					}	
 				}
 			}
 		}
