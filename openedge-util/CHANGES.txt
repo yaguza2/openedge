@@ -5,9 +5,23 @@
 	(was package nl.openedge.maverick.framework.velocity.tools, is now
 	 package nl.openedge.util.velocity.tools)
 
-- StringResourceRepositoryFactory defaults to using StringResourceRepositoryImpl
-	for the repository instead of throwing an exception.
+- Velocity String resources is a separate project now (openedge-velocity-stringresources)
 
+- Did some cleaning up of classes that were not used (anymore) in order to get the project
+	leaner. (Re-)moved Classes:
+	- from package nl.openedge.util:
+		- DateConverter
+		- HostNameDetector
+		- ScanReplaceClass
+	- package nl.openedge.util.config (JNDIObjectFactory and URLHelper)
+	- package nl.openedge.util.tree (TreeStateCache -> moved to openedge-modules.impl-menumodule)
+	- package nl.openedge.util.jndi (DefaultNameParser, MemoryBinding, MemoryContext,
+			MemoryContextFactory, NamingHelper); clients should use
+			Tyrex instead (http://tyrex.sourceforge.net/naming.html)
+	- package nl.openedge.util.jdbc (DataSourceBase, QueryHelper, ResultImpl); clients
+			should use one of the zillion other projects out there (e.g. Spring Framework)
+	- from package nl.openedge.util.hibernate:
+		- StringClobType
 
 -------------------------------------------------
 1.1
