@@ -31,6 +31,8 @@
 package nl.openedge.util;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -620,6 +622,109 @@ public class DateFormatHelperFormatTest extends TestCase
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+
+	/**
+	 * check yyyy-MM-ddTHH:mm:ss
+	 */
+	public void testValidFormat_yyyy_MM_ddTHH_mm_ss()
+	{
+		boolean org = DateFormatHelper.isCheckForCharacters();
+		try
+		{
+			DateFormatHelper.setCheckForCharacters(false);
+			Date d = DateFormatHelper.fallbackParse("2004-02-01T00:00:00");
+			DateFormatHelper.setCheckForCharacters(org);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			assertEquals(1, c.get(Calendar.DATE));
+			assertEquals(1, c.get(Calendar.MONTH));
+			assertEquals(2004, c.get(Calendar.YEAR));
+			assertEquals(0, c.get(Calendar.HOUR_OF_DAY));
+			assertEquals(0, c.get(Calendar.MINUTE));
+			assertEquals(0, c.get(Calendar.SECOND));
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * check yyyy-MM-dd'HH:mm:ss
+	 */
+	public void testValidFormat_yyyy_MM_dd_HH_mm_ss()
+	{
+
+		boolean org = DateFormatHelper.isCheckForCharacters();
+		try
+		{
+			DateFormatHelper.addFormatter("yyyy-MM-dd''HH:mm:ss");
+			DateFormatHelper.setCheckForCharacters(false);
+			Date d = DateFormatHelper.fallbackParse("2004-02-01'00:00:00");
+			DateFormatHelper.setCheckForCharacters(org);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			assertEquals(1, c.get(Calendar.DATE));
+			assertEquals(1, c.get(Calendar.MONTH));
+			assertEquals(2004, c.get(Calendar.YEAR));
+			assertEquals(0, c.get(Calendar.HOUR_OF_DAY));
+			assertEquals(0, c.get(Calendar.MINUTE));
+			assertEquals(0, c.get(Calendar.SECOND));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * check datum: yyyy-MM-dd tijd: HH:mm:ss
+	 */
+	public void testValidFormat_datum_yyyy_MM_dd_tijd_HH_mm_ss()
+	{
+
+		boolean org = DateFormatHelper.isCheckForCharacters();
+		try
+		{
+			DateFormatHelper.addFormatter("'datum: 'yyyy-MM-dd' tijd: 'HH:mm:ss");
+			DateFormatHelper.setCheckForCharacters(false);
+			Date d = DateFormatHelper.fallbackParse("datum: 2004-02-01 tijd: 00:00:00");
+			DateFormatHelper.setCheckForCharacters(org);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			assertEquals(1, c.get(Calendar.DATE));
+			assertEquals(1, c.get(Calendar.MONTH));
+			assertEquals(2004, c.get(Calendar.YEAR));
+			assertEquals(0, c.get(Calendar.HOUR_OF_DAY));
+			assertEquals(0, c.get(Calendar.MINUTE));
+			assertEquals(0, c.get(Calendar.SECOND));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * Test the keys generated for a pattern
+	 */
+	public void testKeyGeneration()
+	{
+		String key = DateFormatHelper.getKeyBasedOnPattern("yyyy-MM-dd'T'HH:mm:ss");
+		assertEquals("yyyy-MM-ddTHH:mm:ss", key);
+		key = DateFormatHelper.getKeyBasedOnPattern("yyyy-MM-dd''HH:mm:ss");
+		assertEquals("yyyy-MM-dd'HH:mm:ss", key);
+		key = DateFormatHelper.getKeyBasedOnPattern("yyyy-MM-dd' 'HH:mm:ss");
+		assertEquals("yyyy-MM-dd HH:mm:ss", key);
+		key = DateFormatHelper.getKeyBasedOnPattern("'datum: 'yyyy-MM-dd' tijd: 'HH:mm:ss");
+		assertEquals("datum: yyyy-MM-dd tijd: HH:mm:ss", key);
+		key = DateFormatHelper.getKeyBasedOnPattern("yyyy-MM-dd 'a''a'");
+		assertEquals("yyyy-MM-dd a'a", key);
 	}
 
 }

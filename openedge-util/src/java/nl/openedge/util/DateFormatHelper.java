@@ -41,16 +41,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Helper for parsing dates in multiple formats, currently for non localized. Loads formats defined
+ * in 'dateformathelper.cfg' in classpath root, or from 'dateformathelper.default.cfg' in this
+ * package as a fallthrough.
+ * 
  * @author Sander Hofstee
- * @author Eelco Hillenius Helper for parsing dates in multiple formats, currently for non
- *         localized. Loads formats defined in 'dateformathelper.cfg' in classpath root, or from
- *         'dateformathelper.default.cfg' in this package as a fallthrough.
+ * @author Eelco Hillenius
+ * @author Maurice Marrink
  */
 public final class DateFormatHelper
 {
@@ -144,17 +148,16 @@ public final class DateFormatHelper
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
 		String format = new String();
-		SimpleDateFormat formatter;
+		DateFormat formatter;
 		boolean defaultSet = false;
 		while ((format = br.readLine()) != null)
 		{
 			if ((!format.startsWith("#")) && (!format.trim().equals("")))
 			{
-				formatter = createSimpleDateFormat(format);
-				formatters.put(format, formatter);
+				formatter = addFormatter(format);
 				if (!defaultSet)
 				{
-					defaultFormatter = formatter;
+					defaultFormatter = (SimpleDateFormat) formatter;
 					defaultFormatterString = format;
 					defaultSet = true;
 				}
@@ -163,13 +166,47 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * Get all formatters.
+	 * Adds a new simpledateformatter with the desired pattern to the end of the list of formatters.
+	 * By default the formatter is not lenient.
 	 * 
-	 * @return Map all registerd formatters
+	 * @param pattern
+	 *            the date pattern
+	 * @return the formatter for customization
 	 */
-	public static Map getFormatters()
+	public static DateFormat addFormatter(String pattern)
 	{
-		return formatters;
+		SimpleDateFormat sdf = createSimpleDateFormat(pattern); //abort early if pattern is invalid
+		formatters.put(getKeyBasedOnPattern(pattern), sdf);
+		return sdf;
+	}
+
+	/**
+	 * Returns a string that can be used as key to store the formatter under. Some formatter
+	 * patterns contain escape like chars (like ' from simpledateformat) that mess up the length
+	 * validation of the pattern against the actual value. by using this key that problem should be
+	 * fixed. We replace the escape sequences here with a string that except for the date and time
+	 * values is identical to the desired input value. This method is public to make the testing
+	 * easier, please regard it as private since you have no further use for it.
+	 * 
+	 * @param pattern
+	 * @return a patternlike string based on the pattern
+	 */
+	public static String getKeyBasedOnPattern(String pattern)
+	{
+		String result = pattern;
+		//fairly simple pattern so compiling should not take that much time, use precompiled
+		//pattern if you really want to optimise
+		Pattern quote = Pattern.compile("'(.+)'"); //replace every 'T' but not ''
+		Matcher m = quote.matcher(pattern);
+		while (m.find(0))
+		{
+			if (m.groupCount() > 0)
+			{
+				result = m.replaceFirst("$1");
+				m = quote.matcher(result);
+			}
+		}
+		return result.replaceAll("''", "'");
 	}
 
 	/**
@@ -247,16 +284,17 @@ public final class DateFormatHelper
 			return null;
 		}
 
-		Iterator i = formatters.values().iterator();
+		Iterator formatterIterator = formatters.values().iterator();
+		Iterator keyIterator = formatters.keySet().iterator();
 		SimpleDateFormat sdf = null;
 		Date date = null;
 
-		while (i.hasNext() && date == null)
+		while (formatterIterator.hasNext() && date == null)
 		{
 			try
 			{
-				sdf = (SimpleDateFormat) i.next();
-				if (stringDate.length() == sdf.toPattern().length())
+				sdf = (SimpleDateFormat) formatterIterator.next();
+				if (stringDate.length() == ((String) keyIterator.next()).length())
 				{
 					date = parse(stringDate, sdf);
 				}
