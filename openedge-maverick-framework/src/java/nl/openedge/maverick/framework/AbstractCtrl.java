@@ -45,6 +45,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.security.auth.Subject;
 import javax.servlet.ServletException;
@@ -158,9 +160,22 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	/**
 	 * Subclasses can register custom populators that override the default population
-	 * process for a given property. Custom populators are stored by name of the property. 
+	 * process for a given request parameter (that usually corresponds to a property with the
+	 * same name in the form. Custom populators are stored by name of the property. 
 	 */
 	private Map fieldPopulators = null;
+	
+	/**
+	 * Subclasses can register custom populators that override the default population
+	 * process for all request parameters that match the regular expressions.
+	 * The registered populators are tried for a match in order of registration. For each match
+	 * that was found, the populator that was registered for it will be used, and the
+	 * request parameter(s) will be removed from the map that is used for population.
+	 * As a consequence, regexFieldPopulators overrule 'normal' field populators, and
+	 * if more than one regex populator would match the parameters, only the first match is used.
+	 * Custom populators are stored by name of the property. 
+	 */
+	private Map regexFieldPopulators = null;
 	
 	/**
 	 * the default field populator
@@ -411,117 +426,215 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		return viewName;
 	}
 	
-	/**
-	 * get the prefered locale for this currentRequest
-	 * IF a user is set in the form, the preferedLocale will be checked for this user.
-	 * IF a locale is found as an attribute in the session with key 
-	 * 		SESSION_KEY_CURRENT_LOCALE, the previous found locale(s) 
-	 * 		will be replaced with this value
+	/*
+	 * users can override this method to do custom populating. Call super first if you want the defaults to be set
 	 * @param cctx controller context
-	 * @param form current form
-	 * @return Locale the prefered locale
+	 * @param formBean bean to populate
+	 * @param locale
+	 * @throws Exception
+	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected Locale getLocaleForRequest(ControllerContext cctx, AbstractForm form)
-	{	
-		Locale locale = null;
-		Principal p = form.getUser();
-		if(p != null && (p instanceof UserPrincipal))
+	private boolean populateForm(
+		ControllerContext cctx, 
+		AbstractForm formBean, 
+		Locale locale) 
+		throws Exception 
+	{
+		long tsBegin = System.currentTimeMillis();
+		// default behavoir
+		boolean retval = true;
+		Map parameters = new HashMap();
+		parameters.putAll(cctx.getRequest().getParameterMap());
+		if(isIncludeRequestAttributes())
 		{
-			UserPrincipal up = (UserPrincipal)p;
-			if(up.getPreferedLocale() != null)
+			HttpServletRequest request = cctx.getRequest();
+			Enumeration enum = request.getAttributeNames();
+			while(enum.hasMoreElements())
 			{
-				locale = up.getPreferedLocale();
+				String attrName = (String)enum.nextElement();
+				parameters.put(attrName, request.getAttribute(attrName));	
 			}
 		}
+		retval = populateWithErrorReport(cctx, formBean, parameters, locale);
+		
+		if(cctx.getControllerParams() != null)
+		{
+			Map ctrlParameters = new HashMap(cctx.getControllerParams());				
+			if(retval == false) 
+			{
+				populateWithErrorReport(cctx, formBean, ctrlParameters, locale);
+			} 
+			else 
+			{
+				retval = populateWithErrorReport(
+					cctx, formBean, ctrlParameters, locale);
+			}	
+		}
 
-		HttpSession session = cctx.getRequest().getSession();
-		Locale temp = (Locale)session.getAttribute(SESSION_KEY_CURRENT_LOCALE);
-		if(temp != null)
+		if(performanceLog.isDebugEnabled())
 		{
-			locale = temp;
-		}
-
-		if(locale == null)
-		{
-			locale = cctx.getRequest().getLocale();
-		}	
-		
-		return locale;		
-	}
-	
-	/**
-	 * get error view. 'error' by default
-	 * @param cctx controller context
-	 * @param form current form
-	 * @return String logical name of view
-	 */
-	protected String getErrorView(ControllerContext cctx, AbstractForm form)
-	{
-		return ERROR;
-	}
-	
-	/**
-	 * checks if a user is saved in the session and stores in formBean if found
-	 * @param cctx Maverick context
-	 * @param formBean bean to store user in
-	 * @return boolean; true if a user was found, false otherwise
-	 */
-	protected boolean checkUser(ControllerContext cctx, AbstractForm formBean)
-	{
-
-		HttpSession session = cctx.getRequest().getSession();
-		Subject subject = (Subject)session.getAttribute(
-			AccessFilter.AUTHENTICATED_SUBJECT_KEY);
-		
-		if(subject == null)
-		{
-			return false;
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("execution of " + this + ".populateForm: " +
+				(tsEnd - tsBegin) + " milis");
 		}
 		
-		UserPrincipal user = null;
-		Set pset = subject.getPrincipals(UserPrincipal.class);	
-		if(pset != null && (!pset.isEmpty()))
-		{
-			// just get first; usually there should be only one of
-			// UserPrincipal type
-			user = (UserPrincipal)pset.iterator().next();	
-		}
-		
-		if (user != null)
-		{
-			formBean.setUser(user);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return retval;
 	}
 	
 	/*
 	 * default populate of form: BeanUtils way; set error if anything goes wrong
 	 * @param cctx controller context
-	 * @param formBean form current form
-	 * @param properties map with name/ values
+	 * @param form form current form
+	 * @param parameters map with name/ values
 	 * @param locale the prefered locale
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
 	private boolean populateWithErrorReport(
 		ControllerContext cctx, 
-		AbstractForm formBean, 
-		Map properties,
+		AbstractForm form, 
+		Map parameters,
 		Locale locale)
 	{
 		
 		// Do nothing unless both arguments have been specified
-		if ((formBean == null) || (properties == null)) 
+		if ((form == null) || (parameters == null)) 
 		{
 			return true;
 		}
 
 		boolean succeeded = true;
+		
+		// try regex population
+		succeeded = regexPopulateWithErrorReport(cctx, form, parameters, locale);
+		
+		// populate remainder
+		succeeded = fieldPopulateWithErrorReport(cctx, form, parameters, locale, succeeded);
+		
+		// do custom validation
+		succeeded = doCustomValidation(cctx, form, parameters, locale, succeeded);
+		
+		return succeeded;
+	}
+	
+	/*
+	 * populate with regex populators if any
+	 * @param cctx controller context
+	 * @param form form current form
+	 * @param parameters map with name/ values. parameters that are found within this method
+	 * 		will be removed, and are thus skipped in the remaining population process
+	 * @param locale the prefered locale
+	 * @return true if populate did not have any troubles, false otherwise
+	 */
+	private boolean regexPopulateWithErrorReport(
+		ControllerContext cctx, 
+		AbstractForm form, 
+		Map parameters,
+		Locale locale)
+	{
+		
+		boolean succeeded = true;
+		PropertyDescriptor propertyDescriptor = null;
+		TargetPropertyMeta targetPropertyMeta = null;
+		Class targetType = null;
+		
+		// first, see if there are matches with registered regex populators
+		if(regexFieldPopulators != null) // there are registrations
+		{
+			List keysToBeRemoved = new ArrayList();
+			for(Iterator i = regexFieldPopulators.keySet().iterator(); i.hasNext(); )
+			{
+				Pattern pattern = (Pattern)i.next();
+				
+				for(Iterator j = parameters.keySet().iterator(); j.hasNext(); )
+				{
+					String name = (String)j.next();
+					Matcher matcher = pattern.matcher(name);
+					if(matcher.matches())
+					{
+						FieldPopulator fieldPopulator = (FieldPopulator)
+							regexFieldPopulators.get(pattern);
+						Object value = parameters.get(name);
+						
+						keysToBeRemoved.add(name);
+
+						TargetPropertyMeta propInfo = null;
+						try 
+						{
+							// get the descriptor
+							propertyDescriptor = 
+								PropertyUtils.getPropertyDescriptor(form, name);
+							// resolve and get some more info we need for the target
+							targetPropertyMeta = PropertyUtil.calculate(
+								form, name, propertyDescriptor);
+
+							if (propertyDescriptor == null) 
+							{
+								continue; // Skip this property setter
+							}
+						}
+						catch (Exception e) 
+						{
+							continue; // Skip this property setter
+						}
+
+						boolean success;
+						try
+						{
+							// execute population on form
+							success = fieldPopulator.setProperty(
+								cctx, form, name, value, targetPropertyMeta, locale);
+						}
+						catch (Exception e)
+						{
+							log.error(e);
+							if(log.isDebugEnabled())
+							{
+								e.printStackTrace();
+							}
+							continue;
+						}
+						if(!success)
+						{
+							succeeded = false;
+						}
+					}
+					
+				}
+			}
+			if(!keysToBeRemoved.isEmpty()) // for all found matches, remove the parameter
+			{
+				for(Iterator i = keysToBeRemoved.iterator(); i.hasNext(); )
+				{
+					parameters.remove(i.next());
+				}
+			}
+		} // else nothing to do
+		
+		return succeeded;
+	}
+	
+	/*
+	 * Populate with field populators. 
+	 * @param cctx controller context
+	 * @param form form current form
+	 * @param parameters map with name/ values.
+	 * @param locale the prefered locale
+	 * @param succeeded if any
+	 * @return true if populate did not have any troubles AND succeeded was true, false otherwise
+	 */
+	private boolean fieldPopulateWithErrorReport(
+		ControllerContext cctx, 
+		AbstractForm form, 
+		Map parameters,
+		Locale locale,
+		boolean succeeded)
+	{
+		PropertyDescriptor propertyDescriptor = null;
+		TargetPropertyMeta targetPropertyMeta = null;
+		Class targetType = null;
+		
 		// Loop through the property name/value pairs to be set
-		Iterator names = properties.keySet().iterator();
+		Iterator names = parameters.keySet().iterator();
 		while(names.hasNext()) 
 		{
 			boolean success = true;
@@ -529,13 +642,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			String name = (String)names.next();
 			if (name == null) continue;
 			
-			Object value = properties.get(name);
+			Object value = parameters.get(name);
 			
 			if(value != null)
 			{
-				PropertyDescriptor propertyDescriptor = null;
-				TargetPropertyMeta targetPropertyMeta = null;
-				Class targetType = null;
 				try
 				{
 					TargetPropertyMeta propInfo = null;
@@ -543,7 +653,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					{
 						// get the descriptor
 						propertyDescriptor = 
-							PropertyUtils.getPropertyDescriptor(formBean, name);
+							PropertyUtils.getPropertyDescriptor(form, name);
 						if (propertyDescriptor == null) 
 						{
 							continue; // Skip this property setter
@@ -555,7 +665,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}
 					
 					// resolve and get some more info we need for the target
-					targetPropertyMeta = PropertyUtil.calculate(formBean, name, propertyDescriptor);
+					targetPropertyMeta = PropertyUtil.calculate(form, name, propertyDescriptor);
 					
 					if (propertyDescriptor instanceof MappedPropertyDescriptor) 
 					{
@@ -576,8 +686,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 						if(propertyDescriptor.getWriteMethod() == null) continue; // skip non-writeable
 						targetType = propertyDescriptor.getPropertyType();
 					}
-					
-					// first, see if we have a custom populator registered for the given field
+
+					// See if we have a custom populator registered for the given field
 					FieldPopulator fieldPopulator = null;
 					if(fieldPopulators != null)
 					{
@@ -591,7 +701,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					
 					// execute population on form
 					success = fieldPopulator.setProperty(
-						cctx, formBean, name, value, targetPropertyMeta, locale);
+						cctx, form, name, value, targetPropertyMeta, locale);
 					
 				}
 				catch (Exception e)
@@ -609,14 +719,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				}
 			}
 		}
-		
-		// do custom validation
-		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
-			(formValidators != null && (!formValidators.isEmpty())))
-		{
-			succeeded = doCustomValidation(cctx, formBean, properties, locale, succeeded);
-		}
-		
 		return succeeded;
 	}
 	
@@ -629,95 +731,100 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		boolean succeeded)
 	{
 		
-		long tsBegin = System.currentTimeMillis();
-
-		boolean doCustomValidation = true;
-		// see if there's any globally (form level) defined rules
-		if(globalValidatorActivationRules != null && (!globalValidatorActivationRules.isEmpty()))
+		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
+			(formValidators != null && (!formValidators.isEmpty())))
 		{
-			for(Iterator i = globalValidatorActivationRules.iterator(); i.hasNext(); )
+			
+			long tsBegin = System.currentTimeMillis();
+	
+			boolean doCustomValidation = true;
+			// see if there's any globally (form level) defined rules
+			if(globalValidatorActivationRules != null && (!globalValidatorActivationRules.isEmpty()))
 			{
-				ValidatorActivationRule rule = (ValidatorActivationRule)i.next();
-				doCustomValidation = rule.allowValidation(cctx, formBean); // fire rule
-				if(!doCustomValidation) break;
-			}
-		}
-		
-		if(doCustomValidation)
-		{
-			// if fieldValidators were registered
-			if(fieldValidators != null && (!fieldValidators.isEmpty()))
-			{
-				Iterator names = properties.keySet().iterator(); // loop through the properties
-				while(names.hasNext())
+				for(Iterator i = globalValidatorActivationRules.iterator(); i.hasNext(); )
 				{
-					String name = (String)names.next();
-					if (name == null) continue;
-					if(formBean.getError(name) == null) 
-					{
-						Collection propertyValidators = (Collection)fieldValidators.get(name);
-						// these are the fieldValidators for one property
-						if(propertyValidators != null)
-						{
-							try
-							{
-								succeeded = doCustomValidationForOneField(
-									cctx, formBean, locale, succeeded, 
-									name, propertyValidators);
-							}
-							catch (Exception e)
-							{
-								if(log.isDebugEnabled())
-								{
-									log.debug(e.getMessage());
-								}
-								// ignore
-							}
-						}	
-					} // else an error allready occured; do not validate
-				}	
-			}
-			// if we are still successful so far, check with the form level validators
-			if(succeeded && (formValidators != null))
-			{
-				// check all registered until either all fired successfully or
-				// one did not fire succesfully
-				for(Iterator i = formValidators.iterator(); i.hasNext(); )
-				{
-					FormValidator fValidator = (FormValidator)i.next();
-					boolean fireValidator = true;
-					if(fValidator instanceof ValidationRuleDependend)
-					{
-						ValidatorActivationRule fRule = 
-							((ValidationRuleDependend)fValidator).getValidationActivationRule();
-						if(fRule != null)
-						{
-							if(!fRule.allowValidation(cctx, formBean))
-							{
-								fireValidator = false;
-							}	
-						}
-					}
-					if(fireValidator)
-					{
-						if(!fValidator.isValid(cctx, formBean))
-						{
-							succeeded = false;
-							String[] msg = fValidator.getErrorMessage(
-								cctx, formBean, locale);
-							formBean.setError(msg[0], msg[1]);
-						}	
-					}
-					// else ignore
+					ValidatorActivationRule rule = (ValidatorActivationRule)i.next();
+					doCustomValidation = rule.allowValidation(cctx, formBean); // fire rule
+					if(!doCustomValidation) break;
 				}
 			}
-		}
-		
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("execution of " + this + ".doCustomValidation: " +
-				(tsEnd - tsBegin) + " milis");
+			
+			if(doCustomValidation)
+			{
+				// if fieldValidators were registered
+				if(fieldValidators != null && (!fieldValidators.isEmpty()))
+				{
+					Iterator names = properties.keySet().iterator(); // loop through the properties
+					while(names.hasNext())
+					{
+						String name = (String)names.next();
+						if (name == null) continue;
+						if(formBean.getError(name) == null) 
+						{
+							Collection propertyValidators = (Collection)fieldValidators.get(name);
+							// these are the fieldValidators for one property
+							if(propertyValidators != null)
+							{
+								try
+								{
+									succeeded = doCustomValidationForOneField(
+										cctx, formBean, locale, succeeded, 
+										name, propertyValidators);
+								}
+								catch (Exception e)
+								{
+									if(log.isDebugEnabled())
+									{
+										log.debug(e.getMessage());
+									}
+									// ignore
+								}
+							}	
+						} // else an error allready occured; do not validate
+					}	
+				}
+				// if we are still successful so far, check with the form level validators
+				if(succeeded && (formValidators != null))
+				{
+					// check all registered until either all fired successfully or
+					// one did not fire succesfully
+					for(Iterator i = formValidators.iterator(); i.hasNext(); )
+					{
+						FormValidator fValidator = (FormValidator)i.next();
+						boolean fireValidator = true;
+						if(fValidator instanceof ValidationRuleDependend)
+						{
+							ValidatorActivationRule fRule = 
+								((ValidationRuleDependend)fValidator).getValidationActivationRule();
+							if(fRule != null)
+							{
+								if(!fRule.allowValidation(cctx, formBean))
+								{
+									fireValidator = false;
+								}	
+							}
+						}
+						if(fireValidator)
+						{
+							if(!fValidator.isValid(cctx, formBean))
+							{
+								succeeded = false;
+								String[] msg = fValidator.getErrorMessage(
+									cctx, formBean, locale);
+								formBean.setError(msg[0], msg[1]);
+							}	
+						}
+						// else ignore
+					}
+				}
+			}
+			
+			if(performanceLog.isDebugEnabled())
+			{
+				long tsEnd = System.currentTimeMillis();
+				performanceLog.debug("execution of " + this + ".doCustomValidation: " +
+					(tsEnd - tsBegin) + " milis");
+			}
 		}
 		
 		return succeeded;
@@ -976,57 +1083,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 	}
 	
-	/*
-	 * users can override this method to do custom populating. Call super first if you want the defaults to be set
-	 * @param cctx controller context
-	 * @param formBean bean to populate
-	 * @param locale
-	 * @throws Exception
-	 * @return true if populate did not have any troubles, false otherwise
-	 */
-	private boolean populateForm(
-		ControllerContext cctx, 
-		AbstractForm formBean, 
-		Locale locale) 
-		throws Exception 
-	{
-		long tsBegin = System.currentTimeMillis();
-		// default behavoir
-		boolean retval = true;
-		Map parameters = new HashMap();
-		parameters.putAll(cctx.getRequest().getParameterMap());
-		if(isIncludeRequestAttributes())
-		{
-			HttpServletRequest request = cctx.getRequest();
-			Enumeration enum = request.getAttributeNames();
-			while(enum.hasMoreElements())
-			{
-				String attrName = (String)enum.nextElement();
-				parameters.put(attrName, request.getAttribute(attrName));	
-			}
-		}
-		retval = populateWithErrorReport(cctx, formBean, parameters, locale);
-						
-		if(retval == false) 
-		{
-			populateWithErrorReport(cctx, formBean, cctx.getControllerParams(), locale);
-		} 
-		else 
-		{
-			retval = populateWithErrorReport(
-				cctx, formBean, cctx.getControllerParams(), locale);
-		}
-
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("execution of " + this + ".populateForm: " +
-				(tsEnd - tsBegin) + " milis");
-		}
-		
-		return retval;
-	}
-	
 	/**
 	 * validate the form
 	 * @param ctx current maverick context
@@ -1185,6 +1241,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		if(globalValidatorActivationRules != null)
 		{
 			globalValidatorActivationRules.remove(rule);
+			if(globalValidatorActivationRules.isEmpty()) globalValidatorActivationRules = null;
 		}
 	}
 	
@@ -1227,6 +1284,54 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		if(fieldPopulators != null)
 		{
 			fieldPopulators.remove(fieldName);
+			if(fieldPopulators.isEmpty()) fieldPopulators = null;
+		}
+	}
+	
+	/**
+	 * Register a custom populator that override the default population
+	 * process for all request parameters that match the regular expression stored in
+	 * the provided pattern.
+	 * 
+	 * The registered populators are tried for a match in order of registration. For each match
+	 * that was found, the populator that was registered for it will be used, and the
+	 * request parameter(s) will be removed from the map that is used for population.
+	 * As a consequence, regexFieldPopulators overrule 'normal' field populators, and
+	 * if more than one regex populator would match the parameters, only the first match is used.
+	 * Custom populators are stored by name of the property.
+	 * 
+	 * @param pattern regex pattern
+	 * @param populator populator instance
+	 */
+	protected void addPopulator(Pattern pattern, FieldPopulator populator)
+	{
+		if(regexFieldPopulators == null)
+		{
+			regexFieldPopulators = new HashMap();
+		}
+		regexFieldPopulators.put(pattern, populator);
+	}
+
+	
+	/**
+	 * Register a custom populator that override the default population
+	 * process for all request parameters that match the regular expression stored in
+	 * the provided pattern.
+	 * 
+	 * The registered populators are tried for a match in order of registration. For each match
+	 * that was found, the populator that was registered for it will be used, and the
+	 * request parameter(s) will be removed from the map that is used for population.
+	 * As a consequence, regexFieldPopulators overrule 'normal' field populators, and
+	 * if more than one regex populator would match the parameters, only the first match is used.
+	 * Custom populators are stored by name of the property.
+	 * 
+	 * @param pattern regex pattern
+	 */
+	protected void removePopulator(Pattern pattern)
+	{
+		if(regexFieldPopulators != null)
+		{
+			regexFieldPopulators.remove(pattern);
 		}
 	}
 
@@ -1396,6 +1501,93 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	// ************************ other utility- and property methods *********************/
+	
+	/**
+	 * get the prefered locale for this currentRequest
+	 * IF a user is set in the form, the preferedLocale will be checked for this user.
+	 * IF a locale is found as an attribute in the session with key 
+	 * 		SESSION_KEY_CURRENT_LOCALE, the previous found locale(s) 
+	 * 		will be replaced with this value
+	 * @param cctx controller context
+	 * @param form current form
+	 * @return Locale the prefered locale
+	 */
+	protected Locale getLocaleForRequest(ControllerContext cctx, AbstractForm form)
+	{	
+		Locale locale = null;
+		Principal p = form.getUser();
+		if(p != null && (p instanceof UserPrincipal))
+		{
+			UserPrincipal up = (UserPrincipal)p;
+			if(up.getPreferedLocale() != null)
+			{
+				locale = up.getPreferedLocale();
+			}
+		}
+
+		HttpSession session = cctx.getRequest().getSession();
+		Locale temp = (Locale)session.getAttribute(SESSION_KEY_CURRENT_LOCALE);
+		if(temp != null)
+		{
+			locale = temp;
+		}
+
+		if(locale == null)
+		{
+			locale = cctx.getRequest().getLocale();
+		}	
+		
+		return locale;		
+	}
+	
+	/**
+	 * get error view. 'error' by default
+	 * @param cctx controller context
+	 * @param form current form
+	 * @return String logical name of view
+	 */
+	protected String getErrorView(ControllerContext cctx, AbstractForm form)
+	{
+		return ERROR;
+	}
+	
+	/**
+	 * checks if a user is saved in the session and stores in formBean if found
+	 * @param cctx Maverick context
+	 * @param formBean bean to store user in
+	 * @return boolean; true if a user was found, false otherwise
+	 */
+	protected boolean checkUser(ControllerContext cctx, AbstractForm formBean)
+	{
+
+		HttpSession session = cctx.getRequest().getSession();
+		Subject subject = (Subject)session.getAttribute(
+			AccessFilter.AUTHENTICATED_SUBJECT_KEY);
+		
+		if(subject == null)
+		{
+			return false;
+		}
+		
+		UserPrincipal user = null;
+		Set pset = subject.getPrincipals(UserPrincipal.class);	
+		if(pset != null && (!pset.isEmpty()))
+		{
+			// just get first; usually there should be only one of
+			// UserPrincipal type
+			user = (UserPrincipal)pset.iterator().next();	
+		}
+		
+		if (user != null)
+		{
+			formBean.setUser(user);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	
 	/**
 	 * Get prefixed fields from a request. Handle checkboxes more easily
