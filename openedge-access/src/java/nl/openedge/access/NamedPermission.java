@@ -40,7 +40,7 @@ import java.util.Hashtable;
  * The name for a NamedPermission is the name of the given permission
  * (for example, "exit",
  * "setFactory", "print/queueJob", etc). The naming
- * convention follows the  hierarchical property naming convention.
+ * convention follows a hierarchical naming convention.
  * An asterisk may appear by itself, or if immediately preceded by a "/"
  * may appear at the end of the name, to signify a wildcard match.
  * For example, "*" and "path/*" are valid, while "*path", "a*b",
@@ -102,7 +102,7 @@ public class NamedPermission extends Permission implements java.io.Serializable
 	 * Creates a new NamedPermission with the specified name.
 	 * Name is the symbolic name of the permission, such as
 	 * "setFactory",
-	 * "print.queueJob", or "topLevelWindow", etc.
+	 * "print/queueJob", or "topLevelWindow", etc.
 	 *
 	 * @param name the name of the NamedPermission.
 	 *
@@ -343,25 +343,25 @@ final class NamedPermissionCollection extends PermissionCollection
 			throw new SecurityException(
 				"attempt to add a Permission to a readonly PermissionCollection");
 
-		NamedPermission bp = (NamedPermission)permission;
+		NamedPermission np = (NamedPermission)permission;
 
 		if (permissions.size() == 0)
 		{
 			// adding first permission
-			permClass = bp.getClass();
+			permClass = np.getClass();
 		}
 		else
 		{
 			// make sure we only add new NamedPermissions of the same class
-			if (bp.getClass() != permClass)
+			if (np.getClass() != permClass)
 				throw new IllegalArgumentException(
 					"invalid permission: " + permission);
 		}
 
-		permissions.put(bp.getName(), permission);
+		permissions.put(np.getName(), permission);
 		if (!all_allowed)
 		{
-			if (bp.getName().equals("*"))
+			if (np.getName().equals("*"))
 				all_allowed = true;
 		}
 	}
@@ -381,10 +381,10 @@ final class NamedPermissionCollection extends PermissionCollection
 		if (!(permission instanceof NamedPermission))
 			return false;
 
-		NamedPermission bp = (NamedPermission)permission;
+		NamedPermission np = (NamedPermission)permission;
 
 		// random subclasses of NamedPermission do not imply each other
-		if (bp.getClass() != permClass)
+		if (np.getClass() != permClass)
 			return false;
 
 		// short circuit if the "*" Permission was added
@@ -395,7 +395,7 @@ final class NamedPermissionCollection extends PermissionCollection
 		// Check for full match first. Then work our way up the
 		// path looking for matches on a/b//*
 
-		String path = bp.getName();
+		String path = np.getName();
 		//System.out.println("check "+path);
 
 		Permission x = (Permission)permissions.get(path);
