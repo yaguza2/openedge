@@ -46,7 +46,7 @@ public class ParameterModel extends DetachableModel
 
     /**
      * Construct.
-     * @param Parameter parameter
+     * @param parameter parameter
      */
     public ParameterModel(Parameter parameter)
     {
@@ -107,19 +107,20 @@ public class ParameterModel extends DetachableModel
     }
 
     /**
-     * @see wicket.model.DetachableModel#doAttach(wicket.RequestCycle)
+     * @see wicket.model.DetachableModel#doAttach()
      */
-    protected void doAttach(RequestCycle cycle)
+    protected void doAttach()
     {
+    	RequestCycle cycle = RequestCycle.get();
         this.locale = cycle.getSession().getLocale();
 		ApplicationSettings settings = cycle.getApplication().getSettings();
 		this.converterRegistry = settings.getConverterRegistry();
     }
 
     /**
-     * @see wicket.model.DetachableModel#doDetach(wicket.RequestCycle)
+     * @see wicket.model.DetachableModel#doDetach()
      */
-    protected void doDetach(RequestCycle cycle)
+    protected void doDetach()
     {
         this.locale = null;
         this.converterRegistry = null;
