@@ -31,6 +31,7 @@
 package nl.openedge.modules.impl.menumodule;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -60,7 +61,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	
 	// is dit item onderdeel van het pad?
 	private boolean active = false;
-
+	
+	private List children=new ArrayList();
+	
 	/**
 	 * @return String
 	 */
@@ -441,4 +444,52 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 			this.attributes.putAll(attributes);
 	}
 
+	/**
+	 * @return
+	 */
+	public List getChildren()
+	{
+		return children;
+	}
+
+	/**
+	 * @param list
+	 */
+	public void setChildren(List list)
+	{
+		children= list;
+	}
+	/**
+	 * Adds the child to the end of the list.
+	 * Note this does not insert the item in the cached menu tree
+	 * @param item
+	 */
+	public void addChild(MenuItem item)
+	{
+		children.add(item);	
+	}
+	/**
+	 * Inserts the child at the specified index
+	 * Note this does not insert the item in the cached menu tree
+	 * 
+	 * @param index
+	 * @param item
+	 * @throws ArrayIndexOutfBoundsException if the index is smaller then 0 or greater then the amount of children-1
+	 */
+	public void insertChild(int index,MenuItem item)
+	{
+		children.add(index,item);	
+	}
+	/**
+	 * Removes the item from the list of children.
+	 * Note this does not remove the item from the cached tree as being a child of this menu.
+	 * 
+	 * @param item
+	 */
+	public void deleteChild(MenuItem item)
+	{
+		int index=children.indexOf(item);
+		if(index>=0)
+			children.remove(index);
+	}
 }

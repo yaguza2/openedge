@@ -1,4 +1,9 @@
 -------------------------------------------------
+SNAPSHOT
+
+- Added childs to MenuItem (duplicating tree behaviour, perhaps we should make the MenuItems extends TreeNode)
+
+-------------------------------------------------
 1.3
 
 - Added AttributeEnabledObject interface

@@ -325,7 +325,8 @@ public final class MenuModule
 				{					
 					DefaultMutableTreeNode childNode = new DefaultMutableTreeNode();
 					childNode.setUserObject(childItem);
-					currentNode.add(childNode);		
+					currentNode.add(childNode);
+					((MenuItem)currentNode.getUserObject()).addChild(childItem);		
 
 					if (log.isDebugEnabled())
 					{
