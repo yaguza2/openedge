@@ -40,7 +40,7 @@ public final class SGroupPathNavigationTable extends Table
             StructuralGroup group, SelectCommand command)
     {
         super(componentName, null);
-        setCurrentGroup(group, false);
+        setCurrentGroup(group);
         this.command = command;
     }
 
@@ -71,21 +71,7 @@ public final class SGroupPathNavigationTable extends Table
      */
     public void setCurrentGroup(StructuralGroup group)
     {
-        setCurrentGroup(group, true);
-    }
-
-    /**
-     * Zet de huidige structuurgroep.
-     * @param group de huidige structuurgroep
-     * @param invalidateModel of invalidateModel dient te worden aangeroepen
-     */
-    private void setCurrentGroup(StructuralGroup group, boolean invalidateModel)
-    {
         StructuralGroup[] path = group.getPathToRoot();
 	    setModel(new MicroMap(getName(), Arrays.asList(path)));
-	    if(invalidateModel)
-	    {
-	        invalidateModel();
-	    }
     }
 }

@@ -39,7 +39,7 @@ public final class SGroupTable extends Table
     public SGroupTable(String componentName, StructuralGroup group, SelectCommand command)
     {
         super(componentName, null);
-        setCurrentGroup(group, false);
+        setCurrentGroup(group);
         this.command = command;
     }
 
@@ -62,16 +62,6 @@ public final class SGroupTable extends Table
      */
     public void setCurrentGroup(StructuralGroup group)
     {
-	    setCurrentGroup(group, true);
-    }
-
-    /**
-     * Zet de huidige structuurgroep.
-     * @param group de huidige structuurgroep
-     * @param invalidateModel of invalidateModel dient te worden aangeroepen
-     */
-    public void setCurrentGroup(StructuralGroup group, boolean invalidateModel)
-    {
 	    StructuralGroup[] childs = group.getStructuralChilds();
 	    List list = Arrays.asList(childs);
 	    setModel(new MicroMap(getName(), list));
@@ -82,10 +72,6 @@ public final class SGroupTable extends Table
 	    else
 	    {
 	        setVisible(true); // in case we set it to false before
-	    }
-	    if(invalidateModel)
-	    {
-	        invalidateModel();
 	    }
     }
 }
