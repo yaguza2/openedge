@@ -208,7 +208,7 @@ public final class VersionDAO
 		EntityVersions entityVersions = null;
 		if(isUseCache())
 		{
-			getEntityVersionsFromCache(entity);
+			entityVersions = getEntityVersionsFromCache(entity);
 		}
 		if (entityVersions != null)
 		{
@@ -238,7 +238,7 @@ public final class VersionDAO
 			entityVersions.setVersionIds(new HashSet(result));
 			if(isUseCache())
 			{
-				putEntityVersionsInCache(entity, entityVersions);	
+				putEntityVersionsInCache(entity, entityVersions);
 			}
 		}
 		catch (HibernateException e)

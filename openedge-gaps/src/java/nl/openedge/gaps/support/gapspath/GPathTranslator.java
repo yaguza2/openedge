@@ -224,6 +224,7 @@ public final class GPathTranslator extends DepthFirstAdapter
 			StructuralGroup structGroup = getStructuralGroup(version);
 			this.currentPosition = structGroup;
 		}
+		long tsEnd = System.currentTimeMillis();
 	}
 
 	/**
