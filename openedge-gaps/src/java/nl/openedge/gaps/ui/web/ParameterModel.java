@@ -58,8 +58,9 @@ public class ParameterModel extends DetachableModel
      */
     public Object getObject()
     {
-        Parameter parameter = (Parameter)getObject();
-        ParameterValue value = parameter.getValue();
+        Parameter parameter = (Parameter)super.getObject();
+        ParameterValue paramValue = parameter.getValue();
+        Object value = paramValue.getValue();
         FormattingUtils util = converterRegistry.getFormattingUtils();
         return util.getObjectFormatted(value, locale);
     }
