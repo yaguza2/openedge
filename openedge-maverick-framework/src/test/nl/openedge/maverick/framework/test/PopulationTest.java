@@ -102,74 +102,109 @@ public class PopulationTest extends TestCase
 		this.request.setupGetRequestDispatcher(requestDispatcher);
 	}
 	
-	/**
-	 * test default, succesful (and localized) population and 
-	 * localized formatting of a form bean
-	 */
-	public void testDefaultPopulateAndFormat()
+
+	public void testIntegerPopulationAndBeforePerformInterceptor()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		
 		Map requestParams = new HashMap();
-		
 		requestParams.put("testInteger1", "1"); // test simple string
 		requestParams.put("testInteger2", new String[]{"2"}); // test string array
-		
-		requestParams.put("testLong1", "1"); // test simple string
-		requestParams.put("testLong2", new String[]{"2"}); // test string array
-		
-		requestParams.put("testDouble1", "1,1"); // test simple string
-		requestParams.put("testDouble2", new String[]{"1,2"}); // test string array
-		
-		requestParams.put("testDate1", "20-02-2004"); // test simple string
-		requestParams.put("testDate2", new String[]{"21-03-2005"}); // test string array
-		
-		requestParams.put("testStringArray1", new String[] {"arrayelem0", "arrayelem1"});
-		
-		requestParams.put("testStringArray2[0]", "newval0");
-		requestParams.put("testStringArray2[1]", "newval1");
-		
-		requestParams.put("testMap(key1)", "val1");
-		requestParams.put("testMap(key2)", "val2");
-		
-		requestParams.put("uppercaseTest", "this once was lower case");
-		requestParams.put("ignore", "this should never come through");
-		requestParams.put("ignoreByRegex", "this should never come through either");
-		
 		request.setupGetParameterMap(requestParams);
-
 		MaverickContext mockMavCtx = new MaverickContext(
 			null, request, response);
 		
 		try
 		{
-			
-			ctrl.init(null); // let controller initialize. 
-				// It cannot depend on the controller node though
-			
-			// execute command method
+			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			
-			// get populated bean
 			TestBean bean = ctrl.getTestBean();
-			
 			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
-			
 			assertNotNull(bean.getTestInteger1());
 			assertEquals(new Integer(1), bean.getTestInteger1());
 			assertNotNull(bean.getTestInteger2());
 			assertEquals(new Integer(2), bean.getTestInteger2());
-			
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+
+	public void testLongPopulation()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testLong1", "1"); // test simple string
+		requestParams.put("testLong2", new String[]{"2"}); // test string array
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestLong1());
 			assertEquals(new Long(1), bean.getTestLong1());
 			assertNotNull(bean.getTestLong2());
 			assertEquals(new Long(2), bean.getTestLong2());
-			
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+
+	public void testDoublePopulationAndLocalizedDisplayProperty()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testDouble1", "1,1"); // test simple string
+		requestParams.put("testDouble2", new String[]{"1,2"}); // test string array
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestDouble1());
 			assertEquals(new Double(1.1), bean.getTestDouble1());
 			assertNotNull(bean.getTestDouble2());
 			assertEquals(new Double(1.2), bean.getTestDouble2());
-			
+			FormBeanContext formBeanContext = ctrl.getFormBeanContext();
+			assertEquals("dutch locale should be used for formatting a double property",
+				"1,1", formBeanContext.displayProperty("testDouble1"));
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testDatePopulation()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testDate1", "20-02-2004"); // test simple string
+		requestParams.put("testDate2", new String[]{"21-03-2005"}); // test string array
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestDate1());
 			assertNotNull(bean.getTestDate2());
 			
@@ -185,45 +220,122 @@ public class PopulationTest extends TestCase
 			assertEquals(cal.get(Calendar.YEAR), 2005);
 			assertEquals(cal.get(Calendar.MONTH), 2);
 			assertEquals(cal.get(Calendar.DAY_OF_MONTH), 21);
-			
-			String[] testStringArray1 = bean.getTestStringArray1();
-			assertNotNull(testStringArray1);
-			assertEquals(2, testStringArray1.length);
-			assertEquals("arrayelem0", testStringArray1[0]);
-			assertEquals("arrayelem1", testStringArray1[1]);
-			
-			String[] testStringArray2 = bean.getTestStringArray2();
-			assertNotNull(testStringArray2);
-			assertEquals(2, testStringArray2.length);
-			assertEquals("newval0", testStringArray2[0]);
-			assertEquals("newval1", testStringArray2[1]);
-			
-			Map map = bean.getTestMap();
-			assertNotNull(map);
-			assertEquals(2, map.size());
-			assertEquals("val1", map.get("key1"));
-			assertEquals("val2", map.get("key2"));
-			
-			FormBeanContext formBeanContext = ctrl.getFormBeanContext();
-			assertEquals("dutch locale should be used for formatting a double property",
-				"1,1", formBeanContext.displayProperty("testDouble1"));
-				
-			// interceptor should be called once for each interface 
-			// (before and after perform)
-			assertEquals(1, TestBeforePerformInterceptor.getBeforeCalls());
-			assertEquals(1, TestBeforePerformInterceptor.getAfterCalls());
-			
-			assertEquals("THIS ONCE WAS LOWER CASE", bean.getUppercaseTest());
-			assertEquals("unchanged", bean.getIgnore());
-			assertEquals("unchanged (regex)", bean.getIgnoreByRegex());
-			
 		}
 		catch (ServletException e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
+		}	
+	}
+	
+	public void testStringArrayPopulation()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testStringArray1", new String[] {"arrayelem0", "arrayelem1"});
+		requestParams.put("testStringArray2[0]", "newval0");
+		requestParams.put("testStringArray2[1]", "newval1");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			String[] testStringArray1 = bean.getTestStringArray1();
+			assertNotNull(testStringArray1);
+			assertEquals(2, testStringArray1.length);
+			assertEquals("arrayelem0", testStringArray1[0]);
+			assertEquals("arrayelem1", testStringArray1[1]);
+			String[] testStringArray2 = bean.getTestStringArray2();
+			assertNotNull(testStringArray2);
+			assertEquals(2, testStringArray2.length);
+			assertEquals("newval0", testStringArray2[0]);
+			assertEquals("newval1", testStringArray2[1]);
 		}
-		
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testStringMapPopulation()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testMap(key1)", "val1");
+		requestParams.put("testMap(key2)", "val2");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			Map map = bean.getTestMap();
+			assertNotNull(map);
+			assertEquals(2, map.size());
+			assertEquals("val1", map.get("key1"));
+			assertEquals("val2", map.get("key2"));
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testPopulationWithCustomPopulators()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("uppercaseTest", "this once was lower case");
+		requestParams.put("ignore", "this should never come through");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals("THIS ONCE WAS LOWER CASE", bean.getUppercaseTest());
+			assertEquals("unchanged", bean.getIgnore());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testPopulationWithCustomPopulatorByRegexMatch()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("ignoreByRegex", "this should never come through");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals("unchanged (regex)", bean.getIgnoreByRegex());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
 	}
 
 }

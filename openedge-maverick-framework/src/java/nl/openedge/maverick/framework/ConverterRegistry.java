@@ -66,6 +66,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Global registry for converters.
+ * 
  * This serves as the alternative for ConvertUtils. We use this instead of ConvertUtils
  * for the following reasons:
  * <ul>

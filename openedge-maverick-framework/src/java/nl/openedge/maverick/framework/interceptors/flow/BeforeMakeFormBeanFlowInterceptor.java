@@ -28,36 +28,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.interceptors;
+ 
+package nl.openedge.maverick.framework.interceptors.flow;
 
-import javax.servlet.ServletException;
-
-import nl.openedge.maverick.framework.FormBeanContext;
-
-import org.infohazard.maverick.flow.ControllerContext;
+import nl.openedge.maverick.framework.interceptors.Interceptor;
 
 /**
- * Registered instances will have their command method executed before the
- * normal action execution took place. Method makeFormBean is called prior 
- * to this execution, but the population of the form still has to be done.
- * 
  * @author Eelco Hillenius
  */
-public interface BeforePerformInterceptor extends Interceptor
+public interface BeforeMakeFormBeanFlowInterceptor extends Interceptor
 {
 
-	/**
-	 * Executed before the normal action execution took place. Method makeFormBean 
-	 * is called prior to this execution, but the population of the form still has 
-	 * to be done.
-	 * 
-	 * @param cctx maverick context
-	 * @param formBeanContext the context with the not-yet populated formBean
-	 * @throws ServletException
-	 */
-	public void doBeforePerform(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-		throws ServletException;
+	public FlowInterceptorResult doBeforeMakeFormBean(FlowInterceptorContext ctx);
 
 }

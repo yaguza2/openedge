@@ -31,15 +31,23 @@
 package nl.openedge.maverick.framework.interceptors;
 
 /**
- * Tagging interface for interceptors. Clients should use one of the specific
+ * Tagging interface for interceptors. Clients should use one or more of the specific
  * interfaces to actually intercept on something.
  * 
- * Interceptors provide a means to encapsulate cross-cutting code that is executed regarless
- * of errors with form population and the execution of the command command (FormBeanCtrl.perform).
+ * Interceptors provide a means to encapsulate cross-cutting code that is 
+ * executed on pre-defined points in the line of execution.
  * 
- * As a best practice, interceptors should have no effect on the form population and the
- * execution of the command method.
+ * There are two kinds of interceptors. The first type are interceptors that
+ * can be used to 'enrich' de model (formBeanContext), eg. load data, save session
+ * attributes, etc. The second type of interceptors are interceptors that can
+ * have an effect on the flow. These 'flow interceptors' can overrule the command
+ * (perform method) and redirect to another view. The latter type can be used to
+ * work with multi page forms coupled to one command or for instance implementing
+ * a generic 'system error' type of view.
  * 
+ * The first type of interceptors are allways called before the second type. 
+ * Besides that, the interception points are exactely the same for both types.
+ *  
  * @author Eelco Hillenius
  */
 public interface Interceptor

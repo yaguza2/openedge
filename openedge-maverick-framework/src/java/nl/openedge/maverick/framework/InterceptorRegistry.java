@@ -35,11 +35,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.openedge.maverick.framework.interceptors.FlowInterceptor;
 import nl.openedge.maverick.framework.interceptors.Interceptor;
 
 /**
- * Registry for interceptors
+ * Registry for interceptors. Each instance of FormBeanCtrl has its own instance.
  * 
  * @author Eelco Hillenius
  */
@@ -93,78 +92,6 @@ final class InterceptorRegistry
 	}
 	
 	/**
-	 * add a flow interceptor to the current list of flow interceptors for the
-	 * provided interception point 
-	 * @param interceptor the interceptor to add to the current list of interceptors
-	 * @param interceptionPoint the point at where the interceptor should be called.
-	 * 		Use one of the public fields of FlowInterceptor.
-	 */
-	public void addInterceptor(
-		FlowInterceptor interceptor, 
-		int interceptionPoint)
-	{
-		checkInterceptionPoint(interceptionPoint);
-	
-		List interceptorsAtPoint = getOrCreateInterceptorsAtPoint(interceptionPoint);
-		interceptorsAtPoint.add(interceptor);
-	}
-	
-	/**
-	 * add a flow interceptor to the current list of flow interceptors for the
-	 * provided interception point 
-	 * @param index index position where to insert the interceptor
-	 * @param interceptor the interceptor to add to the current list of interceptors
-	 * @param interceptionPoint the point at where the interceptor should be called.
-	 * 		Use one of the public fields of FlowInterceptor.
-	 */
-	public void addInterceptor(
-		int index,
-		FlowInterceptor interceptor, 
-		int interceptionPoint)
-	{
-		checkInterceptionPoint(interceptionPoint);
-	
-		List interceptorsAtPoint = getOrCreateInterceptorsAtPoint(interceptionPoint);
-		interceptorsAtPoint.add(interceptor);
-	}
-
-	
-	/**
-	 * remove all interceptors from the current list of interceptors for the given
-	 * interception point.
-	 * @param interceptionPoint the interception point to remove interceptors for.
-	 */
-	public void removeInterceptors(
-		int interceptionPoint)
-	{
-		checkInterceptionPoint(interceptionPoint);
-		
-		if(flowInterceptors != null)
-		{
-			flowInterceptors[interceptionPoint] = null;
-		}
-	}
-	
-	/**
-	 * remove an interceptor from the current list of interceptors for the given
-	 * interception point.
-	 * @param interceptor the interceptor to remove from the current list of interceptors
-	 * @param interceptionPoint the interception point to remove interceptor for.
-	 */
-	public void removeInterceptor(
-		FlowInterceptor interceptor,
-		int interceptionPoint)
-	{
-		checkInterceptionPoint(interceptionPoint);
-		
-		List interceptorsAtPoint = getInterceptorsAtPoint(interceptionPoint);
-		if(interceptorsAtPoint != null)
-		{
-			interceptorsAtPoint.remove(interceptor);
-		}
-	}
-	
-	/**
 	 * get all registered interceptors of the provided type 
 	 * @param type the type
 	 * @return array of Interceptors or null if none
@@ -189,6 +116,17 @@ final class InterceptorRegistry
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * get the flow interceptors for the provided interceptionPoint
+	 * @param interceptionPoint the interception point
+	 * @return List flow interceptors or null if none were registered
+	 */
+	public List getInterceptorsAtPoint(int interceptionPoint)
+	{
+		return (flowInterceptors != null) ?
+			flowInterceptors[interceptionPoint] : null;
 	}
 	
 	/* check the interception point */
@@ -222,13 +160,6 @@ final class InterceptorRegistry
 			}
 		}
 		return interceptorsAtPoint;
-	}
-	
-	/* get the list of flow interceptors at the given point */
-	private List getInterceptorsAtPoint(int interceptionPoint)
-	{
-		return (flowInterceptors != null) ?
-			flowInterceptors[interceptionPoint] : null;
 	}
 
 }

@@ -29,67 +29,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-package nl.openedge.maverick.framework.interceptors;
+package nl.openedge.maverick.framework.interceptors.flow;
 
-import nl.openedge.maverick.framework.FormBeanContext;
-
-import org.infohazard.maverick.flow.ControllerContext;
+import nl.openedge.maverick.framework.interceptors.Interceptor;
 
 /**
  * @author Eelco Hillenius
  */
-public final class FlowInterceptorContext
+public interface PopulationErrorFlowInterceptor extends Interceptor
 {
-	private ControllerContext cctx;
-	private FormBeanContext formBeanContext;
-	private Throwable exception;
-
-	/**
-	 * @return ControllerContext
-	 */
-	public ControllerContext getCctx()
-	{
-		return cctx;
-	}
-
-	/**
-	 * @return Throwable
-	 */
-	public Throwable getException()
-	{
-		return exception;
-	}
-
-	/**
-	 * @return FormBeanContext
-	 */
-	public FormBeanContext getFormBeanContext()
-	{
-		return formBeanContext;
-	}
-
-	/**
-	 * @param context
-	 */
-	public void setCctx(ControllerContext context)
-	{
-		cctx = context;
-	}
-
-	/**
-	 * @param throwable
-	 */
-	public void setException(Throwable throwable)
-	{
-		exception = throwable;
-	}
-
-	/**
-	 * @param context
-	 */
-	public void setFormBeanContext(FormBeanContext context)
-	{
-		formBeanContext = context;
-	}
-
+	public FlowInterceptorResult doOnPopulationException(FlowInterceptorContext ctx);
 }

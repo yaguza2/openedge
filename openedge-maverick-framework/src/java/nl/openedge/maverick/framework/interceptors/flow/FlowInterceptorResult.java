@@ -29,7 +29,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-package nl.openedge.maverick.framework.interceptors;
+package nl.openedge.maverick.framework.interceptors.flow;
 
 /**
  * @author Eelco Hillenius
@@ -37,7 +37,7 @@ package nl.openedge.maverick.framework.interceptors;
 public final class FlowInterceptorResult
 {
 	
-	public final static int ACTION_GO_ON = 0;
+	public final static int ACTION_IGNORE = 0;
 	public final static int ACTION_SHOW_VIEW = 1;
 	public final static int ACTION_DISPATCH = 2;
 	

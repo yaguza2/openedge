@@ -92,6 +92,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 		Converter converter = null;
 		
 		FormBeanCtrl ctrl = getCtrl();
+		ExecutionParams executionParams = ctrl.getExecutionParams();
 		
 		if(targetType.isArray()) 
 		{
@@ -135,7 +136,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					{
 					
 						if( (values[index] == null || (values[index].trim().equals(""))) 
-							&& ctrl.isSetNullForEmptyString())
+							&& executionParams.isSetNullForEmptyString())
 						{
 							converted = null;
 						}
@@ -187,7 +188,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 				{
 					
 					if( (stringValue == null || (stringValue.trim().equals(""))) 
-						&& ctrl.isSetNullForEmptyString())
+						&& executionParams.isSetNullForEmptyString())
 					{
 						converted = null;
 					}
@@ -231,9 +232,12 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 		}
 		else // it's not an array
 		{
-			String stringValue = null;
-			if(requestValue instanceof String[]) stringValue = ((String[])requestValue)[0];
-			else stringValue = String.valueOf(requestValue);
+
+			if(requestValue instanceof String[]) // convert to plain string 
+			{
+				requestValue = ((String[])requestValue)[0];
+			}  
+			// else keep original
 
 			if(converter == null) converter = 
 				ConverterRegistry.getInstance().lookup(targetType, locale);
@@ -241,8 +245,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 			Object converted = null;
 			try
 			{
-				if( (stringValue == null || (stringValue.trim().equals(""))) 
-					&& ctrl.isSetNullForEmptyString())
+				if( (requestValue instanceof String) &&
+					(requestValue == null || (((String)requestValue).trim().equals(""))) 
+					&& executionParams.isSetNullForEmptyString())
 				{
 					converted = null;
 				}
@@ -255,7 +260,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					}
 					
 					converted = converter.convert(
-						targetType, stringValue);
+						targetType, requestValue);
 				}
 				
 				setTargetProperty(targetPropertyMeta, target, converted);
@@ -263,9 +268,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 			catch (ConversionException e)
 			{
 				ctrl.setConversionErrorForField(
-					cctx, formBeanContext, targetType, name, stringValue, e);
+					cctx, formBeanContext, targetType, name, requestValue, e);
 					
-				ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
+				ctrl.setOverrideField(cctx, formBeanContext, name, requestValue, e, null);
 				success = false;	
 			}
 			catch (Exception e)
@@ -273,9 +278,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 				populationLog.error(e.getMessage(), e);
 				
 				ctrl.setConversionErrorForField(
-					cctx, formBeanContext, targetType, name, stringValue, e);
+					cctx, formBeanContext, targetType, name, requestValue, e);
 					
-				ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
+				ctrl.setOverrideField(cctx, formBeanContext, name, requestValue, e, null);
 				success = false;	
 			}			
 		}

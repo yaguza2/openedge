@@ -37,25 +37,25 @@ import nl.openedge.maverick.framework.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed if 
- * the model failed to populate, or did not pass validation
+ * Registered instances will have their command method executed before the
+ * normal action execution took place, but after the form bean was populated.
  * 
  * @author Eelco Hillenius
  */
-public interface PopulationErrorInterceptor extends Interceptor
+public interface AfterPopulationInterceptor extends Interceptor
 {
 
 	/**
-	 * prepare error model for view.
-	 * This method will be called if the model failed to populate,
-	 * or did not pass validation
-	 * override this method to 'enrich' the error model
+	 * Executed before the normal action execution takes place, but after
+	 * the form bean was populated
+	 * 
 	 * @param cctx maverick context
-	 * @param formBeanContext context with form bean that failed to populate
+	 * @param formBeanContext the context with the not-yet populated formBean
+	 * @throws ServletException
 	 */
-	public void doOnPopulationError(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
+	public void doAfterPopulation(
+		ControllerContext cctx,
+		FormBeanContext formBeanContext) 
 		throws ServletException;
 
 }

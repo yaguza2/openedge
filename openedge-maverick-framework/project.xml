@@ -76,39 +76,41 @@
 	<mailingLists />
 
 	<developers>
+		
 		<developer>
 			<name>Eelco Hillenius</name>
 			<id>eelco</id>
-			<email>eelco.hillenius@openedge.nl</email>
-			<organization>Open Edge</organization>
+			<email>eelco.hillenius@topicus.nl</email>
+			<organization>Topicus</organization>
 			<roles>
 				<role>Java Developer</role>
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
+
+		<developer>
+			<name>Sander Hofstee</name>
+			<id>sander</id>
+			<email>sander.hofstee@topicus.nl</email>
+			<organization>Topicus</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	
+		<developer>
+			<name>Maurice Marrink</name>
+			<id>maurice</id>
+			<email>marrink@topicus.nl</email>
+			<organization>Topicus</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	
 	</developers>
-
-	<developer>
-		<name>Sander Hofstee</name>
-		<id>sander</id>
-		<email>sander.hofstee@topicus.nl</email>
-		<organization>Topicus</organization>
-		<roles>
-			<role>Java Developer</role>
-		</roles>
-		<timezone>+1</timezone>
-	</developer>
-
-	<developer>
-		<name>Maurice Marrink</name>
-		<id>maurice</id>
-		<email>marrink@topicus.nl</email>
-		<organization>Topicus</organization>
-		<roles>
-			<role>Java Developer</role>
-		</roles>
-		<timezone>+1</timezone>
-	</developer>
 
 	<dependencies>
 
@@ -228,5 +230,17 @@
 		</resources>
 
 	</build>
+	
+	<reports>
+		<report>maven-license-plugin</report>
+		<report>maven-changes-plugin</report>
+		<!--<report>maven-checkstyle-plugin</report>-->
+		<report>maven-jdepend-plugin</report>
+		<report>maven-junit-report-plugin</report>
+		<report>maven-linkcheck-plugin</report>
+		<report>maven-javadoc-plugin</report>
+		<report>maven-pmd-plugin</report>
+		<report>maven-tasklist-plugin</report>
+	</reports>
 
 </project>

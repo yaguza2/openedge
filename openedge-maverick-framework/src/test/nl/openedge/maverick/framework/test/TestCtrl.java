@@ -76,9 +76,7 @@ public class TestCtrl extends FormBeanCtrl
 	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
 	 */
 	public void init(Element controllerNode) throws ConfigException
-	{
-		// note that we will not have a valid controllerNode when testing
-		addInterceptor(new TestBeforePerformInterceptor());
+	{		
 		addPopulator("uppercaseTest", new ToUpperCasePopulator());
 		addPopulator("ignore", new IgnoreFieldPopulator()); // block property by field name
 		addPopulator(Pattern.compile("(.)*ByRegex$"), 

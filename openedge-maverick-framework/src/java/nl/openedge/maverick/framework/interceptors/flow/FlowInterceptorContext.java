@@ -28,34 +28,87 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.interceptors;
+ 
+package nl.openedge.maverick.framework.interceptors.flow;
 
-import javax.servlet.ServletException;
+import java.util.Stack;
 
 import nl.openedge.maverick.framework.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed if 
- * the model failed to populate, or did not pass validation
- * 
  * @author Eelco Hillenius
  */
-public interface PopulationErrorInterceptor extends Interceptor
+public final class FlowInterceptorContext
 {
+	private ControllerContext cctx;
+	private FormBeanContext formBeanContext;
+	private Throwable exception;
+	private Stack resultStack;
 
 	/**
-	 * prepare error model for view.
-	 * This method will be called if the model failed to populate,
-	 * or did not pass validation
-	 * override this method to 'enrich' the error model
-	 * @param cctx maverick context
-	 * @param formBeanContext context with form bean that failed to populate
+	 * @return ControllerContext
 	 */
-	public void doOnPopulationError(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
-		throws ServletException;
+	public ControllerContext getCctx()
+	{
+		return cctx;
+	}
+
+	/**
+	 * @return Throwable
+	 */
+	public Throwable getException()
+	{
+		return exception;
+	}
+
+	/**
+	 * @return FormBeanContext
+	 */
+	public FormBeanContext getFormBeanContext()
+	{
+		return formBeanContext;
+	}
+
+	/**
+	 * @param context
+	 */
+	public void setCctx(ControllerContext context)
+	{
+		cctx = context;
+	}
+
+	/**
+	 * @param throwable
+	 */
+	public void setException(Throwable throwable)
+	{
+		exception = throwable;
+	}
+
+	/**
+	 * @param context
+	 */
+	public void setFormBeanContext(FormBeanContext context)
+	{
+		formBeanContext = context;
+	}
+
+	/**
+	 * @return Stack
+	 */
+	public Stack getResultStack()
+	{
+		return resultStack;
+	}
+
+	/**
+	 * @param stack
+	 */
+	public void setResultStack(Stack stack)
+	{
+		resultStack = stack;
+	}
 
 }

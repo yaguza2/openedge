@@ -30,9 +30,9 @@
  */
 package nl.openedge.maverick.framework.validation;
 
-import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.ResourceBundle;
+
+import nl.openedge.maverick.framework.util.MessageUtils;
 
 /**
  * convenience class
@@ -82,21 +82,6 @@ public abstract class AbstractValidator
 		setMessagePrefix(messagePrefix);
 	}
 	
-	/* get resource bundle */
-	protected ResourceBundle getBundle(Locale locale)
-	{
-		ResourceBundle res = null;
-		if(locale != null)
-		{
-			res = ResourceBundle.getBundle("resources", locale);
-		}
-		else
-		{
-			res = ResourceBundle.getBundle("resources");
-		}
-		return res;		
-	}
-	
 	/**
 	 * get localized message for given key
 	 * @param key key of message
@@ -116,17 +101,7 @@ public abstract class AbstractValidator
 	 */
 	public String getLocalizedMessage(String key, Locale locale)
 	{	
-		String msg = null;
-		try
-		{
-			msg = getBundle(locale).getString(key);
-		}
-		catch (RuntimeException e)
-		{
-			msg = key;
-			e.printStackTrace();
-		}
-		return msg;
+		return MessageUtils.getLocalizedMessage(key, locale);
 	}
 	
 	/**
@@ -155,13 +130,8 @@ public abstract class AbstractValidator
 	 */
 	public String getLocalizedMessage(
 			String key, Locale locale, Object[] parameters)
-	{
-		ResourceBundle res = getBundle(locale);
-		String msg = res.getString(key);
-		MessageFormat fmt = new MessageFormat(msg);
-		String formattedMessage = 
-			MessageFormat.format(msg, parameters);
-		return formattedMessage;
+	{	
+		return MessageUtils.getLocalizedMessage(key, locale, parameters);
 	}
 
 	/**

@@ -1,4 +1,13 @@
 -------------------------------------------------
+1.4.7
+
+- massive refactor in order to make the internals of FormBeanCtrl more transparant.
+
+- added (flow) interceptors and interception points
+
+- more documentation
+
+-------------------------------------------------
 1.4.6
 
 - (finally) added unit tests

@@ -42,7 +42,7 @@ import org.infohazard.maverick.flow.ControllerContext;
  * 
  * @author Eelco Hillenius
  */
-public interface PopulationErrorInterceptor extends Interceptor
+public interface PerformExceptionInterceptor extends Interceptor
 {
 
 	/**
@@ -53,7 +53,7 @@ public interface PopulationErrorInterceptor extends Interceptor
 	 * @param cctx maverick context
 	 * @param formBeanContext context with form bean that failed to populate
 	 */
-	public void doOnPopulationError(
+	public void doOnPerformException(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext)
 		throws ServletException;

@@ -28,34 +28,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.interceptors;
+ 
+package nl.openedge.maverick.framework.interceptors.flow;
 
-import javax.servlet.ServletException;
-
-import nl.openedge.maverick.framework.FormBeanContext;
-
-import org.infohazard.maverick.flow.ControllerContext;
+import nl.openedge.maverick.framework.interceptors.Interceptor;
 
 /**
- * Registered instances will have their command method executed if 
- * the model failed to populate, or did not pass validation
- * 
  * @author Eelco Hillenius
  */
-public interface PopulationErrorInterceptor extends Interceptor
+public interface BeforePopulationFlowInterceptor extends Interceptor
 {
 
-	/**
-	 * prepare error model for view.
-	 * This method will be called if the model failed to populate,
-	 * or did not pass validation
-	 * override this method to 'enrich' the error model
-	 * @param cctx maverick context
-	 * @param formBeanContext context with form bean that failed to populate
-	 */
-	public void doOnPopulationError(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
-		throws ServletException;
+	public FlowInterceptorResult doBeforePopulation(FlowInterceptorContext ctx);
 
 }

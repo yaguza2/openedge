@@ -39,7 +39,7 @@ import nl.openedge.maverick.framework.population.DefaultFieldPopulator;
 import nl.openedge.maverick.framework.population.FieldPopulator;
 
 /**
- * Registry for populators
+ * Registry for populators. Each instance of FormBeanCtrl has its own instance.
  * 
  * @author Eelco Hillenius
  */

@@ -42,7 +42,7 @@ import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
 
 /**
- * Registry for populators.
+ * Registry for populators. Each instance of FormBeanCtrl has its own instance.
  * 
  * @author Eelco Hillenius
  */

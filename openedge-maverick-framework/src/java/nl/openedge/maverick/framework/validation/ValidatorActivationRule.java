@@ -44,10 +44,10 @@ public interface ValidatorActivationRule
 	/**
 	 * returns whether validation with custom fieldValidators should be performed in this currentRequest
 	 * @param cctx maverick context
-	 * @param form form for this currentRequest
+	 * @param formBeanContext context with form for this currentRequest
 	 * @return whether validation with custom fieldValidators should be performed in this currentRequest.
 	 */
 	public boolean allowValidation(
 		ControllerContext cctx,
-		FormBeanContext form);
+		FormBeanContext formBeanContext);
 }

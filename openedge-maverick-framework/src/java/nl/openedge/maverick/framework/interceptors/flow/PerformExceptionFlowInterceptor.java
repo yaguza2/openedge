@@ -29,26 +29,15 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-package nl.openedge.maverick.framework.interceptors;
+package nl.openedge.maverick.framework.interceptors.flow;
+
+import nl.openedge.maverick.framework.interceptors.Interceptor;
 
 /**
  * @author Eelco Hillenius
  */
-public interface FlowInterceptor
+public interface PerformExceptionFlowInterceptor extends Interceptor
 {
 
-	public static int BEFORE_MAKE_FORMBEAN = 0;
-	public static int BEFORE_POPULATION = 1;
-	public static int AFTER_POPULATION_SUCCESS = 2;
-	public static int AFTER_POPULATION_FAILURE = 3;
-	public static int AFTER_PERFORM = 4;
-	public static int AFTER_PERFORM_EXCEPTION = 5;
-
-	/**
-	 * 
-	 * @param ctx
-	 * @return
-	 */
-	public FlowInterceptorResult interceptFlow(FlowInterceptorContext ctx);
-
+	public FlowInterceptorResult doOnPerformException(FlowInterceptorContext ctx);
 }

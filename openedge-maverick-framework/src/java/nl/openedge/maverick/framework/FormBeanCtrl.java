@@ -33,7 +33,6 @@ package nl.openedge.maverick.framework;
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -43,7 +42,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,15 +50,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import nl.openedge.maverick.framework.interceptors.AfterPerformInterceptor;
-import nl.openedge.maverick.framework.interceptors.BeforePerformInterceptor;
-import nl.openedge.maverick.framework.interceptors.FlowInterceptor;
-import nl.openedge.maverick.framework.interceptors.FlowInterceptorContext;
 import nl.openedge.maverick.framework.interceptors.Interceptor;
-import nl.openedge.maverick.framework.interceptors.PopulationErrorInterceptor;
+import nl.openedge.maverick.framework.interceptors.flow.FlowInterceptorContext;
 import nl.openedge.maverick.framework.population.FieldPopulator;
 import nl.openedge.maverick.framework.population.PropertyUtil;
 import nl.openedge.maverick.framework.population.TargetPropertyMeta;
+import nl.openedge.maverick.framework.util.MessageUtils;
+import nl.openedge.maverick.framework.util.ValueUtils;
 import nl.openedge.maverick.framework.validation.FieldValidator;
 import nl.openedge.maverick.framework.validation.FormValidator;
 import nl.openedge.maverick.framework.validation.ValidationRuleDependend;
@@ -137,84 +133,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/** population log */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
 
-	
-	//--------------------- properties that influence the execution path ----------/
-	
-	/** if true, the no cache headers will be set */
-	private boolean noCache = true;
-	
-	/**
-	 * If we get an empty string, should it be translated to a null (true) or should
-	 * the empty String be kept (false). This property is true by default
-	 */
-	private boolean setNullForEmptyString = true;
-	
-	/**
-	 * Indicates whether we should use the configuration parameters of the controller 
-	 * for the population process as well. This property is false by default.
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * A map with parameters for the population process is filled in the above order, which
-	 * means that every step can overwrite it's predecessor.
-	 *  
-	 */	
-	private boolean includeControllerParameters = false;
-	
-	/**
-	 * Indicates whether we should use the session attributes of the current session
-	 * for the population process as well. This property is false by default.
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * A map with parameters for the population process is filled in the above order, which
-	 * means that every step can overwrite it's predecessor.
-	 * 
-	 */	
-	private boolean includeSessionAttributes = false;
-	
-	/**
-	 * Indicates whether we should use the currentRequest attributes for the population process
-	 * as well. This property is false by default.
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * A map with parameters for the population process is filled in the above order, which
-	 * means that every step can overwrite it's predecessor.
-	 * 
-	 */	
-	private boolean includeRequestAttributes = false;
-	
-	/**
-	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true
-	 */
-	private boolean doFormValidationIfFieldValidationFailed = true;
-	
-	/**
-	 * Indicates whether the perform method of the control should be executed, even if the population/
-	 * validation failed. Use this only in very special cases; extended usage will
-	 * probably result in messy code. Default == false
-	 */
-	private boolean doPerformIfFieldValidationFailed = false;
-	
-	/**
-	 * If true, reuse the context for multiple invocations within the same request.
-	 * Default is true.
-	 */
-	private boolean reuseFormBeanContext = true;
 
 	//------------------------ registries ----------------------------------------/
 	
@@ -227,13 +145,21 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	// registry for form interceptors
 	private InterceptorRegistry interceptorRegistry = new InterceptorRegistry();
 	
+	//------------------------- paramters that influence the execution -----------/
+	private ExecutionParams executionParams = new ExecutionParams();
+	
+	//------------------------- delegates ----------------------------------------/
+	
+	private InterceptorDelegate intercDlg = new InterceptorDelegate(interceptorRegistry);
+	
 	
 	//------------------------- methods ------------------------------------------/
 
 	
 	/**
-	 * Executes this controller.  Override one of the other perform()
-	 * methods to provide application logic.
+	 * Executes this controller. You should verride the perform method 
+	 * to provide application logic. This method handles all callbacks and 
+	 * interceptors. See the manual for the path(s) of execution.
 	 *
 	 * @param cctx maverick controller context
 	 * @return String name of the view
@@ -245,107 +171,151 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	{
 		
 		String viewName = SUCCESS; // default view
-		if(isNoCache())
+		
+		if(executionParams.isNoCache())
 		{
-			doSetNoCache(cctx);
+			doSetNoCache(cctx); // set no cache headers
 		}
 
+		// create flowInterceptor objects
 		FlowInterceptorContext flowInterceptorContext = new FlowInterceptorContext();
 		flowInterceptorContext.setCctx(cctx);
+		String flowInterceptView = null; // view possibly assigned by an interceptor
 		
-		//TODO FlowInterceptor 0
-
+		// get the form bean context and set it in the flow interceptor context
 		FormBeanContext formBeanContext = getFormBeanContext(cctx);
-		
 		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
+		// flow intercept before make form bean
+		intercDlg.doInterceptBeforeMakeFormBean(cctx, formBeanContext);
+		flowInterceptView = intercDlg.doFlowInterceptBeforeMakeFormBean(flowInterceptorContext);
+		if(flowInterceptView != null)
+		{
+			return flowInterceptView;
+		}
+		
 		Object bean = null;
+		Locale locale = null;
+		boolean populated = false;
+		
 		try 
 		{	
 			// let controller create form
 			bean = getFormBean(cctx);
 			formBeanContext.setBean(bean);
 			
-			// intercept before
-			interceptBeforePerform(cctx, formBeanContext);
-			
-			// TODO FlowInterceptor 1
-
-			cctx.setModel(formBeanContext);
-			Locale locale = getLocaleForRequest(cctx, formBeanContext);
-			formBeanContext.setCurrentLocale(locale);
-			
-			// populate form
-			boolean populated = populateFormBean(cctx, formBeanContext, locale);
-			// go on?
-			if(populated || isDoPerformIfFieldValidationFailed()) 
+			// intercept before population
+			intercDlg.doInterceptBeforePopulation(cctx, formBeanContext);
+			flowInterceptView = intercDlg.doFlowInterceptBeforePopulation(flowInterceptorContext);
+			if(flowInterceptView != null)
 			{
+				return flowInterceptView;
+			}
+
+			cctx.setModel(formBeanContext); // set context as model
+			locale = getLocaleForRequest(cctx, formBeanContext); // get the locale
+			formBeanContext.setCurrentLocale(locale); // and set in context
+			
+			// populate
+			populated = populateFormBean(cctx, formBeanContext, locale);
+			
+		} 
+		catch(Exception e)
+		{
+			// as we should normally not get here, give an extra warning
+			log.error("Unexpected exception " + e.getMessage() + 
+				" occured during form population.");
 				
-				// TODO FlowInterceptor 2
+			internalPerformError(cctx, formBeanContext, e);
+			viewName = getErrorView(cctx, formBeanContext);
+			
+			// intercept population error
+			intercDlg.doInterceptPopulationError(cctx, formBeanContext);	
+			flowInterceptView = intercDlg.doFlowInterceptPopulationError(flowInterceptorContext);
+			if(flowInterceptView != null)
+			{
+				return flowInterceptView;
+			}		
+		}
+		
+		try
+		{	
+			// was the bean population successful?
+			if(populated || executionParams.isDoPerformIfFieldValidationFailed()) 
+			{
+				// flow intercept after population
+				intercDlg.doInterceptAfterPopulation(cctx, formBeanContext);
+				flowInterceptView = intercDlg.doFlowInterceptAfterPopulation(flowInterceptorContext);
+				if(flowInterceptView != null)
+				{
+					return flowInterceptView;
+				}
 				
-				// execute command
+				// execute command en get the view
 				viewName = this.perform(formBeanContext, cctx);	
 
 			}
-			else // an error occured
-			{
-				// prepare for error command and execute it
-				internalPerformError(cctx, formBeanContext);
-				
-				
-				// TODO FlowInterceptor 3
-				
+			else // bean population was not successful 
+				 // this is the normal place of handling a failed (by either populators
+				 // or validators) population attempt.
+			{	
+				internalPerformError(cctx, formBeanContext, null);
 				viewName = getErrorView(cctx, formBeanContext);
+				
+				// intercept on population error
+				intercDlg.doInterceptPopulationError(cctx, formBeanContext);
+				flowInterceptView = intercDlg.doFlowInterceptPopulationError(flowInterceptorContext);
+				if(flowInterceptView != null)
+				{
+					return flowInterceptView;
+				}
 			}
-			
 		} 
 		catch (Exception e) 
 		{
 			log.error(e.getMessage(), e);
 			
-			if(formBeanContext != null) 
-			{
-				// save the exception so it can be displayed in the view
-				if(e.getMessage() != null) 
-				{
-					formBeanContext.setError(e, false);	
-				} 
-				else 
-				{
-					// as a fallback, save the stacktrace
-					formBeanContext.setError(e, true); 
-				}
-			}
-			
 			// prepare for error command and execute it
-			internalPerformError(cctx, formBeanContext);
-			
+			internalPerformError(cctx, formBeanContext, e);
+
+			// flow intercept on perform error
+			intercDlg.doInterceptPerformException(cctx, formBeanContext);
 			flowInterceptorContext.setException(e);
-			// TODO FlowInterceptor 5
+			flowInterceptView = intercDlg.doFlowInterceptPerformException(flowInterceptorContext);
+			if(flowInterceptView != null)
+			{
+				return flowInterceptView;
+			}
 			
 			viewName = getErrorView(cctx, formBeanContext);
 		}
 
-		// intercept after
-		interceptAfterPerform(cctx, formBeanContext);
-		
-		// TODO FlowInterceptor 4
+		// intercept after perform
+		intercDlg.doInterceptAfterPerform(cctx, formBeanContext);
+		flowInterceptView = intercDlg.doFlowInterceptAfterPerform(flowInterceptorContext);
+		if(flowInterceptView != null)
+		{
+			return flowInterceptView;
+		}
 		
 		return viewName;
 	}
+	
 	
 	/* get the formBeanContext */
 	private FormBeanContext getFormBeanContext(ControllerContext cctx)
 	{
 		FormBeanContext formBeanContext = null;
-		if(reuseFormBeanContext) // if true, see if an instance was save earlier req
+		if(executionParams.isReuseFormBeanContext()) 
+			// if true, see if an instance was save earlier request
 		{
 			formBeanContext = (FormBeanContext)
 				cctx.getRequest().getAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT);
 			if(formBeanContext == null) 
 			{
 				formBeanContext = new FormBeanContext();
-				cctx.getRequest().setAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT, formBeanContext);
+				cctx.getRequest().setAttribute(
+					REQUEST_ATTRIBUTE_FORMBEANCONTEXT, formBeanContext);
 			}
 		}
 		else
@@ -376,12 +346,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		throws Exception 
 	{
 
-		boolean success = true;
+		boolean popSuccessCtrlParams = true;
+		boolean popSuccessSessionAttribs = true;
+		boolean popSuccessRequestParams = true;
+		boolean popSuccessRequestAttribs = true;
 		
-		// map to store the request parameters in
-		Map parameters = new HashMap();
-		// map to cache converted values in for efficiency
-		Map convertedValuesCache = new HashMap();
+		Map allParameters = new HashMap(); // for use with validators later on
 		
 		// The order in which parameters/ attributes are used for population:
 		//	1. controller parameters (if includeControllerParameters == true)
@@ -389,15 +359,33 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		//	3. request parameters
 		//	4. request attributes (if includeRequestAttributes == true)
 		
-		// controller parameters
-		if(isIncludeControllerParameters())
+		StringBuffer traceMsg = null;
+		Object bean = formBeanContext.getBean();
+		if(populationLog.isDebugEnabled())
 		{
-			parameters.putAll(cctx.getControllerParams());
+			traceMsg = new StringBuffer();
+			traceMsg.append("trace ctrl ")
+				.append(this).append("; populate of bean ")
+				.append(bean).append(" with parameters:");
+		}
+		
+		// controller parameters
+		if(executionParams.isIncludeControllerParameters() &&
+			(cctx.getControllerParams() != null))
+		{
+			Map parameters = new HashMap(cctx.getControllerParams());
+
+			allParameters.putAll(parameters);
+			traceParameters(parameters, bean, traceMsg, "maverick controller params");
+						
+			popSuccessCtrlParams = populateWithErrorReport(
+				cctx, formBeanContext, parameters, locale);
 		}		
 
 		// session attributes
-		if(isIncludeSessionAttributes())
+		if(executionParams.isIncludeSessionAttributes())
 		{
+			Map parameters = new HashMap();
 			HttpSession httpSession = cctx.getRequest().getSession();
 			Enumeration enum = httpSession.getAttributeNames();
 			while(enum.hasMoreElements())
@@ -405,14 +393,29 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				String attrName = (String)enum.nextElement();
 				parameters.put(attrName, httpSession.getAttribute(attrName));	
 			}
+			
+			allParameters.putAll(parameters);
+			traceParameters(parameters, bean, traceMsg, "session attributes");
+			
+			popSuccessSessionAttribs = populateWithErrorReport(
+				cctx, formBeanContext, parameters, locale);
 		}
 
 		// request parameters
-		parameters.putAll(cctx.getRequest().getParameterMap());
+		Map reqParameters = new HashMap();
+
+		reqParameters.putAll(cctx.getRequest().getParameterMap());
+		
+		allParameters.putAll(reqParameters);
+		traceParameters(reqParameters, bean, traceMsg, "request parameters");
+		
+		popSuccessRequestParams = populateWithErrorReport(
+			cctx, formBeanContext, reqParameters, locale);
 
 		// request attributes
-		if(isIncludeRequestAttributes())
+		if(executionParams.isIncludeRequestAttributes())
 		{
+			Map parameters = new HashMap();
 			HttpServletRequest request = cctx.getRequest();
 			Enumeration enum = request.getAttributeNames();
 			while(enum.hasMoreElements())
@@ -423,31 +426,50 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					parameters.put(attrName, request.getAttribute(attrName));	
 				}	
 			}
+			
+			allParameters.putAll(parameters);
+			traceParameters(parameters, bean, traceMsg, "request attributes");
+			
+			popSuccessRequestAttribs = populateWithErrorReport(
+				cctx, formBeanContext, parameters, locale);
 		}
 		
 		if(populationLog.isDebugEnabled())
 		{
-			traceParameters(parameters, formBeanContext.getBean());
+			if(allParameters.isEmpty()) traceMsg.append("\n\tno parameters found");
+			populationLog.debug(traceMsg);
 		}
 		
-		// populate using the paramters map		
-		success = populateWithErrorReport(cctx, formBeanContext, parameters, locale);
+		// we consider population successfull if population of all parameters succeeded
+		boolean succeeded = (popSuccessCtrlParams && popSuccessSessionAttribs && 
+			popSuccessRequestParams && popSuccessRequestAttribs);
 		
-		return success;
+		// do custom validation
+		succeeded = doCustomValidation(
+			cctx, formBeanContext, allParameters, locale, succeeded);
+		
+		return succeeded;
 	}
 	
 	/* extra debug info */
-	private final void traceParameters(Map parameters, Object bean)
+	private final void traceParameters(
+		Map parameters, 
+		Object bean, 
+		StringBuffer msg,
+		String parameterSet)
 	{
-		populationLog.debug("trace ctrl " + this + "; populate of bean " 
-			+ bean + " with parameters:");
-		for(Iterator i = parameters.keySet().iterator(); i.hasNext(); )
+		if(populationLog.isDebugEnabled() 
+			&& (parameters != null) && (!parameters.isEmpty()))
 		{
-			Object key = i.next();
-			Object value = parameters.get(key);
-			populationLog.debug("\t " + key + " == " + ConvertUtils.convert(value));
+			msg.append("\n\t").append(parameterSet).append(": ");
+			for(Iterator i = parameters.keySet().iterator(); i.hasNext(); )
+			{
+				Object key = i.next();
+				Object value = parameters.get(key);
+				msg.append(key + " = " + ConvertUtils.convert(value));
+				if(i.hasNext()) msg.append(", ");
+			}	
 		}
-		populationLog.debug("----------------------------------------------------------");
 	}
 	
 	/*
@@ -465,8 +487,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Locale locale)
 	{
 		
-		// Do nothing unless both arguments have been specified
-		if ((formBeanContext == null) || (parameters == null)) 
+		// Do nothing unless both arguments have been specified or parameters is empty
+		if ((formBeanContext == null) || (parameters == null) || (parameters.isEmpty())) 
 		{
 			return true;
 		}
@@ -478,9 +500,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		// populate remainder
 		succeeded = fieldPopulateWithErrorReport(cctx, formBeanContext, parameters, locale, succeeded);
-		
-		// do custom validation
-		succeeded = doCustomValidation(cctx, formBeanContext, parameters, locale, succeeded);
 		
 		return succeeded;
 	}
@@ -715,6 +734,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		boolean succeeded)
 	{
 		
+		if(parameters == null || parameters.isEmpty()) return succeeded;
+		
 		MultiMap fieldValidators = validatorRegistry.getFieldValidators();
 		List formValidators = validatorRegistry.getFormValidators();
 		List globalValidatorActivationRules = 
@@ -774,7 +795,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					}	
 				}
 				// if we are still successful so far, check with the form level validators
-				if( (succeeded || isDoFormValidationIfFieldValidationFailed()) 
+				if( (succeeded || executionParams.isDoFormValidationIfFieldValidationFailed()) 
 					&& (formValidators != null))
 				{
 					// check all registered until either all fired successfully or
@@ -855,7 +876,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					
 					if(populationLog.isDebugEnabled())
 					{
-						populationLog.debug( "rule " + rule + 
+						populationLog.debug( name + ": rule " + rule + 
 							((validateField) ? " ALLOWS" : " DISALLOWS") +
 							" validation with " + validator);
 					}
@@ -890,7 +911,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					succeeded = false;
 					try
 					{
-						String msgName = getLocalizedMessage(getPropertyNameKey(name));
+						String msgName = MessageUtils.getLocalizedMessage(getPropertyNameKey(name));
 						String msg = validator.getErrorMessage(
 							cctx, formBeanContext, (msgName != null) ? msgName : name, value, locale);
 						
@@ -927,10 +948,26 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	private void internalPerformError(
 		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
+		FormBeanContext formBeanContext,
+		Throwable e)
 		throws ServletException
 	{
 		if(formBeanContext == null) return;
+	
+		if(e != null) 
+		{
+			// save the exception so it can be displayed in the view
+			if(e.getMessage() != null) 
+			{
+				formBeanContext.setError(e, false);	
+			} 
+			else 
+			{
+				// as a fallback, save the stacktrace
+				formBeanContext.setError(e, true); 
+			}
+		}
+	
 		// set the current model
 		cctx.setModel(formBeanContext);
 
@@ -938,10 +975,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	
 		
 		if(populationLog.isDebugEnabled()) traceErrors(formBeanContext);
-		
-		// do further (possibly user specific) error handling and/ or
-		// view preparing
-		interceptPopulationError(cctx, formBeanContext);	
 	}
 	
 	/* extra debug info */
@@ -999,7 +1032,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 			String msg = null;
 			String msgName = null;
-			msgName = getLocalizedMessage(getPropertyNameKey(name));
+			msgName = MessageUtils.getLocalizedMessage(getPropertyNameKey(name));
 
 			String desiredPattern = null;
 			if(t instanceof nl.openedge.maverick.framework.converters.ConversionException)
@@ -1011,11 +1044,13 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 			if(msgName != null)
 			{
-				msg = getLocalizedMessage(key, new Object[]{triedValue, msgName, t, desiredPattern});	
+				msg = MessageUtils.getLocalizedMessage(
+					key, new Object[]{triedValue, msgName, t, desiredPattern});	
 			}
 			else
 			{
-				msg = getLocalizedMessage(key, new Object[]{triedValue, name, t, desiredPattern});
+				msg = MessageUtils.getLocalizedMessage(
+					key, new Object[]{triedValue, name, t, desiredPattern});
 			}
 
 			formBeanContext.setError(name, msg);
@@ -1139,79 +1174,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	public void init(Element controllerNode) throws ConfigException 
 	{
 		// initialise here...
-	}
-	
-	//**************************** interceptors ******************************************/
-	
-	/*
-	 * is called before any handling like form population etc.
-	 * @param cctx maverick context
-	 * @param formBeanContext context with unpopulated formBean
-	 * @throws ServletException
-	 */
-	private void interceptBeforePerform(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-		throws ServletException
-	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			BeforePerformInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((BeforePerformInterceptor)commands[i]).doBeforePerform(cctx, formBeanContext);
-			}
-		}
-	}
-	
-	/*
-	 * is called after all handling like form population etc. is done
-	 * @param cctx maverick context
-	 * @param formBeanContext context with populated (if succesful) formBean
-	 * @throws ServletException
-	 */
-	private void interceptAfterPerform(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-		throws ServletException
-	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			AfterPerformInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((AfterPerformInterceptor)commands[i]).doAfterPerform(cctx, formBeanContext);
-			}
-		}	
-	}
-	
-	/*
-	 * prepare error model for view by calling registered interceptors.
-	 * This method will be called if the model failed to populate,
-	 * or did not pass validation
-	 * @param cctx maverick context
-	 * @param formBeanContext context with form bean that failed to populate
-	 * @throws ServletException
-	 */
-	private void interceptPopulationError(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
-		throws ServletException
-	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			PopulationErrorInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((PopulationErrorInterceptor)commands[i]).performError(cctx, formBeanContext);
-			}
-		}
 	}
 		
 	//**************************** validators ********************************************/
@@ -1390,73 +1352,29 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		interceptorRegistry.removeInterceptor(interceptor);
 	}
 	
-	/**
-	 * add a flow interceptor to the current list of flow interceptors for the
-	 * provided interception point 
-	 * @param interceptor the interceptor to add to the current list of interceptors
-	 * @param interceptionPoint the point at where the interceptor should be called.
-	 * 		Use one of the public fields of FlowInterceptor.
-	 */
-	protected void addInterceptor(
-		FlowInterceptor interceptor, 
-		int interceptionPoint)
-	{
-		interceptorRegistry.addInterceptor(interceptor, interceptionPoint);
-	}
+	// ************************ misc utility- and property methods *********************/
 	
 	/**
-	 * add a flow interceptor to the current list of flow interceptors for the
-	 * provided interception point 
-	 * @param index index position where to insert the interceptor
-	 * @param interceptor the interceptor to add to the current list of interceptors
-	 * @param interceptionPoint the point at where the interceptor should be called.
-	 * 		Use one of the public fields of FlowInterceptor.
-	 */
-	protected void addInterceptor(
-		int index,
-		FlowInterceptor interceptor, 
-		int interceptionPoint)
+	 * check if the value is null or empty
+	 * @param value object to check on
+	 * @return true if value is not null AND not empty (e.g. 
+	 * in case of a String or Collection)
+	 */	
+	protected boolean isNullOrEmpty(Object value)
 	{
-		interceptorRegistry.addInterceptor(index, interceptor, interceptionPoint);
+		return ValueUtils.isNullOrEmpty(value);
 	}
-
-	
-	/**
-	 * remove all interceptors from the current list of interceptors for the given
-	 * interception point.
-	 * @param interceptionPoint the interception point to remove interceptors for.
-	 */
-	protected void removeInterceptors(
-		int interceptionPoint)
-	{
-		interceptorRegistry.removeInterceptors(interceptionPoint);
-	}
-	
-	/**
-	 * remove an interceptor from the current list of interceptors for the given
-	 * interception point.
-	 * @param interceptor the interceptor to remove from the current list of interceptors
-	 * @param interceptionPoint the interception point to remove interceptor for.
-	 */
-	protected void removeInterceptor(
-		FlowInterceptor interceptor,
-		int interceptionPoint)
-	{
-		interceptorRegistry.removeInterceptor(interceptor, interceptionPoint);
-	}
-
-	//*************************** utility methods for localized messages ********************/
 	
 	/**
 	 * get localized message for given key
 	 * @param key key of message
 	 * @return String localized message
 	 */
-	public String getLocalizedMessage(String key)
+	public static String getLocalizedMessage(String key)
 	{
 		return getLocalizedMessage(key, Locale.getDefault());
 	}
-	
+
 	/**
 	 * get localized message for given key and locale. 
 	 * If locale is null, the default locale will be used
@@ -1464,81 +1382,41 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * @param locale locale for message
 	 * @return String localized message
 	 */
-	public String getLocalizedMessage(String key, Locale locale)
-	{	
-		String msg = null;
-		try
-		{
-			msg = getBundle(locale).getString(key);
-		}
-		catch (Exception e)
-		{
-			if(log.isDebugEnabled())
-			{
-				populationLog.error(e.getMessage(), e);
-			}
-		}
-		return msg;
-	}
-	
-	/**
-	 * get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @param parameters parameters for the message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(String key, Object[] parameters)
-	{	
-		return getLocalizedMessage(key, null, parameters);
-	}
-	
-	/**
-	 * get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @param parameters parameters for the message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(String key, Locale locale, Object[] parameters)
+	protected static String getLocalizedMessage(String key, Locale locale)
 	{
-		String msg = null;
-		try
-		{
-			msg = getBundle(locale).getString(key);
-			msg = MessageFormat.format(msg, parameters);
-		}
-		catch (Exception e)
-		{
-			if(log.isDebugEnabled())
-			{
-				populationLog.error(e.getMessage(), e);
-			}
-		}
-		return msg;
+		return MessageUtils.getLocalizedMessage(key, locale);
 	}
 
-	
-	/* get resource bundle */
-	private ResourceBundle getBundle(Locale locale)
+	/**
+	 * get localized message for given key and locale
+	 * and format it with the given parameters. 
+	 * If locale is null, the default locale will be used
+	 * @param key key of message
+	 * @param locale locale for message
+	 * @param parameters parameters for the message
+	 * @return String localized message
+	 */
+	protected static String getLocalizedMessage(String key, Object[] parameters)
 	{
-		ResourceBundle res = null;
-		if(locale != null)
-		{
-			res = ResourceBundle.getBundle("resources", locale);
-		}
-		else
-		{
-			res = ResourceBundle.getBundle("resources");
-		}
-		return res;		
+		return MessageUtils.getLocalizedMessage(key, parameters);
 	}
-	
-	// ************************ misc utility- and property methods *********************/
+
+	/**
+	 * get localized message for given key and locale
+	 * and format it with the given parameters. 
+	 * If locale is null, the default locale will be used
+	 * @param key key of message
+	 * @param locale locale for message
+	 * @param parameters parameters for the message
+	 * @return String localized message
+	 */
+	protected static String getLocalizedMessage(
+		String key,
+		Locale locale,
+		Object[] parameters)
+	{
+		return MessageUtils.getLocalizedMessage(key, locale, parameters);
+	}
 	
 	/**
 	 * get the prefered locale for this currentRequest
@@ -1571,51 +1449,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * check if the value is null or empty
-	 * @param value object to check on
-	 * @return true if value is not null AND not empty (e.g. 
-	 * in case of a String or Collection)
-	 */
-	protected boolean isNullOrEmpty(Object value)
-	{
-		if(value instanceof String)
-		{
-			return (value == null || (((String)value).trim().equals("")));
-		}
-		if(value instanceof Object[])
-		{
-			if(value == null)
-			{
-				return true;
-			}
-			else if(((Object[])value).length == 0)
-			{
-				return true;
-			}
-			else if(((Object[])value).length == 1)
-			{
-				return isNullOrEmpty(((Object[])value)[0]);
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if(value instanceof Collection)
-		{
-			return (value == null || (((Collection)value).isEmpty()));
-		}
-		else if(value instanceof Map)
-		{
-			return (value == null || (((Map)value).isEmpty()));
-		}
-		else
-		{
-			return (value == null);
-		}
-	}
-	
-	/**
 	 * get error view. 'error' by default
 	 * @param cctx controller context
 	 * @param formBeanContext context
@@ -1640,207 +1473,23 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * if true, the no cache headers will be set
-	 * @return boolean
+	 * @TODO document me!
+	 * 
+	 * @return
 	 */
-	protected boolean isNoCache()
+	public ExecutionParams getExecutionParams()
 	{
-		return noCache;
+		return executionParams;
 	}
 
 	/**
-	 * if true, the no cache headers will be set
-	 * @param noCache
+	 * @TODO document me!
+	 * 
+	 * @param params
 	 */
-	protected void setNoCache(boolean noCache)
+	public void setExecutionParams(ExecutionParams params)
 	{
-		this.noCache = noCache;
-	}
-
-	/**
-	 * If we get an empty string it should be translated to a null (true) or to
-	 * an empty String false. This property is true by default
-	 * @return boolean
-	 */
-	public boolean isSetNullForEmptyString()
-	{
-		return setNullForEmptyString;
-	}
-
-	/**
-	 * If we get an empty string it should be translated to a null (true) or to
-	 * an empty String false. This property is true by default
-	 * @param b
-	 */
-	public void setSetNullForEmptyString(boolean b)
-	{
-		setNullForEmptyString = b;
-	}
-	
-	/**
-	 * include controller parameters in the population process
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * @return boolean include controller parameters in the population process
-	 */
-	protected boolean isIncludeControllerParameters()
-	{
-		return includeControllerParameters;
-	}
-	
-	/**
-	 * set whether to include controller parameters in the population process
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * @param b set whether to include controller parameters in the population process
-	 */
-	protected void setIncludeControllerParameters(boolean b)
-	{
-		includeControllerParameters = b;
-	}
-
-	/**
-	 * include session attributes in the population process
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * @return boolean include controller parameters in the population process
-	 */
-	protected boolean isIncludeSessionAttributes()
-	{
-		return includeSessionAttributes;
-	}
-
-	/**
-	 * set whether to include session attributes in the population process
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * @param b set whether to include session attributes in the population process
-	 */
-	protected void setIncludeSessionAttributes(boolean b)
-	{
-		includeSessionAttributes = b;
-	}
-
-	/**
-	 * include request attributes in the population process
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * @return boolean include request parameters in the population process
-	 */
-	protected boolean isIncludeRequestAttributes()
-	{
-		return includeRequestAttributes;
-	}
-
-	/**
-	 * set whether to include request attributes in the population process
-	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
-	 * 
-	 * @param b set whether to include request attributes in the population process
-	 */
-	protected void setIncludeRequestAttributes(boolean b)
-	{
-		includeRequestAttributes = b;
-	}
-
-	/**
-	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true.
-	 * 
-	 * @return boolean Whether the form validators should be executed when one of the 
-	 * 		field validators failed.
-	 */
-	protected boolean isDoFormValidationIfFieldValidationFailed()
-	{
-		return doFormValidationIfFieldValidationFailed;
-	}
-
-	/**
-	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true.
-	 * 
-	 * @param b whether the form validators should be executed when one of the 
-	 * 		field validators failed.
-	 */
-	protected void setDoFormValidationIfFieldValidationFailed(boolean b)
-	{
-		doFormValidationIfFieldValidationFailed = b;
-	}
-
-	/**
-	 * Whether the perform method of the control should be executed, even if the population/
-	 * validation failed. Use this only in very special cases; extended usage will
-	 * probably result in messy code. Default == false.
-	 * 
-	 * @return boolean whether the perform method of the control should be executed, even if the population/
-	 * validation failed.
-	 */
-	protected boolean isDoPerformIfFieldValidationFailed()
-	{
-		return doPerformIfFieldValidationFailed;
-	}
-
-	/**
-	 * Whether the perform method of the control should be executed, even if the population/
-	 * validation failed. Use this only in very special cases; extended usage will
-	 * probably result in messy code. Default == false.
-	 * 
-	 * @param b whether the perform method of the control should be executed, even if the population/
-	 * validation failed.
-	 */
-	protected void setDoPerformIfFieldValidationFailed(boolean b)
-	{
-		doPerformIfFieldValidationFailed = b;
-	}
-
-	/**
-	 * Whether to reuse the context for multiple invocations within the same request.
-	 * Default is true.
-	 * @return reuse the context for multiple invocations within the same request
-	 */
-	public boolean isReuseFormBeanContext()
-	{
-		return reuseFormBeanContext;
-	}
-
-	/**
-	 * Set whether to reuse the context for multiple invocations within the same request.
-	 * Default is true.
-	 * @param b reuse the context for multiple invocations within the same request
-	 */
-	public void setReuseFormBeanContext(boolean b)
-	{
-		reuseFormBeanContext = b;
+		executionParams = params;
 	}
 
 }
