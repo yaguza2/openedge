@@ -1,7 +1,7 @@
 /*
- * $Id: DateLocaleConverter.java,v 1.2 2004-04-09 18:44:53 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-09 18:44:53 $
+ * $Id: DateLocaleConverter.java,v 1.3 2004-08-08 11:46:29 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-08-08 11:46:29 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -204,6 +204,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
 		if (pattern == null)
 		{
 			format = DateFormat.getDateInstance(dateStyle, locale);
+			format.setLenient(lenient);
 		}
 		else
 		{
