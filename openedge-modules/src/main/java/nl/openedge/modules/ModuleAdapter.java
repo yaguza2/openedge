@@ -5,6 +5,8 @@
  */
 package nl.openedge.modules;
 
+import java.util.Map;
+
 import org.jdom.Element;
 
 /**
@@ -23,6 +25,12 @@ abstract class ModuleAdapter {
 	 * configuration file, this is it's node
 	 */
 	protected Element configNode = null;
+
+	/**
+	 * if the module is a bean, store a map of (string) properties
+	 * for later use
+	 */
+	protected Map properties = null;
 
 	/**
 	 * construct with class
@@ -79,6 +87,20 @@ abstract class ModuleAdapter {
 	 */
 	public Class getModuleClass() {
 		return moduleClass;
+	}
+
+	/**
+	 * @return Map
+	 */
+	public Map getProperties() {
+		return properties;
+	}
+
+	/**
+	 * @param properties
+	 */
+	public void setProperties(Map properties) {
+		this.properties = properties;
 	}
 
 }

@@ -31,6 +31,14 @@
 			</param2>		
 		</module>
 		
+		<module name="BeanTest" 
+				class="nl.openedge.modules.test.BeanModuleImpl">
+				
+			<property name="myString" value="test"/>
+			<property name="myInteger" value="12"/>
+		
+		</module>
+		
 		<module name="QuartzTest"
 				class="nl.openedge.modules.test.QuartzJobModuleImpl">
 				

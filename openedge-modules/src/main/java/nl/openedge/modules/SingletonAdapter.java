@@ -5,6 +5,8 @@
  */
 package nl.openedge.modules;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 /**
  * @author Eelco Hillenius
  */
@@ -27,9 +29,18 @@ class SingletonAdapter extends ModuleAdapter {
 			throw new ConfigException(ex);
 		}
 		this.moduleClass = moduleClass;
+		// is this a bean?
+		if(singletonInstance instanceof BeanModule) {
+			// try to set its properties
+			try {
+				BeanUtils.populate(singletonInstance, this.properties);
+			} catch(Exception e) {
+				throw new ConfigException(e);	
+			}
+		}
 		// do we have to configure?
 		if(singletonInstance instanceof Configurable) {
-			((Configurable)singletonInstance).init(configNode);		
+			((Configurable)singletonInstance).init(this.configNode);		
 		}
 	}
 

@@ -327,6 +327,19 @@ public class ModuleFactory {
 					" or " + Job.class.getName());
 			}
 			
+			// is this class a bean?
+			if(BeanModule.class.isAssignableFrom(clazz)) {
+				Map properties = new HashMap();
+				List pList = node.getChildren("property");
+				if(pList != null) for(Iterator j = pList.iterator(); j.hasNext(); ) {
+					
+					Element pElement = (Element)j.next();
+					properties.put(pElement.getAttributeValue("name"),
+								   pElement.getAttributeValue("value"));
+				}
+				adapter.setProperties(properties);
+			}
+			
 			// does this class want to configure?
 			// set this BEFORE setModuleClass as a singleton may want to 
 			// configure right away

@@ -89,14 +89,31 @@ public class ModulesTest extends AbstractTestBase {
 		}
 	}
 	
+	public void testBeanModule() {
+		
+		try {
+
+			BeanModuleImpl module = (BeanModuleImpl)
+					moduleFactory.getModule("BeanTest");
+			assertNotNull(module);
+			
+			this.assertEquals(module.getMyString(), "test");
+			this.assertEquals(module.getMyInteger(), new Integer(12));
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
 	public void testJobModule() {
 		
 		try {
 
 			Scheduler scheduler = moduleFactory.getScheduler();
 			
-			System.out.print("sleep for 10 seconds...");
-			Thread.sleep(10000);
+			System.out.print("sleep for 4 seconds...");
+			Thread.sleep(4000);
 			System.out.println("done");
 			
 		} catch(Exception e) {
