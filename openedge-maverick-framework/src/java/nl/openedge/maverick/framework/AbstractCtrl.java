@@ -746,6 +746,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param ctx current maverick context
 	 * @param formBean form
 	 * @return true if validation succeeded, false otherwise
+	 * @deprecated use the classes from nl.openedge.maverick.framework.validation,
+	 * 		in particular interface FieldValidator
 	 */
 	protected boolean validateForm(ControllerContext ctx, AbstractForm formBean) 
 	{
