@@ -30,10 +30,8 @@
  */
 package nl.openedge.modules.impl.menumodule;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -54,17 +52,17 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jdom.Document;
-import org.jdom.Element;
-
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.DocumentLoader;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ServletContextAwareType;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jdom.Document;
+import org.jdom.Element;
 
 /**
  * De menumodule is verantwoordelijk voor het opbouwen van de menu-opties
@@ -249,7 +247,7 @@ public final class MenuModule
 		
 		return model;
 	}
-	private Properties parseParameters(String params)throws UnsupportedEncodingException
+	private Properties parseParameters(String params)
 	{
 		String[] all=pAnd.split(params);
 		Properties prop=new Properties();
@@ -258,9 +256,9 @@ public final class MenuModule
 		{
 			current=pIs.split(all[i],2);
 			if(current.length>=2)
-				prop.setProperty(URLEncoder.encode(current[0],"UTF-8"),URLEncoder.encode(current[1],"UTF-8"));
+				prop.setProperty(current[0],current[1]);
 			else
-				prop.setProperty(URLEncoder.encode(current[0],"UTF-8"),"");
+				prop.setProperty(current[0],"");
 		}
 		return prop;
 	}
@@ -424,7 +422,7 @@ public final class MenuModule
 		}
 
 	}
-	private void addParameters(MenuItem childItem,Element currentElement)throws Exception
+	private void addParameters(MenuItem childItem,Element currentElement)
 	{
 		
 		// voeg filters voor node toe indien aanwezig
@@ -434,8 +432,8 @@ public final class MenuModule
 			for(Iterator i = attributes.iterator(); i.hasNext(); )
 			{
 				Element attribNode = (Element)i.next();
-				String attribName = URLEncoder.encode(attribNode.getAttributeValue("name"),"UTF-8");
-				String attribValue = URLEncoder.encode(attribNode.getTextNormalize(),"UTF-8");
+				String attribName = attribNode.getAttributeValue("name");
+				String attribValue = attribNode.getTextNormalize();
 				childItem.addParameter(attribName, attribValue);
 				if(log.isDebugEnabled())
 				{

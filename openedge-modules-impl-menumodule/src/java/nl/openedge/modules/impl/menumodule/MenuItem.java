@@ -31,6 +31,7 @@
 package nl.openedge.modules.impl.menumodule;
 
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,8 +51,8 @@ public final class MenuItem implements Serializable
 	private HashSet aliases = null;
 	//attributen van het menu
 	private Map attributes = null;
-	//request parameters
-	private Properties parameters;
+	//request parameters, map cause velocity can only make HashMaps
+	private Map parameters;
 	private boolean enabled = true;
 	private String shortCutKey = null;
 	
@@ -256,10 +257,12 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @return all request parameters in a string
+	 * @return all request parameters in a urlencoded string
 	 */
 	public String getQueryString()
 	{
+		//TODO we might want to support keys with a String[] as value and have that parameter appear multiple times
+		//like p1=1&p1=2&p1=3
 		if(parameters==null || parameters.isEmpty())
 			return "";
 		else
@@ -267,11 +270,16 @@ public final class MenuItem implements Serializable
 			StringBuffer result=new StringBuffer(25);
 			Iterator it=parameters.keySet().iterator();
 			String key,value;
+			Object tmp=null;
 			while(it.hasNext())
 			{
-				key=(String)it.next();
-				value=parameters.getProperty(key);
-				result.append(key).append("=").append(value);
+				key=it.next().toString();	//we might want a null check here, however unlikely you can bet someone will run into it
+				tmp=parameters.get(key);
+				if(tmp==null)
+					value="";
+				else
+					value=URLEncoder.encode(tmp.toString());
+				result.append(URLEncoder.encode(key)).append("=").append(value);
 				if(it.hasNext())
 					result.append("&");
 			}
@@ -368,30 +376,49 @@ public final class MenuItem implements Serializable
 	/**
 	 * @return
 	 */
-	public Properties getParameters()
+	public Map getParameters()
 	{
 		return parameters;
 	}
 
 	/**
+	 * Although it is possible to specify objects as parameters, it is not supported.
+	 * You should only use Strings as keys and values.
+	 * We only allow a Map because Velocity always creates a Map in VLT
+	 * 
 	 * @param map
 	 */
-	public void setParameters(Properties map)
+	public void setParameters(Map map)
 	{
 		parameters= map;
 	}
-	public void addParameters(Properties params)
+	/**
+	 * Although it is possible to specify objects as parameters, it is not supported.
+	 * You should only use Strings as keys and values.
+	 * We only allow a Map because Velocity always creates a Map in VLT
+	 * 
+	 * @param params
+	 */
+	public void addParameters(Map params)
 	{
 		if(parameters==null)
 			parameters=params;
 		else
 			parameters.putAll(params);
 	}
+	/**
+	 * Adds a parameter to the url.
+	 * Like we said only Strings are allowed.
+	 * At some time we might allow String[] as value but right now we dont so dont even try.
+	 * 
+	 * @param name
+	 * @param value
+	 */
 	public void addParameter(String name,String value)
 	{
 		if(parameters==null)
 			parameters=new Properties();
-		parameters.setProperty(name,value);
+		parameters.put(name,value);
 	}
 
 }
