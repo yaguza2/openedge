@@ -69,7 +69,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Eelco Hillenius
  */
-public class AccessFactory
+public final class AccessFactory
 {
 
 	/**

@@ -100,7 +100,7 @@ import org.apache.commons.logging.LogFactory;
  * @author  Eelco Hillenius
  */
 
-public class LoginModuleImpl implements LoginModule
+public final class LoginModuleImpl implements LoginModule
 {
 
 	// initial state

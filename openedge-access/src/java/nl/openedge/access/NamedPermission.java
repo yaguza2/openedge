@@ -56,7 +56,7 @@ import java.util.Hashtable;
  *
  * @author E.F. Hillenius
  */
-public class NamedPermission extends Permission implements java.io.Serializable
+public final class NamedPermission extends Permission implements java.io.Serializable
 {
 
 	// does this permission have a wildcard at the end?

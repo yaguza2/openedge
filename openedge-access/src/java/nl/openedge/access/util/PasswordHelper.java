@@ -38,7 +38,7 @@ import java.security.*;
  * @author Andy Armstrong
  * @author Eelco Hillenius
  */
-public class PasswordHelper {
+public final class PasswordHelper {
 	
 	private final static String ALGORITHM   = "MD5";
 	private static MessageDigest md = null;

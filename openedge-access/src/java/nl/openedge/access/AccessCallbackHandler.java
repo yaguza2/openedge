@@ -45,7 +45,7 @@ import javax.security.auth.callback.*;
  * @author Eelco Hillenius
  */
 
-public class AccessCallbackHandler implements CallbackHandler
+public final class AccessCallbackHandler implements CallbackHandler
 {
 
 	private String username;

@@ -46,7 +46,7 @@ import javax.servlet.http.*;
  * @author E.F. Hillenius
  */
 
-public class SessionLoginContext extends LoginContext 
+public final class SessionLoginContext extends LoginContext 
 				implements HttpSessionBindingListener
 {
 

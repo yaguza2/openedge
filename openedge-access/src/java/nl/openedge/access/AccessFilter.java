@@ -85,7 +85,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Eelco Hillenius
  */
-public class AccessFilter implements Filter
+public final class AccessFilter implements Filter
 {
 
 	/** key for storage of subject in session */
