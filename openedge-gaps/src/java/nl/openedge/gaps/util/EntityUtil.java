@@ -38,6 +38,18 @@ public final class EntityUtil
 	 */
 	public static String createId(Entity entity)
 	{
+	    return createId(entity, null);
+	}
+
+	/**
+	 * Maak een nieuw id voor de gegeven entiteit. NOTE: zorg dat de benodigde properties
+	 * (localId etc) zijn gezet voordat deze functie wordt gebruikt
+	 * @param entity de entiteit waarvoor een id dient te worden gemaakt
+	 * @param parentPath pad parent
+	 * @return een nieuw id
+	 */
+	public static String createId(Entity entity, String parentPath)
+	{
 
 		String id = null;
 		if (entity == null)
@@ -59,7 +71,22 @@ public final class EntityUtil
 		{
 			Parameter param = (Parameter) entity;
 			Group group = param.getParameterGroup();
-			String path = group.getPath();
+			String path = null;
+			if(parentPath != null)
+			{
+			    path = parentPath;
+			}
+			else
+			{
+				if(group != null)
+				{
+				    path = group.getPath();
+				}
+				else
+				{
+				    param.getParent().getId();
+				}
+			}
 			String localId = param.getLocalId();
 			if (param.getParentId() != null)
 			{

@@ -11,7 +11,6 @@ package nl.openedge.gaps.ui.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,35 +136,7 @@ public class ParameterPanel extends Panel
             protected void populateCell(Cell cell)
             {
                 NestedParameter parameter = (NestedParameter)cell.getModelObject();
-                List nestedModel = Arrays.asList(parameter.getNested());
                 cell.add(new Label("name", parameter.getLocalId()));
-        		cell.add(new NestedParameterRowTable("row", nestedModel));
-            }
-
-            /**
-             * Table voor een rij/ geneste parameter waarbij een cell overeenkomt
-             * met een geneste parameter. 
-             */
-            private static class NestedParameterRowTable extends Table
-            {
-                /**
-                 * Construct.
-                 * @param componentName componentnaam
-                 * @param model list met parametergroepen
-                 */
-                public NestedParameterRowTable(String componentName, List model)
-                {
-                    super(componentName, model);
-                }
-
-                /**
-                 * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
-                 */
-                protected void populateCell(Cell cell)
-                {
-                    Parameter parameter = (Parameter)cell.getModelObject();
-            		cell.add(new Label("value", (Serializable)parameter.getValue().getValue()));
-                }
             }
         }
     }

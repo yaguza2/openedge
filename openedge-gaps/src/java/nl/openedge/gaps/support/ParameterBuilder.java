@@ -74,7 +74,10 @@ public class ParameterBuilder
 	/** Huidige parameter groep. */
 	private ParameterGroup currentParameterGroup = null;
 
-	/** Parameter voor evt tijdelijk gebruik (generatie id's geneste parameters). */
+	/**
+	 * Parameter voor tijdelijk gebruik (generatie id's geneste parameters).
+	 * Tevens indicator of deze parameter als parent dient te worden gezet ipv
+	 * de parametergroep. */
 	private NestedParameter topParam = null;
 
 	/** De te gebruiken context bij het creeeren van de waarden; mag 'null' zijn. */
@@ -270,11 +273,17 @@ public class ParameterBuilder
 			params = new Parameter[ids.length];
 			int len = ids.length;
 			this.topParam = param;
-			for (int i = 0; i < len; i++)
+			try
 			{
-				params[i] = createParameter(types[i], ids[i], values[i]);
+				for (int i = 0; i < len; i++)
+				{
+					params[i] = createParameter(types[i], ids[i], values[i]);
+				}
 			}
-			this.topParam = null;
+			finally
+			{
+			    this.topParam = null;
+			}
 		}
         return params;
     }
@@ -700,13 +709,19 @@ public class ParameterBuilder
 					"er is geen actieve parametergroep gezet!");
 		}
 		param.setLocalId(localId);
-		param.setParameterGroup(parameterGroup);
 		param.setVersion(getVersionWithCheck());
-		if (topParam != null)
-		{ // mogelijk ooit mooier oplossen...
+		String parentPath = null;
+		if (topParam != null) // zet of de top parameter als parent
+		{
 			param.setParent(topParam);
+			parentPath = topParam.getId();
 		}
-		String id = EntityUtil.createId(param);
+		else // of de parametergroep
+		{
+		    param.setParameterGroup(parameterGroup);
+		    parentPath = parameterGroup.getPath();
+		}
+		String id = EntityUtil.createId(param, parentPath);
 		param.setId(id);
 		parameterGroup.addParameter(param);
 	}

@@ -283,7 +283,10 @@ public abstract class Parameter extends Entity implements Externalizable
 		try
 		{
 			setVersion(VersionRegistry.getVersion(versionId));
-			setParameterGroup(ParameterRegistry.getParameterGroup(groupId));
+			if(groupId != null)
+			{
+			    setParameterGroup(ParameterRegistry.getParameterGroup(groupId));
+			}
 			setValue((ParameterValue) in.readObject());
 			setParentId((String) in.readObject());
 		}
