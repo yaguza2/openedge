@@ -92,7 +92,7 @@ public final class AccessHelper
 	 * Name of the servlet init parameter which defines the path to the
 	 * OpenEdge Access configuration file.  Defaults to DEFAULT_CONFIG_FILE.
 	 */
-	protected static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
+	public static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
 	/** logger */
 	private static Log log = LogFactory.getLog(AccessHelper.class);
@@ -122,7 +122,7 @@ public final class AccessHelper
 	/**
 	 * construct and initialise with URL to configDocument
 	 * @param configURL url to configuration
-	 * @param appName logical name of the application. 
+	 * @param applicationname logical name of the application. 
 	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
 	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
 	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
@@ -132,18 +132,33 @@ public final class AccessHelper
 	 * @param configDocument
 	 * @throws ConfigException
 	 */
-	public static void reload(String configDocument, String appName) 
+	public static void reload(String configDocument, String applicationname) 
 		throws ConfigException
 	{
-		setAppNameSystemProperty(appName);
+		setAppNameSystemProperty(applicationname);
 		Properties configuration = loadConfigFromUrl(configDocument);
+		internalInit(configuration, null);
+	}
+	
+	/**
+	 * construct and initialise with URL to configDocument 
+	 * and get the appName from properties with key applicationname
+	 * @param configURL url to configuration
+	 * @param configDocument
+	 * @throws ConfigException
+	 */
+	public static void reload(String configDocument) 
+		throws ConfigException
+	{
+		Properties configuration = loadConfigFromUrl(configDocument);
+		setAppNameSystemProperty(configuration.getProperty("applicationname"));	
 		internalInit(configuration, null);
 	}
 
 	/**
 	 * construct and initialise with URL to configDocument
 	 * @param configURL url to configuration
-	 * @param appName logical name of the application. 
+	 * @param applicationname logical name of the application. 
 	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
 	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
 	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
@@ -152,17 +167,30 @@ public final class AccessHelper
 	 * 		"oeaccess.codesource." + appName
 	 * @throws ConfigException
 	 */
-	public static void reload(URL configURL, String appName) throws ConfigException
+	public static void reload(URL configURL, String applicationname) throws ConfigException
 	{
-		setAppNameSystemProperty(appName);
+		setAppNameSystemProperty(applicationname);
 		Properties configuration = loadConfigFromUrl(configURL);
+		internalInit(configuration, null);
+	}
+	
+	/**
+	 * construct and initialise with URL to configDocument
+	 * and get the appName from properties with key applicationname
+	 * @param configURL url to configuration
+	 * @throws ConfigException
+	 */
+	public static void reload(URL configURL) throws ConfigException
+	{
+		Properties configuration = loadConfigFromUrl(configURL);
+		setAppNameSystemProperty(configuration.getProperty("applicationname"));
 		internalInit(configuration, null);
 	}
 
 	/**
 	 * construct and initialise within a servlet context
 	 * @param configURL url to configuration
-	 * @param appName logical name of the application. 
+	 * @param applicationname logical name of the application. 
 	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
 	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
 	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
@@ -172,25 +200,51 @@ public final class AccessHelper
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
-	public static void reload(ServletContext servletContext, String appName) 
+	public static void reload(ServletContext servletContext, String applicationname) 
 		throws ConfigException
 	{
-		setAppNameSystemProperty(appName);
+		setAppNameSystemProperty(applicationname);
 		Properties configuration = loadConfigInWebApp(servletContext);
 		internalInit(configuration, servletContext);
 	}
 	
 	/**
-	 * set codesource of this instance of openedge-access as system property in form:
-	 * "oeaccess.codesource." + appName
-	 * @param appName logical application name
+	 * construct and initialise within a servlet context
+	 * and get the appName from properties with key applicationname
+	 * @param configURL url to configuration
+	 * @param servletContext
+	 * @throws ConfigException
 	 */
-	protected static void setAppNameSystemProperty(String appName)
+	public static void reload(ServletContext servletContext) 
+		throws ConfigException
 	{
+		Properties configuration = loadConfigInWebApp(servletContext);
+		setAppNameSystemProperty(configuration.getProperty("applicationname"));
+		internalInit(configuration, servletContext);
+	}
+	
+	/**
+	 * set codesource of this instance of openedge-access as system property in form:
+	 * "oeaccess.codesource." + applicationname
+	 * @param appName logical application name
+	 * @throws ConfigException
+	 */
+	protected static void setAppNameSystemProperty(String applicationname) 
+		throws ConfigException
+	{
+		String key = "oeaccess.codesource." + applicationname;
+		String check = System.getProperty(applicationname);
+		
+		if(check != null)
+		{
+			throw new ConfigException(
+				"application " + key + " was allready defined in VM");
+		}
+		
 		CodeSource cs = AccessHelper.class.getProtectionDomain().getCodeSource();
 		URL csurl = cs.getLocation();
 		System.out.println("cs loc: " + csurl);
-		System.setProperty("oeaccess.codesource." + appName, csurl.toString());
+		System.setProperty(key, csurl.toString());
 	}
 
 	/* do 'real' initialisation */
