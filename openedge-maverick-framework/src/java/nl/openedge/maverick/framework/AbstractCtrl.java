@@ -126,11 +126,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	private boolean needsValidUser = false;
 	
 	/**
-	 * if population/ validation did not succeed, should we copy ALL request
+	 * if population/ validation did not succeed, should we copy ALL currentRequest
 	 * parameters to the override values map (and thus giving you the option
 	 * of re-displaying the user input), or should we just fill the override fields
 	 * with the fields that failed?
-	 * the default is true (copy the whole request) 
+	 * the default is true (copy the whole currentRequest) 
 	 */
 	private boolean copyRequestToOverride = true;
 	
@@ -141,11 +141,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	private boolean setNullForEmptyString = true;
 	
 	/**
-	 * Indicates whether we should use the request attributes for the population process
+	 * Indicates whether we should use the currentRequest attributes for the population process
 	 * as well. This property is false by default.
-	 * This can be very handy when linking action together, as usually, the request paramters
+	 * This can be very handy when linking action together, as usually, the currentRequest paramters
 	 * are read only. 
-	 * NOTE: request attributes OVERRIDE request parameters
+	 * NOTE: currentRequest attributes OVERRIDE currentRequest parameters
 	 */	
 	private boolean includeRequestAttributes = false;
 	
@@ -155,7 +155,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected MultiMap fieldValidators = null;
 	
 	/**
-	 * subclasses can register converters for custom conversion from string (request parameter)
+	 * subclasses can register converters for custom conversion from string (currentRequest parameter)
 	 * to other types
 	 * registering a converter for a field will override the default (BeanUtils) conversion
 	 * 
@@ -170,7 +170,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	/**
 	 * Optional objects that can be used to switch whether validation with
-	 * custom fieldValidators should be performed in this request
+	 * custom fieldValidators should be performed in this currentRequest
 	 * @author Eelco Hillenius
 	 */
 	private List globalValidatorActivationRules = null;
@@ -405,7 +405,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * get the prefered locale for this request
+	 * get the prefered locale for this currentRequest
 	 * @param cctx controller context
 	 * @param form current form
 	 * @return Locale the prefered locale
@@ -1004,7 +1004,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param cctx controller context
 	 * @param formBean form
 	 * @param name name of the field
-	 * @param triedValue the user input value/ request parameter
+	 * @param triedValue the user input value/ currentRequest parameter
 	 * @param t exception if known (may be null)
 	 * @param validator the validator that was the cause of the validation failure, if one
 	 * 	(is null if this was a conversion error)
@@ -1100,7 +1100,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * other than the formBean itself.
 	 *
 	 * @param formBean will be a bean created by makeFormBean(),
-	 * which has been populated with the http request parameters and
+	 * which has been populated with the http currentRequest parameters and
 	 * possibly controller parameters.
 	 */
 	protected String perform(Object formBean, ControllerContext cctx) 
@@ -1111,7 +1111,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 												
 	/**
 	 * This method will be called to produce a simple bean whose properties
-	 * will be populated with the http request parameters.  The parameters
+	 * will be populated with the http currentRequest parameters.  The parameters
 	 * are useful for doing things like persisting beans across requests.
 	 */
 	protected abstract AbstractForm makeFormBean(ControllerContext cctx);
@@ -1448,11 +1448,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * Indicates whether we should use the request attributes for the population process
+	 * Indicates whether we should use the currentRequest attributes for the population process
 	 * as well. This property is false by default.
-	 * This can be very handy when linking action together, as usually, the request paramters
+	 * This can be very handy when linking action together, as usually, the currentRequest paramters
 	 * are read only. 
-	 * NOTE: request attributes OVERRIDE request parameters
+	 * NOTE: currentRequest attributes OVERRIDE currentRequest parameters
 	 * @return boolean
 	 */
 	protected boolean isIncludeRequestAttributes()
@@ -1461,11 +1461,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * Indicates whether we should use the request attributes for the population process
+	 * Indicates whether we should use the currentRequest attributes for the population process
 	 * as well. This property is false by default.
-	 * This can be very handy when linking action together, as usually, the request paramters
+	 * This can be very handy when linking action together, as usually, the currentRequest paramters
 	 * are read only. 
-	 * NOTE: request attributes OVERRIDE request parameters
+	 * NOTE: currentRequest attributes OVERRIDE currentRequest parameters
 	 * @param b
 	 */
 	protected void setIncludeRequestAttributes(boolean b)
@@ -1474,11 +1474,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * if population/ validation did not succeed, should we copy ALL request
+	 * if population/ validation did not succeed, should we copy ALL currentRequest
 	 * parameters to the override values map (and thus giving you the option
 	 * of re-displaying the user input), or should we just fill the override fields
 	 * with the fields that failed?
-	 * @return boolean whether to copy the whole request to the override fields or just the
+	 * @return boolean whether to copy the whole currentRequest to the override fields or just the
 	 * 	fields that failed
 	 */
 	protected boolean isCopyRequestToOverride()
@@ -1487,11 +1487,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * if population/ validation did not succeed, should we copy ALL request
+	 * if population/ validation did not succeed, should we copy ALL currentRequest
 	 * parameters to the override values map (and thus giving you the option
 	 * of re-displaying the user input), or should we just fill the override fields
 	 * with the fields that failed?
-	 * @param b whether to copy the whole request to the override fields or just the
+	 * @param b whether to copy the whole currentRequest to the override fields or just the
 	 * 	fields that failed
 	 */
 	protected void setCopyRequestToOverride(boolean b)

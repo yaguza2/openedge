@@ -46,7 +46,7 @@ public interface FormValidator
 	/**
 	 * checks if form is valid
 	 * @param cctx maverick context
-	 * @param form form for this request
+	 * @param form form for this currentRequest
 	 * @return true if valid, false if not.
 	 */
 	public boolean isValid(
@@ -56,7 +56,7 @@ public interface FormValidator
 	/**
 	 * if form is not valid, get custom error message here
 	 * @param cctx maverick context
-	 * @param form form for this request
+	 * @param form form for this currentRequest
 	 * @param locale the locale that should be used to get the message
 	 * @return String[] the message key and the localized error message
 	 */		

@@ -45,7 +45,7 @@ public interface FieldValidator
 	/**
 	 * checks if value is valid
 	 * @param cctx maverick context
-	 * @param form form for this request
+	 * @param form form for this currentRequest
 	 * @param fieldName field name of parameter
 	 * @param value the value of this parameter
 	 * @return true if valid, false if not.
@@ -59,7 +59,7 @@ public interface FieldValidator
 	/**
 	 * if value is not valid, get custom error message here
 	 * @param cctx maverick context
-	 * @param form form for this request
+	 * @param form form for this currentRequest
 	 * @param fieldName field name of parameter
 	 * @param value the value of this parameter
 	 * @param locale the locale that should be used to get the message

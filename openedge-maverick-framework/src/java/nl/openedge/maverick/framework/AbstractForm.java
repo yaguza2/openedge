@@ -46,7 +46,7 @@ import nl.openedge.access.UserPrincipal;
  * 
  * Override fields are filled with the string values from the HttpServletRequest
  * if conversion the the target type (e.g. an integer) in the form failed.
- * For example: if you have a form with property 'myinteger' and send the request
+ * For example: if you have a form with property 'myinteger' and send the currentRequest
  * parameter 'myinteger=foo', 'foo' will be saved as an override field with key
  * 'myinteger'. On top of this, an error will be registered (stored in map errors)
  * for this conversion failure, default with key 'myinteger'.
@@ -56,7 +56,7 @@ import nl.openedge.access.UserPrincipal;
 public abstract class AbstractForm
 {
 	
-	/** last request */
+	/** last currentRequest */
 	private String lastreq;
 
 	/** should we redirect? */

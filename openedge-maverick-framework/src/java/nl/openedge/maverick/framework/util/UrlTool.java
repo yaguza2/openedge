@@ -68,8 +68,8 @@ public class UrlTool
 
 	/**
 	 * get lastrequest as string; strip given parameter 
-	 * 	(that is used to store last request in url)
-	 * @param request
+	 * 	(that is used to store last currentRequest in url)
+	 * @param currentRequest
 	 * @param parameterToStrip
 	 * @return String
 	 */

@@ -36,16 +36,16 @@ import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * interface that can be used to switch whether validation with
- * custom fieldValidators should be performed in this request
+ * custom fieldValidators should be performed in this currentRequest
  * @author Eelco Hillenius
  */
 public interface ValidatorActivationRule
 {
 	/**
-	 * returns whether validation with custom fieldValidators should be performed in this request
+	 * returns whether validation with custom fieldValidators should be performed in this currentRequest
 	 * @param cctx maverick context
-	 * @param form form for this request
-	 * @return whether validation with custom fieldValidators should be performed in this request.
+	 * @param form form for this currentRequest
+	 * @return whether validation with custom fieldValidators should be performed in this currentRequest.
 	 */
 	public boolean allowValidation(
 		ControllerContext cctx,
