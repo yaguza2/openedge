@@ -102,7 +102,7 @@ public abstract class RdbmsBase {
 			try {
 				queries = new Properties();
 				queries.load(getClass().getResourceAsStream(
-						"RdbmsQueries.properties"));
+						"/RdbmsQueries.properties"));
 					
 			} catch(Exception e) {
 				e.printStackTrace();
