@@ -92,7 +92,7 @@ public class AccessFilter implements Filter
 	public final static String AUTHENTICATED_SUBJECT_KEY = "_authenticatedSubject";
 
 	/** last request before logon redirect will be saved as a request parameter */
-	public final static String LAST_REQUEST_KEY = "lastRequest";
+	public final static String LAST_REQUEST_KEY = "_lastRequest";
 
 	/** if authentication failed or was not done yet, redirect to this url */
 	protected static String loginRedirect;
@@ -169,7 +169,7 @@ public class AccessFilter implements Filter
 					lq = lq.append("?").append(request.getQueryString());
 				}
 
-				request.setAttribute(LAST_REQUEST_KEY, lq.toString());
+				session.setAttribute(LAST_REQUEST_KEY, lq.toString());
 				// redirect to login address
 
 				RequestDispatcher dispatcher = 
