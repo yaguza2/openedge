@@ -9,6 +9,7 @@ import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
+import nl.openedge.access.impl.rdbms.DataSourceDelegate;
 import nl.openedge.access.impl.rdbms.RdbmsBase;
 import nl.openedge.access.util.*;
 
@@ -65,6 +66,15 @@ public class AccessFactory {
 	}
 	
 	/**
+	 * construct and initialise with URL to configDocument
+	 */
+	public AccessFactory(URL configURL) throws ConfigException {
+		
+		this.configuration = loadConfigDocumentFromUrl(configURL);
+		internalInit();
+	}
+	
+	/**
 	 * construct and initialise with servletContext
 	 */
 	public AccessFactory(ServletContext servletContext) throws ConfigException {
@@ -79,18 +89,41 @@ public class AccessFactory {
 		Element root = configuration.getRootElement();
 		
 		Element dsNode = root.getChild("datasource");
-		if(dsNode == null) throw new ConfigException(
-			"element datasource is mandatory for config");
-		String dataSourceRef = dsNode.getAttributeValue("reference");
-		if(dataSourceRef == null) throw new ConfigException(
-			"attribute dataSourceRef is mandatory for element datasource");
+		if(dsNode != null) {
+			String dataSourceRef = dsNode.getAttributeValue("reference");
+			if(dataSourceRef != null) {
+		
+				try {
+					Context ctx = new InitialContext();
+					DataSource ds = (DataSource)ctx.lookup(dataSourceRef);
+					RdbmsBase.setDataSource(ds);
+					log.info("datasource loaded from " + dataSourceRef);
+				} catch(Exception e) {
+					throw new ConfigException(e);
+				}
+			} else {
+				
+				String delegate = dsNode.getAttributeValue("delegate");
+				if(delegate == null) throw new ConfigException(
+					"element datasource should have attribute 'reference' " +
+					"that points to a datasource OR attribute 'delegate' " + 
+					"with a delegate class that confirms to the interface " + 
+					"nl.openedge.access.impl.rdbms.DataSourceDelegate.");
+				
+				try {
+					Class cls = Class.forName(delegate);
+					DataSourceDelegate d = (DataSourceDelegate)cls.newInstance();
+					DataSource ds = d.getDataSource(XML.getParams(dsNode));
+					if(ds == null) throw new ConfigException(
+							"unable to load datasource from delegate " + d);
+					RdbmsBase.setDataSource(ds);
+					log.info("datasource loaded from delegate" + d);
 					
-		try {
-			Context ctx = new InitialContext();
-			RdbmsBase.setDataSource((DataSource)ctx.lookup(dataSourceRef));
-			log.info("datasource loaded from " + dataSourceRef);
-		} catch(Exception e) {
-			throw new ConfigException(e);
+				} catch(Exception e) {
+					throw new ConfigException(e);
+				}				
+			}
+					
 		}
 		
 		this.accessManager = loadAccessManager(root.getChild("access-manager"));
@@ -174,6 +207,19 @@ public class AccessFactory {
 		} catch (IOException ex) {
 			throw new ConfigException(ex);
 		}
+	}
+	
+	/**
+	 * @return a loaded JDOM document containing the configuration information.
+	 */
+	protected Document loadConfigDocumentFromUrl(URL configURL) 
+				throws ConfigException {
+					
+		if(configURL == null) throw new ConfigException(configURL + 
+				" should be a document but is empty");
+		log.info("Loading config from " + configURL);
+		
+		return internalLoad(configURL);
 	}
 	
 	/**

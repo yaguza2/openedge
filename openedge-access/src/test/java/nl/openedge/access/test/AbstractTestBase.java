@@ -2,33 +2,13 @@ package nl.openedge.access.test;
 
 import java.util.Collection;
 
-import javax.naming.InitialContext;
-
 import junit.framework.TestCase;
 
 import nl.openedge.access.AccessFactory;
 
-import org.gjt.mm.mysql.jdbc2.optional.MysqlConnectionPoolDataSource;
-
 /**
  * This is the baseclass for testcases.
- * 
- * We 'fake' a datasource here using MysqlConnectionPoolDataSource
- * For this to work rmiregistry should run and a rmi based jndi implementation
- * has to be used, eg:
- * java.naming.factory.initial=com.sun.jndi.rmi.registry.RegistryContextFactory
- * Furthermore, we load the accessFactory
- * 
- * The following environment variables are used if they are provided:
- * <ul>
- * 	<li>dbservername - location of MySQL database</li>
- * 	<li>dbname - name of database</li>
- * 	<li>dbport - database port to connect to</li>
- * 	<li>dbuser - username for database connection</li>
- * 	<li>dbpassword - password for database connection</li>
- * 	<li>datasource - name to bind the datasource to in rmi context</li>
- * 	<li>configfile - location url of OpenEdge Access configuration file</li>
- * </ul>
+ * It does some initialisation and provides additional test methods
  * 
  * @author E.F. Hillenius
  * $Id$
@@ -49,32 +29,7 @@ public abstract class AbstractTestBase extends TestCase {
 	 */
 	protected void init() throws Exception {
 
-		setUpDatasource();
 		loadAccessFactory();
-	}
-	
-	/**
-	 * setup the datasource
-	 * @throws Exception
-	 */
-	protected void setUpDatasource() throws Exception {
-		
-		InitialContext ctx = new InitialContext();
-		MysqlConnectionPoolDataSource ds = 
-				new MysqlConnectionPoolDataSource();	
-		String dbname = System.getProperty("dbname", "openedge_website");
-		String dbservername = System.getProperty("dbservername", "baas");
-		String port = System.getProperty("dbport", "3306");
-		String user = System.getProperty("dbuser", "root");
-		String password = System.getProperty("dbpassword", "");		
-		ds.setUser( user );
-		ds.setPassword( password );
-		ds.setDatabaseName( dbname ); 
-		ds.setServerName( dbservername );
-		if( port != null && (!port.trim().equals("")))
-							ds.setPort( Integer.parseInt(port) );					
-		ds.getConnection(); // check
-		ctx.rebind(System.getProperty("datasource", "jdbc/openedge"), ds);		
 	}
 	
 	/**
@@ -111,5 +66,4 @@ public abstract class AbstractTestBase extends TestCase {
 		if(c1 == null || c2 == null || (!c1.containsAll(c2))) 
 			fail(message);
 	}
-
 }

@@ -10,5 +10,6 @@
     <classpathentry kind="var" path="TOMCAT_HOME/common/lib/servlet.jar" sourcepath="SERVLET_SOURCE"/>
     <classpathentry kind="lib" path="lib/mm.mysql-2.0.14-bin.jar" sourcepath="/openedge-access/libsrc/mm.mysql-2.0.14-src.jar"/>
     <classpathentry kind="lib" path="lib/junit.jar" sourcepath="/openedge-access/libsrc/junit-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-cli-1.0-beta-2-dev.jar" sourcepath="/openedge-access/libsrc/commons-cli-1.0-beta-2-dev-src.jar"/>
     <classpathentry kind="output" path="build"/>
 </classpath>

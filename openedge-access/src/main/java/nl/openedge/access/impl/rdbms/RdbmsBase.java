@@ -16,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Base class for Rdbms/ JDBC implementations
- * Relies on the Jakarta Commons SQL package
  * 
  * @author Hillenius
  * $Id$

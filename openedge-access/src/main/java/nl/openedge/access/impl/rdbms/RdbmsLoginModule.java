@@ -10,6 +10,7 @@ import javax.security.auth.callback.*;
 import nl.openedge.access.*;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
+import nl.openedge.access.util.PasswordHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -293,11 +294,11 @@ public class RdbmsLoginModule extends RdbmsUserManager
 		if (dbPassword == null)
 			throw new LoginException("UserPrincipal " + username + " not found");
 
-		if(log.isDebugEnabled()) log.debug("'" + new String(password) + "' equals '" + dbPassword + "'?");
+		String cryptedPassword = new String(
+					PasswordHelper.cryptPassword(password));
 
-		passwordMatch = new String(password).equals(dbPassword);
+		passwordMatch = new String(cryptedPassword).equals(dbPassword);
 		if (passwordMatch) {
-			if(log.isDebugEnabled()) log.debug("passwords do match!");
             
 			RdbmsCredential rdbmsCredential = new RdbmsCredential();
 			this.tempCredentials.add(rdbmsCredential);
@@ -314,7 +315,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 			this.tempPrincipals.addAll(roles);
          
 		} else {
-			if(log.isDebugEnabled()) log.debug("passwords do NOT match!");
+			//passwords do NOT match!
 		}
 
 		return passwordMatch;
