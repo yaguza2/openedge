@@ -34,6 +34,9 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
 import nl.openedge.modules.types.base.SingletonType;
@@ -47,6 +50,7 @@ import nl.openedge.util.hibernate.HibernateHelper;
  */
 public class HibernateMailMQModule implements SingletonType, MailMQModule
 {
+	private Log log = LogFactory.getLog(this.getClass());
 
 	// object query to get new messages
 	private static final String listNewMessages =
@@ -76,9 +80,12 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.fatal("Exception: ", e);
 			if (tx != null)
+			{
+			
 				tx.rollback();
+			}
 			throw e;
 		}
 		finally
@@ -113,9 +120,12 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.fatal("Exception: ", e);
 			if (tx != null)
+			{
+			
 				tx.rollback();
+			}
 			throw e;
 		}
 		finally
@@ -173,9 +183,12 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.fatal("Exception: ", e);
 			if (tx != null)
+			{
+			
 				tx.rollback();
+			}
 			throw e;
 		}
 		finally
@@ -219,9 +232,12 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.fatal("Exception: ", e);
 			if (tx != null)
+			{
+			
 				tx.rollback();
+			}
 			throw e;
 		}
 		finally
@@ -282,9 +298,12 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.fatal("Exception: ", e);
 			if (tx != null)
+			{
+			
 				tx.rollback();
+			}
 			throw e;
 		}
 		finally
