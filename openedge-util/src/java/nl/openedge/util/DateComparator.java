@@ -30,6 +30,7 @@
  */
 package nl.openedge.util;
 
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -38,10 +39,16 @@ import java.util.Date;
  * The comparator checks year, month, day and returns
  * -1 or 0 or 1.
  * 
+ * This component is not Thread safe.
+ * 
  * @author shofstee
  */
 public class DateComparator implements Comparator
 {
+	
+	// as we use instance variables, this component is not Thread safe. 
+	private Calendar cal1 = Calendar.getInstance();
+	private Calendar cal2 = Calendar.getInstance();
 	
 	/**
 	 * Checks year then month then day of month.
@@ -53,24 +60,22 @@ public class DateComparator implements Comparator
 	public int compare(Object o1, Object o2)
 	{
 		int result = 0;
-		Date date1 = null;
-		Date date2 = null;
 		
 		if (o1 == null || o2 == null)
 		{
 			throw new IllegalArgumentException("Cannot compare with null.");
 		}
-		if (!(o1 instanceof Date || o2 instanceof Date))
+		if (!(o1 instanceof Date && o2 instanceof Date))
 		{
 			handleClassCastException(o1, o2);
 		}
 		
-		date1 = (Date) o1;
-		date2 = (Date) o2;
+		cal1.setTime((Date)o1);
+		cal2.setTime((Date)o2);
 		
-		int yearResult = date2.getYear() - date1.getYear();
-		int monthResult = date2.getMonth() - date1.getMonth();
-		int dayResult = date2.getDate() - date1.getDate();
+		int yearResult = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR);
+		int monthResult = cal2.get(Calendar.MONTH) - cal1.get(Calendar.MONTH);
+		int dayResult = cal2.get(Calendar.DATE) - cal1.get(Calendar.DATE);
 		
 		if (yearResult != 0)
 		{
