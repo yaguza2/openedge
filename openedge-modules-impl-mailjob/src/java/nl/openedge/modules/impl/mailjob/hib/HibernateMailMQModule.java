@@ -176,7 +176,8 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 				errorMsg = t.getMessage();
 			}
 			msg.setStatus(MailMessage.STATUS_FAILED);
-			msg.setStatusDetail(errorMsg);
+			// afkappen error bericht tot lengte die zeker in db past
+			msg.setStatusDetail( errorMsg.substring( 0, 250));
 
 			tx.commit();
 
