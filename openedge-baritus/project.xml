@@ -4,7 +4,7 @@
 	<groupId>openedge</groupId>
 	<id>baritus</id>
 	<name>OpenEdge Baritus</name>
-	<currentVersion>1.0.9</currentVersion>
+	<currentVersion>1.0.10</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -16,11 +16,16 @@
 	<shortDescription>Baritus is an open source framework for building Java web applications.</shortDescription>
 	<description>
 		Baritus is an open source framework for building Java web applications. Baritus is a powerfull extension 
-		of Maverick that focussus on developing web applications using plain old java objects.
+		of Maverick that focusus on developing web applications using plain old java objects.
 	</description>
 	<url>http://baritus.sourceforge.net/</url>
 
 	<versions>
+		<version>
+			<id>1.0.10</id>
+			<name>1.0.10</name>
+			<tag>BARITUS_1_0_10</tag>
+		</version>
 		<version>
 			<id>1.0.9</id>
 			<name>1.0.9</name>
