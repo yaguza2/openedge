@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 
 import nl.openedge.maverick.framework.util.UrlTool;
@@ -577,6 +578,17 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			res = ResourceBundle.getBundle("resources");
 		}
 		return res;		
+	}
+	
+	/*
+	 * set no cache headers
+	 */
+	private void setNoCache(ControllerContext cctx)
+	{
+		HttpServletResponse response = cctx.getResponse();
+		response.setHeader("Pragma", "No-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setDateHeader("Expires", 1);
 	}
 
 }
