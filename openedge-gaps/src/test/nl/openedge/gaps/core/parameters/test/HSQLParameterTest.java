@@ -53,15 +53,15 @@ public class HSQLParameterTest extends AbstractParameterTest {
      */
     public static Test suite() throws Exception {
 	    TestSuite suite = new TestSuite();
-//	    suite.addTest(new HSQLParameterTest("testGroepen"));
-//	    suite.addTest(new HSQLParameterTest("testSaveGetDelParameter"));
-//	    suite.addTest(new HSQLParameterTest("testBuildString"));
-//	    suite.addTest(new HSQLParameterTest("testBuildPercentage"));
-//	    suite.addTest(new HSQLParameterTest("testBuildBoolean"));
-//	    suite.addTest(new HSQLParameterTest("testBuildDate"));
-//	    suite.addTest(new HSQLParameterTest("testBuildFixedSet"));
-//	    suite.addTest(new HSQLParameterTest("testParameterInExpressie"));
-//	    suite.addTest(new HSQLParameterTest("testNavigatie"));
+	    suite.addTest(new HSQLParameterTest("testGroepen"));
+	    suite.addTest(new HSQLParameterTest("testSaveGetDelParameter"));
+	    suite.addTest(new HSQLParameterTest("testBuildString"));
+	    suite.addTest(new HSQLParameterTest("testBuildPercentage"));
+	    suite.addTest(new HSQLParameterTest("testBuildBoolean"));
+	    suite.addTest(new HSQLParameterTest("testBuildDate"));
+	    suite.addTest(new HSQLParameterTest("testBuildFixedSet"));
+	    suite.addTest(new HSQLParameterTest("testParameterInExpressie"));
+	    suite.addTest(new HSQLParameterTest("testNavigatie"));
 	    suite.addTest(new HSQLParameterTest("testParameterGroepOvererving"));
 	    TestSetupDeco testDeco = new TestSetupDeco(suite);
 	    return testDeco;
