@@ -102,22 +102,21 @@ public class DefaultParameterRegistryDelegate implements ParameterRegistryDelega
     public Parameter getParameter(String id, Version version) throws NotFoundException,
             RegistryException {
 
-        if(id == null) {
-            throw new RegistryException("id waarde null is niet toegestaan voor het ophalen van een parameter");
+        Parameter param = null;
+        if(id != null) {
+	        try {
+	            param = parameterDao.findParameter(id, version);
+	            if(param == null) {
+	                throw new NotFoundException(
+	                        "Parameter met id " + id + ", versie " + version
+	                        + " niet gevonden");
+	            }
+	        } catch (ParameterDAOException e) {
+	            log.error(e.getMessage(), e);
+	            throw new RegistryException(e);
+	        }
         }
-        try {
-            Parameter param = parameterDao.findParameter(id, version);
-            if(param == null) {
-                throw new NotFoundException(
-                        "Parameter met id " + id + ", versie " + version
-                        + " niet gevonden");
-            } else {
-                return param;
-            }
-        } catch (ParameterDAOException e) {
-            log.error(e.getMessage(), e);
-            throw new RegistryException(e);
-        }
+        return param;
     }
 
     /**

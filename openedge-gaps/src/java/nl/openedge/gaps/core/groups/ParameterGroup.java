@@ -143,11 +143,6 @@ public class ParameterGroup extends Group {
     public Parameter getParameter(String localId) {
 
         String id = (String)mapIdParameterIds.get(localId);
-        if(id == null) {
-            throw new RegistryException(
-                    localId + " is niet geregistreerd als parameter van "
-                    + "parametergroep " + getId());
-        }
         Parameter param;
         try {
             param = ParameterRegistry.getParameter(id, getVersion());
@@ -254,5 +249,17 @@ public class ParameterGroup extends Group {
      */
     public void setSuperGroupId(String superGroupId) {
         this.superGroupId = superGroupId;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        String repr = super.toString();
+        String superGID = getSuperGroupId();
+        if(superGID != null) {
+            repr = repr + " -> " + superGID;
+        }
+        return repr;
     }
 }

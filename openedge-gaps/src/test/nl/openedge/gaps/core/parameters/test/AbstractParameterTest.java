@@ -339,7 +339,9 @@ public abstract class AbstractParameterTest extends TestCase {
         // test browsen
         Group current;
         current = (Group)browser.navigate("/testgroep/dochter"); // absoluut
-        assertEquals(dochterGroep, current);
+        assertEquals(dochterGroep.getId(), current.getId());
+        assertEquals(dochterGroep.getVersion().getName(), current.getVersion().getName());
+//TODO herimplementeer relatief browsen
 //        current = (Group)browser.navigate("kleinzoon"); // relatief kind
 //        assertEquals(kleinZoonGroep, current);
 //        current = (Group)browser.navigate(".."); // relatief parent
@@ -353,32 +355,30 @@ public abstract class AbstractParameterTest extends TestCase {
         StructuralGroup kleinDochterGroep = builder.createStructuralGroup(
                 "kleindochter", "Nog een kleinkind");
         current = (Group)browser.navigate("/testgroep/dochter/kleindochter");
-        assertEquals(kleinDochterGroep, current);
-
+        assertEquals(kleinDochterGroep.getId(), current.getId());
+        assertEquals(kleinDochterGroep.getVersion().getName(), current.getVersion().getName());
+        
         // test toevoegen van en navigeren naar een parameter groep en parameters
         builder.setStructuralGroup(kleinDochterGroep);
         ParameterGroup parameterGroep = builder.createParameterGroup("eigenschappen",
                 "eigenschappen van de kleindochter", true);
-        //builder.setParameterGroup(parameterGroep);
         Parameter param = builder.createNumeric("leeftijd", "8");
+        NestedParameter rowParam = builder.createNumericRow("testrij",
+                new String[]{"1", "2", "3"}, new String[]{"100", "112", "222"});
         Object result = browser.navigate(
                 "/testgroep/dochter/kleindochter:eigenschappen");
-        assertEquals(parameterGroep, result);
+        assertEquals(parameterGroep.getId(), ((ParameterGroup)result).getId());
 
         result = browser.navigate(
         	"/testgroep/dochter/kleindochter:eigenschappen/leeftijd");
-        assertEquals(param, result);
+        assertEquals(param.getId(), ((Parameter)result).getId());
 
         result = browser.navigate(
     		"/testgroep/dochter/kleindochter:eigenschappen/leeftijd@value");
         assertEquals(new Double(8), result);
-
-        builder.navigate("/testgroep/dochter");
-        NestedParameter rowParam = builder.createNumericRow("testrij",
-                new String[]{"1", "2", "3"}, new String[]{"100", "112", "222"});
-//        result = browser.navigate(
-//			"/testgroep/dochter/kleindochter:eigenschappen/testrij['2']/@value");
-//	    assertEquals(new Double(112), result);
+        result = browser.navigate(
+			"/testgroep/dochter/kleindochter:eigenschappen/testrij['2']@value");
+	    assertEquals(new Double(112), result);
 
     }
 
@@ -413,11 +413,11 @@ public abstract class AbstractParameterTest extends TestCase {
 
         Object current = null;
         ParameterBrowser browser = new ParameterBrowser();
-        current = browser.evaluate("/top/super/deze:parametergroep[id='drie']/@value");
+        current = browser.evaluate("/top/super/deze:parametergroep/drie@value");
         assertEquals(new Double(333), current);
-        current = browser.evaluate("/top/super/deze:parametergroep[id='twee']/@value");
+        current = browser.evaluate("/top/super/deze:parametergroep/twee@value");
         assertEquals(new Double(22), current);
-        current = browser.evaluate("/top/super/deze:parametergroep[id='een']/@value");
+        current = browser.evaluate("/top/super/deze:parametergroep/een@value");
         assertEquals(new Double(1), current);
     }
 
