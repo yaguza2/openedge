@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.6 2004-04-07 10:43:54 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-07 10:43:54 $
+ * $Id: PopulationTest.java,v 1.7 2004-04-08 21:05:22 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-08 21:05:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -602,7 +602,7 @@ public class PopulationTest extends TestCase
 	public void testNonStrictParsing()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams().setStictPopulationMode(false);
+		ctrl.getExecutionParams().setStrictPopulationMode(false);
 		Map requestParams = new HashMap();
 		requestParams.put("not-a-valid-name", "foo"); // test simple string
 		request.setupGetParameterMap(requestParams);

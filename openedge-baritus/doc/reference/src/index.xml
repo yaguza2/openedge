@@ -8,7 +8,7 @@
 <!ENTITY population           SYSTEM "population.xml">
 <!ENTITY validation           SYSTEM "validation.xml">
 <!ENTITY interceptors           SYSTEM "interceptors.xml">
-<!ENTITY examples               SYSTEM "examples.xml">
+<!ENTITY examples               SYSTEM "extending.xml">
 ]>
 
 
@@ -34,7 +34,7 @@
 	
 	&interceptors;
    
-    &examples;
+    &extending;
 
 </book>
 
