@@ -39,6 +39,7 @@ import junit.framework.TestCase;
 
 import nl.openedge.modules.Configurator;
 import nl.openedge.modules.ModuleFactory;
+import nl.openedge.util.config.URLHelper;
 
 /**
  * This is the baseclass for testcases.
@@ -75,8 +76,9 @@ public abstract class AbstractTestBase extends TestCase {
 		if(!initialised) {
 			try {
 				
-				URL url = getClass().getResource(
-					System.getProperty("configfile", "/oemodules.xml"));
+				URL url = URLHelper.convertToURL(
+					System.getProperty("configfile", "/oemodules.xml"), 
+					AbstractTestBase.class, null);
 				String mfRef = System.getProperty("factoryRef", 
 						"/openedge/ModuleFactory");
 				

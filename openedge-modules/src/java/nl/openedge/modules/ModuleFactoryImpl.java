@@ -231,7 +231,8 @@ public class ModuleFactoryImpl implements ModuleFactory {
 			properties = new Properties();
 			String proploc = node.getAttributeValue("properties");
 			try {
-				URL urlproploc = URLHelper.convertToURL(proploc, context);
+				URL urlproploc = URLHelper.convertToURL(
+						proploc, ModuleFactoryImpl.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			} catch(IOException ioe) {
