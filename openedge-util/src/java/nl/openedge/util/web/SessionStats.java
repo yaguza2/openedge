@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.util.web;
 
 import java.util.HashMap;
@@ -37,7 +37,8 @@ import java.util.HashMap;
  * Records extra information about a session
  * @author	Eelco Hillenius
  */
-public class SessionStats {
+public class SessionStats
+{
 
 	private String remoteAddr;
 	private String remoteHost;
@@ -47,23 +48,26 @@ public class SessionStats {
 	/**
 	 * default constructor
 	 */
-	public SessionStats() {
-		
-		hitCount++;			
+	public SessionStats()
+	{
+
+		hitCount++;
 	}
-	
+
 	/**
 	 * increase hitcount
 	 */
-	public void hit() {
-		hitCount++;		
+	public void hit()
+	{
+		hitCount++;
 	}
 
 	/**
 	 * Returns the hitCount.
 	 * @return int
 	 */
-	public int getHitCount() {
+	public int getHitCount()
+	{
 		return hitCount;
 	}
 
@@ -71,7 +75,8 @@ public class SessionStats {
 	 * Returns the remoteAddr.
 	 * @return String
 	 */
-	public String getRemoteAddr() {
+	public String getRemoteAddr()
+	{
 		return remoteAddr;
 	}
 
@@ -79,46 +84,52 @@ public class SessionStats {
 	 * Sets the remoteAddr.
 	 * @param remoteAddr The remoteAddr to set
 	 */
-	public void setRemoteAddr(String remoteAddr) {
+	public void setRemoteAddr(String remoteAddr)
+	{
 		this.remoteAddr = new String(remoteAddr);
 	}
-	
-	public void setAttribute(String key, String value) {
-		
+
+	public void setAttribute(String key, String value)
+	{
+
 		attributes.put(key, value);
-	}	
+	}
 
 	/**
 	 * Returns the attributes.
 	 * @return HashMap
 	 */
-	public HashMap getAttributes() {
+	public HashMap getAttributes()
+	{
 		return attributes;
 	}
-	
+
 	/**
 	 * Get named attribute
 	 * @param key key (name) of attribute
 	 * @return attribute or null if nothing is stored under the given key
 	 */
-	public Object getAttribute( String key ) {
-		return attributes.get( key );
+	public Object getAttribute(String key)
+	{
+		return attributes.get(key);
 	}
-	
+
 	/**
 	 * put (possibly overwrite) named attribute
 	 * @param key key (name) of attribute
 	 * @param attribute	attribute to store
 	 */
-	public void putAttribute( String key, Object attribute ) {
-		attributes.put( key, attribute );
+	public void putAttribute(String key, Object attribute)
+	{
+		attributes.put(key, attribute);
 	}
 
 	/**
 	 * Sets the attributes.
 	 * @param attributes The attributes to set
 	 */
-	public void setAttributes(HashMap attributes) {
+	public void setAttributes(HashMap attributes)
+	{
 		this.attributes = attributes;
 	}
 
@@ -126,7 +137,8 @@ public class SessionStats {
 	 * Returns the remoteHost.
 	 * @return String
 	 */
-	public String getRemoteHost() {
+	public String getRemoteHost()
+	{
 		return remoteHost;
 	}
 
@@ -134,7 +146,8 @@ public class SessionStats {
 	 * Sets the remoteHost.
 	 * @param remoteHost The remoteHost to set
 	 */
-	public void setRemoteHost(String remoteHost) {
+	public void setRemoteHost(String remoteHost)
+	{
 		this.remoteHost = remoteHost;
 	}
 

@@ -66,7 +66,6 @@ import org.apache.commons.logging.LogFactory;
  * Uses a HashMap for storage
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
- * @version $Id$
  */
 public class StringResourceRepositoryImpl implements StringResourceRepository
 {

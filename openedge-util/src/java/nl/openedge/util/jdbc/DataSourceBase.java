@@ -42,32 +42,35 @@ import org.apache.commons.dbcp.BasicDataSource;
 /**
  * @author Eelco Hillenius
  */
-public abstract class DataSourceBase {
+public abstract class DataSourceBase
+{
 
 	private static boolean initialized = false;
 
 	/** datasource */
 	protected static DataSource _dataSource = null;
-	
+
 	/**
 	 * construct and get datasource from JNDI location
 	 * @param jndiRef
 	 * @throws Exception
 	 */
-	public DataSourceBase(String jndiRef) throws Exception {
-		
-			Context ctx = new InitialContext();
-			_dataSource = (DataSource)ctx.lookup(jndiRef);
+	public DataSourceBase(String jndiRef) throws Exception
+	{
+
+		Context ctx = new InitialContext();
+		_dataSource = (DataSource)ctx.lookup(jndiRef);
 	}
-	
+
 	/**
 	 * construct using given datasource
 	 * @param dataSource
 	 */
-	public DataSourceBase(DataSource dataSource) throws Exception {
+	public DataSourceBase(DataSource dataSource) throws Exception
+	{
 		_dataSource = dataSource;
 	}
-	
+
 	/**
 	 * construct and create datasource with given parameters
 	 * Use a map like:
@@ -83,14 +86,15 @@ public abstract class DataSourceBase {
 	 * 
 	 * @param constructionParameters populated map to create datasource
 	 */
-	public DataSourceBase(Map constructionParameters) throws Exception {
-		
+	public DataSourceBase(Map constructionParameters) throws Exception
+	{
+
 		_dataSource = new BasicDataSource();
 		BeanUtils.populate(_dataSource, constructionParameters);
 		initialized = true;
-		
+
 	}
-	
+
 	/**
 	 * construct and create datasource with given parameters
 	 * Use a map like:
@@ -105,30 +109,35 @@ public abstract class DataSourceBase {
 	 *	defaultAutoCommit=false
 	 * 
 	 * @param constructionParameters populated map to create datasource
-	 * @param createOnce if true, we'll look if a datasource was allready initialized which can be used in that case 
+	 * @param createOnce if true, we'll look if a datasource was allready 
+	 * 		initialized which can be used in that case 
 	 */
-	public DataSourceBase(Map constructionParameters, boolean createOnce) throws Exception {
-		
-		if(!initialized && createOnce) {
+	public DataSourceBase(Map constructionParameters, boolean createOnce) 
+		throws Exception
+	{
+
+		if (!initialized && createOnce)
+		{
 			_dataSource = new BasicDataSource();
 			BeanUtils.populate(_dataSource, constructionParameters);
 			initialized = true;
 		}
-		
+
 	}
-	
-	
+
 	/**
 	 * @return DataSource
 	 */
-	public DataSource getDataSource() {
+	public DataSource getDataSource()
+	{
 		return _dataSource;
 	}
 
 	/**
 	 * @param dataSource
 	 */
-	public void setDataSource(DataSource dataSource) {
+	public void setDataSource(DataSource dataSource)
+	{
 		_dataSource = dataSource;
 	}
 

@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
+
 package nl.openedge.util.velocity.stringresources;
 
 import java.io.ByteArrayInputStream;
@@ -72,8 +72,10 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
  * implementation of this package.
  * 
  * stringres.resource.loader.description = Velocity StringResource loader
- * stringres.resource.loader.class = nl.promedico.asp.util.velocitytools.stringresources.StringResourceLoader
- * stringres.resource.loader.repositoryimpl = nl.promedico.asp.util.velocitytools.stringresources.StringResourceRepositoryImpl
+ * stringres.resource.loader.class = 
+ * 	nl.promedico.asp.util.velocitytools.stringresources.StringResourceLoader
+ * stringres.resource.loader.repositoryimpl = 
+ * 	nl.promedico.asp.util.velocitytools.stringresources.StringResourceRepositoryImpl
  * 
  * Resources can be added to the repository like this:
  * <code>
@@ -88,25 +90,24 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
  * After this, the templates can be retrieved as allways
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
- * @version $Id$
  */
-public class StringResourceLoader extends ResourceLoader 
+public class StringResourceLoader extends ResourceLoader
 {
 
 	/*
 	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#init(org.apache.commons.collections.ExtendedProperties)
 	 */
-	public void init(ExtendedProperties configuration) 
+	public void init(ExtendedProperties configuration)
 	{
 		rsvc.info("StringResourceLoader : initialization starting.");
-		
+
 		String implClass = configuration.getString("repositoryimpl");
-		
-		if(implClass == null) 
+
+		if (implClass == null)
 		{
 			rsvc.warn("'repositoryimpl' was not set... using default implementation");
-		} 
-		else 
+		}
+		else
 		{
 			rsvc.info("using " + implClass + " for string resource repository");
 		}
@@ -126,7 +127,7 @@ public class StringResourceLoader extends ResourceLoader
 		{
 			e.printStackTrace();
 		}
-		
+
 		rsvc.info("StringResourceLoader : initialization complete.");
 	}
 
@@ -139,44 +140,43 @@ public class StringResourceLoader extends ResourceLoader
 	 * @throws ResourceNotFoundException if template not found
 	 *         in  classpath.
 	 */
-	public InputStream getResourceStream(String name)
-		throws ResourceNotFoundException 
+	public InputStream getResourceStream(String name) throws ResourceNotFoundException
 	{
 		InputStream result = null;
-        
+
 		if (name == null || name.length() == 0)
 		{
 			throw new ResourceNotFoundException("No template name provided");
 		}
-        
-		try 
+
+		try
 		{
 			StringResourceRepository repository = 
 				StringResourceRepositoryFactory.getRepository();
 			StringResource resource = repository.getStringResource(name);
-			
-			if(resource != null) 
+
+			if (resource != null)
 			{
-				byte [] byteArray = resource.getBody().getBytes();
-				result = new ByteArrayInputStream( byteArray );
+				byte[] byteArray = resource.getBody().getBytes();
+				result = new ByteArrayInputStream(byteArray);
 			}
 		}
-		catch( Exception fnfe )
+		catch (Exception fnfe)
 		{
 			/*
 			 *  log and convert to a general Velocity ResourceNotFoundException
 			 */
-			 
-			throw new ResourceNotFoundException( fnfe.getMessage() );
+
+			throw new ResourceNotFoundException(fnfe.getMessage());
 		}
-        
+
 		return result;
 	}
 
 	/*
 	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified(org.apache.velocity.runtime.resource.Resource)
 	 */
-	public boolean isSourceModified(Resource resource) 
+	public boolean isSourceModified(Resource resource)
 	{
 		StringResource original = null;
 
@@ -184,23 +184,23 @@ public class StringResourceLoader extends ResourceLoader
 		{
 			StringResourceRepository repository = 
 				StringResourceRepositoryFactory.getRepository();
-			original = repository.getStringResource(resource.getName()); 
+			original = repository.getStringResource(resource.getName());
 		}
 		catch (StringResourceException e)
 		{
 			e.printStackTrace();
-		}        
-        
-		if ( original != null )
+		}
+
+		if (original != null)
 		{
 			if (original.getLastModified() != resource.getLastModified())
 			{
 				return true;
-			}                
+			}
 			else
 			{
 				return false;
-			}                
+			}
 		}
 		// fallthrough        
 		return true;
@@ -209,7 +209,7 @@ public class StringResourceLoader extends ResourceLoader
 	/*
 	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified(org.apache.velocity.runtime.resource.Resource)
 	 */
-	public long getLastModified(Resource resource) 
+	public long getLastModified(Resource resource)
 	{
 		StringResource original = null;
 
@@ -217,20 +217,20 @@ public class StringResourceLoader extends ResourceLoader
 		{
 			StringResourceRepository repository = 
 				StringResourceRepositoryFactory.getRepository();
-			original = repository.getStringResource(resource.getName()); 
+			original = repository.getStringResource(resource.getName());
 		}
 		catch (StringResourceException e)
 		{
 			e.printStackTrace();
-		}         
-        
-		if ( original != null )
+		}
+
+		if (original != null)
 		{
-			return original.getLastModified();               
+			return original.getLastModified();
 		}
 		else
 		{
 			return 0;
-		}  
+		}
 	}
 }

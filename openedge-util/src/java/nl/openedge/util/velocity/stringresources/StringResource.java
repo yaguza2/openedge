@@ -51,44 +51,43 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
+
 package nl.openedge.util.velocity.stringresources;
 
 /**
  * Wrapper for String resources
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
- * @version $Id$
  */
-class StringResource 
+class StringResource
 {
 	/* template body */
 	private String body;
 	/* last modified ts */
 	private long lastModified;
-	
+
 	/**
 	 * default constructor
 	 */
-	public StringResource() 
+	public StringResource()
 	{
 		// nothing here
 	}
-	
+
 	/**
 	 * convenience constructor; sets body to 'body' and sets lastModified to now
 	 * @param body
 	 */
-	public StringResource(String body) 
+	public StringResource(String body)
 	{
 		this.body = body;
 		this.lastModified = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * @return String
 	 */
-	public String getBody() 
+	public String getBody()
 	{
 		return body;
 	}
@@ -96,7 +95,7 @@ class StringResource
 	/**
 	 * @return long
 	 */
-	public long getLastModified() 
+	public long getLastModified()
 	{
 		return lastModified;
 	}
@@ -104,7 +103,7 @@ class StringResource
 	/**
 	 * @param body
 	 */
-	public void setBody(String body) 
+	public void setBody(String body)
 	{
 		this.body = body;
 	}
@@ -112,7 +111,7 @@ class StringResource
 	/** 
 	 * @param lastModified
 	 */
-	public void setLastModified(long modified) 
+	public void setLastModified(long modified)
 	{
 		this.lastModified = modified;
 	}

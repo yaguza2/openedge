@@ -56,7 +56,8 @@ import org.apache.commons.logging.LogFactory;
  * Resolves JNDI lookups and deserialization
  * @author Eelco Hillenius and 'someone' from Hibernate
  */
-public class JNDIObjectFactory implements ObjectFactory {
+public class JNDIObjectFactory implements ObjectFactory
+{
 
 	/*	to stop the class from being unloaded */
 	private static final JNDIObjectFactory INSTANCE;
@@ -72,44 +73,49 @@ public class JNDIObjectFactory implements ObjectFactory {
 	private static final FastHashMap instances = new FastHashMap();
 	private static final FastHashMap namedInstances = new FastHashMap();
 
-	private static final NamingListener listener = new NamespaceChangeListener() {
-		
-		public void objectAdded(NamingEvent evt) {
-			log.debug( "a object was successfully bound to name: " + 
-						evt.getNewBinding().getName() );
+	private static final NamingListener listener = new NamespaceChangeListener()
+	{
+
+		public void objectAdded(NamingEvent evt)
+		{
+			log.debug("a object was successfully bound to name: " + 
+				evt.getNewBinding().getName());
 		}
-		public void objectRemoved(NamingEvent evt) {
+		public void objectRemoved(NamingEvent evt)
+		{
 			String name = evt.getOldBinding().getName();
 			log.info("a object was unbound from name: " + name);
 			Object instance = namedInstances.remove(name);
 			Iterator iter = instances.values().iterator();
-			while ( iter.hasNext() ) {
-				if ( iter.next()==instance ) iter.remove();
+			while (iter.hasNext())
+			{
+				if (iter.next() == instance)
+					iter.remove();
 			}
 		}
-		public void objectRenamed(NamingEvent evt) {
+		public void objectRenamed(NamingEvent evt)
+		{
 			String name = evt.getOldBinding().getName();
 			log.info("a object was renamed from name: " + name);
-			namedInstances.put( evt.getNewBinding().getName(), 
-								namedInstances.remove(name) );
+			namedInstances.put(evt.getNewBinding().getName(), 
+				namedInstances.remove(name));
 		}
-		public void namingExceptionThrown(NamingExceptionEvent evt) {
-			log.warn( "naming exception occurred accessing object: " + 
-						evt.getException() );
+		public void namingExceptionThrown(NamingExceptionEvent evt)
+		{
+			log.warn("naming exception occurred accessing object: " + 
+				evt.getException());
 		}
 	};
 
 	/**
 	 * @see ObjectFactory#getObjectInstance(Object, Name, Context, Hashtable) throws Exception
 	 */
-	public Object getObjectInstance(Object reference, 
-									Name name, 
-									Context ctx, 
-									Hashtable env) 
-									throws Exception {
-										
+	public Object getObjectInstance(Object reference, Name name, 
+		Context ctx, Hashtable env) throws Exception
+	{
+
 		log.debug("JNDI lookup: " + name);
-		String uid = (String)((Reference)reference).get(0).getContent();
+		String uid = (String) ((Reference)reference).get(0).getContent();
 		return getInstance(uid);
 	}
 
@@ -120,35 +126,46 @@ public class JNDIObjectFactory implements ObjectFactory {
 	 * @param instance
 	 * @param properties
 	 */
-	public static void addInstance(String uid, String name, 
-				Object instance, Properties properties) {
-	
-		log.info("registered: " + uid + " (" + ( (name==null) ? "unnamed" : name ) + ')');
+	public static void addInstance(String uid, String name, Object instance, 
+		Properties properties)
+	{
+
+		log.info("registered: " + uid + " (" 
+				+ ((name == null) ? "unnamed" : name) + ')');
 		instances.put(uid, instance);
-		if (name!=null) namedInstances.put(name, instance);
-	
-		//must add to JNDI _after_ adding to HashMaps, because some JNDI servers use serialization
-		if (name==null) {
+		if (name != null)
+			namedInstances.put(name, instance);
+
+		//must add to JNDI _after_ adding to HashMaps, because some 
+		// JNDI servers use serialization
+		if (name == null)
+		{
 			log.info("no JDNI name configured");
 		}
-		else {
-		
+		else
+		{
+
 			log.info("registered name: " + name);
-		
-			try {
+
+			try
+			{
 				Context ctx = NamingHelper.getInitialContext(properties);
 				NamingHelper.bind(ctx, name, instance);
-				log.info("bound " + instance + " to JNDI name: " + 
-							name + " to context " + ctx);
-				((EventContext)ctx).addNamingListener(name, EventContext.OBJECT_SCOPE, listener);
+				log.info("bound " + instance + " to JNDI name: " + name 
+					+ " to context " + ctx);
+				((EventContext)ctx).addNamingListener(
+					name, EventContext.OBJECT_SCOPE, listener);
 			}
-			catch (InvalidNameException ine) {
+			catch (InvalidNameException ine)
+			{
 				log.error("invalid JNDI name: " + name, ine);
 			}
-			catch (NamingException ne) {
+			catch (NamingException ne)
+			{
 				log.warn("could not bind factory to JNDI", ne);
 			}
-			catch(ClassCastException cce) {
+			catch (ClassCastException cce)
+			{
 				log.warn("initialContext did not implement EventContext");
 			}
 		}
@@ -160,24 +177,30 @@ public class JNDIObjectFactory implements ObjectFactory {
 	 * @param name
 	 * @param properties
 	 */
-	public static void removeInstance(String uid, String name, Properties properties) {
+	public static void removeInstance(String uid, 
+		String name, Properties properties)
+	{
 		//TODO: theoretically non-threadsafe...
 
-		if (name!=null) {
+		if (name != null)
+		{
 			log.info("unbinding object: " + name);
-		
-			try {
+
+			try
+			{
 				Context ctx = NamingHelper.getInitialContext(properties);
 				ctx.unbind(name);
 				log.info("unbound object from JNDI name: " + name);
 			}
-			catch (InvalidNameException ine) {
+			catch (InvalidNameException ine)
+			{
 				log.error("invalid JNDI name: " + name, ine);
 			}
-			catch (NamingException ne) {
+			catch (NamingException ne)
+			{
 				log.warn("could not unbind object from JNDI", ne);
 			}
-		
+
 			namedInstances.remove(name);
 		}
 
@@ -189,10 +212,12 @@ public class JNDIObjectFactory implements ObjectFactory {
 	 * @param name
 	 * @return Object
 	 */
-	public static Object getNamedInstance(String name) {
+	public static Object getNamedInstance(String name)
+	{
 		log.debug("lookup: name=" + name);
 		Object result = namedInstances.get(name);
-		if (result==null) {
+		if (result == null)
+		{
 			log.warn("not found: " + name);
 			log.debug(namedInstances);
 		}
@@ -200,10 +225,12 @@ public class JNDIObjectFactory implements ObjectFactory {
 	}
 
 	/** get an instance */
-	public static Object getInstance(String uid) {
+	public static Object getInstance(String uid)
+	{
 		log.debug("lookup: uid=" + uid);
 		Object result = instances.get(uid);
-		if (result==null) {
+		if (result == null)
+		{
 			log.warn("not found: " + uid);
 			log.debug(instances);
 		}
@@ -211,4 +238,3 @@ public class JNDIObjectFactory implements ObjectFactory {
 	}
 
 }
-

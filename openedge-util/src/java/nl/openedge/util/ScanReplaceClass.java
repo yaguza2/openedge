@@ -37,34 +37,35 @@ package nl.openedge.util;
  * @author	Eelco Hillenius
  */
 
+public final class ScanReplaceClass
+{
 
-public final class ScanReplaceClass {
-
-  /**
-   * Replace scanValue in scanString with replaceString
-   * @param scanString
-   * @param scanValue
-   * @param replaceString
-   * @return String
-   */
-  public static String scanReplaceString(String scanString, String scanValue, String replaceString) {
-    String returnString = scanString;
-    int strIndex = returnString.indexOf(scanValue);
-    StringBuffer helper = new StringBuffer();
-    while(strIndex != -1) {
-      helper.append(returnString.substring(0, strIndex))
-            .append(replaceString)
-            .append(returnString.substring(strIndex + scanValue.length()));
-      returnString = helper.toString();
-      helper.delete(0, helper.length());
-      if(strIndex == -1) break; // otherwise the String would be searched again from the start
-      strIndex = returnString.indexOf(scanValue, strIndex + replaceString.length());
-    }
-    return returnString;
-  }
+	/**
+	 * Replace scanValue in scanString with replaceString
+	 * @param scanString
+	 * @param scanValue
+	 * @param replaceString
+	 * @return String
+	 */
+	public static String scanReplaceString(
+		String scanString, String scanValue, String replaceString)
+	{
+		String returnString = scanString;
+		int strIndex = returnString.indexOf(scanValue);
+		StringBuffer helper = new StringBuffer();
+		while (strIndex != -1)
+		{
+			helper.append(returnString.substring(0, strIndex))
+					.append(replaceString).append(
+				returnString.substring(strIndex + scanValue.length()));
+			returnString = helper.toString();
+			helper.delete(0, helper.length());
+			if (strIndex == -1)
+				break; // otherwise the String would be searched again from the start
+			strIndex = returnString.indexOf(
+				scanValue, strIndex + replaceString.length());
+		}
+		return returnString;
+	}
 
 }
-
-
-
-

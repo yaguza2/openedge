@@ -46,25 +46,28 @@ import org.apache.taglibs.standard.tag.common.sql.ResultImpl;
 /**
  * @author Eelco Hillenius
  */
-public class QueryHelper extends DataSourceBase {
+public class QueryHelper extends DataSourceBase
+{
 
 	/**
 	 * construct and get datasource from JNDI location
 	 * @param jndiRef
 	 * @throws Exception
 	 */
-	public QueryHelper(String jndiRef) throws Exception {
-		super(jndiRef);		
+	public QueryHelper(String jndiRef) throws Exception
+	{
+		super(jndiRef);
 	}
-	
+
 	/**
 	 * construct using given datasource
 	 * @param dataSource
 	 */
-	public QueryHelper(DataSource dataSource) throws Exception {
+	public QueryHelper(DataSource dataSource) throws Exception
+	{
 		super(dataSource);
 	}
-	
+
 	/**
 	 * construct and create datasource with given parameters
 	 * Use a map like:
@@ -80,10 +83,11 @@ public class QueryHelper extends DataSourceBase {
 	 * 
 	 * @param constructionParameters populated map to create datasource
 	 */
-	public QueryHelper(Map constructionParameters) throws Exception {
+	public QueryHelper(Map constructionParameters) throws Exception
+	{
 		super(constructionParameters);
 	}
-	
+
 	/**
 	 * construct and create datasource with given parameters
 	 * Use a map like:
@@ -98,9 +102,12 @@ public class QueryHelper extends DataSourceBase {
 	 *	defaultAutoCommit=false
 	 * 
 	 * @param constructionParameters populated map to create datasource
-	 * @param createOnce if true, we'll look if a datasource was allready initialized which can be used in that case 
+	 * @param createOnce if true, we'll look if a datasource was allready 
+	 * 		initialized which can be used in that case 
 	 */
-	public QueryHelper(Map constructionParameters, boolean createOnce) throws Exception {
+	public QueryHelper(Map constructionParameters, boolean createOnce) 
+		throws Exception
+	{
 		super(constructionParameters, createOnce);
 	}
 
@@ -112,26 +119,53 @@ public class QueryHelper extends DataSourceBase {
 	 * @throws SQLException
 	 */
 	public Result excecuteQuery(String stmt, Object[] params) 
-				throws SQLException {
-		
+		throws SQLException
+	{
+
 		Result result = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-				
-		Connection conn = getDataSource().getConnection();   
-		try {
-				
+
+		Connection conn = getDataSource().getConnection();
+		try
+		{
+
 			pstmt = conn.prepareStatement(stmt);
 			setParameters(pstmt, params);
 			rs = pstmt.executeQuery();
 			result = new ResultImpl(rs, -1, -1);
-			
-		} catch(SQLException e) {
+
+		}
+		catch (SQLException e)
+		{
 			throw e;
-		} finally {
-			if(rs != null) try { rs.close(); } catch(SQLException sqle) { }
-			if(pstmt != null) try { pstmt.close(); } catch(SQLException sqle) { }
-			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (pstmt != null)
+				try
+				{
+					pstmt.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (conn != null)
+				try
+				{
+					conn.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
 		}
 		return result;
 	}
@@ -143,30 +177,56 @@ public class QueryHelper extends DataSourceBase {
 	 * @return int
 	 * @throws SQLException
 	 */
-	public int excecuteUpdate(String stmt, Object[] params) 
-				throws SQLException {
-		
+	public int excecuteUpdate(String stmt, Object[] params) throws SQLException
+	{
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int result;
-				
-		Connection conn = getDataSource().getConnection();   
-		try {
-			
+
+		Connection conn = getDataSource().getConnection();
+		try
+		{
+
 			pstmt = conn.prepareStatement(stmt);
 			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
-			
-		} catch(SQLException e) {
+
+		}
+		catch (SQLException e)
+		{
 			throw e;
-		} finally {
-			if(rs != null) try { rs.close(); } catch(SQLException sqle) { }
-			if(pstmt != null) try { pstmt.close(); } catch(SQLException sqle) { }
-			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (pstmt != null)
+				try
+				{
+					pstmt.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (conn != null)
+				try
+				{
+					conn.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * trivial update of a row in a single table
 	 * @param keyFields
@@ -175,26 +235,26 @@ public class QueryHelper extends DataSourceBase {
 	 * @throws SQLException
 	 */
 	public int update(String table, Map keyFields, Map nonKeyFields) 
-				throws SQLException {
-		
+		throws SQLException
+	{
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean more;
 		int result;
-		
-		Object[] params = new Object[nonKeyFields.size() + keyFields.size()];		
+
+		Object[] params = new Object[nonKeyFields.size() + keyFields.size()];
 		int paramCounter = 0;
 		// create the sql statement
-		StringBuffer b = new StringBuffer("update ")
-			.append(table)
-			.append(" set ");
+		StringBuffer b = new StringBuffer("update ").append(table).append(" set ");
 		// field part
 		more = false;
-		for(Iterator i = nonKeyFields.keySet().iterator(); i.hasNext(); ) {
-			if(more) b.append(", ");
+		for (Iterator i = nonKeyFields.keySet().iterator(); i.hasNext();)
+		{
+			if (more)
+				b.append(", ");
 			String key = (String)i.next();
-			b.append(key)
-			 .append(" = ?");
+			b.append(key).append(" = ?");
 			more = true;
 			params[paramCounter] = nonKeyFields.get(key);
 			paramCounter++;
@@ -202,34 +262,61 @@ public class QueryHelper extends DataSourceBase {
 		// pk part
 		b.append(" where ");
 		more = false;
-		for(Iterator i = keyFields.keySet().iterator(); i.hasNext(); ) {
-			if(more) b.append(" and ");
+		for (Iterator i = keyFields.keySet().iterator(); i.hasNext();)
+		{
+			if (more)
+				b.append(" and ");
 			String key = (String)i.next();
-			b.append(key)
-			 .append(" = ?");
+			b.append(key).append(" = ?");
 			more = true;
 			params[paramCounter] = keyFields.get(key);
 			paramCounter++;
-		}		
-				
-		Connection conn = getDataSource().getConnection();   
-		try {
-			
+		}
+
+		Connection conn = getDataSource().getConnection();
+		try
+		{
+
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
 			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
-			
-		} catch(SQLException e) {
+
+		}
+		catch (SQLException e)
+		{
 			throw e;
-		} finally {
-			if(rs != null) try { rs.close(); } catch(SQLException sqle) { }
-			if(pstmt != null) try { pstmt.close(); } catch(SQLException sqle) { }
-			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (pstmt != null)
+				try
+				{
+					pstmt.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (conn != null)
+				try
+				{
+					conn.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * trivial insert of a row in a single table
 	 * @param keyFields
@@ -237,23 +324,23 @@ public class QueryHelper extends DataSourceBase {
 	 * @return int
 	 * @throws SQLException
 	 */
-	public int insert(String table, Map fields) 
-				throws SQLException {
-		
+	public int insert(String table, Map fields) throws SQLException
+	{
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean more;
 		int result;
-		
-		Object[] params = new Object[fields.size()];		
+
+		Object[] params = new Object[fields.size()];
 		int paramCounter = 0;
 		// create the sql statement
-		StringBuffer b = new StringBuffer("insert into ")
-			.append(table)
-			.append(" (");
+		StringBuffer b = new StringBuffer("insert into ").append(table).append(" (");
 		more = false;
-		for(Iterator i = fields.keySet().iterator(); i.hasNext(); ) {
-			if(more) b.append(", ");
+		for (Iterator i = fields.keySet().iterator(); i.hasNext();)
+		{
+			if (more)
+				b.append(", ");
 			String key = (String)i.next();
 			b.append(key);
 			more = true;
@@ -261,30 +348,58 @@ public class QueryHelper extends DataSourceBase {
 			paramCounter++;
 		}
 		b.append(") values (");
-		for(int i = 0; i < params.length; i++) {
-			if(i > 0) b.append(", ");
-			b.append(" ?");		
+		for (int i = 0; i < params.length; i++)
+		{
+			if (i > 0)
+				b.append(", ");
+			b.append(" ?");
 		}
 		b.append(")");
-				
-		Connection conn = getDataSource().getConnection();   
-		try {
-			
+
+		Connection conn = getDataSource().getConnection();
+		try
+		{
+
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
 			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
-			
-		} catch(SQLException e) {
+
+		}
+		catch (SQLException e)
+		{
 			throw e;
-		} finally {
-			if(rs != null) try { rs.close(); } catch(SQLException sqle) { }
-			if(pstmt != null) try { pstmt.close(); } catch(SQLException sqle) { }
-			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (pstmt != null)
+				try
+				{
+					pstmt.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (conn != null)
+				try
+				{
+					conn.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * trivial update of a row in a single table
 	 * @param keyFields
@@ -292,66 +407,99 @@ public class QueryHelper extends DataSourceBase {
 	 * @return int
 	 * @throws SQLException
 	 */
-	public int delete(String table, Map keyFields) 
-				throws SQLException {
-		
+	public int delete(String table, Map keyFields) throws SQLException
+	{
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int result;
-		
-		Object[] params = new Object[keyFields.size()];		
+
+		Object[] params = new Object[keyFields.size()];
 		int paramCounter = 0;
 		// create the sql statement
-		StringBuffer b = new StringBuffer("delete from ")
-			.append(table);
-		if(params.length > 0) {
+		StringBuffer b = new StringBuffer("delete from ").append(table);
+		if (params.length > 0)
+		{
 			b.append(" where ");
 			// pk part
 			boolean more = false;
-			for(Iterator i = keyFields.keySet().iterator(); i.hasNext(); ) {
-				if(more) b.append(" and ");
+			for (Iterator i = keyFields.keySet().iterator(); i.hasNext();)
+			{
+				if (more)
+					b.append(" and ");
 				String key = (String)i.next();
-				b.append(key)
-				 .append(" = ?");
+				b.append(key).append(" = ?");
 				more = true;
 				params[paramCounter] = keyFields.get(key);
 				paramCounter++;
 			}
-		}		
-				
-		Connection conn = getDataSource().getConnection();   
-		try {
-			
+		}
+
+		Connection conn = getDataSource().getConnection();
+		try
+		{
+
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
 			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
-			
-		} catch(SQLException e) {
+
+		}
+		catch (SQLException e)
+		{
 			throw e;
-		} finally {
-			if(rs != null) try { rs.close(); } catch(SQLException sqle) { }
-			if(pstmt != null) try { pstmt.close(); } catch(SQLException sqle) { }
-			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (pstmt != null)
+				try
+				{
+					pstmt.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (conn != null)
+				try
+				{
+					conn.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
 		}
 		return result;
 	}
-	
-	private void setParameters(PreparedStatement pstmt, Object[] params)
-						throws SQLException {
-	
+
+	private void setParameters(PreparedStatement pstmt, Object[] params) 
+		throws SQLException
+	{
+
 		int paramIndex = 0;
-		for(int i = 0; i < params.length; i++) {
+		for (int i = 0; i < params.length; i++)
+		{
 			paramIndex++;
-			if(params[i] instanceof Date) { // hack for inconsistent setObject behaviour
-				pstmt.setDate(paramIndex, new java.sql.Date(((Date)params[i]).getTime()));
-			} else{
+			if (params[i] instanceof Date)
+			{ // hack for inconsistent setObject behaviour
+				pstmt.setDate(paramIndex, 
+					new java.sql.Date(((Date)params[i]).getTime()));
+			}
+			else
+			{
 				pstmt.setObject(paramIndex, params[i]);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * trivial select row(s) from one table
 	 * @param table
@@ -359,52 +507,80 @@ public class QueryHelper extends DataSourceBase {
 	 * @return QueryResult
 	 * @throws SQLException
 	 */
-	public Result select(String table, Map keyFields) 
-				throws SQLException {
-		
+	public Result select(String table, Map keyFields) throws SQLException
+	{
+
 		Result result = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
-		Object[] params = new Object[keyFields.size()];		
+
+		Object[] params = new Object[keyFields.size()];
 		int paramCounter = 0;
 		// create the sql statement
-		StringBuffer b = new StringBuffer("select * from ")
-			.append(table);
-		if(params.length > 0) {
+		StringBuffer b = new StringBuffer("select * from ").append(table);
+		if (params.length > 0)
+		{
 			b.append(" where ");
 			// pk part
 			boolean more = false;
-			for(Iterator i = keyFields.keySet().iterator(); i.hasNext(); ) {
-				if(more) b.append(" and ");
+			for (Iterator i = keyFields.keySet().iterator(); i.hasNext();)
+			{
+				if (more)
+					b.append(" and ");
 				String key = (String)i.next();
-				b.append(key)
-				 .append(" = ?");
+				b.append(key).append(" = ?");
 				more = true;
 				params[paramCounter] = keyFields.get(key);
 				paramCounter++;
 			}
 		}
-				
-		Connection conn = getDataSource().getConnection();   
-		try {
-				
+
+		Connection conn = getDataSource().getConnection();
+		try
+		{
+
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
 			int paramIndex = 0;
-			for(int i = 0; i < params.length; i++) {
+			for (int i = 0; i < params.length; i++)
+			{
 				paramIndex++;
 				pstmt.setObject(paramIndex, params[i]);
 			}
 			rs = pstmt.executeQuery();
 			result = new ResultImpl(rs, -1, -1);
-			
-		} catch(SQLException e) {
+
+		}
+		catch (SQLException e)
+		{
 			throw e;
-		} finally {
-			if(rs != null) try { rs.close(); } catch(SQLException sqle) { }
-			if(pstmt != null) try { pstmt.close(); } catch(SQLException sqle) { }
-			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (pstmt != null)
+				try
+				{
+					pstmt.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
+			if (conn != null)
+				try
+				{
+					conn.close();
+				}
+				catch (SQLException sqle)
+				{
+				}
 		}
 		return result;
 	}

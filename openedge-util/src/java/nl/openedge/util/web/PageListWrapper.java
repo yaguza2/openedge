@@ -28,18 +28,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.util.web;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Helper class for creating pagelists
  * @author Eelco Hillenius
  */
-public final class PageListWrapper {
+public final class PageListWrapper
+{
 
 	/* rowcount for table */
 	private int rowCount;
@@ -49,101 +49,112 @@ public final class PageListWrapper {
 
 	/* how many rows should fit one page */
 	private int rowsEachPage;
-	
+
 	/* total pages */
 	private int totalNbrOfPages;
-	
+
 	/* page number current */
 	private int currentPagePosition;
-	
+
 	/* pagewrappers before current page */
 	private List beforeCurrentPages;
-	
+
 	/* pagewrappers after current page */
 	private List afterCurrentPages;
-	
+
 	/**
 	 * construct wrapper
 	 * @param rowCount
 	 * @param currentRow
 	 * @param rowsEachPage
 	 */
-	public PageListWrapper(int rowCount, int currentRow, int rowsEachPage) {
-		
+	public PageListWrapper(int rowCount, int currentRow, int rowsEachPage)
+	{
+
 		this.rowCount = rowCount;
 		this.currentRow = currentRow;
 		this.rowsEachPage = rowsEachPage;
-		
+
 		totalNbrOfPages = Math.round(rowCount / rowsEachPage) + 1;
 		currentPagePosition = Math.round(currentRow / rowsEachPage) + 1;
-		
-		if(totalNbrOfPages > 1) {
+
+		if (totalNbrOfPages > 1)
+		{
 			int rowCounter = 0;
-			if(currentPagePosition > 1) {
+			if (currentPagePosition > 1)
+			{
 				beforeCurrentPages = new ArrayList(currentPagePosition);
-				for(int i = 1; i < currentPagePosition; i++) {
-					beforeCurrentPages.add(
-						new PageWrapper(i, rowCounter, rowsEachPage));
+				for (int i = 1; i < currentPagePosition; i++)
+				{
+					beforeCurrentPages.add(new PageWrapper(i, rowCounter, rowsEachPage));
 					rowCounter += rowsEachPage;
-				}
-			} 
-			if(currentPagePosition < totalNbrOfPages) {
-				afterCurrentPages = new ArrayList(totalNbrOfPages - currentPagePosition);
-				for(int i = currentPagePosition+1; i <= totalNbrOfPages; i++) {
-					rowCounter += rowsEachPage;
-					afterCurrentPages.add(
-						new PageWrapper(i, rowCounter, rowsEachPage));
 				}
 			}
-		}			
+			if (currentPagePosition < totalNbrOfPages)
+			{
+				afterCurrentPages = new ArrayList(totalNbrOfPages - currentPagePosition);
+				for (int i = currentPagePosition + 1; i <= totalNbrOfPages; i++)
+				{
+					rowCounter += rowsEachPage;
+					afterCurrentPages.add(new PageWrapper(i, rowCounter, rowsEachPage));
+				}
+			}
+		}
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getCurrentPagePosition() {
+	public int getCurrentPagePosition()
+	{
 		return currentPagePosition;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getCurrentRow() {
+	public int getCurrentRow()
+	{
 		return currentRow;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getRowCount() {
+	public int getRowCount()
+	{
 		return rowCount;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getRowsEachPage() {
+	public int getRowsEachPage()
+	{
 		return rowsEachPage;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getTotalNbrOfPages() {
+	public int getTotalNbrOfPages()
+	{
 		return totalNbrOfPages;
 	}
 
 	/**
 	 * @return List
 	 */
-	public List getAfterCurrentPages() {
+	public List getAfterCurrentPages()
+	{
 		return afterCurrentPages;
 	}
 
 	/**
 	 * @return List
 	 */
-	public List getBeforeCurrentPages() {
+	public List getBeforeCurrentPages()
+	{
 		return beforeCurrentPages;
 	}
 

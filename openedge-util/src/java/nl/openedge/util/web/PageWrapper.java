@@ -28,14 +28,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.util.web;
 
 /**
  * Wraps info about one page
  * @author Eelco Hillenius
  */
-public class PageWrapper {
+public class PageWrapper
+{
 
 	/* current page number */
 	private int number;
@@ -43,10 +44,11 @@ public class PageWrapper {
 	private int startRow;
 	/* number of rows for this page */
 	private int numberOfRows;
-	
+
 	/** construct with params */
-	public PageWrapper(int number, int startRow, int numberOfRows) {
-		
+	public PageWrapper(int number, int startRow, int numberOfRows)
+	{
+
 		this.number = number;
 		this.startRow = startRow;
 		this.numberOfRows = numberOfRows;
@@ -55,21 +57,24 @@ public class PageWrapper {
 	/**
 	 * @return int number of rows on this page
 	 */
-	public int getNumberOfRows() {
+	public int getNumberOfRows()
+	{
 		return numberOfRows;
 	}
 
 	/**
 	 * @return int page number
 	 */
-	public int getNumber() {
+	public int getNumber()
+	{
 		return number;
 	}
 
 	/**
 	 * @return int starting row or element
 	 */
-	public int getStartRow() {
+	public int getStartRow()
+	{
 		return startRow;
 	}
 

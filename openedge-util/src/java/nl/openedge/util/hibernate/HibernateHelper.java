@@ -43,72 +43,72 @@ import net.sf.hibernate.cfg.Configuration;
  *
  * @author Eelco Hillenius
  */
-public abstract class HibernateHelper {
-	  
+public abstract class HibernateHelper
+{
+
 	private static Log log = LogFactory.getLog(HibernateHelper.class);
-	    
-    /**
-     * Holds the current hibernate session, if one has been created.
-     */
-    protected static ThreadLocal hibernateHolder = new ThreadLocal(); 
-    
-    /**
-     * Hibernate session factory
-     */
-    protected static SessionFactory factory;
-    
-    private static boolean wasInitialised = false;
-    
-    /**
-     * initialise
-     */
-     public static void init() throws Exception 
-     {
-        
-        if(!wasInitialised)
-        {       
+
+	/**
+	 * Holds the current hibernate session, if one has been created.
+	 */
+	protected static ThreadLocal hibernateHolder = new ThreadLocal();
+
+	/**
+	 * Hibernate session factory
+	 */
+	protected static SessionFactory factory;
+
+	private static boolean wasInitialised = false;
+
+	/**
+	 * initialise
+	 */
+	public static void init() throws Exception
+	{
+
+		if (!wasInitialised)
+		{
 			wasInitialised = true;
-	        // Initialize hibernate
+			// Initialize hibernate
 			// configure; load mappings
 			Configuration ds = new Configuration().configure();
 			// build a SessionFactory		
 			factory = ds.buildSessionFactory();
-        } 
-     }
-     
-    
-    /**
-     * Get session for this Thread
-     *
-     * @return an appropriate Session object
-     */
-    public static Session getSession() throws HibernateException {
-    	
-		//log.info(Thread.currentThread() + ": get session");
-        Session sess = (Session)hibernateHolder.get();
-        if (sess == null && factory != null) {
-        	
-            sess = factory.openSession();
-			//log.info(Thread.currentThread() + "create session");
-            hibernateHolder.set(sess);
-        } else {
-			//log.info(Thread.currentThread() + ": got it");
-        }
-        
-        return sess;
-    }
-    
-    /**
-     * @return the hibernate session factory
-     */
-    public static SessionFactory getSessionFactory() {
-    	
-        return factory;
-    }
+		}
+	}
+
+	/**
+	 * Get session for this Thread
+	 *
+	 * @return an appropriate Session object
+	 */
+	public static Session getSession() throws HibernateException
+	{
+
+		Session sess = (Session)hibernateHolder.get();
+		if (sess == null && factory != null)
+		{
+
+			sess = factory.openSession();
+			hibernateHolder.set(sess);
+		}
+
+		return sess;
+	}
+
+	/**
+	 * @return the hibernate session factory
+	 */
+	public static SessionFactory getSessionFactory()
+	{
+
+		return factory;
+	}
 	/**
 	 * @param factory
 	 */
-	public static void setSessionFactory(SessionFactory factory) {
+	public static void setSessionFactory(SessionFactory factory)
+	{
 		HibernateHelper.factory = factory;
 	}
 

@@ -41,79 +41,95 @@ import java.text.*;
  * Helper for using SimpleDateFormat. Use for example with Velocity templates
  * 
  */
-public final class DateFormatHelper {
+public final class DateFormatHelper
+{
 
 	private static HashMap formatters = new HashMap();
 	private static SimpleDateFormat defaultFormatter = null;
 	private static String defaultFormatterString = null;
 
 	static {
-		loadFormatters();	
+		loadFormatters();
 	}
 
 	/**
 	 * constructor
 	 */
-	public DateFormatHelper() {}
-	
+	public DateFormatHelper()
+	{
+	}
+
 	/*
 	 * load formatters from config file
 	 */
-	private static void loadFormatters() {
-		
-		try {
+	private static void loadFormatters()
+	{
+
+		try
+		{
 			loadFromFile("/dateformathelper.cfg");
 		}
-        catch (Exception e) {
-        	System.err.println("");
-        	try {
-        		loadFromFile("dateformathelper.default.cfg");
-        	}
-        	catch(Exception e2) {
-        		e2.printStackTrace();
-        	}
-        } 
-        	
+		catch (Exception e)
+		{
+			System.err.println("");
+			try
+			{
+				loadFromFile("dateformathelper.default.cfg");
+			}
+			catch (Exception e2)
+			{
+				e2.printStackTrace();
+			}
+		}
+
 	}
-	
+
 	/*
 	 * load from configuration file
 	 * ALLE formatters isLenient(false)
 	 */
 	private static void loadFromFile(String filename) throws IOException
 	{
-		if(filename == null) {
+		if (filename == null)
+		{
 			throw new IOException("cannot load file 'null'");
 		}
 		InputStream is = null;
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		if(loader != null) { // try to load with context class loader
+		if (loader != null)
+		{ // try to load with context class loader
 			is = loader.getResourceAsStream(filename);
 		}
-		if((loader == null) || (is == null)) { // first classloader fallthrough
+		if ((loader == null) || (is == null))
+		{ // first classloader fallthrough
 			is = DateFormatHelper.class.getResourceAsStream(filename);
 		}
-		if(is == null) { // still null? try a hack
-			if(!filename.startsWith("/")) {
+		if (is == null)
+		{ // still null? try a hack
+			if (!filename.startsWith("/"))
+			{
 				loadFromFile("/" + filename);
 			} // else... give up
 		}
-		
-		if(is == null) {
+
+		if (is == null)
+		{
 			throw new IOException("unable to load " + filename + " from classpath");
 		}
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-				
+
 		String format = new String();
 		SimpleDateFormat formatter;
 		boolean defaultSet = false;
-		while ((format = br.readLine()) != null) {
-			if( (!format.startsWith("#")) &&
-				(!format.trim().equals("")) ) {
-				formatter = new SimpleDateFormat( format );
+		while ((format = br.readLine()) != null)
+		{
+			if ((!format.startsWith("#")) && (!format.trim().equals("")))
+			{
+				formatter = new SimpleDateFormat(format);
 				formatter.setLenient(false);
-				formatters.put( format, formatter );
-				if( !defaultSet ) {
+				formatters.put(format, formatter);
+				if (!defaultSet)
+				{
 					defaultFormatter = formatter;
 					defaultFormatterString = format;
 					defaultSet = true;
@@ -121,15 +137,16 @@ public final class DateFormatHelper {
 			}
 		}
 	}
-	
+
 	/**
 	 * get all formatters
 	 * @return all registerd formatters
 	 */
-	public static Map getFormatters() {
+	public static Map getFormatters()
+	{
 		return formatters;
 	}
-	
+
 	/**
 	 * formats a string according to the given format
 	 * @param format		format like you would use with SimpleDateFormat
@@ -137,15 +154,17 @@ public final class DateFormatHelper {
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format( String format, Date date ) {
-		SimpleDateFormat formatter = (SimpleDateFormat)formatters.get( format );	
-		if( formatter == null ) {
-			formatter = new SimpleDateFormat( format );
-			formatters.put( format, formatter );	
+	public static String format(String format, Date date)
+	{
+		SimpleDateFormat formatter = (SimpleDateFormat)formatters.get(format);
+		if (formatter == null)
+		{
+			formatter = new SimpleDateFormat(format);
+			formatters.put(format, formatter);
 		}
-		return formatter.format( date );
+		return formatter.format(date);
 	}
-	
+
 	/**
 	 * formats a string according to the given format
 	 * @param format		format like you would use with SimpleDateFormat
@@ -153,65 +172,75 @@ public final class DateFormatHelper {
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format( String format, long time ) {
-		return format( format, new Date(time) );
+	public static String format(String format, long time)
+	{
+		return format(format, new Date(time));
 	}
-	
+
 	/**
 	 * formats a string according to the default format
 	 * @param date			date to format
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format( Date date ) {
-		return defaultFormatter.format( date );
+	public static String format(Date date)
+	{
+		return defaultFormatter.format(date);
 	}
-		
+
 	/**
 	 * formats a string according to the default format
 	 * @param date			date to format
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format( long time ) {
-		return defaultFormatter.format( new Date(time) );
+	public static String format(long time)
+	{
+		return defaultFormatter.format(new Date(time));
 	}
-	
+
 	/**
 	 * parse date with fallback option
 	 * @param stringDate		date as a string
 	 * @param fallback			use all formatters before fail
 	 * @return parsed date or null if input was null or empty string
 	 */
-	public static Date fallbackParse( String stringDate ) throws ParseException {
-		
-		if( stringDate == null || "".equals(stringDate.trim())) {
+	public static Date fallbackParse(String stringDate) throws ParseException
+	{
+
+		if (stringDate == null || "".equals(stringDate.trim()))
+		{
 			return null;
 		}
 
 		Iterator i = formatters.values().iterator();
 		DateFormat df = null;
 
-		while( i.hasNext() ) {
-			try {
+		while (i.hasNext())
+		{
+			try
+			{
 				df = (DateFormat)i.next();
-				return df.parse( stringDate );
-			} catch( ParseException e ) {
+				return df.parse(stringDate);
+			}
+			catch (ParseException e)
+			{
 				// do nothing... try next if available
-			}	
+			}
 		}
-		throw new ParseException( stringDate + " is not a valid date", 0 );
+		throw new ParseException(stringDate + " is not a valid date", 0);
 	}
-	
+
 	/**
 	 * parse date using default formatter
 	 * @param stringDate		date as a string
 	 * @return parsed date
 	 */
-	public static Date parse( String stringDate ) throws ParseException {
-		return defaultFormatter.parse( stringDate );
+	public static Date parse(String stringDate) throws ParseException
+	{
+		return defaultFormatter.parse(stringDate);
 	}
-	
+
 	/**
 	 * parse date using default formatter
 	 * @param stringDate		date as a string
@@ -219,10 +248,11 @@ public final class DateFormatHelper {
 	 * @deprecated	use fallbackParse
 	 * @return parsed date
 	 */
-	public static Date parse( String stringDate, boolean fallback ) throws ParseException {
-		return fallbackParse( stringDate );
+	public static Date parse(String stringDate, boolean fallback) throws ParseException
+	{
+		return fallbackParse(stringDate);
 	}
-	
+
 	/**
 	 * parse date using the given format
 	 * @param stringDate		date as a string
@@ -230,15 +260,17 @@ public final class DateFormatHelper {
 	 * @see SimpleDateFormat
 	 * @return parsed date
 	 */
-	public static Date parse( String stringDate, String format ) throws ParseException {
-		DateFormat df = (DateFormat)formatters.get( format );
-		if( df == null ) {
-			df = new SimpleDateFormat( format );		
+	public static Date parse(String stringDate, String format) throws ParseException
+	{
+		DateFormat df = (DateFormat)formatters.get(format);
+		if (df == null)
+		{
+			df = new SimpleDateFormat(format);
 		}
-		Date date = df.parse( stringDate );
+		Date date = df.parse(stringDate);
 		// no exception? keep dateformat
-		formatters.put( format, df );
-		return date;	
+		formatters.put(format, df);
+		return date;
 	}
 
 	/**
@@ -249,6 +281,5 @@ public final class DateFormatHelper {
 	{
 		return defaultFormatterString;
 	}
-		
-	
+
 }

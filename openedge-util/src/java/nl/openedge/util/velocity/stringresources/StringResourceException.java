@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
+
 package nl.openedge.util.velocity.stringresources;
 
 import org.apache.velocity.exception.VelocityException;
@@ -60,7 +60,6 @@ import org.apache.velocity.exception.VelocityException;
  * Exception to use when working with StringResources
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
- * @version $Id$
  */
 public class StringResourceException extends VelocityException
 {

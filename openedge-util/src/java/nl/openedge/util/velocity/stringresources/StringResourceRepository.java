@@ -58,7 +58,6 @@ package nl.openedge.util.velocity.stringresources;
  * in the form of strings.
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
- * @version $Id$
  */
 public interface StringResourceRepository
 {

@@ -31,23 +31,26 @@
 package nl.openedge.util.config;
 
 /**
- * ConfigException is thrown by modules during startup of the module factory
+ * ConfigExceptions are exceptions that are related to 
  * 
  * @author Eelco Hillenius
  */
-public class ConfigException extends Exception {
+public class ConfigException extends Exception
+{
 
 	/**
 	 * construct 
 	 */
-	public ConfigException() {
+	public ConfigException()
+	{
 		super();
 	}
 
 	/**
 	 * @param message
 	 */
-	public ConfigException(String message) {
+	public ConfigException(String message)
+	{
 		super(message);
 	}
 
@@ -55,14 +58,16 @@ public class ConfigException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public ConfigException(String message, Throwable cause) {
+	public ConfigException(String message, Throwable cause)
+	{
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ConfigException(Throwable cause) {
+	public ConfigException(Throwable cause)
+	{
 		super(cause);
 	}
 

@@ -130,12 +130,6 @@
       <version>1.0.3</version>
       <url>http://jakarta.apache.org/taglibs/</url>
     </dependency>
-
-    <dependency>
-      <id>ojb</id>
-      <version>1.0pre-cvs</version>
-      <url>http://db.apache.org/ojb/</url>
-    </dependency>
     
     <dependency>
       <id>hibernate</id>

@@ -98,8 +98,9 @@ import java.util.Vector;
  * @author <a href="mailto:marcoschmidt@users.sourceforge.net">Marco Schmidt</a>.
  * @author Eelco Hillenius
  */
-public final class ImageInfo {
-	
+public final class ImageInfo
+{
+
 	/**
 	 * Return value of {@link #getFormat()} for JPEG streams.
 	 * ImageInfo can extract physical resolution and comments
@@ -179,9 +180,7 @@ public final class ImageInfo {
 	 * this array.
 	 */
 	private static final String[] FORMAT_NAMES =
-		{"JPEG", "GIF", "PNG", "BMP", "PCX", 
-		 "IFF", "RAS", "PBM", "PGM", "PPM", 
-		 "PSD", "SWF"};
+		{ "JPEG", "GIF", "PNG", "BMP", "PCX", "IFF", "RAS", "PBM", "PGM", "PPM", "PSD", "SWF" };
 
 	/**
 	 * The names of the MIME types for all supported file formats.
@@ -189,9 +188,19 @@ public final class ImageInfo {
 	 * this array.
 	 */
 	private static final String[] MIME_TYPE_STRINGS =
-		{"image/jpeg", "image/gif", "image/png", "image/bmp", "image/pcx", 
-		 "image/iff", "image/ras", "image/x-portable-bitmap", "image/x-portable-graymap", "image/x-portable-pixmap", 
-		 "image/psd", "application/x-shockwave-flash"};
+		{
+			"image/jpeg",
+			"image/gif",
+			"image/png",
+			"image/bmp",
+			"image/pcx",
+			"image/iff",
+			"image/ras",
+			"image/x-portable-bitmap",
+			"image/x-portable-graymap",
+			"image/x-portable-pixmap",
+			"image/psd",
+			"application/x-shockwave-flash" };
 
 	private int width;
 	private int height;
@@ -208,8 +217,10 @@ public final class ImageInfo {
 	private int bitBuf;
 	private int bitPos;
 
-	private void addComment(String s) {
-		if (comments == null) {
+	private void addComment(String s)
+	{
+		if (comments == null)
+		{
 			comments = new Vector();
 		}
 		comments.addElement(s);
@@ -219,16 +230,18 @@ public final class ImageInfo {
 	 * construct ImageInfo
 	 * @param is input stream
 	 */
-	public ImageInfo(InputStream is) {
+	public ImageInfo(InputStream is)
+	{
 		this.setInput(is);
 		this.check();
 	}
-	
+
 	/**
 	 * construct ImageInfo
 	 * @param ip data input
 	 */
-	public ImageInfo(DataInput ip) {
+	public ImageInfo(DataInput ip)
+	{
 		this.setInput(ip);
 		this.check();
 	}
@@ -240,7 +253,8 @@ public final class ImageInfo {
 	 * about its content can be retrieved using the various getXyz methods.
 	 * @return if information could be retrieved from input
 	 */
-	protected boolean check() {
+	protected boolean check()
+	{
 		format = -1;
 		width = -1;
 		height = -1;
@@ -249,93 +263,109 @@ public final class ImageInfo {
 		physicalHeightDpi = -1;
 		physicalWidthDpi = -1;
 		comments = null;
-		try {
+		try
+		{
 			int b1 = read() & 0xff;
 			int b2 = read() & 0xff;
-			if (b1 == 0x47 && b2 == 0x49) {
+			if (b1 == 0x47 && b2 == 0x49)
+			{
 				return checkGif();
 			}
-			else
-			if (b1 == 0x89 && b2 == 0x50) {
+			else if (b1 == 0x89 && b2 == 0x50)
+			{
 				return checkPng();
 			}
-			else
-			if (b1 == 0xff && b2 == 0xd8) {
+			else if (b1 == 0xff && b2 == 0xd8)
+			{
 				return checkJpeg();
 			}
-			else
-			if (b1 == 0x42 && b2 == 0x4d) {
+			else if (b1 == 0x42 && b2 == 0x4d)
+			{
 				return checkBmp();
 			}
-			else
-			if (b1 == 0x0a && b2 < 0x06) {
+			else if (b1 == 0x0a && b2 < 0x06)
+			{
 				return checkPcx();
 			}
-			else
-			if (b1 == 0x46 && b2 == 0x4f) {
+			else if (b1 == 0x46 && b2 == 0x4f)
+			{
 				return checkIff();
 			}
-			else
-			if (b1 == 0x59 && b2 == 0xa6) {
+			else if (b1 == 0x59 && b2 == 0xa6)
+			{
 				return checkRas();
 			}
-			else
-			if (b1 == 0x50 && b2 >= 0x31 && b2 <= 0x36) {
+			else if (b1 == 0x50 && b2 >= 0x31 && b2 <= 0x36)
+			{
 				return checkPnm(b2 - '0');
 			}
-			else
-			if (b1 == 0x38 && b2 == 0x42) {
+			else if (b1 == 0x38 && b2 == 0x42)
+			{
 				return checkPsd();
 			}
-			else
-			if (b1 == 0x46 && b2 == 0x57) {
+			else if (b1 == 0x46 && b2 == 0x57)
+			{
 				return checkSwf();
 			}
-			else {
+			else
+			{
 				return false;
 			}
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe)
+		{
 			return false;
 		}
 	}
 
-	private boolean checkBmp() throws IOException {
+	private boolean checkBmp() throws IOException
+	{
 		byte[] a = new byte[44];
-		if (read(a) != a.length) {
+		if (read(a) != a.length)
+		{
 			return false;
 		}
 		width = getIntLittleEndian(a, 16);
 		height = getIntLittleEndian(a, 20);
-		if (width < 1 || height < 1) {
+		if (width < 1 || height < 1)
+		{
 			return false;
 		}
 		bitsPerPixel = getShortLittleEndian(a, 26);
-		if (bitsPerPixel != 1 && bitsPerPixel != 4 &&
-		    bitsPerPixel != 8 && bitsPerPixel != 16 &&
-		    bitsPerPixel != 24 && bitsPerPixel != 32) {
-		    return false;
+		if (bitsPerPixel != 1
+			&& bitsPerPixel != 4
+			&& bitsPerPixel != 8
+			&& bitsPerPixel != 16
+			&& bitsPerPixel != 24
+			&& bitsPerPixel != 32)
+		{
+			return false;
 		}
 		int x = getIntLittleEndian(a, 36);
-		if (x > 0) {
+		if (x > 0)
+		{
 			setPhysicalWidthDpi(x);
 		}
 		int y = getIntLittleEndian(a, 40);
-		if (y > 0) {
+		if (y > 0)
+		{
 			setPhysicalHeightDpi(y);
 		}
 		format = FORMAT_BMP;
 		return true;
 	}
 
-	private boolean checkGif() throws IOException {
-		final byte[] GIF_MAGIC_87A = {0x46, 0x38, 0x37, 0x61};
-		final byte[] GIF_MAGIC_89A = {0x46, 0x38, 0x39, 0x61};
+	private boolean checkGif() throws IOException
+	{
+		final byte[] GIF_MAGIC_87A = { 0x46, 0x38, 0x37, 0x61 };
+		final byte[] GIF_MAGIC_89A = { 0x46, 0x38, 0x39, 0x61 };
 		byte[] a = new byte[11]; // 4 from the GIF signature + 7 from the global header
-		if (read(a) != 11) {
+		if (read(a) != 11)
+		{
 			return false;
 		}
-		if ((!equals(a, 0, GIF_MAGIC_89A, 0, 4)) &&
-			(!equals(a, 0, GIF_MAGIC_87A, 0, 4))) {
+		if ((!equals(a, 0, GIF_MAGIC_89A, 0, 4)) && (!equals(a, 0, GIF_MAGIC_87A, 0, 4)))
+		{
 			return false;
 		}
 		format = FORMAT_GIF;
@@ -343,11 +373,13 @@ public final class ImageInfo {
 		height = getShortLittleEndian(a, 6);
 		int flags = a[8] & 0xff;
 		bitsPerPixel = ((flags >> 4) & 0x07) + 1;
-		if (!determineNumberOfImages) {
+		if (!determineNumberOfImages)
+		{
 			return true;
 		}
 		// skip global color palette
-		if ((flags & 0x80) != 0) {
+		if ((flags & 0x80) != 0)
+		{
 			int tableSize = (1 << ((flags & 7) + 1)) * 3;
 			skip(tableSize);
 		}
@@ -356,120 +388,141 @@ public final class ImageInfo {
 		do
 		{
 			blockType = read();
-			switch(blockType)
+			switch (blockType)
 			{
-				case(0x2c): // image separator
-				{
-					if (read(a, 0, 9) != 9) {
-						return false;
-					}
-					flags = a[8] & 0xff;
-					int localBitsPerPixel = (flags & 0x07) + 1;
-					if (localBitsPerPixel > bitsPerPixel) {
-						bitsPerPixel = localBitsPerPixel;
-					}
-					if ((flags & 0x80) != 0) {
-						skip((1 << localBitsPerPixel) * 3);
-					}
-					skip(1); // initial code length
-					int n;
-					do
+				case (0x2c) : // image separator
 					{
-						n = read();
-						if (n > 0) {
-							skip(n);
-						}
-						else
-						if (n == -1) {
+						if (read(a, 0, 9) != 9)
+						{
 							return false;
 						}
-					}
-					while (n > 0);
-					numberOfImages++;
-					break;
-				}
-				case(0x21): // extension
-				{
-					int extensionType = read();
-					if (collectComments && extensionType == 0xfe) {
-						StringBuffer sb = new StringBuffer();
-						int n;
-						do
+						flags = a[8] & 0xff;
+						int localBitsPerPixel = (flags & 0x07) + 1;
+						if (localBitsPerPixel > bitsPerPixel)
 						{
-							n = read();
-							if (n == -1) {
-								return false;
-							}
-							if (n > 0) {
-								for (int i = 0; i < n; i++) {
-									int ch = read();
-									if (ch == -1) {
-										return false;
-									}
-									sb.append((char)ch);
-								}
-							}
+							bitsPerPixel = localBitsPerPixel;
 						}
-						while (n > 0);
-					} else {
+						if ((flags & 0x80) != 0)
+						{
+							skip((1 << localBitsPerPixel) * 3);
+						}
+						skip(1); // initial code length
 						int n;
 						do
 						{
 							n = read();
-							if (n > 0) {
+							if (n > 0)
+							{
 								skip(n);
 							}
-							else
-							if (n == -1) {
+							else if (n == -1)
+							{
 								return false;
 							}
 						}
 						while (n > 0);
+						numberOfImages++;
+						break;
 					}
-					break;
-				}
-				case(0x3b): // end of file
-				{
-					break;
-				}
-				default:
-				{
-					return false;
-				}
+				case (0x21) : // extension
+					{
+						int extensionType = read();
+						if (collectComments && extensionType == 0xfe)
+						{
+							StringBuffer sb = new StringBuffer();
+							int n;
+							do
+							{
+								n = read();
+								if (n == -1)
+								{
+									return false;
+								}
+								if (n > 0)
+								{
+									for (int i = 0; i < n; i++)
+									{
+										int ch = read();
+										if (ch == -1)
+										{
+											return false;
+										}
+										sb.append((char)ch);
+									}
+								}
+							}
+							while (n > 0);
+						}
+						else
+						{
+							int n;
+							do
+							{
+								n = read();
+								if (n > 0)
+								{
+									skip(n);
+								}
+								else if (n == -1)
+								{
+									return false;
+								}
+							}
+							while (n > 0);
+						}
+						break;
+					}
+				case (0x3b) : // end of file
+					{
+						break;
+					}
+				default :
+					{
+						return false;
+					}
 			}
 		}
 		while (blockType != 0x3b);
 		return true;
 	}
 
-	private boolean checkIff() throws IOException {
+	private boolean checkIff() throws IOException
+	{
 		byte[] a = new byte[10];
 		// read remaining 2 bytes of file id, 4 bytes file size 
 		// and 4 bytes IFF subformat
-		if (read(a, 0, 10) != 10) {
+		if (read(a, 0, 10) != 10)
+		{
 			return false;
 		}
-		final byte[] IFF_RM = {0x52, 0x4d};
-		if (!equals(a, 0, IFF_RM, 0, 2)) {
+		final byte[] IFF_RM = { 0x52, 0x4d };
+		if (!equals(a, 0, IFF_RM, 0, 2))
+		{
 			return false;
 		}
 		int type = getIntBigEndian(a, 6);
 		if (type != 0x494c424d && // type must be ILBM...
-		    type != 0x50424d20) { // ...or PBM
-		    return false;
+		type != 0x50424d20)
+		{ // ...or PBM
+			return false;
 		}
 		// loop chunks to find BMHD chunk
-		do {
-			if (read(a, 0, 8) != 8) {
+		do
+		{
+			if (read(a, 0, 8) != 8)
+			{
 				return false;
 			}
 			int chunkId = getIntBigEndian(a, 0);
 			int size = getIntBigEndian(a, 4);
-			if ((size & 1) == 1) {
+			if ((size & 1) == 1)
+			{
 				size++;
 			}
-			if (chunkId == 0x424d4844) { // BMHD chunk
-				if (read(a, 0, 9) != 9) {
+			if (chunkId == 0x424d4844)
+			{ // BMHD chunk
+				if (read(a, 0, 9) != 9)
+				{
 					return false;
 				}
 				format = FORMAT_IFF;
@@ -477,60 +530,74 @@ public final class ImageInfo {
 				height = getShortBigEndian(a, 2);
 				bitsPerPixel = a[8] & 0xff;
 				return (width > 0 && height > 0 && bitsPerPixel > 0 && bitsPerPixel < 33);
-			} else {
+			}
+			else
+			{
 				skip(size);
 			}
-		} while (true);
+		}
+		while (true);
 	}
 
-	private boolean checkJpeg() throws IOException {
+	private boolean checkJpeg() throws IOException
+	{
 		byte[] data = new byte[12];
-		while (true) {
-			if (read(data, 0, 4) != 4) {
+		while (true)
+		{
+			if (read(data, 0, 4) != 4)
+			{
 				return false;
 			}
 			int marker = getShortBigEndian(data, 0);
 			int size = getShortBigEndian(data, 2);
-			if ((marker & 0xff00) != 0xff00) {
+			if ((marker & 0xff00) != 0xff00)
+			{
 				return false; // not a valid marker
 			}
-			if (marker == 0xffe0) { // APPx 
-				if (size < 14) {
+			if (marker == 0xffe0)
+			{ // APPx 
+				if (size < 14)
+				{
 					return false; // APPx header must be larger than 14 bytes
 				}
-				if (read(data, 0, 12) != 12) {
+				if (read(data, 0, 12) != 12)
+				{
 					return false;
 				}
-				final byte[] APP0_ID = {0x4a, 0x46, 0x49, 0x46, 0x00};
-				if (equals(APP0_ID, 0, data, 0, 5)) {
-					if (data[7] == 1) {
+				final byte[] APP0_ID = { 0x4a, 0x46, 0x49, 0x46, 0x00 };
+				if (equals(APP0_ID, 0, data, 0, 5))
+				{
+					if (data[7] == 1)
+					{
 						setPhysicalWidthDpi(getShortBigEndian(data, 8));
 						setPhysicalHeightDpi(getShortBigEndian(data, 10));
 					}
-					else
-					if (data[7] == 2) {
+					else if (data[7] == 2)
+					{
 						int x = getShortBigEndian(data, 8);
 						int y = getShortBigEndian(data, 10);
-						setPhysicalWidthDpi((int)(x * 2.54f));
-						setPhysicalHeightDpi((int)(y * 2.54f));
+						setPhysicalWidthDpi((int) (x * 2.54f));
+						setPhysicalHeightDpi((int) (y * 2.54f));
 					}
 				}
 				skip(size - 14);
 			}
-			else
-			if (collectComments && size > 2 && marker == 0xfffe) { // comment
+			else if (collectComments && size > 2 && marker == 0xfffe)
+			{ // comment
 				size -= 2;
 				byte[] chars = new byte[size];
-				if (read(chars, 0, size) != size) {
+				if (read(chars, 0, size) != size)
+				{
 					return false;
 				}
 				String comment = new String(chars, "iso-8859-1");
 				comment = comment.trim();
 				addComment(comment);
 			}
-			else
-			if (marker >= 0xffc0 && marker <= 0xffcf && marker != 0xffc4 && marker != 0xffc8) {
-				if (read(data, 0, 6) != 6) {
+			else if (marker >= 0xffc0 && marker <= 0xffcf && marker != 0xffc4 && marker != 0xffc8)
+			{
+				if (read(data, 0, 6) != 6)
+				{
 					return false;
 				}
 				format = FORMAT_JPEG;
@@ -538,18 +605,23 @@ public final class ImageInfo {
 				width = getShortBigEndian(data, 3);
 				height = getShortBigEndian(data, 1);
 				return true;
-			} else {
+			}
+			else
+			{
 				skip(size - 2);
 			}
 		}
 	}
 
-	private boolean checkPcx() throws IOException {
+	private boolean checkPcx() throws IOException
+	{
 		byte[] a = new byte[64];
-		if (read(a) != a.length) {
+		if (read(a) != a.length)
+		{
 			return false;
 		}
-		if (a[0] != 1) { // encoding, 1=RLE is only valid value
+		if (a[0] != 1)
+		{ // encoding, 1=RLE is only valid value
 			return false;
 		}
 		// width / height
@@ -557,7 +629,8 @@ public final class ImageInfo {
 		int y1 = getShortLittleEndian(a, 4);
 		int x2 = getShortLittleEndian(a, 6);
 		int y2 = getShortLittleEndian(a, 8);
-		if (x1 < 0 || x2 < x1 || y1 < 0 || y2 < y1) {
+		if (x1 < 0 || x2 < x1 || y1 < 0 || y2 < y1)
+		{
 			return false;
 		}
 		width = x2 - x1 + 1;
@@ -565,15 +638,18 @@ public final class ImageInfo {
 		// color depth
 		int bits = a[1];
 		int planes = a[63];
-		if (planes == 1 &&
-		    (bits == 1 || bits == 2 || bits == 4 || bits == 8)) {
+		if (planes == 1 && (bits == 1 || bits == 2 || bits == 4 || bits == 8))
+		{
 			// paletted
 			bitsPerPixel = bits;
-		} else
-		if (planes == 3 && bits == 8) {
+		}
+		else if (planes == 3 && bits == 8)
+		{
 			// RGB truecolor
 			bitsPerPixel = 24;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 		setPhysicalWidthDpi(getShortLittleEndian(a, 10));
@@ -582,13 +658,16 @@ public final class ImageInfo {
 		return true;
 	}
 
-	private boolean checkPng() throws IOException {
-		final byte[] PNG_MAGIC = {0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
+	private boolean checkPng() throws IOException
+	{
+		final byte[] PNG_MAGIC = { 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a };
 		byte[] a = new byte[24];
-		if (read(a) != 24) {
+		if (read(a) != 24)
+		{
 			return false;
 		}
-		if (!equals(a, 0, PNG_MAGIC, 0, 6)) {
+		if (!equals(a, 0, PNG_MAGIC, 0, 6))
+		{
 			return false;
 		}
 		format = FORMAT_PNG;
@@ -596,56 +675,71 @@ public final class ImageInfo {
 		height = getIntBigEndian(a, 18);
 		bitsPerPixel = a[22] & 0xff;
 		int colorType = a[23] & 0xff;
-		if (colorType == 2 || colorType == 6) {
+		if (colorType == 2 || colorType == 6)
+		{
 			bitsPerPixel *= 3;
 		}
 		return true;
 	}
 
-	private boolean checkPnm(int id) throws IOException {
-		if (id < 1 || id > 6) {
+	private boolean checkPnm(int id) throws IOException
+	{
+		if (id < 1 || id > 6)
+		{
 			return false;
 		}
-		final int[] PNM_FORMATS = {FORMAT_PBM, FORMAT_PGM, FORMAT_PPM};
+		final int[] PNM_FORMATS = { FORMAT_PBM, FORMAT_PGM, FORMAT_PPM };
 		format = PNM_FORMATS[(id - 1) % 3];
 		boolean hasPixelResolution = false;
 		String s;
 		while (true)
 		{
 			s = readLine();
-			if (s != null) {
+			if (s != null)
+			{
 				s = s.trim();
 			}
-			if (s == null || s.length() < 1) {
+			if (s == null || s.length() < 1)
+			{
 				continue;
 			}
-			if (s.charAt(0) == '#') { // comment
-				if (collectComments && s.length() > 1) {
+			if (s.charAt(0) == '#')
+			{ // comment
+				if (collectComments && s.length() > 1)
+				{
 					addComment(s.substring(1));
 				}
 				continue;
 			}
-			if (!hasPixelResolution) { // split "343 966" into width=343, height=966
+			if (!hasPixelResolution)
+			{ // split "343 966" into width=343, height=966
 				int spaceIndex = s.indexOf(' ');
-				if (spaceIndex == -1) {
+				if (spaceIndex == -1)
+				{
 					return false;
 				}
 				String widthString = s.substring(0, spaceIndex);
 				spaceIndex = s.lastIndexOf(' ');
-				if (spaceIndex == -1) {
+				if (spaceIndex == -1)
+				{
 					return false;
 				}
 				String heightString = s.substring(spaceIndex + 1);
-				try {
+				try
+				{
 					width = Integer.parseInt(widthString);
 					height = Integer.parseInt(heightString);
-				} catch (NumberFormatException nfe) {
+				}
+				catch (NumberFormatException nfe)
+				{
 					return false;
 				}
-				if (width < 1 || height < 1) {
+				if (width < 1 || height < 1)
+				{
 					return false;
 				}
-				if (format == FORMAT_PBM) {
+				if (format == FORMAT_PBM)
+				{
 					bitsPerPixel = 1;
 					return true;
 				}
@@ -654,18 +748,25 @@ public final class ImageInfo {
 			else
 			{
 				int maxSample;
-				try {
+				try
+				{
 					maxSample = Integer.parseInt(s);
-				} catch (NumberFormatException nfe) {
+				}
+				catch (NumberFormatException nfe)
+				{
 					return false;
 				}
-				if (maxSample < 0) {
+				if (maxSample < 0)
+				{
 					return false;
 				}
-				for (int i = 0; i < 25; i++) {
-					if (maxSample < (1 << (i + 1))) {
+				for (int i = 0; i < 25; i++)
+				{
+					if (maxSample < (1 << (i + 1)))
+					{
 						bitsPerPixel = i + 1;
-						if (format == FORMAT_PPM) {
+						if (format == FORMAT_PPM)
+						{
 							bitsPerPixel *= 3;
 						}
 						return true;
@@ -676,13 +777,16 @@ public final class ImageInfo {
 		}
 	}
 
-	private boolean checkPsd() throws IOException {
+	private boolean checkPsd() throws IOException
+	{
 		byte[] a = new byte[24];
-		if (read(a) != a.length) {
+		if (read(a) != a.length)
+		{
 			return false;
 		}
-		final byte[] PSD_MAGIC = {0x50, 0x53};
-		if (!equals(a, 0, PSD_MAGIC, 0, 2)) {
+		final byte[] PSD_MAGIC = { 0x50, 0x53 };
+		if (!equals(a, 0, PSD_MAGIC, 0, 2))
+		{
 			return false;
 		}
 		format = FORMAT_PSD;
@@ -694,13 +798,16 @@ public final class ImageInfo {
 		return (width > 0 && height > 0 && bitsPerPixel > 0 && bitsPerPixel <= 64);
 	}
 
-	private boolean checkRas() throws IOException {
+	private boolean checkRas() throws IOException
+	{
 		byte[] a = new byte[14];
-		if (read(a) != a.length) {
+		if (read(a) != a.length)
+		{
 			return false;
 		}
-		final byte[] RAS_MAGIC = {0x6a, (byte)0x95};
-		if (!equals(a, 0, RAS_MAGIC, 0, 2)) {
+		final byte[] RAS_MAGIC = { 0x6a, (byte)0x95 };
+		if (!equals(a, 0, RAS_MAGIC, 0, 2))
+		{
 			return false;
 		}
 		format = FORMAT_RAS;
@@ -711,20 +818,22 @@ public final class ImageInfo {
 	}
 
 	// Written by Michael Aird.
-	private boolean checkSwf() throws IOException {
+	private boolean checkSwf() throws IOException
+	{
 		//get rid of the last byte of the signature, the byte of the version and 4 bytes of the size
 		byte[] a = new byte[6];
-		if (read(a) != a.length) {
+		if (read(a) != a.length)
+		{
 			return false;
 		}
 		format = FORMAT_SWF;
-		int bitSize = (int)readUBits( 5 );
-		int minX = (int)readSBits( bitSize );
-		int maxX = (int)readSBits( bitSize );
-		int minY = (int)readSBits( bitSize );
-		int maxY = (int)readSBits( bitSize );
-		width = maxX/20; //cause we're in twips
-		height = maxY/20;  //cause we're in twips
+		int bitSize = (int)readUBits(5);
+		int minX = (int)readSBits(bitSize);
+		int maxX = (int)readSBits(bitSize);
+		int minY = (int)readSBits(bitSize);
+		int maxY = (int)readSBits(bitSize);
+		width = maxX / 20; //cause we're in twips
+		height = maxY / 20; //cause we're in twips
 		setPhysicalWidthDpi(72);
 		setPhysicalHeightDpi(72);
 		return (width > 0 && height > 0);
@@ -734,10 +843,14 @@ public final class ImageInfo {
 	 * Run over String list, return false if at least one of the arguments
 	 * equals <code>-c</code>.
 	 */
-	private static boolean determineVerbosity(String[] args) {
-		if (args != null && args.length > 0) {
-			for (int i = 0; i < args.length; i++) {
-				if ("-c".equals(args[i])) {
+	private static boolean determineVerbosity(String[] args)
+	{
+		if (args != null && args.length > 0)
+		{
+			for (int i = 0; i < args.length; i++)
+			{
+				if ("-c".equals(args[i]))
+				{
 					return false;
 				}
 			}
@@ -745,9 +858,12 @@ public final class ImageInfo {
 		return true;
 	}
 
-	private boolean equals(byte[] a1, int offs1, byte[] a2, int offs2, int num) {
-		while (num-- > 0) {
-			if (a1[offs1++] != a2[offs2++]) {
+	private boolean equals(byte[] a1, int offs1, byte[] a2, int offs2, int num)
+	{
+		while (num-- > 0)
+		{
+			if (a1[offs1++] != a2[offs2++])
+			{
 				return false;
 			}
 		}
@@ -759,7 +875,8 @@ public final class ImageInfo {
 	 * Does not include transparency information like the alpha channel.
 	 * @return number of bits per image pixel
 	 */
-	public int getBitsPerPixel() {
+	public int getBitsPerPixel()
+	{
 		return bitsPerPixel;
 	}
 
@@ -769,8 +886,10 @@ public final class ImageInfo {
 	 * to the number of comments retrieved
 	 * @see #getNumberOfComments
 	 */
-	public String getComment(int index) {
-		if (comments == null || index < 0 || index >= comments.size()) {
+	public String getComment(int index)
+	{
+		if (comments == null || index < 0 || index >= comments.size())
+		{
 			throw new IllegalArgumentException("Not a valid comment index: " + index);
 		}
 		return (String)comments.elementAt(index);
@@ -782,7 +901,8 @@ public final class ImageInfo {
 	 * Use {@link #getFormatName()} to get a textual description of the file format.
 	 * @return file format as a FORMAT_xyz constant
 	 */
-	public int getFormat() {
+	public int getFormat()
+	{
 		return format;
 	}
 
@@ -791,10 +911,14 @@ public final class ImageInfo {
 	 * Use {@link #getFormat()} to get a unique number.
 	 * @return file format name
 	 */
-	public String getFormatName() {
-		if (format >= 0 && format < FORMAT_NAMES.length) {
+	public String getFormatName()
+	{
+		if (format >= 0 && format < FORMAT_NAMES.length)
+		{
 			return FORMAT_NAMES[format];
-		} else {
+		}
+		else
+		{
 			return "?";
 		}
 	}
@@ -804,24 +928,21 @@ public final class ImageInfo {
 	 * resolution in pixels.
 	 * @return image height in pixels
 	 */
-	public int getHeight() {
+	public int getHeight()
+	{
 		return height;
 	}
 
-	private int getIntBigEndian(byte[] a, int offs) {
-		return
-			(a[offs] & 0xff) << 24 | 
-			(a[offs + 1] & 0xff) << 16 | 
-			(a[offs + 2] & 0xff) << 8 | 
-			a[offs + 3] & 0xff;
+	private int getIntBigEndian(byte[] a, int offs)
+	{
+		return (a[offs] & 0xff) << 24 | (a[offs + 1] & 0xff) << 16 | 
+			(a[offs + 2] & 0xff) << 8 | a[offs + 3] & 0xff;
 	}
 
-	private int getIntLittleEndian(byte[] a, int offs) {
-		return
-			(a[offs + 3] & 0xff) << 24 | 
-			(a[offs + 2] & 0xff) << 16 | 
-			(a[offs + 1] & 0xff) << 8 | 
-			a[offs] & 0xff;
+	private int getIntLittleEndian(byte[] a, int offs)
+	{
+		return (a[offs + 3] & 0xff) << 24 | (a[offs + 2] & 0xff) << 16 | 
+			(a[offs + 1] & 0xff) << 8 | a[offs] & 0xff;
 	}
 
 	/** 
@@ -829,16 +950,21 @@ public final class ImageInfo {
 	 * MIME type of the format.
 	 * @return MIME type, e.g. <code>image/jpeg</code>
 	 */
-	public String getMimeType() {
-		if (format >= 0 && format < MIME_TYPE_STRINGS.length) {
+	public String getMimeType()
+	{
+		if (format >= 0 && format < MIME_TYPE_STRINGS.length)
+		{
 			return MIME_TYPE_STRINGS[format];
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
 
 	/**
-	 * If {@link #check()} was successful and {@link #setCollectComments(boolean)} was called with
+	 * If {@link #check()} was successful and {@link #setCollectComments(boolean)} 
+	 * was called with
 	 * <code>true</code> as argument, returns the number of comments retrieved 
 	 * from the input image stream / file.
 	 * Any number &gt;= 0 and smaller than this number of comments is then a
@@ -847,9 +973,12 @@ public final class ImageInfo {
 	 */
 	public int getNumberOfComments()
 	{
-		if (comments == null) {
+		if (comments == null)
+		{
 			return 0;
-		} else {
+		}
+		else
+		{
 			return comments.size();
 		}
 	}
@@ -874,37 +1003,45 @@ public final class ImageInfo {
 	 * @see #getPhysicalWidthDpi()
 	 * @see #getPhysicalHeightInch()
 	 */
-	public int getPhysicalHeightDpi() {
+	public int getPhysicalHeightDpi()
+	{
 		return physicalHeightDpi;
 	}
 
 	/**
-	 * If {@link #check()} was successful, returns the physical width of this image in dpi (dots per inch)
+	 * If {@link #check()} was successful, returns the physical width of this 
+	 * image in dpi (dots per inch)
 	 * or -1 if no value could be found.
 	 * @return physical height (in dpi)
 	 * @see #getPhysicalHeightDpi()
 	 * @see #getPhysicalWidthDpi()
 	 * @see #getPhysicalWidthInch()
 	 */
-	public float getPhysicalHeightInch() {
+	public float getPhysicalHeightInch()
+	{
 		int h = getHeight();
 		int ph = getPhysicalHeightDpi();
-		if (h > 0 && ph > 0) {
+		if (h > 0 && ph > 0)
+		{
 			return ((float)h) / ((float)ph);
-		} else {
+		}
+		else
+		{
 			return -1.0f;
 		}
 	}
 
 	/**
-	 * If {@link #check()} was successful, returns the physical width of this image in dpi (dots per inch)
+	 * If {@link #check()} was successful, returns the physical width of this 
+	 * image in dpi (dots per inch)
 	 * or -1 if no value could be found.
 	 * @return physical width (in dpi)
 	 * @see #getPhysicalHeightDpi()
 	 * @see #getPhysicalWidthInch()
 	 * @see #getPhysicalHeightInch()
 	 */
-	public int getPhysicalWidthDpi() {
+	public int getPhysicalWidthDpi()
+	{
 		return physicalWidthDpi;
 	}
 
@@ -916,23 +1053,27 @@ public final class ImageInfo {
 	 * @see #getPhysicalWidthDpi
 	 * @see #getPhysicalHeightInch
 	 */
-	public float getPhysicalWidthInch() {
+	public float getPhysicalWidthInch()
+	{
 		int w = getWidth();
 		int pw = getPhysicalWidthDpi();
-		if (w > 0 && pw > 0) {
+		if (w > 0 && pw > 0)
+		{
 			return ((float)w) / ((float)pw);
-		} else {
+		}
+		else
+		{
 			return -1.0f;
 		}
 	}
 
-	private int getShortBigEndian(byte[] a, int offs) {
-		return
-			(a[offs] & 0xff) << 8 | 
-			(a[offs + 1] & 0xff);
+	private int getShortBigEndian(byte[] a, int offs)
+	{
+		return (a[offs] & 0xff) << 8 | (a[offs + 1] & 0xff);
 	}
 
-	private int getShortLittleEndian(byte[] a, int offs) {
+	private int getShortLittleEndian(byte[] a, int offs)
+	{
 		return (a[offs] & 0xff) | (a[offs + 1] & 0xff) << 8;
 	}
 
@@ -941,118 +1082,144 @@ public final class ImageInfo {
 	 * resolution in pixels.
 	 * @return image width in pixels
 	 */
-	public int getWidth() {
+	public int getWidth()
+	{
 		return width;
 	}
 
-	private int read() throws IOException {
-		if (in != null) {
+	private int read() throws IOException
+	{
+		if (in != null)
+		{
 			return in.read();
-		} else {
+		}
+		else
+		{
 			return din.readByte();
 		}
 	}
 
-	private int read(byte[] a) throws IOException {
-		if (in != null) {
+	private int read(byte[] a) throws IOException
+	{
+		if (in != null)
+		{
 			return in.read(a);
-		} else {
+		}
+		else
+		{
 			din.readFully(a);
 			return a.length;
 		}
 	}
 
-	private int read(byte[] a, int offset, int num) throws IOException {
-		if (in != null) {
+	private int read(byte[] a, int offset, int num) throws IOException
+	{
+		if (in != null)
+		{
 			return in.read(a, offset, num);
-		} else {
+		}
+		else
+		{
 			din.readFully(a, offset, num);
 			return num;
 		}
 	}
 
-	private String readLine() throws IOException {
+	private String readLine() throws IOException
+	{
 		return readLine(new StringBuffer());
 	}
 
-	private String readLine(StringBuffer sb) throws IOException {
+	private String readLine(StringBuffer sb) throws IOException
+	{
 		boolean finished;
-		do {
+		do
+		{
 			int value = read();
 			finished = (value == -1 || value == 10);
-			if (!finished) {
+			if (!finished)
+			{
 				sb.append((char)value);
 			}
-		} while (!finished);
+		}
+		while (!finished);
 		return sb.toString();
 	}
 
-    /**
-     * Read an unsigned value from the given number of bits
-     */
-	public long readUBits( int numBits ) throws IOException
+	/**
+	 * Read an unsigned value from the given number of bits
+	 */
+	public long readUBits(int numBits) throws IOException
 	{
-		if (numBits == 0) {
+		if (numBits == 0)
+		{
 			return 0;
 		}
 		int bitsLeft = numBits;
 		long result = 0;
-		if (bitPos == 0) { //no value in the buffer - read a byte
-			if (in != null) {
+		if (bitPos == 0)
+		{ //no value in the buffer - read a byte
+			if (in != null)
+			{
 				bitBuf = in.read();
-			} else {
+			}
+			else
+			{
 				bitBuf = din.readByte();
 			}
 			bitPos = 8;
 		}
-        
-	    while( true )
-        {
-            int shift = bitsLeft - bitPos;
-            if( shift > 0 )
-            {
-                // Consume the entire buffer
-                result |= bitBuf << shift;
-                bitsLeft -= bitPos;
 
-                // Get the next byte from the input stream
-                if (in != null) {
-                  bitBuf = in.read();
-                } else {
-                  bitBuf = din.readByte();
-                }
-                bitPos = 8;
-            }
-            else
-            {
-             	// Consume a portion of the buffer
-                result |= bitBuf >> -shift;
-                bitPos -= bitsLeft;
-                bitBuf &= 0xff >> (8 - bitPos);	// mask off the consumed bits
+		while (true)
+		{
+			int shift = bitsLeft - bitPos;
+			if (shift > 0)
+			{
+				// Consume the entire buffer
+				result |= bitBuf << shift;
+				bitsLeft -= bitPos;
 
-                return result;
-            }
-        }        
-    }
-    
-        /**
-     * Read a signed value from the given number of bits
-     */
-    private int readSBits( int numBits ) throws IOException
-    {
-        // Get the number as an unsigned value.
-        long uBits = readUBits( numBits );
+				// Get the next byte from the input stream
+				if (in != null)
+				{
+					bitBuf = in.read();
+				}
+				else
+				{
+					bitBuf = din.readByte();
+				}
+				bitPos = 8;
+			}
+			else
+			{
+				// Consume a portion of the buffer
+				result |= bitBuf >> -shift;
+				bitPos -= bitsLeft;
+				bitBuf &= 0xff >> (8 - bitPos); // mask off the consumed bits
 
-        // Is the number negative?
-        if( ( uBits & (1L << (numBits - 1))) != 0 )
-        {
-            // Yes. Extend the sign.
-            uBits |= -1L << numBits;
-        }
+				return result;
+			}
+		}
+	}
 
-        return (int)uBits;        
-    }  
-   
+	/**
+	* Read a signed value from the given number of bits
+	*/
+	private int readSBits(int numBits) throws IOException
+	{
+		// Get the number as an unsigned value.
+		long uBits = readUBits(numBits);
+
+		// Is the number negative?
+		if ((uBits & (1L << (numBits - 1))) != 0)
+		{
+			// Yes. Extend the sign.
+			uBits |= -1L << numBits;
+		}
+
+		return (int)uBits;
+	}
+
 	/**
 	 * Reset the bit buffer
 	 */
@@ -1062,7 +1229,8 @@ public final class ImageInfo {
 		bitPos = 0;
 	}
 
-	private String readLine(int firstChar) throws IOException {
+	private String readLine(int firstChar) throws IOException
+	{
 		StringBuffer result = new StringBuffer();
 		result.append((char)firstChar);
 		return readLine(result);
@@ -1106,7 +1274,8 @@ public final class ImageInfo {
 	 * {@link java.io.DataInput}.
 	 * @param dataInput the input stream to read from
 	 */
-	public void setInput(DataInput dataInput) {
+	public void setInput(DataInput dataInput)
+	{
 		din = dataInput;
 		in = null;
 	}
@@ -1115,23 +1284,30 @@ public final class ImageInfo {
 	 * Set the input stream to the argument stream (or file).
 	 * @param inputStream the input stream to read from
 	 */
-	public void setInput(InputStream inputStream) {
+	public void setInput(InputStream inputStream)
+	{
 		in = inputStream;
 		din = null;
 	}
 
-	private void setPhysicalHeightDpi(int newValue) {
+	private void setPhysicalHeightDpi(int newValue)
+	{
 		physicalWidthDpi = newValue;
 	}
 
-	private void setPhysicalWidthDpi(int newValue) {
+	private void setPhysicalWidthDpi(int newValue)
+	{
 		physicalHeightDpi = newValue;
 	}
 
-	private void skip(int num) throws IOException {
-		if (in != null) {
+	private void skip(int num) throws IOException
+	{
+		if (in != null)
+		{
 			in.skip(num);
-		} else {
+		}
+		else
+		{
 			din.skipBytes(num);
 		}
 	}

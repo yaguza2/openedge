@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.util.web;
 
 import java.util.ArrayList;
@@ -42,18 +42,17 @@ import javax.servlet.http.HttpSessionListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 /**
  * Keeps track of sessions
  * @author	Eelco Hillenius
  */
-public class SessionListener
-			    implements HttpSessionListener,
-						   HttpSessionActivationListener {
+public class SessionListener implements 
+	HttpSessionListener, HttpSessionActivationListener
+{
 
 	/* logger */
 	private Log log = LogFactory.getLog(SessionListener.class);
-	
+
 	/* sessions */
 	private final static List sessions = 
 		Collections.synchronizedList(new ArrayList());
@@ -61,61 +60,64 @@ public class SessionListener
 	/**
 	 * default constructor
 	 */
-	public SessionListener() {
+	public SessionListener()
+	{
 		// nothing here
 	}
 
+	/**
+	 * Record the fact that a session has been created.
+	 * add session to internal store
+	 * @param event session event
+	 */
+	public void sessionCreated(HttpSessionEvent event)
+	{
 
-    /**
-     * Record the fact that a session has been created.
-     * add session to internal store
-     * @param event session event
-     */
-    public void sessionCreated(HttpSessionEvent event) {
-		
 		log.info(event.getSession().getId() + " created");
 		sessions.add(event.getSession());
-    }
+	}
 
-
-    /**
-     * Record the fact that a session has been destroyed.
-     * Remove session from internal store
-     * @param event session event
-     */
-    public void sessionDestroyed(HttpSessionEvent event) {
+	/**
+	 * Record the fact that a session has been destroyed.
+	 * Remove session from internal store
+	 * @param event session event
+	 */
+	public void sessionDestroyed(HttpSessionEvent event)
+	{
 
 		log.info(event.getSession().getId() + " destroyed");
 		sessions.remove(event.getSession());
-    }
-    
+	}
+
 	/**
 	 * Notification that the session is about to be passivated
 	 * @param event session event
 	 */
-	public void sessionWillPassivate(HttpSessionEvent event) {
-		
-		log.info(event.getSession().getId() + " passivated");	
+	public void sessionWillPassivate(HttpSessionEvent event)
+	{
+
+		log.info(event.getSession().getId() + " passivated");
 		sessions.remove(event.getSession());
 	}
-	
+
 	/**
 	 * Notification that the session has just been activated
 	 * @param event session event
 	 */
-	public void sessionDidActivate(HttpSessionEvent event) {
-		
+	public void sessionDidActivate(HttpSessionEvent event)
+	{
+
 		log.info(event.getSession().getId() + " activated");
 		sessions.add(event.getSession());
 	}
-    	
+
 	/**
 	 * get known sessions (for this server)
 	 * @return List sessions known to this listener
 	 */
-	public static List getSessions() {
+	public static List getSessions()
+	{
 		return Collections.unmodifiableList(sessions);
 	}
 
 }
-

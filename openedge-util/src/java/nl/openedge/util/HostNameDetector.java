@@ -37,31 +37,40 @@ import java.net.InetAddress;
  * @version $Id$
  * 
  */
-public final class HostNameDetector {
+public final class HostNameDetector
+{
 
-	
 	/**
 	 * determine server host name or (if not available) raw ip-address of server
 	 * @return String
 	 */
-	public static String getServerHostname() {
+	public static String getServerHostname()
+	{
 
 		String host = null;
-	  	try {
+		try
+		{
 			InetAddress localhost = InetAddress.getLocalHost();
-		  	if (localhost == null) {
+			if (localhost == null)
+			{
 				System.err.println("Unable to determine IP address of this host.");
-		  	} else {
+			}
+			else
+			{
 				host = localhost.getHostName();
-		  	}
-	  	} catch (java.net.UnknownHostException unknownHostException) {
+			}
+		}
+		catch (java.net.UnknownHostException unknownHostException)
+		{
 			System.err.println("Unable to determine IP address of this host.");
-	  		unknownHostException.printStackTrace();
-	  	} catch (SecurityException securityException) {
+			unknownHostException.printStackTrace();
+		}
+		catch (SecurityException securityException)
+		{
 			System.err.println("Not allowed to determine IP address of this host.");
-	  		securityException.printStackTrace();
-	  	}
-	  	return host;
+			securityException.printStackTrace();
+		}
+		return host;
 	}
 
 }

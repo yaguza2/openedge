@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.util.jdbc;
 
 import java.sql.*;
@@ -39,10 +39,11 @@ import javax.servlet.jsp.jstl.sql.Result;
 /**
  * @author Eelco Hillenius
  */
-public final class ResultImpl implements Result {
-	
+public final class ResultImpl implements Result
+{
+
 	// TODO: houd rekening met scrollable resultsets
-	
+
 	private List rowMap;
 	private List rowByIndex;
 	private String[] columnNames;
@@ -58,8 +59,8 @@ public final class ResultImpl implements Result {
 	 * @param maxRows, query maximum rows limit
 	 * @exception if a database error occurs
 	 */
-	public ResultImpl(ResultSet rs, int startRow, int maxRows)
-		throws SQLException 
+	public ResultImpl(ResultSet rs, int startRow, int maxRows) 
+		throws SQLException
 	{
 		rowMap = new ArrayList();
 		rowByIndex = new ArrayList();
@@ -69,34 +70,40 @@ public final class ResultImpl implements Result {
 
 		// Create the column name array
 		columnNames = new String[noOfColumns];
-		for (int i = 1; i <= noOfColumns; i++) {
-			columnNames[i-1] = rsmd.getTableName(i) + "." + rsmd.getColumnName(i);
+		for (int i = 1; i <= noOfColumns; i++)
+		{
+			columnNames[i - 1] = rsmd.getTableName(i) + "." 
+				+ rsmd.getColumnName(i);
 		}
 
 		// Throw away all rows upto startRow
-		for (int i = 0; i < startRow; i++) {
+		for (int i = 0; i < startRow; i++)
+		{
 			rs.next();
 		}
 
 		// Process the remaining rows upto maxRows
 		int processedRows = 0;
-		while (rs.next()) {
-			if ((maxRows != -1) && (processedRows == maxRows)) {
-				isLimited = true; 
+		while (rs.next())
+		{
+			if ((maxRows != -1) && (processedRows == maxRows))
+			{
+				isLimited = true;
 				break;
 			}
 			Object[] columns = new Object[noOfColumns];
-			SortedMap columnMap = 
-				new TreeMap(String.CASE_INSENSITIVE_ORDER);
+			SortedMap columnMap = new TreeMap(String.CASE_INSENSITIVE_ORDER);
 
 			// JDBC uses 1 as the lowest index!
-			for (int i = 1; i <= noOfColumns; i++) {
-				Object value =  rs.getObject(i);
-				if (rs.wasNull()) {
+			for (int i = 1; i <= noOfColumns; i++)
+			{
+				Object value = rs.getObject(i);
+				if (rs.wasNull())
+				{
 					value = null;
 				}
-				columns[i-1] = value;
-				columnMap.put(columnNames[i-1], value);
+				columns[i - 1] = value;
+				columnMap.put(columnNames[i - 1], value);
 			}
 			rowMap.add(columnMap);
 			rowByIndex.add(columns);
@@ -113,15 +120,16 @@ public final class ResultImpl implements Result {
 	 *
 	 * @return an array of Map, or null if there are no rows
 	 */
-	public SortedMap[] getRows() {
-		if (rowMap == null) {
+	public SortedMap[] getRows()
+	{
+		if (rowMap == null)
+		{
 			return null;
 		}
 
 		//should just be able to return SortedMap[] object
-		return (SortedMap []) rowMap.toArray(new SortedMap[0]);
+		return (SortedMap[])rowMap.toArray(new SortedMap[0]);
 	}
-
 
 	/**
 	 * Returns an array of Object[] objects. The first index
@@ -130,13 +138,15 @@ public final class ResultImpl implements Result {
 	 *
 	 * @return an array of Object[], or null if there are no rows
 	 */
-	public Object[][] getRowsByIndex() {
-		if (rowByIndex == null) {
+	public Object[][] getRowsByIndex()
+	{
+		if (rowByIndex == null)
+		{
 			return null;
 		}
 
 		//should just be able to return Object[][] object
-		return (Object [][])rowByIndex.toArray(new Object[0][0]);
+		return (Object[][])rowByIndex.toArray(new Object[0][0]);
 	}
 
 	/**
@@ -146,7 +156,8 @@ public final class ResultImpl implements Result {
 	 *
 	 * @return an array of String[]
 	 */
-	public String[] getColumnNames() {
+	public String[] getColumnNames()
+	{
 		return columnNames;
 	}
 
@@ -156,8 +167,10 @@ public final class ResultImpl implements Result {
 	 * @return the number of cached rows, or -1 if the Result could
 	 *    not be initialized due to SQLExceptions
 	 */
-	public int getRowCount() {
-		if (rowMap == null) {
+	public int getRowCount()
+	{
+		if (rowMap == null)
+		{
 			return -1;
 		}
 		return rowMap.size();
@@ -168,7 +181,8 @@ public final class ResultImpl implements Result {
 	 *
 	 * @return true if the query was limited by a MaxRows attribute
 	 */
-	public boolean isLimitedByMaxRows() {
+	public boolean isLimitedByMaxRows()
+	{
 		return isLimited;
 	}
 }

@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
- 
+
 package nl.openedge.util.velocity.stringresources;
 
 /**
@@ -63,7 +63,6 @@ package nl.openedge.util.velocity.stringresources;
  * string resource repository can be used in a sinlge VM.
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
- * @version $Id$
  */
 public class StringResourceRepositoryFactory
 {
@@ -74,9 +73,9 @@ public class StringResourceRepositoryFactory
 
 	/**
 	 * repository instance
-	 */	
+	 */
 	protected static StringResourceRepository repository = null;
-	
+
 	/**
 	 * initialise factory
 	 * @param implementation class that implements StringResourceRepository
@@ -84,16 +83,15 @@ public class StringResourceRepositoryFactory
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	protected static void init(String implementation) 
+	protected static void init(String implementation)
 		throws ClassNotFoundException, InstantiationException, IllegalAccessException
 	{
-		if(implementation != null) 
+		if (implementation != null)
 		{
-			ClassLoader classLoader = 
-				StringResourceRepositoryFactory.class.getClassLoader();
+			ClassLoader classLoader = StringResourceRepositoryFactory.class.getClassLoader();
 			Class clazz = classLoader.loadClass(implementation);
 			repository = (StringResourceRepository)clazz.newInstance();
-		} 
+		}
 		else
 		{
 			repository = new StringResourceRepositoryImpl();
@@ -107,18 +105,16 @@ public class StringResourceRepositoryFactory
 	 * @return StringResourceRepository
 	 * @throws StringResourceException if the factory was not set up properly
 	 */
-	public static StringResourceRepository getRepository() 
-		throws StringResourceException 
+	public static StringResourceRepository getRepository() throws StringResourceException
 	{
-		if(!loaded) 
+		if (!loaded)
 		{
-			throw new StringResourceException(
-				"StringResourceRepositoryFactory was not properly set up");		
+			throw new StringResourceException("StringResourceRepositoryFactory was not properly set up");
 		}
-		else 
+		else
 		{
-			return repository;	
-		}	
+			return repository;
+		}
 	}
 
 }

@@ -51,58 +51,71 @@ import net.sf.hibernate.Session;
  *
  * @author Jeff Schnitzer, Eelco Hillenius
  */
-public class HibernateFilter extends HibernateHelper implements Filter {    
-   
-    private Log log = LogFactory.getLog(HibernateFilter.class);
-    
-    /**
-     * initialise
-     */
-     public void init(FilterConfig filterConfig) throws ServletException {
+public class HibernateFilter extends HibernateHelper implements Filter
+{
+
+	private Log log = LogFactory.getLog(HibernateFilter.class);
+
+	/**
+	 * initialise
+	 */
+	public void init(FilterConfig filterConfig) throws ServletException
+	{
 		// call to super will read config and create hibernate factory
-		try {
+		try
+		{
 			super.init();
-		} catch(Exception e) {
+		}
+		catch (Exception e)
+		{
 			throw new ServletException(e);
 		}
-     }
-     
-    /**
-     */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
-                   throws IOException, ServletException {
-        if (hibernateHolder.get() != null)
-            throw new IllegalStateException(
-                "A session is already associated with this thread!  "
-                + "Someone must have called getSession() outside of the context "
-                + "of a servlet request.");
-            
-        try {
-            chain.doFilter(request, response);
-        }
-        finally {
-            Session sess = (Session)hibernateHolder.get();
-            
-			//log.info(Thread.currentThread() + ": closing " + sess);
-            if (sess != null) {
-            	
-                hibernateHolder.set(null);
-                
-                try {
-                    sess.close();
-                }
-                catch (HibernateException ex) { 
-                	ex.printStackTrace();
-                	throw new ServletException(ex); 
-                }
-            }
-        }
-    }
+	}
 
-    /**
-     */
-    public void destroy() {
-    	
-        // Nothing necessary
-    }
+	/**
+	 */
+	public void doFilter(ServletRequest request, 
+		ServletResponse response, FilterChain chain)
+		throws IOException, ServletException
+	{
+		if (hibernateHolder.get() != null)
+			throw new IllegalStateException(
+				"A session is already associated with this thread!  "
+					+ "Someone must have called getSession() outside of the context "
+					+ "of a servlet request.");
+
+		try
+		{
+			chain.doFilter(request, response);
+		}
+		finally
+		{
+			Session sess = (Session)hibernateHolder.get();
+
+			//log.info(Thread.currentThread() + ": closing " + sess);
+			if (sess != null)
+			{
+
+				hibernateHolder.set(null);
+
+				try
+				{
+					sess.close();
+				}
+				catch (HibernateException ex)
+				{
+					ex.printStackTrace();
+					throw new ServletException(ex);
+				}
+			}
+		}
+	}
+
+	/**
+	 */
+	public void destroy()
+	{
+
+		// Nothing necessary
+	}
 }

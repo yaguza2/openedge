@@ -13,9 +13,9 @@
     <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/jstl/jars/jstl-1.0.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/jakarta-taglibs-standard/jars/jakarta-taglibs-standard-1.0.3.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/ojb/jars/ojb-1.0pre-cvs.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.0.1.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/velocity/jars/velocity-1.3.1.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/velocity-tools/jars/velocity-tools-0.9.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/velocity/jars/velocity-1.4-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/velocity-1.4-dev-src.jar"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>

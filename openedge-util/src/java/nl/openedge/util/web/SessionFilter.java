@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.util.web;
 
 import java.io.IOException;
@@ -46,97 +46,103 @@ import javax.servlet.http.HttpSession;
  * Simple filter that tracks sessions
  * @author	Eelco Hillenius
  */
-public class SessionFilter implements Filter {
+public class SessionFilter implements Filter
+{
 
 	public final static String SESSION_STATS_KEY = "_httpSessionStats";
 
 	/**
 	 * constructor
 	 */
-	public SessionFilter() {
+	public SessionFilter()
+	{
 		// nothing here		
 	}
 
-    /**
-     * The filter configuration object we are associated with.  If this value
-     * is null, this filter instance is not currently configured.
-     */
-    private FilterConfig filterConfig = null;
+	/**
+	 * The filter configuration object we are associated with.  If this value
+	 * is null, this filter instance is not currently configured.
+	 */
+	private FilterConfig filterConfig = null;
 
-    /**
-     * Take this filter out of service.
-     */
-    public void destroy() {
+	/**
+	 * Take this filter out of service.
+	 */
+	public void destroy()
+	{
 
-        this.filterConfig = null;
-    }
+		this.filterConfig = null;
+	}
 
+	/**
+	 * Time the processing that is performed by all subsequent filters in the
+	 * current filter stack, including the ultimately invoked servlet.
+	 *
+	 * @param request The servlet request we are processing
+	 * @param result The servlet response we are creating
+	 * @param chain The filter chain we are processing
+	 *
+	 * @exception IOException if an input/output error occurs
+	 * @exception ServletException if a servlet error occurs
+	 */
+	public void doFilter(ServletRequest request, 
+		ServletResponse response, FilterChain chain)
+		throws IOException, ServletException
+	{
 
-    /**
-     * Time the processing that is performed by all subsequent filters in the
-     * current filter stack, including the ultimately invoked servlet.
-     *
-     * @param request The servlet request we are processing
-     * @param result The servlet response we are creating
-     * @param chain The filter chain we are processing
-     *
-     * @exception IOException if an input/output error occurs
-     * @exception ServletException if a servlet error occurs
-     */
-    public void doFilter(ServletRequest request,
-    					  ServletResponse response,
-                          FilterChain chain)
-								throws IOException, ServletException {
- 
-		try {
-	
+		try
+		{
+
 			HttpServletRequest httpRequest = (HttpServletRequest)request;
 			HttpSession session = httpRequest.getSession();
 
 			SessionStats stats = (SessionStats)session.getAttribute(SESSION_STATS_KEY);
-			if(stats == null) {
+			if (stats == null)
+			{
 				stats = new SessionStats();
 				stats.setRemoteAddr(httpRequest.getRemoteAddr());
 				session.setAttribute(SESSION_STATS_KEY, stats);
-			} else {
+			}
+			else
+			{
 				stats.hit();
 			}
 
-		} catch(Exception e) {
-			e.printStackTrace();	
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 		// Pass control on to the next filter
-	    chain.doFilter(request, response);
+		chain.doFilter(request, response);
 
-    }
+	}
 
-
-    /**
-     * Place this filter into service.
-     *
-     * @param filterConfig The filter configuration object
-     */
-    public void init(FilterConfig filterConfig) throws ServletException {
+	/**
+	 * Place this filter into service.
+	 *
+	 * @param filterConfig The filter configuration object
+	 */
+	public void init(FilterConfig filterConfig) throws ServletException
+	{
 
 		this.filterConfig = filterConfig;
-    }
+	}
 
+	/**
+	 * Return a String representation of this object.
+	 */
+	public String toString()
+	{
 
-    /**
-     * Return a String representation of this object.
-     */
-    public String toString() {
-
-		if (filterConfig == null) {
-		    return ("SessionFilter()");
+		if (filterConfig == null)
+		{
+			return ("SessionFilter()");
 		}
 		StringBuffer sb = new StringBuffer("SessionFilter(");
 		sb.append(filterConfig);
 		sb.append(")");
 		return (sb.toString());
-    }
-
+	}
 
 }
-
-

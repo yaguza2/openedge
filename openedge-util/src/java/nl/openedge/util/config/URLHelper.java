@@ -39,8 +39,9 @@ import javax.servlet.ServletContext;
  * Helper class for interpreting url locations
  * @author Eelco Hillenius
  */
-public class URLHelper {
-	
+public class URLHelper
+{
+
 	/**
 	 * Interprets some absolute URLs as external paths or from classpath
 	 * @param path path to translate
@@ -49,11 +50,12 @@ public class URLHelper {
 	 * @throws MalformedURLException
 	 */
 	public static URL convertToURL(String path, Class caller) 
-			throws MalformedURLException {
-		
+		throws MalformedURLException
+	{
+
 		return convertToURL(path, caller, null);
 	}
-	
+
 	/**
 	 * Interprets some absolute URLs as external paths, otherwise generates URL
 	 * appropriate for loading from internal webapp or, servletContext is null,
@@ -64,35 +66,47 @@ public class URLHelper {
 	 * @return URL
 	 * @throws MalformedURLException
 	 */
-	public static URL convertToURL(String path, 
-								   Class caller,
-								   ServletContext servletContext) 
-								   throws MalformedURLException {
-		
+	public static URL convertToURL(
+		String path, Class caller, ServletContext servletContext)
+		throws MalformedURLException
+	{
+
 		URL url = null;
-		if (path.startsWith("file:") || path.startsWith("http:") || 
-				path.startsWith("https:") || path.startsWith("ftp:")) {
+		if (path.startsWith("file:")
+			|| path.startsWith("http:")
+			|| path.startsWith("https:")
+			|| path.startsWith("ftp:"))
+		{
 			url = new URL(path);
-		} else if(servletContext != null) {
+		}
+		else if (servletContext != null)
+		{
 			// Quick sanity check
 			if (!path.startsWith("/"))
 				path = "/" + path;
 			url = servletContext.getResource(path);
-		} else {
-			ClassLoader clsLoader = Thread.currentThread().getContextClassLoader();
-			if(clsLoader == null) {
-				url = (caller != null) ?
-							caller.getResource(path)	:
-							ClassLoader.getSystemResource(path);
-			} else {
+		}
+		else
+		{
+			ClassLoader clsLoader = 
+				Thread.currentThread().getContextClassLoader();
+			if (clsLoader == null)
+			{
+				url = (caller != null) ? 
+					caller.getResource(path) : 
+					ClassLoader.getSystemResource(path);
+			}
+			else
+			{
 				url = clsLoader.getResource(path);
 				// fallthrough
-				if(url == null) {
-					url = (caller != null) ?
-								caller.getResource(path)	:
-								ClassLoader.getSystemResource(path);
+				if (url == null)
+				{
+					url = (caller != null) ? 
+						caller.getResource(path) : 
+						ClassLoader.getSystemResource(path);
 				}
-			}			
+			}
 		}
 		return url;
 	}
