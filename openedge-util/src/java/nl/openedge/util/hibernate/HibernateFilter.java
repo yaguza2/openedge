@@ -30,8 +30,8 @@
  */
 package nl.openedge.util.hibernate;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -68,11 +68,13 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 		// call to super will read config and create hibernate factory
 		try
 		{
-			String configUrl = filterConfig.getInitParameter("config");
-			if (configUrl != null)
+			String configStr = filterConfig.getInitParameter("config");
+			if (configStr != null)
 			{
-				File mappingFile = new File(configUrl);
-				super.setConfigURL(mappingFile.toURL());
+				
+				URL configUrl = HibernateFilter.class.getClassLoader().getResource(configStr);
+				log.fatal("Using configfile " + configUrl.toString());
+				super.setConfigURL(configUrl);
 			}
 			super.init();
 		}
