@@ -60,9 +60,9 @@
       <timezone>+1</timezone>
     </developer>
     <developer>
-      <name>KlaasJan Brand</name>
-      <id>eelco</id>
-      <email>klaas.jan.brand@openedge.nl</email>
+      <name>Klaasjan Brand</name>
+      <id>kj</id>
+      <email>klaasjan.brand@openedge.nl</email>
       <organization>Open Edge</organization>
       <roles>
         <role>Java Developer</role>
