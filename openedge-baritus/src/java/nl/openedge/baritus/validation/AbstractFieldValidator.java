@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.4 2004-04-02 09:51:16 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-02 09:51:16 $
+ * $Id: AbstractFieldValidator.java,v 1.5 2004-04-02 15:32:18 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-02 15:32:18 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -103,7 +103,7 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 		Object value)
 	{
 		Locale locale = formBeanContext.getCurrentLocale();
-		String key = getMessagePrefix() + fieldName;
+		String key = getMessagePrefix();
 		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
 	}
 	
