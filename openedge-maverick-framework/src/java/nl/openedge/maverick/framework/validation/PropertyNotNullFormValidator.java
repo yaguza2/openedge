@@ -32,22 +32,84 @@ package nl.openedge.maverick.framework.validation;
 
 import nl.openedge.maverick.framework.AbstractForm;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * interface that can be used to switch whether validation with
- * custom fieldValidators should be performed in this request
  * @author Eelco Hillenius
  */
-public interface ValidatorActivationRule
+public class PropertyNotNullFormValidator extends AbstractFormValidator
 {
+	
+	private String propertyName;
+
 	/**
-	 * returns whether validation with custom fieldValidators should be performed in this request
-	 * @param cctx maverick context
-	 * @param form form for this request
-	 * @return whether validation with custom fieldValidators should be performed in this request.
+	 * construct
 	 */
-	public boolean allowValidation(
-		ControllerContext cctx,
-		AbstractForm form);
+	public PropertyNotNullFormValidator()
+	{
+		super("object.not.found");
+	}
+
+	/**
+	 * construct with message prefix
+	 * @param messagePrefix
+	 */
+	public PropertyNotNullFormValidator(String messagePrefix)
+	{
+		super(messagePrefix);
+	}
+	
+	/**
+	 * construct with property name and message prefix
+	 * @param propertyName
+	 * @param messagePrefix
+	 */
+	public PropertyNotNullFormValidator(String propertyName, String messagePrefix)
+	{
+		super(messagePrefix);
+		setPropertyName(propertyName);
+	}
+
+	/**
+	 * check if the
+	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm)
+	 */
+	public boolean isValid(ControllerContext cctx, AbstractForm form)
+	{
+		boolean valid = false;
+		try
+		{
+			if(PropertyUtils.getProperty(form, propertyName) != null)
+			{
+				valid = true;		
+			}
+		}
+		catch (Exception e)
+		{
+			System.err.println(e.getMessage());
+		}
+
+		return valid;
+		
+	}
+
+	/**
+	 * get the name of the property
+	 * @return String name of property
+	 */
+	public String getPropertyName()
+	{
+		return propertyName;
+	}
+
+	/**
+	 * set the name of the property
+	 * @param string name of the property
+	 */
+	public void setPropertyName(String string)
+	{
+		propertyName = string;
+	}
+
 }

@@ -30,24 +30,49 @@
  */
 package nl.openedge.maverick.framework.validation;
 
+import java.util.Locale;
+
 import nl.openedge.maverick.framework.AbstractForm;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * interface that can be used to switch whether validation with
- * custom fieldValidators should be performed in this request
+ * convenience class with default error message handling
  * @author Eelco Hillenius
  */
-public interface ValidatorActivationRule
+public abstract class AbstractFormValidator extends AbstractValidator
+	implements FormValidator, ValidationRuleDependend
 {
+
 	/**
-	 * returns whether validation with custom fieldValidators should be performed in this request
-	 * @param cctx maverick context
-	 * @param form form for this request
-	 * @return whether validation with custom fieldValidators should be performed in this request.
+	 * construct
 	 */
-	public boolean allowValidation(
+	public AbstractFormValidator()
+	{
+		super();
+	}
+	
+	/**
+	 * construct with message prefix
+	 * @param messagePrefix message prefix
+	 */
+	public AbstractFormValidator(String messagePrefix)
+	{
+		super(messagePrefix);
+	}
+
+	/**
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
+	 */
+	public String[] getErrorMessage(
 		ControllerContext cctx,
-		AbstractForm form);
+		AbstractForm form,
+		Locale locale)
+	{
+		
+		String key = getMessagePrefix();
+		String msg = getLocalizedMessage(key, locale);
+		return new String[]{key, msg};
+	}
+
 }

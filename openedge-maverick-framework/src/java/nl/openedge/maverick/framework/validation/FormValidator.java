@@ -30,24 +30,38 @@
  */
 package nl.openedge.maverick.framework.validation;
 
+import java.util.Locale;
+
 import nl.openedge.maverick.framework.AbstractForm;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * interface that can be used to switch whether validation with
- * custom fieldValidators should be performed in this request
+ * Use this for custom validation on form level
+ * formValidators will be called AFTER field validators executed
  * @author Eelco Hillenius
  */
-public interface ValidatorActivationRule
+public interface FormValidator
 {
 	/**
-	 * returns whether validation with custom fieldValidators should be performed in this request
+	 * checks if form is valid
 	 * @param cctx maverick context
 	 * @param form form for this request
-	 * @return whether validation with custom fieldValidators should be performed in this request.
+	 * @return true if valid, false if not.
 	 */
-	public boolean allowValidation(
+	public boolean isValid(
 		ControllerContext cctx,
 		AbstractForm form);
+
+	/**
+	 * if form is not valid, get custom error message here
+	 * @param cctx maverick context
+	 * @param form form for this request
+	 * @param locale the locale that should be used to get the message
+	 * @return String[] the message key and the localized error message
+	 */		
+	public String[] getErrorMessage(
+		ControllerContext cctx,
+		AbstractForm form,
+		Locale locale);
 }

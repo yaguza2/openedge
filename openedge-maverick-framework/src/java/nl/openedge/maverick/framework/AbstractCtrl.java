@@ -116,13 +116,19 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected boolean setNullForEmptyString = true;
 	
 	/**
-	 * subclasses can register validators for custom validation
+	 * subclasses can register fieldValidators for custom validation on field level
 	 */
-	protected MultiMap validators = null;
+	protected MultiMap fieldValidators = null;
+	
+	/**
+	 * subclasses can register formValidators for custom validation on form level
+	 * formValidators will be called AFTER field validators executed SUCCESSFULLY
+	 */
+	protected List formValidators = null;
 	
 	/**
 	 * Optional objects that can be used to switch whether validation with
-	 * custom validators should be performed in this request
+	 * custom fieldValidators should be performed in this request
 	 * @author Eelco Hillenius
 	 */
 	protected List globalValidatorActivationRules = null;
@@ -168,7 +174,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		{
 			setNoCache(cctx);
 		}
-		
+
 		AbstractForm formBean = null;
 		try 
 		{	
@@ -201,9 +207,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			}
 
 			cctx.setModel(formBean);
+			Locale locale = getLocaleForRequest(cctx, formBean);
 			
 			// populate form
-			boolean populated = populateForm(cctx, formBean);
+			boolean populated = populateForm(cctx, formBean, locale);
 			// go on?
 			if(!populated && failOnPopulateError) // an error occured
 			{
@@ -283,6 +290,27 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
+	 * get the prefered locale for this request
+	 * @param cctx controller context
+	 * @param form current form
+	 * @return Locale the prefered locale
+	 */
+	protected Locale getLocaleForRequest(ControllerContext cctx, AbstractForm form)
+	{
+		Locale locale = cctx.getRequest().getLocale();
+		UserPrincipal up = form.getUser();
+		if(up != null)
+		{
+			if(up.getPreferedLocale() != null)
+			{
+				locale = up.getPreferedLocale();
+			}
+		}
+		
+		return locale;		
+	}
+	
+	/**
 	 * get error view. 'error' by default
 	 * @param cctx controller context
 	 * @param form current form
@@ -334,14 +362,16 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/**
 	 * default populate of form: BeanUtils way; set error if anything goes wrong
 	 * @param cctx controller context
-	 * @param formBean form
-	 * @param properties
+	 * @param formBean form current form
+	 * @param properties map with name/ values
+	 * @param locale the prefered locale
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
 	protected boolean populateWithErrorReport(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
-		Map properties)
+		Map properties,
+		Locale locale)
 	{
 		
 		// Do nothing unless both arguments have been specified
@@ -406,9 +436,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		
 		// do custom validation
-		if(validators != null && (!validators.isEmpty()))
+		if(fieldValidators != null && (!fieldValidators.isEmpty()))
 		{
-			succeeded = doCustomValidation(cctx, formBean, properties, succeeded);
+			succeeded = doCustomValidation(cctx, formBean, properties, locale, succeeded);
 		}
 		
 		return succeeded;
@@ -419,6 +449,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		Map properties,
+		Locale locale,
 		boolean succeeded)
 	{
 
@@ -443,14 +474,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				if (name == null) continue;
 				if(formBean.getError(name) == null) 
 				{
-					Collection propertyValidators = (Collection)validators.get(name);
-					// these are the validators for one property
+					Collection propertyValidators = (Collection)fieldValidators.get(name);
+					// these are the fieldValidators for one property
 					if(propertyValidators != null)
 					{
 						try
 						{
 							doCustomValidationForOneField(
-								cctx, formBean, succeeded, name, propertyValidators);
+								cctx, formBean, locale, succeeded, name, propertyValidators);
 						}
 						catch (Exception e)
 						{
@@ -463,6 +494,23 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}	
 				} // else an error allready occured; do not validate
 			}
+			// if we are still successful so far, check with the form level validators
+			if(succeeded && (formValidators != null))
+			{
+				// check all registered until either all fired successfully or
+				// one did not fire succesfully
+				for(Iterator i = formValidators.iterator(); i.hasNext(); )
+				{
+					FormValidator fValidator = (FormValidator)i.next();
+					if(!fValidator.isValid(cctx, formBean))
+					{
+						succeeded = false;
+						String[] msg = fValidator.getErrorMessage(
+							cctx, formBean, locale);
+						formBean.setError(msg[0], msg[1]);
+					}
+				}
+			}
 		}
 		return succeeded;
 	}
@@ -471,6 +519,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	private boolean doCustomValidationForOneField(
 		ControllerContext cctx,
 		AbstractForm formBean,
+		Locale locale,
 		boolean succeeded,
 		String name,
 		Collection propertyValidators)
@@ -498,7 +547,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				{
 					succeeded = false;
 					String msg = validator.getErrorMessage(
-						cctx, formBean, name, value, null);
+						cctx, formBean, name, value, locale);
 					formBean.setError(name, msg);
 					// if fail on populate, set the override field so that the input
 					// value can be displayed
@@ -515,6 +564,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	/**
 	 * set an array property
+	 * @param cctx controller context
+	 * @param propertyDescriptor descriptor of property
+	 * @param formBean current form
+	 * @param name name of property
+	 * @param values array of values to set
+	 * @return true if successfull, false if not
 	 */
 	protected boolean setArrayProperty(
 			ControllerContext cctx,
@@ -580,6 +635,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	/**
 	 * set a single property
+	 * @param cctx controller context
+	 * @param formBean form
+	 * @param name name of property
+	 * @param value value of property
+	 * @return true if succeeded, false if not
 	 */
 	protected boolean setSingleProperty(
 		ControllerContext cctx,	
@@ -622,8 +682,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param cctx
 	 * @param formBean
 	 */
-	private void internalPerformError(ControllerContext cctx, 
-											AbstractForm formBean)
+	private void internalPerformError(
+		ControllerContext cctx, 
+		AbstractForm formBean)
 	{
 		if(formBean == null) return;
 		// first, set overrides for the current request parameters
@@ -643,8 +704,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param cctx maverick context
 	 * @param form form that failed to populate
 	 */
-	protected void performError(ControllerContext cctx, 
-									AbstractForm form)
+	protected void performError(
+		ControllerContext cctx, 
+		AbstractForm form)
 	{
 		// nothing by default
 	}
@@ -667,8 +729,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param triedValue value that was tried for population
 	 * @param t exception
 	 */
-	protected void setErrorForField(ControllerContext cctx, AbstractForm formBean, 
-									String name, Object triedValue, Throwable t) 
+	protected void setErrorForField(
+		ControllerContext cctx, 
+		AbstractForm formBean, 
+		String name, 
+		Object triedValue, 
+		Throwable t) 
 	{
 
 		try
@@ -719,25 +785,29 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * users can override this method to do custom populating. Call super first if you want the defaults to be set
 	 * @param cctx controller context
 	 * @param formBean bean to populate
+	 * @param locale
 	 * @throws Exception
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected boolean populateForm(ControllerContext cctx, AbstractForm formBean) 
-				throws Exception 
+	protected boolean populateForm(
+		ControllerContext cctx, 
+		AbstractForm formBean, 
+		Locale locale) 
+		throws Exception 
 	{
 		// default behavoir
 		boolean retval = true;
 		retval = populateWithErrorReport(cctx, formBean, 
-						cctx.getRequest().getParameterMap());
+						cctx.getRequest().getParameterMap(), locale);
 						
 		if(retval == false) 
 		{
-			populateWithErrorReport(cctx, formBean, cctx.getControllerParams());
+			populateWithErrorReport(cctx, formBean, cctx.getControllerParams(), locale);
 		} 
 		else 
 		{
 			retval = populateWithErrorReport(
-				cctx, formBean, cctx.getControllerParams());
+				cctx, formBean, cctx.getControllerParams(), locale);
 		}
 		return retval;
 	}
@@ -872,41 +942,69 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * register a validator for the given fieldName. 
-	 * multiple validators for one key are allowed 
+	 * register a field validator for the given fieldName. 
+	 * multiple fieldValidators for one key are allowed 
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
 	public void addValidator(String fieldName, FieldValidator validator)
 	{
-		if(validators == null)
+		if(fieldValidators == null)
 		{
-			validators = new MultiHashMap();
+			fieldValidators = new MultiHashMap();
 		}
-		validators.put(fieldName, validator);
+		fieldValidators.put(fieldName, validator);
 	}
 	
 	/**
-	 * de-register the validators that were registered with the given fieldName
-	 * @param fieldName
+	 * register a form validator
+	 * form validators will be called after the field level validators executed
+	 * successfully, and thus can be used to check consistency etc.
+	 * @param validator the form level validator
+	 */
+	public void addValidator(FormValidator validator)
+	{
+		if(formValidators == null)
+		{
+			formValidators = new ArrayList();
+		}
+		formValidators.add(validator);
+	}
+	
+	/**
+	 * de-register the fieldValidators that were registered with the given fieldName
+	 * @param fieldName name of field
 	 */
 	public void removeValidators(String fieldName)
 	{
-		if(validators != null)
+		if(fieldValidators != null)
 		{
-			validators.remove(fieldName);
+			fieldValidators.remove(fieldName);
 		}
 	}
 	
 	/**
 	 * de-register the given validator that was registered with the given fieldName
-	 * @param fieldName
+	 * @param fieldName name of field
+	 * @param the validator to remove for the given field
 	 */
 	public void removeValidator(String fieldName, FieldValidator validator)
 	{
-		if(validators != null)
+		if(fieldValidators != null)
 		{
-			validators.remove(fieldName, validator);
+			fieldValidators.remove(fieldName, validator);
+		}
+	}
+	
+	/**
+	 * de-register the given form level validator
+	 * @param validator form validator
+	 */
+	public void removeValidator(FormValidator validator)
+	{
+		if(formValidators != null)
+		{
+			formValidators.remove(validator);
 		}
 	}
 	
@@ -937,14 +1035,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * get the validators that were registered with the given fieldName
+	 * get the fieldValidators that were registered with the given fieldName
 	 * @param fieldName name of the field
 	 * @return FieldValidator the instance of FieldValidator that was registered with the given 
 	 * 		fieldName or null if none was registered with that name
 	 */
 	protected Collection getValidators(String fieldName)
 	{
-		return (validators != null) ? (Collection)validators.get(fieldName) : null;
+		return (fieldValidators != null) ? (Collection)fieldValidators.get(fieldName) : null;
 	}
 	
 	/**
