@@ -160,9 +160,12 @@ public final class TreeStateCache
 	 */
 	public TreePath findTreePath(Object userObject)
 	{
-
+		TreePath path = null;
 		DefaultMutableTreeNode endNode = findNodeForPath(userObject);
-		TreePath path = new TreePath(endNode.getPath());
+		if(endNode != null)
+		{
+			path = new TreePath(endNode.getPath());	
+		}
 		return path;
 	}
 
