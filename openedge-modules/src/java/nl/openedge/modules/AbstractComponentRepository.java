@@ -292,21 +292,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		log.info("initialised Quartz... starting up...");
 		// start it
 		scheduler.start();
-		// and... register shutdownhook to stop it as well
-		Runtime.getRuntime().addShutdownHook(new Thread()
-		{
-			public void run()
-			{
-				try
-				{
-					scheduler.shutdown(true);
-				}
-				catch (SchedulerException e)
-				{
-					log.error(e.getMessage(), e);
-				}
-			}
-		});
 		log.info("Quartz started");
 	}
 
