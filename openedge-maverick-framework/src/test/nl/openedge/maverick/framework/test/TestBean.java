@@ -60,6 +60,11 @@ public class TestBean
 	};
 	
 	private Map testMap = new HashMap();
+	
+	// custom population tests
+	private String uppercaseTest = null;
+	private String ignore = "unchanged";
+	private String ignoreByRegex = "unchanged (regex)";
 
 	/**
 	 * @return
@@ -235,6 +240,54 @@ public class TestBean
 	public void setTestMap(Map map)
 	{
 		testMap = map;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getUppercaseTest()
+	{
+		return uppercaseTest;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setUppercaseTest(String string)
+	{
+		uppercaseTest = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getIgnore()
+	{
+		return ignore;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setIgnore(String string)
+	{
+		ignore = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getIgnoreByRegex()
+	{
+		return ignoreByRegex;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setIgnoreByRegex(String string)
+	{
+		ignoreByRegex = string;
 	}
 
 }

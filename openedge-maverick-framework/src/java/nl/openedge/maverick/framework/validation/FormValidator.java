@@ -56,12 +56,12 @@ public interface FormValidator
 	/**
 	 * if form is not valid, get custom error message here
 	 * @param cctx maverick context
-	 * @param form form for this currentRequest
+	 * @param formBeanContext context for this currentRequest
 	 * @param locale the locale that should be used to get the message
 	 * @return String[] the message key and the localized error message
 	 */		
 	public String[] getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		Locale locale);
 }

@@ -50,19 +50,19 @@ import org.infohazard.maverick.flow.ControllerContext;
 public class BeforeValidator extends AbstractFieldValidator
 {
 	private Log log = LogFactory.getLog(BeforeValidator.class);
-	
+
 	private final static String DEFAULT_PREFIX = "invalid.field.input.after";
-	
+
 	/**
 	 * The date check against.
 	 */
 	private Date after = new Date();
-	
+
 	/** 
 	 * The pattern to use when parsing the date.
 	 */
 	private String datePattern = "dd-MM-yyyy";
-	
+
 	/**
 	 * Creates a BeforeValidator with the error key prefix and the 
 	 * date to check against after.
@@ -74,7 +74,7 @@ public class BeforeValidator extends AbstractFieldValidator
 		super(prefix);
 		setAfter(after);
 	}
-	
+
 	/**
 	 * Creates a BeforeValidator with the DEFAULT_PREFIX as error key
 	 * and today as the date to check against.
@@ -84,7 +84,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		this(DEFAULT_PREFIX, new Date());
 	}
-	
+
 	/**
 	 * Creates a BeforeValidator with the error key DEFAULT_PREFIX and the 
 	 * date to check against after.
@@ -95,7 +95,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		this(DEFAULT_PREFIX, after);
 	}
-	
+
 	/**
 	 * Creates a BeforeValidator with the error key prefix and today to check against after.
 	 * @param prefix
@@ -105,7 +105,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		this(prefix, new Date());
 	}
-	
+
 	/**
 	 * Creates a BeforeValidator with the error key prefix and the 
 	 * date to check against after.
@@ -136,7 +136,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		this(DEFAULT_PREFIX, after.getTime());
 	}
-	
+
 	/**
 	 * @return Returns the after.
 	 */
@@ -161,7 +161,11 @@ public class BeforeValidator extends AbstractFieldValidator
 	 * @return true if value is a Date or Calendar and is before after.
 	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
-	public boolean isValid(ControllerContext cctx, FormBeanContext form, String fieldName, Object value)
+	public boolean isValid(
+		ControllerContext cctx,
+		FormBeanContext formBeanContext,
+		String fieldName,
+		Object value)
 	{
 		boolean before = false;
 		if (value instanceof Date)
@@ -179,7 +183,7 @@ public class BeforeValidator extends AbstractFieldValidator
 
 		return before;
 	}
-	
+
 	/**
 	 * Tries to format value to a DateFormat.
 	 * @see nl.openedge.maverick.framework.validation.AbstractFieldValidator#getOverrideValue(java.lang.Object)
@@ -188,13 +192,15 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		String result = "";
 		if (value instanceof String)
-		{	
+		{
 			try
 			{
-				result = DateFormatHelper.format(datePattern, 
-					DateFormatHelper.fallbackParse((String)value));
+				result =
+					DateFormatHelper.format(
+						datePattern,
+						DateFormatHelper.fallbackParse((String)value));
 			}
-			catch(ParseException e)
+			catch (ParseException e)
 			{
 				// value is not a valid date; ignore
 			}
@@ -203,9 +209,12 @@ public class BeforeValidator extends AbstractFieldValidator
 		{
 			result = DateFormatHelper.format(datePattern, (Date)value);
 		}
-		else if (value  instanceof Calendar)
+		else if (value instanceof Calendar)
 		{
-			result = DateFormatHelper.format(datePattern, ((Calendar)value).getTime());
+			result =
+				DateFormatHelper.format(
+					datePattern,
+					((Calendar)value).getTime());
 		}
 		return result;
 	}
@@ -227,15 +236,18 @@ public class BeforeValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Returns the error message.
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value,
 		Locale locale)
 	{
-		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{getOverrideValue(value), fieldName});
+		return getLocalizedMessage(
+			getMessagePrefix(),
+			locale,
+			new Object[] { getOverrideValue(value), fieldName });
 	}
 }

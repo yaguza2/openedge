@@ -95,7 +95,7 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 	/* (non-Javadoc)
 	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext)
 	 */
-	public boolean isValid(ControllerContext cctx, FormBeanContext form)
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
 		boolean valid = false;
 		HttpSession session = cctx.getRequest().getSession(false);

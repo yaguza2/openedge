@@ -52,12 +52,12 @@ public interface BeforePerformInterceptor extends Interceptor
 	 * to be done.
 	 * 
 	 * @param cctx maverick context
-	 * @param formBean the not-yet populated formBean
+	 * @param formBeanContext the context with the not-yet populated formBean
 	 * @throws ServletException
 	 */
 	public void doBeforePerform(
 		ControllerContext cctx,
-		FormBeanContext formBean) 
+		FormBeanContext formBeanContext) 
 		throws ServletException;
 
 }

@@ -32,11 +32,16 @@
 package nl.openedge.maverick.framework.test;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import nl.openedge.maverick.framework.FormBeanContext;
 import nl.openedge.maverick.framework.FormBeanCtrl;
+import nl.openedge.maverick.framework.interceptors.ToUpperCasePopulator;
+import nl.openedge.maverick.framework.population.IgnoreFieldPopulator;
 
+import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.ControllerContext;
+import org.jdom.Element;
 
 /**
  * @author Eelco Hillenius
@@ -66,6 +71,19 @@ public class TestCtrl extends FormBeanCtrl
 	{
 		this.bean = new TestBean();
 		return bean;
+	}
+	
+	/**
+	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
+	 */
+	public void init(Element controllerNode) throws ConfigException
+	{
+		// note that we will not have a valid controllerNode when testing
+		addInterceptor(new TestBeforePerformInterceptor());
+		addPopulator("uppercaseTest", new ToUpperCasePopulator());
+		addPopulator("ignore", new IgnoreFieldPopulator()); // block property by field name
+		addPopulator(Pattern.compile("(.)*ByRegex$"), 
+			new IgnoreFieldPopulator()); // block property by regex pattern
 	}
 	
 	/**

@@ -1,6 +1,15 @@
 -------------------------------------------------
 1.4.5
 
+- (finally) added unit tests
+
+- (and finally as well) added a manual
+
+- some minor doc/ variable name changes
+
+-------------------------------------------------
+1.4.5
+
 - bugfix: pattern was not passed in Formatter.format method.
 
 -------------------------------------------------
@@ -43,7 +52,6 @@
 - removed not used property copyRequestToOverride.
 
 - added optional property doFormValidationIfFieldValidationFailed (true by default).
-
 
 -------------------------------------------------
 1.4
@@ -103,7 +111,6 @@
 
 - Removed some not-needed dependencies.
 
-
 -------------------------------------------------
 1.2.1
 
@@ -113,7 +120,6 @@
 	
 - Fixed a bug in the population process that prevented working with mapped values (and
 	(had the potential of errors when working with indexed values).
-
 
 -------------------------------------------------
 1.2
@@ -203,7 +209,6 @@
 - fixed bug that prevented working with arrays correctly.
 
 - various minor bugfixes.
-
 
 -------------------------------------------------
 1.1

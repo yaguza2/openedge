@@ -147,7 +147,7 @@ public class RegexValidator extends AbstractFieldValidator
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value)
 	{
@@ -167,7 +167,7 @@ public class RegexValidator extends AbstractFieldValidator
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value,
 		Locale locale)

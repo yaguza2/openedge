@@ -49,7 +49,7 @@ import nl.openedge.maverick.framework.FormBeanContext;
  * Default populator for bean properties. Tries to set a property using introspection
  * @author Eelco Hillenius
  */
-public final class DefaultFieldPopulator extends AbstractFieldPopulator implements FieldPopulator
+public final class DefaultFieldPopulator extends AbstractFieldPopulator
 {
 
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);

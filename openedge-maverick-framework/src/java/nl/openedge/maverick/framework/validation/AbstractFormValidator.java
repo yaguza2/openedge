@@ -91,7 +91,7 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	 */
 	public String[] getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		Locale locale)
 	{
 		String key = getMessagePrefix();

@@ -43,23 +43,35 @@ import org.infohazard.maverick.flow.ControllerContext;
 public interface FieldValidator
 {
 	/**
-	 * checks if value is valid
+	 * Checks if value is valid. 
+	 * This method should return true if validation succeeded or false otherwise.
+	 * For error handling you have two options:
+	 * <ul>
+	 * 	<li>
+	 * 	Use the callback method getErrorMessage. You should use this if the error 
+	 * 	message is allways the same (except for maybe some parameters in the message).
+	 * 	</li>
+	 * 	<li>
+	 * 	For more flexibility, like if you have more stages of validation that each generates
+	 * 	its own message(s), you can register errors directly with the formBeanContext
+	 * 	</li>
+	 * </ul>
 	 * @param cctx maverick context
-	 * @param form form for this currentRequest
+	 * @param formBeanContext context with bean for this currentRequest
 	 * @param fieldName field name of parameter
 	 * @param value the value of this parameter
 	 * @return true if valid, false if not.
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value);
 
 	/**
 	 * if value is not valid, get custom error message here
 	 * @param cctx maverick context
-	 * @param form form for this currentRequest
+	 * @param formBeanContext context for this currentRequest
 	 * @param fieldName field name of parameter
 	 * @param value the value of this parameter
 	 * @param locale the locale that should be used to get the message
@@ -67,7 +79,7 @@ public interface FieldValidator
 	 */		
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value,
 		Locale locale);

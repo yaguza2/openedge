@@ -44,7 +44,7 @@ public interface FieldPopulator
 	/**
 	 * set a property on the given form
 	 * @param cctx maverick context
-	 * @param form instance of the form to set the property on
+	 * @param formBeanContext context with instance of the form to set the property on
 	 * @param name name of the property
 	 * @param value the value from the request. This is either a String or a String array (String[])
 	 * @param targetPropertyMeta an extra wrapper for the target
@@ -54,7 +54,7 @@ public interface FieldPopulator
 	 */
 	public abstract boolean setProperty(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String name,
 		Object requestValue,
 		TargetPropertyMeta targetPropertyMeta,

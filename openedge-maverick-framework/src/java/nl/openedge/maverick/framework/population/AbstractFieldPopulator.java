@@ -43,7 +43,7 @@ import nl.openedge.maverick.framework.FormBeanCtrl;
 /**
  * @author Eelco Hillenius
  */
-public abstract class AbstractFieldPopulator
+public abstract class AbstractFieldPopulator implements FieldPopulator
 {
 	
 	/** reference to the controller */
@@ -51,6 +51,14 @@ public abstract class AbstractFieldPopulator
 
 	/**
 	 * default constructor
+	 */
+	public AbstractFieldPopulator()
+	{
+		// noop
+	}
+
+	/**
+	 * constructor with control
 	 */
 	public AbstractFieldPopulator(FormBeanCtrl ctrl)
 	{

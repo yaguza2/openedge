@@ -163,7 +163,7 @@ public class AfterValidator extends AbstractFieldValidator
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value)
 	{
@@ -239,11 +239,11 @@ public class AfterValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Returns the error message.
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value,
 		Locale locale)

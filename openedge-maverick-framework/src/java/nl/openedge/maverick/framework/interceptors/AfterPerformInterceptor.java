@@ -61,12 +61,12 @@ public interface AfterPerformInterceptor extends Interceptor
 	 * the normal execution outcome of the control. 
 	 * 
 	 * @param cctx maverick context
-	 * @param formBean the (possibly succesfull) populated formBean
+	 * @param formBeanContext the context with the (possibly succesfull) populated formBean
 	 * @throws ServletException
 	 */
 	public void doAfterPerform(
 		ControllerContext cctx,
-		FormBeanContext formBean) 
+		FormBeanContext formBeanContext) 
 		throws ServletException;
 
 }

@@ -88,7 +88,7 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value,
 		Locale locale)

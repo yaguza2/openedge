@@ -114,7 +114,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value)
 	{
@@ -157,7 +157,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext form,
+		FormBeanContext formBeanContext,
 		String fieldName,
 		Object value,
 		Locale locale)

@@ -55,7 +55,7 @@ import com.mockobjects.servlet.MockServletContext;
 import junit.framework.TestCase;
 
 /**
- * Testcase for population of form beans
+ * Testcase for population of form beans and interceptors
  * 
  * @author Eelco Hillenius
  */
@@ -131,6 +131,10 @@ public class PopulationTest extends TestCase
 		requestParams.put("testMap(key1)", "val1");
 		requestParams.put("testMap(key2)", "val2");
 		
+		requestParams.put("uppercaseTest", "this once was lower case");
+		requestParams.put("ignore", "this should never come through");
+		requestParams.put("ignoreByRegex", "this should never come through either");
+		
 		request.setupGetParameterMap(requestParams);
 
 		MaverickContext mockMavCtx = new MaverickContext(
@@ -138,6 +142,10 @@ public class PopulationTest extends TestCase
 		
 		try
 		{
+			
+			ctrl.init(null); // let controller initialize. 
+				// It cannot depend on the controller node though
+			
 			// execute command method
 			ctrl.go(mockMavCtx);
 			
@@ -198,6 +206,15 @@ public class PopulationTest extends TestCase
 			FormBeanContext formBeanContext = ctrl.getFormBeanContext();
 			assertEquals("dutch locale should be used for formatting a double property",
 				"1,1", formBeanContext.displayProperty("testDouble1"));
+				
+			// interceptor should be called once for each interface 
+			// (before and after perform)
+			assertEquals(1, TestBeforePerformInterceptor.getBeforeCalls());
+			assertEquals(1, TestBeforePerformInterceptor.getAfterCalls());
+			
+			assertEquals("THIS ONCE WAS LOWER CASE", bean.getUppercaseTest());
+			assertEquals("unchanged", bean.getIgnore());
+			assertEquals("unchanged (regex)", bean.getIgnoreByRegex());
 			
 		}
 		catch (ServletException e)
