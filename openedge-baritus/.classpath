@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="src" path="src/java"/>
-    <classpathentry kind="src" output="target/test-classes" path="src/test"/>
-    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/servletapi-2.3-src.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b8-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/maverick/jars/maverick-2.2.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/maverick-2.2.0-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/junit/jars/junit-3.8.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/junit-3.8.1-src.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/mockobjects/jars/mockobjects-core-0.09.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/mockobjects-0.09-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/log4j-1.2.8-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/mockobjects/jars/mockobjects-jdk1.4-j2ee1.3-0.09.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/mockobjects-0.09-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/ognl/jars/ognl-2.6.4.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/ognl-2.6.4-src.jar"/>
-    <classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry output="target/test-classes" kind="src" path="src/test"/>
+	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/servletapi-2.3-src.jar" kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b8-src.jar" kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/maverick-2.2.0-src.jar" kind="var" path="MAVEN_REPO/maverick/jars/maverick-2.2.0.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/junit-3.8.1-src.jar" kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/mockobjects-0.09-src.jar" kind="var" path="MAVEN_REPO/mockobjects/jars/mockobjects-core-0.09.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/log4j-1.2.8-src.jar" kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/mockobjects-0.09-src.jar" kind="var" path="MAVEN_REPO/mockobjects/jars/mockobjects-jdk1.4-j2ee1.3-0.09.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/ognl-2.6.5-src.jar" kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
