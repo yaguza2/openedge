@@ -1,3 +1,9 @@
+-------------------------------------------------
+1.2.7
+
+- JettyVariableService removed again as it was not needed.
+
+-------------------------------------------------
 1.2.6
 
 - HibernateHelper can have its config location overriden by 

@@ -119,7 +119,7 @@ public class HibernateHelper {
         } 
         catch (Exception e) 
         {
-            e.printStackTrace();
+            // ignore
         }
         
 	}
