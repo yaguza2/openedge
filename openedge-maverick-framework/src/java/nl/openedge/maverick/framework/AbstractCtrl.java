@@ -104,6 +104,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected boolean failOnPopulateError = false;
 	
 	/**
+	 * Indien we een lege string binnenkrijgen vatten we dat op als een null-waarde
+	 * (true) of gebruiken we de lege string (false). Standaard == true
+	 */
+	protected boolean setNullForEmptyString = true;
+	
+	/**
 	 * is called before any handling like form population etc.
 	 * @param cctx maverick context
 	 * @param formBean unpopulated formBean
@@ -386,7 +392,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/**
 	 * set an array property
 	 */
-	private boolean setArrayProperty(
+	protected boolean setArrayProperty(
 			ControllerContext cctx,
 			PropertyDescriptor propertyDescriptor,
 			AbstractForm formBean, 
@@ -406,10 +412,23 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			{
 				try 
 				{
-					Object converted = converter.convert(
-						componentType, (String)values[i]);
-
-					Array.set(array, i, converted);		
+					if(values[i] != null && (!values[i].trim().equals("")))
+					{
+						Object converted = converter.convert(
+							componentType, values[i]);
+						Array.set(array, i, converted);							
+					}
+					else
+					{
+						if(setNullForEmptyString)
+						{
+							Array.set(array, i, null);		
+						}
+						else
+						{
+							Array.set(array, i, values[i]);	
+						}						
+					}	
 				} 
 				catch (ConversionException e) 
 				{
@@ -438,7 +457,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/**
 	 * set a single property
 	 */
-	private boolean setSingleProperty(
+	protected boolean setSingleProperty(
 		ControllerContext cctx,	
 		AbstractForm formBean, String name, Object value)
 	{
@@ -453,6 +472,17 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				Object o = PropertyUtils.getProperty(formBean, name);
 				// Perform the assignment for this property
 				BeanUtils.setProperty(formBean, name, value);
+			}
+			else
+			{
+				if(setNullForEmptyString)
+				{
+					BeanUtils.setProperty(formBean, name, null);	
+				}
+				else
+				{
+					BeanUtils.setProperty(formBean, name, stringValue);
+				}
 			}
 		}
 		catch (Exception e)
@@ -819,6 +849,22 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	public void setNoCache(boolean noCache)
 	{
 		this.noCache = noCache;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public boolean isSetNullForEmptyString()
+	{
+		return setNullForEmptyString;
+	}
+
+	/**
+	 * @param b
+	 */
+	public void setSetNullForEmptyString(boolean b)
+	{
+		setNullForEmptyString = b;
 	}
 
 }
