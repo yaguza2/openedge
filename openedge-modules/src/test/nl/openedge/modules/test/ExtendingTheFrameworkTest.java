@@ -28,51 +28,64 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.test;
+
+import java.net.URL;
+
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.JDOMConfigurator;
+import nl.openedge.modules.RepositoryFactory;
+import nl.openedge.modules.config.URLHelper;
+import nl.openedge.modules.impl.TypesRegistry;
+import junit.framework.TestCase;
 
 /**
- * ComponentLookupException can be thrown when querying 
- * the ComponentRepository for components. 
+ * components related tests
  * 
- * @author Eelco Hillenius
+ * @author E.F. Hillenius
  */
-public class ComponentLookupException extends RuntimeException
+public class ExtendingTheFrameworkTest extends TestCase
 {
 
 	/**
-	 * construct exception
+	 * construct with name
+	 * @param name
 	 */
-	public ComponentLookupException()
+	public ExtendingTheFrameworkTest(String name) throws Exception
 	{
-		super();
+		super(name);
 	}
 
-	/**
-	 * construct exception with message
-	 * @param message
-	 */
-	public ComponentLookupException(String message)
+	public void testHelloWorldExt()
 	{
-		super(message);
-	}
 
-	/**
-	 * construct exception with message and cause
-	 * @param message
-	 * @param cause
-	 */
-	public ComponentLookupException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+		try
+		{
+			URL url =
+				URLHelper.convertToURL("/oemodulesext.xml",
+					AbstractTestBase.class,
+					null);
 
-	/**
-	 * construct exception with cause
-	 * @param cause
-	 */
-	public ComponentLookupException(Throwable cause)
-	{
-		super(cause);
+			TypesRegistry.registerInitCommand(
+				MyType.class, MyTypeInitCommand.class);
+
+			JDOMConfigurator c = new JDOMConfigurator(url);
+			ComponentRepository crep = 
+				RepositoryFactory.getRepository();
+
+			MyTypeImpl module = (MyTypeImpl)
+					crep.getComponent("MyTypeTest");
+			
+			assertNotNull(module);
+			assertNotNull(module.getMessage());
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 	}
 
 }
+

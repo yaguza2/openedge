@@ -7,96 +7,206 @@
   </properties>
 
   <body>
-    <section name="Building Maven">
+    <section name="Extending the framework">
       <p>
-        Building Maven is a little different from your typical Java
-        build because Maven uses itself to build itself!  Thus, in order
-        to successfully build Maven, a bootstrapping process is required
-        to jumpstart the build.  Fortunately, the details of this have
-        been encapsulated in a separate build file called
-        <code>build-bootstrap.xml</code>.  This document details the
-        necessary steps to successfully build Maven from source.  After
-        completing the process, not only will Maven be built, it will
-        also be installed on your system, which will enable you to build
-        any other Maven-enabled project (i.e. all Turbine projects).
+		If you miss certain types or InitCommands, you can register your
+		own. Additionally, if you don't like the two default ComponentRepository
+		implementations, you can provide your own (though within some constraints)
+		version.
       </p>
-      <p>
-        Before you can build Maven, you'll need to make sure you have <a
-        href="http://jakarta.apache.org/ant/">Ant</a> 1.5 or higher
-        installed on your system.  Don't forget to install the
-        <code>optional.jar</code> included with Ant.  In addition,
-        you'll also need the <a href="http://www.junit.org/">JUnit</a>
-        unit testing framework installed.  Be sure to install
-        <code>junit.jar</code> in your <code>$ANT_HOME/lib</code>
-        directory.  Failure to do so will result in build errors.
-      </p>
-      <p>
-        You also must have the <code>$MAVEN_HOME</code> env-var set. The
-        Maven installation is encapsulated in the <code>$MAVEN_HOME</code>
-        directory: scripts, Maven's run-time library, plug-ins and the
-        local repository.
-      </p>
-      <p>
-        For the impatient reader that doesn't want to read the rest of
-        this document, type the following:
-      </p>
-      <source><![CDATA[ant -f build-bootstrap.xml]]></source>
-      <p>
-        If you are new to Maven, it is recommended that you read the
-        rest of the document as it explains the build process in a
-        little more detail.
-      </p>
-      <p>
-        If you are behind a proxy, you must define proxy parameters for
-        building Maven :
-        <a href="../faq.html#build-firewall">FAQS</a>.
-      </p>
-      <subsection name="Bootstrapping Maven">
-        <p>
-          Before you can begin the process, you'll need to download the
-          source from the <code>maven</code> CVS
-          repository.  If you are not familiar with the Jakarta CVS
-          repositories, please see the <a
-          href="http://jakarta.apache.org/site/cvsindex.html">documentation</a>.
-        </p>
-        <p>
-          After setting the value of <code>$MAVEN_HOME</code> and
-          pulling down the sources you are now ready to
-          build and install Maven on your system using the bootstrapping
-          process.  As mentioned earlier, the bootstrapping process is
-          defined in <code>build-bootstrap.xml</code>, and can be
-          initiated by typing the following:
-        </p>
-        <source><![CDATA[ant -f build-bootstrap.xml]]></source>
-        <p>
-          Thats it! Congratulations!  You have now built Maven with
-          Maven and installed Maven on your system!  What does that
-          mean?  
-        </p>
-        <ul>
-          <li>
-            The Maven build system has been installed in
-            <code>$MAVEN_HOME</code>.
-          </li>
-          <li>
-            The Maven JAR has been installed in your local repository,
-            which defaults to <code>$MAVEN_HOME/repository</code>, so
-            that plug-ins that might require Maven can build and it
-            is installed in Maven's run-time directory.
-          </li>
-          <li>
-            You can now build any Maven-enabled project with ease!
-            Please see the <a href="use.html">Using Maven</a>
-            document for instructions on how to build Maven-enabled
-            projects.
-          </li>
-          <li>
-            You can now integrate Maven into your own projects!  Please
-            see the <a href="integrate.html">Integrate Maven</a>
-            document for instructions on how to do this.
-          </li>
-        </ul>
-      </subsection>
+	  <p>
+		In this document, we give some examples for the default, strong typed
+		implementation of ComponentRepository.
+	  </p>
+	  <subsection name="types registries">
+		<p>
+			The two default implementations of ComponentRepository use their
+			own TypesRegistry. Depending on the implementation you use, you
+			work with a TypesRegistry to register your own types and InitCommands.
+		</p>
+	  </subsection>
+	  <subsection name="implementing your own types">
+		<p>
+			To create your own type, you need two things: an interface and a factory.
+			For example, we take the ThrowAwayType that creates a new instance of
+			a component on each request.
+		</p>
+		<p>
+			First we need the type interface to be able to regconize the type and 
+			find the needed factory for it. Mind you that this is not needed if you 
+			use the loosely typed implementation of the ComponentRepository.
+			<source><![CDATA[
+public interface ThrowAwayType
+{
+
+}
+			]]></source><br/>
+			That done, we need a factory to actually create instances of the components.<br/>
+			A factory needs to Implement <code>ComponentFactory</code>.
+			<source><![CDATA[
+public interface ComponentFactory
+{
+
+  public void setComponentClass(Class componentClass) throws ConfigException;
+	
+  public String getName();
+	
+  public void setName(String name);
+	
+  public Class getComponentClass();
+
+  public ComponentRepository getComponentRepository();
+	
+  public void setComponentRepository(ComponentRepository factory);
+	
+  public abstract InitCommand[] getInitCommands();
+
+  public void setInitCommands(InitCommand[] commands);
+
+  public Object getComponent() throws ComponentLookupException;
+	
+  public void setComponentNode(Element componentNode) throws ConfigException;
+
+}
+			]]></source><br/>
+			
+			You can extend from <code>AbstractComponentFactory</code> so
+			that you have the default behavoir except the <code>getComponent()</code>
+			method implemented.<br/>
+			
+			Beneath you find the factory implementation for ThrowAwayType.
+			
+			<source><![CDATA[
+public class ThrowAwayTypeFactory extends AbstractComponentFactory
+{
+
+  public Object getComponent() throws ComponentLookupException
+  {
+    
+	Object instance = null;
+    
+	try
+      {
+        instance = componentClass.newInstance();
+      }
+      catch (InstantiationException ex)
+      {
+        throw new ComponentLookupException(ex);
+      }
+      catch (IllegalAccessException ex)
+      {
+        throw new ComponentLookupException(ex);
+      }
+      
+	  try
+      {
+        executeInitCommands(instance);
+      }
+      catch (InitCommandException e)
+      {
+        e.printStackTrace();
+        throw new ComponentLookupException(e);
+      }
+      catch (ConfigException e)
+      {
+        e.printStackTrace();
+        throw new ComponentLookupException(e);
+      }
+      
+	  return instance;
+    }
+}
+			]]></source><br/>
+		Now, if this was really a new type, we would have to register it with 
+		the respective TypesRegistry like:
+			<source><![CDATA[
+TypesRegistry.registerComponentType(ThrowAwayType.class, ThrowAwayTypeFactory.class);
+			]]></source><br/>
+		
+		You have to do this before initializing, or you have to call either <code>reload()</code>
+		on your instance of <code>JDOMConfigurator</code> or <code>reset()</code> on
+		on the <code>RepositoryFactory</code>.
+		</p><br/>
+	  
+	  </subsection>
+	  
+	  <subsection name="implementing your own InitCommands">
+		<p>
+			To create an InitCommand, you have to create a type (if you use the default
+			implementation of ComponentRepository) and an InitCommand implementation.
+		</p>
+		<p>
+			Creating a type works the same as above; just create an interface.
+			<source><![CDATA[
+public interface MyType
+{
+  public void setMessage(String message);
+}
+			]]></source><br/>			
+			
+			Then create the InitCommand. InitCommands have to implement the 
+			<code>InitCommand</code> interface:
+			<source><![CDATA[
+public interface InitCommand
+{
+  public void init(
+    String componentName, 
+    Element componentNode,
+    ComponentRepository moduleFactory)
+    throws ConfigException; 
+
+  public void execute(Object componentInstance)
+    throws InitCommandException, ConfigException;
+}
+			]]></source><br/>	
+			Here's an implementation of the InitCommand for our new type
+			
+			<source><![CDATA[
+public class MyTypeInitCommand implements InitCommand
+{
+  public void init(
+    String componentName, 
+    Element componentNode,
+    ComponentRepository moduleFactory)
+    throws ConfigException
+    {
+      // nothing here
+    }
+
+    public void execute(Object componentInstance) 
+      throws InitCommandException, ConfigException
+    {
+    if(componentInstance instanceof MyType)
+    {
+      ((MyType)componentInstance).setMessage("Hello World");	
+    }
+    else
+    {
+      throw new ConfigException("loosely typed components are not supported for this case");
+    }
+  }
+}
+			]]></source><br/>
+			
+			Now our startup code could be like this:
+		
+			<source><![CDATA[
+// register out new custom init command type
+TypesRegistry.registerInitCommand(MyType.class, MyTypeInitCommand.class);
+// now load the components
+JDOMConfigurator c = new JDOMConfigurator(url);
+// get the component repository
+ComponentRepository crep = RepositoryFactory.getRepository();
+// get the component of our new type. The initcommand should have been executed
+// at least once depending on the base type.
+MyTypeImpl module = (MyTypeImpl)crep.getComponent("MyTypeTest");
+			]]></source><br/>
+			
+			And we're ready to use our new InitCommand!
+			
+		</p>
+	  </subsection>
+	  
     </section>
   </body>
 </document>

@@ -28,51 +28,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.test;
+
+import org.jdom.Element;
+
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.initcommands.InitCommand;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * ComponentLookupException can be thrown when querying 
- * the ComponentRepository for components. 
- * 
  * @author Eelco Hillenius
  */
-public class ComponentLookupException extends RuntimeException
+public class MyTypeInitCommand implements InitCommand
 {
 
 	/**
-	 * construct exception
+	 * initialize
+	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public ComponentLookupException()
+	public void init(
+		String componentName, 
+		Element componentNode,
+		ComponentRepository moduleFactory)
+		throws ConfigException
 	{
-		super();
+		// nothing here
 	}
 
 	/**
-	 * construct exception with message
-	 * @param message
+	 * set message on component instance
+	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public ComponentLookupException(String message)
+	public void execute(Object componentInstance) 
+		throws InitCommandException, ConfigException
 	{
-		super(message);
-	}
-
-	/**
-	 * construct exception with message and cause
-	 * @param message
-	 * @param cause
-	 */
-	public ComponentLookupException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	/**
-	 * construct exception with cause
-	 * @param cause
-	 */
-	public ComponentLookupException(Throwable cause)
-	{
-		super(cause);
+		if(componentInstance instanceof MyType)
+		{
+			((MyType)componentInstance).setMessage("Hello World");	
+		}
+		else
+		{
+			throw new ConfigException(
+				"loosely typed components are not supported for this case");
+	
+		}
 	}
 
 }

@@ -28,51 +28,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.test;
 
 /**
- * ComponentLookupException can be thrown when querying 
- * the ComponentRepository for components. 
- * 
  * @author Eelco Hillenius
  */
-public class ComponentLookupException extends RuntimeException
+public interface MyType
 {
-
-	/**
-	 * construct exception
-	 */
-	public ComponentLookupException()
-	{
-		super();
-	}
-
-	/**
-	 * construct exception with message
-	 * @param message
-	 */
-	public ComponentLookupException(String message)
-	{
-		super(message);
-	}
-
-	/**
-	 * construct exception with message and cause
-	 * @param message
-	 * @param cause
-	 */
-	public ComponentLookupException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	/**
-	 * construct exception with cause
-	 * @param cause
-	 */
-	public ComponentLookupException(Throwable cause)
-	{
-		super(cause);
-	}
-
+	
+	public void setMessage(String message);
 }

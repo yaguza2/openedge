@@ -29,7 +29,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-package nl.openedge.util.jndi;
+package nl.openedge.modules.util.jndi;
 
 import java.util.HashSet;
 import java.util.Hashtable;

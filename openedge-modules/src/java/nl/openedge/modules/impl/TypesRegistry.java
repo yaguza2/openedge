@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.quartz.Job;
 
@@ -61,17 +62,12 @@ import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitComman
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 /**
- * Registry for types and init commands
+ * Registry for types and init commands.
+ * Couples on classes
  * @author Eelco Hillenius
  */
 public class TypesRegistry
 {
-
-	/* 
-	 * List of base types (Class)
-	 */
-	private static List baseTypes = new ArrayList(4);
-	
 	/*
 	 * Map of component factories. Keyed on types, the values
 	 * are instances of BuilderFactory
@@ -107,14 +103,8 @@ public class TypesRegistry
 	 */
 	static 
 	{
-		// add the default basetypes
-		baseTypes.add(SingletonType.class);
-		baseTypes.add(ThreadSingletonType.class);
-		baseTypes.add(ThrowAwayType.class);
-		baseTypes.add(Job.class);
 		
-		// and the adapter factories for them
-		
+		// the component factories
 		componentFactories.put(
 			SingletonType.class, 
 			SingletonTypeFactory.class);
@@ -129,10 +119,10 @@ public class TypesRegistry
 			
 		componentFactories.put(
 			Job.class, 
-			JobTypeFactory.class);
-			
+			JobTypeFactory.class);		
 		
 		// add the default enhancer types
+		// we use this to have ordering in the commands		
 		initCommandTypes.add(BeanType.class);
 		initCommandTypes.add(ConfigurableType.class);
 		initCommandTypes.add(ChainedEventCaster.class);
@@ -165,9 +155,9 @@ public class TypesRegistry
 	 * get the base types
 	 * @return List
 	 */
-	public static List getBaseTypes()
+	public static Set getBaseTypes()
 	{
-		return Collections.unmodifiableList(baseTypes);
+		return Collections.unmodifiableSet(componentFactories.keySet());
 	}
 	
 	/**
@@ -235,15 +225,25 @@ public class TypesRegistry
 	}
 	
 	/**
-	 * register an component factory class for the given type class
+	 * register an component type and factory class for the given class
 	 * @param typeClass the class
 	 * @param componentFactoryClass the class of the component factory
 	 */
-	public static void registerComponentFactory(
+	public static void registerComponentType(
 		Class typeClass, 
 		Class componentFactoryClass)
 	{
 		componentFactories.put(typeClass, componentFactoryClass);
+	}
+	
+	/**
+	 * de-register an component type with the given type class
+	 * @param typeClass the class
+	 */
+	public static void deRegisterComponentType(
+		Class typeClass)
+	{
+		componentFactories.remove(typeClass);
 	}
 
 	/**
@@ -285,14 +285,41 @@ public class TypesRegistry
 	
 	/**
 	 * register an init command for the given class
-	 * @param clazz the class
-	 * @param adapterFactory the adapter factory
+	 * @param clazz the type class
+	 * @param initCommandClass the class of the command
 	 */
 	public static void registerInitCommand(
 		Class typeClass, 
 		Class initCommandClass)
 	{
+		initCommandTypes.add(typeClass);
 		initCommandClasses.put(typeClass, initCommandClass);
+	}
+	
+	/**
+	 * register an init command for the given class at location index
+	 * @param clazz the type class
+	 * @param initCommandClass the class of the command
+	 * @param index location in command list
+	 */
+	public static void registerInitCommand(
+		Class typeClass, 
+		Class initCommandClass,
+		int index)
+	{
+		initCommandTypes.add(index, typeClass);
+		initCommandClasses.put(typeClass, initCommandClass);
+	}
+	
+	/**
+	 * de-register an init command
+	 * @param clazz the type class
+	 */
+	public static void deRegisterInitCommand(
+		Class typeClass)
+	{
+		initCommandTypes.remove(typeClass);
+		initCommandClasses.remove(typeClass);
 	}
 
 }

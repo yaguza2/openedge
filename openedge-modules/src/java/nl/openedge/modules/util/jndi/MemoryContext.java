@@ -32,7 +32,7 @@
 //got this class from Tyrex (Exolab, http://www.exolab.org/)
 //... made a few cosmetic enhancements
 
-package nl.openedge.util.jndi;
+package nl.openedge.modules.util.jndi;
 
 import java.util.Hashtable;
 import java.util.Enumeration;

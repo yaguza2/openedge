@@ -52,7 +52,8 @@ import nl.openedge.modules.types.initcommands.SchedulerObserverInitCommand;
 
 /**
  * Registry for types and init commands that can be used with
- * the loosely typed implementation of the component repository
+ * the loosely typed implementation of the component repository.
+ * Couples on strings
  * @author Eelco Hillenius
  */
 public class TypesRegistry
@@ -206,11 +207,21 @@ public class TypesRegistry
 	 * @param typeName the name of the type
 	 * @param componentFactoryClass the class of the component factory
 	 */
-	public static void registerComponentFactory(
+	public static void registerComponentType(
 		String typeName, 
 		Class componentFactoryClass)
 	{
 		componentFactories.put(typeName, componentFactoryClass);
+	}
+	
+	/**
+	 * de-register an component type with the given name
+	 * @param typeName the name of the type
+	 */
+	public static void deRegisterComponentType(
+		String typeName)
+	{
+		componentFactories.remove(typeName);
 	}
 
 	/**
@@ -244,14 +255,24 @@ public class TypesRegistry
 	/**
 	 * register an init command for the given name
 	 * @param commandName the name of the command
-	 * @param adapterFactory the adapter factory
+	 * @param initCommandClass class of the command
 	 */
 	public static void registerInitCommand(
 		Class commandName, 
 		Class initCommandClass)
 	{
-		
 		initCommandClasses.put(commandName, initCommandClass);
+	}
+	
+	/**
+	 * de-register an init command for the given name
+	 * @param commandName the name of the command
+	 * @param initCommandClass class of the command
+	 */
+	public static void deRegisterInitCommand(
+		Class commandName)
+	{
+		initCommandClasses.remove(commandName);
 	}
 
 	/**

@@ -47,7 +47,7 @@ import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.impl.DefaultComponentRepository;
-import nl.openedge.util.jndi.NamingHelper;
+import nl.openedge.modules.util.jndi.NamingHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

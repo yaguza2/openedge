@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 
@@ -75,7 +76,10 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 
 /**
- * Default implementation of ComponentRepository
+ * Default implementation of ComponentRepository.
+ * This implementation looks for interfaces that are implemented
+ * by the components for the coupling to the framework types
+ * and InitCommands.
  * 
  * @author Eelco Hillenius
  */
@@ -378,7 +382,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 
 		ComponentFactory factory = null;
 		
-		List baseTypes = TypesRegistry.getBaseTypes();
+		Set baseTypes = TypesRegistry.getBaseTypes();
 		if(baseTypes == null)
 		{
 			throw new ConfigException(

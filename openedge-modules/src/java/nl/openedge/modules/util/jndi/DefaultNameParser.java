@@ -30,7 +30,7 @@
  */
 
 
-package nl.openedge.util.jndi;
+package nl.openedge.modules.util.jndi;
 
 import javax.naming.NameParser;
 import javax.naming.Name;

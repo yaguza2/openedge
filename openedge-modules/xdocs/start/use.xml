@@ -463,7 +463,7 @@ ComponentRepository crepo = RepositoryFactory.getRepository();
 			<source><![CDATA[
 <jndi name="myLocation"/>
 			]]></source>
-				you can use the following snippet:
+				in your configuration file, you can use the following snippet:
 			<source><![CDATA[
 Context ctx = new InitialContext();
 ComponentRepository crepo = (ComponentRepository)ctx.lookup("myLocation");
@@ -474,7 +474,8 @@ ComponentRepository crepo = (ComponentRepository)ctx.lookup("myLocation");
 				single VM use. As we (the creators of the framework) use it for constructing
 				a logic/ bussiness functionallity layer with it, where the components are
 				service centric, not datacentric, duplicates accross VMs are not a problem
-				for us. A real 
+				for us. But... if you have any suggestions on how to improve these and other
+				aspects on the framework, you're welcome to comment!
 			</p>
 			</subsection>
 		
