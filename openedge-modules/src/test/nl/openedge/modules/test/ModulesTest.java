@@ -30,7 +30,9 @@
  */
 package nl.openedge.modules.test;
 
+import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.quartz.Trigger;
 
 /**
  * modules related tests
@@ -159,6 +161,13 @@ public class ModulesTest extends AbstractTestBase
 		{
 
 			Scheduler scheduler = moduleFactory.getScheduler();
+			assertNotNull(scheduler);			
+
+			JobDetail jd = scheduler.getJobDetail("QuartzTest", "DEFAULT");
+			assertNotNull(jd);
+			
+			Trigger t = scheduler.getTrigger("testTrigger_QuartzTest", "DEFAULT");
+			assertNotNull(t);
 
 			System.out.print("sleep for 1/2 minute...");
 			Thread.sleep(30000);

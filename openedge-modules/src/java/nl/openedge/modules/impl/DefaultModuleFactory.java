@@ -100,11 +100,10 @@ public class DefaultModuleFactory implements ModuleFactory
 	private Log log = LogFactory.getLog(this.getClass());
 
 	/** holder for module adapters */
-	protected Map modules = null;
+	protected Map modules = new HashMap();
 
 	/** holder for module adapters that implement job interface */
-	protected Map jobs = null;
-	/** counter for jobs with the same name */
+	protected Map jobs = new HashMap();
 
 	/** holder for triggers */
 	protected Map triggers = null;
@@ -175,9 +174,7 @@ public class DefaultModuleFactory implements ModuleFactory
 		// get node for modules
 		Element modulesNode = factoryNode.getChild("modules");
 		// load modules into modules map
-		Map[] mods = getModules(modulesNode, classLoader);
-		this.modules = mods[0];
-		this.jobs = mods[1];
+		loadModules(modulesNode, classLoader);
 
 		//	get node for quartz scheduler
 		Element schedulerNode = factoryNode.getChild("scheduler");
@@ -186,32 +183,34 @@ public class DefaultModuleFactory implements ModuleFactory
 
 			// load triggers into trigger map
 			this.triggers = getTriggers(schedulerNode, classLoader);
-			if (!jobs.isEmpty() && !triggers.isEmpty())
-			{
-				log.info("schedule jobs & triggers");
-				try
-				{ // initialise quartz
-					initQuartz(schedulerNode, servletContext);
-					// notify observers
-					fireSchedulerStartedEvent(scheduler);
+
+			try
+			{ // initialise quartz
+				initQuartz(schedulerNode, servletContext);
+				// notify observers
+				fireSchedulerStartedEvent(scheduler);
+				
+				if (!jobs.isEmpty() && !triggers.isEmpty())
+				{
 					// finally, schedule the jobs/ triggers
 					scheduleJobs(schedulerNode, classLoader);
 				}
-				catch (SchedulerException e)
+				else
 				{
-					throw new ConfigException(e);
+					log.warn("sceduler was started but " +
+						"there are no jobs to scedule");
 				}
+				
 			}
-			else
+			catch (SchedulerException e)
 			{
-				log.warn(
-					"allthough a scheduler node was found in the " + 
-					"configuration, there is nothing to schedule!");
+				throw new ConfigException(e);
 			}
 		}
 		else
 		{
-			log.info("scheduler node was not found; scheduler will not be started");
+			log.info("scheduler node was not found; " +
+				"scheduler will not be started");
 		}
 
 	}
@@ -220,7 +219,8 @@ public class DefaultModuleFactory implements ModuleFactory
 	 * initialise the quartz scheduler
 	 * @throws Exception
 	 */
-	private void initQuartz(Element node, ServletContext context) throws ConfigException, SchedulerException
+	private void initQuartz(Element node, ServletContext context) 
+		throws ConfigException, SchedulerException
 	{
 
 		Properties properties = null;
@@ -274,14 +274,12 @@ public class DefaultModuleFactory implements ModuleFactory
 	 * @return array of maps; first has all modules, second has subset of
 	 * modules that are jobs
 	 */
-	private Map[] getModules(			
+	private Map loadModules(			
 			Element modulesNode, 
 			ClassLoader classLoader) 
 			throws ConfigException
 	{
 
-		Map modules = new HashMap();
-		Map jobs = new HashMap();
 		// iterate modules
 		List moduleNodes = modulesNode.getChildren("module");
 		for (Iterator i = moduleNodes.iterator(); i.hasNext();)
@@ -375,11 +373,18 @@ public class DefaultModuleFactory implements ModuleFactory
 			adapter.setModuleClass(clazz);
 			// store component
 			modules.put(name, adapter);
+			
+			// special case: see if this is a job
+			if(Job.class.isAssignableFrom(clazz))
+			{
+				jobs.put(name, adapter);
+			}
+			
 			log.info("stored " + className + " with name: " + name);
 
 		}
 		log.info("loading modules done");
-		return new Map[] { modules, jobs };
+		return modules;
 	}
 
 	/*
@@ -410,7 +415,9 @@ public class DefaultModuleFactory implements ModuleFactory
 			{
 				throw new ConfigException(e);
 			}
-			//trigger.setName(name); postpone setting the name;
+			trigger.setName(name); 
+			// this is the 'base' name, as another name will be
+			// used for the actual sceduling;
 			// the name will be a combination of:
 			// 'name_jobname', to keep them unique
 			trigger.setGroup(group);
@@ -475,7 +482,7 @@ public class DefaultModuleFactory implements ModuleFactory
 			jobDetail.setJobDataMap(job.getJobData());
 			try
 			{ //start schedule job/trigger combination
-				sceduleJob(triggerName, trigger, jobDetail);
+				sceduleJob(trigger, jobDetail);
 			}
 			catch (SchedulerException ex)
 			{
@@ -485,9 +492,19 @@ public class DefaultModuleFactory implements ModuleFactory
 		}
 	}
 
-	public String sceduleJob(String triggerName, Trigger trigger, JobDetail jobDetail) 
+	/**
+	 * scedule a Quartz job
+	 * @param triggerName name of the trigger
+	 * @param trigger the trigger
+	 * @param jobDetail the job
+	 * @return actual name used to scedule the trigger
+	 * 	will be of form: ${triggerName}_${jobDetail.getName()}
+	 * @throws SchedulerException
+	 */
+	public String sceduleJob(Trigger trigger, JobDetail jobDetail) 
 		throws SchedulerException
 	{
+		String triggerName = trigger.getName();
 		String sceduleName = triggerName + "_" + jobDetail.getName();
 		trigger.setName(sceduleName);
 		
