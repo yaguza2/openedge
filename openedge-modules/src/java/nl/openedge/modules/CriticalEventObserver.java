@@ -31,9 +31,8 @@
 package nl.openedge.modules;
 
 /**
- * a scheduler observer gets the chance to do extra configuration 
- * (like adding quartz calendars and global listeners etc. BEFORE
- *  jobs and triggers are actually scheduled by the module factory.
+ * a critical even observer listenes for events that are cast by modules that 
+ * are <code>CriticalEventCaster</code>s or the <code>ModuleFactory</code>.
  * 
  * @author Eelco Hillenius
  */
