@@ -68,7 +68,8 @@ public class LTCyclicDepenencyThrowWayTypesFailTest extends TestCase
 			URL url = URLHelper.convertToURL("/cyclic-throwaway-oeltmodules.xml",
 					AbstractTestBase.class, null);
 
-			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
+			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class
+					.getName());
 			JDOMConfigurator c = new JDOMConfigurator(url);
 			ComponentRepository cRepo = RepositoryFactory.getRepository();
 			// if we get here, the cycle was not detected
@@ -79,7 +80,8 @@ public class LTCyclicDepenencyThrowWayTypesFailTest extends TestCase
 		{
 			if (e.getCause() instanceof CyclicDependencyException)
 			{
-				System.err.println("successfully detected cycle during startup\n" + e.getMessage());
+				System.err.println("successfully detected cycle during startup\n"
+						+ e.getMessage());
 			}
 			else
 			{

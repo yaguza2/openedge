@@ -106,12 +106,10 @@ public final class MemoryContext implements Context
 	 * returned context has it's own binding space which is not shared with other contexts created
 	 * in this manner.
 	 * 
-	 * @param env
-	 *            The environment attributes
-	 * @throws NotContextException
-	 *             The attribute {@linkContext.PROVIDER_URL}does not specify a context
-	 * @throws InvalidNameException
-	 *             The attribute {@linkContext.PROVIDER_URL}is an invalid name
+	 * @param env The environment attributes
+	 * @throws NotContextException The attribute {@linkContext.PROVIDER_URL}does not specify a
+	 *             context
+	 * @throws InvalidNameException The attribute {@linkContext.PROVIDER_URL}is an invalid name
 	 */
 	public MemoryContext(Hashtable env) throws NamingException
 	{
@@ -219,8 +217,8 @@ public final class MemoryContext implements Context
 				// Reconstruct a reference.
 				try
 				{
-					return NamingManager.getObjectInstance(object, new CompositeName(name), this,
-							_env);
+					return NamingManager.getObjectInstance(object,
+							new CompositeName(name), this, _env);
 				}
 				catch (Exception except)
 				{
@@ -267,7 +265,8 @@ public final class MemoryContext implements Context
 	/*
 	 * really lookup @param name @param resolveLinkRef @return Object @throws NamingException
 	 */
-	private Object internalLookup(Name name, boolean resolveLinkRef) throws NamingException
+	private Object internalLookup(Name name, boolean resolveLinkRef)
+			throws NamingException
 	{
 
 		String simple;
@@ -360,8 +359,8 @@ public final class MemoryContext implements Context
 					// Reconstruct a reference
 					try
 					{
-						return NamingManager.getObjectInstance(object, name, new MemoryContext(
-								bindings, _env), _env);
+						return NamingManager.getObjectInstance(object, name,
+								new MemoryContext(bindings, _env), _env);
 					}
 					catch (Exception except)
 					{
@@ -452,7 +451,8 @@ public final class MemoryContext implements Context
 			// At this point name.size() == 1 and simple == name.get( 0 ).
 			if (bindings.get(simple) != null)
 			{
-				throw new NameAlreadyBoundException(simple + " already bound, use rebind instead");
+				throw new NameAlreadyBoundException(simple
+						+ " already bound, use rebind instead");
 			}
 			if (value instanceof Referenceable)
 			{
@@ -1045,7 +1045,8 @@ public final class MemoryContext implements Context
 			if (object instanceof MemoryBinding)
 			{
 				if (!((MemoryBinding) object).isEmpty())
-					throw new ContextNotEmptyException(simple + " is not empty, cannot destroy");
+					throw new ContextNotEmptyException(simple
+							+ " is not empty, cannot destroy");
 				((MemoryBinding) object).destroy();
 				bindings.remove(simple);
 			}

@@ -30,7 +30,6 @@
  */
 package nl.openedge.modules.types;
 
-import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.initcommands.InitCommand;
@@ -38,86 +37,88 @@ import nl.openedge.modules.types.initcommands.InitCommand;
 import org.jdom.Element;
 
 /**
- * A component factory knows how to construct components of a certain type
+ * A component factory knows how to construct components of a certain type.
  * 
  * @author Eelco Hillenius
  */
 public interface ComponentFactory
 {
 	/**
-	 * construct with class
+	 * construct with class.
 	 * 
-	 * @param componentClass
-	 *            class of component
+	 * @param componentClass class of component
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	public void setComponentClass(Class componentClass) throws ConfigException;
 
 	/**
-	 * gets the name from config
+	 * gets the name from config.
 	 * 
 	 * @return String
 	 */
-	public String getName();
+	String getName();
 
 	/**
-	 * sets the name from config
+	 * sets the name from config.
 	 * 
-	 * @param name
-	 *            alias for this instance
+	 * @param name alias for this instance
 	 */
-	public void setName(String name);
+	void setName(String name);
 
 	/**
-	 * get class of the component
+	 * get class of the component.
 	 * 
 	 * @return Class of component
 	 */
-	public Class getComponentClass();
+	Class getComponentClass();
 
 	/**
-	 * get component factory
+	 * construct with class.
+	 * 
+	 * @param componentClass class of component
+	 * @throws ConfigException when an configuration error occurs
+	 */
+	void setComponentClass(Class componentClass) throws ConfigException;
+
+	/**
+	 * get component factory.
 	 * 
 	 * @return ComponentRepository
 	 */
-	public ComponentRepository getComponentRepository();
+	ComponentRepository getComponentRepository();
 
 	/**
-	 * set component factory
+	 * set component factory.
 	 * 
-	 * @param factory
-	 *            component factory
+	 * @param factory component factory
 	 */
-	public void setComponentRepository(ComponentRepository factory);
+	void setComponentRepository(ComponentRepository factory);
 
 	/**
-	 * get init commands
+	 * get init commands.
 	 * 
 	 * @return InitCommand[] array of init commands
 	 */
-	public abstract InitCommand[] getInitCommands();
+	InitCommand[] getInitCommands();
 
 	/**
-	 * @param commands
-	 *            array of init commands
+	 * set init commands.
+	 * @param commands array of init commands
 	 */
-	public void setInitCommands(InitCommand[] commands);
+	void setInitCommands(InitCommand[] commands);
 
 	/**
-	 * get instantiated component
+	 * get instantiated component.
 	 * 
 	 * @return Object instance
-	 * @throws ComponentLookupException
 	 */
-	public Object getComponent() throws ComponentLookupException;
+	Object getComponent();
 
 	/**
-	 * set config node
+	 * set config node.
 	 * 
-	 * @param componentNode
-	 *            config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param componentNode config node
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	public void setComponentNode(Element componentNode) throws ConfigException;
+	void setComponentNode(Element componentNode) throws ConfigException;
 
 }

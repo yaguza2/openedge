@@ -36,25 +36,25 @@ import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * wrapper for throw away components
+ * wrapper for throw away components.
  * 
  * @author Eelco Hillenius
  */
 public final class ThrowAwayTypeFactory extends AbstractComponentFactory
 {
 	/**
-	 * get instance of module
+	 * get instance of module.
 	 * 
 	 * @return new instance for each request
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
-	public Object getComponent() throws ComponentLookupException
+	public Object getComponent()
 	{
 
 		Object instance = null;
 		try
 		{
-			instance = componentClass.newInstance();
+			instance = getComponentClass().newInstance();
 		}
 		catch (InstantiationException ex)
 		{

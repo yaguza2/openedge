@@ -39,7 +39,7 @@ import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * wrapper for singleton components
+ * wrapper for singleton components.
  * 
  * @author Eelco Hillenius
  */
@@ -47,18 +47,19 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 		ComponentObserver
 {
 
-	/** the singleton instance */
-	protected Object singletonInstance;
+	/** the singleton instance. */
+	private Object singletonInstance;
 
+	/** whether to execute the init commands. */
 	private boolean executeInitCommands = true;
 
 	/**
-	 * get instance of module
+	 * get instance of module.
 	 * 
 	 * @return singleton instance
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
-	public Object getComponent() throws ComponentLookupException
+	public Object getComponent()
 	{
 		synchronized (this)
 		{
@@ -67,7 +68,7 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 
 				try
 				{
-					singletonInstance = componentClass.newInstance();
+					singletonInstance = getComponentClass().newInstance();
 				}
 
 				catch (InstantiationException e)
@@ -121,22 +122,20 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 	}
 
 	/**
-	 * set component factory
+	 * set component factory.
 	 * 
-	 * @param componentRepository
-	 *            component repository
+	 * @param componentRepository component repository
 	 */
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
-		this.componentRepository = componentRepository;
+		setComponentRepository(componentRepository);
 		componentRepository.addObserver(this);
 	}
 
 	/**
-	 * fired after all components are (re)loaded;
+	 * fired after all components are (re)loaded.
 	 * 
-	 * @param evt
-	 *            event
+	 * @param evt event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{

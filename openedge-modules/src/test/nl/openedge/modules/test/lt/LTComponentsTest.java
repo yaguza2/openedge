@@ -254,7 +254,8 @@ public class LTComponentsTest extends AbstractTestBase
 
 			assertTrue(mods1.size() == 0);
 
-			List mods2 = componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
+			List mods2 = componentFactory.getComponentsByType(
+					SingletonComponentImpl.class, false);
 
 			assertTrue(mods2.size() == 1);
 

@@ -31,15 +31,15 @@
 package nl.openedge.modules.config;
 
 /**
- * ConfigExceptions are exceptions that are related to invalid configurations
+ * ConfigExceptions are exceptions that are related to invalid configurations.
  * 
  * @author Eelco Hillenius
  */
-public class ConfigException extends Exception
+public final class ConfigException extends Exception
 {
 
 	/**
-	 * construct
+	 * Construct.
 	 */
 	public ConfigException()
 	{
@@ -47,7 +47,9 @@ public class ConfigException extends Exception
 	}
 
 	/**
-	 * @param message
+	 * Construct.
+	 * 
+	 * @param message the message
 	 */
 	public ConfigException(String message)
 	{
@@ -55,8 +57,10 @@ public class ConfigException extends Exception
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Construct.
+	 * 
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public ConfigException(String message, Throwable cause)
 	{
@@ -64,7 +68,9 @@ public class ConfigException extends Exception
 	}
 
 	/**
-	 * @param cause
+	 * Construct.
+	 * 
+	 * @param cause the cause
 	 */
 	public ConfigException(Throwable cause)
 	{

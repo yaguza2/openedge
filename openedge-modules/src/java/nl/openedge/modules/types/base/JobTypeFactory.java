@@ -33,7 +33,6 @@ package nl.openedge.modules.types.base;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
@@ -44,27 +43,26 @@ import org.jdom.Element;
 import org.quartz.JobDataMap;
 
 /**
- * Wrapper for jobs Jobs cannot
+ * Wrapper for jobs.
  * 
  * @author Eelco Hillenius
  */
 public final class JobTypeFactory extends AbstractComponentFactory
 {
-
-	private JobDataMap jobData = null;
-
-	private String group;
-
-	/* logger */
+	/** logger. */
 	private static Log log = LogFactory.getLog(JobTypeFactory.class);
 
+	/** job data object. */
+	private JobDataMap jobData = null;
+
+	/** job group. */
+	private String group;
+
 	/**
-	 * set config node
+	 * set config node.
 	 * 
-	 * @param componentNode
-	 *            config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param componentNode config node
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public void setComponentNode(Element componentNode) throws ConfigException
 	{
@@ -73,18 +71,19 @@ public final class JobTypeFactory extends AbstractComponentFactory
 	}
 
 	/**
-	 * @return null allways. Get Jobs from the scheduler
+	 * Get component; allways null.
+	 * @return allways null; get Jobs from the scheduler
 	 */
-	public Object getComponent() throws ComponentLookupException
+	public Object getComponent()
 	{
 		return null;
 	}
 
 	/**
-	 * init job using the configuration node
+	 * init job using the configuration node.
 	 * 
-	 * @param configNode
-	 *            configuration element for this job
+	 * @param configNode configuration element for this job
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public void initJobData(Element configNode) throws ConfigException
 	{
@@ -104,15 +103,16 @@ public final class JobTypeFactory extends AbstractComponentFactory
 			for (Iterator i = parameters.iterator(); i.hasNext();)
 			{
 				Element node = (Element) i.next();
-				jobData.put(node.getAttributeValue("name"), node.getAttributeValue("value"));
+				jobData.put(node.getAttributeValue("name"), node
+						.getAttributeValue("value"));
 			}
 
 	}
 
 	/**
-	 * get group
+	 * get job group.
 	 * 
-	 * @return String
+	 * @return job group
 	 */
 	public String getGroup()
 	{
@@ -120,7 +120,7 @@ public final class JobTypeFactory extends AbstractComponentFactory
 	}
 
 	/**
-	 * get JobData
+	 * get JobData.
 	 * 
 	 * @return JobDataMap
 	 */
@@ -130,7 +130,8 @@ public final class JobTypeFactory extends AbstractComponentFactory
 	}
 
 	/**
-	 * @param commands
+	 * Set init commands.
+	 * @param commands init commands
 	 */
 	public void setInitCommands(InitCommand[] commands)
 	{

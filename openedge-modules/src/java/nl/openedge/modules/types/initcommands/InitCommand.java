@@ -45,28 +45,23 @@ public interface InitCommand
 {
 
 	/**
-	 * initialize the command
+	 * initialize the command.
 	 * 
-	 * @param componentName
-	 *            name of component
-	 * @param componentNode
-	 *            xml config node of component
-	 * @param componentRepository
-	 *            instance of componentRepository
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param componentName name of component
+	 * @param componentNode xml config node of component
+	 * @param componentRepository instance of componentRepository
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	public void init(String componentName, Element componentNode,
+	void init(String componentName, Element componentNode,
 			ComponentRepository componentRepository) throws ConfigException;
 
 	/**
-	 * execute the command
+	 * execute the command.
 	 * 
-	 * @param componentInstance
-	 *            instance of the component
-	 * @throws InitCommandException
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param componentInstance instance of the component
+	 * @throws InitCommandException when init command failed
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException;
+	void execute(Object componentInstance) throws InitCommandException,
+			ConfigException;
 }

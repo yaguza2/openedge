@@ -51,7 +51,7 @@ import org.quartz.Job;
  * 
  * @author Eelco Hillenius
  */
-public class DefaultComponentRepository extends AbstractComponentRepository
+public final class DefaultComponentRepository extends AbstractComponentRepository
 {
 
 	/** logger. */
@@ -68,16 +68,13 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	/**
 	 * add one component.
 	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            component config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs when an configuration error occurs
+	 * @param name component name
+	 * @param clazz component class
+	 * @param node component config node
+	 * @throws ConfigException when an configuration error occurs when an configuration error occurs
 	 */
-	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
+	protected void addComponent(String name, Class clazz, Element node)
+			throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
 
@@ -96,15 +93,11 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	/**
 	 * get the component factory.
 	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            configuration node
+	 * @param name component name
+	 * @param clazz component class
+	 * @param node configuration node
 	 * @return ComponentFactory
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
 			throws ConfigException
@@ -140,7 +133,8 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 			factory = TypesRegistry.getDefaultComponentFactory();
 
 			log.warn(name
-					+ " is not of any know type... using " + factory + " as component factory");
+					+ " is not of any know type... using " + factory
+					+ " as component factory");
 		}
 
 		factory.setName(name);
@@ -157,14 +151,10 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	/**
 	 * add initialization commands.
 	 * 
-	 * @param factory
-	 *            factory
-	 * @param node
-	 *            config node
-	 * @param clazz
-	 *            component class
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param factory factory
+	 * @param node config node
+	 * @param clazz component class
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
 			throws ConfigException
@@ -187,7 +177,8 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 				}
 			}
 
-			InitCommand[] cmds = (InitCommand[]) commands.toArray(new InitCommand[commands.size()]);
+			InitCommand[] cmds = (InitCommand[]) commands
+					.toArray(new InitCommand[commands.size()]);
 
 			if (cmds.length > 0)
 			{

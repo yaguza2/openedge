@@ -81,7 +81,8 @@ public abstract class AbstractTestBase extends TestCase
 		{
 			initialised = true;
 
-			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
+			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class
+					.getName());
 
 			try
 			{

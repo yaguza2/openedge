@@ -49,8 +49,8 @@ public class MyTypeInitCommand implements InitCommand
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String componentName, Element componentNode, ComponentRepository moduleFactory)
-			throws ConfigException
+	public void init(String componentName, Element componentNode,
+			ComponentRepository moduleFactory) throws ConfigException
 	{
 		// nothing here
 	}
@@ -60,7 +60,8 @@ public class MyTypeInitCommand implements InitCommand
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException,
+			ConfigException
 	{
 		if (componentInstance instanceof MyType)
 		{
@@ -68,7 +69,8 @@ public class MyTypeInitCommand implements InitCommand
 		}
 		else
 		{
-			throw new ConfigException("loosely typed components are not supported for this case");
+			throw new ConfigException(
+					"loosely typed components are not supported for this case");
 
 		}
 	}

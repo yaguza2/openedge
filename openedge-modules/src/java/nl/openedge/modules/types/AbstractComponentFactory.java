@@ -33,7 +33,6 @@ package nl.openedge.modules.types;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.initcommands.InitCommand;
@@ -43,33 +42,33 @@ import nl.openedge.modules.types.initcommands.RequestLevelInitCommand;
 import org.jdom.Element;
 
 /**
- * common base for component factories
+ * common base for component factories.
  * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractComponentFactory implements ComponentFactory
 {
 
-	/** class of component */
-	protected Class componentClass = null;
+	/** class of component. */
+	private Class componentClass = null;
 
-	/** name (alias) of component */
-	protected String name = null;
+	/** name (alias) of component. */
+	private String name = null;
 
-	/** component repository for two way navigation */
-	protected ComponentRepository componentRepository = null;
+	/** component repository for two way navigation. */
+	private ComponentRepository componentRepository = null;
 
-	/** init commands */
+	/** init commands. */
 	private InitCommand[] initCommands = null;
 
-	/** request level init commands */
+	/** request level init commands. */
 	private RequestLevelInitCommand[] reqInitCommands = null;
 
 	/**
-	 * construct with class
+	 * construct with class.
 	 * 
-	 * @param componentClass
-	 *            class of component
+	 * @param componentClass class of component
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public void setComponentClass(Class componentClass) throws ConfigException
 	{
@@ -91,16 +90,15 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * execute the init commands
+	 * execute the init commands.
 	 * 
-	 * @param componentInstance
-	 *            instance to execute commands on
+	 * @param componentInstance instance to execute commands on
 	 * @throws InitCommandException
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
+	 * @throws InitCommandException when an init command throws an exception
 	 */
-	protected void executeInitCommands(Object componentInstance) throws InitCommandException,
-			ConfigException
+	protected void executeInitCommands(Object componentInstance)
+			throws InitCommandException, ConfigException
 	{
 
 		if (initCommands != null && (initCommands.length > 0))
@@ -113,13 +111,12 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * execute the request level init commands
+	 * execute the request level init commands.
 	 * 
-	 * @param componentInstance
-	 *            instance to execute commands on
+	 * @param componentInstance instance to execute commands on
 	 * @throws InitCommandException
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
+	 * @throws InitCommandException when an init command throws an exception
 	 */
 	protected void executeRequestLevelInitCommands(Object componentInstance)
 			throws InitCommandException, ConfigException
@@ -135,9 +132,9 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * gets the name from config
+	 * gets the name from config.
 	 * 
-	 * @return String
+	 * @return String name
 	 */
 	public final String getName()
 	{
@@ -145,10 +142,9 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * sets the name from config
+	 * sets the name from config.
 	 * 
-	 * @param name
-	 *            alias for this instance
+	 * @param name alias for this instance
 	 */
 	public void setName(String name)
 	{
@@ -156,6 +152,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
+	 * Get class of component.
 	 * @return Class of component
 	 */
 	public Class getComponentClass()
@@ -164,7 +161,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * get component factory
+	 * get component factory.
 	 * 
 	 * @return ComponentRepository
 	 */
@@ -174,10 +171,9 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * set component factory
+	 * set component factory.
 	 * 
-	 * @param factory
-	 *            component factory
+	 * @param factory component factory
 	 */
 	public void setComponentRepository(ComponentRepository factory)
 	{
@@ -185,7 +181,8 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * @return
+	 * Get init commands.
+	 * @return init commands
 	 */
 	public InitCommand[] getInitCommands()
 	{
@@ -193,7 +190,8 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * @param commands
+	 * Set init commands.
+	 * @param commands init commands
 	 */
 	public void setInitCommands(InitCommand[] commands)
 	{
@@ -213,7 +211,8 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 				}
 			}
 		}
-		InitCommand[] cmds = (InitCommand[]) tempInit.toArray(new InitCommand[tempInit.size()]);
+		InitCommand[] cmds = (InitCommand[]) tempInit.toArray(new InitCommand[tempInit
+				.size()]);
 		this.initCommands = cmds;
 
 		RequestLevelInitCommand[] reqcmds = (RequestLevelInitCommand[]) tempReqInit
@@ -222,12 +221,10 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * set config node
+	 * set config node.
 	 * 
-	 * @param componentNode
-	 *            config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param componentNode config node
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public void setComponentNode(Element componentNode) throws ConfigException
 	{
@@ -235,11 +232,10 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	}
 
 	/**
-	 * get component instance
+	 * get component instance.
 	 * 
 	 * @return instance of component
-	 * @throws ComponentLookupException
 	 */
-	public abstract Object getComponent() throws ComponentLookupException;
+	public abstract Object getComponent();
 
 }

@@ -39,10 +39,16 @@ package nl.openedge.modules.types.initcommands;
  * <pre>
  * 
  *  
- *  		&lt;component name=&quot;FooModule&quot; 
- *  				class=&quot;mypackage.Foo&quot;&gt;
- *  			&lt;property name=&quot;bar&quot; value=&quot;12&quot;/&gt;		
- *  		&lt;/component&gt;
+ *   
+ *    
+ *     
+ *     		&lt;component name=&quot;FooModule&quot; 
+ *     				class=&quot;mypackage.Foo&quot;&gt;
+ *     			&lt;property name=&quot;bar&quot; value=&quot;12&quot;/&gt;		
+ *     		&lt;/component&gt;
+ *      
+ *     
+ *    
  *   
  *  
  * </pre>

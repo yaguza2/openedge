@@ -61,8 +61,10 @@ public final class TypesRegistry
 {
 	/** default number of component factories. */
 	private static final int DFT_TYPE_SIZE = 5;
+
 	/** default number of command types. */
 	private static final int DFT_CMD_SIZE = 9;
+
 	/** default class. */
 	private static Class defaultComponentFactoryClass = SingletonTypeFactory.class;
 
@@ -99,7 +101,8 @@ public final class TypesRegistry
 
 		initCommandClasses.put("dependent", DependentTypeInitCommand.class);
 
-		initCommandClasses.put("servletContextAware", ServletContextAwareTypeInitCommand.class);
+		initCommandClasses.put("servletContextAware",
+				ServletContextAwareTypeInitCommand.class);
 
 		initCommandClasses.put("configurable", ConfigurableTypeInitCommand.class);
 
@@ -108,7 +111,8 @@ public final class TypesRegistry
 		initCommandClasses.put("componentFactoryObserver",
 				ComponentFactoryObserverInitCommand.class);
 
-		initCommandClasses.put("chainedEventObserver", ChainedEventObserverInitCommand.class);
+		initCommandClasses.put("chainedEventObserver",
+				ChainedEventObserverInitCommand.class);
 
 		initCommandClasses.put("schedulerObserver", SchedulerObserverInitCommand.class);
 
@@ -117,12 +121,12 @@ public final class TypesRegistry
 
 	/**
 	 * get the default component factory that is to be used when components are not of any known
-	 * type and use default == true
+	 * type and use default == true.
 	 * 
 	 * @return ComponentFactory
 	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getDefaultComponentFactory() throws RegistryException
+	public static ComponentFactory getDefaultComponentFactory()
 	{
 		ComponentFactory factory = null;
 		try
@@ -143,10 +147,9 @@ public final class TypesRegistry
 
 	/**
 	 * set the default adapter factory class that is to be used when components are not of any known
-	 * type and use default == true
+	 * type and use default == true.
 	 * 
-	 * @param factoryClass
-	 *            the default component factory
+	 * @param factoryClass the default component factory
 	 */
 	public static void setDefaultComponentFactory(Class factoryClass)
 	{
@@ -154,14 +157,13 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * get the component factory for the given type name
+	 * get the component factory for the given type name.
 	 * 
-	 * @param typeName
-	 *            name of the type to get the factory for
+	 * @param typeName name of the type to get the factory for
 	 * @return ComponentFactory
 	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getComponentFactory(String typeName) throws RegistryException
+	public static ComponentFactory getComponentFactory(String typeName)
 	{
 		if (typeName == null)
 		{
@@ -186,12 +188,10 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * register an component factory class for the given type name
+	 * register an component factory class for the given type name.
 	 * 
-	 * @param typeName
-	 *            the name of the type
-	 * @param componentFactoryClass
-	 *            the class of the component factory
+	 * @param typeName the name of the type
+	 * @param componentFactoryClass the class of the component factory
 	 */
 	public static void registerComponentType(String typeName, Class componentFactoryClass)
 	{
@@ -199,10 +199,9 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * de-register an component type with the given name
+	 * de-register an component type with the given name.
 	 * 
-	 * @param typeName
-	 *            the name of the type
+	 * @param typeName the name of the type
 	 */
 	public static void deRegisterComponentType(String typeName)
 	{
@@ -210,14 +209,12 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * get the init command with the given name
+	 * get the init command with the given name.
 	 * 
-	 * @param commandName
-	 *            the name of the command
+	 * @param commandName the name of the command
 	 * @return InitCommand the command
-	 * @throws ConfigException
-	 *             when an configuration error occurs if no command was found or instantiation
-	 *             failed
+	 * @throws ConfigException when an configuration error occurs if no command was found or
+	 *             instantiation failed
 	 */
 	public static InitCommand getInitCommand(String commandName) throws ConfigException
 	{
@@ -229,24 +226,27 @@ public final class TypesRegistry
 			{
 				return (InitCommand) c.newInstance();
 			}
-			catch (Exception e)
+			catch (InstantiationException e)
+			{
+				throw new ConfigException(e);
+			}
+			catch (IllegalAccessException e)
 			{
 				throw new ConfigException(e);
 			}
 		}
 		else
 		{
-			throw new ConfigException("init command with name " + commandName + " not found");
+			throw new ConfigException("init command with name "
+					+ commandName + " not found");
 		}
 	}
 
 	/**
-	 * register an init command for the given name
+	 * register an init command for the given name.
 	 * 
-	 * @param commandName
-	 *            the name of the command
-	 * @param initCommandClass
-	 *            class of the command
+	 * @param commandName the name of the command
+	 * @param initCommandClass class of the command
 	 */
 	public static void registerInitCommand(Class commandName, Class initCommandClass)
 	{
@@ -254,12 +254,9 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * de-register an init command for the given name
+	 * de-register an init command for the given name.
 	 * 
-	 * @param commandName
-	 *            the name of the command
-	 * @param initCommandClass
-	 *            class of the command
+	 * @param commandName the name of the command
 	 */
 	public static void deRegisterInitCommand(Class commandName)
 	{
@@ -267,7 +264,8 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * @return
+	 * Whether to use the default factory.
+	 * @return whether to use the default factory
 	 */
 	public static boolean isUseDefaultFactory()
 	{
@@ -275,7 +273,8 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * @param b
+	 * Set whether to use the default factory.
+	 * @param b whether to use the default factory
 	 */
 	public static void setUseDefaultFactory(boolean b)
 	{

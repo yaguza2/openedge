@@ -72,11 +72,12 @@ public final class TypesRegistry
 {
 	/** default number of component factories. */
 	private static final int DFT_TYPE_SIZE = 5;
+
 	/** default number of command types. */
 	private static final int DFT_CMD_SIZE = 6;
+
 	/**
-	 * Map of component factories.
-	 * Keyed on types, the values are instances of BuilderFactory.
+	 * Map of component factories. Keyed on types, the values are instances of BuilderFactory.
 	 */
 	private static Map componentFactories = new HashMap(DFT_TYPE_SIZE);
 
@@ -89,8 +90,7 @@ public final class TypesRegistry
 	private static List initCommandTypes = new ArrayList(DFT_TYPE_SIZE);
 
 	/**
-	 * Map of init commands. Keyed on types, the values are classes of commands for
-	 * the types.
+	 * Map of init commands. Keyed on types, the values are classes of commands for the types.
 	 */
 	private static Map initCommandClasses = new HashMap(DFT_CMD_SIZE);
 
@@ -109,7 +109,8 @@ public final class TypesRegistry
 		// the component factories
 		componentFactories.put(SingletonType.class, SingletonTypeFactory.class);
 
-		componentFactories.put(ThreadSingletonType.class, ThreadSingletonTypeFactory.class);
+		componentFactories.put(ThreadSingletonType.class,
+				ThreadSingletonTypeFactory.class);
 
 		componentFactories.put(ThrowAwayType.class, ThrowAwayTypeFactory.class);
 
@@ -134,7 +135,8 @@ public final class TypesRegistry
 
 		initCommandClasses.put(ConfigurableType.class, ConfigurableTypeInitCommand.class);
 
-		initCommandClasses.put(ChainedEventCaster.class, ChainedEventCasterInitCommand.class);
+		initCommandClasses.put(ChainedEventCaster.class,
+				ChainedEventCasterInitCommand.class);
 
 		initCommandClasses.put(ComponentRepositoryObserver.class,
 				ComponentFactoryObserverInitCommand.class);
@@ -157,7 +159,7 @@ public final class TypesRegistry
 	 * @return ComponentFactory
 	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getDefaultComponentFactory() throws RegistryException
+	public static ComponentFactory getDefaultComponentFactory()
 	{
 		ComponentFactory factory = null;
 		try
@@ -178,10 +180,9 @@ public final class TypesRegistry
 
 	/**
 	 * set the default adapter factory class that is to be used when components are not of a type
-	 * registered as a base type in this registry
+	 * registered as a base type in this registry.
 	 * 
-	 * @param factoryClass
-	 *            the default component factory
+	 * @param factoryClass the default component factory
 	 */
 	public static void setDefaultComponentFactory(Class factoryClass)
 	{
@@ -189,14 +190,13 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * get the component factory for the given type
+	 * get the component factory for the given type.
 	 * 
-	 * @param clazz
-	 *            type to get the factory for
+	 * @param clazz type to get the factory for
 	 * @return ComponentFactory
 	 * @throws RegistryException when the registry is faulty
 	 */
-	public static ComponentFactory getComponentFactory(Class clazz) throws RegistryException
+	public static ComponentFactory getComponentFactory(Class clazz)
 	{
 		ComponentFactory factory = null;
 		try
@@ -216,12 +216,10 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * register an component type and factory class for the given class
+	 * register an component type and factory class for the given class.
 	 * 
-	 * @param typeClass
-	 *            the class
-	 * @param componentFactoryClass
-	 *            the class of the component factory
+	 * @param typeClass the class
+	 * @param componentFactoryClass the class of the component factory
 	 */
 	public static void registerComponentType(Class typeClass, Class componentFactoryClass)
 	{
@@ -229,10 +227,9 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * de-register an component type with the given type class
+	 * de-register an component type with the given type class.
 	 * 
-	 * @param typeClass
-	 *            the class
+	 * @param typeClass the class
 	 */
 	public static void deRegisterComponentType(Class typeClass)
 	{
@@ -240,7 +237,7 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * get the init commands
+	 * get the init commands.
 	 * 
 	 * @return List command types
 	 */
@@ -250,14 +247,12 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * get the init command for the given type
+	 * get the init command for the given type.
 	 * 
-	 * @param clazz
-	 *            the type to get the init command for
+	 * @param clazz the type to get the init command for
 	 * @return InitCommand the command
-	 * @throws ConfigException
-	 *             when an configuration error occurs if no command was found or instantiation
-	 *             failed
+	 * @throws ConfigException when an configuration error occurs if no command was found or
+	 *             instantiation failed
 	 */
 	public static InitCommand getInitCommand(Class clazz) throws ConfigException
 	{
@@ -269,24 +264,27 @@ public final class TypesRegistry
 			{
 				return (InitCommand) c.newInstance();
 			}
-			catch (Exception e)
+			catch (InstantiationException e)
+			{
+				throw new ConfigException(e);
+			}
+			catch (IllegalAccessException e)
 			{
 				throw new ConfigException(e);
 			}
 		}
 		else
 		{
-			throw new ConfigException("init command for " + clazz.getName() + " not found");
+			throw new ConfigException("init command for "
+					+ clazz.getName() + " not found");
 		}
 	}
 
 	/**
 	 * register an init command for the given class.
 	 * 
-	 * @param typeClass
-	 *            the type class
-	 * @param initCommandClass
-	 *            the class of the command
+	 * @param typeClass the type class
+	 * @param initCommandClass the class of the command
 	 */
 	public static void registerInitCommand(Class typeClass, Class initCommandClass)
 	{
@@ -295,26 +293,23 @@ public final class TypesRegistry
 	}
 
 	/**
-	 * register an init command for the given class at location index
+	 * register an init command for the given class at location index.
 	 * 
-	 * @param clazz
-	 *            the type class
-	 * @param initCommandClass
-	 *            the class of the command
-	 * @param index
-	 *            location in command list
+	 * @param typeClass the type class
+	 * @param initCommandClass the class of the command
+	 * @param index location in command list
 	 */
-	public static void registerInitCommand(Class typeClass, Class initCommandClass, int index)
+	public static void registerInitCommand(Class typeClass, Class initCommandClass,
+			int index)
 	{
 		initCommandTypes.add(index, typeClass);
 		initCommandClasses.put(typeClass, initCommandClass);
 	}
 
 	/**
-	 * de-register an init command
+	 * de-register an init command.
 	 * 
-	 * @param clazz
-	 *            the type class
+	 * @param typeClass the type class
 	 */
 	public static void deRegisterInitCommand(Class typeClass)
 	{

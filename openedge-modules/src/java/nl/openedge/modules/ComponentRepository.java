@@ -60,8 +60,7 @@ public interface ComponentRepository extends ChainedEventObserver, Serializable
 	 * 
 	 * @param rootNode root node of the config
 	 * @param servletContext servlet context
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	void start(Element rootNode, ServletContext servletContext) throws ConfigException;
 
@@ -80,12 +79,11 @@ public interface ComponentRepository extends ChainedEventObserver, Serializable
 	void removeObserver(ComponentRepositoryObserver observer);
 
 	/**
-	 * returns instance of component can throw ComponentLookupException (runtime exception)
-	 * if a loading or initialisation error occured or when no component was
-	 * found stored under the given name.
+	 * returns instance of component can throw ComponentLookupException (runtime exception) if a
+	 * loading or initialisation error occured or when no component was found stored under the given
+	 * name.
 	 * 
-	 * @param name
-	 *            the name (alias) of component
+	 * @param name the name (alias) of component
 	 * @return Object component instance
 	 */
 	Object getComponent(String name);
@@ -93,10 +91,8 @@ public interface ComponentRepository extends ChainedEventObserver, Serializable
 	/**
 	 * get all components that are instance of the given type.
 	 * 
-	 * @param type
-	 *            the class
-	 * @param exact
-	 *            If true, only exact matches will be returned. If false, superclasses and
+	 * @param type the class
+	 * @param exact If true, only exact matches will be returned. If false, superclasses and
 	 *            interfaces will be taken into account
 	 * @return List list of components. Never null, possibly empty
 	 */

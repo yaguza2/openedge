@@ -31,21 +31,21 @@
 package nl.openedge.modules.types.initcommands;
 
 /**
- * Holder for named dependency
+ * Holder for named dependency.
  * 
  * @author Eelco Hillenius
  */
 public class NamedDependency
 {
 
-	/* name of the module */
+	/** name of the module. */
 	private String moduleName;
 
-	/* name of the (target) property */
+	/** name of the (target) property. */
 	private String propertyName;
 
 	/**
-	 * default construct
+	 * default construct.
 	 */
 	public NamedDependency()
 	{
@@ -53,12 +53,10 @@ public class NamedDependency
 	}
 
 	/**
-	 * utility constructor
+	 * utility constructor.
 	 * 
-	 * @param moduleName
-	 *            name of module
-	 * @param propertyName
-	 *            name of property
+	 * @param moduleName name of module
+	 * @param propertyName name of property
 	 */
 	public NamedDependency(String moduleName, String propertyName)
 	{
@@ -67,6 +65,7 @@ public class NamedDependency
 	}
 
 	/**
+	 * Get module name.
 	 * @return String name of module
 	 */
 	public String getModuleName()
@@ -75,6 +74,7 @@ public class NamedDependency
 	}
 
 	/**
+	 * Get property name.
 	 * @return name of property
 	 */
 	public String getPropertyName()
@@ -83,8 +83,8 @@ public class NamedDependency
 	}
 
 	/**
-	 * @param moduleName
-	 *            name of module
+	 * Set module name.
+	 * @param moduleName name of module
 	 */
 	public void setModuleName(String moduleName)
 	{
@@ -92,8 +92,8 @@ public class NamedDependency
 	}
 
 	/**
-	 * @param propertyName
-	 *            name of property
+	 * Set property name.
+	 * @param propertyName name of property
 	 */
 	public void setPropertyName(String propertyName)
 	{

@@ -70,7 +70,8 @@ public final class RepositoryFactory implements ObjectFactory
 		 */
 		public void objectAdded(NamingEvent evt)
 		{
-			log.info("a object was successfully bound to name: " + evt.getNewBinding().getName());
+			log.info("a object was successfully bound to name: "
+					+ evt.getNewBinding().getName());
 		}
 
 		/**
@@ -130,17 +131,13 @@ public final class RepositoryFactory implements ObjectFactory
 	/**
 	 * construct with configuration node and ServletContext.
 	 * 
-	 * @param factoryNode
-	 *            configuration node
-	 * @param servletContext
-	 *            use null if not in servlet environment
+	 * @param factoryNode configuration node
+	 * @param servletContext use null if not in servlet environment
 	 * @throws ComponentLookupException
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	protected static synchronized void initialize(
-			Element factoryNode, ServletContext servletContext)
-			throws ConfigException
+	protected static synchronized void initialize(Element factoryNode,
+			ServletContext servletContext) throws ConfigException
 	{
 		if (!initialized)
 		{
@@ -155,13 +152,10 @@ public final class RepositoryFactory implements ObjectFactory
 	/**
 	 * load/ instantiate the component repository.
 	 * 
-	 * @param factoryNode
-	 *            configuration node
-	 * @param servletContext
-	 *            use null if not in servlet environment
+	 * @param factoryNode configuration node
+	 * @param servletContext use null if not in servlet environment
 	 * @throws ComponentLookupException
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected static void load(Element factoryNode, ServletContext servletContext)
 			throws ConfigException
@@ -242,6 +236,7 @@ public final class RepositoryFactory implements ObjectFactory
 
 	/**
 	 * set the implementing class.
+	 * 
 	 * @param theImplementingClass the implementing class
 	 */
 	public static void setImplementingClass(String theImplementingClass)
@@ -264,10 +259,11 @@ public final class RepositoryFactory implements ObjectFactory
 	/**
 	 * @see ObjectFactory#getObjectInstance(Object, Name, Context, Hashtable) throws Exception
 	 */
-	public Object getObjectInstance(Object reference, Name name, Context ctx, Hashtable env)
-			throws Exception
+	public Object getObjectInstance(Object reference, Name name, Context ctx,
+			Hashtable env) throws Exception
 	{
-		log.info("ref: " + reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
+		log.info("ref: "
+				+ reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
 
 		log.debug("JNDI lookup: " + name);
 		return componentRepository;

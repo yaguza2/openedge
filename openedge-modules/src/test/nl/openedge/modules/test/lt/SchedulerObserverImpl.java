@@ -45,8 +45,7 @@ public class SchedulerObserverImpl implements SchedulerObserver
 	 * fired after initialisation and startup of the Quartz scheduler, before the actual scheduling
 	 * of jobs and triggers
 	 * 
-	 * @param evt
-	 *            holds instance of scheduler
+	 * @param evt holds instance of scheduler
 	 */
 	public void schedulerStarted(SchedulerStartedEvent evt)
 	{

@@ -62,6 +62,7 @@ import javax.naming.spi.NamingManager;
 public final class MemoryBinding
 {
 
+	private static final int INDEX_AND = 0x7FFFFFFF;
 	/** The initial capacity for the hashtable. */
 	public static final int INITIAL_CAPACITY = 11;
 
@@ -87,7 +88,7 @@ public final class MemoryBinding
 	private BindingEntry[] hashTable;
 
 	/**
-	 * construct
+	 * construct.
 	 */
 	public MemoryBinding()
 	{
@@ -97,7 +98,7 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * get memory context
+	 * get memory context.
 	 * 
 	 * @return Context
 	 */
@@ -108,9 +109,9 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * get instance from bindings
+	 * get instance from bindings.
 	 * 
-	 * @param name
+	 * @param name binding name
 	 * @return Object
 	 */
 	public synchronized Object get(String name)
@@ -125,27 +126,27 @@ public final class MemoryBinding
 			throw new IllegalArgumentException("Argument name is null");
 		}
 		hashCode = name.hashCode();
-		index = (hashCode & 0x7FFFFFFF) % hashTable.length;
+		index = (hashCode & INDEX_AND) % hashTable.length;
 		entry = hashTable[index];
 		while (entry != null)
 		{
 
-			if (entry._hashCode == hashCode && entry._name.equals(name))
+			if (entry.bindingHashCode == hashCode && entry.bindingName.equals(name))
 			{
-				return entry._value;
+				return entry.bindingValue;
 			}
-			entry = entry._next;
+			entry = entry.nextBinding;
 		}
 		return null;
 	}
 
 	/**
-	 * put instance in bindings with key name
+	 * put instance in bindings with key name.
 	 * 
-	 * @param name
-	 * @param value
+	 * @param bindingName binding name
+	 * @param value value to bind
 	 */
-	public synchronized void put(String name, Object value)
+	public synchronized void put(String bindingName, Object value)
 	{
 
 		int hashCode;
@@ -153,7 +154,7 @@ public final class MemoryBinding
 		BindingEntry entry;
 		BindingEntry next;
 
-		if (name == null)
+		if (bindingName == null)
 		{
 			throw new IllegalArgumentException("Argument name is null");
 		}
@@ -164,39 +165,39 @@ public final class MemoryBinding
 		if (value instanceof MemoryBinding)
 		{
 			((MemoryBinding) value).parent = this;
-			((MemoryBinding) value).name = name;
+			((MemoryBinding) value).name = bindingName;
 		}
 
-		hashCode = name.hashCode();
-		index = (hashCode & 0x7FFFFFFF) % hashTable.length;
+		hashCode = bindingName.hashCode();
+		index = (hashCode & INDEX_AND) % hashTable.length;
 		entry = hashTable[index];
 		if (entry == null)
 		{
-			entry = new BindingEntry(name, hashCode, value);
+			entry = new BindingEntry(bindingName, hashCode, value);
 			hashTable[index] = entry;
 			++count;
 		}
 		else
 		{
-			if (entry._hashCode == hashCode && entry._name.equals(name))
+			if (entry.bindingHashCode == hashCode && entry.bindingName.equals(bindingName))
 			{
-				entry._value = value;
+				entry.bindingValue = value;
 				return;
 			}
 			else
 			{
-				next = entry._next;
+				next = entry.nextBinding;
 				while (next != null)
 				{
-					if (next._hashCode == hashCode && next._name.equals(name))
+					if (next.bindingHashCode == hashCode && next.bindingName.equals(bindingName))
 					{
-						next._value = value;
+						next.bindingValue = value;
 						return;
 					}
 					entry = next;
-					next = next._next;
+					next = next.nextBinding;
 				}
-				entry._next = new BindingEntry(name, hashCode, value);
+				entry.nextBinding = new BindingEntry(bindingName, hashCode, value);
 				++count;
 			}
 		}
@@ -207,12 +208,12 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * remove instance from bindings
+	 * remove instance from bindings.
 	 * 
-	 * @param name
-	 * @return Object
+	 * @param bindingName binding name
+	 * @return Object previously bound object if any
 	 */
-	public synchronized Object remove(String name)
+	public synchronized Object remove(String bindingName)
 	{
 
 		int hashCode;
@@ -220,42 +221,42 @@ public final class MemoryBinding
 		BindingEntry entry;
 		BindingEntry next;
 
-		if (name == null)
+		if (bindingName == null)
 		{
 			throw new IllegalArgumentException("Argument name is null");
 		}
-		hashCode = name.hashCode();
-		index = (hashCode & 0x7FFFFFFF) % hashTable.length;
+		hashCode = bindingName.hashCode();
+		index = (hashCode & INDEX_AND) % hashTable.length;
 		entry = hashTable[index];
 		if (entry == null)
 		{
 			return null;
 		}
-		if (entry._hashCode == hashCode && entry._name.equals(name))
+		if (entry.bindingHashCode == hashCode && entry.bindingName.equals(bindingName))
 		{
-			hashTable[index] = entry._next;
+			hashTable[index] = entry.nextBinding;
 			--count;
-			return entry._value;
+			return entry.bindingValue;
 		}
-		next = entry._next;
+		next = entry.nextBinding;
 		while (next != null)
 		{
-			if (next._hashCode == hashCode && next._name.equals(name))
+			if (next.bindingHashCode == hashCode && next.bindingName.equals(bindingName))
 			{
-				entry._next = next._next;
+				entry.nextBinding = next.nextBinding;
 				--count;
-				return next._value;
+				return next.bindingValue;
 			}
 			entry = next;
-			next = next._next;
+			next = next.nextBinding;
 		}
 		return null;
 	}
 
 	/**
-	 * get name recursively
+	 * get name recursively.
 	 * 
-	 * @return String
+	 * @return binding name
 	 */
 	public String getName()
 	{
@@ -268,9 +269,9 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * is this binding the root
+	 * is this binding the root.
 	 * 
-	 * @return boolean
+	 * @return is this binding the root
 	 */
 	public boolean isRoot()
 	{
@@ -279,9 +280,9 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * is this binding empty
+	 * is this binding empty.
 	 * 
-	 * @return boolean
+	 * @return is this binding empty
 	 */
 	public boolean isEmpty()
 	{
@@ -298,10 +299,10 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * get the enumerator of this binding
+	 * get the enumerator of this binding.
 	 * 
-	 * @param context
-	 * @param nameOnly
+	 * @param context JNDI context
+	 * @param nameOnly is name only
 	 * @return NamingEnumeration
 	 */
 	public NamingEnumeration enumerate(Context context, boolean nameOnly)
@@ -310,8 +311,8 @@ public final class MemoryBinding
 		return new MemoryBindingEnumeration(context, nameOnly);
 	}
 
-	/*
-	 * rehash context/ binding
+	/**
+	 * rehash context/ binding.
 	 */
 	private void rehash()
 	{
@@ -336,9 +337,9 @@ public final class MemoryBinding
 			entry = hashTable[i];
 			while (entry != null)
 			{
-				next = entry._next;
-				index = (entry._hashCode & 0x7FFFFFFF) % newSize;
-				entry._next = newTable[index];
+				next = entry.nextBinding;
+				index = (entry.bindingHashCode & INDEX_AND) % newSize;
+				entry.nextBinding = newTable[index];
 				newTable[index] = entry;
 				entry = next;
 			}
@@ -347,178 +348,183 @@ public final class MemoryBinding
 		threshold = (int) (newSize * LOAD_FACTOR);
 	}
 
-	/*
+	/**
 	 * Name to value binding entry in the memory binding hashtable.
 	 */
 	private static class BindingEntry
 	{
 
-		/* The binding name. */
-		private final String _name;
+		/** The binding name. */
+		private final String bindingName;
 
-		/* The binding name hash code. */
-		private final int _hashCode;
+		/** The binding name hash code. */
+		private final int bindingHashCode;
 
-		/* The bound value. */
-		private Object _value;
+		/** The bound value. */
+		private Object bindingValue;
 
 		/** The next binding in the hash table entry. */
-		private BindingEntry _next;
+		private BindingEntry nextBinding;
 
-		/** construct with name, hasCode and instance */
+		/**
+		 * construct with name, hasCode and instance.
+		 * @param name binding name
+		 * @param hashCode hash code
+		 * @param value value to bind
+		 */
 		protected BindingEntry(String name, int hashCode, Object value)
 		{
-			_name = name;
-			_hashCode = hashCode;
-			_value = value;
+			bindingName = name;
+			bindingHashCode = hashCode;
+			bindingValue = value;
 		}
 	}
 
-	/*
+	/**
 	 * Naming enumeration supporting {@link NamClassPair}and {@link Binding}, created based of a
 	 * {@link MemoryBinding}. @author <a href="arkin@intalio.com">Assaf Arkin </a>
-	 * 
-	 * @version $Revision$ $Date$
-	 * @see MemoryBinding
 	 */
 	private final class MemoryBindingEnumeration implements NamingEnumeration
 	{
 
-		/*
+		/**
 		 * Holds a reference to the next entry to be returned by {@link next}. Becomes null when
 		 * there are no more entries to return.
 		 */
-		private BindingEntry _entry;
+		private BindingEntry bindingEntry;
 
-		/*
+		/**
 		 * Index to the current position in the hash table.
 		 */
-		private int _index;
+		private int bindingIndex;
 
-		/*
+		/**
 		 * True to return an enumeration of {@link NameClassPair}, false to return an enumeration
 		 * of {@link Binding}
 		 */
-		private final boolean _nameOnly;
+		private final boolean bindingNameOnly;
 
-		/*
+		/**
 		 * The context is required to create a duplicate.
 		 */
-		private final Context _context;
+		private final Context bindingContext;
 
-		/*
+		/**
 		 * The class name of the context class
 		 */
-		private final String _contextClassName;
+		private final String contextClassName;
 
-		/*
+		/**
 		 * The value of the next element to return. Can be null.
 		 */
-		private Object _nextValue;
+		private Object nextValue;
 
-		/*
+		/**
 		 * The name of the next element to return. Can be null. <P> If the value is null this means
 		 * that there are no element to return.
-		 * 
-		 * @see #hasMore
 		 */
-		private String _nextName;
+		private String nextName;
 
-		/*
+		/**
 		 * The class name of the next element to return. Can be null.
 		 */
-		private String _nextClassName;
+		private String nextClassName;
 
-		/** construct with context */
+		/**
+		 * Construct with context.
+		 * @param context JNDI context
+		 * @param nameOnly is name only
+		 */
 		protected MemoryBindingEnumeration(Context context, boolean nameOnly)
 		{
-
 			if (context == null)
 				throw new IllegalArgumentException("Argument context is null");
-			_context = context;
-			_contextClassName = nameOnly ? context.getClass().getName() : null;
-			_nameOnly = nameOnly;
-			_index = hashTable.length;
+			bindingContext = context;
+			if (nameOnly)
+			{
+				contextClassName = context.getClass().getName();
+			}
+			else
+			{
+				contextClassName = null;
+			}
+			bindingNameOnly = nameOnly;
+			bindingIndex = hashTable.length;
 		}
 
-		/*
+		/**
 		 * @see java.util.Enumeration#hasMoreElements()
 		 */
 		public boolean hasMoreElements()
 		{
-
 			return hasMore();
 		}
 
-		/*
+		/**
 		 * @see java.util.Enumeration#nextElement()
 		 */
 		public Object nextElement()
 		{
-
 			return next();
 		}
 
-		/*
+		/**
 		 * @see javax.naming.NamingEnumeration#close()
 		 */
 		public void close()
 		{
-
-			_entry = null;
-			_index = -1;
-			_nextValue = null;
-			_nextName = null;
-			_nextClassName = null;
+			bindingEntry = null;
+			bindingIndex = -1;
+			nextValue = null;
+			nextName = null;
+			nextClassName = null;
 		}
 
-		/*
+		/**
 		 * @see javax.naming.NamingEnumeration#hasMore()
 		 */
 		public boolean hasMore()
 		{
-
-			if (-1 == _index)
+			if (-1 == bindingIndex)
 			{
 				return false;
 			}
-			if (null != _nextName)
+			if (null != nextName)
 			{
 				return true;
 			}
 			return internalHasMore();
 		}
 
-		/*
+		/**
 		 * @see javax.naming.NamingEnumeration#next()
 		 */
-		public Object next() throws NoSuchElementException
+		public Object next()
 		{
-
 			Object value;
-			String name;
+			String currentName;
 
 			if (!hasMore())
 			{
 				throw new NoSuchElementException("No more elements in enumeration");
 			}
 
-			name = _nextName;
-			_nextName = null;
+			currentName = nextName;
+			nextName = null;
 
-			if (_nameOnly)
+			if (bindingNameOnly)
 			{
-				return new NameClassPair(name, _nextClassName, true);
+				return new NameClassPair(currentName, nextClassName, true);
 			}
 
-			value = _nextValue;
-			_nextValue = null;
-			return new Binding(name, _nextClassName, value, true);
+			value = nextValue;
+			nextValue = null;
+			return new Binding(currentName, nextClassName, value, true);
 		}
 
-		/*
+		/**
 		 * Return true if there are more elements in the enumeration. <P> This method has the side
-		 * effects of setting {@link #_nextValue},{@link #_nextName},{@link #_nextClassName}.
+		 * effects of setting {@link #nextValue},{@link #nextName},{@link #nextClassName}.
 		 * @return true if there are more elements in the enumeration.
 		 */
 		private boolean internalHasMore()
@@ -534,25 +540,25 @@ public final class MemoryBinding
 				return false;
 			}
 
-			// the variable _nextName is set last in every clause so that
+			// the variable nextName is set last in every clause so that
 			// it wont have to be reset to null when making recursive calls.
 			// This is done because the test in #hasMore relys on testing
-			// _nextName for null
+			// nextName for null
 
-			value = entry._value;
+			value = entry.bindingValue;
 			if (value instanceof MemoryBinding)
 			{
-				if (_nameOnly)
+				if (bindingNameOnly)
 				{
-					_nextClassName = _contextClassName;
+					nextClassName = contextClassName;
 				}
 				else
 				{
 					try
 					{
 						// If another context, must use lookup to create a duplicate.
-						_nextValue = _context.lookup(entry._name);
-						_nextClassName = _nextValue.getClass().getName();
+						nextValue = bindingContext.lookup(entry.bindingName);
+						nextClassName = nextValue.getClass().getName();
 					}
 					catch (NamingException except)
 					{
@@ -560,35 +566,36 @@ public final class MemoryBinding
 						return internalHasMore();
 					}
 				}
-				_nextName = entry._name;
+				nextName = entry.bindingName;
 			}
 			else if ((value instanceof LinkRef))
 			{
 				try
 				{
 					// Need to resolve the link.
-					_nextValue = _context.lookup(entry._name);
-					_nextClassName = (null == _nextValue) ? null : _nextValue.getClass().getName();
+					nextValue = bindingContext.lookup(entry.bindingName);
+					nextClassName = (null == nextValue) ? null : nextValue.getClass()
+							.getName();
 				}
 				catch (NamingException except)
 				{
 					// Skip this entry and go immediately to next one.
 					return internalHasMore();
 				}
-				if (_nameOnly)
+				if (bindingNameOnly)
 				{
-					_nextValue = null;
+					nextValue = null;
 				}
-				_nextName = entry._name;
+				nextName = entry.bindingName;
 			}
 			else if (value instanceof Reference)
 			{
-				if (!_nameOnly)
+				if (!bindingNameOnly)
 				{
 					try
 					{
-						_nextValue = NamingManager.getObjectInstance(value, new CompositeName(
-								entry._name), _context, null);
+						nextValue = NamingManager.getObjectInstance(value,
+								new CompositeName(entry.bindingName), bindingContext, null);
 					}
 					catch (Exception except)
 					{
@@ -596,18 +603,18 @@ public final class MemoryBinding
 						return internalHasMore();
 					}
 				}
-				_nextClassName = ((Reference) value).getClassName();
-				_nextName = entry._name;
+				nextClassName = ((Reference) value).getClassName();
+				nextName = entry.bindingName;
 
 			}
 			else
 			{
-				if (!_nameOnly)
+				if (!bindingNameOnly)
 				{
-					_nextValue = value;
+					nextValue = value;
 				}
-				_nextClassName = (null == value) ? null : value.getClass().getName();
-				_nextName = entry._name;
+				nextClassName = (null == value) ? null : value.getClass().getName();
+				nextName = entry.bindingName;
 			}
 			return true;
 		}
@@ -622,21 +629,21 @@ public final class MemoryBinding
 			int index;
 			BindingEntry[] table;
 
-			entry = _entry;
+			entry = bindingEntry;
 			if (entry != null)
 			{
-				_entry = entry._next;
+				bindingEntry = entry.nextBinding;
 				return entry;
 			}
 			table = hashTable;
-			index = _index;
+			index = bindingIndex;
 			while (index > 0)
 			{
 				entry = table[--index];
 				if (entry != null)
 				{
-					_entry = entry._next;
-					_index = index;
+					bindingEntry = entry.nextBinding;
+					bindingIndex = index;
 					return entry;
 				}
 			}

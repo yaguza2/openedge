@@ -39,7 +39,8 @@ import org.jdom.Element;
 /**
  * @author Eelco Hillenius
  */
-public class ThreadSingletonComponentImpl implements ThreadSingletonType, ConfigurableType
+public class ThreadSingletonComponentImpl implements ThreadSingletonType,
+		ConfigurableType
 {
 
 	private int numberOfTimesInitialized = 0;

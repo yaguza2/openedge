@@ -54,15 +54,13 @@ public final class URLHelper
 	/**
 	 * Interprets some absolute URLs as external paths or from classpath.
 	 * 
-	 * @param path
-	 *            path to translate
-	 * @param caller
-	 *            caller class of method
+	 * @param path path to translate
+	 * @param caller caller class of method
 	 * @return URL the converted URL
-	 * @throws MalformedURLException
-	 *             when the path does not follow the URL rules
+	 * @throws MalformedURLException when the path does not follow the URL rules
 	 */
-	public static URL convertToURL(String path, Class caller) throws MalformedURLException
+	public static URL convertToURL(String path, Class caller)
+			throws MalformedURLException
 	{
 		return convertToURL(path, caller, null);
 	}
@@ -71,14 +69,10 @@ public final class URLHelper
 	 * Interprets some absolute URLs as external paths, otherwise generates URL appropriate for
 	 * loading from internal webapp or, servletContext is null, loading from the classpath.
 	 * 
-	 * @param pathToTranslate
-	 *            path to translate
-	 * @param caller
-	 *            caller of method
-	 * @param servletContext
-	 *            servlet context of webapp
-	 * @throws MalformedURLException
-	 *             when the path does not follow the URL rules
+	 * @param pathToTranslate path to translate
+	 * @param caller caller of method
+	 * @param servletContext servlet context of webapp
+	 * @throws MalformedURLException when the path does not follow the URL rules
 	 * @return the converted URL
 	 */
 	public static URL convertToURL(String pathToTranslate, Class caller,
@@ -87,8 +81,8 @@ public final class URLHelper
 		String path = pathToTranslate;
 		URL url = null;
 		if (path.startsWith("file:")
-				|| path.startsWith("http:") || path.startsWith("https:") || path.startsWith("ftp:")
-				|| path.startsWith("jar:"))
+				|| path.startsWith("http:") || path.startsWith("https:")
+				|| path.startsWith("ftp:") || path.startsWith("jar:"))
 		{
 			url = new URL(path);
 		}
@@ -104,16 +98,13 @@ public final class URLHelper
 	}
 
 	/**
-	 * @param servletContext
-	 *            the servlet context
-	 * @param pathToTranslate
-	 *            the path to translate
+	 * @param servletContext the servlet context
+	 * @param pathToTranslate the path to translate
 	 * @return URL the URL as a resource from the servlet context
-	 * @throws MalformedURLException
-	 *             when the path does not follow the URL rules
+	 * @throws MalformedURLException when the path does not follow the URL rules
 	 */
-	private static URL getServletContextURL(ServletContext servletContext, String pathToTranslate)
-			throws MalformedURLException
+	private static URL getServletContextURL(ServletContext servletContext,
+			String pathToTranslate) throws MalformedURLException
 	{
 		String path = pathToTranslate;
 		URL url;
@@ -125,10 +116,8 @@ public final class URLHelper
 	}
 
 	/**
-	 * @param caller
-	 *            class of the caller
-	 * @param path
-	 *            the path to get the URL for
+	 * @param caller class of the caller
+	 * @param path the path to get the URL for
 	 * @return the URL as a resource from the classpath
 	 */
 	private static URL getClasspathURL(Class caller, String path)

@@ -51,8 +51,14 @@ import javax.naming.spi.InitialContextFactory;
  * <pre>
  * 
  *  
- *   java.naming.factory.initial=tyrex.naming.MemoryContextFactory
- *   java.naming.provider.url=
+ *   
+ *    
+ *     
+ *      java.naming.factory.initial=tyrex.naming.MemoryContextFactory
+ *      java.naming.provider.url=
+ *      
+ *     
+ *    
  *   
  *  
  * </pre>
@@ -73,11 +79,9 @@ public final class MemoryContextFactory implements InitialContextFactory
 	 * Returns a binding in the specified path. If the binding does not exist, the full path is
 	 * created and a new binding is returned. The binding is always obtained from the shared root.
 	 * 
-	 * @param path
-	 *            The path
+	 * @param path The path
 	 * @return The memory binding for the path
-	 * @throws NamingException
-	 *             Name is invalid
+	 * @throws NamingException Name is invalid
 	 */
 	synchronized static MemoryBinding getBindings(String path) throws NamingException
 	{

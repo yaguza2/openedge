@@ -31,12 +31,11 @@
 package nl.openedge.modules;
 
 /**
- * ComponentLookupException can be thrown when querying the
- * ComponentRepository for components.
+ * ComponentLookupException can be thrown when querying the ComponentRepository for components.
  * 
  * @author Eelco Hillenius
  */
-public class ComponentLookupException extends RuntimeException
+public final class ComponentLookupException extends RuntimeException
 {
 
 	/**

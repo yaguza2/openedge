@@ -31,7 +31,7 @@
 package nl.openedge.modules.observers;
 
 /**
- * Generic interface for observers of module factory events
+ * Generic tagging interface for observers of module factory events.
  * 
  * @author Eelco Hillenius
  */

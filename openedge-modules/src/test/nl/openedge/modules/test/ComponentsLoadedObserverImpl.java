@@ -45,8 +45,7 @@ public class ComponentsLoadedObserverImpl implements ComponentObserver
 	/**
 	 * fired after all components are (re)loaded
 	 * 
-	 * @param evt
-	 *            event
+	 * @param evt event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{

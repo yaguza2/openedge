@@ -40,8 +40,6 @@ import nl.openedge.modules.config.ConfigException;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
 /**
@@ -51,14 +49,10 @@ import org.jdom.Element;
  */
 public final class BeanTypeInitCommand implements InitCommand
 {
-
+	/** bean properties for population. */
 	private Map properties = null;
 
-	private static Log log = LogFactory.getLog(BeanTypeInitCommand.class);
-
 	/**
-	 * initialize
-	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
@@ -80,11 +74,12 @@ public final class BeanTypeInitCommand implements InitCommand
 	}
 
 	/**
-	 * populate the component instance
+	 * populate the component instance.
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException,
+			ConfigException
 	{
 		if (properties != null)
 		{
@@ -92,7 +87,7 @@ public final class BeanTypeInitCommand implements InitCommand
 			{
 				populate(componentInstance, this.properties);
 			}
-			catch (Exception e)
+			catch (OgnlException e)
 			{
 				throw new ConfigException(e);
 			}
@@ -100,19 +95,20 @@ public final class BeanTypeInitCommand implements InitCommand
 	}
 
 	/**
-	 * default populate of form: BeanUtils way; set error if anything goes wrong
+	 * default populate of form: BeanUtils way; set error if anything goes wrong.
 	 * 
-	 * @param componentInstance
-	 * @param properties
-	 * @return true if populate did not have any troubles, false otherwise
+	 * @param instance the component instance
+	 * @param propertiesToPopulate properties for population
+	 * @throws OgnlException on population errors
 	 */
-	protected void populate(Object componentInstance, Map properties) throws OgnlException
+	private void populate(Object instance, Map propertiesToPopulate)
+			throws OgnlException
 	{
-		for (Iterator i = properties.keySet().iterator(); i.hasNext();)
+		for (Iterator i = propertiesToPopulate.keySet().iterator(); i.hasNext();)
 		{
 			String key = (String) i.next();
-			Object value = properties.get(key);
-			Ognl.setValue(key, componentInstance, value);
+			Object value = propertiesToPopulate.get(key);
+			Ognl.setValue(key, instance, value);
 		}
 	}
 

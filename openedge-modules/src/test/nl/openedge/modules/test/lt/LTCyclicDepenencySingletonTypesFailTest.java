@@ -70,7 +70,8 @@ public class LTCyclicDepenencySingletonTypesFailTest extends TestCase
 			URL url = URLHelper.convertToURL("/cyclic-singleton-oeltmodules.xml",
 					AbstractTestBase.class, null);
 
-			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
+			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class
+					.getName());
 			JDOMConfigurator c = new JDOMConfigurator(url);
 			ComponentRepository cRepo = RepositoryFactory.getRepository();
 
@@ -82,7 +83,8 @@ public class LTCyclicDepenencySingletonTypesFailTest extends TestCase
 		{
 			if (e.getCause() instanceof CyclicDependencyException)
 			{
-				System.err.println("successfully detected cycle during startup\n" + e.getMessage());
+				System.err.println("successfully detected cycle during startup\n"
+						+ e.getMessage());
 			}
 			else
 			{

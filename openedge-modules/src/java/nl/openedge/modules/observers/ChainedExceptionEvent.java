@@ -31,6 +31,7 @@
 package nl.openedge.modules.observers;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -38,33 +39,34 @@ import java.io.PrintWriter;
  * 
  * @author Eelco Hillenius
  */
-public class ChainedExceptionEvent extends ChainedEvent
+public final class ChainedExceptionEvent extends ChainedEvent
 {
-
-	private Throwable exception = null;
+	/** original exception. */
+	private Exception exception = null;
 
 	/**
-	 * @param source
-	 *            sender of event
+	 * Construct.
+	 * @param source sender of event
+	 * @param exception original exception
 	 */
-	public ChainedExceptionEvent(Object source, Throwable exception)
+	public ChainedExceptionEvent(Object source, Exception exception)
 	{
 		super(source);
 		this.exception = exception;
 	}
 
 	/**
-	 * get the embedded exception
+	 * get the embedded exception.
 	 * 
-	 * @return Throwable
+	 * @return the exception
 	 */
-	public Throwable getException()
+	public Exception getException()
 	{
 		return exception;
 	}
 
 	/**
-	 * return stacktrace as a string
+	 * return stacktrace as a string.
 	 * 
 	 * @return String stacktrace as string
 	 */
@@ -85,7 +87,7 @@ public class ChainedExceptionEvent extends ChainedEvent
 				bos.close();
 				errorMsg = bos.toString();
 			}
-			catch (Exception ex)
+			catch (IOException e)
 			{
 				errorMsg = exception.getMessage();
 			}

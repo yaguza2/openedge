@@ -39,33 +39,32 @@ import nl.openedge.modules.config.ConfigException;
 import org.jdom.Element;
 
 /**
- * Command for configurable types
+ * Command for configurable types.
  * 
  * @author Eelco Hillenius
  */
 public final class ConfigurableTypeInitCommand implements InitCommand
 {
-
+	/** component xml node. */
 	private Element componentNode = null;
 
 	/**
-	 * initialize
-	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String componentName, Element componentNode,
+	public void init(String componentName, Element cNode,
 			ComponentRepository componentRepository) throws ConfigException
 	{
-		this.componentNode = componentNode;
+		this.componentNode = cNode;
 	}
 
 	/**
-	 * call init on the component instance
+	 * call init on the component instance.
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException,
+			ConfigException
 	{
 		if (componentInstance instanceof ConfigurableType)
 		{
@@ -77,10 +76,8 @@ public final class ConfigurableTypeInitCommand implements InitCommand
 			Class clazz = componentInstance.getClass();
 			try
 			{
-				Method initMethod = clazz.getMethod("init", new Class[]
-					{Element.class});
-				initMethod.invoke(componentInstance, new Object[]
-					{this.componentNode});
+				Method initMethod = clazz.getMethod("init", new Class[] {Element.class});
+				initMethod.invoke(componentInstance, new Object[] {this.componentNode});
 			}
 			catch (SecurityException e)
 			{

@@ -62,7 +62,8 @@ public class ExtendingTheFrameworkTest extends TestCase
 
 		try
 		{
-			URL url = URLHelper.convertToURL("/oemodulesext.xml", AbstractTestBase.class, null);
+			URL url = URLHelper.convertToURL("/oemodulesext.xml", AbstractTestBase.class,
+					null);
 
 			TypesRegistry.registerInitCommand(MyType.class, MyTypeInitCommand.class);
 

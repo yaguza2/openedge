@@ -35,11 +35,11 @@ package nl.openedge.modules.observers;
  * 
  * @author Eelco Hillenius
  */
-public class ObserveException extends RuntimeException
+public final class ObserveException extends RuntimeException
 {
 
 	/**
-	 * 
+	 * Construct.
 	 */
 	public ObserveException()
 	{
@@ -47,7 +47,8 @@ public class ObserveException extends RuntimeException
 	}
 
 	/**
-	 * @param message
+	 * Construct.
+	 * @param message the message
 	 */
 	public ObserveException(String message)
 	{
@@ -55,8 +56,9 @@ public class ObserveException extends RuntimeException
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Construct.
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public ObserveException(String message, Throwable cause)
 	{
@@ -64,7 +66,8 @@ public class ObserveException extends RuntimeException
 	}
 
 	/**
-	 * @param cause
+	 * Construct.
+	 * @param cause the cause
 	 */
 	public ObserveException(Throwable cause)
 	{

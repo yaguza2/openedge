@@ -37,33 +37,34 @@ import nl.openedge.modules.observers.ChainedEventObserver;
 import org.jdom.Element;
 
 /**
- * Command that populates instances using BeanUtils
+ * Command that populates instances using BeanUtils.
  * 
  * @author Eelco Hillenius
  */
 public final class ChainedEventObserverInitCommand implements InitCommand
 {
-
-	protected ComponentRepository componentRepository = null;
+	/** component repository. */
+	private ComponentRepository componentRepository = null;
 
 	/**
-	 * initialize
+	 * initialize.
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
 	public void init(String componentName, Element componentNode,
-			ComponentRepository componentRepository) throws ConfigException
+			ComponentRepository cRepo) throws ConfigException
 	{
-		this.componentRepository = componentRepository;
+		this.componentRepository = cRepo;
 	}
 
 	/**
-	 * populate the component instance
+	 * populate the component instance.
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException,
+			ConfigException
 	{
 
 		if (componentInstance instanceof ChainedEventObserver)

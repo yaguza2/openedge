@@ -50,7 +50,8 @@ public class ChainedEventObserverImpl implements ChainedEventObserver
 	public void recieveChainedEvent(ChainedEvent evt)
 	{
 
-		System.out.println("critical event: " + evt + " received from " + evt.getSource());
+		System.out
+				.println("critical event: " + evt + " received from " + evt.getSource());
 		this.evt = evt;
 		numberOfEventsReceived++;
 	}

@@ -40,11 +40,10 @@ public interface ChainedEventObserver extends ComponentRepositoryObserver
 {
 
 	/**
-	 * recieve a chained event
+	 * recieve a chained event.
 	 * 
-	 * @param evt
-	 *            the chained event
+	 * @param evt the chained event
 	 */
-	public void recieveChainedEvent(ChainedEvent evt);
+	void recieveChainedEvent(ChainedEvent evt);
 
 }

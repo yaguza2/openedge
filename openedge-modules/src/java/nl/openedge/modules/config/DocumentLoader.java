@@ -41,28 +41,32 @@ import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 
 /**
- * Helper class for loading jdom documents
+ * Helper class for loading jdom documents.
  * 
  * @author Eelco Hillenius
  */
 public final class DocumentLoader
 {
-
-	/* logger */
+	/** logger. */
 	private static Log log = LogFactory.getLog(DocumentLoader.class);
 
 	/**
+	 * Load configuration document.
+	 * 
+	 * @param configDocument configuration document
 	 * @return a loaded JDOM document containing the configuration information.
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public static Document loadDocument(String configDocument) throws ConfigException
 	{
-
 		try
 		{
-			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class, null);
+			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class,
+					null);
 
 			if (configURL == null)
-				throw new ConfigException(configDocument + " should be a document but is empty");
+				throw new ConfigException(configDocument
+						+ " should be a document but is empty");
 			log.info("Loading config from " + configURL);
 
 			return internalLoad(configURL);
@@ -75,11 +79,14 @@ public final class DocumentLoader
 	}
 
 	/**
+	 * Load configuration document.
+	 * 
+	 * @param configURL URL of configuration document
 	 * @return a loaded JDOM document containing the configuration information.
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public static Document loadDocument(URL configURL) throws ConfigException
 	{
-
 		if (configURL == null)
 			throw new ConfigException(configURL + " should be a document but is empty");
 		log.info("Loading config from " + configURL);
@@ -88,24 +95,26 @@ public final class DocumentLoader
 	}
 
 	/**
+	 * Load configuration document.
+	 * 
+	 * @param configDocument configuration document
+	 * @param servletContext servlet context
 	 * @return a loaded JDOM document containing the configuration information.
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	public static Document loadDocument(String configFile, ServletContext servletContext)
-			throws ConfigException
+	public static Document loadDocument(String configDocument,
+			ServletContext servletContext) throws ConfigException
 	{
-
 		try
 		{
-
-			URL configURL = URLHelper
-					.convertToURL(configFile, DocumentLoader.class, servletContext);
+			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class,
+					servletContext);
 
 			if (configURL == null)
-				throw new ConfigException(configFile + " should be a document but is empty");
+				throw new ConfigException(configDocument
+						+ " should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());
-
 			return internalLoad(configURL);
-
 		}
 		catch (IOException ex)
 		{
@@ -113,8 +122,12 @@ public final class DocumentLoader
 		}
 	}
 
-	/*
+	/**
+	 * Do the real loading.
+	 * 
+	 * @param configURL URL of configuration document
 	 * @return a loaded JDOM document containing the configuration information.
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	private static Document internalLoad(URL configURL) throws ConfigException
 	{

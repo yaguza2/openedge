@@ -31,7 +31,7 @@
 package nl.openedge.modules.types;
 
 /**
- * will be thrown for exception that occur when using the types registry
+ * will be thrown for exception that occur when using the types registry.
  * 
  * @author Eelco Hillenius
  */
@@ -39,7 +39,7 @@ public class RegistryException extends RuntimeException
 {
 
 	/**
-	 * 
+	 * Construct.
 	 */
 	public RegistryException()
 	{
@@ -47,7 +47,8 @@ public class RegistryException extends RuntimeException
 	}
 
 	/**
-	 * @param message
+	 * Construct.
+	 * @param message the message
 	 */
 	public RegistryException(String message)
 	{
@@ -55,8 +56,9 @@ public class RegistryException extends RuntimeException
 	}
 
 	/**
-	 * @param message
-	 * @param cause
+	 * Construct.
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public RegistryException(String message, Throwable cause)
 	{
@@ -64,7 +66,8 @@ public class RegistryException extends RuntimeException
 	}
 
 	/**
-	 * @param cause
+	 * Construct.
+	 * @param cause the cause
 	 */
 	public RegistryException(Throwable cause)
 	{

@@ -40,39 +40,38 @@ import nl.openedge.modules.config.ConfigException;
 import org.jdom.Element;
 
 /**
- * Command that populates instances using BeanUtils
+ * Command that populates instances using BeanUtils.
  * 
  * @author Eelco Hillenius
  */
 public final class DependentTypeInitCommand implements RequestLevelInitCommand
 {
-
+	/** component repository. */
 	private ComponentRepository componentRepository = null;
 
+	/** logical dependencies. */
 	private List namedDependencies = null;
 
+	/** current component name. */
 	private String componentName;
 
 	/**
-	 * initialize
-	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String componentName, Element componentNode,
-			ComponentRepository componentRepository) throws ConfigException
+	public void init(String cName, Element cNode, ComponentRepository cRepo)
+			throws ConfigException
 	{
 
-		this.componentRepository = componentRepository;
-		this.componentName = componentName;
-		loadDependencies(componentNode);
+		this.componentRepository = cRepo;
+		this.componentName = cName;
+		loadDependencies(cNode);
 	}
 
 	/**
-	 * load dependencies
+	 * load dependencies.
 	 * 
-	 * @param componentNode
-	 *            configuration node
+	 * @param componentNode configuration node
 	 */
 	protected void loadDependencies(Element componentNode)
 	{
@@ -92,12 +91,10 @@ public final class DependentTypeInitCommand implements RequestLevelInitCommand
 	}
 
 	/**
-	 * create decorator that tries to solve the dependencies when all components are loaded
-	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException,
-			CyclicDependencyException
+	public void execute(Object componentInstance)
+			throws InitCommandException, ConfigException
 	{
 
 		DependentTypeWrapper solver = new DependentTypeWrapper();

@@ -35,7 +35,7 @@ package nl.openedge.modules.observers;
  * global listeners etc.) BEFORE jobs and triggers are actually scheduled by the module factory.
  * NOTE that this contract depends on the implementation of the ComponentRepository, so at this
  * stage, only the default implementations that are packaged with this framework guarantee this
- * behaviour
+ * behaviour.
  * 
  * @author Eelco Hillenius
  */
@@ -44,11 +44,10 @@ public interface SchedulerObserver extends ComponentRepositoryObserver
 
 	/**
 	 * fired after initialisation and startup of the Quartz scheduler, before the actual scheduling
-	 * of jobs and triggers
+	 * of jobs and triggers.
 	 * 
-	 * @param evt
-	 *            holds instance of scheduler
+	 * @param evt holds instance of scheduler
 	 */
-	public void schedulerStarted(SchedulerStartedEvent evt);
+	void schedulerStarted(SchedulerStartedEvent evt);
 
 }

@@ -47,7 +47,8 @@ public class QuartzJobComponentImpl implements Job
 	{
 
 		String msg = (String) context.getJobDetail().getJobDataMap().get("msg");
-		System.err.println("\n---" + context.getJobDetail().getFullName() + " msg: " + msg);
+		System.err.println("\n---"
+				+ context.getJobDetail().getFullName() + " msg: " + msg);
 
 	}
 

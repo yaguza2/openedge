@@ -77,7 +77,8 @@ public class CyclicDepenencySingletonTypesFailTest extends TestCase
 		{
 			if (e.getCause() instanceof CyclicDependencyException)
 			{
-				System.err.println("successfully detected cycle during startup\n" + e.getMessage());
+				System.err.println("successfully detected cycle during startup\n"
+						+ e.getMessage());
 			}
 			else
 			{

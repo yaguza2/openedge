@@ -31,7 +31,7 @@
 package nl.openedge.modules.types.initcommands;
 
 /**
- * Exception for InitCommands
+ * Exception for InitCommands.
  * 
  * @author Eelco Hillenius
  */
@@ -39,7 +39,7 @@ public class InitCommandException extends Exception
 {
 
 	/**
-	 * construct exception
+	 * construct exception.
 	 */
 	public InitCommandException()
 	{
@@ -47,9 +47,9 @@ public class InitCommandException extends Exception
 	}
 
 	/**
-	 * construct exception with message
+	 * construct exception with message.
 	 * 
-	 * @param message
+	 * @param message the message
 	 */
 	public InitCommandException(String message)
 	{
@@ -57,10 +57,10 @@ public class InitCommandException extends Exception
 	}
 
 	/**
-	 * construct exception with message and cause
+	 * construct exception with message and cause.
 	 * 
-	 * @param message
-	 * @param cause
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public InitCommandException(String message, Throwable cause)
 	{
@@ -68,9 +68,9 @@ public class InitCommandException extends Exception
 	}
 
 	/**
-	 * construct exception with cause
+	 * construct exception with cause.
 	 * 
-	 * @param cause
+	 * @param cause the cause
 	 */
 	public InitCommandException(Throwable cause)
 	{

@@ -51,7 +51,7 @@ import org.quartz.Job;
  * 
  * @author Eelco Hillenius
  */
-public class LooselyTypedComponentRepository extends AbstractComponentRepository
+public final class LooselyTypedComponentRepository extends AbstractComponentRepository
 {
 
 	/** logger. */
@@ -71,10 +71,10 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 	 * @param name component name
 	 * @param clazz component class
 	 * @param node component config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
+	protected void addComponent(String name, Class clazz, Element node)
+			throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
 
@@ -97,15 +97,11 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 	/**
 	 * get the component factory.
 	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            configuration node
+	 * @param name component name
+	 * @param clazz component class
+	 * @param node configuration node
 	 * @return ComponentFactory
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
 			throws ConfigException
@@ -123,7 +119,8 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 				factory = TypesRegistry.getDefaultComponentFactory();
 
 				log.warn(name
-						+ " is not of any know type... using " + factory + " as component factory");
+						+ " is not of any know type... using " + factory
+						+ " as component factory");
 			}
 			else
 			{
@@ -145,14 +142,10 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 	/**
 	 * add initialization commands.
 	 * 
-	 * @param factory
-	 *            factory
-	 * @param node
-	 *            config node
-	 * @param clazz
-	 *            component class
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param factory factory
+	 * @param node config node
+	 * @param clazz component class
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
 			throws ConfigException
@@ -169,15 +162,16 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 				Element cnode = (Element) i.next();
 				String commandName = cnode.getTextNormalize();
 
-				InitCommand initCommand = (InitCommand) TypesRegistry.getInitCommand(commandName);
+				InitCommand initCommand = (InitCommand) TypesRegistry
+						.getInitCommand(commandName);
 
 				// initialize the command
 				initCommand.init(factory.getName(), node, this);
 				// add command to the list
 				commands.add(initCommand);
 
-				InitCommand[] cmds = (InitCommand[]) commands.toArray(new InitCommand[commands
-						.size()]);
+				InitCommand[] cmds = (InitCommand[]) commands
+						.toArray(new InitCommand[commands.size()]);
 
 				if (cmds.length > 0)
 				{

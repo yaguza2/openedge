@@ -37,12 +37,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ComponentObserver;
 import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import ognl.Ognl;
+import ognl.OgnlException;
 
 /**
  * Tries to solve the dependencies after all components have been loaded. <br>
@@ -65,34 +69,56 @@ import ognl.Ognl;
  * 
  * @author Eelco Hillenius
  */
-public class DependentTypeWrapper
+public final class DependentTypeWrapper
 {
 
+	/**
+	 * observe components loaded event.
+	 */
+	private class RegisterOnce implements ComponentObserver
+	{
+
+		/**
+		 * fired after all components are (re)loaded.
+		 * 
+		 * @param evt event
+		 */
+		public void modulesLoaded(ComponentsLoadedEvent evt)
+		{
+			// test it
+			setDependencies(componentInstance);
+		}
+	}
+
+	/** log. */
+	private static Log log = LogFactory.getLog(DependentTypeWrapper.class);
+
+	/** fail on cycle. */
 	private static boolean failOnCycle = false;
 
-	/** the decorated instance */
-	protected Object componentInstance;
+	/** used for cycle check. */
+	private static ThreadLocal referenceHolder = new ThreadLocal();
 
-	/** aliases of components that this component depends on */
-	protected List namedDependencies = null;
+	/** used for temporary storing of resolved dependencies. */
+	private static ThreadLocal resolvedComponentsHolder = new ThreadLocal();
 
-	/** just need to react to components loaded event once */
-	protected static boolean wasAdded = false;
+	/** just need to react to components loaded event once. */
+	private static boolean wasAdded = false;
 
-	/** instance of module factory */
-	protected ComponentRepository moduleFactory = null;
+	/** the decorated instance. */
+	private Object componentInstance;
 
-	/** name of the component */
-	protected String componentName = null;
+	/** aliases of components that this component depends on. */
+	private List namedDependencies = null;
 
-	/** used for cycle check */
-	protected static ThreadLocal referenceHolder = new ThreadLocal();
+	/** instance of module factory. */
+	private ComponentRepository moduleFactory = null;
 
-	/** used for temporary storing of resolved dependencies */
-	protected static ThreadLocal resolvedComponentsHolder = new ThreadLocal();
+	/** name of the component. */
+	private String componentName = null;
 
 	/**
-	 * construct
+	 * construct.
 	 */
 	public DependentTypeWrapper()
 	{
@@ -100,15 +126,22 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * execute command
+	 * Execute the command.
+	 * @param cInstance component instance
+	 * @throws InitCommandException when init command threw an error
+	 * @throws ConfigException when the configuration is faulty
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object cInstance) throws InitCommandException,
+			ConfigException
 	{
-
-		setDependencies(componentInstance);
+		setDependencies(cInstance);
 	}
 
-	public void setDependencies(Object componentInstance) throws CyclicDependencyException
+	/**
+	 * Set the dependencies.
+	 * @param cInstance component instance
+	 */
+	public void setDependencies(Object cInstance)
 	{
 
 		if (namedDependencies != null && (namedDependencies.size() > 0))
@@ -126,7 +159,7 @@ public class DependentTypeWrapper
 			if (resolved == null)
 			{
 				resolved = new HashMap();
-				resolved.put(componentName, componentInstance);
+				resolved.put(componentName, cInstance);
 				resolvedComponentsHolder.set(resolved);
 			}
 
@@ -165,13 +198,14 @@ public class DependentTypeWrapper
 				try
 				{
 					// set module as a property
-					Ognl.setValue(dep.getPropertyName(), componentInstance, dependency);
+					Ognl.setValue(dep.getPropertyName(), cInstance, dependency);
 				}
-				catch (Exception e)
+				catch (OgnlException e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 					throw new ComponentLookupException(e);
 				}
+
 			}
 
 			referenceHolder.set(null);
@@ -180,6 +214,7 @@ public class DependentTypeWrapper
 	}
 
 	/**
+	 * Get the component instance.
 	 * @return DependentType the wrapped instance
 	 */
 	public Object getComponentInstance()
@@ -188,8 +223,8 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param instance
-	 *            the instance to wrap
+	 * Set the component instance.
+	 * @param instance the instance to wrap
 	 */
 	public void setComponentInstance(Object instance)
 	{
@@ -197,6 +232,7 @@ public class DependentTypeWrapper
 	}
 
 	/**
+	 * Get the logical dependencies.
 	 * @return List named dependencies
 	 */
 	public List getNamedDependencies()
@@ -205,8 +241,8 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param list
-	 *            name dependencies
+	 * Set the logical dependencies.
+	 * @param namedDependencies name dependencies
 	 */
 	public void setNamedDependencies(List namedDependencies)
 	{
@@ -222,7 +258,7 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * get component name
+	 * get component name.
 	 * 
 	 * @return String
 	 */
@@ -232,10 +268,9 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * set component name
+	 * set component name.
 	 * 
-	 * @param componentName
-	 *            name of the component
+	 * @param componentName name of the component
 	 */
 	public void setComponentName(String componentName)
 	{
@@ -251,8 +286,7 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param factory
-	 *            module factory
+	 * @param factory module factory
 	 */
 	public void setModuleFactory(ComponentRepository factory)
 	{
@@ -266,26 +300,8 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * observe components loaded event
-	 */
-	class RegisterOnce implements ComponentObserver
-	{
-
-		/**
-		 * fired after all components are (re)loaded;
-		 * 
-		 * @param evt
-		 *            event
-		 */
-		public void modulesLoaded(ComponentsLoadedEvent evt)
-		{
-			// test it
-			setDependencies(componentInstance);
-		}
-	}
-
-	/**
-	 * @return boolean
+	 * Get whether to fail when a cycle is detected.
+	 * @return whether to fail when a cycle is detected
 	 */
 	public static boolean isFailOnCycle()
 	{
@@ -293,7 +309,8 @@ public class DependentTypeWrapper
 	}
 
 	/**
-	 * @param b
+	 * Set whether to fail when a cycle is detected.
+	 * @param b whether to fail when a cycle is detected
 	 */
 	public static void setFailOnCycle(boolean b)
 	{

@@ -33,14 +33,16 @@ package nl.openedge.modules.types.initcommands;
 import nl.openedge.modules.observers.ComponentRepositoryObserver;
 
 /**
+ * Decorator for component factory observer.
  * @author Eelco Hillenius
  */
 public class ComponentFactoryObserverDecorator implements ComponentRepositoryObserver
 {
-
-	protected Object decorated;
+	/** decorated. */
+	private Object decorated;
 
 	/**
+	 * Get decorated.
 	 * @return Object
 	 */
 	public Object getDecorated()
@@ -49,8 +51,8 @@ public class ComponentFactoryObserverDecorator implements ComponentRepositoryObs
 	}
 
 	/**
-	 * @param object
-	 *            the object to decorate
+	 * Set decorated.
+	 * @param object the object to decorate
 	 */
 	public void setDecorated(Object object)
 	{

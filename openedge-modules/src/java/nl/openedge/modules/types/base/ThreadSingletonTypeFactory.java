@@ -39,25 +39,26 @@ import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * wrapper for singleton components per Thread
+ * wrapper for singleton components per Thread.
  * 
  * @author Eelco Hillenius
  */
 public final class ThreadSingletonTypeFactory extends AbstractComponentFactory implements
 		ComponentObserver
 {
+	/** holder for the thread singleton. */
+	private ThreadLocal singletonInstanceHolder = new ThreadLocal();
 
-	protected ThreadLocal singletonInstanceHolder = new ThreadLocal();
-
+	/** whether to execute the init commands. */
 	private boolean executeInitCommands = true;
 
 	/**
-	 * get instance of module
+	 * get instance of module.
 	 * 
 	 * @return new instance for each request
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
-	public Object getComponent() throws ComponentLookupException
+	public Object getComponent()
 	{
 		Object singletonInstance = singletonInstanceHolder.get();
 
@@ -67,7 +68,7 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory i
 			{
 				try
 				{
-					singletonInstance = componentClass.newInstance();
+					singletonInstance = getComponentClass().newInstance();
 					singletonInstanceHolder.set(singletonInstance);
 				}
 				catch (InstantiationException e)
@@ -119,22 +120,20 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory i
 	}
 
 	/**
-	 * set component factory
+	 * set component factory.
 	 * 
-	 * @param componentRepository
-	 *            component repository
+	 * @param componentRepository component repository
 	 */
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
-		this.componentRepository = componentRepository;
+		setComponentRepository(componentRepository);
 		componentRepository.addObserver(this);
 	}
 
 	/**
-	 * fired after all components are (re)loaded;
+	 * fired after all components are (re)loaded.
 	 * 
-	 * @param evt
-	 *            event
+	 * @param evt event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{

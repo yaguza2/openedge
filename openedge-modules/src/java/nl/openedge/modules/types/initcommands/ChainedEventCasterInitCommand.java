@@ -43,35 +43,35 @@ import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import org.jdom.Element;
 
 /**
- * Command that populates instances using BeanUtils
+ * Command that populates instances using BeanUtils.
  * 
  * @author Eelco Hillenius
  */
 public class ChainedEventCasterInitCommand implements InitCommand, ComponentObserver
 {
-
+	/** repository instance. */
 	private ComponentRepository componentRepository = null;
 
+	/** whether to execute the init commands. */
 	private boolean executeInitCommands = true;
 
 	/**
-	 * initialize
-	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
 	public void init(String componentName, Element componentNode,
-			ComponentRepository componentRepository) throws ConfigException
+			ComponentRepository cRepo) throws ConfigException
 	{
-		this.componentRepository = componentRepository;
+		this.componentRepository = cRepo;
 	}
 
 	/**
-	 * populate the component instance
+	 * populate the component instance.
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws InitCommandException,
+			ConfigException
 	{
 		if (executeInitCommands)
 		{
@@ -79,17 +79,18 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 
 			if (componentInstance instanceof ChainedEventCaster)
 			{
-				((ChainedEventCaster) componentInstance).addObserver(this.componentRepository);
+				((ChainedEventCaster) componentInstance)
+						.addObserver(this.componentRepository);
 			}
 			else
 			{
 				Class clazz = componentInstance.getClass();
 				try
 				{
-					Method initMethod = clazz.getMethod("addObserver", new Class[]
-						{ChainedEventObserver.class});
-					initMethod.invoke(componentInstance, new Object[]
-						{this.componentRepository});
+					Method initMethod = clazz.getMethod("addObserver",
+							new Class[] {ChainedEventObserver.class});
+					initMethod.invoke(componentInstance,
+							new Object[] {this.componentRepository});
 				}
 				catch (SecurityException e)
 				{
@@ -116,10 +117,9 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 	}
 
 	/**
-	 * fired after all components are (re)loaded;
+	 * fired after all components are (re)loaded.
 	 * 
-	 * @param evt
-	 *            event
+	 * @param evt event
 	 */
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{

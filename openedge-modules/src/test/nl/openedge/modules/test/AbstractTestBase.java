@@ -81,9 +81,8 @@ public abstract class AbstractTestBase extends TestCase
 			try
 			{
 
-				URL url = URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"), AbstractTestBase.class,
-						null);
+				URL url = URLHelper.convertToURL(System.getProperty("configfile",
+						"/oemodules.xml"), AbstractTestBase.class, null);
 
 				JDOMConfigurator c = new JDOMConfigurator(url);
 				componentFactory = RepositoryFactory.getRepository();

@@ -41,37 +41,46 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 /**
- * <p>Clients of the ComponentRepository should either construct the factory with an
- * instance of <code>javax.servlet.ServletContext</code> or with an instance
- * of <code>java.lang.String</code>. The first is for usage within a web application
- * environment and tries to read the location of the configuration document from
- * <code>javax.servlet.ServletContext.getInitParameter("oemodules.configFile")</code> 
- * If you are not within a web application context, or if you want to load the 
- * configuration from a location outside the web application environment, you
- * can provide an URL as either a string or an URL object,
- * e.g: file://c:/mywinboxdrive/mydir/mycomponents.xml. If you provide a
- * string with a relative path, e.g: /mycomponents.xml, the configurator
- * tries to load from the classpath, where / is the classpath root.
+ * <p>
+ * Clients of the ComponentRepository should either construct the factory with an instance of
+ * <code>javax.servlet.ServletContext</code> or with an instance of <code>java.lang.String</code>.
+ * The first is for usage within a web application environment and tries to read the location of the
+ * configuration document from
+ * <code>javax.servlet.ServletContext.getInitParameter("oemodules.configFile")</code> If you are
+ * not within a web application context, or if you want to load the configuration from a location
+ * outside the web application environment, you can provide an URL as either a string or an URL
+ * object, e.g: file://c:/mywinboxdrive/mydir/mycomponents.xml. If you provide a string with a
+ * relative path, e.g: /mycomponents.xml, the configurator tries to load from the classpath, where /
+ * is the classpath root. <br/>For example, you could have a startup/ main servlet that does this:
  * <br/>
- * For example, you could have a startup/ main servlet that does this:<br/>
+ * 
  * <pre>
- * 	public void init(ServletConfig config) throws ServletException
- *	{
- *		new JDOMConfigurator(config.getServletContext());
- *	}
+ * public void init(ServletConfig config) throws ServletException
+ * {
+ * 	new JDOMConfigurator(config.getServletContext());
+ * }
  * </pre>
- * and have this in your web.xml:<br/>
+ * 
+ * and have this in your web.xml: <br/>
+ * 
  * <pre>
- * 	&lt;servlet&gt;
- *		&lt;servlet-name&gt;Application&lt;/servlet-name&gt;
- *		&lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt;
- *		&lt;init-param&gt;
- *			&lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
- *			&lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt;
- *		&lt;/init-param&gt;
- *		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *	&lt;/servlet&gt;
+ * 
+ *  
+ *   
+ *    	&lt;servlet&gt;
+ *   		&lt;servlet-name&gt;Application&lt;/servlet-name&gt;
+ *   		&lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt;
+ *   		&lt;init-param&gt;
+ *   			&lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
+ *   			&lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt;
+ *   		&lt;/init-param&gt;
+ *   		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *   	&lt;/servlet&gt;
+ *    
+ *   
+ *  
  * </pre>
+ * 
  * @author Eelco Hillenius
  */
 public final class JDOMConfigurator
@@ -95,7 +104,7 @@ public final class JDOMConfigurator
 	public static final String INITPARAM_CONFIG_FILE = "oemodules.configFile";
 
 	// only one of the following three is set at a time
-	/** pointer to url .*/
+	/** pointer to url . */
 	private URL configURL = null;
 
 	/** pointer to servlet context. */
@@ -107,8 +116,7 @@ public final class JDOMConfigurator
 	/**
 	 * construct and initialise with configDocument.
 	 * 
-	 * @param configDocument
-	 *            location of document as a string
+	 * @param configDocument location of document as a string
 	 * @throws ConfigException on config errors
 	 */
 	public JDOMConfigurator(String configDocument) throws ConfigException
@@ -120,10 +128,8 @@ public final class JDOMConfigurator
 	/**
 	 * construct and initialise with URL to configDocument.
 	 * 
-	 * @param configURL
-	 *            location of document as an URL
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param configURL location of document as an URL
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public JDOMConfigurator(URL configURL) throws ConfigException
 	{
@@ -135,10 +141,8 @@ public final class JDOMConfigurator
 	/**
 	 * construct and initialise with servletContext.
 	 * 
-	 * @param servletContext
-	 *            servlet context of webapplication
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @param servletContext servlet context of webapplication
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public JDOMConfigurator(ServletContext servletContext) throws ConfigException
 	{
@@ -149,13 +153,13 @@ public final class JDOMConfigurator
 
 	/**
 	 * create and register the component repository.
+	 * 
 	 * @param configuration configuration document
 	 * @param theServletContext servlet context
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
-	protected void createRepository(Document configuration, ServletContext theServletContext)
-			throws ConfigException
+	protected void createRepository(Document configuration,
+			ServletContext theServletContext) throws ConfigException
 	{
 
 		Element rootNode = configuration.getRootElement();
@@ -165,8 +169,7 @@ public final class JDOMConfigurator
 	/**
 	 * reload the configuration this is known by this configurator.
 	 * 
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	public void reload() throws ConfigException
 	{
@@ -189,8 +192,7 @@ public final class JDOMConfigurator
 	 * construct and initialise with configDocument.
 	 * 
 	 * @param theConfigDocument configuration document
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected void reload(String theConfigDocument) throws ConfigException
 	{
@@ -202,8 +204,7 @@ public final class JDOMConfigurator
 	 * load config document with URL to configDocument.
 	 * 
 	 * @param theConfigURL the configuration url
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected void reload(URL theConfigURL) throws ConfigException
 	{
@@ -215,8 +216,7 @@ public final class JDOMConfigurator
 	 * initialise with servletContext.
 	 * 
 	 * @param theServletContext servlet context
-	 * @throws ConfigException
-	 *             when an configuration error occurs
+	 * @throws ConfigException when an configuration error occurs
 	 */
 	protected void reload(ServletContext theServletContext) throws ConfigException
 	{
@@ -226,7 +226,8 @@ public final class JDOMConfigurator
 			configFile = theServletContext.getInitParameter(INITPARAM_CONFIG_FILE);
 		if (configFile == null)
 			configFile = DEFAULT_CONFIG_FILE;
-		Document configuration = DocumentLoader.loadDocument(configFile, theServletContext);
+		Document configuration = DocumentLoader.loadDocument(configFile,
+				theServletContext);
 		createRepository(configuration, theServletContext);
 	}
 
