@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>openedge-velocity-stringresources</id>
   <name>OpenEdge Velocity String resources</name>
-  <currentVersion>1.1.1</currentVersion>
+  <currentVersion>1.0</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
