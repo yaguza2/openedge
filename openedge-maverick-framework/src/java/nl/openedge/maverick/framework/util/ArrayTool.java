@@ -118,4 +118,28 @@ public class ArrayTool
 		return l;
 	}
 
+	/**
+	 * the length of the input array.
+	 * @param array
+	 * @return the length of the input array.
+	 * 	if array == null return -1.
+	 */
+	public static int size(Object[] array)
+	{
+		if (array == null)
+		{
+			return -1;
+		}
+		return array.length;
+	}
+
+	/**
+	 * Uses elementAt to return the last element in array.
+	 * @param array
+	 * @return
+	 */	
+	public static Object getLast(Object[] array)
+	{
+		return elementAt(array, array.length - 1);
+	}
 }
