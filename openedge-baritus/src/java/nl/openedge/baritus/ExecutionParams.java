@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.7 2004-04-07 10:43:39 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-04-07 10:43:39 $
+ * $Id: ExecutionParams.java,v 1.8 2004-04-08 20:42:55 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-04-08 20:42:55 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -151,7 +151,7 @@ public final class ExecutionParams
 	 * In strict mode, this will have the effect that the population process is
 	 * marked as failed. If not in strict mode, the exception will be ignored.
 	 */
-	private boolean stictPopulationMode = true;
+	private boolean strictPopulationMode = true;
 
 	/**
 	 * if true, the no cache headers will be set
@@ -403,9 +403,9 @@ public final class ExecutionParams
 	 * 
 	 * @return boolean whether the population mode is strict
 	 */
-	public boolean isStictPopulationMode()
+	public boolean isStrictPopulationMode()
 	{
-		return stictPopulationMode;
+		return strictPopulationMode;
 	}
 
 	/**
@@ -417,9 +417,9 @@ public final class ExecutionParams
 	 * 
 	 * @param b whether the population mode is strict
 	 */
-	public void setStictPopulationMode(boolean b)
+	public void setStrictPopulationMode(boolean b)
 	{
-		stictPopulationMode = b;
+		strictPopulationMode = b;
 	}
 
 }
