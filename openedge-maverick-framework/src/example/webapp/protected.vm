@@ -1,0 +1,20 @@
+<HTML>
+	<head>
+		<title>Login</title>
+	</head>
+	<body>
+	
+		<table width="100%" height="100%" border="0" cellpadding="6" cellspacing="2">
+		  <tr>
+		  	<td>
+		  		#set( $user = $userTool.getUser($request) )
+				<h1>Welcome ${user.name} to this protected page!</h1>
+			</td>
+		  </tr>
+		  <tr valign="top" height="100%">
+		    <td></td>
+		  </tr>
+		</table>
+		
+	</body>
+<html>

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Using OpenEdge Modules</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+	
+    <section name="Using OpenEdge Maverick Framework">
+      <p>
+		As looking at examples is usually the best way of learning, we made two examples.
+		<ul>
+			<li>
+				included in ${projecthome}/src/example is a simple example that shows you how
+				to use OpenEdge Modules and OpenEdge Access with the Maverick framework. Note
+				that this example has dependencies on two component implementations not included 
+				in this project: usermanager-hib and mailjob from openedge-modules-impl.
+			</li>
+			<li>
+				as a seperate project, maverickexample shows with a simple database editing web application
+				(based on Hibernate and MySQL) how to use the default error handling etc.
+			</li>
+		</ul>
+      </p>
+	  <subsection name="Maverick Example">
+		  <p>
+			you should take a good look at
+			the classes in package: 'nl.openedge.maverick.example.ctrl' and the Velocity
+			files 'listcds.vm', 'editcd.vm' and 'VM_global_library.vm'. The framework itself
+			consist of the four classes in package 'nl.openedge.maverick.example'.
+			
+			The main rules to use the framework are:
+			<ul>
+				<li>
+					Controlls should override <code>nl.openedge.maverick.framework.AbstractCtrl</code>
+				</li>
+				<li>
+					Forms (used for request parameter passing) should override
+					<code>nl.openedge.maverick.framework.AbstractForm</code>
+				</li>
+				<li>
+					To use the errorhandling, fields should have consistent naming. E.g:
+		      <source><![CDATA[
+		<input type="text" name="cd.year" size="40" 
+			value="$!{cd.year}">
+		#error("cd.year")
+		      ]]></source><br/>				
+				</li>
+				<li>	
+					Take a look at the methods in <code>AbstractCtrl</code> you can override. This can be 
+					usefull for customized error handling/ form populating. For an example
+					look at <code>EditCDSubmitCtrl</code>.
+				</li>
+			</ul>
+		</p>
+	 </subsection>
+   </section>
+   
+ </body>
+</document>

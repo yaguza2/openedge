@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Maverick Framework</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+    <section name="About this Guide">
+      <p>
+        The OpenEdge User Guide is intended to help developers get acquainted with the
+		OpenEdge Maverick Framework. If you have any
+        suggestions or comments please feel free to post them to the
+        <a href="mailto:todo@sourceforge.net">list</a>.
+      </p>
+    </section>
+  <section name="Overview">
+    <p>
+    The <code>OpenEdge Maverick Framework</code> is a small framework on top of Maverick,
+	Velocity, OpenEdge Modules and OpenEdge Access. The main aim of the framework is to provide
+	basic functionality, such as error handling and authentication, that'll give you a headstart when 
+	developping a web application.
+	</p>
+	<p>
+	Key features are:
+	<ul>
+		<li>
+			Extends Maverick and Velocity for custom error handling
+		</li>
+		<li>
+			Initializes OpenEdge Modules and OpenEdge Acess. You can use OpenEdge Modules as
+			your component repository and OpenEdge Access for JAAS based authentication/ authorization.
+		</li>
+		<li>
+			Provides some utility methods and overridable default behavior that can be used when developing
+			a web application.
+		</li>
+	</ul>
+	</p>
+	
+
+  </section>
+
+</body>
+</document>
+

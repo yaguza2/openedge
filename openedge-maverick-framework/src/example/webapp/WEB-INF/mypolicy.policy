@@ -1,0 +1,11 @@
+grant 
+{
+  permission nl.openedge.access.NamedPermission "/";
+  permission nl.openedge.access.NamedPermission "/index.m";
+  permission nl.openedge.access.NamedPermission "/login.m";
+  permission nl.openedge.access.NamedPermission "/logoff.m";
+};
+
+
+
+

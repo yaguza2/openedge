@@ -1,0 +1,60 @@
+<HTML>
+	<head>
+		<title>Login</title>
+	</head>
+	<body>
+	
+		<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0" valign='top'>
+		 
+		  <tr height="20">
+		  	<td colspan="3"></td>
+		  </tr>
+		 
+		 #set( $link = "${request.getContextPath()}/login.m" )
+		 <form action="${response.encodeURL($link)}" method="POST">
+		  
+		  <tr>
+		  	<td>usename</td>
+		  	<td>&nbsp;
+		  		<input type="text" size="20" 
+		  			name="username" value="$!{model.username}">
+		  	</td>
+		  	<td width="100%"></td>
+		  </tr>
+		  <tr>
+		  	<td>password</td>
+		  	<td>&nbsp;	  			
+		  		<input type="password" size="20"
+		  			name="password" value="$!{model.password}">
+		  	</td>
+		  	<td width="100%"></td>
+		  </tr>
+		  <tr height="12">
+		  	<td colspan="3"></td>
+		  </tr>
+		  <tr>
+		  	<td colspan="3">	  			
+		  		<input type="submit" value="login">
+		  	</td>
+		  </tr>
+		  <tr height="12">
+		  	<td colspan="3"></td>
+		  </tr>
+		
+		  #if($model.error)
+		  <tr>
+		  	<td colspan="3" class="errormessage">
+			$model.error
+		  	</td>
+		  </tr>
+		  #end
+		 </form>
+		 
+		  <tr height="100%">
+		  	<td colspan="3"></td>
+		  </tr>
+		
+		</table>
+		
+	</body>
+<html>

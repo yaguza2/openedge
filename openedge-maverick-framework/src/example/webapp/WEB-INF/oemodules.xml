@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<components-config>
+
+
+	<scheduler properties="/WEB-INF/quartz.properties">
+
+		<trigger name="mailTrigger" group="DEFAULT" class="org.quartz.SimpleTrigger">
+			<parameter name="repeatInterval" value="60000" />
+			<parameter name="repeatCount" value="-1" />
+		</trigger>
+
+		<jobExecutionMap>
+			<job trigger="mailTrigger" component="MailJob" />
+		</jobExecutionMap>
+		
+	</scheduler>
+
+		
+	<components>
+
+		<component name="UserManager" class="nl.openedge.modules.impl.usermanager.hib.UserManagerModuleImpl">
+
+		</component>
+
+		<component name="MailJob" class="nl.openedge.modules.impl.mailjob.MailJob">
+
+			<jobDetail group="DEFAULT">
+				<!--<parameter name="mailSessionRef" value="java:comp/env/mail/myref" />-->
+				<parameter name="mailprop.mail.smtp.host" value="mail.foo.com"/>
+				<parameter name="mailMQModuleAlias" value="MailMQModule" />
+			</jobDetail>
+
+		</component>
+		
+	</components>
+
+</components-config>
