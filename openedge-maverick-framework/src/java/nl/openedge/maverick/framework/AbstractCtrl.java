@@ -1195,6 +1195,35 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
+	 * get localized message for given key and locale
+	 * and format it with the given parameters. 
+	 * If locale is null, the default locale will be used
+	 * @param key key of message
+	 * @param locale locale for message
+	 * @param parameters parameters for the message
+	 * @return String localized message
+	 */
+	public String getLocalizedMessage(
+			String key, Locale locale, Object[] parameters)
+	{
+		
+		String msg = null;
+		try
+		{
+			msg = getBundle(locale).getString(key);
+			msg = MessageFormat.format(msg, parameters);
+		}
+		catch (Exception e)
+		{
+			if(log.isDebugEnabled())
+			{
+				e.printStackTrace();
+			}
+		}
+		return msg;
+	}
+	
+	/**
 	 * register a field validator for the given fieldName. 
 	 * multiple fieldValidators for one key are allowed 
 	 * @param fieldName name of field
@@ -1296,25 +1325,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected Collection getValidators(String fieldName)
 	{
 		return (fieldValidators != null) ? (Collection)fieldValidators.get(fieldName) : null;
-	}
-	
-	/**
-	 * get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @param parameters parameters for the message
-	 * @return String localized message
-	 */
-	public String getLocalizedMessage(
-			String key, Locale locale, Object[] parameters)
-	{
-		ResourceBundle res = getBundle(locale);
-		String msg = res.getString(key);
-		String formattedMessage = 
-			MessageFormat.format(msg, parameters);
-		return formattedMessage;
 	}
 	
 	/* get resource bundle */
