@@ -48,7 +48,19 @@ import org.jdom.Element;
  * be usefull when testing controllers; eg when you make changes in the init method,
  * you want these changes be loaded while in a production environment, you
  * want the initialization just done once.
- *
+ * <p>
+ * Configure like:
+ * <pre>
+ * &lt;maverick version="2.0"&gt;
+ *  &lt;modules&gt;
+ *    &lt;controller-factory provider="nl.openedge.util.maverick.CustomControllerFactory"&gt;
+ *      &lt;allways-reload value="true"/&gt;
+ *    &lt;/controller-factory&gt;
+ *  &lt;/modules&gt; 
+ *  ...
+ * &lt;/maverick&gt;
+ * </pre>
+ * </p>
  * @author Eelco Hillenius
  */
 public class AllwaysReloadControllerFactory extends AbstractControllerFactory
