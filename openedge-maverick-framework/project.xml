@@ -245,6 +245,15 @@
 			<url>http://www.openedge.nl</url>
 		</dependency>
 
+		<dependency>
+			<id>openedge-utils</id>
+			<version>SNAPSHOT</version>
+			<properties>
+				<war.bundle.jar>true</war.bundle.jar>
+			</properties>
+			<url>http://www.openedge.nl</url>
+		</dependency>
+
 
 	</dependencies>
 
