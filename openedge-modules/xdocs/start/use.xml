@@ -438,15 +438,15 @@ public class SchedulerObserverImpl implements SchedulerObserver
 	 			]]></source><br/>
 				and have this in your web.xml:
 	 		      <source><![CDATA[
-	&lt;servlet&gt;
-	  &lt;servlet-name&gt;Application&lt;/servlet-name&gt;
-	  &lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt;
-	  &lt;init-param&gt;
-	    &lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
-	    &lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt;
-	 &lt;/init-param&gt;
-	 &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-	&lt;/servlet&gt;
+	<servlet>
+	  <servlet-name>Application</servlet-name>
+	  <servlet-class>com.foo.bar.ApplicationServlet</servlet-class>
+	  <init-param>
+	    <param-name>oemodules.configFile</param-name>
+	    <param-value>WEB-INF/oemodules.xml</param-value>
+	 </init-param>
+	 <load-on-startup>1</load-on-startup>
+	</servlet>
 	 ]]></source><br/>
 			</p>
 		</subsection>
@@ -470,7 +470,16 @@ ComponentRepository crepo = (ComponentRepository)ctx.lookup("myLocation");
 			]]></source>
 			</p>
 			<p>
-				Keep in mind that at time of writing the framework was build and tested for
+			    You can now get a component like this:
+			<source><![CDATA[
+OtherComponent myComp = (OtherComponent)crepo.getComponent("ComponentB");
+			]]></source>
+			</p>
+        </subsection>
+        
+        <subsection name="Suggestions">
+			<p>
+				Please keep in mind that at time of writing the framework was build and tested for
 				single VM use. As we (the creators of the framework) use it for constructing
 				a logic/ bussiness functionallity layer with it, where the components are
 				service centric, not datacentric, duplicates accross VMs are not a problem
