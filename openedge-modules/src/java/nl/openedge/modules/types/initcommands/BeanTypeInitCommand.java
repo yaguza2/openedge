@@ -35,6 +35,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import ognl.Ognl;
@@ -53,6 +57,11 @@ public final class BeanTypeInitCommand implements InitCommand
 	private Map properties = null;
 
 	/**
+	 * Prefix voor waarden die in JNDI env. opgezocht moeten worden
+	 */
+	private static final String JNDI_PREFIX = "JNDI:";
+
+	/**
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
@@ -66,10 +75,24 @@ public final class BeanTypeInitCommand implements InitCommand
 			for (Iterator j = pList.iterator(); j.hasNext();)
 			{
 				Element pElement = (Element) j.next();
-				properties.put(pElement.getAttributeValue("name"), pElement
-						.getAttributeValue("value"));
-			}
-
+				String value = pElement.getAttributeValue("value");
+				
+				if( value != null && value.length() > (JNDI_PREFIX.length() + 1) &&
+					JNDI_PREFIX.equals( value.substring( 0, JNDI_PREFIX.length()).toUpperCase()))
+				{
+					try
+					{
+						Context env = (Context) new InitialContext().lookup("java:comp/env");
+						if( env != null)
+						{
+							value = (String) env.lookup( value.substring( JNDI_PREFIX.length()));
+						}
+					}
+					catch (NamingException e)
+					{
+					}
+				}
+				properties.put(pElement.getAttributeValue("name"), value);			}
 		}
 	}
 
