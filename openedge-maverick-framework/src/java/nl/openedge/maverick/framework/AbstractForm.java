@@ -44,6 +44,8 @@ import nl.openedge.maverick.framework.converters.Formatter;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * AbstractForm is a base class to be used with AbstractCtrl.
@@ -79,6 +81,9 @@ public abstract class AbstractForm
 
 	/** overriden values as strings */
 	private Map overrideFields = null;
+
+	/** log for this class */
+	private static Log log = LogFactory.getLog(AbstractCtrl.class);
 
 	/** error key for stacktrace if any */
 	public final static String ERROR_KEY_STACKTRACE = "stacktrace";
@@ -460,7 +465,11 @@ public abstract class AbstractForm
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				if(log.isDebugEnabled())
+				{
+					log.error(e);
+					e.printStackTrace();	
+				}
 				return null;
 			}	
 		}
