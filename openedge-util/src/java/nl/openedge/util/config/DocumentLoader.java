@@ -57,7 +57,9 @@ public class DocumentLoader {
 				throws ConfigException {
 					
 		try {
-			URL configURL = URLHelper.convertToURL(configDocument, null);
+			URL configURL = URLHelper.convertToURL(configDocument, 
+					DocumentLoader.class, null);
+					
 			if(configURL == null) throw new ConfigException(configDocument + 
 					" should be a document but is empty");
 			log.info("Loading config from " + configURL);
@@ -93,7 +95,9 @@ public class DocumentLoader {
 		try	{
 			
 			URL configURL = URLHelper.convertToURL(
-								configFile, servletContext);
+								configFile, DocumentLoader.class, 
+								servletContext);
+								
 			if(configURL == null) throw new ConfigException(configFile + 
 					" should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());

@@ -43,36 +43,57 @@ public class URLHelper {
 	
 	/**
 	 * Interprets some absolute URLs as external paths or from classpath
+	 * @param path path to translate
+	 * @param caller caller class of method
+	 * @return URL
+	 * @throws MalformedURLException
 	 */
-	public static URL convertToURL(String path) 
+	public static URL convertToURL(String path, Class caller) 
 			throws MalformedURLException {
 		
-		return convertToURL(path, null);
+		return convertToURL(path, caller, null);
 	}
 	
 	/**
 	 * Interprets some absolute URLs as external paths, otherwise generates URL
 	 * appropriate for loading from internal webapp or, servletContext is null,
 	 * loading from the classpath.
+	 * @param path path to translate
+	 * @param caller caller of method
+	 * @param servletContext servlet context of webapp
+	 * @return URL
+	 * @throws MalformedURLException
 	 */
-	public static URL convertToURL(String path, ServletContext servletContext) 
-			throws MalformedURLException {
+	public static URL convertToURL(String path, 
+								   Class caller,
+								   ServletContext servletContext) 
+								   throws MalformedURLException {
 		
+		URL url = null;
 		if (path.startsWith("file:") || path.startsWith("http:") || 
 				path.startsWith("https:") || path.startsWith("ftp:")) {
-			return new URL(path);
+			url = new URL(path);
 		} else if(servletContext != null) {
 			// Quick sanity check
 			if (!path.startsWith("/"))
 				path = "/" + path;
-			return servletContext.getResource(path);
+			url = servletContext.getResource(path);
 		} else {
 			ClassLoader clsLoader = Thread.currentThread().getContextClassLoader();
 			if(clsLoader == null) {
-				return ClassLoader.getSystemResource(path);	
+				url = (caller != null) ?
+							caller.getResource(path)	:
+							ClassLoader.getSystemResource(path);
 			} else {
-				return clsLoader.getResource(path);
+				url = clsLoader.getResource(path);
+				// fallthrough
+				if(url == null) {
+					url = (caller != null) ?
+								caller.getResource(path)	:
+								ClassLoader.getSystemResource(path);
+				}
 			}			
 		}
+		return url;
 	}
 }
