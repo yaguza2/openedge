@@ -659,7 +659,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					
 						// execute population on form
 						success = fieldPopulator.setProperty(
-							cctx, formBeanContext, name, value, targetPropertyMeta, locale);	
+							cctx, formBeanContext, name, value, targetPropertyMeta, locale);
+								
 					}
 				}
 				catch (Exception e)
@@ -927,7 +928,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * 
 	 * @param cctx controller context
 	 * @param formBeanContext context with form bean
-	 * @param target target property
+	 * @param targetType type of target property
 	 * @param name name of field
 	 * @param triedValue value that was tried for population
 	 * @param t exception
@@ -935,7 +936,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	public void setConversionErrorForField(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext,
-		Object target,
+		Class targetType,
 		String name, 
 		Object triedValue, 
 		Throwable t) 
@@ -943,8 +944,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 		try
 		{
-			String key = getConversionErrorLabelKey(
-				target.getClass(), name, triedValue);
+			String key = getConversionErrorLabelKey(targetType, name, triedValue);
 		
 			String msg = null;
 			String msgName = null;

@@ -151,7 +151,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 					{
 						String nameWithIndex = name + '[' + index + "]";
 						ctrl.setConversionErrorForField(
-							cctx, formBeanContext, target, nameWithIndex, values[index], e);
+							cctx, formBeanContext, targetType, nameWithIndex, values[index], e);
 						ctrl.setOverrideField(cctx, formBeanContext, nameWithIndex, values[index], e, null);
 						success = false;
 					}
@@ -160,7 +160,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 						e.printStackTrace();
 						String nameWithIndex = name + '[' + index + "]";
 						ctrl.setConversionErrorForField(
-							cctx, formBeanContext, target, nameWithIndex, values[index], e);
+							cctx, formBeanContext, targetType, nameWithIndex, values[index], e);
 						ctrl.setOverrideField(cctx, formBeanContext, nameWithIndex, values[index], e, null);
 						success = false;
 					}
@@ -194,7 +194,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				catch (ConversionException e)
 				{
 					ctrl.setConversionErrorForField(
-						cctx, formBeanContext, target, name, stringValue, e);
+						cctx, formBeanContext, targetType, name, stringValue, e);
 						
 					ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 					success = false;	
@@ -203,7 +203,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				{
 					e.printStackTrace();
 					ctrl.setConversionErrorForField(
-						cctx, formBeanContext, target, name, stringValue, e);
+						cctx, formBeanContext, targetType, name, stringValue, e);
 						
 					ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 					success = false;	
@@ -239,7 +239,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 			catch (ConversionException e)
 			{
 				ctrl.setConversionErrorForField(
-					cctx, formBeanContext, target, name, stringValue, e);
+					cctx, formBeanContext, targetType, name, stringValue, e);
 					
 				ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 				success = false;	
@@ -248,7 +248,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 			{
 				e.printStackTrace();
 				ctrl.setConversionErrorForField(
-					cctx, formBeanContext, target, name, stringValue, e);
+					cctx, formBeanContext, targetType, name, stringValue, e);
 					
 				ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
 				success = false;	
