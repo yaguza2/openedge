@@ -1,3 +1,9 @@
+1.0.5
+-------------------------------------------------
+- Added execution parameter trimStringInputValues (true by default)
+	that indicates that populators should trim values of type String or String[]
+	before populating/ converting.
+
 1.0.4
 -------------------------------------------------
 - Fixes Maurice:

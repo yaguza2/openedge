@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.6 2004-04-09 09:47:37 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-09 09:47:37 $
+ * $Id: TestBean.java,v 1.7 2004-04-21 11:42:10 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-21 11:42:10 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -44,6 +44,9 @@ import java.util.Map;
  */
 public class TestBean
 {
+	private String testTrimString;
+	private String[] testTrimStringArray = new String[] { "" };
+	
 	private Integer testInteger1;
 	private Integer testInteger2;
 	
@@ -472,6 +475,38 @@ public class TestBean
 	public void setToValidate4(String string)
 	{
 		toValidate4 = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getTestTrimString()
+	{
+		return testTrimString;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setTestTrimString(String string)
+	{
+		testTrimString = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String[] getTestTrimStringArray()
+	{
+		return testTrimStringArray;
+	}
+
+	/**
+	 * @param strings
+	 */
+	public void setTestTrimStringArray(String[] strings)
+	{
+		testTrimStringArray = strings;
 	}
 
 }

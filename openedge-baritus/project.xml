@@ -4,7 +4,7 @@
 	<groupId>openedge</groupId>
 	<id>baritus</id>
 	<name>OpenEdge Baritus</name>
-	<currentVersion>1.0.4</currentVersion>
+	<currentVersion>1.0.5</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -21,6 +21,11 @@
 	<url>http://baritus.sourceforge.net/</url>
 
 	<versions>
+		<version>
+			<id>1.0.5</id>
+			<name>1.0.5</name>
+			<tag>BARITUS_1_0_5</tag>
+		</version>
 		<version>
 			<id>1.0.4</id>
 			<name>1.0.4</name>

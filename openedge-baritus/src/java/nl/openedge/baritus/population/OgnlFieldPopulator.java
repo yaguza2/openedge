@@ -1,7 +1,7 @@
 /*
- * $Id: OgnlFieldPopulator.java,v 1.4 2004-04-09 18:44:53 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-09 18:44:53 $
+ * $Id: OgnlFieldPopulator.java,v 1.5 2004-04-21 11:42:10 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-21 11:42:10 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -104,11 +104,30 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 		boolean success = true;
 		Object bean = formBeanContext.getBean();
 		
+		ExecutionParams params = formBeanContext.getController().getExecutionParams();
+		
 		OgnlContext context = new OgnlContext();
 		context.setTypeConverter(converter);
 		context.put(CTX_KEY_CURRENT_LOCALE, formBeanContext.getCurrentLocale());
-		context.put(CTX_KEY_CURRENT_EXEC_PARAMS, ctrl.getExecutionParams());
+		context.put(CTX_KEY_CURRENT_EXEC_PARAMS, params);
 		context.put(CTX_KEY_CURRENT_FIELD_NAME, name);
+		
+		// trim input string values if required
+		if(params.isTrimStringInputValues())
+		{
+			if(value instanceof String)
+			{
+				value = ((String)value).trim();
+			}
+			else if(value instanceof String[])
+			{
+				String[] _value = (String[])value;
+				for(int i = 0; i < _value.length; i++)
+				{
+					_value[i] = _value[i].trim();
+				}
+			}
+		}
 		
 		try
 		{
@@ -134,7 +153,6 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 				}
 				else
 				{
-					ExecutionParams params = formBeanContext.getController().getExecutionParams();
 					if(params.isStrictPopulationMode())
 					{
 						populationLog.error(e.getMessage(), e);

@@ -10,7 +10,15 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
-			<subsection name="1.0.3">
+			<subsection name="1.0.5">
+				<ul>
+					<li>Added execution parameter trimStringInputValues (true by default)
+						that indicates that populators should trim values of type String or String[]
+						before populating/ converting.</li>
+				</ul>
+			</subsection>
+	
+			<subsection name="1.0.4">
 				<ul>
 					<li>removed redundant Locale parameter in ValidationDelegate interface and in some 
 							of the private methods of FormBeanCtrlBase.</li>

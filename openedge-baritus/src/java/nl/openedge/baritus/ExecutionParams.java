@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.8 2004-04-08 20:42:55 eelco12 Exp $
- * $Revision: 1.8 $
- * $Date: 2004-04-08 20:42:55 $
+ * $Id: ExecutionParams.java,v 1.9 2004-04-21 11:42:10 eelco12 Exp $
+ * $Revision: 1.9 $
+ * $Date: 2004-04-21 11:42:10 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -152,6 +152,13 @@ public final class ExecutionParams
 	 * marked as failed. If not in strict mode, the exception will be ignored.
 	 */
 	private boolean strictPopulationMode = true;
+	
+	/**
+	 * Whether string input values should be trimmed before conversion.
+	 * Note that the actual trimming depends on the used populator, so
+	 * setting this parameter does not garantee trimming for all parameters.
+	 */
+	private boolean trimStringInputValues = true;
 
 	/**
 	 * if true, the no cache headers will be set
@@ -420,6 +427,25 @@ public final class ExecutionParams
 	public void setStrictPopulationMode(boolean b)
 	{
 		strictPopulationMode = b;
+	}
+
+	/**
+	 * Get whether string input values should be trimmed before conversion.
+	 * True by default.
+	 * @return boolean hhether string input values should be trimmed before conversion.
+	 */
+	public boolean isTrimStringInputValues()
+	{
+		return trimStringInputValues;
+	}
+
+	/**
+	 * Set whether string input values should be trimmed before conversion.
+	 * @param b Whether string input values should be trimmed before conversion.
+	 */
+	public void setTrimStringInputValues(boolean b)
+	{
+		trimStringInputValues = b;
 	}
 
 }

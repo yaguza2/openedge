@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.7 2004-04-08 21:05:22 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-04-08 21:05:22 $
+ * $Id: PopulationTest.java,v 1.8 2004-04-21 11:42:10 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-04-21 11:42:10 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -622,5 +622,104 @@ public class PopulationTest extends TestCase
 		}	
 	}
 	
+	public void testTrimString1()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testTrimString", "    tobetrimmed     ");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+			assertNotNull(bean.getTestTrimString());
+			assertEquals("tobetrimmed", bean.getTestTrimString());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testTrimString2()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testTrimStringArray[0]", "    tobetrimmed     ");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+			assertNotNull(bean.getTestTrimStringArray());
+			assertNotNull(bean.getTestTrimStringArray()[0]);
+			assertEquals("tobetrimmed", bean.getTestTrimStringArray()[0]);
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testTrimString3()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		ctrl.getExecutionParams().setTrimStringInputValues(false);
+		Map requestParams = new HashMap();
+		requestParams.put("testTrimString", "    notbetrimmed     ");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+			assertNotNull(bean.getTestTrimString());
+			assertEquals("    notbetrimmed     ", bean.getTestTrimString());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testTrimString4()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		ctrl.getExecutionParams().setTrimStringInputValues(false);
+		Map requestParams = new HashMap();
+		requestParams.put("testTrimStringArray[0]", "    notbetrimmed     ");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+			assertNotNull(bean.getTestTrimStringArray());
+			assertNotNull(bean.getTestTrimStringArray()[0]);
+			assertEquals("    notbetrimmed     ", bean.getTestTrimStringArray()[0]);
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
 	
 }
