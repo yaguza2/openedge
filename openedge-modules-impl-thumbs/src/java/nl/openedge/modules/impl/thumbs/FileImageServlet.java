@@ -153,13 +153,15 @@ public final class FileImageServlet extends HttpServlet
 		if (!cacheFile.isFile())
 		{
 			// image was not cached yet
-			log.debug("did not find cached image, create new image now...");
+			log.debug("did not find image in cache, create new image now...");
 			FileInputStream fis = null;
+			FileOutputStream fos = null;
 			try
 			{
 				fis = new FileInputStream(concreteFile);
+				fos = new FileOutputStream(cacheFile);
 				// first create a cached image
-				iModule.writeImage(fis, new FileOutputStream(cacheFile), max);
+				iModule.writeImage(fis, fos, max);
 			}
 			catch (Exception e)
 			{
@@ -168,6 +170,10 @@ public final class FileImageServlet extends HttpServlet
 			}
 			finally
 			{
+				if(fos != null)
+				{
+					fos.close();
+				}
 				if(fis != null)
 				{
 					fis.close();

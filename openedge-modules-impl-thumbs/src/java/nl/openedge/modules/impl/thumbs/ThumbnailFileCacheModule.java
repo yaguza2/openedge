@@ -74,7 +74,10 @@ public final class ThumbnailFileCacheModule implements SingletonType, BeanType
 			cacheDir.mkdir();
 		}
 		File cacheFile = new File(cacheDir, name + cacheSuffix + max + "." + ext);
-		log.debug("cache file found: " + cacheFile.getAbsolutePath());
+		if(log.isDebugEnabled())
+		{
+			log.debug("cache file found: " + cacheFile.getAbsolutePath());
+		} 
 		return cacheFile;
 	}
 
@@ -100,13 +103,17 @@ public final class ThumbnailFileCacheModule implements SingletonType, BeanType
 		{ // cache dir does not exist yet... nothing to clear!
 			return;
 		}
-		String[] files = dir.list();
+		String[] files = cacheDir.list();
 		int size = files.length;
 		for (int i = 0; i < size; i++)
 		{
 
 			if ((files[i].startsWith(scanFor)) && (files[i].endsWith(ext)))
 			{
+				if(log.isDebugEnabled())
+				{
+					log.debug("removing " + files[i] + " from cache");
+				}
 				File toDelete = new File(dir, files[i]);
 				boolean success = toDelete.delete();
 				if (!success)
