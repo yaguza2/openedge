@@ -35,7 +35,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -403,9 +405,12 @@ public class ModuleFactory {
 					// a bit of a hack as the implementors of abstract class 
 					// org.quartz.Trigger have method setStartTime(Date), whereas 
 					// the base class itself lacks this method
+					// set startup to 30 seconds from now
+					Calendar start = new GregorianCalendar();
+					start.roll(Calendar.SECOND, 30);
 					Method setMethod = clazz.getMethod("setStartTime", 
 							new Class[]{Date.class});
-					setMethod.invoke(trigger, new Object[]{new Date()});	
+					setMethod.invoke(trigger, new Object[]{start.getTime()});	
 				} catch(Exception e) { // too bad. Let's hope the trigger will fire anyway
 					log.error("\tcould not set start time, cause: " 
 								+ e.getMessage());
