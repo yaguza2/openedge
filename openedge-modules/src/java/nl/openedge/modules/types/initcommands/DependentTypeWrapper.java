@@ -51,7 +51,7 @@ public class DependentTypeWrapper
 {
 	
 	/** the decorated instance */
-	protected DependentType componentInstance;
+	protected Object componentInstance;
 	
 	/** aliases of components that this component depends on */
 	protected List namedDependencies = null;
@@ -153,17 +153,17 @@ public class DependentTypeWrapper
 	/**
 	 * @return DependentType the wrapped instance
 	 */
-	public DependentType getComponentInstance()
+	public Object getComponentInstance()
 	{
 		return componentInstance;
 	}
 
 	/**
-	 * @param type the instance to wrap
+	 * @param instance the instance to wrap
 	 */
-	public void setComponentInstance(DependentType type)
+	public void setComponentInstance(Object instance)
 	{
-		componentInstance = type;
+		componentInstance = instance;
 	}
 
 	/**

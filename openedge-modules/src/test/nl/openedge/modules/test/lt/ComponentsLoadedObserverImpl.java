@@ -28,82 +28,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.jdom.Element;
+package nl.openedge.modules.test.lt;
 
 import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
+
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ComponentsLoadedObserverImpl
 {
 	
-	private Element componentNode = null;
-
+	private ComponentsLoadedEvent evt;
+	
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * fired after all components are (re)loaded
+	 * @param evt event
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		this.componentNode = componentNode;
+		this.evt = evt;
+		
+		ComponentRepository mf = (ComponentRepository)evt.getSource();
+		String[] names = mf.getComponentNames();
+		
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @return SchedulerStartedEvent
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public ComponentsLoadedEvent getEvt()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			
-			Class clazz = componentInstance.getClass();
-			try
-			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
-			}
-			catch (SecurityException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-	
-		}
+		return evt;
 	}
 
 }

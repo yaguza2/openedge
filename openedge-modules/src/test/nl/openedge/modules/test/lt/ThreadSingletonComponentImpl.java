@@ -28,61 +28,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ComponentFactoryObserver;
+package nl.openedge.modules.test.lt;
 
 /**
- * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ComponentFactoryObserverInitCommand implements InitCommand
+public class ThreadSingletonComponentImpl
 {
-	
-	protected ComponentRepository moduleFactory = null;
-	
 
-	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
-	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	public ThreadSingletonComponentImpl()
 	{
-		this.moduleFactory = moduleFactory;
-	}
-
-	/**
-	 * populate the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-
-		if(componentInstance instanceof ComponentFactoryObserver)
-		{
-			moduleFactory.addObserver(
-				(ComponentFactoryObserver)componentInstance);
-		}
-		else
-		{
-			ComponentFactoryObserverDecorator deco = 
-				new ComponentFactoryObserverDecorator();
-			
-			deco.setDecorated(componentInstance);
-			
-			moduleFactory.addObserver(deco);
-				
-		}
-
+		System.out.println(getClass().getName() + ": created");
 	}
 
 }

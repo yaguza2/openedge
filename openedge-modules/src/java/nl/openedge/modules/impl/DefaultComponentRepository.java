@@ -57,7 +57,6 @@ import nl.openedge.modules.observers.ComponentObserver;
 import nl.openedge.modules.observers.SchedulerObserver;
 import nl.openedge.modules.observers.SchedulerStartedEvent;
 import nl.openedge.modules.types.ComponentFactory;
-import nl.openedge.modules.types.TypesRegistry;
 import nl.openedge.modules.types.base.JobTypeFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
@@ -422,13 +421,13 @@ public class DefaultComponentRepository implements ComponentRepository
 	
 	/**
 	 * add initialization commands
-	 * @param adapter adapter
+	 * @param factory factory
 	 * @param node config node
 	 * @param clazz component class
 	 * @throws ConfigException
 	 */
 	protected void addInitCommands(
-		ComponentFactory adapter, 
+		ComponentFactory factory, 
 		Class clazz,
 		Element node)
 		throws ConfigException
@@ -446,7 +445,7 @@ public class DefaultComponentRepository implements ComponentRepository
 					InitCommand initCommand = 
 						TypesRegistry.getInitCommand(type);
 					// initialize the command
-					initCommand.init(adapter.getName(), node, this);
+					initCommand.init(factory.getName(), node, this);
 					// add command to the list
 					commands.add(initCommand);
 				}
@@ -457,7 +456,7 @@ public class DefaultComponentRepository implements ComponentRepository
 				
 			if(cmds.length > 0)
 			{
-				adapter.setInitCommands(cmds);	
+				factory.setInitCommands(cmds);	
 			}
 		}		
 	}
@@ -730,10 +729,10 @@ public class DefaultComponentRepository implements ComponentRepository
 			for(Iterator i = components.values().iterator(); i.hasNext(); )
 			{
 		
-				ComponentFactory adapter = (ComponentFactory)i.next();
-				if(type.equals(adapter.getComponentClass()))
+				ComponentFactory factory = (ComponentFactory)i.next();
+				if(type.equals(factory.getComponentClass()))
 				{
-					sublist.add(getComponent(adapter.getName()));
+					sublist.add(getComponent(factory.getName()));
 				}	
 			}			
 		}
@@ -742,10 +741,10 @@ public class DefaultComponentRepository implements ComponentRepository
 			for(Iterator i = components.values().iterator(); i.hasNext(); )
 			{
 		
-				ComponentFactory adapter = (ComponentFactory)i.next();
-				if(type.isAssignableFrom(adapter.getComponentClass()))
+				ComponentFactory factory = (ComponentFactory)i.next();
+				if(type.isAssignableFrom(factory.getComponentClass()))
 				{
-					sublist.add(getComponent(adapter.getName()));
+					sublist.add(getComponent(factory.getName()));
 				}
 			}	
 		}

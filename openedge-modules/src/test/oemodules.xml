@@ -25,10 +25,12 @@
 				
 		<component name="ConfigurableTest" 
 				class="nl.openedge.modules.test.ConfigurableComponentImpl">	
+			
 			<param1 attr="foo"/>
 			<param2>
 				Bar
-			</param2>		
+			</param2>
+			
 		</component>
 		
 		<component name="ChainedEventTest" 

@@ -37,15 +37,17 @@ import org.jdom.Element;
 
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ChainedEventCaster;
+import nl.openedge.modules.observers.ChainedEventObserver;
 
 /**
- * Command for configurable types
+ * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ChainedEventCasterInitCommand implements InitCommand
 {
 	
-	private Element componentNode = null;
+	private ComponentRepository moduleFactory = null;
 
 	/**
 	 * initialize
@@ -57,19 +59,21 @@ public class ConfigurableTypeInitCommand implements InitCommand
 		ComponentRepository moduleFactory)
 		throws ConfigException
 	{
-		this.componentNode = componentNode;
+		this.moduleFactory = moduleFactory;
 	}
 
 	/**
-	 * call init on the component instance
+	 * populate the component instance
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
-		if(componentInstance instanceof ConfigurableType)
+
+		if(componentInstance instanceof ChainedEventCaster)
 		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
+			((ChainedEventCaster)componentInstance)
+				.addObserver(this.moduleFactory);
 		}
 		else
 		{
@@ -78,9 +82,9 @@ public class ConfigurableTypeInitCommand implements InitCommand
 			try
 			{
 				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
+					"addObserver",new Class[]{ChainedEventObserver.class});
 				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
+					new Object[]{this.moduleFactory});
 			}
 			catch (SecurityException e)
 			{
@@ -102,8 +106,9 @@ public class ConfigurableTypeInitCommand implements InitCommand
 			{
 				throw new ConfigException(e);
 			}
-	
+				
 		}
+
 	}
 
 }

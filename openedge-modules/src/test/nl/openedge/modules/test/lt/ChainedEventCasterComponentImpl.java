@@ -28,56 +28,60 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.test.lt;
 
-import org.jdom.Element;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ChainedEventCaster;
+import nl.openedge.modules.observers.ChainedEventObserver;
+import nl.openedge.modules.observers.ChainedExceptionEvent;
 
 /**
- * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class CriticalEventCasterInitCommand implements InitCommand
+public class ChainedEventCasterComponentImpl
 {
-	
-	private ComponentRepository moduleFactory = null;
-	
+
+	// observers
+	private List observers = new ArrayList();
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * construct
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	public ChainedEventCasterComponentImpl()
 	{
-		this.moduleFactory = moduleFactory;
+		System.out.println(getClass().getName() + ": created");
 	}
 
 	/**
-	 * populate the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @see nl.openedge.components.ChainedEventCaster#addObserver(nl.openedge.components.ChainedEventObserver)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void addObserver(ChainedEventObserver observer)
 	{
+		observers.add(observer);
+	}
 
-		if(componentInstance instanceof ChainedEventCaster)
-		{
-			((ChainedEventCaster)componentInstance)
-				.addObserver(this.moduleFactory);
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ChainedEventCaster.class.getName());	
-		}
+	/**
+	 * test method; this method will fire a critical event
+	 */
+	public void doFoo()
+	{
+		fireCriticalEvent();
+	}
 
+	/**
+	 * fire event
+	 */
+	protected void fireCriticalEvent()
+	{
+		Exception e = new Exception("I am a critical event!");
+		for (Iterator i = observers.iterator(); i.hasNext();)
+		{
+
+			ChainedEventObserver observer = (ChainedEventObserver)i.next();
+			observer.recieveChainedEvent(new ChainedExceptionEvent(this, e));
+		}
 	}
 
 }

@@ -28,82 +28,70 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
+package nl.openedge.modules.test.lt;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class BeanComponentImpl
 {
-	
-	private Element componentNode = null;
 
-	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
-	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	private String myString;
+	private Integer myInteger;
+	
+	private BeanComponentImplNested nested = new BeanComponentImplNested();
+
+	public BeanComponentImpl()
 	{
-		this.componentNode = componentNode;
+		System.out.println(getClass().getName() + ": created");
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @return
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public Integer getMyInteger()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			
-			Class clazz = componentInstance.getClass();
-			try
-			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
-			}
-			catch (SecurityException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-	
-		}
+		return myInteger;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getMyString()
+	{
+		return myString;
+	}
+
+	/**
+	 * @param integer
+	 */
+	public void setMyInteger(Integer integer)
+	{
+		myInteger = integer;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setMyString(String string)
+	{
+		myString = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public BeanComponentImplNested getNested()
+	{
+		return nested;
+	}
+
+	/**
+	 * @param nested
+	 */
+	public void setNested(BeanComponentImplNested nested)
+	{
+		this.nested = nested;
 	}
 
 }

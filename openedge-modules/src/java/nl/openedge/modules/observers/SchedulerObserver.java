@@ -37,7 +37,7 @@ package nl.openedge.modules.observers;
  *  jobs and triggers are actually scheduled by the module factory.
  * 
  * NOTE that contract depends on the implementation of the ComponentRepository,
- * so at this stage, only the DefaultComponentRepository guarantees this behaviour
+ * so at this stage, only the LooselyTypedComponentRepository guarantees this behaviour
  * 
  * @author Eelco Hillenius
  */

@@ -28,82 +28,79 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
+package nl.openedge.modules.test.lt;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.net.URL;
 
-import org.jdom.Element;
+import junit.framework.TestCase;
 
+import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.RepositoryFactory;
+import nl.openedge.modules.config.URLHelper;
+import nl.openedge.modules.impl.lt.LooselyTypedComponentRepository;
 
 /**
- * Command for configurable types
- * @author Eelco Hillenius
+ * This is the baseclass for testcases.
+ * It does some initialisation and provides additional test methods
+ * 
+ * @author E.F. Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public abstract class AbstractTestBase extends TestCase
 {
-	
-	private Element componentNode = null;
 
-	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
-	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	/** access factory */
+	protected static ComponentRepository componentFactory;
+	protected static boolean initialised = false;
+
+	/** construct */
+	public AbstractTestBase(String name) throws Exception
 	{
-		this.componentNode = componentNode;
+		super(name);
+		init();
+	}
+
+	/** 
+	 * initialise
+	 */
+	protected void init() throws Exception
+	{
+
+		loadComponentFactory();
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * load the module factory
+	 * @throws Exception
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	protected void loadComponentFactory() throws Exception
 	{
-		if(componentInstance instanceof ConfigurableType)
+
+		if (!initialised)
 		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			
-			Class clazz = componentInstance.getClass();
+			initialised = true;
+
+			RepositoryFactory.setImplementingClass(
+				LooselyTypedComponentRepository.class.getName());
+
 			try
 			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
+
+				URL url =
+					URLHelper.convertToURL(
+						System.getProperty("configfile", "/oeltmodules.xml"),
+						AbstractTestBase.class,
+						null);
+
+				JDOMConfigurator c = new JDOMConfigurator(url);
+				componentFactory = RepositoryFactory.getInstance();
+
 			}
-			catch (SecurityException e)
+			catch (Exception e)
 			{
-				throw new ConfigException(e);
+				e.printStackTrace();
+				throw e;
 			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-	
 		}
 	}
-
 }

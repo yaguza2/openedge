@@ -30,80 +30,31 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ComponentFactoryObserver;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ComponentFactoryObserverDecorator 
+	implements ComponentFactoryObserver
 {
-	
-	private Element componentNode = null;
+
+	protected Object decorated;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * @return Object
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	public Object getDecorated()
 	{
-		this.componentNode = componentNode;
+		return decorated;
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @param object the object to decorate
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void setDecorated(Object object)
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			
-			Class clazz = componentInstance.getClass();
-			try
-			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
-			}
-			catch (SecurityException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-	
-		}
+		decorated = object;
 	}
 
 }

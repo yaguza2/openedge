@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types;
+package nl.openedge.modules.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +41,8 @@ import org.quartz.Job;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventCaster;
 import nl.openedge.modules.observers.ComponentFactoryObserver;
+import nl.openedge.modules.types.ComponentFactory;
+import nl.openedge.modules.types.RegistryException;
 import nl.openedge.modules.types.base.JobTypeFactory;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.base.SingletonTypeFactory;
@@ -52,7 +54,7 @@ import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ConfigurableTypeInitCommand;
-import nl.openedge.modules.types.initcommands.CriticalEventCasterInitCommand;
+import nl.openedge.modules.types.initcommands.ChainedEventCasterInitCommand;
 import nl.openedge.modules.types.initcommands.DependentType;
 import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
@@ -68,13 +70,13 @@ public class TypesRegistry
 	/* 
 	 * List of base types (Class)
 	 */
-	private static List baseTypes = new ArrayList(3);
+	private static List baseTypes = new ArrayList(4);
 	
 	/*
 	 * Map of component factories. Keyed on types, the values
 	 * are instances of BuilderFactory
 	 */
-	private static Map componentFactories = new HashMap(3);
+	private static Map componentFactories = new HashMap(4);
 	
 	/*
 	 * List of command types (Class). These types can do additional
@@ -84,13 +86,13 @@ public class TypesRegistry
 	 * as usually it's handy to have a component populated first
 	 * and then do some more initialization with it
 	 */
-	private static List initCommandTypes = new ArrayList(2);
+	private static List initCommandTypes = new ArrayList(5);
 	
 	/*
 	 * Map of init commands. Keyed on types, the values
 	 * are classes of commands for the types
 	 */
-	private static Map initCommandClasses = new HashMap(2);
+	private static Map initCommandClasses = new HashMap(5);
 	
 	/*
 	 * the default component factory class will be used when the 
@@ -148,7 +150,7 @@ public class TypesRegistry
 			
 		initCommandClasses.put(
 			ChainedEventCaster.class, 
-			CriticalEventCasterInitCommand.class);
+			ChainedEventCasterInitCommand.class);
 			
 		initCommandClasses.put(
 			ComponentFactoryObserver.class, 

@@ -33,76 +33,58 @@ package nl.openedge.modules.types.initcommands;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ObserveException;
+import nl.openedge.modules.observers.SchedulerObserver;
+import nl.openedge.modules.observers.SchedulerStartedEvent;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class SchedulerObserverDecorator 
+	extends ComponentFactoryObserverDecorator 
+	implements SchedulerObserver
 {
-	
-	private Element componentNode = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
+	 * 
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	public SchedulerObserverDecorator()
 	{
-		this.componentNode = componentNode;
+		super();
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @see nl.openedge.modules.observers.SchedulerObserver#schedulerStarted(nl.openedge.modules.observers.SchedulerStartedEvent)
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public void schedulerStarted(SchedulerStartedEvent evt)
 	{
-		if(componentInstance instanceof ConfigurableType)
+		
+		Class clazz = decorated.getClass();
+		try
 		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
+			Method initMethod = clazz.getMethod(
+				"schedulerStarted",new Class[]{SchedulerStartedEvent.class});
+			initMethod.invoke(decorated, new Object[]{evt});
 		}
-		else
+		catch (SecurityException e)
 		{
-			
-			Class clazz = componentInstance.getClass();
-			try
-			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
-			}
-			catch (SecurityException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-	
+			throw new ObserveException(e);
+		}
+		catch (IllegalArgumentException e)
+		{
+			throw new ObserveException(e);
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new ObserveException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new ObserveException(e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new ObserveException(e);
 		}
 	}
 

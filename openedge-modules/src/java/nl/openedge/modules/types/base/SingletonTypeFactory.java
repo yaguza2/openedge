@@ -75,10 +75,12 @@ public class SingletonTypeFactory extends AbstractComponentFactory
 				}
 				catch (InitCommandException e)
 				{
+					e.printStackTrace();
 					throw new ComponentLookupException(e);
 				}
 				catch (ConfigException e)
 				{
+					e.printStackTrace();
 					throw new ComponentLookupException(e);
 				}
 

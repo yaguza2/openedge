@@ -49,7 +49,8 @@ public class RepositoryFactory
 {
 
 	/** class of the default implementation */
-	protected static String _implementingClass = DefaultComponentRepository.class.getName();
+	protected static String _implementingClass = 
+		DefaultComponentRepository.class.getName();
 	
 	/** instance of module factory */
 	protected static ComponentRepository moduleFactory = null;

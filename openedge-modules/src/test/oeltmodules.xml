@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<components-config>
+
+	<scheduler properties="/quartz.properties">
+
+		<trigger name="testTrigger" group="DEFAULT"
+				 class="org.quartz.SimpleTrigger">
+			<parameter name="repeatInterval" value="2000"/>
+			<parameter name="repeatCount" value="-1"/>
+		</trigger>
+		
+		<jobExecutionMap>
+			<job trigger="testTrigger" component="QuartzTest" />
+		</jobExecutionMap>
+
+	</scheduler>
+
+	<components>
+		
+		<component name="ThrowAwayTest" type="throwaway" 
+				class="nl.openedge.modules.test.lt.ThrowAwayComponentImpl"/>
+		
+		<component name="SingletonTest" type="singleton"
+				class="nl.openedge.modules.test.lt.SingletonComponentImpl"/>
+		
+		<component name="ConfigurableTest" 
+				class="nl.openedge.modules.test.lt.ConfigurableComponentImpl">	
+			
+			<init-commands>
+				<command>configurable</command>
+			</init-commands>
+			
+			<param1 attr="foo"/>
+			<param2>
+				Bar
+			</param2>		
+		
+		</component>
+
+		<component name="ChainedEventTest" 
+				class="nl.openedge.modules.test.lt.ChainedEventCasterComponentImpl">
+		
+			<init-commands>
+				<command>chainedEventCaster</command>
+			</init-commands>
+			
+		</component>
+			
+		<component name="ChainedEventTestObserver" 
+				class="nl.openedge.modules.test.lt.ChainedEventObserverImpl">
+			
+			<init-commands>
+				<command>chainedEventObserver</command>
+			</init-commands>
+				
+		</component>		
+		
+		<component name="BeanTest" 
+				class="nl.openedge.modules.test.lt.BeanComponentImpl">
+				
+			<init-commands>
+				<command>bean</command>
+			</init-commands>
+				
+			<property name="myString" value="test"/>
+			<property name="myInteger" value="12"/>
+			
+			<property name="nested.anotherString" value="anotherTest"/>
+		
+		</component>
+		
+
+		<component name="QuartzTest" type="job"
+				class="nl.openedge.modules.test.QuartzJobComponentImpl">
+				
+			<jobDetail group="DEFAULT">
+				<parameter name="msg" value="this is a test job"/>
+			</jobDetail>
+				
+		</component>
+
+	
+		<component name="BlancoTest"
+				class="nl.openedge.modules.test.lt.BlancoComponentImpl">
+				
+		</component>
+
+
+		<component name="SchedulerObserverTest"
+				class="nl.openedge.modules.test.lt.SchedulerObserverImpl">
+			
+			<init-commands>
+				<command>schedulerObserver</command>
+			</init-commands>
+				
+		</component>
+	
+		<component name="ComponentsLoadedObserverTest"
+				class="nl.openedge.modules.test.lt.ComponentsLoadedObserverImpl">
+			
+			<init-commands>
+				<command>componentObserver</command>
+			</init-commands>
+				
+		</component>
+<!--			
+		<component name="DependendComponentTest"
+				class="nl.openedge.modules.test.lt.DependentComponentImpl">
+				
+			<dependency componentName="BeanTest" propertyName="beanComponent"/>
+			<dependency componentName="ConfigurableTest" propertyName="configComponent"/>
+			
+		</component>
+-->		
+		<component name="ThreadSingletonTest" 
+				class="nl.openedge.modules.test.lt.ThreadSingletonComponentImpl"/>
+-->	
+	</components>
+	
+</components-config>

@@ -28,82 +28,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+package nl.openedge.modules.test.lt;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
 /**
- * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ConfigurableComponentImpl
 {
-	
-	private Element componentNode = null;
 
-	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
-	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository moduleFactory)
-		throws ConfigException
+	private String message = null;
+
+	public ConfigurableComponentImpl()
 	{
-		this.componentNode = componentNode;
+		System.out.println(getClass().getName() + ": created");
+	}
+
+	public void init(Element configNode) throws ConfigException
+	{
+		System.out.println(getClass().getName() 
+			+ ": initialised with " + configNode);
+		Element p1 = configNode.getChild("param1");
+		if (p1 == null)
+			throw new ConfigException("where's param1?");
+		String attr = p1.getAttributeValue("attr");
+		if (attr == null)
+			throw new ConfigException("where's param1['attr']?");
+		Element p2 = configNode.getChild("param2");
+		if (p2 == null)
+			throw new ConfigException("where's param2?");
+		String val = p2.getTextNormalize();
+		if (val == null || (!val.equals("Bar")))
+			throw new ConfigException("value of param2 should be Bar!");
+			
+		this.message = "HELLO!";
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
+	 * @return String
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public String getMessage()
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			
-			Class clazz = componentInstance.getClass();
-			try
-			{
-				Method initMethod = clazz.getMethod(
-					"init",new Class[]{Element.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentNode});
-			}
-			catch (SecurityException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-	
-		}
+		return message;
 	}
 
 }
