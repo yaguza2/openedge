@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <classpath>
-    <classpathentry kind="src" path="src/java"/>
-    <classpathentry kind="src" output="target/test-classes" path="src/test"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/junit/jars/junit-3.8.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/junit-3.8.1-src.jar"/>
-    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
-    <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b9-src.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/quartz-1.2.3-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-access/jars/openedge-access-1.1.2.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-access-1.1.2-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-1.2.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-modules-1.2-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/ognl/jars/ognl-2.6.4.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/ognl-2.6.4-src.jar"/>
-    <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="src" path="src\java">
+  </classpathentry>
+  <classpathentry output="target\test-classes" kind="src" path="src\test">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
+  </classpathentry>
+  <classpathentry kind="var" rootpath="JRE_SRCROOT" path="JRE_LIB" sourcepath="JRE_SRC">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.4.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/openedge-modules/jars/openedge-modules-1.2.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/openedge-access/jars/openedge-access-1.2.jar">
+  </classpathentry>
+  <classpathentry kind="output" path="target\classes">
+  </classpathentry>
 </classpath>
