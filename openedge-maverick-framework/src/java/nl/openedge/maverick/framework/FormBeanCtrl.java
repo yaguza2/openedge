@@ -114,7 +114,18 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/** Common name for the "redirect" view */
 	public static final String REDIRECT = "doredirect";
 	
+	/** session key for the current locale */
 	public static final String SESSION_KEY_CURRENT_LOCALE = "_currentLocale";
+	
+	/** 
+	 * Key for request attribute that is used to store the formbean context.
+	 * This key is used to be able to reuse the formbean context with
+	 * multiple commands within the same request without having to figure out
+	 * what the last Maverick beanName was (it is possible to override the name
+	 * of the bean - 'model' by default - that is stored in the request by Maverick
+	 * for each view). Not intended for use outside this class.
+	 */
+	private static final String REQUEST_ATTRIBUTE_FORMBEANCONTEXT = "__formBeanContext";
 	
 	/** log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
@@ -273,11 +284,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		if(reuseFormBeanContext) // if true, see if an instance was save earlier req
 		{
 			formBeanContext = (FormBeanContext)
-				cctx.getRequest().getAttribute("__formBeanContext");
+				cctx.getRequest().getAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT);
 			if(formBeanContext == null) 
 			{
 				formBeanContext = new FormBeanContext();
-				cctx.getRequest().setAttribute("__formBeanContext", formBeanContext);
+				cctx.getRequest().setAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT, formBeanContext);
 			}
 		}
 		else
@@ -446,7 +457,10 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			while(enum.hasMoreElements())
 			{
 				String attrName = (String)enum.nextElement();
-				parameters.put(attrName, request.getAttribute(attrName));	
+				if(!REQUEST_ATTRIBUTE_FORMBEANCONTEXT.equals(attrName))
+				{
+					parameters.put(attrName, request.getAttribute(attrName));	
+				}	
 			}
 		}
 		

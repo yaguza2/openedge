@@ -32,10 +32,12 @@ package nl.openedge.maverick.framework;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import nl.openedge.maverick.framework.converters.Formatter;
 
@@ -47,7 +49,9 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * FormBeanContext wraps the form bean, errors the current locale and overrideFields.
- * 
+ * Furthermore, it acts as a decorator for a HashMap where you can optionally store 
+ * attributes you do not want to include as properties in your form bean. 
+ *  
  * @author Eelco Hillenius
  */
 public final class FormBeanContext
@@ -67,6 +71,12 @@ public final class FormBeanContext
 
 	/** overriden values as strings */
 	private Map overrideFields = null;
+	
+	/** 
+	 * if, for some reason, you want to store extra attributes in this context
+	 * instead in the formBean, you can do this here (e.g. messages)
+	 */
+	private Map attributes = null;
 
 	/** log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
@@ -577,6 +587,138 @@ public final class FormBeanContext
 			formatted = ConvertUtils.convert(value);
 		}
 		return formatted;
+	}
+	
+	// ------------- ATTRIBUTES, the decorator methods for a HashMap -------------//
+
+	/**
+	 * Returns the value to which the attributes map maps the specified key. 
+	 * Returns null if the map contains no mapping for this key.
+	 * @param key key whose associated value is to be returned
+	 * @return Object the value to which the attributes map maps the specified key, 
+	 * or null if the map contains no mapping for this key.
+	 * @see java.util.HashMap#get(java.lang.Object)
+	 */
+	public Object get(Object key)
+	{
+		return (attributes != null) ? attributes.get(key) : null;
+	}
+	
+	/** 
+	 * Associates the specified value with the specified key in the attribute map. 
+	 * If the attribute map previously contained a mapping for this key, the old value 
+	 * is replaced by the specified value.
+	 * @param key key with which the specified value is to be associated.
+	 * @param value value to be associated with the specified key.
+	 * @see java.util.HashMap#put(java.lang.Object, java.lang.Object)
+	 */
+	public void put(Object key, Object value)
+	{
+		if(attributes == null) attributes = new HashMap();
+		attributes.put(key, value);
+	}
+
+	/**
+	 * get the attribute values
+	 * @return Collection the attribute values or null if no attributes were set
+	 * @see java.util.HashMap#values(Object)
+	 */
+	public Collection values()
+	{
+		return (attributes != null) ? attributes.values() : null;
+	}
+
+	/**
+	 * get the key set of the attributes
+	 * @return Set the key set of the attributes or null if no attributes were set
+	 * @see java.util.HashMap#keySet()
+	 */
+	public Set keySet()
+	{
+		return (attributes != null) ? attributes.keySet() : null;
+	}
+
+	/**
+	 * clear the attributes
+	 * @see java.util.HashMap#clear()
+	 */
+	public void clear()
+	{
+		this.attributes = null;
+	}
+
+	/**
+	 * get the number of attributes
+	 * @return int the number of attributes
+	 * @see java.util.HashMap#size()
+	 */
+	public int size()
+	{
+		return (attributes != null) ? attributes.size() : 0;
+	}
+
+	/**
+	 * put the provided map in the attribute map 
+	 * @param t map to put in attributes
+	 * @see java.util.HashMap#putAll(java.util.Map)
+	 */
+	public void putAll(Map t)
+	{
+		if(attributes == null) attributes = new HashMap();
+		attributes.putAll(t);
+	}
+
+	/**
+	 * get the entries of the attributes
+	 * @return Set the entries of the attributes or null if no attributes were set
+	 * @see java.util.HashMap#entrySet()
+	 */
+	public Set entrySet()
+	{
+		return (attributes != null) ? attributes.entrySet() : null;
+	}
+
+	/**
+	 * is the provided key the key of an attribute
+	 * @param key the key to look for
+	 * @return boolean is the provided key the key of an attribute
+	 * @see java.util.HashMap#containsKey(java.lang.Object)
+	 */
+	public boolean containsKey(Object key)
+	{
+		return (attributes != null) ? attributes.containsKey(key) : false;
+	}
+
+	/**
+	 * are there any attributes
+	 * @return boolean are there any attributes
+	 * @see java.util.HashMap#isEmpty()
+	 */
+	public boolean isEmpty()
+	{
+		return (attributes != null) ? attributes.isEmpty() : true;
+	}
+
+	/**
+	 * remove an attribute
+	 * @param key key of the attribute to remove
+	 * @return Object the object that was stored under the given key, if any
+	 * @see java.util.HashMap#remove(java.lang.Object)
+	 */
+	public Object remove(Object key)
+	{
+		return (attributes != null) ? attributes.remove(key) : null;
+	}
+
+	/**
+	 * is the provided value stored as an attribute
+	 * @param value the value to look for
+	 * @return boolean is the provided value stored as an attribute
+	 * @see java.util.HashMap#(java.lang.Object value)
+	 */
+	public boolean containsValue(Object value)
+	{
+		return (attributes != null) ? attributes.containsValue(value) : false;
 	}
 
 }

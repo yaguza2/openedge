@@ -10,6 +10,14 @@
 - ability to reuse the instance of FormBeanContext in one request. This is convenient
 	when linking (dispatching) controlls within one request. Default is true.
 	
+- FormBeanContext is now a decorator for HashMap as well. You can now
+	add arbitrary attributes. You can use this as an alternative for request attributes
+	(and Maverick view params for that matter). This is a good idea when you do
+	include request parameters in the population process, but want certain attributes
+	not to be included in the population. An example of such a case is a user message
+	that you want to have passed through the chain of commands without having
+	any effect on the form bean population.
+	
 - better error reporting for field validation
 
 - converted most throwable.printStackTrace to Logger.log(String, throwable)
