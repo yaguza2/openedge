@@ -351,7 +351,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 							PropertyUtils.getPropertyDescriptor(formBean, name);
 						type = propertyDescriptor.getPropertyType();
 						
-						if(type.isArray())
+						if(( type != null) && type.isArray())
 						{
 							success = setArrayProperty(
 								cctx, propertyDescriptor, 
@@ -366,7 +366,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}
 					catch (Exception e)
 					{
-						// Property does not exist in target object; ignore 
+						log.error( "Property " + name + " not found"); 
 					}
 				}
 				if(!success)
