@@ -1,7 +1,7 @@
 /*
- * $Id: InterceptorDelegate.java,v 1.4 2004-05-23 10:26:57 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-05-23 10:26:57 $
+ * $Id: InterceptorDelegate.java,v 1.5 2004-06-22 17:57:24 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-06-22 17:57:24 $
  *
  * ====================================================================
  * Copyright (c) 2003
@@ -40,8 +40,8 @@ final class InterceptorDelegate
 	/* handle to interceptor registry */	
 	private InterceptorRegistry interceptorRegistry = null;
     
-    /* logger */
-    private static Log log = LogFactory.getLog(InterceptorDelegate.class);
+    /* interception logger */
+    private static Log intercLog = LogFactory.getLog(LogConstants.INTERCEPTION_LOG);
 	
 	private final static int LEVEL_BEFORE_MAKE_FORMBEAN = 0;
 	private final static int LEVEL_BEFORE_POPULATION = 1;
@@ -261,6 +261,10 @@ final class InterceptorDelegate
 
         for(int i = fromPos; i < nbrcmds; i++)
         {
+            if(intercLog.isDebugEnabled())
+            {
+                intercLog.debug("calling interceptor " + commands[i]);
+            }
             try
             {
                 switch(level) // just a bit more efficient than instanceof, and we need level anyway
@@ -296,7 +300,10 @@ final class InterceptorDelegate
             }
             catch (FlowException e)
             {
-                log.debug(e.getMessage(), e);
+                if(intercLog.isDebugEnabled())
+                {
+                    intercLog.debug(e + " was thrown by interceptor " + commands[i]); 
+                }
                 if(handleFlowExceptions) 
                 {
                     handleFlowException(
@@ -326,6 +333,10 @@ final class InterceptorDelegate
 			{
                 ReturnNowFlowException e = (ReturnNowFlowException)flowException;
 				view = e.getView();
+				if(intercLog.isDebugEnabled())
+				{
+				    intercLog.debug("returning view " + view);
+				}
 			}
 			else if(flowException instanceof DispatchNowFlowException)
 			{
@@ -335,16 +346,23 @@ final class InterceptorDelegate
 				{
 					HttpServletRequest request = cctx.getRequest(); 
 					String dispatchPath = e.getDispatchPath(); 
+					if(intercLog.isDebugEnabled())
+					{
+					    intercLog.debug("trying dispatch to " + dispatchPath);
+					}
 					RequestDispatcher disp = request.getRequestDispatcher(dispatchPath);
                     if(disp == null)
                     {
-                        throw new ServletException("dispatcher not found for path " + dispatchPath);  
+                        String msg = "dispatcher not found for path " + dispatchPath;
+                        ServletException ex = new ServletException(msg);
+                        intercLog.error(msg, ex);
+                        throw ex;  
                     }
 					disp.forward(request, cctx.getResponse());	
 				}
 				catch (IOException ex)
 				{
-                    log.error(ex.getMessage(), ex);
+                    intercLog.error(ex.getMessage(), ex);
 					throw new ServletException(e);
 				}	
 			}
@@ -366,6 +384,10 @@ final class InterceptorDelegate
 	{
 		if(flowException.isExecuteOtherInterceptors())
 		{
+			if(intercLog.isDebugEnabled())
+			{
+			    intercLog.debug("handling other interceptors before handling flowexception...");
+			}
             // handle current level
 			try
 			{
@@ -375,7 +397,7 @@ final class InterceptorDelegate
 			catch (FlowException e)
 			{
 				// never occurs
-                log.error(e.getMessage(), e); // but... just in case
+                intercLog.error(e.getMessage(), e); // but... just in case
 			}
             
 			if(level == LEVEL_BEFORE_MAKE_FORMBEAN)
@@ -386,7 +408,7 @@ final class InterceptorDelegate
 				}
 				catch (Exception e)
 				{
-                    log.error(e.getMessage(), e);
+                    intercLog.error(e.getMessage(), e);
                     // ignore rest
 				}
 			}
@@ -398,7 +420,7 @@ final class InterceptorDelegate
                 }
                 catch (Exception e)
                 {
-                    log.error(e.getMessage(), e);
+                    intercLog.error(e.getMessage(), e);
                     // ignore rest
                 }
 			}

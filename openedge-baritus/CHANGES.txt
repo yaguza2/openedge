@@ -1,3 +1,9 @@
+1.0.12
+-------------------------------------------------
+Added extra logging, levels: nl.openedge.baritus.interception,
+nl.openedge.baritus.executionparams and nl.openedge.baritus.executionparams,
+and FormBeanCtrlBase now logs to nl.openedge.baritus.
+
 1.0.11
 -------------------------------------------------
 When populating with request parameters and other parameters like request

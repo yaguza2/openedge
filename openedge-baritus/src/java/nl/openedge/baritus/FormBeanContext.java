@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.10 2004-06-03 17:01:55 eelco12 Exp $
- * $Revision: 1.10 $
- * $Date: 2004-06-03 17:01:55 $
+ * $Id: FormBeanContext.java,v 1.11 2004-06-22 17:57:24 eelco12 Exp $
+ * $Revision: 1.11 $
+ * $Date: 2004-06-22 17:57:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -42,7 +42,6 @@ import java.util.Set;
 import nl.openedge.baritus.converters.Converter;
 import nl.openedge.baritus.converters.Formatter;
 import nl.openedge.baritus.util.ValueUtils;
-
 import ognl.Ognl;
 
 import org.apache.commons.logging.Log;
@@ -763,6 +762,55 @@ public final class FormBeanContext implements Map
 	public void setController(FormBeanCtrlBase controller)
 	{
 		this.controller = controller;
+	}
+
+	/**
+	 * String rep.
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+        StringBuffer b = new StringBuffer(super.toString());
+        b.append(" { bean=")
+         .append(bean)
+         .append(", ctrl=")
+         .append(controller);
+        if(attributes != null && (!attributes.isEmpty()))
+        {
+            b.append(", attributes{");
+            for(Iterator i = attributes.keySet().iterator(); i.hasNext(); )
+            {
+                String key = (String)i.next();
+                b.append(key)
+                 .append("=")
+                 .append(attributes.get(key));
+                if(i.hasNext())
+                {
+                    b.append(",");
+                }
+            }
+            b.append("}");
+        }
+        b.append(", errors{");
+        if(errors != null)
+        {
+            for(Iterator i = errors.keySet().iterator(); i.hasNext(); )
+            {
+                String errorKey = (String)i.next();
+                b.append(errorKey)
+                 .append("=")
+                 .append(getError(errorKey))
+                 .append("(override=")
+                 .append(getOverrideField(errorKey))
+                 .append(")");
+                if(i.hasNext())
+                {
+                    b.append(",");
+                }
+            }
+        }
+        b.append("}}");
+        return b.toString();
 	}
 
 }

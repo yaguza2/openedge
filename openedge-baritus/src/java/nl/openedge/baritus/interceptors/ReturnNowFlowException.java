@@ -1,7 +1,7 @@
 /*
- * $Id: ReturnNowFlowException.java,v 1.1 2004-05-23 10:26:57 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-05-23 10:26:57 $
+ * $Id: ReturnNowFlowException.java,v 1.2 2004-06-22 17:57:24 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-06-22 17:57:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -56,6 +56,15 @@ public final class ReturnNowFlowException extends FlowException {
     public String getView()
     {
         return view;
+    }
+
+    /**
+     * String representation.
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        return super.toString() + " {view=" + view + "}"; 
     }
 
 }

@@ -10,6 +10,16 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
+            <subsection name="1.0.12">
+                <ul>
+                	<li>
+                        Added extra logging, levels: nl.openedge.baritus.interception,
+                        nl.openedge.baritus.executionparams and nl.openedge.baritus.executionparams,
+                        and FormBeanCtrlBase now logs to nl.openedge.baritus.
+                	</li>
+                </ul>
+            </subsection>
+
             <subsection name="1.0.11">
                 <ul>
                 	<li>

@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.11 2004-06-03 17:01:55 eelco12 Exp $
- * $Revision: 1.11 $
- * $Date: 2004-06-03 17:01:55 $
+ * $Id: ExecutionParams.java,v 1.12 2004-06-22 17:57:24 eelco12 Exp $
+ * $Revision: 1.12 $
+ * $Date: 2004-06-22 17:57:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,6 +31,7 @@
 package nl.openedge.baritus;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 /**
  * Each instance of FormBeanBase keeps an instance of ExecutionParams.
@@ -518,6 +519,39 @@ public final class ExecutionParams implements Serializable, Cloneable
         {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * String rep.
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        StringBuffer b = new StringBuffer(super.toString());
+        b.append(" {");
+        try
+        {
+            Class clz = getClass();
+            Field[] fields = clz.getDeclaredFields();
+            int length = fields.length;
+            for(int i = 0; i < length; i++)
+            {
+                b.append(fields[i].getName())
+                 .append("=")
+                 .append(fields[i].get(this));
+                if((i+1) < length)
+                {
+                    b.append(",");
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            b.append(e.getMessage());
+        }
+        b.append("}");
+        return b.toString();
     }
 
 }

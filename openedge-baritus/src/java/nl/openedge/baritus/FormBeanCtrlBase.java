@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.15 2004-06-11 09:19:44 eelco12 Exp $
- * $Revision: 1.15 $
- * $Date: 2004-06-11 09:19:44 $
+ * $Id: FormBeanCtrlBase.java,v 1.16 2004-06-22 17:57:24 eelco12 Exp $
+ * $Revision: 1.16 $
+ * $Date: 2004-06-22 17:57:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -102,21 +102,25 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * of the bean - 'model' by default - that is stored in the request by Maverick
 	 * for each view). Not intended for use outside this class.
 	 */
-	private static final String REQUEST_ATTRIBUTE_FORMBEANCONTEXT = "__formBeanContext";
+	public static final String REQUEST_ATTRIBUTE_FORMBEANCONTEXT = "__formBeanContext";
 
 	/**
 	 * Key for request attribute that is used to store the execution parameters
 	 * for the current request. Not intended for use outside this class.
 	 */
-	private static final String REQUEST_ATTRIBUTE_EXECUTION_PARAMS = "__executionParams";
+	public static final String REQUEST_ATTRIBUTE_EXECUTION_PARAMS = "__executionParams";
 
 	//--------------------- logs --------------------------------------------------/
 
-	/** log for this class. */
-	private static Log log = LogFactory.getLog(FormBeanCtrlBase.class);
+	/** log for general stuff. */
+	private static Log log = LogFactory.getLog(LogConstants.BARITUS_LOG);
 
 	/** population log. */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
+
+	/** exeuction params log. */
+	private static Log executionParamsLog = 
+	    LogFactory.getLog(LogConstants.EXECUTION_PARAMS_LOG);
 
 	//------------------------ registries ----------------------------------------/
 
@@ -159,14 +163,22 @@ public abstract class FormBeanCtrlBase implements Controller
 	 */
 	public final String go(ControllerContext cctx) throws ServletException
 	{
-
+	    if(log.isDebugEnabled())
+	    {
+	        log.debug("*** start handling request");
+	    }
 		String viewName = SUCCESS; // default view
 
 		Object bean = null;
 		Locale locale = null;
 		boolean populated = true;
+		FormBeanContext formBeanContext = null;
 
 		ExecutionParams execParams = getExecutionParams(cctx);
+	    if(executionParamsLog.isDebugEnabled())
+	    {
+	        executionParamsLog.debug("using " + execParams);
+	    }
 		if (execParams.isNoCache())
 		{
 			doSetNoCache(cctx); // set no cache headers
@@ -175,7 +187,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		try
 		{
 			// get the form bean context and set it in the flow interceptor context
-			FormBeanContext formBeanContext = getFormBeanContext(cctx, execParams);
+			formBeanContext = getFormBeanContext(cctx, execParams);
 			// set the current controller to be able to use methods like getPropertyNameKey etc
 			formBeanContext.setController(this);
 			cctx.setModel(formBeanContext); // set context as model
@@ -268,9 +280,21 @@ public abstract class FormBeanCtrlBase implements Controller
             else
             {
                 cctx.setModel(null);
-                viewName = null; //TODO is there a more quit way of aborting?
+                viewName = null; //TODO is there a more quiet way of aborting?
             }
 		}
+
+	    if(log.isDebugEnabled())
+	    {
+	        if(viewName != null)
+	        {
+	            log.debug("*** end handling request, fbc: " + formBeanContext);
+	        }
+	        else
+	        {
+	            log.debug("*** (request was re-dispatched)");
+	        }
+	    }
 
 		return viewName;
 	}
@@ -292,6 +316,13 @@ public abstract class FormBeanCtrlBase implements Controller
 			{
 				formBeanContext = new FormBeanContext();
 				cctx.getRequest().setAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT, formBeanContext);
+			}
+			else
+			{
+			    if(log.isDebugEnabled())
+			    {
+			        log.debug("reusing " + formBeanContext);
+			    }
 			}
 		}
 		else
@@ -1270,6 +1301,10 @@ public abstract class FormBeanCtrlBase implements Controller
 	 */
 	public void fixExecutionParams(ExecutionParams params)
 	{
+	    if(executionParamsLog.isDebugEnabled())
+	    {
+	        executionParamsLog.debug("fixing " + params + " for all requests");
+	    }
 		executionParams = params;
 	}
 
