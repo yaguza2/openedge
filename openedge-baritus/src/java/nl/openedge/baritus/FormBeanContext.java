@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.8 2004-04-04 18:23:19 eelco12 Exp $
- * $Revision: 1.8 $
- * $Date: 2004-04-04 18:23:19 $
+ * $Id: FormBeanContext.java,v 1.9 2004-05-23 10:41:20 eelco12 Exp $
+ * $Revision: 1.9 $
+ * $Date: 2004-05-23 10:41:20 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -130,7 +130,7 @@ public final class FormBeanContext implements Map
 	}
 	
 	/**
-	 * Get the form bean. The current controll provided a bean to populate with method
+	 * Get the form bean. The current control provided a bean to populate with method
 	 * makeFormBean. That bean is saved (before population) in the formBeanContext.
 	 * 
 	 * @return Object the bean that will be populated, and that is returned by makeFormbean
