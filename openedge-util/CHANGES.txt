@@ -1,4 +1,13 @@
 -------------------------------------------------
+1.2.8
+
+- updated Before and After validators to Baritus 1.0.12
+- added package nl.openedge.util.ser
+- added package nl.openedge.util.rekenen
+- added Jetty utilities
+- added package nl.openedge.util.mock
+
+-------------------------------------------------
 1.2.7
 
 - JettyVariableService removed again as it was not needed.
