@@ -31,9 +31,7 @@
 package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ModuleLookpupException;
-import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.ModuleAdapter;
-import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for singleton modules
@@ -41,40 +39,9 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
  */
 public class SingletonTypeAdapter extends ModuleAdapter
 {
-
+	
+	/** the singleton instance */
 	protected Object singletonInstance;
-
-	/**
-	 * construct with class and create and store singleton instance
-	 * @param moduleClass	class of module
-	 * @see nl.openedge.modules.ModuleAdapter#setModuleClass(java.lang.Class) 
-	 */
-	public void setModuleClass(Class moduleClass) throws ConfigException
-	{
-		// set instance
-		try
-		{
-			this.singletonInstance = moduleClass.newInstance();
-		}
-		catch (InstantiationException ex)
-		{
-			throw new ConfigException(ex);
-		}
-		catch (IllegalAccessException ex)
-		{
-			throw new ConfigException(ex);
-		}
-		this.moduleClass = moduleClass;
-		
-		try
-		{
-			executeInitCommands(singletonInstance);
-		}
-		catch (InitCommandException e)
-		{
-			throw new ConfigException(e);
-		}
-	}
 
 	/**
 	 * get instance of module
@@ -83,6 +50,24 @@ public class SingletonTypeAdapter extends ModuleAdapter
 	 */
 	public Object getModule() throws ModuleLookpupException
 	{
+		synchronized(this)
+		{
+			if(this.singletonInstance == null)
+			{
+		
+				try
+				{
+					singletonInstance = moduleClass.newInstance();
+					
+					executeInitCommands(singletonInstance);
+					
+				}
+				catch (Exception ex)
+				{
+					throw new ModuleLookpupException(ex);
+				}	
+			}
+		}
 		return singletonInstance;
 	}
 
