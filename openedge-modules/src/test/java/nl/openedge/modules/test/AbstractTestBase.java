@@ -68,7 +68,7 @@ public abstract class AbstractTestBase extends TestCase {
 		
 		if(!initialised) {
 			try {
-				this.moduleFactory = ModuleFactory.instantiate(
+				moduleFactory = ModuleFactory.instantiate(
 					System.getProperty("configfile", "/oemodules.xml"), null);
 			} catch(Exception e) {
 				e.printStackTrace();

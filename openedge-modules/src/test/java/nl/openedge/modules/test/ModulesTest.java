@@ -97,8 +97,8 @@ public class ModulesTest extends AbstractTestBase {
 					moduleFactory.getModule("BeanTest");
 			assertNotNull(module);
 			
-			this.assertEquals(module.getMyString(), "test");
-			this.assertEquals(module.getMyInteger(), new Integer(12));
+			assertEquals(module.getMyString(), "test");
+			assertEquals(module.getMyInteger(), new Integer(12));
 			
 		} catch(Exception e) {
 			e.printStackTrace();
