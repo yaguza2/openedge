@@ -31,7 +31,7 @@
 package nl.openedge.modules.impl.menumodule;
 
 /**
- * Marker voor filter per request
+ * Marker for request scope filter
  * @author Eelco Hillenius
  */
 public interface RequestScopeMenuFilter extends MenuFilter

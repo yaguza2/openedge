@@ -1,0 +1,12 @@
+-------------------------------------------------
+1.1.1
+
+- Moved class TreeStateCache from OpenEdge Util to this project, package:
+	nl.openedge.modules.impl.menumodule
+	
+- Cleaned up dependencies
+
+-------------------------------------------------
+1.1
+
+First production release.

@@ -31,10 +31,46 @@
 package nl.openedge.modules.impl.menumodule;
 
 /**
- * Exception voor menu gerelateerde gebeurtenissen
+ * Exception for menu related stuff
  * @author Eelco Hillenius
  */
 public final class MenuException extends Exception
 {
+
+	/**
+	 * construct
+	 */
+	public MenuException()
+	{
+		super();
+	}
+
+	/**
+	 * onstruct with message
+	 * @param message
+	 */
+	public MenuException(String message)
+	{
+		super(message);
+	}
+
+	/**
+	 * onstruct with message and cause
+	 * @param message
+	 * @param cause
+	 */
+	public MenuException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * onstruct with cause
+	 * @param cause
+	 */
+	public MenuException(Throwable cause)
+	{
+		super(cause);
+	}
 
 }

@@ -33,19 +33,22 @@ package nl.openedge.modules.impl.menumodule;
 import java.util.Map;
 
 /**
- * Een menufilter kan aangeven of een menu item dient te worden weergegeven.
+ * A menu filter can be used to filter menu items from the menu tree
  * @author Eelco Hillenius
  */
 public interface MenuFilter
 {
+	/** special key to store a JAAS subject with in the context */
 	public final static String CONTEXT_KEY_SUBJECT = "subject";
 	
 	/**
-	 * dient dit item te worden weergegeven?
-	 * @param menuItem het menuItem waarop wordt gechecked
-	 * @param context de huidige context. Uniek voor een Thread, maar binnen
-	 * de Thread globaal
-	 * @return boolean Als true wordt dit menuitem getoond, anders (false) niet
+	 * should the provided menu item, based on the given context, be a part of the result tree
+	 * @param menuItem the current menu item. This is a reference to the item that will
+	 * 		be part of the result tree if accepted. You can change attributes/ properties
+	 * 		if this item for later use without affecting the original tree.
+	 * @param context the current context. This context is unique for this thread, but is 
+	 * 		global within this thread.
+	 * @return boolean true if the item should be part of the result tree, false if not
 	 */
 	public boolean accept(MenuItem menuItem, Map context);
 }

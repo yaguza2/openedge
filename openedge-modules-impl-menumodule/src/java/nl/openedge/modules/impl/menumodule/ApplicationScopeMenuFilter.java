@@ -31,7 +31,7 @@
 package nl.openedge.modules.impl.menumodule;
 
 /**
- * Marker voor filter voor gehele applicatie
+ * Marker for application scope filter
  * @author Eelco Hillenius
  */
 public interface ApplicationScopeMenuFilter extends MenuFilter

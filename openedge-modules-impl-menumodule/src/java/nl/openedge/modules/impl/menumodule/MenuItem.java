@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Een item in een menu 
+ * An item that fits within a menu tree
  * @author Eelco Hillenius
  */
 public final class MenuItem implements Serializable
@@ -167,13 +167,14 @@ public final class MenuItem implements Serializable
 	}
 	
 	/**
-	 * @return String string representatie
+	 * Get the string representation with some extra info.
+	 * @return String the string representation with some extra info.
 	 */
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer("menu -> " )
 			.append(link)
-			.append((active) ? " (actief)" : "");
+			.append((active) ? " (active)" : "");
 			
 		if( (aliases != null) || (filters != null) || (attributes != null) )
 		{
@@ -225,7 +226,8 @@ public final class MenuItem implements Serializable
 	}
 	
 	/**
-	 * @return boolean is dit item onderdeel van het actieve pad
+	 * is this menu item part of the active path
+	 * @return boolean is this menu item part of the active path
 	 */
 	public boolean getActive()
 	{
@@ -233,7 +235,8 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @return boolean is dit item onderdeel van het actieve pad
+	 * is this menu item part of the active path
+	 * @return boolean is this menu item part of the active path
 	 */
 	public boolean isActive()
 	{
@@ -241,6 +244,7 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
+	 * set whether this menu item part of the active path
 	 * @param active
 	 */
 	public void setActive(boolean active)
@@ -286,8 +290,8 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * render hint; indien false kan item grijs/ niet clickable worden gezet
-	 * @return enabled
+	 * rendering hint; if false this item could be grayed out
+	 * @return boolean enabled
 	 */
 	public boolean isEnabled()
 	{
@@ -295,7 +299,8 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @param b
+	 * rendering hint; if false this item could be grayed out
+	 * @param b enabled
 	 */
 	public void setEnabled(boolean b)
 	{

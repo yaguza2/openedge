@@ -61,7 +61,6 @@ import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ServletContextAwareType;
-import nl.openedge.util.tree.TreeStateCache;
 
 /**
  * De menumodule is verantwoordelijk voor het opbouwen van de menu-opties
@@ -70,6 +69,7 @@ import nl.openedge.util.tree.TreeStateCache;
  * 
  * @author Eelco Hillenius
  * @todo: TODO momenteel zit hier een hack in... verwijder voor efficient gedrag!
+ * @todo: vertaal naar Engels
  */
 public final class MenuModule 
 	implements SingletonType, BeanType, ConfigurableType, ServletContextAwareType

@@ -39,8 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Filter dat alle MenuItems die er gebruik van maken altijd disabled. 
- * Verder wordt altijd alles geaccepteerd.
+ * Allways disables all
  * @author Sander Hofstee
  */
 public final class DisabledFilter implements RequestScopeMenuFilter
@@ -49,16 +48,15 @@ public final class DisabledFilter implements RequestScopeMenuFilter
 	private static Log log = LogFactory.getLog(DisabledFilter.class);
 
 	/**
-	 * Disabled alle menu itemts die deze filter gebruiken, verder wordt
-	 * altijd true teruggegeven. Dus alles wordt geaccepteerd, maar wel gedisabled.
+	 * Allways disables.
 	 * @param menuItem menu item
 	 * @param context de filter context
-	 * @return true
+	 * @return boolean true allways
 	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
-		boolean accepted = true; // keur altijd goed.
+		boolean accepted = true;
 	
 		if (log.isDebugEnabled())
 		{

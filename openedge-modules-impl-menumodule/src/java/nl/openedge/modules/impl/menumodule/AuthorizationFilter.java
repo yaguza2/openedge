@@ -41,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Filters on authorisations with Access/ JAAS
  * @author Eelco Hillenius
  */
 public final class AuthorizationFilter implements SessionScopeMenuFilter
@@ -49,17 +50,17 @@ public final class AuthorizationFilter implements SessionScopeMenuFilter
 	private static Log log = LogFactory.getLog(AuthorizationFilter.class);
 
 	/**
-	 * kijkt naar permissie subject om te bepalen of een menu item mag worden getoon
+	 * accepts if the subject stored in the context has permission for this item
 	 * @param menuItem menu item
 	 * @param context de filter context
 	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
-		boolean accepted = false; // default is afkeuren
+		boolean accepted = false; // default is to deny
 		
 		String link = menuItem.getLink();
-		int ix = link.indexOf('?'); // strip parameter en ?
+		int ix = link.indexOf('?'); // strip parameter and '?'
 		if(ix != -1)
 		{
 			link = link.substring(0, ix);
@@ -69,19 +70,19 @@ public final class AuthorizationFilter implements SessionScopeMenuFilter
 		try
 		{
 			
-			// doe autorisatie
+			// check authorisation
 			AccessHelper.checkPermissionForSubject(new AuthPermission(link), subject);
-			// geen exception: subject is geautoriseerd
-			// maak nieuwe werk node
+			// no exception: subject is authorised
+			// create new work node
 
 			accepted = true; // ok
 		}
 		catch (SecurityException se)
 		{
-			// geen permissie
+			// no permission
 			if(log.isDebugEnabled())
 			{
-				log.debug(subject + " heeft geen permissie voor " + menuItem);
+				log.debug(subject + " has no permission for " + menuItem);
 			}
 		}
 		
