@@ -114,9 +114,12 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	{
 		if (observer != null)
 		{
-			if(!observers.contains(observer))
+			synchronized(observers)
 			{
-				this.observers.add(observer);		
+				if(!observers.contains(observer))
+				{
+					this.observers.add(observer);		
+				}	
 			}
 		}
 	}
@@ -526,13 +529,16 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	protected void fireSchedulerStartedEvent(Scheduler scheduler)
 	{
 		SchedulerStartedEvent evt = new SchedulerStartedEvent(this, scheduler);
-		for (Iterator i = observers.iterator(); i.hasNext();)
+		synchronized(observers)
 		{
-			ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
-			if (mo instanceof SchedulerObserver)
+			for (Iterator i = observers.iterator(); i.hasNext();)
 			{
-				((SchedulerObserver)mo).schedulerStarted(evt);
-			}
+				ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
+				if (mo instanceof SchedulerObserver)
+				{
+					((SchedulerObserver)mo).schedulerStarted(evt);
+				}
+			}	
 		}
 	}
 	
@@ -543,13 +549,16 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	protected void fireModulesLoadedEvent()
 	{
 		ComponentsLoadedEvent evt = new ComponentsLoadedEvent(this);
-		for (Iterator i = observers.iterator(); i.hasNext();)
+		synchronized(observers)
 		{
-			ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
-			if (mo instanceof ComponentObserver)
+			for (Iterator i = observers.iterator(); i.hasNext();)
 			{
-				((ComponentObserver)mo).modulesLoaded(evt);
-			}
+				ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
+				if (mo instanceof ComponentObserver)
+				{
+					((ComponentObserver)mo).modulesLoaded(evt);
+				}
+			}	
 		}
 	}
 
@@ -568,13 +577,16 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	protected void fireCriticalEvent(ChainedEvent evt)
 	{
-		for (Iterator i = observers.iterator(); i.hasNext();)
+		synchronized(observers)
 		{
-			ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
-			if (mo instanceof ChainedEventObserver)
+			for (Iterator i = observers.iterator(); i.hasNext();)
 			{
-				((ChainedEventObserver)mo).recieveChainedEvent(evt);
-			}
+				ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
+				if (mo instanceof ChainedEventObserver)
+				{
+					((ChainedEventObserver)mo).recieveChainedEvent(evt);
+				}
+			}	
 		}
 	}
 
