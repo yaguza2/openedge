@@ -46,7 +46,7 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 	implements ComponentObserver
 {
 	
-	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
+	protected ThreadLocal singletonInstanceHolder = new ThreadLocal();
 
 	private boolean executeInitCommands = true;
 
