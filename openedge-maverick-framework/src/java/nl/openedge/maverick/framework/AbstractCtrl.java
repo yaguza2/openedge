@@ -625,6 +625,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	private void internalPerformError(ControllerContext cctx, 
 											AbstractForm formBean)
 	{
+		if(formBean == null) return;
 		// first, set overrides for the current request parameters
 		formBean.setOverrideField(cctx.getRequest().getParameterMap());
 		// set the current model
