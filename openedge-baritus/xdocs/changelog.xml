@@ -10,7 +10,7 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
-            <subsection name="1.0.9">
+            <subsection name="1.0.10">
                 <ul>
                 	<li>
                 	    Fixed a small but SERIOUS bug that prevented using a deep copy
