@@ -95,7 +95,7 @@ public class LogConnector extends Thread
             }
             catch(Exception e)
             {
-                log.error(e.getMessage(), e);
+                log.error(e.getMessage());
                 if(buffer.length() > 0) // flush buffer if it is not empty
                 {
                     log.info(buffer.toString());
