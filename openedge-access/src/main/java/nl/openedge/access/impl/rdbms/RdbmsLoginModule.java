@@ -174,10 +174,13 @@ public class RdbmsLoginModule extends RdbmsUserManager
 		String decoClass = (String)options.get("decorator");
 		if(decoClass != null) {
 			// got one, try to instantiate
-			try {				
-				Class cls = Thread.currentThread()
-								  .getContextClassLoader()
-								  .loadClass(decoClass);
+			try {
+				ClassLoader classLoader =
+					Thread.currentThread().getContextClassLoader();
+				if (classLoader == null) {
+					classLoader = RdbmsLoginModule.class.getClassLoader();
+				}	
+				Class cls = classLoader.loadClass(decoClass);
 				this.decorator = (LoginDecorator)cls.newInstance();
 			} catch(Exception e) {
 				e.printStackTrace();

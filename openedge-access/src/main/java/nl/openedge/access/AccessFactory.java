@@ -290,9 +290,14 @@ public class AccessFactory {
 		UserManager manager = null;
 		String managerCls = XML.getValue(configNode, "class");
 		try {
-			Class cls =  Thread.currentThread()
-							   .getContextClassLoader()
-							   .loadClass(managerCls);
+			
+			ClassLoader classLoader =
+				Thread.currentThread().getContextClassLoader();
+			if (classLoader == null) {
+				classLoader = AccessFactory.class.getClassLoader();
+			}
+			Class cls = classLoader.loadClass(managerCls);	
+
 			manager = (UserManager)cls.newInstance();
 			manager.init(configNode);
 			
