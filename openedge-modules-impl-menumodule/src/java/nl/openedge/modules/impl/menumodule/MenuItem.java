@@ -223,6 +223,14 @@ public final class MenuItem implements Serializable
 		}
 		return b.toString();
 	}
+	
+	/**
+	 * @return boolean is dit item onderdeel van het actieve pad
+	 */
+	public boolean getActive()
+	{
+		return active;
+	}
 
 	/**
 	 * @return boolean is dit item onderdeel van het actieve pad
@@ -270,6 +278,11 @@ public final class MenuItem implements Serializable
 	public void setFilters(List list)
 	{
 		filters = list;
+	}
+
+	public boolean getEnabled()
+	{
+		return enabled;
 	}
 
 	/**
