@@ -46,7 +46,27 @@ import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import nl.openedge.modules.observers.ComponentObserver;
 
 /**
- * Tries to solve the dependencies after all components have been loaded
+ * Tries to solve the dependencies after all components have been loaded.<br>
+ * Users can set the static property 'failOnCycle' to true if they want the resolving 
+ * of dependencies stopped (and thus stop the loading of the component repository)
+ * when a circular dependency is detected. Be sure to set this property BEFORE initialising
+ * the component repository.<br>
+ * 
+ * If 'failOnCycle' is false (the default),
+ * the resolving of dependencies will not stop when a circular dependency is detected.
+ * In this case, instead of getting the instance of the component for which the circular
+ * dependency was detected from the repository, a cached instance will be used for
+ * setting the dependency of the current dependent component.<br>
+ * 
+ * WARNING: as dependencies are potentially loaded from a temporary cache instead of via
+ * the component repository when 'failOnCycle' is false, it is not safe to work with
+ * components with state (ThrowAwayTypes). If there a cycle was detected, the same instance
+ * of a component is shared by more than one module, even if the normal behaviour of the
+ * type factory would be to create a new intance (like with ThrowAwayTypes). In most cases,
+ * this probably would not be a problem, but if it is, consider setting the 'failOnCycle'
+ * property to true or just using the component repository directely in the components
+ * that have dependencies instead tagging it as a dependent type.
+ * 
  * @author Eelco Hillenius
  */
 public class DependentTypeWrapper
