@@ -106,14 +106,36 @@ public class ModulesTest extends AbstractTestBase {
 		}
 	}
 	
+	public void testCriticalModule() {
+		
+		try {
+
+			CriticalModuleImpl module = (CriticalModuleImpl)
+					moduleFactory.getModule("CriticalTest");
+			assertNotNull(module);
+			
+			// create and add observer
+			CriticalEventObserverImpl observer = new CriticalEventObserverImpl();
+			module.addObserver(observer);
+			// call method that fires critical event
+			module.doFoo();
+			// the observer should now have received a critical event
+			assertNotNull(observer.getCriticalEvent());			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
 	public void testJobModule() {
 		
 		try {
 
 			Scheduler scheduler = moduleFactory.getScheduler();
 			
-			System.out.print("sleep for 4 seconds...");
-			Thread.sleep(4000);
+			System.out.print("sleep for 1 minute...");
+			Thread.sleep(60000);
 			System.out.println("done");
 			
 		} catch(Exception e) {

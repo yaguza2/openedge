@@ -30,25 +30,54 @@
  */
 package nl.openedge.modules.test;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import nl.openedge.modules.CriticalEventObserver;
+import nl.openedge.modules.CriticalExceptionEvent;
+import nl.openedge.modules.CriticalEventCaster;
+import nl.openedge.modules.SingletonModule;
 
 /**
  * @author Eelco Hillenius
  */
-public class QuartzJobModuleImpl implements Job {
+public class CriticalModuleImpl implements SingletonModule, CriticalEventCaster {
+	
+	// observers
+	private List observers = new ArrayList();
 
-	/*
-	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	/**
+	 * construct
 	 */
-	public void execute(JobExecutionContext context)
-					throws JobExecutionException {
-		
-		String msg = (String)context.getJobDetail().getJobDataMap().get("msg");
-		System.err.println("\n---" + context.getJobDetail().getFullName() 
-						+ " msg: " + msg);
-
+	public CriticalModuleImpl() {
+		System.out.println(getClass().getName() + ": created");
+	}
+	
+	/**
+	 * @see nl.openedge.modules.CriticalEventCaster#addObserver(nl.openedge.modules.CriticalEventObserver)
+	 */
+	public void addObserver(CriticalEventObserver observer) {
+		observers.add(observer);
+	}
+	
+	/**
+	 * test method; this method will fire a critical event
+	 */
+	public void doFoo() {
+		fireCriticalEvent();
+	}
+	
+	/**
+	 * fire event
+	 */
+	protected void fireCriticalEvent() {
+		Exception e = new Exception("I am a critical event!");
+		for(Iterator i = observers.iterator(); i.hasNext(); ) {
+			
+			CriticalEventObserver observer = (CriticalEventObserver)i.next();
+			observer.criticalEventOccured(new CriticalExceptionEvent(this, e));
+		}
 	}
 
 }

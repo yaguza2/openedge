@@ -31,7 +31,7 @@
 package nl.openedge.modules;
 
 /**
- * General exception for use in the OpenEdge Modules framework. 
+ * ModuleExceptions can be thrown when query-ing the ModuleFactory for modules. 
  * 
  * @author Eelco Hillenius
  */

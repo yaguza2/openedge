@@ -46,7 +46,10 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import nl.openedge.util.DateConverter;
+
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
@@ -85,7 +88,7 @@ import org.quartz.Trigger;
  * 
  * @author Eelco Hillenius
  */
-public class ModuleFactory {
+public class ModuleFactory implements CriticalEventObserver {
 
 	/**
 	 * Default location of the xml configuration file.
@@ -193,10 +196,15 @@ public class ModuleFactory {
 		if(observer != null) this.observers.remove(observer);
 	}
 	
+//-------------------------------------- INIT METHODS -------------------------//
+	
 	/* do 'real' initialisation */
 	private void internalInit(Document configuration, ServletContext servletContext) 
 					throws ConfigException {
 		
+		// initialise BeanUtils converters
+		initConverters();
+		// get doc root
 		Element root = configuration.getRootElement();
 		// get node for quartz scheduler
 		ClassLoader classLoader =
@@ -349,6 +357,7 @@ public class ModuleFactory {
 				adapter.setConfigNode(node);
 			}
 			
+			adapter.setModuleFactory(this);
 			adapter.setModuleClass(clazz); 
 			adapter.setName(name);
 			
@@ -405,9 +414,10 @@ public class ModuleFactory {
 					// a bit of a hack as the implementors of abstract class 
 					// org.quartz.Trigger have method setStartTime(Date), whereas 
 					// the base class itself lacks this method
-					// set startup to 30 seconds from now
+					// set startup to twenty seconds from now
 					Calendar start = new GregorianCalendar();
-					start.roll(Calendar.SECOND, 30);
+					start.setLenient(true);
+					start.add(Calendar.SECOND, 20);
 					Method setMethod = clazz.getMethod("setStartTime", 
 							new Class[]{Date.class});
 					setMethod.invoke(trigger, new Object[]{start.getTime()});	
@@ -567,6 +577,17 @@ public class ModuleFactory {
 	}
 	
 	/**
+	 * Initialize the custom beanutils converters here
+	 */
+	public void initConverters() {
+		DateConverter dc = new DateConverter();
+		ConvertUtils.register( dc, java.util.Date.class);
+	}
+	
+	
+//--------------------------- NONE INIT METHODS -----------------------------//
+	
+	/**
 	 * notify observers that scheduler was started
 	 * @param scheduler
 	 */
@@ -578,6 +599,29 @@ public class ModuleFactory {
 			ModuleFactoryObserver mo = (ModuleFactoryObserver)i.next();
 			if(mo instanceof SchedulerObserver) {
 				((SchedulerObserver)mo).schedulerStarted(evt);	 
+			}
+		}
+	}
+	
+	/**
+	 * fired when (according to the implementing module) a critical event occured
+	 * @param evt the critical event
+	 */
+	public void criticalEventOccured(CriticalEvent evt) {
+		fireCriticalEvent(evt);	
+	}
+	
+	/**
+	 * notify observers that a critical event occured
+	 * @param scheduler
+	 */
+	protected void fireCriticalEvent(CriticalEvent evt) {
+		
+		for(Iterator i = observers.iterator(); i.hasNext(); ) {
+			
+			ModuleFactoryObserver mo = (CriticalEventObserver)i.next();
+			if(mo instanceof SchedulerObserver) {
+				((CriticalEventObserver)mo).criticalEventOccured(evt);	 
 			}
 		}
 	}

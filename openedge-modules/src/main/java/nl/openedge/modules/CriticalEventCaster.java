@@ -28,27 +28,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+package nl.openedge.modules;
 
 /**
+ * A critical module can fire critical events. Critical modules have a central 
+ * role in the whole system and want to be able to send events 
+ * (e.g. 'emergency events') to other parts of the system 
+ * (e.g. a controller servlet)
+ * 
  * @author Eelco Hillenius
  */
-public class QuartzJobModuleImpl implements Job {
+public interface CriticalEventCaster {
 
-	/*
-	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	/**
+	 * adds an observer for CriticalEvents
+	 * @param observer
 	 */
-	public void execute(JobExecutionContext context)
-					throws JobExecutionException {
-		
-		String msg = (String)context.getJobDetail().getJobDataMap().get("msg");
-		System.err.println("\n---" + context.getJobDetail().getFullName() 
-						+ " msg: " + msg);
-
-	}
+	public void addObserver(CriticalEventObserver observer); 
 
 }

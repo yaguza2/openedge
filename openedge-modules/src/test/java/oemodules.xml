@@ -6,7 +6,7 @@
 		<trigger name="testTrigger" group="DEFAULT"
 				 class="org.quartz.SimpleTrigger">
 			<parameter name="repeatInterval" value="2000"/>
-			<parameter name="repeatCount" value="-1"/>	
+			<parameter name="repeatCount" value="-1"/>
 		</trigger>
 		
 		<jobExecutionMap>
@@ -30,6 +30,9 @@
 				Bar
 			</param2>		
 		</module>
+		
+		<module name="CriticalTest" 
+				class="nl.openedge.modules.test.CriticalModuleImpl"/>
 		
 		<module name="BeanTest" 
 				class="nl.openedge.modules.test.BeanModuleImpl">

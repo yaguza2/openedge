@@ -31,12 +31,14 @@
 package nl.openedge.modules;
 
 /**
+ * ConfigException is thrown by modules during startup of the module factory
+ * 
  * @author Eelco Hillenius
  */
 public class ConfigException extends Exception {
 
 	/**
-	 * 
+	 * construct 
 	 */
 	public ConfigException() {
 		super();

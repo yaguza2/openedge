@@ -28,27 +28,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+package nl.openedge.modules;
 
 /**
+ * a scheduler observer gets the chance to do extra configuration 
+ * (like adding quartz calendars and global listeners etc. BEFORE
+ *  jobs and triggers are actually scheduled by the module factory.
+ * 
  * @author Eelco Hillenius
  */
-public class QuartzJobModuleImpl implements Job {
+public interface CriticalEventObserver extends ModuleFactoryObserver {
 
-	/*
-	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	/**
+	 * fired when (according to the implementing module) a critical event occured
+	 * @param evt the critical event
 	 */
-	public void execute(JobExecutionContext context)
-					throws JobExecutionException {
-		
-		String msg = (String)context.getJobDetail().getJobDataMap().get("msg");
-		System.err.println("\n---" + context.getJobDetail().getFullName() 
-						+ " msg: " + msg);
-
-	}
+	public void criticalEventOccured(CriticalEvent evt);
 
 }

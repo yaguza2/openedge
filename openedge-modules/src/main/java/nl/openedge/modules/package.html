@@ -35,6 +35,8 @@ nl.openedge.modules.BeanModule. Properties will be tried to set according to
 the given &lt;property&gt; child tags of the module in the configuration.
 <p>If a module is both a bean and is configurable, it's (bean) properties will
 be set prior to calling the Configurable.init(Element) method.
+<p>A module that implements CriticalEventCaster can throw events that are routed
+to CriticalEventListeners.
 
 <p>
 The main class for clients is the <code>ModuleFactory</code>. 

@@ -28,27 +28,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import java.util.EventObject;
 
 /**
+ * high-level event that can be fired by implementors of CriticalEventCaster
  * @author Eelco Hillenius
  */
-public class QuartzJobModuleImpl implements Job {
+public class CriticalEvent extends EventObject {
 
-	/*
-	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	/**
+	 * @param source	sender of event
 	 */
-	public void execute(JobExecutionContext context)
-					throws JobExecutionException {
-		
-		String msg = (String)context.getJobDetail().getJobDataMap().get("msg");
-		System.err.println("\n---" + context.getJobDetail().getFullName() 
-						+ " msg: " + msg);
-
+	public CriticalEvent(Object source) {
+		super(source);
 	}
+	
+	
 
 }

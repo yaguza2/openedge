@@ -13,5 +13,6 @@
     <classpathentry kind="lib" path="lib/commons-collections-2.0.jar"/>
     <classpathentry kind="var" path="TOMCAT_HOME/common/lib/servlet.jar" sourcepath="SERVLET_SOURCE"/>
     <classpathentry exported="true" kind="lib" path="lib/quartz.jar" sourcepath="/openedge-modules/libsrc/quartz-src.jar"/>
+    <classpathentry kind="src" path="/openedge-util"/>
     <classpathentry kind="output" path="build"/>
 </classpath>

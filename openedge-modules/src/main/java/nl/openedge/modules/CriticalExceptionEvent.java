@@ -28,27 +28,58 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 
 /**
+ * event that can be fired by implementors of CriticalEventCaster and that hold a
+ * reference to a critical exception
  * @author Eelco Hillenius
  */
-public class QuartzJobModuleImpl implements Job {
+public class CriticalExceptionEvent extends CriticalEvent {
 
-	/*
-	 * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
+	private Throwable exception = null;
+
+	/**
+	 * @param source	sender of event
 	 */
-	public void execute(JobExecutionContext context)
-					throws JobExecutionException {
+	public CriticalExceptionEvent(Object source, Throwable exception) {
+		super(source);
+		this.exception = exception;
+	}
+	
+	/**
+	 * get the embedded exception
+	 * @return Throwable
+	 */
+	public Throwable getException() {
+		return exception;
+	}
+	
+	/**
+	 * return stacktrace as a string
+	 * @return String stacktrace as string
+	 */
+	public String getStackTraceAsString() {
 		
-		String msg = (String)context.getJobDetail().getJobDataMap().get("msg");
-		System.err.println("\n---" + context.getJobDetail().getFullName() 
-						+ " msg: " + msg);
-
+		String errorMsg = "";
+		if(exception != null) {
+			try {
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				PrintWriter pw = new PrintWriter(bos);
+				exception.printStackTrace(pw);
+				pw.flush();
+				pw.close();
+				bos.flush();
+				bos.close();
+				errorMsg = bos.toString();
+			} catch (Exception ex) {
+				errorMsg = exception.getMessage();
+			}
+		}
+		return errorMsg;
 	}
 
 }
