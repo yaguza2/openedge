@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.7 2004-02-29 13:51:24 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-02-29 13:51:24 $
+ * $Id: FormBeanCtrl.java,v 1.8 2004-02-29 17:22:28 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-02-29 17:22:28 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -179,6 +179,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		// get the form bean context and set it in the flow interceptor context
 		FormBeanContext formBeanContext = getFormBeanContext(cctx, _execParams);
+		cctx.setModel(formBeanContext); // set context as model
 		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
 		// flow intercept before make form bean
@@ -207,7 +208,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				return flowInterceptView;
 			}
 
-			cctx.setModel(formBeanContext); // set context as model
 			locale = getLocaleForRequest(cctx, formBeanContext); // get the locale
 			formBeanContext.setCurrentLocale(locale); // and set in context
 			
