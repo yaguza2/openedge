@@ -10,6 +10,14 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
+            <subsection name="1.0.9">
+                <ul>
+                	<li>
+                	    Refactored populateAndValidate from FormBeanContext to ExecutionParams.
+                	</li>
+                </ul>
+            </subsection>
+
 			<subsection name="1.0.8">
 				<ul>
 					<li>Interceptors and FlowInterceptors are now the same. From the docs:<br/>

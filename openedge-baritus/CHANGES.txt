@@ -1,3 +1,7 @@
+1.0.9
+-------------------------------------------------
+- Refactored populateAndValidate from FormBeanContext to ExecutionParams.
+
 1.0.8
 -------------------------------------------------
 - Interceptors and FlowInterceptors are now the same. From the docs:
