@@ -1552,31 +1552,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 	}
 	
-	/**
-	 * Get prefixed fields from a request. Handle checkboxes more easily
-	 * @param cctx maverick context
-	 * @param prefix prefix to search for
-	 * @return Map filled with fields that started with the prefix
-	 */
-	public Map getPrefixedFieldsFromRequest(ControllerContext cctx, String prefix)
-	{
-		Map pks = new HashMap();
-		HttpServletRequest request = cctx.getRequest();
-		Enumeration parameterNames = request.getParameterNames();
-		while (parameterNames.hasMoreElements())
-		{
-			String parameterName = (String)parameterNames.nextElement();
-			if (parameterName.startsWith(prefix))
-			{
-				String keyName = parameterName.substring(prefix.length());
-				String keyValue = request.getParameter(parameterName);
-				if (!keyValue.trim().equals(""))
-					pks.put(keyName, keyValue);
-			}
-		}
-		return pks;
-	}
-	
 	/*
 	 * set no cache headers
 	 */

@@ -1,3 +1,10 @@
+1.2.2
+-------------------------------------------------
+
+- Added Map to method isNullOrEmpty
+- Removed method getPrefixedFieldsFromRequest. Uses (like checkboxes) 
+	of this method should be replaced with a Map.
+
 1.2.1
 -------------------------------------------------
 

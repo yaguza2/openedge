@@ -547,6 +547,10 @@ public abstract class AbstractForm
 		{
 			return (value == null || (((Collection)value).isEmpty()));
 		}
+		else if (value instanceof Map)
+		{
+			return (value == null || (((Map)value).isEmpty()));
+		}
 		else
 		{
 			return (value == null);
