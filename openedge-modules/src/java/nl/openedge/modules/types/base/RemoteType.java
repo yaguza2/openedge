@@ -28,33 +28,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
-package nl.openedge.modules.util.jndi;
-
-import javax.naming.NameParser;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.CompositeName;
+package nl.openedge.modules.types.base;
 
 /**
- * Default name parser.
- *
  * @author Eelco Hillenius
+ * 
+ * Modules that implement SingletonComponentImpl will be instantiated 
+ * exactly once for each configuration entry (name).
  */
-public final class DefaultNameParser implements NameParser {
-
-    /**
-     * Parses a name into its components.
-     * 
-     * @param name The non-null string name to parse
-     * @return A non-null parsed form of the name using the naming convention 
-     * of this parser.
-     */
-    public Name parse(String name) throws NamingException {
-        
-        return new CompositeName(name);
-    }
+public interface RemoteType
+{
 
 }
-

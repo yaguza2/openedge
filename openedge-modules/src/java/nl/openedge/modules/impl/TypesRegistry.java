@@ -45,6 +45,8 @@ import nl.openedge.modules.observers.ComponentRepositoryObserver;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.RegistryException;
 import nl.openedge.modules.types.base.JobTypeFactory;
+import nl.openedge.modules.types.base.RemoteType;
+import nl.openedge.modules.types.base.RemoteTypeFactory;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.base.SingletonTypeFactory;
 import nl.openedge.modules.types.base.ThreadSingletonType;
@@ -74,7 +76,7 @@ public final class TypesRegistry
 	 * Map of component factories. Keyed on types, the values
 	 * are instances of BuilderFactory
 	 */
-	private static Map componentFactories = new HashMap(4);
+	private static Map componentFactories = new HashMap(5);
 	
 	/*
 	 * List of command types (Class). These types can do additional
@@ -121,7 +123,11 @@ public final class TypesRegistry
 			
 		componentFactories.put(
 			Job.class, 
-			JobTypeFactory.class);		
+			JobTypeFactory.class);	
+			
+		componentFactories.put(
+			RemoteType.class, 
+			RemoteTypeFactory.class);	
 		
 		// add the default enhancer types
 		// we use this to have ordering in the commands		
