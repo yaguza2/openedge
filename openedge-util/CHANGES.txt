@@ -1,3 +1,11 @@
+1.2.6
+
+- HibernateHelper can have its config location overriden by 
+	JNDI (by default using name java:comp/env/hibernate/config).
+	
+- Added JettyVariableService to be able to add simple variables
+	the the JNDI context.
+
 -------------------------------------------------
 1.2.5
 
