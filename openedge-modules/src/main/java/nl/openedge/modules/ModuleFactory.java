@@ -101,6 +101,8 @@ public class ModuleFactory {
 	 * OpenEdge Modules configuration file.  Defaults to DEFAULT_CONFIG_FILE.
 	 */
 	protected static final String INITPARAM_CONFIG_FILE = "oemodules.configFile";
+	
+	private static ModuleFactory _instance = null;
 
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
@@ -121,34 +123,56 @@ public class ModuleFactory {
 	protected List observers = new ArrayList();
 
 	/**
+	 * get singleton instance
+	 * NOTE that instantiate MUST be called once prior to using this method
+	 * @return
+	 */
+	public static ModuleFactory getInstance() {
+		return _instance;
+	}
+	
+	/*
+	 * hidden constructor
+	 */
+	private ModuleFactory() {
+		// do nothing
+	}
+
+	/**
 	 * construct and initialise with configDocument
 	 */
-	public ModuleFactory(String configDocument, ModuleFactoryObserver observer) 
+	public static ModuleFactory instantiate(String configDocument, ModuleFactoryObserver observer) 
 				throws ConfigException {
 		
-		if(observer != null) this.observers.add(observer);
-		Document configuration = loadConfigDocumentFromUrl(configDocument);
-		internalInit(configuration, null);
+		_instance = new ModuleFactory();
+		if(observer != null) _instance.observers.add(observer);
+		Document configuration = _instance.loadConfigDocumentFromUrl(configDocument);
+		_instance.internalInit(configuration, null);
+		return _instance;
 	}
 	
 	/**
 	 * construct and initialise with URL to configDocument
 	 */
-	public ModuleFactory(URL configURL, ModuleFactoryObserver observer) throws ConfigException {
+	public static ModuleFactory instantiate(URL configURL, ModuleFactoryObserver observer) throws ConfigException {
 		
-		if(observer != null) this.observers.add(observer);
-		Document configuration = loadConfigDocumentFromUrl(configURL);
-		internalInit(configuration, null);
+		_instance = new ModuleFactory();
+		if(observer != null) _instance.observers.add(observer);
+		Document configuration = _instance.loadConfigDocumentFromUrl(configURL);
+		_instance.internalInit(configuration, null);
+		return _instance;
 	}
 	
 	/**
 	 * construct and initialise with servletContext
 	 */
-	public ModuleFactory(ServletContext servletContext, ModuleFactoryObserver observer) throws ConfigException {
+	public static ModuleFactory instantiate(ServletContext servletContext, ModuleFactoryObserver observer) throws ConfigException {
 
-		if(observer != null) this.observers.add(observer);
-		Document configuration = loadConfigDocumentInWebApp(servletContext);
-		internalInit(configuration, servletContext);
+		_instance = new ModuleFactory();
+		if(observer != null) _instance.observers.add(observer);
+		Document configuration = _instance.loadConfigDocumentInWebApp(servletContext);
+		_instance.internalInit(configuration, servletContext);
+		return _instance;
 	}
 	
 	/**
