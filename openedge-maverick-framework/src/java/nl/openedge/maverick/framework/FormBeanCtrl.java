@@ -428,7 +428,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 		if(success) // if successful, do custom validation
 		{
-			doCustomValidation(cctx, formBeanContext, parameters, locale, success);
+			success = doCustomValidation(cctx, formBeanContext, parameters, locale, success);
 		}
 
 		if(performanceLog.isDebugEnabled())
@@ -835,7 +835,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Collection propertyValidators)
 		throws Exception
 	{
-		Object value = PropertyUtils.getProperty(formBeanContext, name);
+		Object value = PropertyUtils.getProperty(formBeanContext.getBean(), name);
 		for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
 		{
 			FieldValidator validator = (FieldValidator)j.next();
