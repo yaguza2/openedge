@@ -3,7 +3,7 @@
     <artifactId>openedge-gaps</artifactId>
     <name>OpenEdge GAPS</name>
     <groupId>openedge-gaps</groupId>
-    <currentVersion>1.0</currentVersion>
+    <currentVersion>1.0.1</currentVersion>
     <organization>
         <name>Levob en OpenEdge</name>
         <url>http://www.openedge.nl</url>

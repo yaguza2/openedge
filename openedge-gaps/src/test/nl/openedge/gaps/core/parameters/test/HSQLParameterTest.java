@@ -55,11 +55,11 @@ public class HSQLParameterTest extends AbstractParameterTest
 		TestSuite suite = new TestSuite();
 		suite.addTest(new HSQLParameterTest("testGroepen"));
 		suite.addTest(new HSQLParameterTest("testSaveGetDelParameter"));
-		suite.addTest(new HSQLParameterTest("testBuildString"));
-		suite.addTest(new HSQLParameterTest("testBuildPercentage"));
-		suite.addTest(new HSQLParameterTest("testBuildBoolean"));
-		suite.addTest(new HSQLParameterTest("testBuildDate"));
-		suite.addTest(new HSQLParameterTest("testBuildFixedSet"));
+		suite.addTest(new HSQLParameterTest("testCreateString"));
+		suite.addTest(new HSQLParameterTest("testCreatePercentage"));
+		suite.addTest(new HSQLParameterTest("testCreateBoolean"));
+		suite.addTest(new HSQLParameterTest("testCreateDate"));
+		suite.addTest(new HSQLParameterTest("testCreateFixedSet"));
 		suite.addTest(new HSQLParameterTest("testParameterInExpressie"));
 		suite.addTest(new HSQLParameterTest("testNavigatie"));
 		suite.addTest(new HSQLParameterTest("testParameterGroepOvererving"));

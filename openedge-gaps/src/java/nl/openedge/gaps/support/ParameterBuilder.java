@@ -97,6 +97,160 @@ public class ParameterBuilder
 	 */
 
 	/**
+	 * Creeer een {@link Parameter} van het gegeven type, en een bijbehorende
+	 * {@link ParameterValue} met de gegeven string waarde, het id en de versie
+	 * dat de property is van deze builder.
+	 * @param type parameter klasse
+	 * @param localId het lokale id
+	 * @param value de waarde als een string (leeg of null indien er geen value object
+	 *            dient te worden gecreeerd)
+	 * @return een nieuwe parameter instantie
+	 * @throws RegistryException bij onverwachte registry problemen
+	 * @throws SaveException als de parameter niet kan worden opgeslagen
+	 * @throws InputException bij conversie fouten van de gegeven waarde
+	 * @throws ParameterBuilderException indien de builder niet in staat is de
+	 *             parameter(s) te construeren
+	 */
+	public Parameter createParameter(Class type, String localId, String value)
+		throws RegistryException, SaveException, InputException,
+		ParameterBuilderException
+	{
+		Parameter param = buildParameter(type, localId, value);
+		saveParameter(param);
+		return param;
+	}
+
+	/**
+	 * Creeer een {@link Parameter}, van het gegeven type en een bijbehorende
+	 * {@link ParameterValue} met de gegeven string waarde, het id en de versie
+	 * @param type parameter klasse
+	 * dat de property is van deze builder.
+	 * @param localId het lokale id
+	 * @param value de waarde als een string (leeg of null indien er geen value object
+	 *            dient te worden gecreeerd)
+	 * @return een nieuwe parameter instantie
+	 * @throws InputException bij conversie fouten van de gegeven waarde
+	 * @throws ParameterBuilderException indien de builder niet in staat is de
+	 *             parameter(s) te construeren
+	 */
+	protected Parameter buildParameter(Class type, String localId, String value)
+			throws InputException, ParameterBuilderException
+	{
+		checkIdNotNull(localId);
+		Parameter param = null;
+        try
+        {
+            param = (Parameter)type.newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            throw new ParameterBuilderException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new ParameterBuilderException(e);
+        }
+        param = prepareParameter(param, localId, value);
+		return param;
+	}
+
+	/**
+	 * Creeer een {@link NestedParameter}met daarin genest een rij van
+	 * {@link Parameter}s op basis van het gegeven type, id's en values.
+	 * @param type parameter klasse
+	 * @param localId het lokale id van deze parameter
+	 * @param ids de ids van de geneste parameters
+	 * @param values de waarden als een string array
+	 * @return een nieuwe parameter instantie
+	 * @throws RegistryException bij onverwachte registry problemen
+	 * @throws SaveException als de parameter niet kan worden opgeslagen
+	 * @throws InputException bij conversie fouten van de gegeven waarde
+	 * @throws ParameterBuilderException indien de builder niet in staat is de
+	 *             parameter(s) te construeren
+	 */
+	public NestedParameter createRow(
+	        Class type, String localId, String[] ids, String[] values)
+			throws RegistryException, SaveException, InputException,
+			ParameterBuilderException
+	{
+	    int len = ids.length;
+		Class[] types = new Class[len];
+		for(int i = 0; i < len; i++)
+		{
+		    types[i] = type;
+		}
+		return createRow(types, localId, ids, values);
+	}
+
+	/**
+	 * Creeer een {@link NestedParameter}met daarin genest een rij van
+	 * {@link Parameter}s op basis van de gegeven types, id's en values.
+	 * @param type parameter klassen
+	 * @param localId het lokale id van deze parameter
+	 * @param ids de ids van de geneste parameters
+	 * @param values de waarden als een string array
+	 * @return een nieuwe parameter instantie
+	 * @throws RegistryException bij onverwachte registry problemen
+	 * @throws SaveException als de parameter niet kan worden opgeslagen
+	 * @throws InputException bij conversie fouten van de gegeven waarde
+	 * @throws ParameterBuilderException indien de builder niet in staat is de
+	 *             parameter(s) te construeren
+	 */
+	public NestedParameter createRow(
+	        Class[] types, String localId, String[] ids, String[] values)
+			throws RegistryException, SaveException, InputException,
+			ParameterBuilderException
+	{
+		checkIdNotNull(localId);
+		NestedParameter param = new NestedParameter();
+		prepareParameterProperties(param, localId);
+		Parameter[] params = createNested(types, ids, values, param);
+		param.addAll(params);
+		NestedParameterValue paramValue = (NestedParameterValue)
+			param.createValue(context, values);
+		param.setValue(paramValue);
+		saveParameter(param);
+		return param;
+	}
+
+	/**
+	 * Creeer geneste string parameters.
+	 * @param type parameter klassen
+     * @param ids ids
+     * @param values waarden
+     * @param param parameter
+     * @return array van geneste parameters
+	 * @throws SaveException als de parameter niet kan worden opgeslagen
+	 * @throws InputException bij conversie fouten van de gegeven waarde
+	 * @throws ParameterBuilderException indien de builder niet in staat is de
+	 *             parameter(s) te construeren
+     */
+    private Parameter[] createNested(
+            Class[] types, String[] ids, String[] values,
+            NestedParameter param)
+    		throws ParameterBuilderException, SaveException, InputException
+    {
+        Parameter[] params = null;
+        if ((ids != null) || (values != null))
+		{
+			if ((ids.length != values.length))
+			{
+				throw new ParameterBuilderException(
+						"invoer ids en values niet van gelijke grootte");
+			}
+			params = new Parameter[ids.length];
+			int len = ids.length;
+			this.topParam = param;
+			for (int i = 0; i < len; i++)
+			{
+				params[i] = createParameter(types[i], ids[i], values[i]);
+			}
+			this.topParam = null;
+		}
+        return params;
+    }
+
+	/**
 	 * Creeer een {@link StringParameter}, en een bijbehorende {@link ParameterValue}met
 	 * de gegeven string waarde, het id en de versie dat de property is van deze builder.
 	 * @param localId het lokale id
@@ -113,30 +267,7 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
-		StringParameter param = buildString(localId, value);
-		saveParameter(param);
-		return param;
-	}
-
-	/**
-	 * Creeer een {@link StringParameter}, en een bijbehorende {@link ParameterValue}met
-	 * de gegeven string waarde, het id en de versie dat de property is van deze builder.
-	 * @param localId het lokale id
-	 * @param value de waarde als een string (leeg of null indien er geen value object
-	 *            dient te worden gecreeerd)
-	 * @return een nieuwe parameter instantie
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected StringParameter buildString(String localId, String value)
-			throws InputException, ParameterBuilderException
-	{
-
-		checkIdNotNull(localId);
-		Parameter param = prepareParameter(new StringParameter(), localId, value);
-		return (StringParameter) param;
+	    return (StringParameter)createParameter(StringParameter.class, localId, value);
 	}
 
 	/**
@@ -157,31 +288,7 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
-		NumericParameter param = buildNumeric(localId, value);
-		saveParameter(param);
-		return param;
-	}
-
-	/**
-	 * Creeer een {@link NumericParameter}, en een bijbehorende
-	 * {@link NumericParameterValue}met de gegeven numerieke waarde, het id en de versie
-	 * dat de property is van deze builder.
-	 * @param localId het lokale id
-	 * @param value de waarde als een string (leeg of null indien er geen value object
-	 *            dient te worden gecreeerd)
-	 * @return een nieuwe parameter instantie
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected NumericParameter buildNumeric(String localId, String value)
-			throws InputException, ParameterBuilderException
-	{
-
-		checkIdNotNull(localId);
-		Parameter param = prepareParameter(new NumericParameter(), localId, value);
-		return (NumericParameter) param;
+	    return (NumericParameter)createParameter(NumericParameter.class, localId, value);
 	}
 
 	/**
@@ -201,35 +308,7 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
-		checkIdNotNull(localId);
-		NestedParameter param = new NestedParameter();
-		prepareParameterProperties(param, localId);
-
-		NumericParameter[] params = null;
-		if ((ids != null) || (values != null))
-		{
-			if ((ids.length != values.length))
-			{
-				throw new ParameterBuilderException(
-						"invoer ids en values niet van gelijke grootte");
-			}
-			params = new NumericParameter[ids.length];
-			int len = ids.length;
-			this.topParam = param;
-			for (int i = 0; i < len; i++)
-			{
-				params[i] = createNumeric(ids[i], values[i]);
-			}
-			this.topParam = null;
-		}
-		param.addAll(params);
-		NestedParameterValue paramValue = (NestedParameterValue) param.createValue(
-				context, values);
-		param.setValue(paramValue);
-
-		saveParameter(param);
-		return param;
+	    return createRow(NumericParameter.class, localId, ids, values);
 	}
 
 	/**
@@ -428,34 +507,8 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
-		PercentageParameter param = buildPercentage(localId, value);
-		saveParameter(param);
-		return param;
-	}
-
-	/**
-	 * Creeer een {@link PercentageParameter}, en een bijbehorende
-	 * {@link PercentageParameterValue}met de gegeven numerieke waarde, het id en de
-	 * versie dat de property is van deze builder. <br>
-	 * Deze functie registreert de parameter niet; gebruik deze functie 'om te spelen' met
-	 * parameters, of gebruik methode createPercentage van deze builder voor create en
-	 * registratie van de parameter.
-	 * @param localId het lokale id
-	 * @param value de waarde als een string (leeg of null indien er geen value object
-	 *            dient te worden gecreeerd)
-	 * @return een nieuwe parameter instantie
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected PercentageParameter buildPercentage(String localId, String value)
-			throws InputException, ParameterBuilderException
-	{
-
-		checkIdNotNull(localId);
-		Parameter param = prepareParameter(new PercentageParameter(), localId, value);
-		return (PercentageParameter) param;
+	    return (PercentageParameter)createParameter(
+	            PercentageParameter.class, localId, value);
 	}
 
 	/**
@@ -476,30 +529,7 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
-		BooleanParameter param = buildBoolean(localId, value);
-		saveParameter(param);
-		return param;
-	}
-
-	/**
-	 * Creeer een {@link BooleanParameter}, en een bijbehorende {@link ParameterValue}
-	 * met de gegeven waarde, het id en de versie dat de property is van deze builder.
-	 * @param localId het lokale id
-	 * @param value de waarde als een string (leeg of null indien er geen value object
-	 *            dient te worden gecreeerd)
-	 * @return een instantie van BooleanParameter
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected BooleanParameter buildBoolean(String localId, String value)
-			throws InputException, ParameterBuilderException
-	{
-
-		checkIdNotNull(localId);
-		Parameter param = prepareParameter(new BooleanParameter(), localId, value);
-		return (BooleanParameter) param;
+	    return (BooleanParameter)createParameter(BooleanParameter.class, localId, value);
 	}
 
 	/**
@@ -520,30 +550,7 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
-		DateParameter param = buildDate(localId, value);
-		saveParameter(param);
-		return param;
-	}
-
-	/**
-	 * Creeer een {@link DateParameter}, en een bijbehorende {@link ParameterValue}met
-	 * de gegeven waarde, het id en de versie dat de property is van deze builder.
-	 * @param localId het lokale id
-	 * @param value de waarde als een string (leeg of null indien er geen value object
-	 *            dient te worden gecreeerd)
-	 * @return een nieuwe parameter instantie
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected DateParameter buildDate(String localId, String value)
-			throws InputException, ParameterBuilderException
-	{
-
-		checkIdNotNull(localId);
-		Parameter param = prepareParameter(new DateParameter(), localId, value);
-		return (DateParameter) param;
+	    return (DateParameter)createParameter(DateParameter.class, localId, value);
 	}
 
 	/**
@@ -567,7 +574,6 @@ public class ParameterBuilder
 			throws RegistryException, SaveException, InputException,
 			ParameterBuilderException
 	{
-
 		FixedSetParameter param = buildFixedSet(localId, value, inputSet, converter);
 		saveParameter(param);
 		return param;
@@ -593,8 +599,8 @@ public class ParameterBuilder
 	{
 
 		checkIdNotNull(id);
-		Parameter param = prepareParameter(new FixedSetParameter(inputSet, converter),
-				id, value);
+		Parameter param = prepareParameter(
+		        new FixedSetParameter(inputSet, converter), id, value);
 		return (FixedSetParameter) param;
 	}
 
@@ -732,7 +738,6 @@ public class ParameterBuilder
 			boolean navigateTo) throws ParameterBuilderException, RegistryException,
 			SaveException
 	{
-
 		StructuralGroup group = buildStructuralGroup(name, description, navigateTo);
 		ParameterRegistry.saveGroup(group);
 		ParameterRegistry.saveGroup(structuralGroup); // gewijzigde parent
@@ -749,7 +754,6 @@ public class ParameterBuilder
 	protected StructuralGroup buildStructuralGroup(String name, String description)
 			throws ParameterBuilderException
 	{
-
 		return buildStructuralGroup(name, description, false);
 	}
 
@@ -766,7 +770,6 @@ public class ParameterBuilder
 	protected StructuralGroup buildStructuralGroup(String name, String description,
 			boolean navigateTo) throws ParameterBuilderException
 	{
-
 		checkIdNotNull(name);
 		checkGroupLocalId(name);
 		StructuralGroup group = new StructuralGroup();
@@ -796,7 +799,6 @@ public class ParameterBuilder
 	public ParameterGroup createParameterGroup(String name, String description)
 			throws ParameterBuilderException
 	{
-
 		return createParameterGroup(null, name, description, false);
 	}
 
@@ -812,7 +814,6 @@ public class ParameterBuilder
 	public ParameterGroup createParameterGroup(ParameterGroup extendsFrom, String name,
 			String description) throws ParameterBuilderException
 	{
-
 		return createParameterGroup(extendsFrom, name, description, false);
 	}
 
@@ -830,7 +831,6 @@ public class ParameterBuilder
 	public ParameterGroup createParameterGroup(String name, String description,
 			boolean navigateTo) throws ParameterBuilderException
 	{
-
 		return createParameterGroup(null, name, description, navigateTo);
 	}
 
@@ -849,7 +849,6 @@ public class ParameterBuilder
 	public ParameterGroup createParameterGroup(ParameterGroup extendsFrom, String name,
 			String description, boolean navigateTo) throws ParameterBuilderException
 	{
-
 		ParameterGroup group = buildParameterGroup(
 				extendsFrom, name, description, navigateTo);
 		ParameterRegistry.saveGroup(group);
@@ -868,7 +867,6 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(String name, String description)
 			throws ParameterBuilderException
 	{
-
 		return buildParameterGroup(null, name, description, false);
 	}
 
@@ -884,7 +882,6 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(ParameterGroup extendsFrom, String name,
 			String description) throws ParameterBuilderException
 	{
-
 		return buildParameterGroup(extendsFrom, name, description, false);
 	}
 
@@ -902,7 +899,6 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(String name, String description,
 			boolean navigateTo) throws ParameterBuilderException
 	{
-
 		return buildParameterGroup(null, name, description, navigateTo);
 	}
 
@@ -921,7 +917,6 @@ public class ParameterBuilder
 	protected ParameterGroup buildParameterGroup(ParameterGroup extendsFrom, String name,
 			String description, boolean navigateTo) throws ParameterBuilderException
 	{
-
 		checkIdNotNull(name);
 		checkGroupLocalId(name);
 		checkParentOfParameterGroup(structuralGroup);
@@ -950,7 +945,6 @@ public class ParameterBuilder
 	private void checkParentOfParameterGroup(StructuralGroup parent)
 			throws ParameterBuilderException
 	{
-
 		if (parent == null)
 		{
 			throw new ParameterBuilderException("parent dient gegeven te zijn "
@@ -1153,6 +1147,5 @@ public class ParameterBuilder
 			TransactionUtil.rollback();
 			throw new ParameterBuilderException(e);
 		}
-
 	}
 }

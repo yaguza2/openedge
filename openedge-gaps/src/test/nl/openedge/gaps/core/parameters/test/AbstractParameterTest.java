@@ -154,7 +154,7 @@ public abstract class AbstractParameterTest extends TestCase
 	 * Test parameter constructie.
 	 * @throws Exception
 	 */
-	public void testBuildPercentage() throws Exception
+	public void testCreatePercentage() throws Exception
 	{
 
 		ParameterBuilder builder = new ParameterBuilder();
@@ -168,20 +168,30 @@ public abstract class AbstractParameterTest extends TestCase
 	 * Test parameter constructie.
 	 * @throws Exception
 	 */
-	public void testBuildString() throws Exception
+	public void testCreateString() throws Exception
 	{
-
 		ParameterBuilder builder = new ParameterBuilder();
 		StringParameter param = null;
 		param = builder.createString("foo", "My Name Is Bar");
 		assertEquals("My Name Is Bar", param.getString());
+
+		NestedParameter nParam = builder.createRow(
+		        StringParameter.class, "nestedString",
+		        new String[]{"nested1", "nested2"},
+		        new String[]{"valNested1", "valNested2"});
+		param = (StringParameter)nParam.get("nested1");
+		assertNotNull(param);
+		assertEquals("valNested1", param.getString());
+		param = (StringParameter)nParam.get("nested2");
+		assertNotNull(param);
+		assertEquals("valNested2", param.getString());
 	}
 
 	/**
 	 * Test parameter constructie.
 	 * @throws Exception
 	 */
-	public void testBuildBoolean() throws Exception
+	public void testCreateBoolean() throws Exception
 	{
 
 		ParameterBuilder builder = new ParameterBuilder();
@@ -198,7 +208,7 @@ public abstract class AbstractParameterTest extends TestCase
 	 * Test parameter constructie.
 	 * @throws Exception
 	 */
-	public void testBuildDate() throws Exception
+	public void testCreateDate() throws Exception
 	{
 
 		ParameterBuilder builder = new ParameterBuilder();
@@ -217,7 +227,7 @@ public abstract class AbstractParameterTest extends TestCase
 	 * Test parameter constructie.
 	 * @throws Exception
 	 */
-	public void testBuildFixedSet() throws Exception
+	public void testCreateFixedSet() throws Exception
 	{
 
 		ParameterBuilder builder = new ParameterBuilder();

@@ -55,11 +55,11 @@ public class OracleParameterTest extends AbstractParameterTest
 		TestSuite suite = new TestSuite();
 		suite.addTest(new OracleParameterTest("testGroepen"));
 		suite.addTest(new OracleParameterTest("testSaveGetDelParameter"));
-		suite.addTest(new OracleParameterTest("testBuildString"));
-		suite.addTest(new OracleParameterTest("testBuildPercentage"));
-		suite.addTest(new OracleParameterTest("testBuildBoolean"));
-		suite.addTest(new OracleParameterTest("testBuildDate"));
-		suite.addTest(new OracleParameterTest("testBuildFixedSet"));
+		suite.addTest(new OracleParameterTest("testCreateString"));
+		suite.addTest(new OracleParameterTest("testCreatePercentage"));
+		suite.addTest(new OracleParameterTest("testCreateBoolean"));
+		suite.addTest(new OracleParameterTest("testCreateDate"));
+		suite.addTest(new OracleParameterTest("testCreateFixedSet"));
 		suite.addTest(new OracleParameterTest("testParameterInExpressie"));
 		//	    suite.addTest(new HSQLParameterTest("testNavigatie"));
 		//	    suite.addTest(new HSQLParameterTest("testParameterGroepOvererving"));

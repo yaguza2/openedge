@@ -1,0 +1,8 @@
+-----------------------------------------------
+1.0.1
+
+- implementatie builder eenvoudiger gemaakt
+- generieke builder methoden toegevoegd met Class en Class[] argumenten
+
+-----------------------------------------------
+1.0 eerste release
