@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.7 2004-04-21 11:42:10 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-04-21 11:42:10 $
+ * $Id: TestBean.java,v 1.8 2004-06-03 19:58:07 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-06-03 19:58:07 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -64,6 +64,11 @@ public class TestBean
 	private String[] testStringArray2 = new String[] 
 	{
 		"existing0", "existing1"	
+	};
+	
+	private Integer[] testIntegerArray1 = new Integer[]
+	{
+	  new Integer(-1), new Integer(-1)
 	};
 	
 	private Map testMap = new HashMap();
@@ -509,4 +514,20 @@ public class TestBean
 		testTrimStringArray = strings;
 	}
 
+    /**
+     * Get testIntegerArray1.
+     * @return Integer[] Returns the testIntegerArray1.
+     */
+    public Integer[] getTestIntegerArray1()
+    {
+        return testIntegerArray1;
+    }
+    /**
+     * Set testIntegerArray1.
+     * @param testIntegerArray1 testIntegerArray1 to set.
+     */
+    public void setTestIntegerArray1(Integer[] testIntegerArray1)
+    {
+        this.testIntegerArray1 = testIntegerArray1;
+    }
 }

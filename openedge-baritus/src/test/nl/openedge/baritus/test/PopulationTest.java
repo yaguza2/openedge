@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.9 2004-05-23 10:26:58 eelco12 Exp $
- * $Revision: 1.9 $
- * $Date: 2004-05-23 10:26:58 $
+ * $Id: PopulationTest.java,v 1.10 2004-06-03 19:58:07 eelco12 Exp $
+ * $Revision: 1.10 $
+ * $Date: 2004-06-03 19:58:07 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -230,7 +230,7 @@ public class PopulationTest extends TestCase
 	}
 	
 	/**
-	 * Test the population of arrays when the are in the request as 
+	 * Test the population of arrays when the parameters are in the request as 
 	 * array = {value1, value2}
 	 */
 	public void testRequestStringArrayPopulation()
@@ -258,39 +258,6 @@ public class PopulationTest extends TestCase
 			e.printStackTrace();
 			fail(e.getMessage());
 		}		
-	}
-	
-	/**
-	 * Test the population of arrays when the are in the request as 
-	 * array[0] = value1
-	 * array[1] = value2
-	 */
-	public void testStringArrayPopulation()
-	{
-		TestCtrl ctrl = new TestCtrl();
-		Map requestParams = new HashMap();
-		requestParams.put("testStringArray2[0]", "newval0");
-		requestParams.put("testStringArray2[1]", "newval1");
-		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
-		try
-		{
-			ctrl.init(null);
-			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());			
-			String[] testStringArray2 = bean.getTestStringArray2();
-			assertNotNull(testStringArray2);
-			assertEquals(2, testStringArray2.length);
-			assertEquals("newval0", testStringArray2[0]);
-			assertEquals("newval1", testStringArray2[1]);
-		}
-		catch (ServletException e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}	
 	}
 	
 	public void testStringMapPopulation()
@@ -721,5 +688,39 @@ public class PopulationTest extends TestCase
 			fail(e.getMessage());
 		}	
 	}
+	
+// THIS TESTS AN OGNL BUG/ FEATURE
+//	/**
+//	 * Test the population of arrays when the parameters are in the request as 
+//	 * array[0] = 1
+//	 * array[1] = 2
+//	 */
+//	public void testIntegerArrayPopulation1()
+//	{
+//		TestCtrl ctrl = new TestCtrl();
+//		Map requestParams = new HashMap();
+//		requestParams.put("testIntegerArray1[0]", "1");
+//		requestParams.put("testIntegerArray1[1]", "2");
+//		request.setupGetParameterMap(requestParams);
+//		MaverickContext mockMavCtx = new MaverickContext(
+//			null, request, response);
+//		try
+//		{
+//			ctrl.init(null);
+//			ctrl.go(mockMavCtx);
+//			TestBean bean = ctrl.getTestBean();
+//			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());			
+//			Integer[] testIntegerArray = bean.getTestIntegerArray1();
+//			assertNotNull(testIntegerArray);
+//			assertEquals(2, testIntegerArray.length);
+//			assertEquals(new Integer(1), testIntegerArray[0]);
+//			assertEquals(new Integer(2), testIntegerArray[1]);
+//		}
+//		catch (ServletException e)
+//		{
+//			e.printStackTrace();
+//			fail(e.getMessage());
+//		}	
+//	}
 	
 }
