@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>oe-thumbs</id>
 	<name>OpenEdge Thumbnails and file resources</name>
-	<currentVersion>1.0</currentVersion>
+	<currentVersion>1.1</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -22,9 +22,9 @@
 
 	<versions>
 		<version>
-			<id>1</id>
-			<name>1</name>
-			<tag>HEAD</tag>
+			<id>1.1</id>
+			<name>1.1</name>
+			<tag>B1</tag>
 		</version>
 	</versions>
 	<branches />
