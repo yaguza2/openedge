@@ -35,6 +35,7 @@ import java.security.AccessController;
 import java.security.Permission;
 import java.security.PrivilegedAction;
 
+import javax.security.auth.AuthPermission;
 import javax.security.auth.Subject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -153,9 +154,16 @@ public final class AccessFilter implements Filter
 		UriAction action = new UriAction(uri);
 		try
 		{
-			// Subject.doAs(subject, action) does NOT work... dunno why?
-			// nevertheless, this does. 
 			Subject.doAsPrivileged(subject, action, null);
+			
+			/*
+			Invoke the action via a doAsPrivileged. This allows the
+			action to be executed as the client subject, and it also 
+			runs that code as privileged. This means that any permission 
+			checking that happens beyond this point applies only to 
+			the code being run as the client.
+			*/
+
 			// if we get here, the user was authorised
 			chain.doFilter(req, res);
 			return;
@@ -231,7 +239,7 @@ public final class AccessFilter implements Filter
 		/** run check */
 		public Object run()
 		{
-			Permission p = new NamedPermission(uri);
+			Permission p = new AuthPermission(uri);
 			AccessController.checkPermission(p);
 			return null;
 		}
