@@ -23,7 +23,6 @@ import nl.openedge.util.URLHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.infohazard.maverick.flow.ConfigException;
 
 /**
  * Helper class to be able to transparantly obtain and configure Hibernate sessions.

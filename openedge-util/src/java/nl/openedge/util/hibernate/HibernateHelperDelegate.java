@@ -32,8 +32,6 @@ package nl.openedge.util.hibernate;
 
 import java.net.URL;
 
-import org.infohazard.maverick.flow.ConfigException;
-
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;

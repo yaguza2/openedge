@@ -32,16 +32,15 @@ package nl.openedge.util.hibernate;
 
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.infohazard.maverick.flow.ConfigException;
-
 import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Interceptor;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Manages a hibernate session with ThreadLocal.

@@ -93,7 +93,15 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 				log.info("Using configfile " + configUrl.toString());
 				super.setConfigURL(configUrl);
 			}
-			super.init();
+			try
+			{
+                super.init();
+            }
+			catch (ConfigException e)
+            {
+                log.error(e.getMessage(), e);
+                throw new ServletException(e);
+            }
 		}
 	}
 
