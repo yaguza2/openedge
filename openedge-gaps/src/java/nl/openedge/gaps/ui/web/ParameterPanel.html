@@ -5,42 +5,48 @@
 
     <!-- container voor gewone, niet-geneste parameters -->
     <div id="wcn-plainParamsPanel">
+     <form id="wcn-paramForm"> 
+      <div id="plainParamsMainPanel">
       <!-- header -->
       <table id="resultstable">
         <caption>parameters</caption>
         <thead>
           <tr>
-            <th>
+            <th width="180">
                 Naam
             </th>
-            <th>
+            <th width="330">
                 Waarde
+            </th>
+            <th width="80">
+                Verwijder
             </th>
           </tr>
         </thead>
       </table>
 
      <!-- body -->
-     <form id="wcn-paramForm">
+      <div id="plainParamScrollPane">
        <table id="resultstable">
-        <tfoot>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="strongsubmit" value="opslaan"/>
-                </td>
-            </tr>
-        </tfoot>
         <tbody id="plainParamScrollPane">
           <tr id="wcn-plainParams">
-            <td>
+            <td width="180">
                 <span id="wcn-name">(Naam)</span>
             </td>
-            <td>
+            <td width="330">
                 <input id="wcn-value" type="text" size="20"/>
+            </td>
+            <td width="80">
+                <span id="deleteButton">(x)</span>
             </td>
           </tr>
         </tbody>
       </table>
+     </div>
+       <div class="floatright">
+        <input type="submit" class="strongsubmit" value="opslaan"/>
+       </div>
+     </div>
     </form>
     <!-- einde gewone, niet-geneste parameters -->
     </div>

@@ -18,7 +18,12 @@ import java.util.Map;
 
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.parameters.Parameter;
+import nl.openedge.gaps.core.parameters.impl.BooleanParameter;
+import nl.openedge.gaps.core.parameters.impl.DateParameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameter;
+import nl.openedge.gaps.core.parameters.impl.NumericParameter;
+import nl.openedge.gaps.core.parameters.impl.PercentageParameter;
+import nl.openedge.gaps.core.parameters.impl.StringParameter;
 import nl.openedge.gaps.support.ParameterBuilder;
 
 import com.voicetribe.wicket.RequestCycle;
@@ -39,6 +44,32 @@ import com.voicetribe.wicket.markup.html.table.Table;
  */
 public class ParameterPanel extends Panel
 {
+    /** boolean type. */
+    protected static final String TYPE_BOOLEAN = "logisch";
+
+    /** numeriek type. */
+    protected static final String TYPE_NUMERIC = "numeriek";
+
+    /** tekst type. */
+    protected static final String TYPE_TEXT = "tekst";
+
+    /** datum type. */
+    protected static final String TYPE_DATE = "datum";
+
+    /** percentage type. */
+    protected static final String TYPE_PERCENTAGE = "percentage";
+
+    /** voor ui type/ parameter type (class). */
+    private static final Map TYPEMAP = new HashMap();
+    static
+    {
+        TYPEMAP.put(TYPE_BOOLEAN, BooleanParameter.class);
+        TYPEMAP.put(TYPE_NUMERIC, NumericParameter.class);
+        TYPEMAP.put(TYPE_TEXT, StringParameter.class);
+        TYPEMAP.put(TYPE_DATE, DateParameter.class);
+        TYPEMAP.put(TYPE_PERCENTAGE, PercentageParameter.class);
+    }
+    
     /** de huidige parametergroep. */
     private ParameterGroup group;
 
@@ -161,9 +192,7 @@ public class ParameterPanel extends Panel
             nameInput = new TextField("name", "");
             add(nameInput);
             List typeChoiceModel = new ArrayList();
-            typeChoiceModel.add("tekst");
-            typeChoiceModel.add("numeriek");
-            typeChoiceModel.add("logisch");
+            typeChoiceModel.addAll(TYPEMAP.keySet());
             typeChoice = new TypeChoice("typeChoice", "", typeChoiceModel);
             add(typeChoice);
             // voeg verschillende inputs toe. Uiteindelijk zal er 1 visible zijn
@@ -171,7 +200,7 @@ public class ParameterPanel extends Panel
             add(checkbox);
             input = new TextField("input", "");
             add(input);
-            setInputForType("tekst");
+            setInputForType(TYPE_TEXT);
         }
 
         /**
@@ -180,7 +209,7 @@ public class ParameterPanel extends Panel
          */
         private void setInputForType(String type)
         {
-            if("logisch".equals(type))
+            if(TYPE_BOOLEAN.equals(type))
             {
                 checkbox.setVisible(true);
                 input.setVisible(false);
@@ -202,21 +231,34 @@ public class ParameterPanel extends Panel
             String type = (String)typeChoice.getModelObject();
             String name = (String)nameInput.getModelObject();
             
-            //TODO even kort door de bocht voor nu, doe dit netter
-            if("logisch".equals(type))
+            try
             {
-                //builder.createBoolean(name, null);
+                String value = null;
+                Class parameterClass = (Class)TYPEMAP.get(type);
+	            if(TYPE_BOOLEAN.equals(type))
+	            {
+	                value = checkbox.getModelObject().toString();
+	            }
+	            else
+	            {
+	                value = (String)input.getModelObject();
+	            }
+	            builder.createParameter(parameterClass, name, value);
+	            ParameterPanel.this.invalidateModel();
+	            ParameterPanel.this.removeAll();
+	            addParamComponents(group);
             }
-            else if("logisch".equals(type))
+            catch(Exception e)
             {
-                
+                throw new RuntimeException(e);
             }
-            else if("logisch".equals(type))
-            {
-                
-            } 
         }
 
+        /**
+         * Klasse voor selectiebox met een onChanged event. Afhankelijk van het
+         * geselecteerde type wordt het juiste invoerveld op visible gezet (en
+         * de niet-relevante invoermogelijkheden op false).
+         */
         private class TypeChoice extends DropDownChoice implements IOnChangeListener
         {
             /**

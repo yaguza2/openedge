@@ -56,6 +56,15 @@ public class ParameterModel extends PropertyModel
     }
 
     /**
+     * @see com.voicetribe.wicket.IModel#getObject()
+     */
+    public Object getObject()
+    {
+        Parameter parameter = (Parameter)getPropertyModel();
+        ParameterValue value = parameter.getValue();
+        return value.getFormattedValue(getLocale());
+    }
+    /**
      * @see com.voicetribe.wicket.PropertyModel#setObject(java.io.Serializable)
      */
     public void setObject(Serializable propertyValue)

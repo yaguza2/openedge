@@ -6,6 +6,10 @@
  */
 package nl.openedge.gaps.core.parameters.impl;
 
+import java.util.Locale;
+
+import com.voicetribe.util.convert.ConvertUtils;
+
 import nl.openedge.gaps.core.parameters.ParameterValue;
 
 /**
@@ -56,5 +60,16 @@ public final class PercentageParameterValue extends ParameterValue
 	public Object getValue()
 	{
 		return new Double(getFactorValue());
+	}
+
+	/**
+	 * Geeft de geformatteerde waarde.
+	 * @param locale locale
+	 * @return de geformatteerde waarde
+	 */
+	public String getFormattedValue(Locale locale)
+	{
+	    return ConvertUtils.getObjectFormatted(
+	            new Double(getPercentageValue()), locale);
 	}
 }
