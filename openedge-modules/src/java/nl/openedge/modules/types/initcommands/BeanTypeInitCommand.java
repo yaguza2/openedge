@@ -175,7 +175,6 @@ public final class BeanTypeInitCommand implements InitCommand
 					}
 					catch (Exception e)
 					{
-						break; 
 						// Property does not exist in target object; ignore 
 					}
 				}
