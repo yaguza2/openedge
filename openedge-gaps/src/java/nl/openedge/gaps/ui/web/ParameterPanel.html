@@ -46,11 +46,11 @@
     </div>
 
     <div id="newParameterPanel">
-        <form id="fooBar">
+        <form id="wcn-newParamForm">
           <fieldset>
             <legend>Nieuwe parameter</legend>
               <label for="title">Type</label>
-              <select>
+              <select id="wcn-typeChoice">
                 <option>numeriek</option>
                 <option>logisch</option>
                 <option>datum</option>
@@ -58,7 +58,10 @@
               <label for="name">Naam</label>
               <input id="name" type="text" size="20"/>
               <label for="value">Waarde</label>
-              <input id="value" type="text" size="20"/>
+              <!-- een van onderstaande inputs zal werkelijk visible/ benaderbaar zijn -->
+               <input id="wcn-input" type="text" size="20"/>
+               <input id="wcn-checkbox" type="checkbox"/>
+              <!-- einde inputs -->
               <input type="submit" value="voeg toe" class="strongsubmit"/>
           </fieldset>
         </form>

@@ -9,7 +9,9 @@
  */
 package nl.openedge.gaps.ui.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +23,12 @@ import nl.openedge.gaps.core.parameters.impl.NestedParameter;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
+import com.voicetribe.wicket.markup.html.form.CheckBox;
+import com.voicetribe.wicket.markup.html.form.DropDownChoice;
 import com.voicetribe.wicket.markup.html.form.Form;
+import com.voicetribe.wicket.markup.html.form.IOnChangeListener;
 import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
-import com.voicetribe.wicket.markup.html.panel.FeedbackPanel;
 import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
@@ -83,12 +87,13 @@ public class ParameterPanel extends Panel
     {
         // voeg niet-geneste parameters toe
         HtmlContainer plainParamsPanel = new HtmlContainer("plainParamsPanel");
-        FeedbackPanel feedback = new FeedbackPanel("feedback");
-        PlainParameterForm form = new PlainParameterForm("paramForm", feedback);
+        PlainParameterForm paramForm = new PlainParameterForm("paramForm", null);
         PlainParameterTable plainParametersTable =
             new PlainParameterTable("plainParams", grouped.plainParams);
-        form.add(plainParametersTable);
-        plainParamsPanel.add(form);
+        paramForm.add(plainParametersTable);
+        plainParamsPanel.add(paramForm);
+        NewParameterForm newParamForm = new NewParameterForm("newParamForm", null);
+        outerPanel.add(newParamForm);
         if(grouped.plainParams.isEmpty())
         {
             plainParamsPanel.setVisible(false);
@@ -97,7 +102,7 @@ public class ParameterPanel extends Panel
     }
 
     /**
-     * Form voor gewone parameters.
+     * Form voor editen gewone parameters.
      */
     private static class PlainParameterForm extends Form
     {
@@ -117,7 +122,91 @@ public class ParameterPanel extends Panel
          */
         public void handleSubmit(RequestCycle cycle)
         {
-            System.err.println("submitted!");
+            // op dit moment handelen de specifieke models achter de input
+            // velden alles af.
+        }
+    }
+
+    /**
+     * Form voor toevoegen parameters.
+     */
+    private static class NewParameterForm extends Form
+    {
+        /** checkbox input voor value. */
+        private CheckBox checkbox;
+
+        /** text input voor value. */
+        private TextField input;
+
+        /**
+         * Construct.
+         * @param name component name
+         * @param validationErrorHandler validation error handler
+         */
+        public NewParameterForm(String name,
+                IValidationErrorHandler validationErrorHandler)
+        {
+            super(name, validationErrorHandler);
+            List typeChoiceModel = new ArrayList();
+            typeChoiceModel.add("tekst");
+            typeChoiceModel.add("numeriek");
+            typeChoiceModel.add("logisch");
+            add(new TypeChoice("typeChoice", "", typeChoiceModel));
+            // voeg verschillende inputs toe. Uiteindelijk zal er 1 visible zijn
+            checkbox = new CheckBox("checkbox", new Boolean(false));
+            add(checkbox);
+            input = new TextField("input", "");
+            add(input);
+            setInputForType("tekst");
+        }
+
+        /**
+         * Zet juiste input aan (visible) op basis van het gegeven type.
+         * @param type type uit selectie dropdown
+         */
+        private void setInputForType(String type)
+        {
+            if("logisch".equals(type))
+            {
+                checkbox.setVisible(true);
+                input.setVisible(false);
+            }
+            else
+            {
+                checkbox.setVisible(false);
+                input.setVisible(true);
+            }
+        }
+
+        /**
+         * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
+         */
+        public void handleSubmit(RequestCycle cycle)
+        {
+            // op dit moment handelen de specifieke models achter de input
+            // velden alles af.
+        }
+
+        private class TypeChoice extends DropDownChoice implements IOnChangeListener
+        {
+            /**
+             * Construct.
+             * @param componentName
+             * @param model
+             * @param values
+             */
+            public TypeChoice(String componentName, Serializable model, Collection values)
+            {
+                super(componentName, model, values);
+            }
+
+            /**
+             * @see com.voicetribe.wicket.markup.html.form.IOnChangeListener#selectionChanged(com.voicetribe.wicket.RequestCycle, java.lang.Object)
+             */
+            public void selectionChanged(RequestCycle cycle, Object newSelection)
+            {
+                setInputForType((String)newSelection);
+            }
         }
     }
 
