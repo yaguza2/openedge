@@ -1,9 +1,20 @@
-grant {
-  permission nl.openedge.access.NamedPermission "/";
-  permission nl.openedge.access.NamedPermission "/index.m";
-  permission nl.openedge.access.NamedPermission "/login.m";
+
+grant	principal nl.openedge.access.RolePrincipal "tableadmin" {
+ 
+  permission nl.openedge.access.NamedPermission "/forgroup";
 };
 
-grant Principal nl.openedge.access.RolePrincipal "tableadmin" {
-  permission nl.openedge.access.NamedPermission "/*";
+grant	principal nl.openedge.access.UserPrincipal "Eelco" {
+  
+  permission nl.openedge.access.NamedPermission "/foreelco";
+};
+
+grant	principal nl.openedge.access.UserPrincipal "sander" {
+  
+  permission nl.openedge.access.NamedPermission "/forsander";
+};
+
+grant {
+
+  permission nl.openedge.access.NamedPermission "/forall";
 };

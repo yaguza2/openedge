@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessControlException;
-import java.security.Policy;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import java.security.Policy;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
@@ -226,6 +226,9 @@ public class AccessFactory {
 		try {
 			Policy policy = Policy.getPolicy();
 			policy.refresh();
+
+			log.info(policy);
+			
 		} catch (AccessControlException e) {
 			e.printStackTrace();
 		}

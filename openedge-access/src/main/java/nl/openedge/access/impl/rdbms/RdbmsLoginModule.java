@@ -308,7 +308,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 			// add attributes
 			addAttributes(user);
 			// add roles
-			this.tempCredentials.add(user);
+			this.tempPrincipals.add(user);
 			
 			List roles = listRolesForUser(user);
 			user.setRoles(roles);

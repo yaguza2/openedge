@@ -1,9 +1,9 @@
 package nl.openedge.access;
 
 import java.io.IOException;
-import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Permission;
+import java.security.PrivilegedAction;
 
 import javax.security.auth.Subject;
 import javax.servlet.Filter;
@@ -28,6 +28,9 @@ public class AccessFilter implements Filter {
 	/** key for storage of subject in session */
 	public final static String AUTHENTICATED_SUBJECT_KEY =
 		"_authenticatedSubject";
+		
+	/** last request before logon redirect will be saved as a request parameter */
+	public final static String LAST_REQUEST_KEY = "lastRequest";
 
 	/** if authentication failed or was not done yet, redirect to this url */
 	protected static String loginRedirect;
@@ -72,24 +75,30 @@ public class AccessFilter implements Filter {
 		// strip contextpath
 		uri = uri.substring(request.getContextPath().length());
 		
+		UriAction action = new UriAction(uri);
 		try {
-			
-			Permission p = new NamedPermission(uri);
-			AccessController.checkPermission(p);
+			// Subject.doAs(subject, action) does NOT work... dunno why?
+			// nevertheless, this does. 
+			Subject.doAsPrivileged(subject, action, null);
 			// if we get here, the user was authorised
 			chain.doFilter(req, res);
 			return;
-			
-		} catch(AccessControlException e) {
+		} catch (SecurityException se) {
+			// Subject does not have permission
 			log.info("for subject '" + subject + 
-					"', uri '" + uri + "': " + e.getMessage());
+					"', uri '" + uri + "': " + se.getMessage());
 			if(subject == null) needsAuthentication = true;
 		}
+
 
 		// if this is a proctected request, try to retrieve subject from session
 		if(needsAuthentication) {
 			
 			if( subject == null) {
+				// save this request
+				String lq = request.getRequestURL() + "?" + 
+								request.getQueryString();
+				request.setAttribute(LAST_REQUEST_KEY, lq);
 				// redirect to login address
 				response.sendRedirect(response.encodeRedirectURL(
 					request.getContextPath() + loginRedirect));
@@ -110,6 +119,25 @@ public class AccessFilter implements Filter {
 	 */
 	public void destroy() {
 	
+	}
+	
+	/** action for checking permissions for a specific subject */
+	class UriAction implements PrivilegedAction {
+		
+		// uri to check on
+		private String uri;
+		
+		/** construct with uri */
+		public UriAction(String uri) {
+			this.uri = uri;
+		}
+		
+		/** run check */
+		public Object run() {
+			Permission p = new NamedPermission(uri);
+			AccessController.checkPermission(p);
+			return null;
+		}
 	}
 
 }
