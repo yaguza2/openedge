@@ -43,8 +43,8 @@ public final class GPathTranslator extends DepthFirstAdapter
 	/** Huidige 'positie'/ executie resultaat. */
 	private Object currentPosition;
 
-	/** Of dit een absolute of een relatieve query is. */
-	private boolean absolute = true;
+	/** Bewaar de laatst benaderde struct groep. */
+	private StructuralGroup lastStructGroup = null;
 
 	/** query. */
 	private String query = "";
@@ -65,7 +65,8 @@ public final class GPathTranslator extends DepthFirstAdapter
 	private String attribName;
 
 	/**
-	 * naam versie (mogelijk in toekomst uitbreiden met ondersteuning voor meer opties).
+	 * naam versie (mogelijk in toekomst uitbreiden met
+	 * ondersteuning voor meer opties).
 	 */
 	private String versionName;
 
@@ -110,10 +111,6 @@ public final class GPathTranslator extends DepthFirstAdapter
 			}
 		}
 		structPath = structPath + pathPart.toString();
-		if (structPath.indexOf('.') != -1)
-		{
-			absolute = false;
-		}
 	}
 
 	/**
@@ -182,7 +179,6 @@ public final class GPathTranslator extends DepthFirstAdapter
 		this.versionName = null;
 		this.attribName = null;
 		this.subSelect = null;
-		this.absolute = true;
 	}
 
 	/**
@@ -190,9 +186,12 @@ public final class GPathTranslator extends DepthFirstAdapter
 	 */
 	public void outStart(Start node)
 	{
-
 		// bepaal de versie (indien gezet)
 		Version version = version = getVersion();
+
+		// normaliseer (vertaal naar absoluut) struct pad
+		normalizeStructPath();
+		
 		if (paramGroupName != null)
 		{
 			if (paramName != null)
@@ -225,6 +224,78 @@ public final class GPathTranslator extends DepthFirstAdapter
 			StructuralGroup structGroup = getStructuralGroup(version);
 			this.currentPosition = structGroup;
 		}
+	}
+
+	/**
+	 * Normaliseer het structPath door de '.' en '..' te substitueren,
+	 * en - indien het een relatief pad is - het absolute pad te herleiden
+	 * adv de huidige groep.
+	 */
+	private void normalizeStructPath()
+	{
+		boolean isAbsolute = (structPath.startsWith("/"));
+		StringBuffer workPath = null;
+		if (isAbsolute)
+		{
+			workPath = new StringBuffer(structPath);
+		}
+		else
+		{
+			if (lastStructGroup != null)
+			{
+				workPath = new StringBuffer(lastStructGroup.getPath()
+						+ "/" + structPath);
+			}
+			else
+			{
+				throw new GPathInterpreterException(
+						"kan niet relatief browsen; geen actieve structuurgroep");
+			}
+		}
+		int dotIndex;
+		while ((dotIndex = workPath.indexOf(".")) != -1)
+		{
+			boolean isDoubleDot =
+				((dotIndex + 1 < workPath.length())
+						&& (workPath.charAt(dotIndex + 1) == '.'));
+			if (isDoubleDot)
+			{
+				int from = dotIndex - 2;
+				int to = dotIndex + 2; 
+				from = indexOf(workPath, '/', from);
+				workPath.delete(from, to);
+			}
+			else
+			{
+				int from = dotIndex - 1;
+				int to = dotIndex + 1; 
+				workPath.delete(from, to);
+			}
+		}
+		structPath = workPath.toString();
+	}
+
+	/**
+	 * Zoekt vanaf de gegeven index achterwaards naar het gegeven karakter in de gegeven stringbuffer.
+	 * @param buffer de stringbuffer waarin wordt gezocht
+	 * @param scanChar het te vinden karakter
+	 * @param indexFrom vanaf waar dient te worden gezocht
+	 * @return de index of 0 indien niet gevonden
+	 */
+	private int indexOf(StringBuffer buffer, char scanChar, int indexFrom)
+	{
+		int index = 0;
+		int current = indexFrom;
+		while(current >= 0)
+		{
+			if(buffer.charAt(current) == scanChar)
+			{
+				index = current;
+				break;
+			}
+			current--;
+		}
+		return index;
 	}
 
 	/**
@@ -276,6 +347,7 @@ public final class GPathTranslator extends DepthFirstAdapter
 			log.error(e.getMessage(), e);
 			throw new GPathInterpreterException(e);
 		}
+		this.lastStructGroup = structGroup;
 		return structGroup;
 	}
 
@@ -304,6 +376,7 @@ public final class GPathTranslator extends DepthFirstAdapter
 			log.error(e.getMessage(), e);
 			throw new GPathInterpreterException(e);
 		}
+		this.lastStructGroup = paramGroup.getParent();
 		return paramGroup;
 	}
 

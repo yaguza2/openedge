@@ -16,16 +16,16 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Deze klasse voert performance testen uit.
  */
-public abstract class PerformanceTester
+public abstract class AbstractPerformanceTester
 {
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(PerformanceTester.class);
+	private static Log log = LogFactory.getLog(AbstractPerformanceTester.class);
 
 	/**
 	 * Construct.
 	 */
-	public PerformanceTester()
+	public AbstractPerformanceTester()
 	{
 		//
 	}
@@ -39,13 +39,14 @@ public abstract class PerformanceTester
 	{
 
 		ParameterBuilder builder = new ParameterBuilder();
+		int paramGroupCounter = 1;
+		Parameter param = null;
+		int stepCounter = 0;
 		builder.navigate("/:DEFAULT");
 		ParameterBrowser browser = new ParameterBrowser();
 		try
 		{
 			long begin = System.currentTimeMillis();
-			Parameter param = null;
-			int stepCounter = 0;
 			for (int i = 0; i < aantal; i++)
 			{
 				String nbr = String.valueOf(i);
@@ -54,7 +55,10 @@ public abstract class PerformanceTester
 				{
 					System.out.print(".");
 					stepCounter = 0;
-					builder.createParameterGroup("DEFAULT_" + i, "TEST_" + i, true);
+					builder.createParameterGroup(
+							"DEFAULT_" + paramGroupCounter,
+							"TEST_" + paramGroupCounter, true);
+					paramGroupCounter++;
 				}
 				else
 				{
@@ -67,6 +71,7 @@ public abstract class PerformanceTester
 			begin = System.currentTimeMillis();
 			String pg = "/:DEFAULT/";
 			stepCounter = 0;
+			paramGroupCounter = 1;
 			for (int i = 0; i < aantal; i++)
 			{
 				browser.navigate(pg + i + "@value");
@@ -74,7 +79,8 @@ public abstract class PerformanceTester
 				{
 					System.out.print(".");
 					stepCounter = 0;
-					pg = "/:DEFAULT_" + i + "/";
+					pg = "/:DEFAULT_" + paramGroupCounter + "/";
+					paramGroupCounter++;
 				}
 				else
 				{

@@ -60,15 +60,15 @@
 
         -->
 
-	<cache name="nl.openedge.gaps.core.parameters.impl.ParameterWrapper"
-	    maxElementsInMemory="100"
+	<cache name="nl.openedge.gaps.core.versions.custcache.EntityVersions"
+	    maxElementsInMemory="1000"
 	    eternal="false"
 	    timeToIdleSeconds="300"
 	    timeToLiveSeconds="600"
 	    overflowToDisk="true"
 	/>
 
-	<cache name="nl.openedge.gaps.core.groups.impl.GroupWrapper"
+	<cache name="nl.openedge.gaps.core.versions.custcache.Version"
 	    maxElementsInMemory="100"
 	    eternal="false"
 	    timeToIdleSeconds="300"

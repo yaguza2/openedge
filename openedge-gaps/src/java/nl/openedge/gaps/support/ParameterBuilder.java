@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.Group;
@@ -47,16 +50,14 @@ import nl.openedge.gaps.util.EntityUtil;
 /**
  * Utility class voor het eenvoudig kunnen aanmaken van - mogelijk - complexe parameter
  * structuren. <br/>
- * <p>
- * De buildXxx methoden creeeren nieuwe instanties van de parameters zonder deze te
- * registreren, de createXxx methoden creeeren EN registreren de parameters.
- * </p>
  */
 public class ParameterBuilder
 {
-
-	/** tegebruiken bij stream verwerking. */
+	/** tokens voor stream verwerking. */
 	public static final String TAB_EN_SPACE_CHARS = "\t ";
+
+	/** Log. */
+	private Log log = LogFactory.getLog(ParameterBuilder.class);
 
 	/** Te gebruiken versie bij constructies (null voor de huidige). */
 	private Version version = null;
@@ -92,10 +93,6 @@ public class ParameterBuilder
 	/**
 	 * Creeer een {@link StringParameter}, en een bijbehorende {@link ParameterValue}met
 	 * de gegeven string waarde, het id en de versie dat de property is van deze builder.
-	 * <br>
-	 * Deze functie registreert de parameter direct; gebruik deze functie om direct een
-	 * persistente, voor berekeningen beschikbare parameter te maken, of gebruik de
-	 * methode buildString om een 'speelinstantie' te maken.
 	 * @param localId het lokale id
 	 * @param value de waarde als een string (leeg of null indien er geen value object
 	 *            dient te worden gecreeerd)
@@ -119,10 +116,6 @@ public class ParameterBuilder
 	/**
 	 * Creeer een {@link StringParameter}, en een bijbehorende {@link ParameterValue}met
 	 * de gegeven string waarde, het id en de versie dat de property is van deze builder.
-	 * <br>
-	 * Deze functie registreert de parameter niet; gebruik deze functie 'om te spelen' met
-	 * parameters, of gebruik methode createString van deze builder voor create en
-	 * registratie van de parameter.
 	 * @param localId het lokale id
 	 * @param value de waarde als een string (leeg of null indien er geen value object
 	 *            dient te worden gecreeerd)
@@ -143,10 +136,7 @@ public class ParameterBuilder
 	/**
 	 * Creeer een {@link NumericParameter}, en een bijbehorende
 	 * {@link NumericParameterValue}met de gegeven numerieke waarde, het id en de versie
-	 * dat de property is van deze builder. <br>
-	 * Deze functie registreert de parameter direct; gebruik deze functie om direct een
-	 * persistente, voor berekeningen beschikbare parameter te maken, of gebruik de
-	 * methode buildNumeric om een 'speelinstantie' te maken.
+	 * dat de property is van deze builder.
 	 * @param localId het lokale id
 	 * @param value de waarde als een string (leeg of null indien er geen value object
 	 *            dient te worden gecreeerd)
@@ -170,10 +160,7 @@ public class ParameterBuilder
 	/**
 	 * Creeer een {@link NumericParameter}, en een bijbehorende
 	 * {@link NumericParameterValue}met de gegeven numerieke waarde, het id en de versie
-	 * dat de property is van deze builder. <br>
-	 * Deze functie registreert de parameter niet; gebruik deze functie 'om te spelen' met
-	 * parameters, of gebruik methode createNumeric van deze builder voor create en
-	 * registratie van de parameter.
+	 * dat de property is van deze builder.
 	 * @param localId het lokale id
 	 * @param value de waarde als een string (leeg of null indien er geen value object
 	 *            dient te worden gecreeerd)
@@ -193,10 +180,7 @@ public class ParameterBuilder
 
 	/**
 	 * Creeer een {@link NestedParameter}met daarin genest een rij van
-	 * {@link NumericParameter}s op basis van de gegeven id's en values. <br>
-	 * Deze functie registreert de parameter direct; gebruik deze functie om direct een
-	 * persistente, voor berekeningen beschikbare parameter te maken, of gebruik de
-	 * methode buildNumeric om een 'speelinstantie' te maken.
+	 * {@link NumericParameter}s op basis van de gegeven id's en values.
 	 * @param localId het lokale id van deze parameter
 	 * @param ids de ids van de geneste parameters
 	 * @param values de waarden als een string array
@@ -243,134 +227,31 @@ public class ParameterBuilder
 	}
 
 	/**
-	 * Lees bestand in van inputstream en converteer naar een array van nested parameters
-	 * ([][] dus).
-	 * @param is inputstream
-	 * @param startcol eerste kolom waar de parameters beginnen
-	 * @param startrij eerste rij waar de parameterrij begint
-	 * @param rijIdIsCol1 het rij-id staat in de eerste kolom
-	 * @param tokens scheidingstekens.
+	 * Leest bestand in van inputstream en converteer naar een array van nested data en
+	 * registreert deze parameters.
+	 * @param inputStream inputstream
 	 * @return array van nested parameters
+	 * @throws RegistryException bij onverwachte fouten
 	 * @throws SaveException indien de rij niet goed kon worden opgeslagen
 	 * @throws InputException bij conversie fouten van de gegeven waarde
 	 * @throws ParameterBuilderException indien de builder niet in staat is de
 	 *             parameter(s) te construeren
 	 */
-	protected NestedParameter[] buildNumericData(InputStream is, int startcol,
-			int startrij, boolean rijIdIsCol1, String tokens) throws SaveException,
-			InputException, ParameterBuilderException
+	public NestedParameter[] createNumericData(
+			InputStream inputStream) throws RegistryException,
+			SaveException, InputException, ParameterBuilderException
 	{
 
-		List nestParas = new ArrayList();
-		LineNumberReader line = null;
-		try
-		{
-			line = new LineNumberReader(new InputStreamReader(is));
-			String str;
-			int rij = 0;
-			while ((str = line.readLine()) != null)
-			{
-				str = str.trim();
-				if ((!str.startsWith("#")) && (!"".equals(str)))
-				{
-					NestedParameter parameter = readRow(str, tokens, startcol,
-							rijIdIsCol1, rij);
-					nestParas.add(parameter);
-					rij++;
-				}
-			}
-
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				line.close();
-			}
-			catch (IOException e1)
-			{
-				e1.printStackTrace();
-			}
-		}
-		return (NestedParameter[]) nestParas
-				.toArray(new NestedParameter[nestParas.size()]);
+		return createNumericData(inputStream, 0, 0, false, TAB_EN_SPACE_CHARS);
 	}
 
 	/**
-	 * Lees een rij in vanuit de gegeven regel.
-	 * @param line een regel
-	 * @param tokens tokens te gebruiken als scheidingsteken(s)
-	 * @param startcol eerste kolom waar de parameters beginnen
-	 * @param rijIdIsCol1 het rij-id staat in de eerste kolom
-	 * @param rij de huidige rij (nummer)
-	 * @return een rijparameter
-	 * @throws SaveException indien de rij niet goed kon worden opgeslagen
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected NestedParameter readRow(String line, String tokens, int startcol,
-			boolean rijIdIsCol1, int rij) throws SaveException, InputException,
-			ParameterBuilderException
-	{
-
-		StringTokenizer tk = new StringTokenizer(line, tokens);
-		int len = tk.countTokens();
-		String[] ids = new String[len - startcol];
-		String[] values = new String[len - startcol];
-		int kol = 0 - startcol;
-		StringBuffer rijNaam = new StringBuffer(String.valueOf(rij));
-		while (tk.hasMoreTokens())
-		{
-			if (kol >= 0)
-			{
-				ids[kol] = String.valueOf(kol);
-				values[kol] = tk.nextToken().trim();
-				kol++;
-			}
-			else
-			{
-				if ((rijIdIsCol1) && (kol == (0 - startcol)))
-				{
-					rijNaam.setLength(0);
-					rijNaam.append(tk.nextToken().trim());
-				}
-				kol++;
-			}
-		}
-		NestedParameter parameter = createNumericRow(rijNaam.toString(), ids, values);
-
-		return parameter;
-	}
-
-	/**
-	 * Lees bestand in van inputstream en converteer naar een array van nested parameters
-	 * ([][] dus).
-	 * @param is inputstream
-	 * @return array van nested parameters
-	 * @throws SaveException indien de rij niet goed kon worden opgeslagen
-	 * @throws InputException bij conversie fouten van de gegeven waarde
-	 * @throws ParameterBuilderException indien de builder niet in staat is de
-	 *             parameter(s) te construeren
-	 */
-	protected NestedParameter[] buildNumericData(InputStream is) throws SaveException,
-			InputException, ParameterBuilderException
-	{
-
-		return buildNumericData(is, 0, 0, false, TAB_EN_SPACE_CHARS);
-	}
-
-	/**
-	 * Lees bestand in van inputstream en converteer naar een array van nested data en
-	 * registreerd deze parameters.
-	 * @param is inputstream
-	 * @param startcol eerste kolom waar de parameters beginnen
-	 * @param startrij eerste rij waar de parameterrij begint
-	 * @param rijIdIsCol1 het rij-id staat in de eerste kolom.
+	 * Leest bestand in van inputstream en converteer naar een array van nested data en
+	 * registreert deze parameters.
+	 * @param inputStream inputstream
+	 * @param startcolumn eerste kolom waar de parameters beginnen
+	 * @param startRow eerste rij waar de parameterrij begint
+	 * @param rowIdInFirstColumn het rij-id staat in de eerste kolom (== startrij!!).
 	 * @param tokens de tokens die gebruikt dienen te worden als scheidingsteken(s)
 	 * @return array van nested parameters
 	 * @throws RegistryException bij onverwachte fouten
@@ -379,36 +260,108 @@ public class ParameterBuilder
 	 * @throws ParameterBuilderException indien de builder niet in staat is de
 	 *             parameter(s) te construeren
 	 */
-	public NestedParameter[] createNumericData(InputStream is, int startcol,
-			int startrij, boolean rijIdIsCol1, String tokens) throws RegistryException,
-			SaveException, InputException, ParameterBuilderException
+	public NestedParameter[] createNumericData(
+			InputStream inputStream, int startcolumn,
+			int startRow, boolean rowIdInFirstColumn, String tokens)
+			throws RegistryException, SaveException,
+			InputException, ParameterBuilderException
 	{
-
-		NestedParameter[] param = buildNumericData(is, startcol, startrij, rijIdIsCol1,
-				tokens);
-		for (int i = 0; i < param.length; i++)
+		List parameters = new ArrayList();
+		LineNumberReader reader = null;
+		try
 		{
-			saveParameter(param[i]);
+			reader = new LineNumberReader(new InputStreamReader(inputStream));
+			String line;
+			int row = 0;
+			while ((line = reader.readLine()) != null)
+			{
+				line = line.trim();
+				if ((!line.startsWith("#")) && (!"".equals(line)))
+				{
+					NestedParameter parameter =
+						createRowFromLine(line, tokens, startcolumn, rowIdInFirstColumn, row);
+					parameters.add(parameter);
+					row++;
+				}
+			}
 		}
-		return param;
+		catch (IOException e)
+		{
+			throw new ParameterBuilderException(e);
+		}
+		finally
+		{
+			try
+			{
+				reader.close();
+			}
+			catch (IOException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+		}
+		NestedParameter[] params = (NestedParameter[])
+			parameters.toArray(new NestedParameter[parameters.size()]);
+		return params;
 	}
 
 	/**
-	 * Lees bestand in van inputstream en converteer naar een array van nested data en
-	 * registreerd deze parameters.
-	 * @param is inputstream
-	 * @return array van nested parameters
-	 * @throws RegistryException bij onverwachte fouten
+	 * Leest een rij in vanuit de gegeven regel en creeert een
+	 * {@link NestedParameter} met de ingelezen informatie.
+	 * @param line een regel
+	 * @param tokens tokens te gebruiken als scheidingsteken(s)
+	 * @param startColumn eerste kolom waar de parameters beginnen
+	 * @param rowIdInFirstColumn het rij-id staat in de eerste kolom
+	 * @param row de huidige rij (nummer)
+	 * @return een rijparameter
 	 * @throws SaveException indien de rij niet goed kon worden opgeslagen
 	 * @throws InputException bij conversie fouten van de gegeven waarde
 	 * @throws ParameterBuilderException indien de builder niet in staat is de
 	 *             parameter(s) te construeren
 	 */
-	public NestedParameter[] createNumericData(InputStream is) throws RegistryException,
-			SaveException, InputException, ParameterBuilderException
+	protected NestedParameter createRowFromLine(
+			String line, String tokens, int startColumn,
+			boolean rowIdInFirstColumn, int row)
+			throws SaveException, InputException, ParameterBuilderException
 	{
 
-		return createNumericData(is, 0, 0, false, TAB_EN_SPACE_CHARS);
+		StringTokenizer tk = new StringTokenizer(line, tokens);
+		int nbrOfTokens = tk.countTokens();
+		int rowIdInFirstColumnModifier = 0;
+		if(rowIdInFirstColumn)
+		{
+			rowIdInFirstColumnModifier = 1;
+		}
+		int arrayLen;
+		arrayLen = nbrOfTokens - startColumn - rowIdInFirstColumnModifier;
+		String[] ids = new String[arrayLen];
+		String[] values = new String[arrayLen];
+		int kol = 0;
+		String parameterName = null;
+		if(rowIdInFirstColumn)
+		{
+			parameterName = String.valueOf(row);	
+		}
+		while (tk.hasMoreTokens())
+		{
+			if (kol >= startColumn)
+			{
+				String token = tk.nextToken().trim();
+				if ((kol == startColumn) && rowIdInFirstColumn)
+				{
+					parameterName = token;
+				}
+				else
+				{
+					int arrayCol = kol - startColumn - rowIdInFirstColumnModifier;
+					ids[arrayCol] = String.valueOf(arrayCol);
+					values[arrayCol] = token;	
+				}
+			}
+			kol++;
+		}
+		NestedParameter parameter = createNumericRow(parameterName, ids, values);
+		return parameter;
 	}
 
 	/**

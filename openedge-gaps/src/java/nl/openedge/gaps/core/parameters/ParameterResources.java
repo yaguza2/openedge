@@ -26,7 +26,7 @@ public final class ParameterResources
 	static
 	{
 		Package pck = ParameterResources.class.getPackage();
-		RESOURCES = ResourceBundle.getBundle(pck.getName() + ".RESOURCES");
+		RESOURCES = ResourceBundle.getBundle(pck.getName() + ".resources");
 	}
 
 	/** Log. */

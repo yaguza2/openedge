@@ -38,6 +38,9 @@ public abstract class Parameter extends Entity implements Externalizable
 	/** id van parent indien dit een geneste parameter is. */
 	private String parentId;
 
+	/** local id van parent indien dit een geneste parameter is. */
+	private String parentLocalId;
+
 	/**
 	 * Construct; maakt altijd een instantie aan met de huidige versie. Overervende
 	 * klasses zijn verplicht deze constructor aan te roepen.
@@ -162,6 +165,24 @@ public abstract class Parameter extends Entity implements Externalizable
 	}
 
 	/**
+	 * Get parentLocalId.
+	 * @return parentLocalId.
+	 */
+	public String getParentLocalId()
+	{
+		return parentLocalId;
+	}
+
+	/**
+	 * Set parentLocalId.
+	 * @param parentLocalId parentLocalId.
+	 */
+	public void setParentLocalId(String parentLocalId)
+	{
+		this.parentLocalId = parentLocalId;
+	}
+
+	/**
 	 * Zet parent.
 	 * @param parent de parent
 	 */
@@ -171,7 +192,8 @@ public abstract class Parameter extends Entity implements Externalizable
 		{
 			if (parent instanceof NestedParameter)
 			{
-				this.parentId = parent.getId();
+				setParentId(parent.getId());
+				setParentLocalId(parent.getLocalId());
 			}
 			else
 			{
@@ -246,5 +268,4 @@ public abstract class Parameter extends Entity implements Externalizable
 			throw new RuntimeException(e);
 		}
 	}
-
 }

@@ -20,11 +20,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Performancetester voor HSQL.
  */
-public class HSQLPerformanceTester extends PerformanceTester
+public class HSQLPerformanceTester extends AbstractPerformanceTester
 {
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(PerformanceTester.class);
+	private static Log log = LogFactory.getLog(AbstractPerformanceTester.class);
 
 	/**
 	 * Construct.
@@ -59,10 +59,10 @@ public class HSQLPerformanceTester extends PerformanceTester
 			log.error(e.getMessage(), e);
 			return;
 		}
-		PerformanceTester tester = new HSQLPerformanceTester();
+		AbstractPerformanceTester tester = new HSQLPerformanceTester();
 		try
 		{
-			tester.testParameterToevoegingen(200);
+			tester.testParameterToevoegingen(1000);
 			HibernateHelper.closeSession();
 		}
 		catch (Exception e)

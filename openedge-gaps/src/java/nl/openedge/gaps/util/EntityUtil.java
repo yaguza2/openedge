@@ -65,7 +65,7 @@ public final class EntityUtil
 			{
 				// voor nu: 1 niveau diep... mogelijk - ooit - meer niveau's
 				// ondersteunen?
-				id = path + "/" + param.getLocalId() + "|" + localId;
+				id = path + "/" + param.getParentLocalId() + "|" + localId;
 			}
 			else
 			{

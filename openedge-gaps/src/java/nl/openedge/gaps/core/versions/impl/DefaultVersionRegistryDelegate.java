@@ -7,11 +7,9 @@
 package nl.openedge.gaps.core.versions.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.sf.hibernate.HibernateException;
@@ -46,12 +44,6 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 	/** Log. */
 	private static Log log = LogFactory.getLog(DefaultVersionRegistryDelegate.class);
 
-	/**
-	 * Versies op naam/ id; we zorgen dat we altijd alle versie objecten in het geheugen
-	 * hebben zodat we zeer snelle access hebben.
-	 */
-	private Map versions = new HashMap();
-
 	/** data access object voor Version objecten. */
 	private VersionDAO versionDao = new VersionDAO();
 
@@ -70,15 +62,14 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 		{
 			throw new RegistryException(e);
 		}
-		if (temp != null)
+		if ( (temp != null) && (!temp.isEmpty()) )
 		{
 			for (Iterator i = temp.iterator(); i.hasNext();)
 			{
 				Version version = (Version) i.next();
-				putVersionInCache(version);
 			}
 		}
-		if (versions.isEmpty())
+		else
 		{
 			// creeer een dummy versie om het systeem consistent te kunnen laten
 			// werken
@@ -92,7 +83,6 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 			try
 			{
 				versionDao.saveVersion(version);
-				versions.put(version.getName(), version);
 				// sla ze zelf op (ipv via de parameter registry)
 				groupDao.saveOrUpdateGroup(root);
 				groupDao.saveOrUpdateGroup(paramGroup);
@@ -191,7 +181,6 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 		{
 			throw new RegistryException(e);
 		}
-		putVersionInCache(version);
 		EntityVersions giv = addRegistries(workEntity, version);
 		ParameterRegistry.createVersion(workEntity, version);
 		return giv;
@@ -270,24 +259,14 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 	public Version getVersion(String name)
 	{
 
-		Version version = (Version) versions.get(name);
-		if (version != null)
+		Version version = null;
+		try
 		{
-			return version;
+			version = versionDao.getVersion(name);
 		}
-		else
+		catch (VersionDAOException e)
 		{
-			// bij wijze van fallthrough (indien bijvoorbeeld een derde systeem
-			// een additie heeft gedaan)
-			log.warn("versie " + name + " niet gevonden in cache... probeer DB");
-			try
-			{
-				version = versionDao.getVersion(name);
-			}
-			catch (VersionDAOException e)
-			{
-				throw new RegistryException(e);
-			}
+			throw new RegistryException(e);
 		}
 		return version;
 	}
@@ -357,7 +336,6 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 		{
 			throw new RegistryException(e);
 		}
-		putVersionInCache(version);
 	}
 
 	/**
@@ -373,25 +351,6 @@ public final class DefaultVersionRegistryDelegate implements VersionRegistryDele
 		{
 			throw new RegistryException(e);
 		}
-		removeVersionFromCache(version);
-	}
-
-	/**
-	 * Stop de versie in de cache.
-	 * @param version de versie
-	 */
-	private void putVersionInCache(Version version)
-	{
-		versions.put(version.getName(), version);
-	}
-
-	/**
-	 * Stop de versie in de cache.
-	 * @param version de versie
-	 */
-	private void removeVersionFromCache(Version version)
-	{
-		versions.remove(version.getName());
 	}
 
 	/**

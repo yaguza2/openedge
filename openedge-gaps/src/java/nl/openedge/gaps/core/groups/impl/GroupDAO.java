@@ -147,16 +147,13 @@ public final class GroupDAO
 
 		GroupWrapper wrapper = null;
 		Session session = null;
-		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
-			tx = session.beginTransaction();
 			List results = session.find("from "
 					+ GroupWrapper.class.getName()
 					+ " gw where gw.path = ? and gw.versionId = ?", new Object[] {path,
 					version.getName()}, new Type[] {Hibernate.STRING, Hibernate.STRING});
-			tx.commit();
 			if ((results != null) && (!results.isEmpty()))
 			{
 				if (results.size() > 1)
@@ -170,7 +167,6 @@ public final class GroupDAO
 		catch (HibernateException e)
 		{
 			log.error(e.getMessage(), e);
-			rollback(tx);
 			throw new GroupDAOException(e);
 		}
 		return wrapper;

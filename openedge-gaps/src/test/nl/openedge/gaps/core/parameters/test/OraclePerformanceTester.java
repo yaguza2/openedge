@@ -20,11 +20,11 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Performancetester voor HSQL.
  */
-public class OraclePerformanceTester extends PerformanceTester
+public class OraclePerformanceTester extends AbstractPerformanceTester
 {
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(PerformanceTester.class);
+	private static Log log = LogFactory.getLog(AbstractPerformanceTester.class);
 
 	/**
 	 * Construct.
@@ -48,8 +48,7 @@ public class OraclePerformanceTester extends PerformanceTester
 
 			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
 			Date vdate = Util.getTestDatum();
-			Version version = VersionRegistry.createVersion(vdate, sdf.format(vdate),
-					null);
+			Version version = VersionRegistry.createVersion(vdate, sdf.format(vdate), null);
 			version.setGoedgekeurd(true);
 			VersionRegistry.updateVersion(version);
 
@@ -59,7 +58,7 @@ public class OraclePerformanceTester extends PerformanceTester
 			log.error(e.getMessage(), e);
 			return;
 		}
-		PerformanceTester tester = new OraclePerformanceTester();
+		AbstractPerformanceTester tester = new OraclePerformanceTester();
 		try
 		{
 			tester.testParameterToevoegingen(1000);

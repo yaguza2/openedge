@@ -6,6 +6,7 @@
  */
 package nl.openedge.gaps.core.parameters.test;
 
+import java.io.InputStream;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
@@ -280,10 +281,7 @@ public abstract class AbstractParameterTest extends TestCase
 		ParameterGroup paramGroup = builder.createParameterGroup("pgroup",
 				"test parametergroep");
 		builder.setParameterGroup(paramGroup);
-		Parameter numberParam = builder.createNumeric("numberparam", "12,5"); // let
-		// op:
-		// NL
-		// locale!
+		Parameter numberParam = builder.createNumeric("numberparam", "12,5");
 		Parameter percParam = builder.createPercentage("percparam", "50");
 		NestedParameter rowParam = builder.createNumericRow("rowparam", new String[] {
 				"1", "2"}, new String[] {"15", "25"});
@@ -332,10 +330,6 @@ public abstract class AbstractParameterTest extends TestCase
 		assertNotNull(sroot);
 		ParameterRootGroup proot = (ParameterRootGroup) browser.navigate("/:DEFAULT");
 		assertNotNull(proot);
-		sroot = (StructuralRootGroup) browser.navigate("/");
-		assertNotNull(sroot);
-		proot = (ParameterRootGroup) browser.navigate("/:DEFAULT");
-		assertNotNull(proot);
 
 		ParameterBuilder builder = new ParameterBuilder();
 		StructuralGroup testgroep = builder.createStructuralGroup("testgroep",
@@ -363,14 +357,6 @@ public abstract class AbstractParameterTest extends TestCase
 		current = (Group) browser.navigate("/testgroep/dochter"); // absoluut
 		assertEquals(dochterGroep.getId(), current.getId());
 		assertEquals(dochterGroep.getVersion().getName(), current.getVersion().getName());
-		//TODO herimplementeer relatief browsen
-		//        current = (Group)browser.navigate("kleinzoon"); // relatief kind
-		//        assertEquals(kleinZoonGroep, current);
-		//        current = (Group)browser.navigate(".."); // relatief parent
-		//        assertEquals(dochterGroep, current);
-		//        current = (Group)browser.navigate(
-		//                "/testgroep/dochter/../dochter/./kleinzoon"); // absoluut
-		//        assertEquals(kleinZoonGroep, current);
 
 		// test browsen met builder
 		builder.navigate("/testgroep/dochter");
@@ -402,7 +388,33 @@ public abstract class AbstractParameterTest extends TestCase
 		result = browser
 				.navigate("/testgroep/dochter/kleindochter:eigenschappen/testrij['2']@value");
 		assertEquals(new Double(112), result);
+	}
 
+	/**
+	 * Test relatief browsen.
+	 * @throws Exception
+	 */
+	public void testRelatiefBrowsen() throws Exception {
+		ParameterBrowser browser = new ParameterBrowser();
+		ParameterBuilder builder = new ParameterBuilder();
+		StructuralGroup current = null;
+		builder.navigate("/:DEFAULT");
+		StructuralGroup g1 = builder.createStructuralGroup("RELTEST1", "", true);
+		StructuralGroup g2 = builder.createStructuralGroup("RELTEST2", "", true);
+		StructuralGroup g3 = builder.createStructuralGroup("RELTEST3", "", true);
+		// '/RELTEST1/RELTEST2/RELTEST3'
+		browser.navigate("/RELTEST1/RELTEST2/RELTEST3");
+		current = (StructuralGroup)browser.navigate("..");
+		assertEquals(g2.getId(), current.getId());
+		current = (StructuralGroup)browser.navigate(".");
+		assertEquals(g2.getId(), current.getId());
+		current = (StructuralGroup)browser.navigate(
+				"/RELTEST1/RELTEST2/../../RELTEST1/RELTEST2/../RELTEST2/./RELTEST3");
+		assertEquals(g3.getId(), current.getId());
+		current = (StructuralGroup)browser.navigate("../..");
+		assertEquals(g1.getId(), current.getId());
+		current = (StructuralGroup)browser.navigate("RELTEST2/RELTEST3");
+		assertEquals(g3.getId(), current.getId());
 	}
 
 	/**
@@ -441,6 +453,66 @@ public abstract class AbstractParameterTest extends TestCase
 		assertEquals(new Double(22), current);
 		current = browser.evaluate("/top/super/deze:parametergroep/een@value");
 		assertEquals(new Double(1), current);
+	}
+
+	/**
+	 * Test upload functie.
+	 * @throws Exception
+	 */
+	public void testUpload() throws Exception
+	{
+		StructuralGroup sg;
+		ParameterGroup pg;
+		Object result = null;
+		ParameterBuilder pb = new ParameterBuilder();
+		sg = pb.createStructuralGroup("SterfteTafels",
+				"StarefteTafels voor berekening van koopsommen/lijfrentes");
+		pb.navigate("/SterfteTafels");
+		pg = pb.createParameterGroup("Tafels", "Tafels met levenden");
+		pg.setParent(sg);
+		pg.setParentId(sg.getParentId());
+		pg.setParentLocalId(sg.getParentLocalId());
+		pg.setVersion(sg.getVersion());
+		pb.navigate("/SterfteTafels:Tafels");
+		InputStream is = AbstractParameterTest.class.getResourceAsStream("LGBM61.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBM71.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBM76.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBM80.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBM85.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBM90.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBV71.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBV76.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBV80.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBV85.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		is = AbstractParameterTest.class.getResourceAsStream("LGBV90.txt");
+		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		Group current = null;
+		NestedParameter np = null;
+		ParameterBrowser browser = new ParameterBrowser();
+		current = (Group) browser.navigate("/SterfteTafels");
+		assertEquals(sg.getId(), current.getId());
+		current = (Group) browser.navigate("/SterfteTafels:Tafels");
+		assertEquals(pg.getId(), current.getId());
+		np = (NestedParameter) browser.navigate("/SterfteTafels:Tafels/L_GBM61");
+		assertNotNull(np);
+		result = browser.navigate("/SterfteTafels:Tafels/L_GBM61['0']@value");
+		assertEquals(new Double(10000000), result);
+		result = browser.navigate("/SterfteTafels:Tafels/L_GBM61['10']@value");
+		assertEquals(new Double(9962191), result);
+		result = browser.navigate("/SterfteTafels:Tafels/L_GBM71['0']@value");
+		assertEquals(new Double(10000000), result);
+		result = browser.navigate("/SterfteTafels:Tafels/L_GBM71['8']@value");
+		assertEquals(new Double(9952112), result);
 	}
 
 	/**
