@@ -36,16 +36,12 @@ import java.net.URL;
 import java.security.AccessControlException;
 
 import java.security.Policy;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.access.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
 
 /**
  * The AccessFactory constructs and initialises objects that are used within
@@ -79,7 +75,8 @@ public class AccessFactory
 	/**
 	 * Default location of the xml configuration file.
 	 */
-	public static final String DEFAULT_CONFIG_FILE = "/WEB-INF/oeaccess.xml";
+	public static final String DEFAULT_CONFIG_FILE = 
+							"/WEB-INF/oeaccess.properties";
 
 	/**
 	 * If a value is set in the application attribute context with this key,
@@ -93,99 +90,96 @@ public class AccessFactory
 	 */
 	protected static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
-	/** save the reference if it is available */
-	protected ServletContext servletContext = null;
+	/** logger */
+	private static Log log = LogFactory.getLog(AccessFactory.class);
 
 	/**
-	 * configuration document
+	 * hidden constructor. Clients should use the static methods instead
 	 */
-	protected Document configuration;
-
-	/** logger */
-	private Log log = LogFactory.getLog(this.getClass());
+	protected AccessFactory()
+	{
+		// no nada	
+	}
 
 	/**
 	 * construct and initialise with configDocument
 	 */
-	public AccessFactory(String configDocument) throws ConfigException
+	public static void reload(String configDocument) 
+		throws ConfigException
 	{
 
-		this.configuration = loadConfigDocumentFromUrl(configDocument);
-		internalInit();
+		Properties configuration = loadConfigFromUrl(configDocument);
+		internalInit(configuration, null);
 	}
 
 	/**
 	 * construct and initialise with URL to configDocument
 	 */
-	public AccessFactory(URL configURL) throws ConfigException
+	public static void reload(URL configURL) throws ConfigException
 	{
 
-		this.configuration = loadConfigDocumentFromUrl(configURL);
-		internalInit();
+		Properties configuration = loadConfigFromUrl(configURL);
+		internalInit(configuration, null);
 	}
 
 	/**
 	 * construct and initialise with servletContext
 	 */
-	public AccessFactory(ServletContext servletContext) throws ConfigException
+	public static void reload(ServletContext servletContext) 
+		throws ConfigException
 	{
 
-		// save reference for (possible) later use
-		this.servletContext = servletContext;
-		this.configuration = loadConfigDocumentInWebApp(servletContext);
-		internalInit();
+		Properties configuration = loadConfigInWebApp(servletContext);
+		internalInit(configuration, servletContext);
 	}
 
 	/* do 'real' initialisation */
-	private void internalInit() throws ConfigException
+	private static void internalInit(
+		Properties configuration,
+		ServletContext servletContext) 
+		throws ConfigException
 	{
-
-		Element root = configuration.getRootElement();
 
 		// a client of this library does not have to configure the security
 		// element. For instance, it could be configured in the JDK settings
 		// directely instead
-		Element securityNode = root.getChild("security");
-		if (securityNode != null)
+
+		// add jaas config file (with LoginModule(s)) if property exists
+		String jaasConfig = configuration.getProperty("jaas-config");
+		if (jaasConfig != null)
 		{
-
-			// add jaas config file (with LoginModule(s)) if attribute exists
-			String jaasConfig = XML.getValue(securityNode, "jaas-config");
-			if (jaasConfig != null)
+			try
 			{
-				try
-				{
-					URL jaasConfigURL = convertToURL(jaasConfig, servletContext);
-					if (jaasConfigURL == null)
-						throw new ConfigException(jaasConfig + " is not a valid url");
-					String convertedJaasConfig = jaasConfigURL.toString();
-					setLoginModule(convertedJaasConfig);
-				}
-				catch (Exception e)
-				{
-					throw new ConfigException(e);
-				}
+				URL jaasConfigURL = convertToURL(jaasConfig, servletContext);
+				if (jaasConfigURL == null)
+					throw new ConfigException(jaasConfig + " is not a valid url");
+				String convertedJaasConfig = jaasConfigURL.toString();
+				setLoginModule(convertedJaasConfig);
 			}
-
-			//	add policy file (with policies) if attribute exists
-			String policyFile = XML.getValue(securityNode, "policies");
-			if (jaasConfig != null)
+			catch (Exception e)
 			{
-				try
-				{
-					URL policyURL = convertToURL(policyFile, servletContext);
-					if (policyURL == null)
-						throw new ConfigException(policyFile + " is not a valid url");
-					String convertedPolicyURL = policyURL.toString();
-					addPolicies(convertedPolicyURL);
-				}
-				catch (Exception e)
-				{
-					throw new ConfigException(e);
-				}
+				throw new ConfigException(e);
 			}
-
 		}
+
+		//	add policy file (with policies) if property exists
+		String policyFile = configuration.getProperty("policies");
+		if (jaasConfig != null)
+		{
+			try
+			{
+				URL policyURL = convertToURL(policyFile, servletContext);
+				if (policyURL == null)
+					throw new ConfigException(policyFile + " is not a valid url");
+				String convertedPolicyURL = policyURL.toString();
+				addPolicies(convertedPolicyURL);
+			}
+			catch (Exception e)
+			{
+				throw new ConfigException(e);
+			}
+		}
+
 	}
 
 	/**
@@ -193,13 +187,14 @@ public class AccessFactory
 	 * known by the security environment
 	 * @param convertedJaasConfig
 	 */
-	protected void setLoginModule(String convertedJaasConfig)
+	protected static void setLoginModule(String convertedJaasConfig)
 	{
 
 		boolean exists = false;
 		int n = 1;
 		String config_url;
-		while ((config_url = java.security.Security.getProperty("login.config.url." + n)) != null)
+		while ((config_url = java.security.Security.getProperty(
+					"login.config.url." + n)) != null)
 		{
 
 			if (config_url.equalsIgnoreCase(convertedJaasConfig))
@@ -213,7 +208,8 @@ public class AccessFactory
 		{
 			String configKey = ("login.config.url." + n);
 			java.security.Security.setProperty(configKey, convertedJaasConfig);
-			log.info("added " + configKey + "=" + convertedJaasConfig + " to java.security.Security properties");
+			log.info("added " + configKey + "=" + convertedJaasConfig 
+				+ " to java.security.Security properties");
 		}
 
 	}
@@ -222,14 +218,15 @@ public class AccessFactory
 	 * add our own policy file to the security environment
 	 * @param convertedPolicyURL
 	 */
-	protected void addPolicies(String convertedPolicyURL)
+	protected static void addPolicies(String convertedPolicyURL)
 	{
 
 		// handle the loading of Policies
 		boolean exists = false;
 		int n = 1;
 		String policy_url;
-		while ((policy_url = java.security.Security.getProperty("auth.policy.url." + n)) != null)
+		while ((policy_url = java.security.Security.getProperty(
+					"auth.policy.url." + n)) != null)
 		{
 
 			if (policy_url.equalsIgnoreCase(convertedPolicyURL))
@@ -243,7 +240,8 @@ public class AccessFactory
 		{
 			String configKey = ("auth.policy.url." + n);
 			java.security.Security.setProperty(configKey, convertedPolicyURL);
-			log.info("added " + configKey + "=" + convertedPolicyURL + " to java.security.Security properties");
+			log.info("added " + configKey + "=" + convertedPolicyURL 
+				+ " to java.security.Security properties");
 		}
 		// reload the policy configuration to add our policies	
 		try
@@ -259,16 +257,20 @@ public class AccessFactory
 	}
 
 	/**
-	 * @return a loaded JDOM document containing the configuration information.
+	 * load Properties
+	 * @return a loaded Properties object containing 
+	 * the configuration information.
 	 */
-	protected Document loadConfigDocumentFromUrl(String configDocument) throws ConfigException
+	protected static Properties loadConfigFromUrl(String configDocument) 
+		throws ConfigException
 	{
 
 		try
 		{
 			java.net.URL configURL = convertToURL(configDocument, null);
 			if (configURL == null)
-				throw new ConfigException(configDocument + " should be a document but is empty");
+				throw new ConfigException(configDocument + 
+						" should be a document but is empty");
 			log.info("Loading config from " + configURL);
 
 			return internalLoad(configURL);
@@ -283,11 +285,13 @@ public class AccessFactory
 	/**
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	protected Document loadConfigDocumentFromUrl(URL configURL) throws ConfigException
+	protected static Properties loadConfigFromUrl(URL configURL) 
+		throws ConfigException
 	{
 
 		if (configURL == null)
-			throw new ConfigException(configURL + " should be a document but is empty");
+			throw new ConfigException(configURL 
+				+ " should be a document but is empty");
 		log.info("Loading config from " + configURL);
 
 		return internalLoad(configURL);
@@ -296,7 +300,8 @@ public class AccessFactory
 	/**
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	protected Document loadConfigDocumentInWebApp(ServletContext servletContext) throws ConfigException
+	protected static Properties loadConfigInWebApp(ServletContext servletContext) 
+		throws ConfigException
 	{
 
 		try
@@ -309,7 +314,8 @@ public class AccessFactory
 
 			java.net.URL configURL = convertToURL(configFile, servletContext);
 			if (configURL == null)
-				throw new ConfigException(configFile + " should be a document but is empty");
+				throw new ConfigException(
+					configFile + " should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());
 
 			return internalLoad(configURL);
@@ -324,28 +330,21 @@ public class AccessFactory
 	/*
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	private Document internalLoad(URL configURL) throws ConfigException
+	private static Properties internalLoad(URL configURL) throws ConfigException
 	{
+		
+		log.info("Loading config from " + configURL.toString());
+
 		try
 		{
-
-			log.info("Loading config from " + configURL.toString());
-
-			try
-			{
-				SAXBuilder builder = new SAXBuilder();
-				return builder.build(configURL.openStream(), configURL.toString());
-			}
-			catch (org.jdom.JDOMException jde)
-			{
-
-				throw new ConfigException(jde);
-			}
+			Properties p = new Properties();
+			p.load(configURL.openStream());
+			return p;
 		}
-		catch (IOException ex)
+		catch (Exception jde)
 		{
 
-			throw new ConfigException(ex);
+			throw new ConfigException(jde);
 		}
 	}
 
@@ -354,7 +353,8 @@ public class AccessFactory
 	 * appropriate for loading from internal webapp or, servletContext is null,
 	 * loading from the classpath.
 	 */
-	protected URL convertToURL(String path, ServletContext servletContext) throws MalformedURLException
+	protected static URL convertToURL(String path, ServletContext servletContext) 
+		throws MalformedURLException
 	{
 
 		if (path.startsWith("file:")
@@ -373,7 +373,7 @@ public class AccessFactory
 		}
 		else
 		{
-			return getClass().getResource(path);
+			return AccessFactory.class.getResource(path);
 		}
 	}
 
