@@ -6,19 +6,14 @@ body  {
 	  Verdana, Lucida, Geneva, Helvetica, 
 	  Arial, sans-serif;
 	font-size:10pt;
-	overflow:hidden;
 } 
 
 .body {
 	position: absolute;
-	top: 70px;
+	top: 64px;
 	left:20px;
-	height: 90%;
-	width: 100%;
 	padding-left: 120px;
-	padding-right: 20%;
-	padding-bottom: 100px;
-	overflow: auto;
+
 }
 A {
   text-decoration:none;
@@ -29,10 +24,13 @@ A:HOVER {
   text-decoration:underline;
   /* background-color: #cccccc; */
 }
+form {
+  padding:0px;
+  display: inline;
+}
 h1  { 	
 	font-size:175%;
 	font-weight:bold;
-	height:60px
 } 
 
 h2  { 	
@@ -56,7 +54,7 @@ code  {
 } 
 
 img  { 	
-	border:0 solid 
+	border:0 solid
 } 
 		
 th  { 	
@@ -129,13 +127,24 @@ input, select, label  {
  list-style: none;
  display: inline;
 }		
-
-#paramGroupPanelBody {
- height: 100px;
+#plainParamScrollPane {
+ width:680px;
+ height: 200px;
  overflow: auto;
 }
-#structGroupPanelBody {
- height: 100px;
+#nestedParamScrollPane {
+ width:680px;
+ height: 80px;
+ overflow: auto;
+}
+#paramGroupScrollPane {
+ width:680px;
+ height: 120px;
+ overflow: auto;
+}
+#structGroupScrollPane {
+ width:680px;
+ height: 120px;
  overflow: auto;
 }
 #resultstable {

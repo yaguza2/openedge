@@ -37,7 +37,7 @@ public final class GapsWebApplication extends WebApplication
 		Code.addListenerFactory(new Log4JCodeListenerFactory());
 		ApplicationSettings settings = getSettings();
 		settings.setHomePage(HomePage.class);
-		//settings.setComponentUseCheck(false);
+		settings.setComponentUseCheck(false);
 		if (!Boolean.getBoolean("cache-templates"))
 		{
 			Duration pollFreq = Duration.ONE_SECOND;

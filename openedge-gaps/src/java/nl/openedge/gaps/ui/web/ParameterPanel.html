@@ -5,10 +5,9 @@
 
     <!-- container voor gewone, niet-geneste parameters -->
     <div id="wcn-plainParamsPanel">
-
       <!-- header -->
       <table id="resultstable">
-        <caption>parameter</caption>
+        <caption>parameters</caption>
         <thead>
           <tr>
             <th>
@@ -22,8 +21,9 @@
       </table>
 
      <!-- body -->
-     <div id="paramGroupPanelBody">
-      <table id="resultstable">
+     <form id="wcn-paramForm">
+      <div id="plainParamScrollPane">
+       <table id="resultstable">
         <tfoot>
         </tfoot>
         <tbody>
@@ -32,12 +32,14 @@
                 <span id="wcn-name">(Naam)</span>
             </td>
             <td>
-                <span id="wcn-value">(Waarde)</span>
+                <input id="wcn-value" type="text" size="20"/>
             </td>
           </tr>
         </tbody>
       </table>
      </div>
+      <input type="submit" value="save"/>
+    </form>
     <!-- einde gewone, niet-geneste parameters -->
     </div>
     
@@ -53,14 +55,14 @@
         <thead>
           <tr>
             <th>
-                TODO
+                Tabel
             </th>
           </tr>
         </thead>
       </table>
 
      <!-- body -->
-     <div id="paramGroupPanelBody">
+     <div id="nestedParamScrollPane">
       <table id="resultstable">
         <tfoot>
         </tfoot>

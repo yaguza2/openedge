@@ -9,7 +9,6 @@
  */
 package nl.openedge.gaps.ui.web;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +18,19 @@ import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameter;
 
+import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
+import com.voicetribe.wicket.markup.html.form.Form;
+import com.voicetribe.wicket.markup.html.form.TextField;
+import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
+import com.voicetribe.wicket.markup.html.panel.FeedbackPanel;
 import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
 
 /**
- * Panel voor groepen.
+ * Panel voor parameters.
  */
 public class ParameterPanel extends Panel
 {
@@ -38,7 +42,7 @@ public class ParameterPanel extends Panel
     public ParameterPanel(String componentName, ParameterGroup group)
     {
         super(componentName);
-        addParamComponents(group);
+        addParamComponents(group); // voeg de componenten toe
     }
 
     /**
@@ -47,8 +51,7 @@ public class ParameterPanel extends Panel
      */
     private void addParamComponents(ParameterGroup group)
     {
-        HtmlContainer outerPanel = new HtmlContainer("outerPanel");
-
+        HtmlContainer outerPanel = new HtmlContainer("outerPanel"); // maak top container
         final Parameter[] parameters;
         if(group != null)
         {
@@ -56,22 +59,104 @@ public class ParameterPanel extends Panel
         }
         else
         {
-            parameters = new Parameter[0];
+            parameters = new Parameter[0]; // lege array
         }
         // splis en sorteer de parameters naar soort
         GroupedParameters grouped = new GroupedParameters(parameters);
+        addPlain(outerPanel, grouped); // componenten voor gewone parameters
+        addNested(outerPanel, grouped); // componenten voor geneste parameters
+        add(outerPanel); // voeg top container aan dit panel toe
+    }
 
+    //-------------------------------------------------------------------------------
+    //--------------------- afhandeling gewone parameters ---------------------------
+    //-------------------------------------------------------------------------------
+
+    /**
+     * Voeg componenten voor gewone parameters toe.
+     * @param outerPanel top level panel
+     * @param grouped groupering
+     */
+    private void addPlain(HtmlContainer outerPanel, GroupedParameters grouped)
+    {
         // voeg niet-geneste parameters toe
         HtmlContainer plainParamsPanel = new HtmlContainer("plainParamsPanel");
+        FeedbackPanel feedback = new FeedbackPanel("feedback");
+        PlainParameterForm form = new PlainParameterForm("paramForm", feedback);
         PlainParameterTable plainParametersTable =
             new PlainParameterTable("plainParams", grouped.plainParams);
-        plainParamsPanel.add(plainParametersTable);
+        form.add(plainParametersTable);
+        plainParamsPanel.add(form);
         if(grouped.plainParams.isEmpty())
         {
             plainParamsPanel.setVisible(false);
         }
         outerPanel.add(plainParamsPanel);
+    }
 
+    /**
+     * Form voor gewone parameters.
+     */
+    private static class PlainParameterForm extends Form
+    {
+        /**
+         * Construct.
+         * @param name component name
+         * @param validationErrorHandler validation error handler
+         */
+        public PlainParameterForm(String name,
+                IValidationErrorHandler validationErrorHandler)
+        {
+            super(name, validationErrorHandler);
+        }
+
+        /**
+         * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
+         */
+        public void handleSubmit(RequestCycle cycle)
+        {
+            System.err.println("submitted!");
+        }
+    }
+
+    /**
+     * Table voor niet-geneste parameters.
+     */
+    private static class PlainParameterTable extends Table
+    {
+        /**
+         * Construct.
+         * @param componentName componentnaam
+         * @param model list met parametergroepen
+         */
+        public PlainParameterTable(String componentName, List model)
+        {
+            super(componentName, model);
+        }
+
+        /**
+         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         */
+        protected void populateCell(Cell cell)
+        {
+            Parameter parameter = (Parameter)cell.getModelObject();
+    		cell.add(new Label("name", parameter.getLocalId()));
+    		cell.add(new TextField("value",
+    		        new ParameterModel(parameter, "value.value", true)));
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    //--------------------- afhandeling geneste parameters --------------------------
+    //-------------------------------------------------------------------------------
+
+    /**
+     * Voeg componenten voor geneste parameters toe.
+     * @param outerPanel top level panel
+     * @param grouped groupering
+     */
+    private void addNested(HtmlContainer outerPanel, GroupedParameters grouped)
+    {
         // voeg geneste parameters toe
         HtmlContainer nestedParamsPanel = new HtmlContainer("nestedParamsPanel");
         NestedParametersOuterTable nestedParametersTable =
@@ -83,9 +168,6 @@ public class ParameterPanel extends Panel
             nestedParametersTable.setVisible(false);
         }
         outerPanel.add(nestedParamsPanel);
-
-        // voeg topcontainer toe
-        add(outerPanel);
     }
 
     /**
@@ -141,31 +223,9 @@ public class ParameterPanel extends Panel
         }
     }
 
-    /**
-     * Table voor niet-geneste parameters.
-     */
-    private static class PlainParameterTable extends Table
-    {
-        /**
-         * Construct.
-         * @param componentName componentnaam
-         * @param model list met parametergroepen
-         */
-        public PlainParameterTable(String componentName, List model)
-        {
-            super(componentName, model);
-        }
-
-        /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
-         */
-        protected void populateCell(Cell cell)
-        {
-            Parameter parameter = (Parameter)cell.getModelObject();
-    		cell.add(new Label("name", parameter.getLocalId()));
-    		cell.add(new Label("value", (Serializable)parameter.getValue().getValue()));
-        }
-    }
+    //-------------------------------------------------------------------------------
+    //--------------------- utilities -----------------------------------------------
+    //-------------------------------------------------------------------------------
 
     /**
      * Groepeert de parameters in geneste/ niet geneste paramers, waarbij
