@@ -22,13 +22,13 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Validates if a date lies before a given date
+ * Validates if a date is before a given date
  * 
  * @author hofstee
  */
 public class BeforeValidator extends AbstractFieldValidator
 {
-	private Log log = LogFactory.getLog(this.getClass());
+	private Log log = LogFactory.getLog(BeforeValidator.class);
 	
 	private final static String DEFAULT_PREFIX = "invalid.field.input.after";
 	

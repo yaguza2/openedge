@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="src" path="src/java"/>
-    <classpathentry kind="src" output="src/example/classes" path="src/example/java"/>
     <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/servletapi-2.3-src.jar"/>
