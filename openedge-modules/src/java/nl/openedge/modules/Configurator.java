@@ -46,7 +46,22 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 /**
- * The configurator loads configuration files
+ * <p>Clients of the ModuleFactory should either construct the factory with an
+ * instance of <code>javax.servlet.ServletContext</code> or with an instance
+ * of <code>java.lang.String</code>. The first is for usage in a web application
+ * environment and tries to read the location of the configuration document from
+ * <code>javax.servlet.ServletContext.getInitParameter("oeaccess.configFile")</code> 
+ * Moreover, all other references to documents (e.g. jaas.config) in the
+ * configuration file will be looked up relative to the context path of the web
+ * application. The second case tries to load all files from the classpath. To
+ * overide this behaviour you can specify url's in the configuration document,
+ * e.g: file://c:/mywinboxdrive/mydir/mymodules.xml. A third option is to load 
+ * the configuration document from a custom location. This is done by 
+ * constructing the URL yourself and constructing the ModuleFactory
+ * with this URL.
+ * <p>In a web application environment, the constructed instance of this 
+ * <code>ModuleFactory</code> will be saved in the <code>ServletContext</code>
+ * under key 'oemodules.configFile'. 
  * 
  * @author Eelco Hillenius
  */
@@ -133,12 +148,9 @@ public class Configurator {
 			if(name == null) {
 				throw new ConfigException("factory must have a name");
 			}
-			ModuleFactory moduleFactory = 
-				new ModuleFactory(factoryNode, servletContext);
-	
-			log.info("Factory name: " + name);
-			bindFactory(name, moduleFactory, properties);
-				
+			log.info("instantiating factory '" + name + "'");
+			ModuleFactory moduleFactory = new ModuleFactoryImpl(
+					name, properties, factoryNode, servletContext);
 		}
 	}
 	
@@ -162,27 +174,6 @@ public class Configurator {
 			}
 		}
 		return properties;
-	}
-	
-	/**
-	 * bind a factory to a JNDI name
-	 * @param name name to bind on
-	 * @param moduleFactory instance of module factory
-	 * @throws ConfigException
-	 */
-	protected void bindFactory(String name, 
-							   ModuleFactory moduleFactory,
-							   Properties properties)
-							throws ConfigException {
-		
-		String uuid = null;
-		try {
-			uuid = (String) uuidgenerator.generate();
-		}
-		catch (Exception e) {
-			throw new ConfigException("Could not generate UUID");
-		}
-		JNDIObjectFactory.addInstance(uuid, name, this, properties);
 	}
 	
 	/**

@@ -1,3 +1,33 @@
+/*
+ * $Header$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Copyright (c) 2003, Open Edge B.V.
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer. Redistributions 
+ * in binary form must reproduce the above copyright notice, this list of 
+ * conditions and the following disclaimer in the documentation and/or other 
+ * materials provided with the distribution. Neither the name of OpenEdge B.V. 
+ * nor the names of its contributors may be used to endorse or promote products 
+ * derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package nl.openedge.util.config;
 
 import java.util.Hashtable;
@@ -24,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Resolves JNDI lookups and deserialization
- * @author unknown, got it from Hibernate
+ * @author Eelco Hillenius and 'someone' from Hibernate
  */
 public class JNDIObjectFactory implements ObjectFactory {
 
@@ -45,12 +75,12 @@ public class JNDIObjectFactory implements ObjectFactory {
 	private static final NamingListener listener = new NamespaceChangeListener() {
 		
 		public void objectAdded(NamingEvent evt) {
-			log.debug( "A factory was successfully bound to name: " + 
+			log.debug( "a object was successfully bound to name: " + 
 						evt.getNewBinding().getName() );
 		}
 		public void objectRemoved(NamingEvent evt) {
 			String name = evt.getOldBinding().getName();
-			log.info("A factory was unbound from name: " + name);
+			log.info("a object was unbound from name: " + name);
 			Object instance = namedInstances.remove(name);
 			Iterator iter = instances.values().iterator();
 			while ( iter.hasNext() ) {
@@ -59,12 +89,12 @@ public class JNDIObjectFactory implements ObjectFactory {
 		}
 		public void objectRenamed(NamingEvent evt) {
 			String name = evt.getOldBinding().getName();
-			log.info("A factory was renamed from name: " + name);
+			log.info("a object was renamed from name: " + name);
 			namedInstances.put( evt.getNewBinding().getName(), 
 								namedInstances.remove(name) );
 		}
 		public void namingExceptionThrown(NamingExceptionEvent evt) {
-			log.warn( "Naming exception occurred accessing factory: " + 
+			log.warn( "naming exception occurred accessing object: " + 
 						evt.getException() );
 		}
 	};
@@ -93,7 +123,7 @@ public class JNDIObjectFactory implements ObjectFactory {
 	public static void addInstance(String uid, String name, 
 				Object instance, Properties properties) {
 	
-		log.debug("registered: " + uid + " (" + ( (name==null) ? "unnamed" : name ) + ')');
+		log.info("registered: " + uid + " (" + ( (name==null) ? "unnamed" : name ) + ')');
 		instances.put(uid, instance);
 		if (name!=null) namedInstances.put(name, instance);
 	
@@ -103,26 +133,24 @@ public class JNDIObjectFactory implements ObjectFactory {
 		}
 		else {
 		
-			log.info("Factory name: " + name);
+			log.info("registered name: " + name);
 		
 			try {
 				Context ctx = NamingHelper.getInitialContext(properties);
 				NamingHelper.bind(ctx, name, instance);
-				log.info("Bound factory to JNDI name: " + name);
+				log.info("bound " + instance + " to JNDI name: " + name);
 				( (EventContext) ctx ).addNamingListener(name, EventContext.OBJECT_SCOPE, listener);
 			}
 			catch (InvalidNameException ine) {
-				log.error("Invalid JNDI name: " + name, ine);
+				log.error("invalid JNDI name: " + name, ine);
 			}
 			catch (NamingException ne) {
-				log.warn("Could not bind factory to JNDI", ne);
+				log.warn("could not bind factory to JNDI", ne);
 			}
 			catch(ClassCastException cce) {
-				log.warn("InitialContext did not implement EventContext");
+				log.warn("initialContext did not implement EventContext");
 			}
-		
 		}
-	
 	}
 
 	/**
@@ -135,26 +163,24 @@ public class JNDIObjectFactory implements ObjectFactory {
 		//TODO: theoretically non-threadsafe...
 
 		if (name!=null) {
-			log.info("Unbinding factory: " + name);
+			log.info("unbinding object: " + name);
 		
 			try {
 				Context ctx = NamingHelper.getInitialContext(properties);
 				ctx.unbind(name);
-				log.info("Unbound factory from JNDI name: " + name);
+				log.info("unbound object from JNDI name: " + name);
 			}
 			catch (InvalidNameException ine) {
-				log.error("Invalid JNDI name: " + name, ine);
+				log.error("invalid JNDI name: " + name, ine);
 			}
 			catch (NamingException ne) {
-				log.warn("Could not unbind factory from JNDI", ne);
+				log.warn("could not unbind object from JNDI", ne);
 			}
 		
 			namedInstances.remove(name);
-		
 		}
 
 		instances.remove(uid);
-	
 	}
 
 	/**
@@ -166,7 +192,7 @@ public class JNDIObjectFactory implements ObjectFactory {
 		log.debug("lookup: name=" + name);
 		Object result = namedInstances.get(name);
 		if (result==null) {
-			log.warn("Not found: " + name);
+			log.warn("not found: " + name);
 			log.debug(namedInstances);
 		}
 		return result;
@@ -177,7 +203,7 @@ public class JNDIObjectFactory implements ObjectFactory {
 		log.debug("lookup: uid=" + uid);
 		Object result = instances.get(uid);
 		if (result==null) {
-			log.warn("Not found: " + uid);
+			log.warn("not found: " + uid);
 			log.debug(instances);
 		}
 		return result;

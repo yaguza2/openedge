@@ -30,6 +30,11 @@
  */
 package nl.openedge.modules.test;
 
+import java.net.URL;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
 import junit.framework.TestCase;
 
 import nl.openedge.modules.Configurator;
@@ -69,13 +74,16 @@ public abstract class AbstractTestBase extends TestCase {
 		
 		if(!initialised) {
 			try {
-				Configurator c = new Configurator(
+				
+				URL url = getClass().getResource(
 					System.getProperty("configfile", "/oemodules.xml"));
+				String mfRef = System.getProperty("factoryRef", 
+						"/openedge/ModuleFactory");
 				
-				
-				
-				//moduleFactory = ModuleFactory.instantiate(
-				//	System.getProperty("configfile", "/oemodules.xml"), null);
+				Configurator c = new Configurator(url);
+				Context ctx = new InitialContext();
+				moduleFactory = (ModuleFactory)ctx.lookup(mfRef);	
+
 			} catch(Exception e) {
 				e.printStackTrace();
 				throw e;
