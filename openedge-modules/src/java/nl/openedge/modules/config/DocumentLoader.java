@@ -53,7 +53,7 @@ public final class DocumentLoader
 	/**
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	public static Document loadDocumentFromUrl(String configDocument) throws ConfigException
+	public static Document loadDocument(String configDocument) throws ConfigException
 	{
 
 		try
@@ -78,7 +78,7 @@ public final class DocumentLoader
 	/**
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	public static Document loadDocumentFromUrl(URL configURL) throws ConfigException
+	public static Document loadDocument(URL configURL) throws ConfigException
 	{
 
 		if (configURL == null)
@@ -92,7 +92,7 @@ public final class DocumentLoader
 	/**
 	 * @return a loaded JDOM document containing the configuration information.
 	 */
-	public static Document loadDocumentInWebApp(String configFile, 
+	public static Document loadDocument(String configFile, 
 								ServletContext servletContext)
 								throws ConfigException
 	{

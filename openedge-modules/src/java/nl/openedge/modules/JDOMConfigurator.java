@@ -182,7 +182,7 @@ public final class JDOMConfigurator
 	 */
 	protected void reload(String configDocument) throws ConfigException
 	{
-		Document configuration = DocumentLoader.loadDocumentFromUrl(configDocument);
+		Document configuration = DocumentLoader.loadDocument(configDocument);
 		createRepository(configuration, null);
 	}
 
@@ -193,7 +193,7 @@ public final class JDOMConfigurator
 	 */
 	protected void reload(URL configURL) throws ConfigException
 	{
-		Document configuration = DocumentLoader.loadDocumentFromUrl(configURL);
+		Document configuration = DocumentLoader.loadDocument(configURL);
 		createRepository(configuration, null);
 	}
 
@@ -210,7 +210,7 @@ public final class JDOMConfigurator
 			configFile = servletContext.getInitParameter(INITPARAM_CONFIG_FILE);
 		if (configFile == null)
 			configFile = DEFAULT_CONFIG_FILE;
-		Document configuration = DocumentLoader.loadDocumentInWebApp(
+		Document configuration = DocumentLoader.loadDocument(
 										configFile, servletContext);
 		createRepository(configuration, servletContext);
 	}
