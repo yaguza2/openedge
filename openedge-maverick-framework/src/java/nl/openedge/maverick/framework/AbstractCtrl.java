@@ -496,7 +496,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public String getLocalizedMessage(String key)
 	{
-		return getLocalizedMessage(null);
+		return getLocalizedMessage(key, Locale.getDefault());
 	}
 	
 	/**
@@ -542,6 +542,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		
 		ResourceBundle res = getBundle(locale);
 		String msg = res.getString(key);
+		MessageFormat fmt = new MessageFormat(msg);
+
 		String formattedMessage = 
 			MessageFormat.format(msg, parameters);
 		
