@@ -15,8 +15,6 @@ import nl.openedge.util.hibernate.HibernateHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.voicetribe.util.code.Code;
-import com.voicetribe.util.code.Log4JCodeListenerFactory;
 import com.voicetribe.util.convert.ConverterRegistry;
 import com.voicetribe.util.time.Duration;
 import com.voicetribe.wicket.ApplicationSettings;
@@ -35,7 +33,6 @@ public final class GapsWebApplication extends WebApplication
      */
     public GapsWebApplication()
     {
-		Code.addListenerFactory(new Log4JCodeListenerFactory());
 		ApplicationSettings settings = getSettings();
 		settings.setHomePage(HomePage.class);
 		settings.setComponentUseCheck(false);
