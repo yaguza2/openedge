@@ -114,7 +114,7 @@ public final class ThumbnailFileCacheModule implements SingletonType, BeanType
 				{
 					log.debug("removing " + files[i] + " from cache");
 				}
-				File toDelete = new File(dir, files[i]);
+				File toDelete = new File(cacheDir, files[i]);
 				boolean success = toDelete.delete();
 				if (!success)
 				{
