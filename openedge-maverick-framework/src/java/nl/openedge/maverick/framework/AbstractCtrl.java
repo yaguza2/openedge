@@ -685,7 +685,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 						}
 						else
 						{
-							log.warn(e.getMessage());
+							log.warn(e.getMessage(), e);
 						}
 						formBean.setError(name, e.getMessage());
 					}
@@ -1162,11 +1162,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		{
 			msg = getBundle(locale).getString(key);
 		}
-		catch (RuntimeException e)
+		catch (Exception e)
 		{
 			if(log.isDebugEnabled())
 			{
-				log.warn(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return msg;
