@@ -54,7 +54,7 @@ public class BeforeValidator extends AbstractFieldValidator
 {
 	private Log log = LogFactory.getLog(BeforeValidator.class);
 
-	private final static String DEFAULT_PREFIX = "invalid.field.input.after";
+	private final static String DEFAULT_PREFIX = "invalid.field.input.before";
 
 	/**
 	 * The date check against.

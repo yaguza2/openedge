@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>openedge-util</id>
 	<name>OpenEdge Util</name>
-	<currentVersion>1.2.1</currentVersion>
+	<currentVersion>1.2.2</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -20,6 +20,11 @@
 	<url>http://maven.apache.org/</url>
 
 	<versions>
+		<version>
+			<id>1.2.2</id>
+			<name>1.2.2</name>
+			<tag>B1_2_2</tag>
+		</version>
 		<version>
 			<id>1.2.1</id>
 			<name>1.2.1</name>
