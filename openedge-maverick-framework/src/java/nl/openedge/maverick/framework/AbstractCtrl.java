@@ -74,10 +74,27 @@ import org.infohazard.maverick.flow.ControllerContext;
 import org.infohazard.maverick.flow.ControllerSingleton;
 
 /**
- * baseclass for controls
+ * AbstractCtrl is a base class for singleton controllers which use
+ * external FormBeans rather than populating themselves. 
+ * 
+ * It is the more refined version of FormBeanUser from the maverick project.
+ * Using (extending) this class gives you:
+ * <ul>
+ * 	<li>automatic population of the form</li>
+ * 	<li>plugable conversion mechanism (using BeanUtils)</li>
+ * 	<li>flexible, localized error handling</li>
+ * 	<li>plugable form-level and field-level validation</li>
+ * 	<li>mechanism to get the last input for fields if conversion failed</li>
+ * </ul>
+ * 
+ * Please read the 'usage' document for examples of how to use this class.
+ * 
+ * @see org.infohazard.maverick.ctl.FormBeanUser
+ * @see org.apache.commons.beanutils.BeanUtils
+ * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractCtrl implements ControllerSingleton 
+public abstract class AbstractCtrl implements ControllerSingleton
 {
 	
 	/** Common name for the typical "success" view */

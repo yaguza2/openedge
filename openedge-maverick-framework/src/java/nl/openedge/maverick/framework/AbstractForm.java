@@ -40,7 +40,17 @@ import java.util.Map;
 import nl.openedge.access.UserPrincipal;
 
 /**
- * Baseclass for forms
+ * AbstractForm is a base class to be used with AbstractCtrl.
+ * Using this form, you (or better AbstractCtrl) can save errors,
+ * save override fields and save the current user.
+ * 
+ * Override fields are filled with the string values from the HttpServletRequest
+ * if conversion the the target type (e.g. an integer) in the form failed.
+ * For example: if you have a form with property 'myinteger' and send the request
+ * parameter 'myinteger=foo', 'foo' will be saved as an override field with key
+ * 'myinteger'. On top of this, an error will be registered (stored in map errors)
+ * for this conversion failure, default with key 'myinteger'.
+ * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractForm
