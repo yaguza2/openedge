@@ -60,24 +60,9 @@ public abstract class RdbmsBase {
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
 
-	/* init flag */
-	private static boolean initialised = false;
-
-	/** construct and read queries */
+	/** construct */
 	public RdbmsBase() {
-		
-		if(!initialised) {
-			
-			initialised = true;
-			try {
-				queries = new Properties();
-				queries.load(RdbmsBase.class.getResourceAsStream(
-						"RdbmsQueries.properties"));
-					
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
+
 	}
 
 	/**

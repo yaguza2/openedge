@@ -31,8 +31,8 @@
 package nl.openedge.access;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p> This class implements the <code>Principal</code> interface
@@ -58,7 +58,7 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	protected Map attributes;
 	
 	/** roles that user is member of */
-	protected List roles;
+	protected Set roles;
 	
 	/** possibly the active role for this user */
 	protected RolePrincipal activeRole;
@@ -161,7 +161,7 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	/**
 	 * @return List
 	 */
-	public List getRoles() {
+	public Set getRoles() {
 		return roles;
 	}
 
@@ -177,7 +177,7 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 * Sets the roles.
 	 * @param roles The roles to set
 	 */
-	public void setRoles(List roles) {
+	public void setRoles(Set roles) {
 		this.roles = roles;
 	}
 

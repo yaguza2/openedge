@@ -33,6 +33,7 @@ package nl.openedge.access.tools;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import nl.openedge.access.AccessException;
 import nl.openedge.access.AccessFactory;
@@ -281,9 +282,9 @@ public final class UserTool {
 					System.err.println("user " + username + " does not exist");
 					return;
 				}
-				List roles = userManager.listRolesForUser(user);
+				Set roles = userManager.listRolesForUser(user);
 				if(roles != null && (!roles.isEmpty())) {
-					for(Iterator i = roles.listIterator(); i.hasNext(); ) {
+					for(Iterator i = roles.iterator(); i.hasNext(); ) {
 						RolePrincipal r = (RolePrincipal)i.next();
 						System.out.println("\t- " + r);
 					}

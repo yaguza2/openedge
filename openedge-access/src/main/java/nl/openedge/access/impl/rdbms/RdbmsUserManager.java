@@ -33,8 +33,10 @@ package nl.openedge.access.impl.rdbms;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -463,9 +465,9 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	/**
 	 * @see nl.openedge.access.UserManager#listRolesForUser(nl.openedge.access.UserPrincipal)
 	 */
-	public List listRolesForUser(UserPrincipal user) throws AccessException {
+	public Set listRolesForUser(UserPrincipal user) throws AccessException {
 		
-		List roles = new ArrayList();
+		Set roles = new HashSet();
 		if(user == null) return roles;
 		try {
 			Object[] params = new Object[]{ user.getName() };

@@ -32,6 +32,7 @@ package nl.openedge.access;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The UserManager manages users and roles.
@@ -146,7 +147,7 @@ public interface UserManager extends Configurable {
 	 * @param user
 	 * @return List
 	 */
-	public List listRolesForUser(UserPrincipal user) throws AccessException;
+	public Set listRolesForUser(UserPrincipal user) throws AccessException;
 	
 	/**
 	 * checks if user is in role

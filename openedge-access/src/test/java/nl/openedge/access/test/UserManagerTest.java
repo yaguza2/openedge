@@ -33,6 +33,7 @@ package nl.openedge.access.test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
@@ -147,7 +148,7 @@ public class UserManagerTest extends AbstractTestBase {
 			testRoles.add(role1);
 			testRoles.add(role2);
 			
-			List roles = userManager.listRolesForUser(user);			
+			Set roles = userManager.listRolesForUser(user);			
 			assertSameContents("test roles and current roles should be same",
 				roles, testRoles);		
 			userManager.removeUserFromRole(user, role2);
@@ -207,7 +208,7 @@ public class UserManagerTest extends AbstractTestBase {
 			Map attribs = userManager.getUserAttributes(dummy);
 			assertTrue(attribs.values().isEmpty());
 			
-			List roles = userManager.listRolesForUser(dummy);
+			Set roles = userManager.listRolesForUser(dummy);
 			assertTrue(roles.isEmpty());
 			
 		} catch(Exception e) {
