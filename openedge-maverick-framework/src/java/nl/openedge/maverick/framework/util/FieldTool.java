@@ -40,13 +40,18 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.tools.view.context.ViewContext;
+import org.apache.velocity.tools.view.tools.ViewTool;
 
 import nl.openedge.maverick.framework.AbstractForm;
 
 /**
  * @author Eelco Hillenius
  */
-public class FieldTool
+public class FieldTool implements ViewTool
 {
 	
 	/* prefix for form, default = "model" */
@@ -56,18 +61,52 @@ public class FieldTool
 	
 	protected static Map keyedFormatters = new HashMap(); 
 
+	/** Reference to the current Velocity(View)Context. */ 
+	protected ViewContext currentContext = null;
+	
+	protected static String counterName;
+	protected static int counterInitialValue;
+	
+	static
+	{
+		counterName = (String)Velocity.getProperty(RuntimeConstants.COUNTER_NAME);
+		String initValue = String.valueOf(Velocity.getProperty(RuntimeConstants.COUNTER_INITIAL_VALUE));
+		counterInitialValue = Integer.parseInt(initValue);
+		
+		log.info("using velocity countername " + counterName +
+			 ", with initial value " + counterInitialValue);	
+	}
+	
+	/**
+	 * Initializes this tool.
+	 *
+	 * @param obj the current ViewContext
+	 * @throws IllegalArgumentException if the param is not a ViewContext
+	 */
+	public void init(Object obj)
+	{
+		if (!(obj instanceof ViewContext))
+		{
+			throw new IllegalArgumentException("Tool can only be initialized with a ViewContext");
+		}
+ 
+		this.currentContext = (ViewContext)obj;
+	}
+
 	/**
 	 * print error message
 	 * @param model current model
 	 * @param field field name
 	 * @return String or null if no error was found
 	 */
-	public String error(Object model, String field) 
+	public String error(Object model, String name) 
 	{	
+		name = replaceVelocityCount(name);
+		
 		if(model instanceof AbstractForm) 
 		{
 			AbstractForm form = (AbstractForm)model;
-			String stringVal = form.getError(field);
+			String stringVal = form.getError(name);
 			if(stringVal != null) 
 			{
 				return stringVal;		
@@ -81,6 +120,16 @@ public class FieldTool
 		// fallback
 		return null;	
 	}
+	
+	/**
+	 * get formname
+	 * @param name
+	 * @return String
+	 */
+	public String getFormName(String name)
+	{
+		return replaceVelocityCount(name);
+	}
 
 	/**
 	 * get value from form as a String
@@ -91,8 +140,12 @@ public class FieldTool
 	public String getFormValueAsString(Object bean, String name)
 	{
 		if( (bean == null) || (name == null)) return null;
+		
+		name = replaceVelocityCount(name);
+		
 		String value = null;
 		AbstractForm model = null;
+		
 		if(bean instanceof AbstractForm)
 		{
 			model = (AbstractForm)bean;
@@ -161,6 +214,9 @@ public class FieldTool
 	public String getFormattedFormValueAsString(Object bean, String name, String pattern)
 	{
 		if((bean == null) || (name == null) || (pattern == null)) return null;
+		
+		name = replaceVelocityCount(name);
+		
 		Object value = null;
 		String converted = null;
 		AbstractForm model = null;
@@ -242,6 +298,24 @@ public class FieldTool
 		}
 
 		return converted;
+	}
+	
+	/**
+	 * replace $velocityCount in name with the value of velocityCount minus the initial
+	 * count value (in order to have an integer rangin from 0..n-1)
+	 * @param name
+	 * @return
+	 */
+	public String replaceVelocityCount(String name)
+	{
+		Context vctx = currentContext.getVelocityContext();
+		Integer loopCounter = (Integer)vctx.get(counterName);
+		if(loopCounter != null) // we're in a loop
+		{
+			int index = loopCounter.intValue() - counterInitialValue;
+			name = name.replaceAll("\\$" + counterName, String.valueOf(index));			
+		}
+		return name;
 	}
 
 	/**
