@@ -44,10 +44,16 @@ public class HtmlTool
 	 * met de daaraan gekoppelde waarde.
 	 * @param original de string met speciale characters
 	 * @return string waarin de speciale characters vervangen zijn door 
-	 * 			HTML-vriendelijke characters.
+	 * 			HTML-vriendelijke characters. Als original null is wordt null terug
+	 * 			gegeven.
 	 */
 	public static String parseText(String original)
 	{
+		if (original == null)
+		{
+			return original;
+		}
+		
 		StringBuffer encodedStr = new StringBuffer(original.length());		
 
 		for (int i = 0; i < original.length(); i++)
