@@ -33,6 +33,7 @@ package nl.openedge.maverick.framework;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -507,16 +508,36 @@ public abstract class AbstractCtrl implements ControllerSingleton
 									String name, Object triedValue, Throwable t) 
 	{
 
-		String msg = getLocalizedMessage(
-			"invalid.field.input", new Object[]{name, triedValue, t});
-
-		formBean.setError(name, msg);
-		
-		// if fail on populate, set the override field so that the input
-		// value can be displayed
-		if(failOnPopulateError)
+		try
 		{
-			formBean.setOverrideField(name, triedValue);	
+			
+			PropertyDescriptor descriptor = 
+				PropertyUtils.getPropertyDescriptor(formBean, name);
+			String key = "invalid.field.input"; 
+			if (descriptor.getPropertyType().equals(Date.class))
+			{
+				key = "invalid.field.input.date";
+			}
+			else if(descriptor.getPropertyType().getName().equals("int"))
+			{
+				key = "invalid.field.input.integer";
+			}
+		
+			String msg = getLocalizedMessage(key
+				, new Object[]{triedValue, name, t});
+
+			formBean.setError(name, msg);
+		
+			// if fail on populate, set the override field so that the input
+			// value can be displayed
+			if(failOnPopulateError)
+			{
+				formBean.setOverrideField(name, triedValue);	
+			}
+		}		
+		catch (Exception e)
+		{
+			log.error(e.getMessage());
 		}
 	}
 	
