@@ -9,7 +9,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-modules-1.2-src.jar" kind="var" path="MAVEN_REPO/openedge-modules/jars/openedge-modules-1.2.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/openedge-modules-1.2-src.jar" kind="var" path="MAVEN_REPO/openedge-modules/jars/openedge-modules-1.2.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/openedge-access/jars/openedge-access-1.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

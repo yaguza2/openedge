@@ -7,6 +7,11 @@
 			<property name="configLocation" value="test.usermenu.xml" />
 		</component>
 
+		<component name="MenuModule2" class="nl.openedge.modules.impl.menumodule.MenuModule">
+			<property name="configLocation" value="test.usermenu2.xml" />
+            <property name="useRootForNullPath" value="true"/>
+		</component>
+
 	</components>
 
 </components-config>

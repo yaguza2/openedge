@@ -28,48 +28,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.impl.menumodule;
+package nl.openedge.modules.impl.menumodule.test;
 
-import java.util.Map;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import nl.openedge.access.AccessHelper;
+import nl.openedge.modules.JDOMConfigurator;
+
 
 /**
- * common interface for all things accepting attributes.
- * 
- * @author Maurice Marrink
+ * Test decorator for MenuTest.
  */
-public interface AttributeEnabledObject
-{
+public final class MenuTestDecorator extends TestSetup {
+
+    /**
+     * Construct.
+     * @param test
+     */
+    public MenuTestDecorator(Test test)
+    {
+        super(test);
+    }
+
+    /**
+     * @see junit.extensions.TestSetup#setUp()
+     */
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+		setUpModules();
+		setUpAccessFactory();
+    }
+    /**
+     * @see junit.extensions.TestSetup#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 	/**
-	 * Get attribute.
-	 * @param name the name of attribute
-	 * @return the value of the attribute or null if it does not exist
+	 * loadModules is een helper method die de componenten laad.
+	 * @throws Exception
 	 */
-	public Object getAttribute(String name);
+	private void setUpModules() throws Exception
+	{
+		JDOMConfigurator c = new JDOMConfigurator("test.oemodules.xml");
+	}
+		
 	/**
-	 * Get attributes.
-	 * @return the (possibly empty) Map with all the attributes
+	 * laad de access factory
+	 * @throws Exception
 	 */
-	public Map getAttributes();
-	/**
-	 * Registers a new Attribute with this filter, overriding any attribute 
-	 * already registered under that name.
-	 * 
-	 * @param name name of the attribute
-	 * @param value value of the attribute
-	 */
-	public void putAttribute(String name, Object value);
-	/**
-	 * Registers all attributes in the Map, overriding any existing attribute with
-	 * the same name.
-	 * 
-	 * @param attributes the attributes
-	 */
-	public void putAllAttributes(Map attributes);
-	/**
-	 * Removes the attribute with the specified name if it exists, 
-	 * if it doesnt exist nothing happens.
-	 * 
-	 * @param name the name of the attribute
-	 */
-	public void removeAttribute(String name);
+	private void setUpAccessFactory() throws Exception
+	{
+		try
+		{
+			AccessHelper.reload(
+				System.getProperty("configfile", "/test.oeaccess.properties"), "test");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+	}
 }

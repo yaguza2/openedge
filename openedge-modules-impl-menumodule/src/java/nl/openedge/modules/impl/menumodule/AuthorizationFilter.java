@@ -41,12 +41,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Filters on authorisations with Access/ JAAS
+ * Filters on authorisations with Access/ JAAS.
  * @author Eelco Hillenius
  */
 public final class AuthorizationFilter extends AbstractMenuFilter implements SessionScopeMenuFilter
 {
-
+    /** Log. */
 	private static Log log = LogFactory.getLog(AuthorizationFilter.class);
 
 	/**

@@ -38,484 +38,438 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 
-import junit.framework.TestCase;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import nl.openedge.access.AccessHelper;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.impl.menumodule.MenuItem;
 import nl.openedge.modules.impl.menumodule.MenuModule;
 
 
 /**
- * Unit tests voor menu component
+ * Unit tests for menu component.
  * @author Eelco Hillenius
  */
 public class MenuTest extends TestCase
 {
-
-	private static boolean init = true;
-	protected static ComponentRepository cRepo = null;
-	
-	private static MenuModule menuModule = null;
-
+    /** Log. */
+    private static Log log = LogFactory.getLog(MenuTest.class);
 	/**
-	 * contstruct
+	 * contstruct.
 	 * @param name naam test
 	 */
 	public MenuTest(String name)
 	{
 		super(name);
-		if(init)
-		{
-			init = false;
-			try
-			{
-				System.err.println("Initialising modules"); 
-				setUpModules();
-				System.err.println("Initializing access");
-				setUpAccessFactory();
-				System.err.println("Initialising done.");
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				fail("Setup failed: " + e.getMessage());
-			}
-		}
+	}
+
+    /**
+     * Create suite.
+     * @return suite
+     */
+    public static Test suite()
+    {
+        TestSuite suite = new TestSuite(MenuTest.class);
+        MenuTestDecorator deco = new MenuTestDecorator(suite);
+        return deco;
+    }
+	
+	/**
+	 * test whether the menu module was loaded.
+	 * @throws Exception
+	 */
+	public void testMenuComponentLoaded() throws Exception
+	{
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		assertNotNull(menuModule);		
 	}
 	
 	/**
-	 * test of menu module is geladen
-	 *
+	 * test menu voor user chef.
+	 * @throws Exception
 	 */
-	public void testMenuComponentLoaded()
+	public void testMenuForChef() throws Exception
 	{
-		try
-		{
-			assertNotNull(menuModule);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
-	}
-	
-	/**
-	 * test menu voor user chef
-	 *
-	 */
-	public void testMenuForChef()
-	{
-		System.out.println("");
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		log.info("");
 		Subject subject = new Subject();
 		Set principals = new HashSet();
 		principals.add(new UserPrincipal("chef"));
 		
 		subject.getPrincipals().addAll(principals);
-		try
+
+		List[] items = menuModule.getMenuItems(subject);
+		List linkChecks = new ArrayList();
+		linkChecks.add("/admin.onderhoud.m");
+		linkChecks.add("/medischdossier.m");
+		linkChecks.add("/zoeken.m");
+		log.info("level 1 ***********************************");
+		int i = 0;
+		assertEquals(1, items.length); // 1 niveau diep
+		int size = items[0].size();
+		assertEquals(3, size); // drie items
+		for( ; i < size; i++ )
 		{
-			List[] items = menuModule.getMenuItems(subject);
-			List linkChecks = new ArrayList();
-			linkChecks.add("/admin.onderhoud.m");
-			linkChecks.add("/medischdossier.m");
-			linkChecks.add("/zoeken.m");
-			System.out.println("level 1 ***********************************");
-			int i = 0;
-			assertEquals(1, items.length); // 1 niveau diep
-			int size = items[0].size();
-			assertEquals(3, size); // drie items
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[0].get(i);
-				System.out.println("menuitem: " + item);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-			
-			linkChecks.clear();
-			linkChecks.add("/admin.onderhoud.functie.m");
-			linkChecks.add("/admin.onderhoud.praktijk.m");
-			items = menuModule.getMenuItems(subject, "/admin.onderhoud.m");
-			System.out.println("level 2 ***********************************");
-			i = 0;
-			assertEquals(2, items.length); // 2 niveaus diep
-			size = items[1].size();
-			assertEquals(2, size); // 2 items
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[1].get(i);
-				System.out.println("menuitem: " + item);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-			
-			linkChecks.clear();
-			linkChecks.add("/admin.onderhoud.functie.recursetest.m");
-			items = menuModule.getMenuItems(subject, "/admin.onderhoud.functie.m");
-			System.out.println("level 3 ***********************************");
-			i = 0;
-			assertEquals(3, items.length); // 3 niveaus diep
-			size = items[2].size();
-			assertEquals(1, size); // 1 item op dit niveau
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[2].get(i);
-				System.out.println("menuitem: " + item);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-			
+			MenuItem item = (MenuItem)items[0].get(i);
+			log.info("menuitem: " + item);
+			assertEquals(linkChecks.get(i), item.getLink());
 		}
-		catch (Exception e)
+		
+		linkChecks.clear();
+		linkChecks.add("/admin.onderhoud.functie.m");
+		linkChecks.add("/admin.onderhoud.praktijk.m");
+		items = menuModule.getMenuItems(subject, "/admin.onderhoud.m");
+		log.info("level 2 ***********************************");
+		i = 0;
+		assertEquals(2, items.length); // 2 niveaus diep
+		size = items[1].size();
+		assertEquals(2, size); // 2 items
+		for( ; i < size; i++ )
 		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
+			MenuItem item = (MenuItem)items[1].get(i);
+			log.info("menuitem: " + item);
+			assertEquals(linkChecks.get(i), item.getLink());
+		}
+		
+		linkChecks.clear();
+		linkChecks.add("/admin.onderhoud.functie.recursetest.m");
+		items = menuModule.getMenuItems(subject, "/admin.onderhoud.functie.m");
+		log.info("level 3 ***********************************");
+		i = 0;
+		assertEquals(3, items.length); // 3 niveaus diep
+		size = items[2].size();
+		assertEquals(1, size); // 1 item op dit niveau
+		for( ; i < size; i++ )
+		{
+			MenuItem item = (MenuItem)items[2].get(i);
+			log.info("menuitem: " + item);
+			assertEquals(linkChecks.get(i), item.getLink());
+		}
 	}
 	
 	/**
-	 * test menu voor user admin
-	 *
+	 * test menu voor user admin.
+	 * @throws Exception
 	 */
-	public void testMenuForAdmin()
+	public void testMenuForAdmin() throws Exception
 	{
-		System.out.println("");
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		log.info("");
 		Subject subject = new Subject();
 		Set principals = new HashSet();
 		principals.add(new UserPrincipal("admin"));
 		
 		subject.getPrincipals().addAll(principals);
-		try
+
+		List[] items = menuModule.getMenuItems(subject);
+		List linkChecks = new ArrayList();
+		linkChecks.add("/medischdossier.m");
+		linkChecks.add("/zoeken.m");
+		log.info("level 1 ***********************************");
+		int i = 0;
+		assertEquals(1, items.length);
+		int size = items[0].size();
+		assertEquals(2, size);
+		for( ; i < size; i++ )
 		{
-			List[] items = menuModule.getMenuItems(subject);
-			List linkChecks = new ArrayList();
-			linkChecks.add("/medischdossier.m");
-			linkChecks.add("/zoeken.m");
-			System.out.println("level 1 ***********************************");
-			int i = 0;
-			assertEquals(1, items.length);
-			int size = items[0].size();
-			assertEquals(2, size);
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[0].get(i);
-				System.out.println("menuitem: " + item);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-			
-			linkChecks.clear();
-			linkChecks.add("/medischdossier.journaal.m");
-			linkChecks.add("/medischdossier.actuelemedicatie.m");
-			linkChecks.add("/medischdossier.contraindicaties.m");
-			linkChecks.add("/medischdossier.allergieen.m");
-			linkChecks.add("/medischdossier.probleemlijst.m");
-			items = menuModule.getMenuItems(subject, "/medischdossier.m");
-			System.out.println("level 2 ***********************************");
-			i = 0;
-			assertEquals(2, items.length);
-			size = items[1].size();
-			assertEquals(5, size);
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[1].get(i);
-				System.out.println("menuitem: " + item);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-			
-			items = menuModule.getMenuItems(subject, "/medischdossier.allergieen.m");
-			assertEquals(2, items.length); 
-				// we horen nog steeds twee niveaus te krijgen
-				// omdat deze selectie geen childs heeft
+			MenuItem item = (MenuItem)items[0].get(i);
+			log.info("menuitem: " + item);
+			assertEquals(linkChecks.get(i), item.getLink());
 		}
-		catch (Exception e)
+		
+		linkChecks.clear();
+		linkChecks.add("/medischdossier.journaal.m");
+		linkChecks.add("/medischdossier.actuelemedicatie.m");
+		linkChecks.add("/medischdossier.contraindicaties.m");
+		linkChecks.add("/medischdossier.allergieen.m");
+		linkChecks.add("/medischdossier.probleemlijst.m");
+		items = menuModule.getMenuItems(subject, "/medischdossier.m");
+		log.info("level 2 ***********************************");
+		i = 0;
+		assertEquals(2, items.length);
+		size = items[1].size();
+		assertEquals(5, size);
+		for( ; i < size; i++ )
 		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
+			MenuItem item = (MenuItem)items[1].get(i);
+			log.info("menuitem: " + item);
+			assertEquals(linkChecks.get(i), item.getLink());
+		}
+		
+		items = menuModule.getMenuItems(subject, "/medischdossier.allergieen.m");
+		assertEquals(2, items.length); 
+			// we horen nog steeds twee niveaus te krijgen
+			// omdat deze selectie geen childs heeft
 	}
 	
 	/**
-	 * test attributes
-	 *
+	 * test attributes.
+	 * @throws Exception
 	 */
-	public void testAttribute()
+	public void testAttribute() throws Exception
 	{
-		System.out.println("");
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		log.info("");
 		Subject subject = new Subject();
 		Set principals = new HashSet();
 		principals.add(new UserPrincipal("admin"));
 		
 		subject.getPrincipals().addAll(principals);
-		try
-		{
-			List[] items = menuModule.getMenuItems(subject);
-			int size = items[0].size();
 
-			MenuItem item = (MenuItem)items[0].get(1);
-			System.out.println("menuitem: " + item);
-			
-			// check:
-			// <attribute name="test1">value1</attribute>
-			// <attribute name="test2"><![CDATA[ test with CDATA: &'"<> ]]></attribute>
-			Object test1Val = item.getAttribute("test1");
-			Object test2Val = item.getAttribute("test2");
-			System.out.println("test1: " + test1Val + ", test2: " + test2Val);
-			
-			assertEquals("value1", test1Val);
-			assertEquals("test with CDATA: &'\"<>", test2Val);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
+		List[] items = menuModule.getMenuItems(subject);
+		int size = items[0].size();
+
+		MenuItem item = (MenuItem)items[0].get(1);
+		log.info("menuitem: " + item);
+		
+		// check:
+		// <attribute name="test1">value1</attribute>
+		// <attribute name="test2"><![CDATA[ test with CDATA: &'"<> ]]></attribute>
+		Object test1Val = item.getAttribute("test1");
+		Object test2Val = item.getAttribute("test2");
+		log.info("test1: " + test1Val + ", test2: " + test2Val);
+		
+		assertEquals("value1", test1Val);
+		assertEquals("test with CDATA: &'\"<>", test2Val);		
 	}
 	
 	/**
-	 * test 'actief' marker
-	 *
+	 * test 'active' marker.
+	 * @throws Exception
 	 */
-	public void testActief()
+	public void testActief() throws Exception
 	{
-		System.out.println("");
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		log.info("");
 		Subject subject = new Subject();
 		Set principals = new HashSet();
 		principals.add(new UserPrincipal("admin"));
 		
 		subject.getPrincipals().addAll(principals);
-		try
-		{
-			List[] items = null;
-			int i = 0;
-			items = menuModule.getMenuItems(subject, "/medischdossier.allergieen.m");
-			
-			// level 0
-			int size = items[0].size();
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[0].get(i);
-				System.out.println(item);
-				if("/medischdossier.m".equals(item.getLink()))
-				{
-					assertTrue(item.isActive());
-					
-				}
-			}
-			
-			// level 1
-			size = items[1].size();
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[1].get(i);
-				System.out.println(item);
-				if("/medischdossier.allergieen.m".equals(item.getLink()))
-				{
-					assertTrue(item.isActive());
-				}
-			}
 
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
-	}
-	
-	/**
-	 * test 'actief' marker
-	 *
-	 */
-	public void testActiefAlias()
-	{
-		System.out.println("");
-		Subject subject = new Subject();
-		Set principals = new HashSet();
-		principals.add(new UserPrincipal("admin"));
+		List[] items = null;
+		int i = 0;
+		items = menuModule.getMenuItems(subject, "/medischdossier.allergieen.m");
 		
-		subject.getPrincipals().addAll(principals);
-		try
+		// level 0
+		int size = items[0].size();
+		for( ; i < size; i++ )
 		{
-			List[] items = null;
-			int i = 0;
-			items = menuModule.getMenuItems(subject, "/medischdossier.journaaldetail.m");
-			
-			// level 0
-			int size = items[0].size();
-			for( ; i < size; i++ )
+			MenuItem item = (MenuItem)items[0].get(i);
+			log.info(item);
+			if("/medischdossier.m".equals(item.getLink()))
 			{
-				MenuItem item = (MenuItem)items[0].get(i);
-				System.out.println(item);
-				if("/medischdossier.m".equals(item.getLink()))
-				{
-					assertTrue(item.isActive());
-					
-				}
-			}
-			
-			// level 1
-			size = items[1].size();
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[1].get(i);
-				System.out.println(item);
-				if("/medischdossier.journaal.m".equals(item.getLink()))
-				{
-					assertTrue(item.isActive());
-				}
-			}
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
-	}
-	
-	public void testRequestScopeFilter()
-	{
-		Subject subject = new Subject();
-		Set principals = new HashSet();
-		principals.add(new UserPrincipal("admin"));
-		
-		subject.getPrincipals().addAll(principals);
-		try
-		{
-			// zet indicator variable
-			menuModule.putFilterContextVariable(
-				RequestScopeTestFilter.TEST_CONTEXT_KEY, new Object());
-			
-			List[] items = menuModule.getMenuItems(subject);
-			List linkChecks = new ArrayList();
-			linkChecks.add("/medischdossier.m");
-			int i = 0;
-			assertEquals(1, items.length);
-			int size = items[0].size();
-			assertEquals(1, size);
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[0].get(i);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-	
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-
-		try
-		{
-			// verwijder indicator variable
-			menuModule.resetContextForCurrentThread();
-			
-			List[] items = menuModule.getMenuItems(subject);
-			List linkChecks = new ArrayList();
-			linkChecks.add("/medischdossier.m");
-			linkChecks.add("/zoeken.m");
-			int i = 0;
-			assertEquals(1, items.length);
-			int size = items[0].size();
-			assertEquals(2, size);
-			for( ; i < size; i++ )
-			{
-				MenuItem item = (MenuItem)items[0].get(i);
-				assertEquals(linkChecks.get(i), item.getLink());
-			}
-	
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-			
-	}
-	
-	public void testNodeScopeFilter()
-	{
-		System.out.println("");
-		Subject subject = new Subject();
-		Set principals = new HashSet();
-		principals.add(new UserPrincipal("admin"));
-		
-		subject.getPrincipals().addAll(principals);
-		try
-		{
-			Object test = menuModule.getFilterContextVariable(
-				RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
-			
-			List[] items = menuModule.getMenuItems(subject);
-
-			test = menuModule.getFilterContextVariable(
-				RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
+				assertTrue(item.isActive());
 				
-			assertNotNull(test);	
+			}
 		}
-		catch (Exception e)
+		
+		// level 1
+		size = items[1].size();
+		for( ; i < size; i++ )
 		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}		
+			MenuItem item = (MenuItem)items[1].get(i);
+			log.info(item);
+			if("/medischdossier.allergieen.m".equals(item.getLink()))
+			{
+				assertTrue(item.isActive());
+			}
+		}
 	}
-	public void testChildListFiltering()
+	
+	/**
+	 * test alias.
+	 * @throws Exception
+	 */
+	public void testAlias() throws Exception
 	{
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		log.info("");
 		Subject subject = new Subject();
 		Set principals = new HashSet();
 		principals.add(new UserPrincipal("admin"));
+		
 		subject.getPrincipals().addAll(principals);
-		try
+
+		List[] items = null;
+		int i = 0;
+		items = menuModule.getMenuItems(subject, "/medischdossier.journaaldetail.m");
+		
+		// level 0
+		int size = items[0].size();
+		for( ; i < size; i++ )
 		{
-			List[] items = menuModule.getMenuItems(subject, "/zoeken.m");
-			Iterator it=items[0].iterator();
-			MenuItem actief=null;
-			while(it.hasNext())
+			MenuItem item = (MenuItem)items[0].get(i);
+			log.info(item);
+			if("/medischdossier.m".equals(item.getLink()))
 			{
-				actief=(MenuItem)it.next();
-				if(actief.isActive())
-					break;
+				assertTrue(item.isActive());
+				
 			}
-			// the menuitems in items[1] should be exactly the same as those in actief.children
-			assertEquals("Mismatch in children.",items[1],actief.getChildren()); 
 		}
-		catch (Exception e)
+		
+		// level 1
+		size = items[1].size();
+		for( ; i < size; i++ )
 		{
-			e.printStackTrace();
-			fail(e.getMessage());
+			MenuItem item = (MenuItem)items[1].get(i);
+			log.info(item);
+			if("/medischdossier.journaal.m".equals(item.getLink()))
+			{
+				assertTrue(item.isActive());
+			}
+		}		
+	}
+
+	/**
+	 * Test request scope filter.
+	 * @throws Exception
+	 */
+	public void testRequestScopeFilter() throws Exception
+	{
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		Subject subject = new Subject();
+		Set principals = new HashSet();
+		principals.add(new UserPrincipal("admin"));
+		
+		subject.getPrincipals().addAll(principals);
+
+		// zet indicator variable
+		menuModule.putFilterContextVariable(
+			RequestScopeTestFilter.TEST_CONTEXT_KEY, new Object());
+		
+		List[] items = menuModule.getMenuItems(subject);
+		List linkChecks = new ArrayList();
+		linkChecks.add("/medischdossier.m");
+		int i = 0;
+		assertEquals(1, items.length);
+		int size = items[0].size();
+		assertEquals(1, size);
+		for( ; i < size; i++ )
+		{
+			MenuItem item = (MenuItem)items[0].get(i);
+			assertEquals(linkChecks.get(i), item.getLink());
+		}
+
+		// verwijder indicator variable
+		menuModule.resetContextForCurrentThread();
+		
+		items = menuModule.getMenuItems(subject);
+		linkChecks = new ArrayList();
+		linkChecks.add("/medischdossier.m");
+		linkChecks.add("/zoeken.m");
+		i = 0;
+		assertEquals(1, items.length);
+		size = items[0].size();
+		assertEquals(2, size);
+		for( ; i < size; i++ )
+		{
+			MenuItem item = (MenuItem)items[0].get(i);
+			assertEquals(linkChecks.get(i), item.getLink());
 		}	
 	}
-	//--------------------------- SETUP METHODS --------------------------------
-	
+
 	/**
-	 * loadModules is een helper method die de componenten laad.
+	 * Test node scoped filter.
 	 * @throws Exception
 	 */
-	private void setUpModules() throws Exception
+	public void testNodeScopeFilter() throws Exception
 	{
-		JDOMConfigurator c = new JDOMConfigurator("test.oemodules.xml");
-		cRepo = RepositoryFactory.getRepository();
-		menuModule = (MenuModule) cRepo.getComponent("MenuModule");
-	}
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		log.info("");
+		Subject subject = new Subject();
+		Set principals = new HashSet();
+		principals.add(new UserPrincipal("admin"));
 		
-	/**
-	 * laad de access factory
-	 * @throws Exception
-	 */
-	protected void setUpAccessFactory() throws Exception
-	{
-		try
-		{
-			AccessHelper.reload(
-				System.getProperty("configfile", "/test.oeaccess.properties"), "test");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			throw e;
-		}
+		subject.getPrincipals().addAll(principals);
+
+		Object test = menuModule.getFilterContextVariable(
+			RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
+		
+		List[] items = menuModule.getMenuItems(subject);
+
+		test = menuModule.getFilterContextVariable(
+			RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
+			
+		assertNotNull(test);	
 	}
 
+
+	/**
+	 * Test childs.
+	 * @throws Exception
+	 */
+	public void testChildListFiltering() throws Exception
+	{
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule = (MenuModule) cRepo.getComponent("MenuModule");
+		Subject subject = new Subject();
+		Set principals = new HashSet();
+		principals.add(new UserPrincipal("admin"));
+		subject.getPrincipals().addAll(principals);
+		List[] items = menuModule.getMenuItems(subject, "/zoeken.m");
+		Iterator it=items[0].iterator();
+		MenuItem actief=null;
+		while(it.hasNext())
+		{
+			actief=(MenuItem)it.next();
+			if(actief.isActive())
+				break;
+		}
+		// the menuitems in items[1] should be exactly the same as those in actief.children
+		assertEquals("Mismatch in children.",items[1],actief.getChildren()); 
+	}
+
+	/**
+	 * test a second instance of the menu module (with a different config/ menu tree).
+	 * @throws Exception
+	 */
+	public void testSecondModuleInstance() throws Exception
+	{
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule2 = (MenuModule) cRepo.getComponent("MenuModule2");
+		assertNotNull(menuModule2);	
+		List[] items = menuModule2.getMenuItems(new Subject());
+		assertNotNull(items);
+		assertEquals(1, items.length);
+		List level0 = items[0];
+		assertNotNull(level0);
+		MenuItem item = (MenuItem)level0.get(0);
+		assertEquals(item.getTag(), "Test");
+		assertEquals(item.getLink(), "/test.m");
+	}
+
+	/**
+	 * test module property useRootForNullPath.
+	 * @throws Exception
+	 */
+	public void testUseRootForNullPath() throws Exception
+	{
+		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		MenuModule menuModule2 = (MenuModule) cRepo.getComponent("MenuModule2");
+		assertNotNull(menuModule2);
+		assertTrue(menuModule2.isUseRootForNullPath());
+		// as useRootForNullPath == true, we should get the first level of items
+		List[] items = menuModule2.getMenuItems(new Subject(), "/admin.onderhoud.m");
+		assertNotNull(items);
+		assertFalse(items.length == 0);
+		menuModule2.setUseRootForNullPath(false);
+		// as useRootForNullPath == false, we should not get any items
+		items = menuModule2.getMenuItems(new Subject(), "/admin.onderhoud.m");
+		assertNotNull(items);
+		assertTrue(items.length == 0);
+	}
 }

@@ -1,4 +1,12 @@
 -------------------------------------------------
+1.4.2
+- Fix for bug that prevented proper usage of more than one concurrent instance of the module
+	(reference to cache was static).
+- Refactored JUnit test to use a decorator for initialization.
+- JavaDocs & code conventions.
+- Added module property 'useRootForNullPath' (see JavaDoc).
+
+-------------------------------------------------
 1.4.1
 
 -Fixed bug that would leave the children (getChildren()) of an item unfiltered.

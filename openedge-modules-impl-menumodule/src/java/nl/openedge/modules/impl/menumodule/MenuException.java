@@ -31,14 +31,14 @@
 package nl.openedge.modules.impl.menumodule;
 
 /**
- * Exception for menu related stuff
+ * Exception for menu related stuff.
  * @author Eelco Hillenius
  */
 public final class MenuException extends Exception
 {
 
 	/**
-	 * construct
+	 * construct.
 	 */
 	public MenuException()
 	{
@@ -46,8 +46,8 @@ public final class MenuException extends Exception
 	}
 
 	/**
-	 * onstruct with message
-	 * @param message
+	 * onstruct with message.
+	 * @param message the message
 	 */
 	public MenuException(String message)
 	{
@@ -55,9 +55,9 @@ public final class MenuException extends Exception
 	}
 
 	/**
-	 * onstruct with message and cause
-	 * @param message
-	 * @param cause
+	 * onstruct with message and cause.
+	 * @param message the message
+	 * @param cause the cause
 	 */
 	public MenuException(String message, Throwable cause)
 	{
@@ -65,8 +65,8 @@ public final class MenuException extends Exception
 	}
 
 	/**
-	 * onstruct with cause
-	 * @param cause
+	 * onstruct with cause.
+	 * @param cause the cause
 	 */
 	public MenuException(Throwable cause)
 	{

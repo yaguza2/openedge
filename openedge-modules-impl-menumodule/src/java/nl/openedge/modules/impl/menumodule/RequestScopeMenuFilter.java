@@ -31,14 +31,14 @@
 package nl.openedge.modules.impl.menumodule;
 
 /**
- * Marker for request scope filter
+ * Marker interface for request scope filters.
  * @author Eelco Hillenius
  */
 public interface RequestScopeMenuFilter extends MenuFilter
 {
-	/** 
-	 * Context sleutel voor httpRequest. Servlet/ Command is verantwoordelijk
-	 * voor toevoegen variabele. Waarde = '_request'
+	/**
+	 * Context key for the http servlet request. The servlet/ command
+	 * is responsible for setting the variable. value = "_request".
 	 */ 
 	public final static String CONTEXT_KEY_REQUEST = "_request";
 }

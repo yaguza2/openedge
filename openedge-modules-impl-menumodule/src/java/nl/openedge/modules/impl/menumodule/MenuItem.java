@@ -40,494 +40,581 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * An item that fits within a menu tree
+ * An item that represents one menu item within a menu tree.
+ * 
  * @author Eelco Hillenius
  */
 public final class MenuItem implements Serializable, AttributeEnabledObject
 {
-	private String tag;
-	private String link;
-	// als er aliases zijn, stoppen we die hier als String in
-	private HashSet aliases = null;
-	//attributen van het menu
-	private Map attributes = null;
-	//request parameters, map cause velocity can only make HashMaps
-	private Map parameters;
-	private boolean enabled = true;
-	private String shortCutKey = null;
-	
-	// evt filters voor dit item
-	private List filters = null;
-	
-	// is dit item onderdeel van het pad?
-	private boolean active = false;
-	
-	private List children=new ArrayList();
-	
-	/**
-	 * @return String
-	 */
-	public String getLink()
-	{
-		return link;
-	}
+    /**
+     * The tag (text to be rendered) of the menu item.
+     */
+    private String tag;
 
-	/**
-	 * @return String
-	 */
-	public String getTag()
-	{
-		return tag;
-	}
+    /**
+     * The link of the menu item.
+     */
+    private String link;
 
-	/**
-	 * @param string
-	 */
-	public void setLink(String string)
-	{
-		link = string;
-	}
+    /**
+     * Possible aliases.
+     */
+    private HashSet aliases = null;
 
-	/**
-	 * @param string
-	 */
-	public void setTag(String string)
-	{
-		tag = string;
-	}
-	
-	/**
-	 * add/ update an attribute
-	 * @param key key to store attribute with
-	 * @param value value of attribute
-	 */
-	public void putAttribute(String key, Object value)
-	{
-		if(attributes == null)
-		{
-			attributes = new HashMap();
-		}
-		attributes.put(key, value);
-	}
-	
-	/**
-	 * delete attribute
-	 * @param key key of attribute
-	 */
-	public void removeAttribute(String key)
-	{
-		if(attributes != null)
-		{
-			attributes.remove(key);
-		}
-	}
-	
-	/**
-	 * @deprecated replaced by getAttribute(String)
-	 * 
-	 * get attribute with given key
-	 * @param key key of attribute
-	 * @return Object attribute or null if not found
-	 */
-	public Object get(String key)
-	{
-		return (attributes != null) ? attributes.get(key) : null;
-	}
-	
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o)
-	{
-		if (o == null)
-		{
-			return false;	
-		}
+    /**
+     * Free-form attributes to be used with filters and views.
+     */
+    private Map attributes = null;
 
-		if (this == o)
-		{
-			return true;	
-		}
+    /**
+     * Request parameters.
+     */
+    private Map parameters;
 
-		if (!(o instanceof MenuItem))
-		{
-			return false;	
-		}
-			
-		MenuItem that = (MenuItem)o;
-		
-		// vergelijken op link
-		if (this.link.equals(that.link))
-		{
-			return true;
-		}
-		
-		// vergelijken op aliases
-		if(aliases != null)
-		{
-			if(aliases.contains(that.link))
-			{
-				return true;
-			}
-		}
-			
-		return false;
-	}
-	
-	/**
-	 * Get the string representation with some extra info.
-	 * @return String the string representation with some extra info.
-	 */
-	public String toString()
-	{
-		StringBuffer b = new StringBuffer("menu -> " )
-			.append(link)
-			.append((active) ? " (active)" : "");
-			
-		if( (aliases != null) || (filters != null) || (attributes != null) )
-		{
-			b.append(" {");
-		}
-		if(attributes != null)
-		{
-			b.append(" attributes:");
-			for(Iterator i = attributes.keySet().iterator(); i.hasNext(); )
-			{
-				String key = (String)i.next();
-				b.append(key).append("=").append(attributes.get(key));
-				if(i.hasNext())
-				{
-					b.append(",");
-				}
-			}
-		}
-		if(aliases != null)
-		{
-			b.append(" aliases:");
-			for(Iterator i = aliases.iterator(); i.hasNext(); )
-			{
-				b.append(i.next());
-				if(i.hasNext())
-				{
-					b.append(",");
-				}
-			}
-		}
-		if(filters != null)
-		{
-			b.append(" filters:");
-			for(Iterator i = filters.iterator(); i.hasNext(); )
-			{
-				RequestScopeMenuFilter f = (RequestScopeMenuFilter)i.next();
-				b.append(f);
-				if(i.hasNext())
-				{
-					b.append(",");
-				}
-			}
-		}
-		if( (aliases != null) || (filters != null) || (attributes != null) )
-		{
-			b.append(" }");
-		}
-		return b.toString();
-	}
-	
-	/**
-	 * is this menu item part of the active path
-	 * @return boolean is this menu item part of the active path
-	 */
-	public boolean getActive()
-	{
-		return active;
-	}
+    /**
+     * Whether this item is enabled; to be used with filters and views.
+     */
+    private boolean enabled = true;
 
-	/**
-	 * is this menu item part of the active path
-	 * @return boolean is this menu item part of the active path
-	 */
-	public boolean isActive()
-	{
-		return active;
-	}
+    /**
+     * Key for shortCuts (standard attribute).
+     */
+    private String shortCutKey = null;
 
-	/**
-	 * set whether this menu item part of the active path
-	 * @param active
-	 */
-	public void setActive(boolean active)
-	{
-		this.active = active;
-	}
+    /**
+     * Filters for this menu item.
+     */
+    private List filters = null;
 
-	/**
-	 * @return all request parameters in a String (not urlencoded!) or null if there are no parameters
-	 */
-	public String getQueryString()
-	{
-		//TODO we might want to support keys with a String[] as value and have that parameter appear multiple times
-		//like p1=1&p1=2&p1=3
-		if(parameters==null || parameters.isEmpty())
-			return null;
-		else
-		{
-			StringBuffer result=new StringBuffer(25);
-			Iterator it=parameters.keySet().iterator();
-			String key,value;
-			Object tmp=null;
-			while(it.hasNext())
-			{
-				key=it.next().toString();	//we might want a null check here, however unlikely you can bet someone will run into it
-				tmp=parameters.get(key);
-				if(tmp==null)
-					value="";
-				else
-					value=tmp.toString();
-				result.append(key).append("=").append(value);
-				if(it.hasNext())
-					result.append("&");
-			}
-			return result.toString();	
-		}
-	}
-	/**
-	 * @return List
-	 */
-	public List getFilters()
-	{
-		return filters;
-	}
+    /**
+     * Whether this item is part of the current (active) path.
+     */
+    private boolean active = false;
 
-	/**
-	 * @param list
-	 */
-	public void setFilters(List list)
-	{
-		filters = list;
-	}
+    /**
+     * Childs of this menu node.
+     */
+    private List children = new ArrayList();
 
-	public boolean getEnabled()
-	{
-		return enabled;
-	}
+    /**
+     * Get the link.
+     * @return String the link
+     */
+    public String getLink()
+    {
+        return link;
+    }
 
-	/**
-	 * rendering hint; if false this item could be grayed out
-	 * @return boolean enabled
-	 */
-	public boolean isEnabled()
-	{
-		return enabled;
-	}
+    /**
+     * Get the tag.
+     * @return String the tag
+     */
+    public String getTag()
+    {
+        return tag;
+    }
 
-	/**
-	 * rendering hint; if false this item could be grayed out
-	 * @param b enabled
-	 */
-	public void setEnabled(boolean b)
-	{
-		enabled = b;
-	}
+    /**
+     * Set the link.
+     * @param string the link
+     */
+    public void setLink(String string)
+    {
+        link = string;
+    }
 
-	/**
-	 * @return String snelmenu toets
-	 */
-	public String getShortCutKey()
-	{
-		return shortCutKey;
-	}
+    /**
+     * Set the tag.
+     * @param string the tag.
+     */
+    public void setTag(String string)
+    {
+        tag = string;
+    }
 
-	/**
-	 * @param string snelmenu toets
-	 */
-	public void setShortCutKey(String string)
-	{
-		shortCutKey = string;
-	}
+    /**
+     * add/ update an attribute.
+     * 
+     * @param key key to store attribute with
+     * @param value value of attribute
+     */
+    public void putAttribute(String key, Object value)
+    {
+        if(attributes == null)
+        {
+            attributes = new HashMap();
+        }
+        attributes.put(key, value);
+    }
 
-	/**
-	 * @return HashSet
-	 */
-	public HashSet getAliases()
-	{
-		return aliases;
-	}
+    /**
+     * delete attribute.
+     * 
+     * @param key key of attribute
+     */
+    public void removeAttribute(String key)
+    {
+        if(attributes != null)
+        {
+            attributes.remove(key);
+        }
+    }
 
-	/**
-	 * @param set
-	 */
-	public void setAliases(HashSet set)
-	{
-		aliases = set;
-	}
+    /**
+     * Alternative method for getAttribute. Makes $model.myattrib possible.
+     * @param key key of attribute
+     * @return Object attribute or null if not found
+     */
+    public Object get(String key)
+    {
+        return (attributes != null) ? attributes.get(key) : null;
+    }
 
-	/**
-	 * @return Map
-	 */
-	public Map getAttributes()
-	{
-		return attributes;
-	}
+    /**
+     * is this menu item part of the active path.
+     * 
+     * @return boolean is this menu item part of the active path
+     */
+    public boolean getActive()
+    {
+        return active;
+    }
 
-	/**
-	 * @param map
-	 */
-	public void setAttributes(Map map)
-	{
-		attributes = map;
-	}
+    /**
+     * is this menu item part of the active path.
+     * 
+     * @return boolean is this menu item part of the active path
+     */
+    public boolean isActive()
+    {
+        return active;
+    }
 
-	/**
-	 * @return
-	 */
-	public Map getParameters()
-	{
-		return parameters;
-	}
+    /**
+     * set whether this menu item part of the active path.
+     * 
+     * @param active
+     */
+    public void setActive(boolean active)
+    {
+        this.active = active;
+    }
 
-	/**
-	 * Although it is possible to specify objects as parameters, it is not supported.
-	 * You should only use Strings as keys and values.
-	 * We only allow a Map because Velocity always creates a Map in VLT
-	 * 
-	 * @param map
-	 */
-	public void setParameters(Map map)
-	{
-		parameters= map;
-	}
-	/**
-	 * Although it is possible to specify objects as parameters, it is not supported.
-	 * You should only use Strings as keys and values.
-	 * We only allow a Map because Velocity always creates a Map in VLT
-	 * 
-	 * @param params
-	 */
-	public void addParameters(Map params)
-	{
-		if(parameters==null)
-			parameters=params;
-		else
-			parameters.putAll(params);
-	}
-	/**
-	 * Adds a parameter to the url.
-	 * Like we said only Strings are allowed.
-	 * At some time we might allow String[] as value but right now we dont, so dont even try.
-	 * 
-	 * @param name
-	 * @param value
-	 */
-	public void addParameter(String name,String value)
-	{
-		if(parameters==null)
-			parameters=new Properties();
-		parameters.put(name,value);
-	}
+    /**
+     * Get the query string.
+     * @return all request parameters in a String (not urlencoded!) or null if
+     *         there are no parameters
+     */
+    public String getQueryString()
+    {
+        //TODO we might want to support keys with a String[] as value and have
+        // that parameter appear multiple times
+        //like p1=1&p1=2&p1=3
+        if(parameters == null || parameters.isEmpty())
+            return null;
+        else
+        {
+            StringBuffer result = new StringBuffer(25);
+            Iterator it = parameters.keySet().iterator();
+            String key, value;
+            Object tempValue = null;
+            while(it.hasNext())
+            {
+                Object item = it.next();
+                if(item == null)
+                {
+                    continue;
+                }
+                if(item instanceof String)
+                {
+                    key = (String)item;
+                }
+                else
+                {
+                    key = String.valueOf(item);
+                }
+                tempValue = parameters.get(key);
+                if(tempValue == null)
+                {
+                    value = "";   
+                }
+                else
+                {
+                    value = String.valueOf(tempValue);   
+                }
+                result.append(key).append("=").append(value);
+                if(it.hasNext())
+                {
+                    result.append("&");
+                }
+            }
+            return result.toString();
+        }
+    }
 
-	/**
-	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#getAttribute(java.lang.String)
-	 */
-	public Object getAttribute(String name)
-	{
-		return (attributes != null) ? attributes.get(name) : null;
-	}
+    /**
+     * Get list of filters.
+     * @return List filters
+     */
+    public List getFilters()
+    {
+        return filters;
+    }
 
-	/**
-	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#putAllAttributes(java.util.Map)
-	 */
-	public void putAllAttributes(Map attributes)
-	{
-		if(this.attributes==null)
-			this.attributes=new HashMap(attributes);
-		else
-			this.attributes.putAll(attributes);
-	}
-	/**
-	 * Filters out any child menuitems that have no right to be in the list based n the current context.
-	 * Basicly a little hack to keep this list in sync with the results you get if you access the children of this item via MenuModule.getMenuItems().
-	 * Since Session and RequestScopeMenuFilters are not stored inside the menuitems themselfs you can put them in the filterContext under the keys obtainable from MenuFilter.
-	 * 
-	 * @param filterContext environment variables for the filters
-	 */
-	public void applyFiltersOnChildren(Map filterContext)
-	{
-		List list=getChildren();
-		if(children==null)
-			return;
-		Iterator it=children.iterator();
-		Iterator filters=null;
-		MenuItem child=null;
-		boolean accept=true;
-		ArrayList filtered=new ArrayList();
-		while(it.hasNext())
-		{
-			accept=true;
-			child=(MenuItem)it.next();
-			list=child.getFilters();
-			if(list==null)
-			{
-				list=new ArrayList();
-				list.addAll((List)filterContext.get(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS));
-				list.addAll((List)filterContext.get(MenuFilter.CONTEXT_KEY_SESSION_FILTERS));
-			}
-			filters=list.iterator();
-			while(filters.hasNext() && accept)
-				accept=((MenuFilter)filters.next()).accept(child,filterContext);
-			if(accept)
-			{
-				child.applyFiltersOnChildren(filterContext);
-				filtered.add(child);	
-			}
-		}
-		setChildren(filtered);	
-	}
-	/**
-	 * @return
-	 */
-	public List getChildren()
-	{
-		return children;
-	}
+    /**
+     * Set list of filters.
+     * @param list filters
+     */
+    public void setFilters(List list)
+    {
+        filters = list;
+    }
 
-	/**
-	 * @param list
-	 */
-	public void setChildren(List list)
-	{
-		children= list;
-	}
-	/**
-	 * Adds the child to the end of the list.
-	 * Note this does not insert the item in the cached menu tree
-	 * @param item
-	 */
-	public void addChild(MenuItem item)
-	{
-		children.add(item);	
-	}
-	/**
-	 * Inserts the child at the specified index
-	 * Note this does not insert the item in the cached menu tree
-	 * 
-	 * @param index
-	 * @param item
-	 * @throws ArrayIndexOutfBoundsException if the index is smaller then 0 or greater then the amount of children-1
-	 */
-	public void insertChild(int index,MenuItem item)
-	{
-		children.add(index,item);	
-	}
-	/**
-	 * Removes the item from the list of children.
-	 * Note this does not remove the item from the cached tree as being a child of this menu.
-	 * 
-	 * @param item
-	 */
-	public void deleteChild(MenuItem item)
-	{
-		int index=children.indexOf(item);
-		if(index>=0)
-			children.remove(index);
-	}
+    /**
+     * Get whether this item is enabled.
+     * @return whether this item is enabled
+     */
+    public boolean getEnabled()
+    {
+        return enabled;
+    }
+
+    /**
+     * get rendering hint; if false this item could be grayed out.
+     * 
+     * @return boolean enabled
+     */
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    /**
+     * set rendering hint; if false this item could be grayed out.
+     * 
+     * @param b enabled
+     */
+    public void setEnabled(boolean b)
+    {
+        enabled = b;
+    }
+
+    /**
+     * Get short cut key (if any).
+     * @return String short cut key (if any)
+     */
+    public String getShortCutKey()
+    {
+        return shortCutKey;
+    }
+
+    /**
+     * set short cut key.
+     * @param string short cut key
+     */
+    public void setShortCutKey(String string)
+    {
+        shortCutKey = string;
+    }
+
+    /**
+     * Get the aliases.
+     * @return HashSet aliases
+     */
+    public HashSet getAliases()
+    {
+        return aliases;
+    }
+
+    /**
+     * Set the aliases.
+     * @param set the aliases
+     */
+    public void setAliases(HashSet set)
+    {
+        aliases = set;
+    }
+
+    /**
+     * Get the attributes.
+     * @return Map attributes
+     */
+    public Map getAttributes()
+    {
+        return attributes;
+    }
+
+    /**
+     * Set the attributes.
+     * @param map the attributes
+     */
+    public void setAttributes(Map map)
+    {
+        attributes = map;
+    }
+
+    /**
+     * Get the request parameters.
+     * @return Map the request parameters
+     */
+    public Map getParameters()
+    {
+        return parameters;
+    }
+
+    /**
+     * Set the request parameters.
+     * Although it is possible to specify objects as parameters, it is not
+     * supported. You should only use Strings as keys and values. We only allow
+     * a Map because Velocity always creates a Map in VLT
+     * 
+     * @param map the request parameters
+     */
+    public void setParameters(Map map)
+    {
+        parameters = map;
+    }
+
+    /**
+     * Add request parameters to the current request parameters.
+     * Although it is possible to specify objects as parameters, it is not
+     * supported. You should only use Strings as keys and values. We only allow
+     * a Map because Velocity always creates a Map in VLT
+     * 
+     * @param params request paramteres to add
+     */
+    public void addParameters(Map params)
+    {
+        if(parameters == null)
+        {
+            parameters = params;
+        }
+        else
+        {
+            parameters.putAll(params);
+        }
+    }
+
+    /**
+     * Adds a request parameter to the url. Like we said only Strings are allowed. At
+     * some time we might allow String[] as value but right now we dont, so dont
+     * even try.
+     * 
+     * @param name name of the request parameter
+     * @param value value of the request parameter
+     */
+    public void addParameter(String name, String value)
+    {
+        if(parameters == null)
+        {
+            parameters = new Properties();
+        }
+        parameters.put(name, value);
+    }
+
+    /**
+     * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name)
+    {
+        if(attributes != null)
+        {
+            return attributes.get(name);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#putAllAttributes(java.util.Map)
+     */
+    public void putAllAttributes(Map attributes)
+    {
+        if(this.attributes == null)
+        {
+            this.attributes = new HashMap(attributes);
+        }
+        else
+        {
+            this.attributes.putAll(attributes);
+        }
+    }
+
+    /**
+     * Filters out any child menuitems that should not be be in the list
+     * based on the current context. Basicly a little hack to keep this list in
+     * sync with the results you get if you access the children of this item via
+     * MenuModule.getMenuItems() for the level above.
+     * Since Session and RequestScopeMenuFilters are not stored inside the
+     * menuitems themselfs you can put them in the filterContext under the keys
+     * obtainable from MenuFilter.
+     * 
+     * @param filterContext environment variables for the filters
+     */
+    public void applyFiltersOnChildren(Map filterContext)
+    {
+        List list = getChildren();
+        if(children == null) return;
+        Iterator it = children.iterator();
+        Iterator filters = null;
+        MenuItem child = null;
+        boolean accept = true;
+        ArrayList filtered = new ArrayList();
+        while(it.hasNext())
+        {
+            accept = true;
+            child = (MenuItem)it.next();
+            list = child.getFilters();
+            if(list == null)
+            {
+                list = new ArrayList();
+                list.addAll((List)filterContext.get(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS));
+                list.addAll((List)filterContext.get(MenuFilter.CONTEXT_KEY_SESSION_FILTERS));
+            }
+            filters = list.iterator();
+            while(filters.hasNext() && accept)
+                accept = ((MenuFilter)filters.next()).accept(child, filterContext);
+            if(accept)
+            {
+                child.applyFiltersOnChildren(filterContext);
+                filtered.add(child);
+            }
+        }
+        setChildren(filtered);
+    }
+
+    /**
+     * Get the children of this item.
+     * @return the children of this item
+     */
+    public List getChildren()
+    {
+        return children;
+    }
+
+    /**
+     * Set the children of this item.
+     * @param list the children of this item
+     */
+    public void setChildren(List list)
+    {
+        children = list;
+    }
+
+    /**
+     * Adds the child to the end of the list. Note this does not insert the item
+     * in the cached menu tree.
+     * 
+     * @param item the item to add
+     */
+    public void addChild(MenuItem item)
+    {
+        children.add(item);
+    }
+
+    /**
+     * Inserts the child at the specified index Note this does not insert the
+     * item in the cached menu tree.
+     * 
+     * @param index position where the item should be inserted
+     * @param item the item to insert
+     * @throws ArrayIndexOutfBoundsException if the index is smaller then 0 or
+     *             greater then the amount of children-1
+     */
+    public void insertChild(int index, MenuItem item)
+    {
+        children.add(index, item);
+    }
+
+    /**
+     * Removes the item from the list of children. Note this does not remove the
+     * item from the cached tree as being a child of this menu.
+     * 
+     * @param item the item to remove
+     */
+    public void deleteChild(MenuItem item)
+    {
+        int index = children.indexOf(item);
+        if(index >= 0)
+        {
+            children.remove(index);
+        }
+    }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object o)
+    {
+        if(o == null) { return false; }
+        if(this == o) { return true; }
+        if(!(o instanceof MenuItem)) { return false; }
+        MenuItem that = (MenuItem)o;
+        if(this.link.equals(that.link)) { return true; }
+        if(aliases != null)
+        {
+            if(aliases.contains(that.link)) { return true; }
+        }
+        return false;
+    }
+
+    /**
+     * Get the string representation with some extra info.
+     * 
+     * @return String the string representation with some extra info.
+     */
+    public String toString()
+    {
+        StringBuffer b = new StringBuffer("menu -> ").append(link).append((active) ? " (active)" : "");
+
+        if((aliases != null) || (filters != null) || (attributes != null))
+        {
+            b.append(" {");
+        }
+        if(attributes != null)
+        {
+            b.append(" attributes:");
+            for(Iterator i = attributes.keySet().iterator(); i.hasNext();)
+            {
+                String key = (String)i.next();
+                b.append(key).append("=").append(attributes.get(key));
+                if(i.hasNext())
+                {
+                    b.append(",");
+                }
+            }
+        }
+        if(aliases != null)
+        {
+            b.append(" aliases:");
+            for(Iterator i = aliases.iterator(); i.hasNext();)
+            {
+                b.append(i.next());
+                if(i.hasNext())
+                {
+                    b.append(",");
+                }
+            }
+        }
+        if(filters != null)
+        {
+            b.append(" filters:");
+            for(Iterator i = filters.iterator(); i.hasNext();)
+            {
+                RequestScopeMenuFilter f = (RequestScopeMenuFilter)i.next();
+                b.append(f);
+                if(i.hasNext())
+                {
+                    b.append(",");
+                }
+            }
+        }
+        if((aliases != null) || (filters != null) || (attributes != null))
+        {
+            b.append(" }");
+        }
+        return b.toString();
+    }
 }

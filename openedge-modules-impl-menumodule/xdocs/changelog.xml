@@ -9,10 +9,28 @@
 	<body>
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
+
+			<subsection name="1.4.2">
+				<ul>
+					<li>Fix for bug that prevented proper usage of more than one concurrent instance of the module
+	(reference to cache was static).</li>
+                    <li>Refactored JUnit test to use a decorator for initialization.</li>
+                    <li>JavaDocs & code conventions.</li>
+                    <li>Added module property 'useRootForNullPath' (see JavaDoc).</li>
+				</ul>
+			</subsection>
+
+			<subsection name="1.4.1">
+				<ul>
+					<li>Fixed bug that would leave the children (getChildren()) of an item unfiltered.</li>
+                    <li>Wrote JUnitTest to verify this behaviour in the future.</li>
+				</ul>
+			</subsection>
 			
 			<subsection name="1.4.1">
 				<ul>
-					<li>(Nog in te vullen)</li>
+					<li>Fixed bug that would leave the children (getChildren()) of an item unfiltered.</li>
+                    <li>Wrote JUnitTest to verify this behaviour in the future.</li>
 				</ul>
 			</subsection>
 			

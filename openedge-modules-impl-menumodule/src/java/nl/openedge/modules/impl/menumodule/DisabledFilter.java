@@ -39,12 +39,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Allways disables all
+ * Allways disables all.
  * @author Sander Hofstee
  */
 public final class DisabledFilter extends AbstractMenuFilter implements RequestScopeMenuFilter
 {
-
+    /** Log. */
 	private static Log log = LogFactory.getLog(DisabledFilter.class);
 
 	/**

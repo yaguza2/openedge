@@ -40,7 +40,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.VariableHeightLayoutCache;
 
 /**
- * Holder and handler for tree state
+ * Holder and handler for tree state.
  * @author Eelco Hillenius
  */
 public final class TreeStateCache 
@@ -48,15 +48,15 @@ public final class TreeStateCache
 	implements Serializable
 {
 
-	/* currently selected path */
+	/** currently selected path. */
 	private TreePath selectedPath;
-	/* query that was used to select the current selected path */
+	/** query that was used to select the current selected path. */
 	private String selectedPathQuery;
-	/* the objects owned by the selected path */
+	/** the objects owned by the selected path. */
 	private List pathContent;
 
 	/**
-	 * expand the selected path and set selection to currently selected path
+	 * expand the selected path and set selection to currently selected path.
 	 * @param selection new selection
 	 */
 	public void setSelectedPath(TreePath selection)
@@ -67,7 +67,7 @@ public final class TreeStateCache
 
 	/**
 	 * expand the selected path and set selection to currently selected path
-	 * and set the content owned by the selected path
+	 * and set the content owned by the selected path.
 	 * @param selection new selection
 	 * @param content owned by selection
 	 */
@@ -80,7 +80,7 @@ public final class TreeStateCache
 	/**
 	 * expand the selected path and set selection to currently selected path
 	 * , set the content owned by the selected path and set query that was 
-	 * used to get the selection
+	 * used to get the selection.
 	 * @param selection new selection
 	 * @param content owned by selection
 	 * @param selectedPathQuery query that was used to get selection  
@@ -93,8 +93,8 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * get the currently selected path
-	 * @return TreePath
+	 * get the currently selected path.
+	 * @return TreePath the currently select path
 	 */
 	public TreePath getSelectedPath()
 	{
@@ -106,7 +106,7 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * get the content that is owned by the current path
+	 * get the content that is owned by the current path.
 	 * @return List list of content
 	 */
 	public List getPathContent()
@@ -115,7 +115,7 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * set the content that is owned by the current path
+	 * set the content that is owned by the current path.
 	 * @param list list of content 
 	 */
 	public void setPathContent(List list)
@@ -124,7 +124,8 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * @return String
+	 * Get the selected path query.
+	 * @return String the selected path query
 	 */
 	public String getSelectedPathQuery()
 	{
@@ -132,7 +133,8 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * @param selectedPathQuery
+	 * Set the selected path query.
+	 * @param selectedPathQuery the selected path query
 	 */
 	public void setSelectedPathQuery(String selectedPathQuery)
 	{
@@ -154,9 +156,9 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * get tree path in model for given user object
+	 * get tree path in model for given user object.
 	 * @param userObject object to look for in model
-	 * @return TreePath
+	 * @return TreePath the treepath for the given user object
 	 */
 	public TreePath findTreePath(Object userObject)
 	{
@@ -170,7 +172,7 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * find the node in model that has arg as its userObject
+	 * find the node in model that has arg as its userObject.
 	 * @param userObject object to look for in model
 	 * @return DefaultMutableTreeNode
 	 */
@@ -181,7 +183,13 @@ public final class TreeStateCache
 		return findNodeRecursively(root, null, userObject);
 	}
 
-	/* recurse childs */
+	/**
+	 * find the child nodes recursively.
+	 * @param currentNode the current node
+	 * @param resultNode node of last result
+	 * @param userObject the user object
+	 * @return resulting node
+	 */
 	private DefaultMutableTreeNode findNodeRecursively(
 		DefaultMutableTreeNode currentNode,
 		DefaultMutableTreeNode resultNode,

@@ -37,19 +37,19 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * decorator for sets of principals
+ * decorator for sets of principals.
  * NOTE: though not strong typed, this set should 
  * never contain other set elements other than Principals
  * @author Eelco Hillenius
  */
 public final class PrincipalSet implements Set
 {
- 	/* decorated instance */
+ 	/** decorated instance. */
 	private Set decorated = null;
 	
 	/**
-	 * construct with set to decorate
-	 * @param toDecorate
+	 * construct with set to decorate.
+	 * @param toDecorate set to decorate
 	 */
 	public PrincipalSet(Set toDecorate)
 	{

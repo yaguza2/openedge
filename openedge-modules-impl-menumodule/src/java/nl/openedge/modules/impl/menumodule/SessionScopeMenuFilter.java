@@ -31,7 +31,7 @@
 package nl.openedge.modules.impl.menumodule;
 
 /**
- * Marker voor filters per sessie
+ * Marker interface for session scoped filters.
  * @author Eelco Hillenius
  */
 public interface SessionScopeMenuFilter extends MenuFilter

@@ -33,14 +33,16 @@ package nl.openedge.modules.impl.menumodule;
 import java.util.Map;
 
 /**
- * A menu filter can be used to filter menu items from the menu tree
+ * A menu filter can be used to filter menu items from the menu tree.
  * @author Eelco Hillenius
  */
 public interface MenuFilter extends AttributeEnabledObject
 {
-	/** special key to store a JAAS subject with in the context */
+	/** special key to store a JAAS subject with in the context. */
 	public final static String CONTEXT_KEY_SUBJECT = "subject";
+	/** key to store request filters, value = 'request_filters'. */
 	public final static String CONTEXT_KEY_REQUEST_FILTERS = "request_filters";
+	/** key to store session filters, value = 'session_filters'. */
 	public final static String CONTEXT_KEY_SESSION_FILTERS = "session_filters";
 	
 	/**

@@ -65,988 +65,980 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 /**
- * De menumodule is verantwoordelijk voor het opbouwen van de menu-opties
- * vanuit de configuratie, en het uitdelen van menu-opties (per niveau)
- * voor specifieke gebruikers.
+ * The menu module is responsible for building the menu tree from a
+ * configuration (xml) document and for applying rules for specific users/ contexts
+ * to get the proper menu tree for those users/ contexts.
  * 
  * @author Eelco Hillenius
- * @todo: TODO momenteel zit hier een hack in... verwijder voor efficient gedrag!
- * @todo: vertaal naar Engels
  */
-public final class MenuModule 
-	implements SingletonType, BeanType, ConfigurableType, ServletContextAwareType
+public final class MenuModule implements
+	SingletonType, BeanType, ConfigurableType, ServletContextAwareType
 {
 
-	/** principal sets that hold combination of principals en menu items */
-	private List principalSets = new ArrayList();
-	
-	private String configLocation;
-	
-	private ServletContext servletContext;
-	
-	private TreeModel menuModel = null;
-	
-	private Pattern pAnd=Pattern.compile("&");
-	private Pattern pIs=Pattern.compile("=");
+    /** principal sets that hold combination of principals en menu items. */
+    private List principalSets = new ArrayList();
 
-	/* logger */
-	private static Log log = LogFactory.getLog(MenuModule.class);
-	/* performance log */
-	private static Log performanceLog = 
-		LogFactory.getLog("nl.openedge.modules.impl.menumodule.performance");
-	
-	/*
-	 * @TODO: zorg ervoor dat nadat sessies zijn verlopen, cache elementen worden verwijderd
-	 */
-	private static Map userModelCache = new HashMap();
-	//private static Map userStateCache = new HashMap();
-	private static Set sessionScopedFiltersApplied = new HashSet();
-	
-	private static ThreadLocal contextHolder = new ThreadLocal();
-	
-	private List applicationScopedFilters = new ArrayList(1);
-	private List sessionScopedFilters = new ArrayList(1);
-	private List requestScopedFilters = new ArrayList(1);
+    /** the location of the configuration document. */
+    private String configLocation;
 
-	/**
-	 * @see nl.openedge.components.ConfigurableType#init(org.jdom.Element)
-	 */
-	public void init(Element configNode) throws ConfigException
-	{
-		try
-		{	
-			buildTreeModel(true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			throw new ConfigException(e);
-		}
-	}
-	
-	/**
-	 * lees filters uit configuratie en voeg toe aan lijsten
-	 * @param rootElement root element menu xml document
-	 * @throws Exception
-	 */
-	private void addFilters(Element rootElement)
-		throws Exception
-	{
-		
-		applicationScopedFilters.clear();
-		sessionScopedFilters.clear();
-		requestScopedFilters.clear();
-		
-		List filters = rootElement.getChildren("filter");
-		ClassLoader classLoader = 
-			Thread.currentThread().getContextClassLoader();	
-		if (classLoader == null)
-		{
-			classLoader = MenuModule.class.getClassLoader();
-		}
-		
-		for(Iterator i = filters.iterator(); i.hasNext(); )
-		{
-			Element filterNode = (Element)i.next();
-			String className = filterNode.getAttributeValue("class");
-			Class clazz = classLoader.loadClass(className);
-			MenuFilter temp=(MenuFilter)clazz.newInstance();
-			addAttributes(temp,filterNode);
-			if(ApplicationScopeMenuFilter.class.isAssignableFrom(clazz))
-			{
-				applicationScopedFilters.add(temp);
-				log.info(className + " geregistreerd als filter met applicatie scope");
-			}
-			else if(SessionScopeMenuFilter.class.isAssignableFrom(clazz))
-			{
-				sessionScopedFilters.add(temp);
-				log.info(className + " geregistreerd als filter met sessie scope");				
-			}
-			else if(RequestScopeMenuFilter.class.isAssignableFrom(clazz))
-			{
-				requestScopedFilters.add(temp);
-				log.info(className + " geregistreerd als filter met request scope");				
-			}
-			else
-			{
-				throw new ConfigException(
-					"filters moeten van een van de volgende types zijn: " +
-					ApplicationScopeMenuFilter.class.getName() + ", " +
-					SessionScopeMenuFilter.class.getName() + " of " + 
-					RequestScopeMenuFilter.class.getName());
-			}
-			
-		}
-		
-	}
-	
-	/**
-	 * bouw tree, kijk in cache of het nodig is
-	 * @param rebuild indien waar, bouw altijd
-	 * @return TreeModel
-	 * @throws Exception
-	 */
-	private synchronized TreeModel buildTreeModel(
-		boolean rebuild)
-		throws Exception
-	{
+    /** the current servlet context. */
+    private ServletContext servletContext;
 
-		if (rebuild || menuModel == null)
-		{
-			Document doc = null;
-			URL configURL = URLHelper.convertToURL(configLocation, 
-				MenuModule.class, servletContext);
-			doc = DocumentLoader.loadDocument(configURL);
-			Element rootElement = doc.getRootElement();
-			
-			addFilters(rootElement);
-			
-			ClassLoader classLoader = 
-				Thread.currentThread().getContextClassLoader();	
-			if (classLoader == null)
-			{
-				classLoader = MenuModule.class.getClassLoader();
-			}
-			
-			this.menuModel = buildTreeModel(rootElement, classLoader);
-		}
-		return menuModel;
-	}
+    /** the shared menu model of this module instance. */
+    private TreeModel menuModel = null;
 
-	/**
-	 * bouw tree model
-	 * @param rootElement
-	 * @param classLoader
-	 * @return TreeModel
-	 * @throws Exception
-	 */
-	private TreeModel buildTreeModel(
-		Element rootElement,
-		ClassLoader classLoader) 
-		throws Exception
-	{
-		
-		TreeModel model = null;
-		// build directory tree, starting with root dir
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
-		MenuItem rootMenuItem = new MenuItem();
-		rootMenuItem.setTag("/");
-		rootMenuItem.setLink("/");
-		
-		rootNode.setUserObject(rootMenuItem);
+    /** and pattern. */
+    private static final Pattern PATTERN_AND = Pattern.compile("&");
 
-		Map ctx = new HashMap();
-		ctx.put(ApplicationScopeMenuFilter.CONTEXT_KEY_CONFIGURATION, rootElement);
-		
-		addChilds(rootElement, rootNode, classLoader, ctx);
-		model = new DefaultTreeModel(rootNode);
-		
-		if(log.isDebugEnabled())
-		{
-			debugTree(model);
-		}
-		
-		return model;
-	}
-	private Properties parseParameters(String params)
-	{
-		String[] all=pAnd.split(params);
-		Properties prop=new Properties();
-		String[] current=null;
-		for(int i=0;i<all.length;i++)
-		{
-			current=pIs.split(all[i],2);
-			if(current.length>=2)
-				prop.setProperty(current[0],current[1]);
-			else
-				prop.setProperty(current[0],"");
-		}
-		return prop;
-	}
-	/* voeg childs recursief toe */
-	private void addChilds(
-		Element currentElement,
-		DefaultMutableTreeNode currentNode,
-		ClassLoader classLoader,
-		Map filterContext)
-		throws Exception
-	{
+    /** is pattern. */
+    private static final Pattern PATTERN_IS = Pattern.compile("=");
 
-		// voeg childs toe
-		List items = currentElement.getChildren("menu-item");
-		if(!items.isEmpty())
-		{
-			
-			for(Iterator i = items.iterator(); i.hasNext(); )
-			{
-				Element childElement = (Element)i.next();
-				MenuItem childItem = new MenuItem();
-				
-				// zet tag (label)
-				childItem.setTag(childElement.getAttributeValue("tag"));
-				
-				// zet link
-				String link = childElement.getAttributeValue("link");
-				int ix = link.indexOf('?'); // strip parameter en ?
-				if(ix != -1)
-				{
-					if(ix < link.length())
-					{
-						String queryString = link.substring(ix+1, link.length());
-						childItem.addParameters(parseParameters(queryString));	
-					}
-					link = link.substring(0, ix);
-				}
-				addParameters(childItem, childElement);
-				childItem.setLink(link);
-	
-				String key = childElement.getAttributeValue("key");
-				if(key != null && (!key.trim().equals("")))
-				{
-					childItem.setShortCutKey(key.trim());
-					log.info("sneltoets alt + '" + key + 
-						"' geregistreerd als sneltoets voor " + 
-						childItem.getTag());	
-				}
+    /** logger. */
+    private static Log log = LogFactory.getLog(MenuModule.class);
 
-				// filter op applicatie scope
-				boolean accepted = true;
-				for(Iterator j = applicationScopedFilters.iterator(); j.hasNext(); )
-				{
-					MenuFilter filter = (MenuFilter)j.next();
-					accepted = filter.accept(childItem, filterContext);
-					if(!accepted)
-					{
-						break;			
-					}
-				}
+    /** cache for user model. */
+    private Map userModelCache = new HashMap();
 
-				if(accepted)
-				{					
-					DefaultMutableTreeNode childNode = new DefaultMutableTreeNode();
-					childNode.setUserObject(childItem);
-					currentNode.add(childNode);
-					((MenuItem)currentNode.getUserObject()).addChild(childItem);		
+    /** set of applied session scoped filters. */
+    private Set sessionScopedFiltersApplied = new HashSet();
 
-					if (log.isDebugEnabled())
-					{
-						log.debug("voeg " + childItem + " toe aan " 
-									+ currentNode.getUserObject());	
-					}
-					addChilds(childElement, childNode, classLoader, filterContext);
-						
-					// voeg aliases toe indien gegeven			
-					addAliases(
-						childItem, childElement, childNode, classLoader, filterContext);
-										
-					// voeg filters toe indien gegeven
-					addNodeLevelFilters(
-						childItem, childElement, childNode, classLoader, filterContext);
-						
-					// zet attributen indien gegeven
-					//addAttributes(childItem, childElement, childNode, classLoader, filterContext);
-					addAttributes(childItem, childElement);					
-				}
-			}
-		}
-	}
-	
-	/* voeg filters voor node toe (nooit voor root) */
-	private void addNodeLevelFilters(
-		MenuItem childItem,
-		Element currentElement,
-		DefaultMutableTreeNode currentNode,
-		ClassLoader classLoader,
-		Map filterContext)
-		throws Exception
-	{
-		
-		// voeg filters voor node toe indien aanwezig
-		List filters = currentElement.getChildren("filter");
-		if(!filters.isEmpty())
-		{
-			List nodeFilters = new ArrayList();
-			for(Iterator i = filters.iterator(); i.hasNext(); )
-			{
-				Element filterNode = (Element)i.next();
-				String className = filterNode.getAttributeValue("class");
-				Class clazz = classLoader.loadClass(className);
-				MenuFilter temp=(MenuFilter)clazz.newInstance();
-				addAttributes(temp,filterNode);
-				if(RequestScopeMenuFilter.class.isAssignableFrom(clazz))
-				{
-					nodeFilters.add(temp);
-					if(log.isDebugEnabled())
-					{
-						log.debug(className + 
-							" geregistreerd als een node filter voor " + 
-							childItem.getTag());	
-					}				
-				}
-				else
-				{
-					throw new ConfigException(
-						"filters bij een menu node moeten van het volgende type zijn: " + 
-						RequestScopeMenuFilter.class.getName());
-				}	
-			}
-			childItem.setFilters(nodeFilters);			
-		}
+    /** context for the current thread. */
+    private ThreadLocal contextHolder = new ThreadLocal();
 
-	}
-	
-	/* voeg attributen voor node toe (nooit voor root) */
-	
-	/**
-	 * @deprecated use addAtttributes(AttributeEnabledObject Element)
-	 */
-	private void addAttributes(
-		MenuItem childItem,
-		Element currentElement,
-		DefaultMutableTreeNode currentNode,
-		ClassLoader classLoader,
-		Map filterContext)
-		throws Exception
-	{
-		
-		// voeg filters voor node toe indien aanwezig
-		List attributes = currentElement.getChildren("attribute");
-		if(!attributes.isEmpty())
-		{
-			for(Iterator i = attributes.iterator(); i.hasNext(); )
-			{
-				Element attribNode = (Element)i.next();
-				String attribName = attribNode.getAttributeValue("name");
-				String attribValue = attribNode.getTextNormalize();
-				childItem.putAttribute(attribName, attribValue);
-				if(log.isDebugEnabled())
-				{
-					log.debug("attribuut " + attribName + "{" +
-						attribValue + "} geregistreerd als een node filter voor " + 
-						childItem.getTag());					
-				}
-			}			
-		}
+    /** list of configured application scope filters. */
+    private List applicationScopedFilters = new ArrayList(1);
 
-	}
-	/**
-	 * Registers attributes for objects
-	 * @param target
-	 * @param currentElement
-	 */
-	private void addAttributes(AttributeEnabledObject target, Element currentElement)
-	{
-		List attributes = currentElement.getChildren("attribute");
-		if(!attributes.isEmpty())
-		{
-			for(Iterator i = attributes.iterator(); i.hasNext(); )
-			{
-				Element attribNode = (Element)i.next();
-				String attribName = attribNode.getAttributeValue("name");
-				String attribValue = attribNode.getTextNormalize();
-				target.putAttribute(attribName, attribValue);
-				if(log.isDebugEnabled())
-				{
-					log.debug("attribute " + attribName + "{" +
-						attribValue + "} registered for " + 
-						target.getClass().getName());					
-				}
-			}			
-		}
-	}
-	private void addParameters(MenuItem childItem,Element currentElement)
-	{
-		
-		// voeg filters voor node toe indien aanwezig
-		List attributes = currentElement.getChildren("parameter");
-		if(!attributes.isEmpty())
-		{
-			for(Iterator i = attributes.iterator(); i.hasNext(); )
-			{
-				Element attribNode = (Element)i.next();
-				String attribName = attribNode.getAttributeValue("name");
-				String attribValue = attribNode.getTextNormalize();
-				childItem.addParameter(attribName, attribValue);
-				if(log.isDebugEnabled())
-				{
-					log.debug("parameter " + attribName + "{" +
-						attribValue + "} geregistreerd als een request parameter voor " + 
-						childItem.getTag());					
-				}
-			}			
-		}
+    /** list of configured session scope filters. */
+    private List sessionScopedFilters = new ArrayList(1);
 
-	}
-	/* voeg aliases voor menu items toe (nooit voor root) */
-	private void addAliases(
-		MenuItem childItem,
-		Element currentElement,
-		DefaultMutableTreeNode currentNode,
-		ClassLoader classLoader,
-		Map filterContext)
-		throws Exception
-	{
-		// voeg filters voor node toe indien aanwezig
-		List aliases = currentElement.getChildren("alias");
-		if(!aliases.isEmpty())
-		{
-			HashSet aliasLinks = new HashSet(aliases.size());
-			for(Iterator i = aliases.iterator(); i.hasNext(); )
-			{
-				Element aliasNode = (Element)i.next();
-				String aliasLink = aliasNode.getAttributeValue("link");
-				boolean check = aliasLinks.add(aliasLink);
-				log.info("voeg alias '" + aliasLink + "' voor " + childItem.getTag());
-				if(!check)
-				{
-					log.warn("duplicaat alias '" + aliasLink + 
-						"' voor " + childItem.getTag());
-				}
-			}
-			childItem.setAliases(aliasLinks);	
-		}
+    /** list of configured request scope filters. */
+    private List requestScopedFilters = new ArrayList(1);
 
-	}
+    /**
+     * Whether to use the root (path) as the current path if no path was found
+     * based on the given context. If true, if a path was not found, the first level
+     * of menu items is allways returned. This can be usefull when working with
+     * several instances of this module.
+     */
+    private boolean useRootForNullPath = false;
 
-	/* model voor subject */
-	private synchronized TreeModel getModelForSubject(Subject subject)
-	{
-		Map filterContext = (Map)contextHolder.get();
-		if(filterContext == null) // fallthrough (handig voor buiten webapp framework)
-		{
-			filterContext = new HashMap();
-			contextHolder.set(filterContext);
-		}
-		filterContext.put(MenuFilter.CONTEXT_KEY_SUBJECT, subject);
-		
-		DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)menuModel.getRoot();
-		DefaultMutableTreeNode workNode = new DefaultMutableTreeNode();
-		workNode.setUserObject(rootNode.getUserObject());
-		
-		// opbouw voor sessie
-		TreeModel model = (TreeModel)userModelCache.get(subject);
-		if(model == null)
-		{
-			// vul tree mbv subject
-			addChildsForSubject(subject, rootNode, workNode, filterContext);
-			// workrootnode is nu root van tree speciaal voor subject;
-			// zet model op met deze node
-			model = new DefaultTreeModel(workNode); // model voor session
-			userModelCache.put(subject, model);
-		}
-		
-		// opbouw voor request
-		rootNode = (DefaultMutableTreeNode)model.getRoot();
-		workNode = new DefaultMutableTreeNode();
-		workNode.setUserObject(rootNode.getUserObject());
-		addChildsForRequest(subject, rootNode, workNode, filterContext);
-		model = new DefaultTreeModel(workNode); // model voor request
-		
-		return model;
-	}
-	
-	/* voeg childs to aan worknode voor subject */
-	private void addChildsForSubject(
-		Subject subject, 
-		DefaultMutableTreeNode currentNode,
-		DefaultMutableTreeNode workNode,
-		Map filterContext)
-	{
-		addFilteredChildsForSession(subject, currentNode, workNode, filterContext, sessionScopedFilters);
-	}
-	
-	/* voeg childs to aan worknode voor request */
-	private void addChildsForRequest(
-		Subject subject, 
-		DefaultMutableTreeNode currentNode,
-		DefaultMutableTreeNode workNode,
-		Map filterContext)
-	{
-		
-		long tsBegin = System.currentTimeMillis();
-		
-		addFilteredChildsForRequest(subject, currentNode, workNode, filterContext, requestScopedFilters);
-		
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("filtering took " + 
-				(tsEnd - tsBegin) + " miliseconds total");
-		}
-	}
-	
-	/* voeg childs to aan worknode voor filter voor sessie */
-	private void addFilteredChildsForSession(
-		Subject subject, 
-		DefaultMutableTreeNode currentNode,
-		DefaultMutableTreeNode workNode,
-		Map filterContext,
-		List filters)
-	{
-		
-		Enumeration children = currentNode.children();
-		while(children.hasMoreElements())
-		{
-			DefaultMutableTreeNode childNode = 
-				(DefaultMutableTreeNode)children.nextElement();
-			MenuItem menuItem = (MenuItem)childNode.getUserObject();
-			
-			// filter globaal
-			boolean accepted = true;
-			for(Iterator j = filters.iterator(); j.hasNext(); )
-			{
-				MenuFilter filter = (MenuFilter)j.next();
-				accepted = filter.accept(menuItem, filterContext);
-				if(!accepted)
-				{
-					break;			
-				}
-			}
+    /** The root menu item. */
+    private MenuItem rootMenuItem = null;
 
-			// filter per node indien aanwezig en voorgaande filtering is geslaagd
-			if(accepted) // filtering is gelukt
-			{
-				List nodeFilters = menuItem.getFilters();
-				if(nodeFilters != null)
-				{
-					for(Iterator k = nodeFilters.iterator(); k.hasNext(); )
-					{
-						MenuFilter filter = (MenuFilter)k.next();
-						if(filter instanceof ApplicationScopeMenuFilter ||
-							filter instanceof SessionScopeMenuFilter)
-						{
-							accepted = filter.accept(menuItem, filterContext);
-							if(!accepted)
-							{
-								break;			
-							}	
-						}
-					}	
-				}	
-			}
-			
-			if(accepted) // filtering is gelukt
-			{
-				DefaultMutableTreeNode newWorkNode = 
-					new DefaultMutableTreeNode();
-				newWorkNode.setUserObject(menuItem);
-				// voeg child toe
-				workNode.add(newWorkNode);
-				// recurse
-				addFilteredChildsForSession(subject, childNode, newWorkNode, filterContext, filters);	
-			}
-		}
-	}
-	
-	/* voeg childs to aan worknode voor filter voor request */
-	private void addFilteredChildsForRequest(
-		Subject subject, 
-		DefaultMutableTreeNode currentNode,
-		DefaultMutableTreeNode workNode,
-		Map filterContext,
-		List filters)
-	{
-		
-		Enumeration children = currentNode.children();
-		while(children.hasMoreElements())
-		{
-			DefaultMutableTreeNode childNode = 
-				(DefaultMutableTreeNode)children.nextElement();
-			MenuItem menuItem = (MenuItem)childNode.getUserObject();
-			
-			// filter globaal
-			boolean accepted = true;
-			for(Iterator j = filters.iterator(); j.hasNext(); )
-			{
-				MenuFilter filter = (MenuFilter)j.next();
-				accepted = filter.accept(menuItem, filterContext);
-				if(!accepted)
-				{
-					break;			
-				}
-			}
+    /**
+     * @see nl.openedge.components.ConfigurableType#init(org.jdom.Element)
+     */
+    public void init(Element configNode) throws ConfigException
+    {
+        try
+        {
+            buildTreeModel(true);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            throw new ConfigException(e);
+        }
+    }
 
-			// filter per node indien aanwezig en voorgaande filtering is geslaagd
-			if(accepted) // filtering is gelukt
-			{
-				List nodeFilters = menuItem.getFilters();
-				if(nodeFilters != null)
-				{
-					for(Iterator k = nodeFilters.iterator(); k.hasNext(); )
-					{
-						MenuFilter filter = (MenuFilter)k.next();
-						if(filter instanceof RequestScopeMenuFilter)
-						{
-							accepted = filter.accept(menuItem, filterContext);
-							if(!accepted)
-							{
-								break;			
-							}	
-						}
-					}	
-				}	
-			}
-			
-			if(accepted) // filtering is gelukt
-			{
-				DefaultMutableTreeNode newWorkNode = 
-					new DefaultMutableTreeNode();
-				newWorkNode.setUserObject(menuItem);
-				// voeg child toe
-				workNode.add(newWorkNode);
-				// recurse
-				addFilteredChildsForRequest(subject, childNode, newWorkNode, filterContext, filters);	
-			}
-		}
-	}
+    /**
+     * Read filters from the configuration and add them to this module instance.
+     * 
+     * @param rootElement root element of menu xml document
+     * @throws Exception
+     */
+    private void addFilters(Element rootElement) throws Exception
+    {
+        applicationScopedFilters.clear();
+        sessionScopedFilters.clear();
+        requestScopedFilters.clear();
 
-	/**
-	 * haal menu op voor root level voor gegeven subject
-	 * @param subject jaas subject
-	 * @return List de menuopties die ONDER de root level hangen
-	 */
-	public List[] getMenuItems(Subject subject)
-	{
-		return getMenuItems(subject, null);
-	}
-	
-	/**
-	 * haal menu op vanaf de kinderen van het huidig geselecteerde menu item voor
-	 * het gegeven subject
-	 * @param subject jaas subject
-	 * @param idCurrentLevel id huidge menu level of null voor root
-	 * @return List[] array van de menuopties die ONDER de gegeven level hangen; 1 niveau
-	 */
-	public List[] getMenuItems(
-		Subject subject, 
-		String currentLink)
-	{
-		
-		long tsBegin = System.currentTimeMillis();
-		Map filterContext = (Map)contextHolder.get();
-		if(filterContext == null) // fallthrough (handig voor buiten webapp framework)
-		{
-			filterContext = new HashMap();
-			contextHolder.set(filterContext);
-		}
-		filterContext.put(MenuFilter.CONTEXT_KEY_SUBJECT, subject);
-		filterContext.put(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS,requestScopedFilters);
-		filterContext.put(MenuFilter.CONTEXT_KEY_SESSION_FILTERS,sessionScopedFilters);
-		if(currentLink == null)
-		{
-			currentLink = "/";
-		}
-		
-		MenuItem workItem = new MenuItem();
-		workItem.setLink(currentLink);
-		List[] items = null;
-		
-//		TreeModel model = getModelForSubject(subject);
-		TreeStateCache treeState = getTreeState(subject);
-		
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("got TreeState in " + 
-				(tsEnd - tsBegin) + " miliseconds");
-		}
-		
-		TreePath selection = treeState.findTreePath(workItem);
-		
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("got TreePath selection in " + 
-				(tsEnd - tsBegin) + " miliseconds");
-		}
-		
-		if(selection != null)
-		{
+        List filters = rootElement.getChildren("filter");
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if(classLoader == null)
+        {
+            classLoader = MenuModule.class.getClassLoader();
+        }
 
-			int depth = selection.getPathCount();
-			items = new List[depth];
-			for(int i = depth - 1; i >= 0; i--)
-			{
-				DefaultMutableTreeNode currentNode = 
-					(DefaultMutableTreeNode)selection.getPathComponent(i);
-				workItem = (MenuItem)currentNode.getUserObject();			
-				
-				int childCount = currentNode.getChildCount();
-				if((i == (depth - 1)) && (childCount == 0))
-				{
-					items = new List[depth - 1];
-				}
-				else
-				{
-					items[i] = new ArrayList(currentNode.getChildCount());
-					Enumeration children = currentNode.children();
-					while(children.hasMoreElements())
-					{
-						DefaultMutableTreeNode childNode = 
-							(DefaultMutableTreeNode)children.nextElement();
-						MenuItem tempItem = (MenuItem)childNode.getUserObject();
-						MenuItem childItem = new MenuItem();
-						childItem.setLink(tempItem.getLink());
-						childItem.setTag(tempItem.getTag());
-						childItem.setEnabled(tempItem.isEnabled());
-						childItem.setShortCutKey(tempItem.getShortCutKey());
-						childItem.setParameters(tempItem.getParameters());
-						childItem.setAttributes(tempItem.getAttributes());
-						childItem.setChildren(tempItem.getChildren());
-						
-						if(i < (depth - 1))
-						{
-							DefaultMutableTreeNode temp =
-								(DefaultMutableTreeNode)selection.getPathComponent(i + 1);
-							if(childNode.equals(temp))
-							{
-								childItem.setActive(true);
-							}
-						}
-						childItem.applyFiltersOnChildren(filterContext);
-						items[i].add(childItem);
-					}	
-				}
-			}
-			
-			if(performanceLog.isDebugEnabled())
-			{
-				long tsEnd = System.currentTimeMillis();
-				performanceLog.debug("rendered working copy of tree in " + 
-					(tsEnd - tsBegin) + " miliseconds");
-			}
-			
-		}
-		else
-		{
-			items = new List[0];
-		}
-		
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("building menu tree took " + 
-				(tsEnd - tsBegin) + " miliseconds total");
-		}
-		
-		return items;
-	}
-	
-	/**
-	 * haal tree state uit cache
-	 * @TODO Helaas, de treeState kan niet gecached worden omdat de uiteindelijke
-	 * 		per request kan verschillen. Misschien met een andere aanpak? 
-	 * @param subject jaas subject
-	 * @return TreeStateCache
-	 */
-	public TreeStateCache getTreeState(Subject subject)
-	{
-		//TreeStateCache treeState = (TreeStateCache)userStateCache.get(subject);
-		TreeStateCache treeState = null;
-		if (treeState == null)
-		{
-			treeState = new TreeStateCache();
-			TreeModel model = getModelForSubject(subject);
-			treeState.setModel(model);
-			TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
-			treeState.setSelectionModel(selectionModel);
-			treeState.setRootVisible(true);
+        for(Iterator i = filters.iterator(); i.hasNext();)
+        {
+            Element filterNode = (Element)i.next();
+            String className = filterNode.getAttributeValue("class");
+            Class clazz = classLoader.loadClass(className);
+            MenuFilter temp = (MenuFilter)clazz.newInstance();
+            addAttributes(temp, filterNode);
+            if(ApplicationScopeMenuFilter.class.isAssignableFrom(clazz))
+            {
+                applicationScopedFilters.add(temp);
+                log.info(className + " registered as a filter with application scope");
+            }
+            else if(SessionScopeMenuFilter.class.isAssignableFrom(clazz))
+            {
+                sessionScopedFilters.add(temp);
+                log.info(className + " registered as a filter with session scope");
+            }
+            else if(RequestScopeMenuFilter.class.isAssignableFrom(clazz))
+            {
+                requestScopedFilters.add(temp);
+                log.info(className + " registered as a filter with request scope");
+            }
+            else
+            {
+                throw new ConfigException("filters must be of one of the following types: "
+                        + ApplicationScopeMenuFilter.class.getName() + ", " + SessionScopeMenuFilter.class.getName()
+                        + " or " + RequestScopeMenuFilter.class.getName());
+            }
 
-			//userStateCache.put(subject, treeState);
-		}
-		return treeState;
-	}
-	
-	/**
-	 * reset context voor deze Thread
-	 */
-	public void resetContextForCurrentThread()
-	{
-		Map context = (Map)contextHolder.get();
-		if(context != null)
-		{
-			context.clear();
-		}
-		else
-		{
-			context = new HashMap();
-			contextHolder.set(context);	
-		}	
-	}
-	
-	/**
-	 * remove variable from the filter context
-	 * @param key
-	 */
-	public void removeFilterContextVariable(Object key)
-	{
-		Map context = (Map)contextHolder.get();
-		if(context != null)
-		{
-			context.remove(key);		
-		}
-	}
-	
-	/**
-	 * bewaar context variable value onder key
-	 * @param key sleutel
-	 * @param value waarde
-	 */
-	public void putFilterContextVariable(Object key, Object value)
-	{
-		Map context = (Map)contextHolder.get();
-		if(context == null)
-		{
-			context = new HashMap();
-			contextHolder.set(context);			
-		}
-		context.put(key, value);
-	}
-	
-	/**
-	 * haal context variabele met key
-	 * @param key sleutel
-	 * @return Object of null indien niet gevonden
-	 */
-	public Object getFilterContextVariable(Object key)
-	{
-		Map context = (Map)contextHolder.get();
-		if(context != null)
-		{
-			return context.get(key);			
-		}
-		else
-		{
-			return null;
-		}
-	}
-	
-	/**
-	 * @return String
-	 */
-	public String getConfigLocation()
-	{
-		return configLocation;
-	}
+        }
+    }
 
-	/**
-	 * @param configLocation
-	 */
-	public void setConfigLocation(String configLocation)
-	{
-		this.configLocation = configLocation;
-	}
-	
-	/**
-	 * @see nl.openedge.modules.types.initcommands.ServletContextAwareType#setServletContext(javax.servlet.ServletContext)
-	 */
-	public void setServletContext(ServletContext servletContext)
-		throws ConfigException
-	{
-		this.servletContext = servletContext;
-	}
-	
-	/* 
-	 * debug tree
-	 */
-	private void debugTree(TreeModel m)
-	{
+    /**
+     * Look in cache for tree and build if needed.
+     * 
+     * @param rebuild whether the model should be rebuilt
+     * @return TreeModel the tree model
+     * @throws Exception
+     */
+    private synchronized TreeModel buildTreeModel(boolean rebuild) throws Exception
+    {
+        if(rebuild || menuModel == null)
+        {
+            Document doc = null;
+            URL configURL = URLHelper.convertToURL(configLocation, MenuModule.class, servletContext);
+            doc = DocumentLoader.loadDocument(configURL);
+            Element rootElement = doc.getRootElement();
+            // add filters
+            addFilters(rootElement);
+            // get classloadder
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if(classLoader == null)
+            {
+                classLoader = MenuModule.class.getClassLoader();
+            }
+            // build model
+            this.menuModel = buildTreeModel(rootElement, classLoader);
+        }
+        return menuModel;
+    }
 
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)m.getRoot();
-		Enumeration enum = node.breadthFirstEnumeration();
-		enum = node.preorderEnumeration();
-		log.debug("-- MENU TREE DUMP --");
-		while (enum.hasMoreElements())
-		{
-			DefaultMutableTreeNode nd = 
-				(DefaultMutableTreeNode)enum.nextElement();
-			String tabs = "|";
-			for (int i = 0; i < nd.getLevel(); i++)
-				tabs += "\t";
-			log.debug(tabs + nd);
-		}
-		log.debug("-------------------");
-	}
+    /**
+     * Build the tree model.
+     * 
+     * @param rootElement config root element
+     * @param classLoader the class loader to use
+     * @return TreeModel the tree model
+     * @throws Exception
+     */
+    private TreeModel buildTreeModel(Element rootElement, ClassLoader classLoader) throws Exception
+    {
+        TreeModel model = null;
+        // build directory tree, starting with root dir
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
+        rootMenuItem = new MenuItem();
+        rootMenuItem.setTag("/");
+        rootMenuItem.setLink("/");
+        rootNode.setUserObject(rootMenuItem);
+        Map ctx = new HashMap();
+        ctx.put(ApplicationScopeMenuFilter.CONTEXT_KEY_CONFIGURATION, rootElement);
+        // add the childs
+        addChilds(rootElement, rootNode, classLoader, ctx);
+        model = new DefaultTreeModel(rootNode);
+        // debug tree if debug enabled
+        if(log.isDebugEnabled())
+        {
+            debugTree(model);
+        }
+        return model;
+    }
 
+    /**
+     * Parse the request paramters and put into a properties object.
+     * @param params the request parameters as a string
+     * @return the request parameters as a properties object
+     */
+    private Properties parseParameters(String params)
+    {
+        String[] all = PATTERN_AND.split(params);
+        Properties prop = new Properties();
+        String[] current = null;
+        for(int i = 0; i < all.length; i++)
+        {
+            current = PATTERN_IS.split(all[i], 2);
+            if(current.length >= 2)
+            {
+                prop.setProperty(current[0], current[1]);
+            }
+            else
+            {
+                prop.setProperty(current[0], "");
+            }
+        }
+        return prop;
+    }
+
+    /**
+     * Add the childs recursively.
+     * @param currentElement the current element
+     * @param currentNode the current node
+     * @param classLoader the classloader to use
+     * @param filterContext the current filter context
+     * @throws Exception
+     */
+    private void addChilds(
+            Element currentElement,
+            DefaultMutableTreeNode currentNode,
+            ClassLoader classLoader,
+            Map filterContext) 
+    		throws Exception
+    {
+        List items = currentElement.getChildren("menu-item");
+        if(!items.isEmpty())
+        {
+            for(Iterator i = items.iterator(); i.hasNext();)
+            {
+                Element childElement = (Element)i.next();
+                MenuItem childItem = new MenuItem();
+                // set tag (label)
+                childItem.setTag(childElement.getAttributeValue("tag"));
+                // set link
+                String link = childElement.getAttributeValue("link");
+                int ix = link.indexOf('?'); // strip parameter and ?
+                if(ix != -1)
+                {
+                    if(ix < link.length())
+                    {
+                        String queryString = link.substring(ix + 1, link.length());
+                        childItem.addParameters(parseParameters(queryString));
+                    }
+                    link = link.substring(0, ix);
+                }
+                addParameters(childItem, childElement);
+                childItem.setLink(link);
+                String key = childElement.getAttributeValue("key");
+                if(key != null && (!key.trim().equals("")))
+                {
+                    childItem.setShortCutKey(key.trim());
+                    log.info("key alt + '" + key + "' registered as a short cut key "
+                        + childItem.getTag());
+                }
+                // filter on application scope
+                boolean accepted = true;
+                for(Iterator j = applicationScopedFilters.iterator(); j.hasNext();)
+                {
+                    MenuFilter filter = (MenuFilter)j.next();
+                    accepted = filter.accept(childItem, filterContext);
+                    if(!accepted)
+                    {
+                        break;
+                    }
+                }
+                if(accepted)
+                {
+                    DefaultMutableTreeNode childNode = new DefaultMutableTreeNode();
+                    childNode.setUserObject(childItem);
+                    currentNode.add(childNode);
+                    ((MenuItem)currentNode.getUserObject()).addChild(childItem);
+
+                    if(log.isDebugEnabled())
+                    {
+                        log.debug("add " + childItem + " to " + currentNode.getUserObject());
+                    }
+                    addChilds(childElement, childNode, classLoader, filterContext);
+                    // add aliases
+                    addAliases(childItem, childElement, childNode, classLoader, filterContext);
+                    // add filters
+                    addNodeLevelFilters(childItem, childElement, childNode, classLoader, filterContext);
+                    // add attributes
+                    addAttributes(childItem, childElement);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add filters of the given node.
+     * @param childItem the node
+     * @param currentElement the xml node of the current node
+     * @param currentNode the tree node for the node
+     * @param classLoader the classloader to use
+     * @param filterContext the current filter context
+     * @throws Exception
+     */
+    private void addNodeLevelFilters(
+            MenuItem childItem,
+            Element currentElement,
+            DefaultMutableTreeNode currentNode,
+            ClassLoader classLoader,
+            Map filterContext)
+    		throws Exception
+    {
+        List filters = currentElement.getChildren("filter");
+        if(!filters.isEmpty())
+        {
+            List nodeFilters = new ArrayList();
+            for(Iterator i = filters.iterator(); i.hasNext();)
+            {
+                Element filterNode = (Element)i.next();
+                String className = filterNode.getAttributeValue("class");
+                Class clazz = classLoader.loadClass(className);
+                MenuFilter temp = (MenuFilter)clazz.newInstance();
+                addAttributes(temp, filterNode);
+                if(RequestScopeMenuFilter.class.isAssignableFrom(clazz))
+                {
+                    nodeFilters.add(temp);
+                    if(log.isDebugEnabled())
+                    {
+                        log.debug(className + " registered as a node filter for "
+                            + childItem.getTag());
+                    }
+                }
+                else
+                {
+                    throw new ConfigException(
+                        "menu item filters should be of type: "
+                            + RequestScopeMenuFilter.class.getName());
+                }
+            }
+            childItem.setFilters(nodeFilters);
+        }
+    }
+
+    /**
+     * Registers attributes for objects.
+     * 
+     * @param target object to add attributes
+     * @param currentElement the xml node
+     */
+    private void addAttributes(AttributeEnabledObject target, Element currentElement)
+    {
+        List attributes = currentElement.getChildren("attribute");
+        if(!attributes.isEmpty())
+        {
+            for(Iterator i = attributes.iterator(); i.hasNext();)
+            {
+                Element attribNode = (Element)i.next();
+                String attribName = attribNode.getAttributeValue("name");
+                String attribValue = attribNode.getTextNormalize();
+                target.putAttribute(attribName, attribValue);
+                if(log.isDebugEnabled())
+                {
+                    log.debug("attribute " + attribName + "{" + attribValue
+                        + "} registered for "
+                            + target.getClass().getName());
+                }
+            }
+        }
+    }
+
+    /**
+     * Add request parameters.
+     * @param childItem the item to add the parameters to
+     * @param currentElement the xml node
+     */
+    private void addParameters(MenuItem childItem, Element currentElement)
+    {
+        List attributes = currentElement.getChildren("parameter");
+        if(!attributes.isEmpty())
+        {
+            for(Iterator i = attributes.iterator(); i.hasNext();)
+            {
+                Element attribNode = (Element)i.next();
+                String attribName = attribNode.getAttributeValue("name");
+                String attribValue = attribNode.getTextNormalize();
+                childItem.addParameter(attribName, attribValue);
+                if(log.isDebugEnabled())
+                {
+                    log.debug("parameter " + attribName + "{" + attribValue
+                            + "} registered as a request parameter for "
+                            + childItem.getTag());
+                }
+            }
+        }
+    }
+
+    /**
+     * Add aliases for the given item.
+     * @param childItem the item
+     * @param currentElement the xml node of the item
+     * @param currentNode the tree node of the item
+     * @param classLoader the classloader to use
+     * @param filterContext the current filter context
+     * @throws Exception
+     */
+    private void addAliases(
+            MenuItem childItem,
+            Element currentElement,
+            DefaultMutableTreeNode currentNode,
+            ClassLoader classLoader,
+            Map filterContext)
+    		throws Exception
+    {
+        List aliases = currentElement.getChildren("alias");
+        if(!aliases.isEmpty())
+        {
+            HashSet aliasLinks = new HashSet(aliases.size());
+            for(Iterator i = aliases.iterator(); i.hasNext();)
+            {
+                Element aliasNode = (Element)i.next();
+                String aliasLink = aliasNode.getAttributeValue("link");
+                boolean check = aliasLinks.add(aliasLink);
+                log.info("add alias '" + aliasLink + "' for " + childItem.getTag());
+                if(!check)
+                {
+                    log.warn("duplicate alias '" + aliasLink + "' for " + childItem.getTag());
+                }
+            }
+            childItem.setAliases(aliasLinks);
+        }
+    }
+
+    /**
+     * Get the tree model for the given subject.
+     * @param subject the subject to get the treemodel for
+     * @return TreeModel the treemodel for the given subject
+     */
+    private synchronized TreeModel getModelForSubject(Subject subject)
+    {
+        Map filterContext = (Map)contextHolder.get();
+        if(filterContext == null) // fallthrough
+        {
+            filterContext = new HashMap();
+            contextHolder.set(filterContext);
+        }
+        filterContext.put(MenuFilter.CONTEXT_KEY_SUBJECT, subject);
+        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)menuModel.getRoot();
+        DefaultMutableTreeNode workNode = new DefaultMutableTreeNode();
+        workNode.setUserObject(rootNode.getUserObject());
+        TreeModel model = (TreeModel)userModelCache.get(subject);
+        if(model == null)
+        {
+            addChildsForSubject(subject, rootNode, workNode, filterContext);
+            // working root node is now root of tree for this subject
+            model = new DefaultTreeModel(workNode); // model for session
+            userModelCache.put(subject, model);
+        }
+        // build for request
+        rootNode = (DefaultMutableTreeNode)model.getRoot();
+        workNode = new DefaultMutableTreeNode();
+        workNode.setUserObject(rootNode.getUserObject());
+        addChildsForRequest(subject, rootNode, workNode, filterContext);
+        model = new DefaultTreeModel(workNode); // model voor request
+        return model;
+    }
+
+    /**
+     * Add childs to the given worknode for the given subject
+     * @param subject the subject
+     * @param currentNode the treenode
+     * @param workNode the worknode to add childs to
+     * @param filterContext the current filter context
+     */
+    private void addChildsForSubject(Subject subject, DefaultMutableTreeNode currentNode,
+            DefaultMutableTreeNode workNode, Map filterContext)
+    {
+        addFilteredChildsForSession(subject, currentNode, workNode, filterContext, sessionScopedFilters);
+    }
+
+    /**
+     * Add childs to a worknode.
+     * @param subject the subject
+     * @param currentNode the current tree node
+     * @param workNode the worknode to add childs to
+     * @param filterContext
+     */
+    private void addChildsForRequest(Subject subject, DefaultMutableTreeNode currentNode,
+            DefaultMutableTreeNode workNode, Map filterContext)
+    {
+        addFilteredChildsForRequest(subject, currentNode, workNode, filterContext, requestScopedFilters);
+    }
+
+    /**
+     * Add childs for the session.
+     * @param subject the subject
+     * @param currentNode the current node
+     * @param workNode the working copy of a node
+     * @param filterContext the current filter context
+     * @param filters list of filters to (possibly) apply
+     */
+    private void addFilteredChildsForSession(Subject subject, DefaultMutableTreeNode currentNode,
+            DefaultMutableTreeNode workNode, Map filterContext, List filters)
+    {
+        Enumeration children = currentNode.children();
+        while(children.hasMoreElements())
+        {
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)children.nextElement();
+            MenuItem menuItem = (MenuItem)childNode.getUserObject();
+            // filter globally
+            boolean accepted = true;
+            for(Iterator j = filters.iterator(); j.hasNext();)
+            {
+                MenuFilter filter = (MenuFilter)j.next();
+                accepted = filter.accept(menuItem, filterContext);
+                if(!accepted)
+                {
+                    break;
+                }
+            }
+
+            if(accepted)
+            {
+                List nodeFilters = menuItem.getFilters();
+                if(nodeFilters != null)
+                {
+                    for(Iterator k = nodeFilters.iterator(); k.hasNext();)
+                    {
+                        MenuFilter filter = (MenuFilter)k.next();
+                        if(filter instanceof ApplicationScopeMenuFilter || filter instanceof SessionScopeMenuFilter)
+                        {
+                            accepted = filter.accept(menuItem, filterContext);
+                            if(!accepted)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(accepted)
+            {
+                DefaultMutableTreeNode newWorkNode = new DefaultMutableTreeNode();
+                newWorkNode.setUserObject(menuItem);
+                // add child
+                workNode.add(newWorkNode);
+                // recurse
+                addFilteredChildsForSession(subject, childNode, newWorkNode, filterContext, filters);
+            }
+        }
+    }
+
+    /**
+     * Add filtered childs to the worknode
+     * @param subject the subject
+     * @param currentNode the current node
+     * @param workNode the working copy of a node
+     * @param filterContext the current filter context
+     * @param filters the filters
+     */
+    private void addFilteredChildsForRequest(Subject subject, DefaultMutableTreeNode currentNode,
+            DefaultMutableTreeNode workNode, Map filterContext, List filters)
+    {
+        Enumeration children = currentNode.children();
+        while(children.hasMoreElements())
+        {
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)children.nextElement();
+            MenuItem menuItem = (MenuItem)childNode.getUserObject();
+            // filter globaal
+            boolean accepted = true;
+            for(Iterator j = filters.iterator(); j.hasNext();)
+            {
+                MenuFilter filter = (MenuFilter)j.next();
+                accepted = filter.accept(menuItem, filterContext);
+                if(!accepted)
+                {
+                    break;
+                }
+            }
+
+            if(accepted)
+            {
+                List nodeFilters = menuItem.getFilters();
+                if(nodeFilters != null)
+                {
+                    for(Iterator k = nodeFilters.iterator(); k.hasNext();)
+                    {
+                        MenuFilter filter = (MenuFilter)k.next();
+                        if(filter instanceof RequestScopeMenuFilter)
+                        {
+                            accepted = filter.accept(menuItem, filterContext);
+                            if(!accepted)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(accepted)
+            {
+                DefaultMutableTreeNode newWorkNode = new DefaultMutableTreeNode();
+                newWorkNode.setUserObject(menuItem);
+                // add child
+                workNode.add(newWorkNode);
+                // recurse
+                addFilteredChildsForRequest(subject, childNode, newWorkNode, filterContext, filters);
+            }
+        }
+    }
+
+    /**
+     * Get the menu for the root level of the given subject.
+     * 
+     * @param subject JAAS subject
+     * @return the menu options UNDER the root level
+     */
+    public List[] getMenuItems(Subject subject)
+    {
+        return getMenuItems(subject, null);
+    }
+
+    /**
+     * Get the menu items for the given subject and the current link.
+     * 
+     * @param subject jaas subject
+     * @param idCurrentLevel id current menu level or null voor root
+     * @return List[] menuoptions (one level) UNDER the proided level.
+     */
+    public List[] getMenuItems(Subject subject, String currentLink)
+    {
+        Map filterContext = (Map)contextHolder.get();
+        if(filterContext == null)
+        {
+            filterContext = new HashMap();
+            contextHolder.set(filterContext);
+        }
+        filterContext.put(MenuFilter.CONTEXT_KEY_SUBJECT, subject);
+        filterContext.put(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS, requestScopedFilters);
+        filterContext.put(MenuFilter.CONTEXT_KEY_SESSION_FILTERS, sessionScopedFilters);
+        if(currentLink == null)
+        {
+            currentLink = "/";
+        }
+
+        MenuItem workItem = new MenuItem();
+        workItem.setLink(currentLink);
+        List[] items = null;
+        TreeStateCache treeState = getTreeState(subject);
+        TreePath selection = findSelection(workItem, treeState);
+
+        if(selection != null)
+        {
+            int depth = selection.getPathCount();
+            items = new List[depth];
+            for(int i = depth - 1; i >= 0; i--)
+            {
+                DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)selection.getPathComponent(i);
+                workItem = (MenuItem)currentNode.getUserObject();
+
+                int childCount = currentNode.getChildCount();
+                if((i == (depth - 1)) && (childCount == 0))
+                {
+                    items = new List[depth - 1];
+                }
+                else
+                {
+                    items[i] = new ArrayList(currentNode.getChildCount());
+                    Enumeration children = currentNode.children();
+                    while(children.hasMoreElements())
+                    {
+                        DefaultMutableTreeNode childNode = (DefaultMutableTreeNode)children.nextElement();
+                        MenuItem tempItem = (MenuItem)childNode.getUserObject();
+                        MenuItem childItem = new MenuItem();
+                        childItem.setLink(tempItem.getLink());
+                        childItem.setTag(tempItem.getTag());
+                        childItem.setEnabled(tempItem.isEnabled());
+                        childItem.setShortCutKey(tempItem.getShortCutKey());
+                        childItem.setParameters(tempItem.getParameters());
+                        childItem.setAttributes(tempItem.getAttributes());
+                        childItem.setChildren(tempItem.getChildren());
+
+                        if(i < (depth - 1))
+                        {
+                            DefaultMutableTreeNode temp = (DefaultMutableTreeNode)selection.getPathComponent(i + 1);
+                            if(childNode.equals(temp))
+                            {
+                                childItem.setActive(true);
+                            }
+                        }
+                        childItem.applyFiltersOnChildren(filterContext);
+                        items[i].add(childItem);
+                    }
+                }
+            }
+        }
+        else
+        {
+            items = new List[0];
+        }
+        return items;
+    }
+
+    /**
+     * Find the path of the item item.
+     * @param workItem the item to get the path for
+     * @param treeState the tree state cache
+     * @return TreePath the path of the given item
+     */
+    private TreePath findSelection(MenuItem workItem, TreeStateCache treeState)
+    {
+        TreePath selection;
+        selection = treeState.findTreePath(workItem);
+        if(selection == null && (useRootForNullPath))
+        {
+            selection = treeState.findTreePath(rootMenuItem);
+        }
+        return selection;
+    }
+
+    /**
+     * Get the tree state from cache
+     * haal tree state uit cache
+     * @param subject jaas subject
+     * @return TreeStateCache the tree state cache
+     */
+    public TreeStateCache getTreeState(Subject subject)
+    {
+        //TreeStateCache treeState =
+        // (TreeStateCache)userStateCache.get(subject);
+        TreeStateCache treeState = null;
+        if(treeState == null)
+        {
+            treeState = new TreeStateCache();
+            TreeModel model = getModelForSubject(subject);
+            treeState.setModel(model);
+            TreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
+            treeState.setSelectionModel(selectionModel);
+            treeState.setRootVisible(true);
+
+            //userStateCache.put(subject, treeState);
+        }
+        return treeState;
+    }
+
+    /**
+     * reset the context for this Thread. Users of this library are responsible to
+     * calling this method.
+     */
+    public void resetContextForCurrentThread()
+    {
+        Map context = (Map)contextHolder.get();
+        if(context != null)
+        {
+            context.clear();
+        }
+        else
+        {
+            context = new HashMap();
+            contextHolder.set(context);
+        }
+    }
+
+    /**
+     * remove variable from the filter context.
+     * 
+     * @param key key of the variable to remove
+     */
+    public void removeFilterContextVariable(Object key)
+    {
+        Map context = (Map)contextHolder.get();
+        if(context != null)
+        {
+            context.remove(key);
+        }
+    }
+
+    /**
+     * Save context variable with the given key.
+     * 
+     * @param key the key of the context varaible
+     * @param value the value of the context variable
+     */
+    public void putFilterContextVariable(Object key, Object value)
+    {
+        Map context = (Map)contextHolder.get();
+        if(context == null)
+        {
+            context = new HashMap();
+            contextHolder.set(context);
+        }
+        context.put(key, value);
+    }
+
+    /**
+     * Get the context variable with the given key.
+     * @param key the key of the context variable
+     * @return Object or null if not found.
+     */
+    public Object getFilterContextVariable(Object key)
+    {
+        Map context = (Map)contextHolder.get();
+        if(context != null)
+        {
+            return context.get(key);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Get the configuration location.
+     * @return String the configuration location
+     */
+    public String getConfigLocation()
+    {
+        return configLocation;
+    }
+
+    /**
+     * Set the configuration location.
+     * @param configLocation the configuration location
+     */
+    public void setConfigLocation(String configLocation)
+    {
+        this.configLocation = configLocation;
+    }
+
+    /**
+     * @see nl.openedge.modules.types.initcommands.ServletContextAwareType#setServletContext(javax.servlet.ServletContext)
+     */
+    public void setServletContext(ServletContext servletContext) throws ConfigException
+    {
+        this.servletContext = servletContext;
+    }
+
+    /**
+     * Debug the given tree.
+     * @param treeModel the tree model to debug
+     */
+    private void debugTree(TreeModel treeModel)
+    {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)treeModel.getRoot();
+        Enumeration enum = node.breadthFirstEnumeration();
+        enum = node.preorderEnumeration();
+        log.debug("-- MENU TREE DUMP --");
+        while(enum.hasMoreElements())
+        {
+            DefaultMutableTreeNode nd = (DefaultMutableTreeNode)enum.nextElement();
+            String tabs = "|";
+            for(int i = 0; i < nd.getLevel(); i++)
+                tabs += "\t";
+            log.debug(tabs + nd);
+        }
+        log.debug("-------------------");
+    }
+
+    /**
+     * Get whether to use the root (path) as the current path if no path was found
+     * based on the given context. If true, if a path was not found, the first level
+     * of menu items is allways returned. This can be usefull when working with
+     * several instances of this module..
+     * @return whether to use the root (path) as the current path if no path was found
+     * based on the given context.
+     */
+    public boolean isUseRootForNullPath()
+    {
+        return useRootForNullPath;
+    }
+    /**
+     * Set whether to use the root (path) as the current path if no path was found
+     * based on the given context. If true, if a path was not found, the first level
+     * of menu items is allways returned. This can be usefull when working with
+     * several instances of this module..
+     * @param useRootForNullPath whether to use the root (path) as the current path if no path was found
+     * based on the given context.
+     */
+    public void setUseRootForNullPath(boolean useRootForNullPath)
+    {
+        this.useRootForNullPath = useRootForNullPath;
+    }
 }
 
-/* wrapper hulp object */
+/**
+ * Internal wrapper struct for principals and menu items.
+ */
 final class SetWrapper
 {
-	protected Set principals = new HashSet();
-	protected Set menuItems = new HashSet();
+    /** the set of principals. */
+    protected Set principals = new HashSet();
+    /** the set of menu items. */
+    protected Set menuItems = new HashSet();
 }
 
-/* url helper */
+/**
+ * URI utility class.
+ */
 final class URLHelper
 {
+    /** Hidden constructor. */
+    private URLHelper()
+    {
+        // nothing
+    }
+    
+    /**
+     * Interprets some absolute URLs as external paths or from classpath.
+     * 
+     * @param path path to translate
+     * @param caller caller class of method
+     * @return URL the converted URL
+     * @throws MalformedURLException
+     */
+    public static URL convertToURL(String path, Class caller) throws MalformedURLException
+    {
+        return convertToURL(path, caller, null);
+    }
 
-	/**
-	 * Interprets some absolute URLs as external paths or from classpath
-	 * @param path path to translate
-	 * @param caller caller class of method
-	 * @return URL
-	 * @throws MalformedURLException
-	 */
-	public static URL convertToURL(String path, Class caller) 
-		throws MalformedURLException
-	{
-
-		return convertToURL(path, caller, null);
-	}
-
-	/**
-	 * Interprets some absolute URLs as external paths, otherwise generates URL
-	 * appropriate for loading from internal webapp or, servletContext is null,
-	 * loading from the classpath.
-	 * @param path path to translate
-	 * @param caller caller of method
-	 * @param servletContext servlet context of webapp
-	 * @return URL
-	 * @throws MalformedURLException
-	 */
-	public static URL convertToURL(
-		String path, Class caller, ServletContext servletContext)
-		throws MalformedURLException
-	{
-
-		URL url = null;
-		if (path.startsWith("file:")
-			|| path.startsWith("http:")
-			|| path.startsWith("https:")
-			|| path.startsWith("ftp:"))
-		{
-			url = new URL(path);
-		}
-		else if (servletContext != null)
-		{
-			// Quick sanity check
-			if (!path.startsWith("/"))
-				path = "/" + path;
-			url = servletContext.getResource(path);
-		}
-		else
-		{
-			ClassLoader clsLoader = 
-				Thread.currentThread().getContextClassLoader();
-			if (clsLoader == null)
-			{
-				url = (caller != null) ? 
-					caller.getResource(path) : 
-					ClassLoader.getSystemResource(path);
-			}
-			else
-			{
-				url = clsLoader.getResource(path);
-				// fallthrough
-				if (url == null)
-				{
-					url = (caller != null) ? 
-						caller.getResource(path) : 
-						ClassLoader.getSystemResource(path);
-				}
-			}
-		}
-		return url;
-	}
+    /**
+     * Interprets some absolute URLs as external paths, otherwise generates URL
+     * appropriate for loading from internal webapp or, servletContext is null,
+     * loading from the classpath.
+     * 
+     * @param path path to translate
+     * @param caller caller of method
+     * @param servletContext servlet context of webapp
+     * @return URL the converted URL
+     * @throws MalformedURLException
+     */
+    public static URL convertToURL(String path, Class caller, ServletContext servletContext)
+            throws MalformedURLException
+    {
+        URL url = null;
+        if(path.startsWith("file:") || path.startsWith("http:")
+                || path.startsWith("https:") || path.startsWith("ftp:")
+                || path.startsWith("jar:"))
+        {
+            url = new URL(path);
+        }
+        else if(servletContext != null)
+        {
+            // Quick sanity check
+            if(!path.startsWith("/")) path = "/" + path;
+            url = servletContext.getResource(path);
+        }
+        else
+        {
+            ClassLoader clsLoader = Thread.currentThread().getContextClassLoader();
+            if(clsLoader == null)
+            {
+                if(caller != null)
+                {
+                    url = caller.getResource(path);
+                }
+                else
+                {
+                    url = ClassLoader.getSystemResource(path); 
+                }
+            }
+            else
+            {
+                url = clsLoader.getResource(path);
+                // fallthrough
+                if(url == null)
+                {
+                    if(caller != null)
+                    {
+                        url = caller.getResource(path);
+                    }
+                    else
+                    {
+                        url = ClassLoader.getSystemResource(path); 
+                    }
+                }
+            }
+        }
+        return url;
+    }
 }
