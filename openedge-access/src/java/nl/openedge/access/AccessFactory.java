@@ -154,7 +154,7 @@ public class AccessFactory
 				if (jaasConfigURL == null)
 					throw new ConfigException(jaasConfig + " is not a valid url");
 				String convertedJaasConfig = jaasConfigURL.toString();
-				setLoginModule(convertedJaasConfig);
+				addLoginModule(convertedJaasConfig);
 			}
 			catch (Exception e)
 			{
@@ -187,7 +187,7 @@ public class AccessFactory
 	 * known by the security environment
 	 * @param convertedJaasConfig
 	 */
-	protected static void setLoginModule(String convertedJaasConfig)
+	protected static void addLoginModule(String convertedJaasConfig)
 	{
 
 		boolean exists = false;
@@ -200,6 +200,11 @@ public class AccessFactory
 			if (config_url.equalsIgnoreCase(convertedJaasConfig))
 			{
 				exists = true;
+				
+				log.warn("login url " + convertedJaasConfig + 
+						 " is allready in the security environmoment (element " +
+						 n + ")");
+				
 				break;
 			}
 			n++;
@@ -232,6 +237,9 @@ public class AccessFactory
 			if (policy_url.equalsIgnoreCase(convertedPolicyURL))
 			{
 				exists = true;
+				log.warn("policy url " + convertedPolicyURL + 
+						 " is allready in the security environmoment (element " +
+						 n + ")");
 				break;
 			}
 			n++;
@@ -247,6 +255,9 @@ public class AccessFactory
 		try
 		{
 			Policy policy = Policy.getPolicy();
+			
+			log.info("refreshing Policy");
+			
 			policy.refresh();
 
 		}
@@ -283,7 +294,7 @@ public class AccessFactory
 	}
 
 	/**
-	 * @return a loaded JDOM document containing the configuration information.
+	 * @return a loaded Properties object containing the configuration information.
 	 */
 	protected static Properties loadConfigFromUrl(URL configURL) 
 		throws ConfigException
@@ -298,7 +309,7 @@ public class AccessFactory
 	}
 
 	/**
-	 * @return a loaded JDOM document containing the configuration information.
+	 * @return a loaded Properties object containing the configuration information.
 	 */
 	protected static Properties loadConfigInWebApp(ServletContext servletContext) 
 		throws ConfigException
