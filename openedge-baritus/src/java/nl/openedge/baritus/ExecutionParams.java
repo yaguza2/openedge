@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.2 2004-02-25 10:33:08 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-25 10:33:08 $
+ * $Id: ExecutionParams.java,v 1.3 2004-02-27 19:52:23 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-02-27 19:52:23 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -119,7 +119,7 @@ public final class ExecutionParams
 	 * validation failed. Use this only in very special cases; extended usage will
 	 * probably result in messy code. Default == false
 	 */
-	private boolean doPerformIfFieldValidationFailed = false;
+	private boolean doPerformIfPopulationFailed = false;
 	
 	/**
 	 * If true, reuse the context for multiple invocations within the same request.
@@ -293,9 +293,9 @@ public final class ExecutionParams
 	 * @return boolean whether the perform method of the control should be executed, even if the population/
 	 * validation failed.
 	 */
-	public boolean isDoPerformIfFieldValidationFailed()
+	public boolean isDoPerformIfPopulationFailed()
 	{
-		return doPerformIfFieldValidationFailed;
+		return doPerformIfPopulationFailed;
 	}
 
 	/**
@@ -306,9 +306,9 @@ public final class ExecutionParams
 	 * @param b whether the perform method of the control should be executed, even if the population/
 	 * validation failed.
 	 */
-	public void setDoPerformIfFieldValidationFailed(boolean b)
+	public void setDoPerformIfPopulationFailed(boolean b)
 	{
-		doPerformIfFieldValidationFailed = b;
+		doPerformIfPopulationFailed = b;
 	}
 
 	/**

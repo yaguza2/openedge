@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.4 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: FormBeanCtrl.java,v 1.5 2004-02-27 19:52:23 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-02-27 19:52:23 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -236,7 +236,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		try
 		{	
 			// was the bean population successful?
-			if(populated || _execParams.isDoPerformIfFieldValidationFailed()) 
+			if(populated || _execParams.isDoPerformIfPopulationFailed()) 
 			{
 				// flow intercept after population
 				intercDlg.doInterceptAfterPopulation(cctx, formBeanContext);
