@@ -1,7 +1,7 @@
 /*
- * $Id: PopulatorRegistry.java,v 1.1.1.1 2004-02-24 20:34:00 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:00 $
+ * $Id: PopulatorRegistry.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,7 +39,7 @@ import nl.openedge.baritus.population.DefaultFieldPopulator;
 import nl.openedge.baritus.population.FieldPopulator;
 
 /**
- * Registry for populators. Each instance of FormBeanCtrl has its own instance.
+ * Registry for populators. Each instance of FormBeanBase has its own instance.
  * 
  * @author Eelco Hillenius
  */
@@ -53,10 +53,10 @@ final class PopulatorRegistry
 	private FieldPopulator defaultFieldPopulator = null;
 	
 	/**
-	 * construct registry with the current instance of FormBeanCtrl
+	 * construct registry with the current instance of FormBeanBase
 	 * @param formBeanCtrl
 	 */
-	public PopulatorRegistry(FormBeanCtrl formBeanCtrl)
+	public PopulatorRegistry(FormBeanCtrlBase formBeanCtrl)
 	{
 		defaultFieldPopulator = new DefaultFieldPopulator(formBeanCtrl);
 	}

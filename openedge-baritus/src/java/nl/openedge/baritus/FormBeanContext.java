@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.4 2004-03-02 13:23:22 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-03-02 13:23:22 $
+ * $Id: FormBeanContext.java,v 1.5 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -79,7 +79,7 @@ public final class FormBeanContext
 	private Map attributes = null;
 
 	/* log for this class */
-	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
+	private static Log log = LogFactory.getLog(FormBeanCtrlBase.class);
 	
 	/* format log */
 	private static Log formattingLog = LogFactory.getLog(LogConstants.FORMATTING_LOG);

@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.4 2004-03-02 13:23:22 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-03-02 13:23:22 $
+ * $Id: ExecutionParams.java,v 1.5 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,9 +31,9 @@
 package nl.openedge.baritus;
 
 /**
- * Each instance of FormBeanCtrl keeps an instance of ExecutionParams.
+ * Each instance of FormBeanBase keeps an instance of ExecutionParams.
  * ExecutionParams are used to influence the execution of population,
- * validation and the general execution of FormBeanCtrl.
+ * validation and the general execution of FormBeanBase.
  * 
  * If you want to override the defaults, you can override method init in your
  * controller, using getExecutionParams() to get the reference to the 

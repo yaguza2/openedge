@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldPopulator.java,v 1.1.1.1 2004-02-24 20:34:11 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:11 $
+ * $Id: AbstractFieldPopulator.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
 
-import nl.openedge.baritus.FormBeanCtrl;
+import nl.openedge.baritus.FormBeanCtrlBase;
 
 /**
  * @author Eelco Hillenius
@@ -47,7 +47,7 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 {
 	
 	/** reference to the controller */
-	private FormBeanCtrl ctrl = null;
+	private FormBeanCtrlBase ctrl = null;
 
 	/**
 	 * default constructor
@@ -60,7 +60,7 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 	/**
 	 * constructor with control
 	 */
-	public AbstractFieldPopulator(FormBeanCtrl ctrl)
+	public AbstractFieldPopulator(FormBeanCtrlBase ctrl)
 	{
 		setCtrl(ctrl);
 	}
@@ -69,7 +69,7 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 	 * get reference to the controller
 	 * @return reference to the controller
 	 */
-	public FormBeanCtrl getCtrl()
+	public FormBeanCtrlBase getCtrl()
 	{
 		return ctrl;
 	}
@@ -78,7 +78,7 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 	 * set reference to the controller
 	 * @param ctrl reference to the controller
 	 */
-	public void setCtrl(FormBeanCtrl ctrl)
+	public void setCtrl(FormBeanCtrlBase ctrl)
 	{
 		this.ctrl = ctrl;
 	}

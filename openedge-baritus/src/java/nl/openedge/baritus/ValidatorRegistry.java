@@ -1,7 +1,7 @@
 /*
- * $Id: ValidatorRegistry.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: ValidatorRegistry.java,v 1.3 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -42,7 +42,7 @@ import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
 
 /**
- * Registry for populators. Each instance of FormBeanCtrl has its own instance.
+ * Registry for populators. Each instance of FormBeanBase has its own instance.
  * 
  * @author Eelco Hillenius
  */

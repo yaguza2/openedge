@@ -1,7 +1,7 @@
 /*
- * $Id: TestCtrl.java,v 1.2 2004-02-28 13:06:05 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-28 13:06:05 $
+ * $Id: TestCtrl.java,v 1.3 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -35,7 +35,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import nl.openedge.baritus.FormBeanContext;
-import nl.openedge.baritus.FormBeanCtrl;
+import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.population.IgnoreFieldPopulator;
 
 import org.infohazard.maverick.flow.ConfigException;
@@ -45,7 +45,7 @@ import org.jdom.Element;
 /**
  * @author Eelco Hillenius
  */
-public class TestCtrl extends FormBeanCtrl
+public class TestCtrl extends FormBeanCtrlBase
 {
 
 	private TestBean bean = null;
@@ -53,7 +53,7 @@ public class TestCtrl extends FormBeanCtrl
 	private String view = SUCCESS;
 
 	/**
-	 * @see nl.openedge.baritus.FormBeanCtrl#perform(nl.openedge.baritus.FormBeanContext, org.infohazard.maverick.flow.ControllerContext)
+	 * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext, org.infohazard.maverick.flow.ControllerContext)
 	 */
 	protected String perform(
 		FormBeanContext formBeanContext,
@@ -64,7 +64,7 @@ public class TestCtrl extends FormBeanCtrl
 	}
 
 	/**
-	 * @see nl.openedge.baritus.FormBeanCtrl#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
+	 * @see nl.openedge.baritus.FormBeanBase#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
 	 */
 	protected Object makeFormBean(
 		FormBeanContext formBeanContext,
@@ -107,7 +107,7 @@ public class TestCtrl extends FormBeanCtrl
 	}
 
 	/**
-	 * @see nl.openedge.baritus.FormBeanCtrl#getLocaleForRequest(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext)
+	 * @see nl.openedge.baritus.FormBeanBase#getLocaleForRequest(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext)
 	 */
 	protected Locale getLocaleForRequest(
 		ControllerContext cctx,

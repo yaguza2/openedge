@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.1.1.1 2004-02-24 20:34:17 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:17 $
+ * $Id: PopulationTest.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,7 +41,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import nl.openedge.baritus.FormBeanContext;
-import nl.openedge.baritus.FormBeanCtrl;
+import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.test.mock.MockHttpServletRequest;
 import nl.openedge.baritus.test.mock.MockHttpServletResponse;
 
@@ -92,7 +92,7 @@ public class PopulationTest extends TestCase
 		this.servletConfig.setServletContext(servletContext);
 		this.session = new MockHttpSession();
 		this.session.setupGetAttribute(
-			FormBeanCtrl.SESSION_KEY_CURRENT_LOCALE, dutch);
+			FormBeanCtrlBase.SESSION_KEY_CURRENT_LOCALE, dutch);
 			
 		this.session.setupServletContext(servletContext);
 		this.response = new MockHttpServletResponse();
@@ -118,7 +118,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestInteger1());
 			assertEquals(new Integer(1), bean.getTestInteger1());
 			assertNotNull(bean.getTestInteger2());
@@ -146,7 +146,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestLong1());
 			assertEquals(new Long(1), bean.getTestLong1());
 			assertNotNull(bean.getTestLong2());
@@ -174,7 +174,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestDouble1());
 			assertEquals(new Double(1.1), bean.getTestDouble1());
 			assertNotNull(bean.getTestDouble2());
@@ -204,7 +204,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestDate1());
 			assertNotNull(bean.getTestDate2());
 			
@@ -243,7 +243,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			String[] testStringArray1 = bean.getTestStringArray1();
 			assertNotNull(testStringArray1);
 			assertEquals(2, testStringArray1.length);
@@ -276,7 +276,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			Map map = bean.getTestMap();
 			assertNotNull(map);
 			assertEquals(2, map.size());
@@ -304,7 +304,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertEquals("THIS ONCE WAS LOWER CASE", bean.getUppercaseTest());
 			assertEquals("unchanged", bean.getIgnore());
 		}
@@ -328,7 +328,7 @@ public class PopulationTest extends TestCase
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrl.SUCCESS, ctrl.getView());
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertEquals("unchanged (regex)", bean.getIgnoreByRegex());
 		}
 		catch (ServletException e)

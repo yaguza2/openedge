@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultFieldPopulator.java,v 1.1.1.1 2004-02-24 20:34:10 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:10 $
+ * $Id: DefaultFieldPopulator.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 import nl.openedge.baritus.*;
-import nl.openedge.baritus.FormBeanCtrl;
+import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.FormBeanContext;
 
 /**
@@ -58,7 +58,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 	 * construct with reference to the control
 	 * @param ctrl
 	 */
-	public DefaultFieldPopulator(FormBeanCtrl ctrl)
+	public DefaultFieldPopulator(FormBeanCtrlBase ctrl)
 	{
 		super(ctrl);
 	}
@@ -91,7 +91,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 		Class targetType = getTargetType(propertyDescriptor);
 		Converter converter = null;
 		
-		FormBeanCtrl ctrl = getCtrl();
+		FormBeanCtrlBase ctrl = getCtrl();
 		ExecutionParams executionParams = ctrl.getExecutionParams();
 		
 		if(targetType.isArray()) 

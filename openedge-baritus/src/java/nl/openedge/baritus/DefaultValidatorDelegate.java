@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.2 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: DefaultValidatorDelegate.java,v 1.3 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -59,7 +59,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 	private ValidatorRegistry validatorRegistry = null;
 	
 	// instance of formbean ctrl
-	private FormBeanCtrl ctrl = null;
+	private FormBeanCtrlBase ctrl = null;
 	
 	/* population log */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
@@ -71,7 +71,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 	 */
 	public DefaultValidatorDelegate(
 		ValidatorRegistry validatorRegistry,
-		FormBeanCtrl ctrl)
+		FormBeanCtrlBase ctrl)
 	{
 		this.validatorRegistry = validatorRegistry;
 		this.ctrl = ctrl;

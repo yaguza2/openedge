@@ -1,7 +1,7 @@
 /*
- * $Id: InterceptorRegistry.java,v 1.1.1.1 2004-02-24 20:34:00 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:00 $
+ * $Id: InterceptorRegistry.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-04 08:21:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,7 +38,7 @@ import java.util.List;
 import nl.openedge.baritus.interceptors.Interceptor;
 
 /**
- * Registry for interceptors. Each instance of FormBeanCtrl has its own instance.
+ * Registry for interceptors. Each instance of FormBeanBase has its own instance.
  * 
  * @author Eelco Hillenius
  */
