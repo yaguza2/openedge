@@ -41,25 +41,37 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 /**
- * <p>
- * Clients of the ComponentRepository should either construct the factory with an instance of
- * <code>javax.servlet.ServletContext</code> or with an instance of <code>java.lang.String</code>.
- * The first is for usage within a web application environment and tries to read the location of the
- * configuration document from
- * <code>javax.servlet.ServletContext.getInitParameter("oemodules.configFile")</code> If you are
- * not within a web application context, or if you want to load the configuration from a location
- * outside the web application environment, you can provide an URL as either a string or an URL
- * object, e.g: file://c:/mywinboxdrive/mydir/mycomponents.xml. If you provide a string with a
- * relative path, e.g: /mycomponents.xml, the configurator tries to load from the classpath, where /
- * is the classpath root. For example, you could have a startup/ main servlet that does this: public
- * void init(ServletConfig config) throws ServletException { new
- * JDOMConfigurator(config.getServletContext()); } and have this in your web.xml: &lt;servlet&gt;
- * &lt;servlet-name&gt;Application&lt;/servlet-name&gt;
- * &lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt; &lt;init-param&gt;
- * &lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
- * &lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt; &lt;/init-param&gt;
- * &lt;load-on-startup&gt;1&lt;/load-on-startup&gt; &lt;/servlet&gt;
- * 
+ * <p>Clients of the ComponentRepository should either construct the factory with an
+ * instance of <code>javax.servlet.ServletContext</code> or with an instance
+ * of <code>java.lang.String</code>. The first is for usage within a web application
+ * environment and tries to read the location of the configuration document from
+ * <code>javax.servlet.ServletContext.getInitParameter("oemodules.configFile")</code> 
+ * If you are not within a web application context, or if you want to load the 
+ * configuration from a location outside the web application environment, you
+ * can provide an URL as either a string or an URL object,
+ * e.g: file://c:/mywinboxdrive/mydir/mycomponents.xml. If you provide a
+ * string with a relative path, e.g: /mycomponents.xml, the configurator
+ * tries to load from the classpath, where / is the classpath root.
+ * <br/>
+ * For example, you could have a startup/ main servlet that does this:<br/>
+ * <pre>
+ * 	public void init(ServletConfig config) throws ServletException
+ *	{
+ *		new JDOMConfigurator(config.getServletContext());
+ *	}
+ * </pre>
+ * and have this in your web.xml:<br/>
+ * <pre>
+ * 	&lt;servlet&gt;
+ *		&lt;servlet-name&gt;Application&lt;/servlet-name&gt;
+ *		&lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt;
+ *		&lt;init-param&gt;
+ *			&lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
+ *			&lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt;
+ *		&lt;/init-param&gt;
+ *		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *	&lt;/servlet&gt;
+ * </pre>
  * @author Eelco Hillenius
  */
 public final class JDOMConfigurator
