@@ -30,12 +30,19 @@
  */
 package nl.openedge.modules.types.initcommands;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.jdom.Element;
 
 import nl.openedge.modules.ComponentRepository;
@@ -88,13 +95,169 @@ public class BeanTypeInitCommand implements InitCommand
 			// try to set its properties
 			try
 			{
-				BeanUtils.populate(componentInstance, this.properties);
+				//BeanUtils.populate(componentInstance, this.properties);
+				populate(componentInstance, this.properties);
 			}
 			catch (Exception e)
 			{
 				throw new ConfigException(e);
 			}	
 		}
+	}
+	
+	/**
+	 * default populate of form: BeanUtils way; set error if anything goes wrong
+	 * @param componentInstance
+	 * @param properties
+	 * @return true if populate did not have any troubles, false otherwise
+	 */
+	protected boolean populate(Object componentInstance, Map properties)
+		throws NoSuchMethodException, 
+		InvocationTargetException,
+		IllegalAccessException 
+	{
+		
+		// Do nothing unless both arguments have been specified
+		if ((componentInstance == null) || (properties == null)) 
+		{
+			return true;
+		}
+
+		boolean succeeded = true;
+		// Loop through the property name/value pairs to be set
+		Iterator names = properties.keySet().iterator();
+		while (names.hasNext()) 
+		{
+			boolean success = true;
+			// Identify the property name and value(s) to be assigned
+			String name = (String)names.next();
+			if (name == null) 
+			{
+				continue;
+			}
+			Object value = properties.get(name);
+			String stringValue = null;
+			
+			if(value != null)
+			{
+
+				if(value instanceof String)
+				{
+					success = setSingleProperty(componentInstance, name, value);
+				} 
+				else if(value instanceof String[])
+				{
+					Class type;
+					PropertyDescriptor propertyDescriptor;
+					try
+					{
+						propertyDescriptor =
+							PropertyUtils.getPropertyDescriptor(componentInstance, name);
+						type = propertyDescriptor.getPropertyType();
+						
+						if(type.isArray())
+						{
+							success = setArrayProperty(
+								propertyDescriptor, 
+								componentInstance, name, (String[])value);
+		
+						}
+						else // the target property is not an array; let BeanUtils
+							// handle the conversion
+						{
+							success = setSingleProperty(componentInstance, name, value);
+						}
+					}
+					catch (Exception e)
+					{
+						break; 
+						// Property does not exist in target object; ignore 
+					}
+				}
+				if(!success)
+				{
+					succeeded = false;
+				}
+			}
+		}
+		return succeeded;
+	}
+	
+	/**
+	 * set an array property
+	 */
+	private boolean setArrayProperty(
+			PropertyDescriptor propertyDescriptor,
+			Object componentInstance,
+			String name, 
+			String[] values)
+	{		
+		boolean success = true;
+		Class type = propertyDescriptor.getPropertyType();
+		if(type.isArray())
+		{
+			Class componentType = type.getComponentType();
+			Converter converter = ConvertUtils.lookup(componentType);
+			Object array = Array.newInstance(componentType, values.length);
+			
+			int i = 0;
+			for ( ; i < values.length; i++) 
+			{
+				try 
+				{
+					Object converted = converter.convert(
+						componentType, (String)values[i]);
+
+					Array.set(array, i, converted);		
+				} 
+				catch (ConversionException e) 
+				{
+					e.printStackTrace();
+					success = false;
+				}
+			}
+			
+			try
+			{
+				PropertyUtils.setProperty(componentInstance, name, array);
+			}
+			catch (Exception e)
+			{
+				//this should not happen as we did extensive checking allready.
+				// therefore print the stacktrace
+				e.printStackTrace();
+				success = false;
+			}				
+		}
+		
+		return success;
+	}
+	
+	/**
+	 * set a single property
+	 */
+	private boolean setSingleProperty(
+		Object componentInstance, String name, Object value)
+	{
+		boolean success = true;
+		String stringValue = null;
+		try
+		{
+			// check as string first
+			stringValue = ConvertUtils.convert(value);
+			if(stringValue != null && (!stringValue.trim().equals("")))
+			{
+				Object o = PropertyUtils.getProperty(componentInstance, name);
+				// Perform the assignment for this property
+				BeanUtils.setProperty(componentInstance, name, value);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			success = false;	
+		}
+		return success;
 	}
 
 }
