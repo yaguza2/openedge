@@ -1,3 +1,9 @@
+1.0.3
+- Typo 'stictPopulationMode' -> 'strictPopulationMode', class ExcecutionParams
+- Fix in OgnlFieldPopulator: conversion was done twice in some cases
+
+-------------------------------------------------
+
 1.0.2
 -------------------------------------------------
 - Removed call back getErrorMessage in Validator interfaces
