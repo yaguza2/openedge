@@ -22,11 +22,15 @@
 
      <!-- body -->
      <form id="wcn-paramForm">
-      <div id="plainParamScrollPane">
        <table id="resultstable">
         <tfoot>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="strongsubmit" value="opslaan"/>
+                </td>
+            </tr>
         </tfoot>
-        <tbody>
+        <tbody id="plainParamScrollPane">
           <tr id="wcn-plainParams">
             <td>
                 <span id="wcn-name">(Naam)</span>
@@ -37,12 +41,29 @@
           </tr>
         </tbody>
       </table>
-     </div>
-      <input type="submit" value="save"/>
     </form>
     <!-- einde gewone, niet-geneste parameters -->
     </div>
-    
+
+    <div id="newParameterPanel">
+        <form id="fooBar">
+          <fieldset>
+            <legend>Nieuwe parameter</legend>
+              <label for="title">Type</label>
+              <select>
+                <option>numeriek</option>
+                <option>logisch</option>
+                <option>datum</option>
+              </select>
+              <label for="name">Naam</label>
+              <input id="name" type="text" size="20"/>
+              <label for="value">Waarde</label>
+              <input id="value" type="text" size="20"/>
+              <input type="submit" value="voeg toe" class="strongsubmit"/>
+          </fieldset>
+        </form>
+    </div>
+
     <!-- container voor geneste parameters -->
     <div id="wcn-nestedParamsPanel">
 
@@ -78,7 +99,6 @@
     <!-- einde geneste parameters -->
     </div>
    </div>
-
   </div>
 
 </div>

@@ -56,10 +56,12 @@ public class ParameterPanel extends Panel
         if(group != null)
         {
             parameters = group.getParameters();
+            setVisible(true);
         }
         else
         {
             parameters = new Parameter[0]; // lege array
+            setVisible(false);
         }
         // splis en sorteer de parameters naar soort
         GroupedParameters grouped = new GroupedParameters(parameters);

@@ -5,15 +5,13 @@ body  {
 	font-family: 'Trebuchet MS', 'Lucida Grande',
 	  Verdana, Lucida, Geneva, Helvetica, 
 	  Arial, sans-serif;
-	font-size:10pt;
-} 
-
+	font-size:9pt;
+}
 .body {
 	position: absolute;
 	top: 64px;
 	left:20px;
 	padding-left: 120px;
-
 }
 A {
   text-decoration:none;
@@ -28,21 +26,23 @@ form {
   padding:0px;
   display: inline;
 }
+input.strongsubmit {
+  background-color: #FF9900; font-weight: bold;
+  font-size: 12px; color: white;
+  padding: 1px;
+}
 h1  { 	
 	font-size:175%;
 	font-weight:bold;
-} 
-
+}
 h2  { 	
 	font-size:150%;
 	font-weight:bold 
-} 
-
+}
 h3  { 	
 	font-size:125%;
 	font-weight:bold 
 }
-
 code  { 	
 	display:block;
 	font-size:100%;
@@ -51,60 +51,43 @@ code  {
 	border-width:1px;
 	padding:5px;
 	margin:5px 
-} 
-
+}
 img  { 	
 	border:0 solid
-} 
-		
+}
 th  { 	
 	text-align:left;
-	font-size:10pt;
-} 
-
+	font-size:9pt;
+}
 td  {
 	padding:0;
-	font-size:10pt;
+	font-size:9pt;
 }
-
 tr  { 	
 	height:20px 
 }
-
 tr.selectrowover {
 	cursor : hand;
 	background-color:#00584b;
 	color:#FFF6E5	
 }
-
 fieldset  { 	
 	padding:6px;
 	margin-bottom:6px 
 }
-
 label.indent  { 	
 	margin-right:10px;
 	width:150px 
-} 
-
+}
 input, select, label  { 	
 	font-size:12px;
 	margin-right:10px 
 }
-
 #linedrow tr {
   border: 1px solid #339900;
 }
-
 #linedrow td {
   background-color: #CECECE;
-}
-#structGroupPanelHeader {
- background-color: #CECECE;
- text-align: left;
- border: 1px solid #339900;
- padding:2px;
- width:660px;
 }
 #tabs {
  text-align: left;
@@ -116,17 +99,15 @@ input, select, label  {
  margin-left: 0;
  padding-left: 0;
  display: inline;
-} 
-
+}
 #tabs ul li {
  background-color: #CECECE;
  margin-left: 0;
  margin-bottom: 0;
  padding: 2px 15px 5px;
- 
  list-style: none;
  display: inline;
-}		
+}	
 #plainParamScrollPane {
  width:680px;
  height: 200px;
@@ -142,10 +123,20 @@ input, select, label  {
  height: 120px;
  overflow: auto;
 }
+#newParameterPanel {
+ width:660px;
+}
 #structGroupScrollPane {
  width:680px;
  height: 120px;
  overflow: auto;
+}
+#structGroupPanelHeader {
+ background-color: #CECECE;
+ text-align: left;
+ border: 1px solid #339900;
+ padding:2px;
+ width:660px;
 }
 #resultstable {
  caption-side:top;
@@ -188,19 +179,16 @@ input, select, label  {
 	color: #333;
 	filter:alpha(opacity=60);-moz-opacity:0.6;
 }
-
 #button ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 	border: none;
-}
-		
+}	
 #button li {
 	border-bottom: 1px solid #90bade;
 	margin: 0;
 }
-
 #button li a {
 	display: block;
 	padding: 5px 5px 5px 0.5em;
@@ -210,11 +198,9 @@ input, select, label  {
 	text-decoration: none;
 	width: 100%;
 }
-
 html>body #button li a {
 	width: auto;
 }
-
 #button li a:hover {
 	border-left: 10px solid #1c64d1;
 	border-right: 10px solid #5ba3e0;
