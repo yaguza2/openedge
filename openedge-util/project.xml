@@ -2,7 +2,7 @@
 
 <project>
   <pomVersion>3</pomVersion>
-  <id>oeutils</id>
+  <id>openedge-utils</id>
   <name>OpenEdge Utils</name>
   <currentVersion>1.0</currentVersion>
   <organization>

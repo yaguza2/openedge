@@ -3,7 +3,7 @@
 <document>
 
   <properties>
-    <title>werkflow</title>
+    <title>OpenEdge Utils</title>
     <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
   </properties>
 
@@ -11,7 +11,7 @@
 
   <section name="Overview">
     <p>
-    <code>openedge util</code> is a set of handy utility classes and components.
+    <code>OpenEdge util</code> is a set of handy utility classes and components.
     </p>
 
   </section>

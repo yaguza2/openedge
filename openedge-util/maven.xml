@@ -1,0 +1,40 @@
+
+<project 
+  xmlns:j="jelly:core"
+  xmlns:ant="jelly:ant"
+  xmlns:license="license"
+  xmlns:maven="jelly:maven"
+  xmlns:deploy="deploy"
+  xmlns:resources="resources"
+  xmlns:util="jelly:util"
+  xmlns:doc="doc"
+  xmlns:m="maven">
+
+  <goal name="jar:deployfs" prereqs="jar:jar"
+    description="Install the jar in the local repository">
+    
+    <ant:echo>
+    id = '${pom.artifactId}'
+    groupId = '${pom.groupId}'
+    artifactDirectory = '${pom.artifactDirectory}'
+    </ant:echo>
+    
+    <ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars"/>
+    <ant:mkdir dir="${jardir__}"/>    
+    <ant:copy 
+      file="${maven.build.dir}/${maven.final.name}.jar"
+      todir="${jardir__}"
+      overwrite="true"
+    />
+  </goal>
+
+  <!-- <goal name="werkflow:example.resources">
+    <copy toDir="${werkflow.examples.dest.dir}">
+      <fileset dir="${werkflow.examples.src.dir}">
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+  </goal> -->
+
+</project>
