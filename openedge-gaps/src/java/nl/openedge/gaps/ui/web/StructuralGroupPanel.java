@@ -43,9 +43,9 @@ public class StructuralGroupPanel extends Panel
 	    StructuralGroup[] childs = group.getStructuralChilds();
 	    List list = (childs != null) ? Arrays.asList(childs) :  new ArrayList();
 	    String tableName = "structuralGroupChilds";
-	    results.put(tableName, group);
+	    results.put(tableName, list);
 	    StructuralGroupTable sGroupTable = new StructuralGroupTable(
-	            "results", results);
+	            tableName, results);
 	    add(sGroupTable);
 	}
 
