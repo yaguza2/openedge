@@ -36,7 +36,7 @@ import java.security.Principal;
  * <p> This class implements the <code>Principal</code> interface
  * and represents a group.
  *
- * <p> Principals such as this <code>RolePrincipal</code>
+ * <p> Principals such as this <code>GroupPrincipal</code>
  * may be associated with a particular <code>Subject</code>
  * to augment that <code>Subject</code> with an additional
  * identity.  Refer to the <code>Subject</code> class for more information
@@ -62,7 +62,7 @@ public class GroupPrincipal implements Principal, java.io.Serializable
 	}
 
 	/**
-	 * Create a RolePrincipal with a group name.
+	 * Create a GroupPrincipal with a group name.
 	 *
 	 * <p>
 	 *
@@ -82,11 +82,11 @@ public class GroupPrincipal implements Principal, java.io.Serializable
 	}
 
 	/**
-	 * Return the name for this <code>RolePrincipal</code>.
+	 * Return the name for this <code>GroupPrincipal</code>.
 	 *
 	 * <p>
 	 *
-	 * @return the name for this <code>RolePrincipal</code>
+	 * @return the name for this <code>GroupPrincipal</code>
 	 */
 	public String getName()
 	{
@@ -102,30 +102,30 @@ public class GroupPrincipal implements Principal, java.io.Serializable
 	}
 
 	/**
-	 * Return a string representation of this <code>RolePrincipal</code>.
+	 * Return a string representation of this <code>GroupPrincipal</code>.
 	 *
 	 * <p>
 	 *
-	 * @return a string representation of this <code>RolePrincipal</code>.
+	 * @return a string representation of this <code>GroupPrincipal</code>.
 	 */
 	public String toString()
 	{
-		return "RolePrincipal: " + name;
+		return "GroupPrincipal: " + name;
 	}
 
 	/**
-	 * Compares the specified Object with this <code>RolePrincipal</code>
+	 * Compares the specified Object with this <code>GroupPrincipal</code>
 	 * for equality.  Returns true if the given object is also a
-	 * <code>RolePrincipal</code> and the two GroupPrincipals
+	 * <code>GroupPrincipal</code> and the two GroupPrincipals
 	 * have the same username.
 	 *
 	 * <p>
 	 *
 	 * @param o Object to be compared for equality with this
-	 *		<code>RolePrincipal</code>.
+	 *		<code>GroupPrincipal</code>.
 	 *
 	 * @return true if the specified Object is equal equal to this
-	 *		<code>RolePrincipal</code>.
+	 *		<code>GroupPrincipal</code>.
 	 */
 	public boolean equals(Object o)
 	{
@@ -145,11 +145,11 @@ public class GroupPrincipal implements Principal, java.io.Serializable
 	}
 
 	/**
-	 * Return a hash code for this <code>RolePrincipal</code>.
+	 * Return a hash code for this <code>GroupPrincipal</code>.
 	 *
 	 * <p>
 	 *
-	 * @return a hash code for this <code>RolePrincipal</code>.
+	 * @return a hash code for this <code>GroupPrincipal</code>.
 	 */
 	public int hashCode()
 	{
