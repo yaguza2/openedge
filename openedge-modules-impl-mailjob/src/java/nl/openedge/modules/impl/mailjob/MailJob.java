@@ -132,6 +132,7 @@ public final class MailJob implements StatefulJob
 			{
 				// fallback to normal mail API
 				this.mailProperties = new Properties();
+				log.debug("Reading mailproperties:");
 				for(Iterator i = parameters.keySet().iterator(); i.hasNext(); ) 
 				{
 					String key = (String)i.next();
@@ -140,23 +141,28 @@ public final class MailJob implements StatefulJob
 						String pname = key.substring(9);
 						String pvalue = (String)parameters.get(key);
 						mailProperties.setProperty(pname, pvalue);
+						log.debug(pname + "[" + pvalue + "]");
 					}
 				}
+				log.debug("Done.");
 			}			
 			if(mailMQModuleAlias == null)
 			{
 				mailMQModuleAlias = (String)parameters.get(
-						PARAMETER_KEY_MAILMQMODULE_ALIAS);
+					PARAMETER_KEY_MAILMQMODULE_ALIAS);
 				if(mailMQModuleAlias == null) 
-				{ // still null?
-					throw new Exception(PARAMETER_KEY_MAILMQMODULE_ALIAS +
-								" must be provided as a parameter");
+				{ 
+					// still null?
+					String error = PARAMETER_KEY_MAILMQMODULE_ALIAS + 
+						" must be provided as a parameter";
+					log.error(error);
+					throw new Exception(error);
 				}
 			}
 		} 
 		catch(Exception e) 
 		{
-			e.printStackTrace();
+			log.fatal(e);
 			log.fatal("will unschedule all triggers");
 			JobExecutionException je = new JobExecutionException(e, false);
 			je.setErrorCode(JobExecutionException.ERR_BAD_CONFIGURATION);
@@ -174,17 +180,19 @@ public final class MailJob implements StatefulJob
 		
 			if(mailSessionRef != null)
 			{
+				log.debug("Using JDNDI mail session.");
 				session = (Session)ctx.lookup(mailSessionRef);
 			}
 			else
 			{
+				log.debug("Using non-JNDI mail session.");
 				session = Session.getDefaultInstance(mailProperties, null);
 			}
 		
 		} 
 		catch(Exception ex) 
 		{
-			ex.printStackTrace();
+			log.fatal(ex);
 			log.fatal("will unschedule all triggers");
 			
 			JobExecutionException e = new JobExecutionException(ex, false);
@@ -200,57 +208,60 @@ public final class MailJob implements StatefulJob
 		} 
 		catch(Exception e) 
 		{
-			e.printStackTrace();
+			log.fatal(e);
 		}
 
 	}
 	
-	/*
+	/**
 	 * send messages from queue
 	 */
 	private void sendMessages(Session session, MailMQModule mqMod) 
-					throws Exception 
+		throws Exception 
 	{
-
 		List succeeded = new ArrayList();
 		try 
 		{
-
 			List messages = mqMod.popQueue();
-			Date now = new Date();
-			if(messages != null) for(Iterator i = messages.iterator(); i.hasNext(); ) 
+			log.info("Loaded " + messages.size() + " MailMessages from the database.");
+			if(messages != null)  
 			{	
-				MailMessage msg = (MailMessage)i.next();
-				MimeMessage mailMsg = null;
-				try 
+				for(Iterator i = messages.iterator(); i.hasNext(); )
 				{
-					mailMsg = constructMessage(msg, session);
-					Transport.send(mailMsg);
-					
-					succeeded.add(msg);
-					
-				} 
-				catch(Exception e) 
-				{
-					e.printStackTrace();
+					MailMessage msg = (MailMessage)i.next();
+					MimeMessage mailMsg = null;
 					try 
 					{
-						mqMod.flagFailedMessage(msg, e);
+						log.debug("Mailing message with id[" + msg.getId() + "]");
+						mailMsg = constructMessage(msg, session);
+						Transport.send(mailMsg);
+						
+						succeeded.add(msg);
+						
 					} 
-					catch(Exception e2) 
-					{ // ooops this is pretty bad!
-						e2.printStackTrace();
-						// nothing else to do than to ignore it
+					catch(Exception e) 
+					{
+						log.fatal("Exception sending message with id[" + msg.getId() + "]");
+						log.fatal(e);
+						try 
+						{
+							mqMod.flagFailedMessage(msg, e);
+						} 
+						catch(Exception e2) 
+						{ // ooops this is pretty bad!
+							log.fatal(e2);
+							// nothing else to do than to ignore it
+						}
 					}
 				}
 			}
-			
+			log.info("Succeeded sending " + succeeded.size()+ "messages.");
 			mqMod.removeFromQueue(succeeded);
 
 		} 
 		catch(Exception e) 
 		{
-			e.printStackTrace();
+			log.fatal(e);
 			throw e; 
 		}
 	}
@@ -259,7 +270,7 @@ public final class MailJob implements StatefulJob
 	 * construct mail message from data object
 	 */
 	private MimeMessage constructMessage(MailMessage msg, Session session) 
-				throws MessagingException, AddressException 
+		throws MessagingException, AddressException 
 	{	
 		MimeMessage mailMsg = new MimeMessage(session);
 		mailMsg.setFrom(new InternetAddress(msg.getSender()));
