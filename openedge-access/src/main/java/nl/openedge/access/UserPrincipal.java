@@ -94,6 +94,13 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	protected RolePrincipal activeRole;
 	
 	/**
+	 * Default constructor.
+	 */
+	public UserPrincipal() {
+		// do nothing here
+	}
+	
+	/**
 	 * Create a UserPrincipal with a username.
 	 *
 	 * <p>

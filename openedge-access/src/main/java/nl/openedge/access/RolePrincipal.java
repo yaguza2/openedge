@@ -82,6 +82,12 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	/** name */
 	protected String name;
 
+	/**
+	 * Default constructor.
+	 */
+	public RolePrincipal() {
+		// do nothing here
+	}
 	
 	/**
 	 * Create a RolePrincipal with a group name.
