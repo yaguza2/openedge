@@ -55,7 +55,6 @@ import nl.openedge.access.util.XML;
  * them on the fly
  * 
  * @author E.F. Hillenius
- * $Id$
  */
 public class RdbmsUserManager extends RdbmsBase implements UserManager {
 
