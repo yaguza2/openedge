@@ -16,8 +16,8 @@
     <classpathentry kind="var"
         path="MAVEN_REPO/velocity/jars/velocity-1.4-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/velocity-1.4-dev-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.3.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/openedge-util/jars/openedge-util-1.1.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-util-1.1.1-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
