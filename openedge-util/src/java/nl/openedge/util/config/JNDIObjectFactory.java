@@ -138,8 +138,9 @@ public class JNDIObjectFactory implements ObjectFactory {
 			try {
 				Context ctx = NamingHelper.getInitialContext(properties);
 				NamingHelper.bind(ctx, name, instance);
-				log.info("bound " + instance + " to JNDI name: " + name);
-				( (EventContext) ctx ).addNamingListener(name, EventContext.OBJECT_SCOPE, listener);
+				log.info("bound " + instance + " to JNDI name: " + 
+							name + " to context " + ctx);
+				((EventContext)ctx).addNamingListener(name, EventContext.OBJECT_SCOPE, listener);
 			}
 			catch (InvalidNameException ine) {
 				log.error("invalid JNDI name: " + name, ine);
