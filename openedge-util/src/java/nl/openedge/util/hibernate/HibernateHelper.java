@@ -48,6 +48,12 @@ import net.sf.hibernate.cfg.Configuration;
 public abstract class HibernateHelper
 {
 
+	/** close current session on setSession */
+	public final static int ACTION_CLOSE = 1;
+	
+	/** disconnect current session on setSession */
+	public final static int ACTION_DISCONNECT = 2;
+
 	private static Log log = LogFactory.getLog(HibernateHelper.class);
 	
 	/**
@@ -134,6 +140,68 @@ public abstract class HibernateHelper
 				log.error(ex);
 			}
 		}
+	}
+	
+	/**
+	 * disconnect session and remove from threadlocal for this Thread
+	 */
+	public static void disconnectSession() throws HibernateException
+	{
+		Session sess = (Session)hibernateHolder.get();
+		if (sess != null)
+		{
+			hibernateHolder.set(null);
+			try
+			{
+				sess.disconnect();
+			}
+			catch (HibernateException ex)
+			{
+				log.error(ex);
+			}
+		}
+	}
+	
+	/**
+	 * set current session
+	 * @param session hibernate session
+	 * @param actionForCurrentSession one of the constants 
+	 * 		HibernateHelper.ACTION_CLOSE close current session
+	 * 		HibernateHelper.ACTION_DISCONNECT disconnect current session
+	 */
+	public static void setSession(Session session, int actionForCurrentSession)
+	{
+		Session sess = (Session)hibernateHolder.get();
+		if (sess != null)
+		{
+			if(actionForCurrentSession == ACTION_CLOSE)
+			{
+				try
+				{
+					sess.close();
+				}
+				catch (HibernateException ex)
+				{
+					log.error(ex);
+				}	
+			}
+			else if(actionForCurrentSession == ACTION_DISCONNECT)
+			{
+				try
+				{
+					sess.disconnect();
+				}
+				catch (HibernateException ex)
+				{
+					log.error(ex);
+				}				
+			}
+			else
+			{
+				throw new RuntimeException("invallid action " + actionForCurrentSession);
+			}
+		}
+		hibernateHolder.set(session);		
 	}
 
 	/**
