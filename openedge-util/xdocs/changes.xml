@@ -5,6 +5,13 @@
 		<author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
 	</properties>
 	<body>
+		<release version="1.2.15" date="23 september 2004" description="bugfixes in hibernate utilities">
+			<action type="fix" dev="dashorst">Fixed closing of HibernateSession after exception in database command execution.</action>
+			<action type="fix" dev="dashorst">Fixed jar:deploy behaviour that the deprecated method of deployment is no longer used.</action>
+			<action type="update" dev="dashorst">Moved from changes.txt to <a href="http://maven.apache.org/reference/plugins/changes/">
+				Maven changes plugin</a>.</action>
+		</release>
+		
         <release version="1.2.14" date="21 september 2004" description="additions for FINAN project" >
             <action type="add" dev="dashorst">added DeleteObjectsCommand to hibernate utilities.</action>
         </release>
