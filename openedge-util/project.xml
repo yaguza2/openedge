@@ -159,6 +159,16 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+    	<name>Martijn Dashorst</name>
+    	<id>dashorst</id>
+    	<email>martijn.dashorst@openedge.nl</email>
+    	<organization>Open Edge</organization>
+        <roles>
+          <role>Java Developer</role>
+        </roles>
+        <timezone>+1</timezone>
+    </developer>
   </developers>
   <dependencies>
     <!-- BEGIN Servlet API -->
