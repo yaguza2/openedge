@@ -30,10 +30,14 @@
  */
 package nl.openedge.access;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessControlException;
+import java.security.ProtectionDomain;
 
 import java.security.Policy;
 import java.util.Properties;
@@ -42,6 +46,8 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import sun.security.provider.PolicyParser;
 
 /**
  * The AccessFactory constructs and initialises objects that are used within
@@ -215,6 +221,7 @@ public final class AccessFactory
 			java.security.Security.setProperty(configKey, convertedJaasConfig);
 			log.info("added " + configKey + "=" + convertedJaasConfig 
 				+ " to java.security.Security properties");
+				
 		}
 
 	}
@@ -238,7 +245,7 @@ public final class AccessFactory
 			{
 				exists = true;
 				log.warn("policy url " + convertedPolicyURL + 
-						 " is allready in the security environmoment (element " +
+						 " allready is in the security environmoment (element " +
 						 n + ")");
 				break;
 			}
@@ -250,6 +257,37 @@ public final class AccessFactory
 			java.security.Security.setProperty(configKey, convertedPolicyURL);
 			log.info("added " + configKey + "=" + convertedPolicyURL 
 				+ " to java.security.Security properties");
+
+//			PolicyParser parser = new PolicyParser(true);
+//			
+//			ProtectionDomain pd = AccessFactory.class.getProtectionDomain();
+//			System.setProperty("codebase", 
+//				pd.getCodeSource().getLocation().toString());
+//			
+//			try
+//			{
+//				URL theUrl = new URL(convertedPolicyURL);
+//				File file = new File(theUrl.getFile());
+//				log.info("reading policies from " + file.getAbsolutePath());
+//				if(!file.isFile())
+//				{
+//					throw new RuntimeException(theUrl.toString() + " is not a valid file");	
+//				}
+//				FileReader reader = new FileReader(file);
+//				parser.read(reader);
+//				
+//				PrintWriter writer = new PrintWriter(System.out);
+//				parser.write(writer);
+//				
+//				writer.flush();
+//				writer.close();
+//			}
+//			catch (Exception e)
+//			{
+//				e.printStackTrace();
+//				throw new RuntimeException(e);
+//			}
+			
 		}
 		// reload the policy configuration to add our policies	
 		try
@@ -257,8 +295,12 @@ public final class AccessFactory
 			Policy policy = Policy.getPolicy();
 
 			log.info("refreshing Policy");
-			
 			policy.refresh();
+
+			Policy.setPolicy(null);
+			
+//			ProtectionDomain pd = AccessFactory.class.getProtectionDomain();
+//			log.info("using policy: " + policy.getPermissions(pd));
 
 		}
 		catch (AccessControlException e)
@@ -343,9 +385,6 @@ public final class AccessFactory
 	 */
 	private static Properties internalLoad(URL configURL) throws ConfigException
 	{
-		
-		log.info("Loading config from " + configURL.toString());
-
 		try
 		{
 			Properties p = new Properties();
