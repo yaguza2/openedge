@@ -603,9 +603,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					{
 						ValidatorActivationRule fRule = 
 							((ValidationRuleDependend)fValidator).getValidationActivationRule();
-						if(!fRule.allowValidation(cctx, formBean))
+						if(fRule != null)
 						{
-							fireValidator = false;
+							if(!fRule.allowValidation(cctx, formBean))
+							{
+								fireValidator = false;
+							}	
 						}
 					}
 					if(fireValidator)
