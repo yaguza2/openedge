@@ -17,9 +17,9 @@
 
 	<versions>
 		<version>
-			<id>1.2</id>
-			<name>1.2</name>
-			<tag>B2</tag>
+			<id>1.2.1</id>
+			<name>1.2.1</name>
+			<tag>B1_2_1</tag>
 		</version>
 	</versions>
 	<branches />

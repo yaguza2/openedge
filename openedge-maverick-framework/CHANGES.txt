@@ -1,3 +1,13 @@
+1.2.1
+-------------------------------------------------
+
+- Added a final fallthough for converting; if no Converter is found in the lookup, the registry
+	returns an instance of NoopConverter, which does absolutely nothing besides returning
+	the input value unaltered.
+	
+- Fixed a bug in the population process that prevented working with mapped values (and
+	(had the potential of errors when working with indexed values).
+
 -------------------------------------------------
 1.2
 
