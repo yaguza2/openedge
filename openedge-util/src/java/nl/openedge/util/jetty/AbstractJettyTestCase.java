@@ -170,7 +170,7 @@ public abstract class AbstractJettyTestCase extends TestCase
 	 * }
 	 * This method is called before a test is executed but before Jetty is actually started.
      */
-    public void beforeSetUp()
+    protected void beforeSetUp()
     {
         // noop
     }
@@ -179,7 +179,7 @@ public abstract class AbstractJettyTestCase extends TestCase
      * Sets up the fixture.
 	 * This method is called before a test is executed but after Jetty is started.
      */
-    public void afterSetUp()
+    protected void afterSetUp()
     {
         // noop
     }
@@ -188,7 +188,7 @@ public abstract class AbstractJettyTestCase extends TestCase
 	 * Tears down the fixture.
 	 * This method is called after a test is executed but before Jetty is actually stopped.
 	 */
-    public void beforeTearDown()
+    protected void beforeTearDown()
     {
         // noop
     }
@@ -197,7 +197,7 @@ public abstract class AbstractJettyTestCase extends TestCase
 	 * Tears down the fixture.
 	 * This method is called after a test is executed and after Jetty is stopped.
 	 */
-    public void afterTearDown()
+    protected void afterTearDown()
     {
         // noop
     }

@@ -28,7 +28,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package nl.openedge.util.mock;
 
 import java.util.Enumeration;
@@ -39,51 +38,57 @@ import java.util.Map;
 import nl.openedge.util.IteratorToEnumeratorDecorator;
 
 /**
- * Een mock servlet request.
- *
+ * Mock servlet request.
+ * 
  * @author Eelco Hillenius
  */
-public class MockHttpServletRequest extends
-        com.mockobjects.servlet.MockHttpServletRequest {
+public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServletRequest
+{
 
     /**
-     * Request attributen.
+     * Request attributes.
      */
     private Map attributes = new HashMap();
 
     /**
      * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
      */
-    public long getDateHeader(final String arg0) {
+    public long getDateHeader(final String arg0)
+    {
         return System.currentTimeMillis();
     }
 
     /**
-     * Geeft altijd null.
+     * Geeft null allways.
+     * 
      * @see javax.servlet.ServletRequest#getLocale()
      */
-    public Locale getLocale() {
+    public Locale getLocale()
+    {
         return null;
     }
 
     /**
      * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
      */
-    public Object getAttribute(final String anAttributeName) {
+    public Object getAttribute(final String anAttributeName)
+    {
         return attributes.get(anAttributeName);
     }
 
     /**
      * @see javax.servlet.ServletRequest#getAttributeNames()
      */
-    public Enumeration getAttributeNames() {
+    public Enumeration getAttributeNames()
+    {
         return new IteratorToEnumeratorDecorator(attributes.keySet().iterator());
     }
 
     /**
      * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
      */
-    public void removeAttribute(final String anAttributeToRemove) {
+    public void removeAttribute(final String anAttributeToRemove)
+    {
         attributes.remove(anAttributeToRemove);
     }
 
@@ -91,7 +96,8 @@ public class MockHttpServletRequest extends
      * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
      *      java.lang.Object)
      */
-    public void setAttribute(final String attributeName, final Object attributeValue) {
+    public void setAttribute(final String attributeName, final Object attributeValue)
+    {
         attributes.put(attributeName, attributeValue);
     }
 

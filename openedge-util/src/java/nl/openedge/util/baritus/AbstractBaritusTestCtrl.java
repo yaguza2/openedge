@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.util.mock;
+package nl.openedge.util.baritus;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -45,42 +45,50 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Abstracte klasse voor het testen van controls in een gesimuleerde Baritus/ Maverick/ Web
- * omgeving, zodat zaken als validators, populators enz eenvoudig kunnen worden getest.
- * Houd referenties bij naar handige objecten (form bean, formbean context en view),
- * en overschrijft de protected methoden met publieke methoden zodat we er makkelijk
- * van buitenaf bij kunnen.
- *
+ * Abstract class for testing controls in a simulated Baritus/ Maverick/ webapp
+ * environment, so that constructs like validators, populators etc can be tested
+ * in isolation without much effort. This basecontrol keeps references to things
+ * like the formBean, formBeanContext and logical view and overrides some of the
+ * propected methods from Baritus with public methods in order to make testing
+ * easier.
+ * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractBaritusTestCtrl extends FormBeanCtrlBase {
+public abstract class AbstractBaritusTestCtrl extends FormBeanCtrlBase
+{
 
     /**
-     * referentie naar form bean zodat we er van buitenaf bij kunnen.
+     * reference to the current form bean.
      */
     protected Object bean = null;
+
     /**
-     * Referentie naar formBeanContext zodat we er van buitenaf bij kunnen.
+     * reference to the current form bean context.
      */
     protected FormBeanContext formBeanContext = null;
+
     /**
-     * Referentie naar de view zodat we er van buitenaf bij kunnen.
+     * reference to the current logical view.
      */
     protected String view = SUCCESS;
 
     /**
-     * Geeft referentie test bean.
-     * @return Object referentie test bean
+     * get current test bean.
+     * 
+     * @return Object current test bean
      */
-    public Object getTestBean() {
+    public Object getTestBean()
+    {
         return bean;
     }
 
     /**
-     * Geeft view.
+     * get view.
+     * 
      * @return String view
      */
-    public String getView() {
+    public String getView()
+    {
         return view;
     }
 
@@ -88,8 +96,8 @@ public abstract class AbstractBaritusTestCtrl extends FormBeanCtrlBase {
      * @see nl.openedge.baritus.FormBeanBase#getLocaleForRequest(org.infohazard.maverick.flow.ControllerContext,
      *      nl.openedge.baritus.FormBeanContext)
      */
-    protected Locale getLocaleForRequest(final ControllerContext cctx,
-            final FormBeanContext deFormBeanContext) {
+    protected Locale getLocaleForRequest(final ControllerContext cctx, final FormBeanContext deFormBeanContext)
+    {
         // hack to be able to get the formBeanContext
         this.formBeanContext = deFormBeanContext;
 
@@ -97,129 +105,166 @@ public abstract class AbstractBaritusTestCtrl extends FormBeanCtrlBase {
     }
 
     /**
-     * Geeft formBeanContext.
-     * @return FormBeanContext
+     * get formBeanContext.
+     * 
+     * @return FormBeanContext form bean context
      */
-    public FormBeanContext getFormBeanContext() {
+    public FormBeanContext getFormBeanContext()
+    {
         return formBeanContext;
     }
 
     /**
      * Get error view. This is 'error' by default.
+     * 
      * @param cctx controller context
      * @param deFormBeanContext context
      * @return String logical name of view
      */
-    protected String getErrorView(final ControllerContext cctx,
-            final FormBeanContext deFormBeanContext) {
+    protected String getErrorView(final ControllerContext cctx, final FormBeanContext deFormBeanContext)
+    {
         this.view = ERROR;
         return ERROR;
     }
 
     /**
-     * @see nl.openedge.baritus.FormBeanCtrlBase#addValidator(java.lang.String, nl.openedge.baritus.validation.FieldValidator)
+     * @see nl.openedge.baritus.FormBeanCtrlBase#addValidator(java.lang.String,
+     *      nl.openedge.baritus.validation.FieldValidator)
      */
-    public void addValidator(final String fieldName, final FieldValidator validator) {
+    public void addValidator(final String fieldName, final FieldValidator validator)
+    {
         super.addValidator(fieldName, validator);
     }
 
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#addValidator(nl.openedge.baritus.validation.FormValidator)
      */
-    public void addValidator(final FormValidator validator) {
+    public void addValidator(final FormValidator validator)
+    {
         super.addValidator(validator);
     }
 
     /**
-     * @see nl.openedge.baritus.FormBeanCtrlBase#addInterceptor(int, nl.openedge.baritus.interceptors.Interceptor)
+     * @see nl.openedge.baritus.FormBeanCtrlBase#addInterceptor(int,
+     *      nl.openedge.baritus.interceptors.Interceptor)
      */
-    protected void addInterceptor(final int index, final Interceptor interceptor) {
+    protected void addInterceptor(final int index, final Interceptor interceptor)
+    {
         super.addInterceptor(index, interceptor);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#addInterceptor(nl.openedge.baritus.interceptors.Interceptor)
      */
-    protected void addInterceptor(final Interceptor interceptor) {
+    protected void addInterceptor(final Interceptor interceptor)
+    {
         super.addInterceptor(interceptor);
     }
+
     /**
-     * @see nl.openedge.baritus.FormBeanCtrlBase#addPopulator(java.util.regex.Pattern, nl.openedge.baritus.population.FieldPopulator)
+     * @see nl.openedge.baritus.FormBeanCtrlBase#addPopulator(java.util.regex.Pattern,
+     *      nl.openedge.baritus.population.FieldPopulator)
      */
-    protected void addPopulator(final Pattern pattern, final FieldPopulator populator) {
+    protected void addPopulator(final Pattern pattern, final FieldPopulator populator)
+    {
         super.addPopulator(pattern, populator);
     }
+
     /**
-     * @see nl.openedge.baritus.FormBeanCtrlBase#addPopulator(java.lang.String, nl.openedge.baritus.population.FieldPopulator)
+     * @see nl.openedge.baritus.FormBeanCtrlBase#addPopulator(java.lang.String,
+     *      nl.openedge.baritus.population.FieldPopulator)
      */
-    protected void addPopulator(final String fieldName, final FieldPopulator populator) {
+    protected void addPopulator(final String fieldName, final FieldPopulator populator)
+    {
         super.addPopulator(fieldName, populator);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#addValidationActivationRule(nl.openedge.baritus.validation.ValidationActivationRule)
      */
-    protected void addValidationActivationRule(final ValidationActivationRule rule) {
+    protected void addValidationActivationRule(final ValidationActivationRule rule)
+    {
         super.addValidationActivationRule(rule);
     }
 
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#getDefaultPopulator()
      */
-    protected FieldPopulator getDefaultPopulator() {
+    protected FieldPopulator getDefaultPopulator()
+    {
         return super.getDefaultPopulator();
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#getValidators(java.lang.String)
      */
-    protected MultiHashMap getValidators(final String fieldName) {
+    protected MultiHashMap getValidators(final String fieldName)
+    {
         return super.getValidators(fieldName);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#removeInterceptor(nl.openedge.baritus.interceptors.Interceptor)
      */
-    protected void removeInterceptor(final Interceptor interceptor) {
+    protected void removeInterceptor(final Interceptor interceptor)
+    {
         super.removeInterceptor(interceptor);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#removePopulator(java.util.regex.Pattern)
      */
-    protected void removePopulator(final Pattern pattern) {
+    protected void removePopulator(final Pattern pattern)
+    {
         super.removePopulator(pattern);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#removePopulator(java.lang.String)
      */
-    protected void removePopulator(final String fieldName) {
+    protected void removePopulator(final String fieldName)
+    {
         super.removePopulator(fieldName);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#removeValidationActivationRule(nl.openedge.baritus.validation.ValidationActivationRule)
      */
-    protected void removeValidationActivationRule(final ValidationActivationRule rule) {
+    protected void removeValidationActivationRule(final ValidationActivationRule rule)
+    {
         super.removeValidationActivationRule(rule);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#removeValidator(nl.openedge.baritus.validation.FormValidator)
      */
-    protected void removeValidator(final FormValidator validator) {
+    protected void removeValidator(final FormValidator validator)
+    {
         super.removeValidator(validator);
     }
+
     /**
-     * @see nl.openedge.baritus.FormBeanCtrlBase#removeValidator(java.lang.String, nl.openedge.baritus.validation.FieldValidator)
+     * @see nl.openedge.baritus.FormBeanCtrlBase#removeValidator(java.lang.String,
+     *      nl.openedge.baritus.validation.FieldValidator)
      */
-    protected void removeValidator(final String fieldName, final FieldValidator validator) {
+    protected void removeValidator(final String fieldName, final FieldValidator validator)
+    {
         super.removeValidator(fieldName, validator);
     }
 
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#removeValidators(java.lang.String)
      */
-    protected void removeValidators(final String fieldName) {
+    protected void removeValidators(final String fieldName)
+    {
         super.removeValidators(fieldName);
     }
+
     /**
      * @see nl.openedge.baritus.FormBeanCtrlBase#setDefaultPopulator(nl.openedge.baritus.population.FieldPopulator)
      */
-    protected void setDefaultPopulator(final FieldPopulator populator) {
+    protected void setDefaultPopulator(final FieldPopulator populator)
+    {
         super.setDefaultPopulator(populator);
     }
 }

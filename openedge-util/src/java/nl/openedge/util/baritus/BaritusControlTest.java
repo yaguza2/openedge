@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.util.mock;
+package nl.openedge.util.baritus;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -36,8 +36,11 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 import nl.openedge.baritus.ConverterRegistry;
+import nl.openedge.baritus.FormBeanCtrl;
 import nl.openedge.baritus.converters.DateLocaleConverter;
 import nl.openedge.util.baritus.converters.FallbackDateConverter;
+import nl.openedge.util.mock.MockHttpServletRequest;
+import nl.openedge.util.mock.MockHttpServletResponse;
 
 import com.mockobjects.servlet.MockHttpSession;
 import com.mockobjects.servlet.MockRequestDispatcher;
@@ -45,95 +48,131 @@ import com.mockobjects.servlet.MockServletConfig;
 import com.mockobjects.servlet.MockServletContext;
 
 /**
- * Basis test klasse voor het schrijven van Unit testen met mock objects.
- * Gebruik dit voor het testen van controllers, validators, populators, etc.
- * waarbij de view niet relevant is.
+ * Base class for testcases that are used to test controlls, validators etc.
+ * Note that allthough this class depends on Mock Objects, its actual usage
+ * differs from the standard mock objects way. Instead of the white box approach
+ * of mock objects (with recording and playback), you can use these mock objects
+ * in a black box fashion, ie use them as if being in a real web environment.
+ * 
  * @author Eelco Hillenius
  */
-public class AbstractMockControlTest extends TestCase {
-
+public abstract class BaritusControlTest extends TestCase
+{
     /**
-     * Session key voor de huidige locale; dit is een constante van Baritus.
+     * Fixed locale (dutch locale, but you can overwrite this in setUpTestCase).
      */
-    public static final String SESSION_KEY_CURRENT_LOCALE = "_currentLocale";
+    protected Locale fixedLocale = new Locale("nl", "NL");
 
     /**
-     * De nederlandse locale.
-     */
-    protected Locale nederlandseLocale = new Locale("nl", "NL");
-
-    /**
-     * Refentie naar mock request dispatcher.
+     * request dispatcher.
      */
     protected MockRequestDispatcher requestDispatcher = null;
 
     /**
-     * Refentie naar mock servlet context.
+     * mock servlet context.
      */
     protected MockServletContext servletContext = null;
 
     /**
-     * Referentie naar mock servlet config.
+     * mock servlet config.
      */
     protected MockServletConfig servletConfig = null;
 
     /**
-     * Referentie naar mock http sessie.
+     * mock http sessie.
      */
     protected MockHttpSession session = null;
 
     /**
-     * Refentie naar mock servlet response.
+     * mock servlet response.
      */
     protected MockHttpServletResponse response = null;
 
     /**
-     * Refentie naar mock servlet request.
+     * mock servlet request.
      */
     protected MockHttpServletRequest request = null;
 
     /**
-     * Construct leeg.
+     * Construct.
      */
-    public AbstractMockControlTest() {
+    public BaritusControlTest()
+    {
         super();
     }
 
     /**
-     * Construct test met naam.
-     * @param name naam van de test
+     * Construct with naam.
+     * 
+     * @param name name of test
      */
-    public AbstractMockControlTest(final String name) {
+    public BaritusControlTest(final String name)
+    {
         super(name);
     }
 
     /**
-     * Bereid de unit test voor door het creeeren/ registreren van de relevante
-     * mock objecten.
+     * Create fixture; set up mockobjects.
+     * 
      * @see junit.framework.TestCase#setUp()
      */
-    protected void setUp() throws Exception {
+    protected final void setUp() throws Exception
+    {
         this.requestDispatcher = new MockRequestDispatcher();
         this.servletContext = new MockServletContext();
         this.servletContext.setupGetRequestDispatcher(requestDispatcher);
         this.servletConfig = new MockServletConfig();
         this.servletConfig.setServletContext(servletContext);
         this.session = new MockHttpSession();
-        this.session.setupGetAttribute(SESSION_KEY_CURRENT_LOCALE,
-                nederlandseLocale);
-
+        this.session.setupGetAttribute(FormBeanCtrl.SESSION_KEY_CURRENT_LOCALE, fixedLocale);
         this.session.setupServletContext(servletContext);
         this.response = new MockHttpServletResponse();
         this.request = new MockHttpServletRequest();
         this.request.setupGetAttribute("__formBeanContext");
         this.request.setSession(session);
         this.request.setupGetRequestDispatcher(requestDispatcher);
+        setUpTestCase();
     }
 
     /**
-     * Registreer de converters voor dit project.
+     * Sets up the fixture; use instead of setUp().
+	 * This method is called after the finalized setUp method is called.
      */
-    protected void initConverters() {
+    protected void setUpTestCase()
+    {
+        // noop
+    }
+
+    /**
+     * Breakdown fixture; remove references mockobjects.
+     * 
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected final void breakDown() throws Exception
+    {
+        this.requestDispatcher = null;
+        this.servletContext = null;
+        this.servletConfig = null;
+        this.session = null;
+        this.response = null;
+        this.request = null;
+        breakDownTestCase();
+    }
+
+    /**
+     * Breaks down the fixture; use instead of breakDown().
+	 * This method is called after the finalized breakDown method is called.
+     */
+    protected void breakDownTestCase()
+    {
+        // noop
+    }
+
+    /**
+     * Register converters.
+     */
+    protected void initConverters()
+    {
         // get the converter registry
         ConverterRegistry reg = ConverterRegistry.getInstance();
         reg.deregisterByConverterClass(DateLocaleConverter.class);
