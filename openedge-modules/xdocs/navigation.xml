@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <project name="openedge-modules" repository="openedge-modules" href="http://www.openedge.nl/">
 
-  <title>OpenEdge Modules framework provides a component factory and a wrapper for the Quartz sceduler</title>
+	<title>OpenEdge Modules component framework</title>
 
-  <body>
-    <links>
-      <item name="OpenEdge" href="http://www.openedge.nl/"/>
-    </links>
-    <menu name="OpenEdge Utils">
-      <item name="Overview" href="/index.html"/> 
-    </menu>
-  </body>
+	<body>
+		<links>
+			<item name="OpenEdge" href="http://www.openedge.nl/" />
+		</links>
+		<menu name="OpenEdge Utils">
+			<item name="Overview" href="/index.html" />
+			<item name="Getting Started" href="/start/index.html" collapse="true">
+				<item name="Download" href="/start/download.html" />
+				<item name="Build" href="/start/building.html" />
+				<item name="Use" href="/start/use.html" />
+				<item name="Extend" href="/start/extend.html" />
+			</item>
+		</menu>
+	</body>
 
 </project>

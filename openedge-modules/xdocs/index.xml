@@ -9,13 +9,50 @@
 
   <body>
 
+    <section name="About this Guide">
+      <p>
+        The OpenEdge User Guide is intended to help developers get acquainted with  the
+		OpenEdge Modules framework. If you have any
+        suggestions or comments please feel free to post them to the
+        <a href="mailto:todo@sourceforge.net">list</a>.
+      </p>
+    </section>
   <section name="Overview">
     <p>
-    The <code>OpenEdge module framework</code> provides for an easy to use 
-    object factory that can build and configure instances of objects 
-    (Modules) from a configuration xml document. Clients can then ask 
-    the ModuleFactory for instances.
-    </p>
+    The <code>OpenEdge module framework</code> provides for an easy to use lightweight container for 
+	components and Jobs.
+	</p>
+	<p>
+	Key features are:
+	<ul>
+		<li>
+			Lightweight. You can use it in the environment you want (J2EE/ standard) and the internals
+			of the framework are not too difficult to understand as it's aims are not sky-high (it is not intended to be the
+			mother of all frameworks).
+		</li>
+		<li>
+			Easy to use. You will be up and running in less than an hour.
+		</li>
+		<li>
+			Flexible. It is relatively easy to plugin your own types and commands and behaviour 
+			that goes with them
+		</li>
+		<li>
+			Non (too) intrusive. Allthough for specific behaviour you have to implement specific interfaces, you do not
+			have to implement any interface at all for your components. 
+			The lately very populair pattern IoC (Inversion of Control) applies to parts of this framework.
+		</li>
+		<li>
+			Wraps the excellent J2EE-ready sceduling framework 'Quartz' 
+			(<a target="_new" href="http://www.part.net/quartz.html">see their website</a>). With Quartz
+			you have the power of a mature, production ready sceduler. OpenEdge Modules
+			facilitates in easy configuration of Jobs and Triggers, and starts the sceduler for you, but does this
+			in the least intrusive manner possible. You can write jobs as usual for Quartz and the only
+			thing you have to do is configuring them (which you otherwise have to do programmatically).
+		</li>
+	</ul>
+	</p>
+	
 
   </section>
 

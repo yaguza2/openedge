@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Using OpenEdge Modules</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+    <section name="Using OpenEdge Modules">
+      <p>
+		To successfully use OpenEdge Modules, you should know about three things:
+		<ul>
+			<li>
+				how to use types and (init)commands
+			</li>
+			<li>
+				how to use Quartz (if you want to use the sceduler)
+			</li>
+			<li>
+				how to configure Quartz and OpenEdge Modules in
+				the environment you need.
+			</li>
+		</ul>
+      </p>
+      <subsection name="How to use types and (init)commands">
+        <p>
+			When you want to use OpenEdge Modules you don't have to do anything... by default.
+			Classes that do not implement one of the registered interfaces will be handled as the
+			default type. The types and the way they are handled are pluggable, but currently the
+			following types are available:<br/>
+		<ul>
+			<li>
+				ThrowAwayType<br/>
+				When you ask the ModuleFactory for a component of type ThrowAwayType 
+				you will get a new instance every time.
+				<br/>
+			</li>
+			<li>
+				SingletonType (default)<br/>
+				A singleton component will be created once and only once 
+				on the first query for it on the ModuleFactory. In other words: all ModuleFactory
+				users share the same instance.
+				<br/>
+			</li>
+			<li>
+				ThreadSingletonType<br/>
+				A thread singleton component will be created once and only once for each Thread
+				on the first query for it in a Thread on the ModuleFactory. In other words: 
+				The same instance will be shared in one Thread, but a different instance will
+				be used for each seperate Thread.
+				<br/>
+			</li>
+			<li>
+				Job<br/>
+				This is exactly the same as a Quartz job. The only differences from Quartz in using 
+				the OpenEdge Modules framework are that:
+				<ul>
+					<li>
+						when using OpenEdge Modules, you have a standard way of configuring Triggers
+						on Jobs and passing parameters from configuration as JobDataMaps
+					</li>
+					<li>
+						Jobs and Triggers will be sceduled automatically as defined in the OpenEdge
+						Modules configuration
+					</li>
+				</ul>
+				One important thing to remember when using Jobs is that you never get use Jobs
+				directly from the ModuleFactory. As we wanted to stay as close as possible to 
+				the default Quartz behaviour, we decided to let the Jobs keep their original
+				interface and let them be managed completely by the Quartz sceduler. 
+				The good news is that the Sceduler (of which the instance you can get
+				from the ModuleFactory) has all the functionality you need when working 
+				with Jobs and Triggers.
+				<br/>
+			</li>
+		</ul>
+        </p>
+		<p>
+			
+		</p>
+      </subsection>
+   </section>
+ </body>
+</document>

@@ -2,15 +2,14 @@
 <document>
   
   <properties>
-    <author email="turbine-maven-dev@jakarta.apache.org">Maven</author>
-    <title>Issue Tracking</title>
+        <title>OpenEdge Modules Issue Tracking</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
   </properties>
 
   <body>
     <section name="Issue Tracking">
       <p>
-		Submit your bugs with:<a href="http://financialtools.nl/mantis/" target="_new">
-			Mantis Bugtrack System</a>
+TODO
       </p>
     </section>
   </body>

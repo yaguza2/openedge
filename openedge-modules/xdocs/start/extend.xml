@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Extending OpenEdge Modules</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+    <section name="Building Maven">
+      <p>
+        Building Maven is a little different than your typical Java
+        build because Maven uses itself to build itself!  Thus, in order
+        to successfully build Maven, a bootstrapping process is required
+        to jumpstart the build.  Fortunately, the details of this have
+        been encapsulated in a separate build file called
+        <code>build-bootstrap.xml</code>.  This document details the
+        necessary steps to successfully build Maven from source.  After
+        completing the process, not only will Maven be built, it will
+        also be installed on your system, which will enable you to build
+        any other Maven-enabled project (i.e. all Turbine projects).
+      </p>
+      <p>
+        Before you can build Maven, you'll need to make sure you have <a
+        href="http://jakarta.apache.org/ant/">Ant</a> 1.5 or higher
+        installed on your system.  Don't forget to install the
+        <code>optional.jar</code> included with Ant.  In addition,
+        you'll also need the <a href="http://www.junit.org/">JUnit</a>
+        unit testing framework installed.  Be sure to install
+        <code>junit.jar</code> in your <code>$ANT_HOME/lib</code>
+        directory.  Failure to do so will result in build errors.
+      </p>
+      <p>
+        You also must have the <code>$MAVEN_HOME</code> env-var set. The
+        Maven installation is encapsulated in the <code>$MAVEN_HOME</code>
+        directory: scripts, Maven's run-time library, plug-ins and the
+        local repository.
+      </p>
+      <p>
+        For the impatient reader that doesn't want to read the rest of
+        this document, type the following:
+      </p>
+      <source><![CDATA[ant -f build-bootstrap.xml]]></source>
+      <p>
+        If you are new to Maven, it is recommended that you read the
+        rest of the document as it explains the build process in a
+        little more detail.
+      </p>
+      <p>
+        If you are behind a proxy, you must define proxy parameters for
+        building Maven :
+        <a href="../faq.html#build-firewall">FAQS</a>.
+      </p>
+      <subsection name="Bootstrapping Maven">
+        <p>
+          Before you can begin the process, you'll need to download the
+          source from the <code>maven</code> CVS
+          repository.  If you are not familiar with the Jakarta CVS
+          repositories, please see the <a
+          href="http://jakarta.apache.org/site/cvsindex.html">documentation</a>.
+        </p>
+        <p>
+          After setting the value of <code>$MAVEN_HOME</code> and
+          pulling down the sources you are now ready to
+          build and install Maven on your system using the bootstrapping
+          process.  As mentioned earlier, the bootstrapping process is
+          defined in <code>build-bootstrap.xml</code>, and can be
+          initiated by typing the following:
+        </p>
+        <source><![CDATA[ant -f build-bootstrap.xml]]></source>
+        <p>
+          Thats it! Congratulations!  You have now built Maven with
+          Maven and installed Maven on your system!  What does that
+          mean?  
+        </p>
+        <ul>
+          <li>
+            The Maven build system has been installed in
+            <code>$MAVEN_HOME</code>.
+          </li>
+          <li>
+            The Maven JAR has been installed in your local repository,
+            which defaults to <code>$MAVEN_HOME/repository</code>, so
+            that plug-ins that might require Maven can build and it
+            is installed in Maven's run-time directory.
+          </li>
+          <li>
+            You can now build any Maven-enabled project with ease!
+            Please see the <a href="use.html">Using Maven</a>
+            document for instructions on how to build Maven-enabled
+            projects.
+          </li>
+          <li>
+            You can now integrate Maven into your own projects!  Please
+            see the <a href="integrate.html">Integrate Maven</a>
+            document for instructions on how to do this.
+          </li>
+        </ul>
+      </subsection>
+    </section>
+  </body>
+</document>
