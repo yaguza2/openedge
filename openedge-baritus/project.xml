@@ -8,11 +8,11 @@
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
-		<logo>http://www.openedge.nl/images/logo.jpg</logo>
+		<logo>http://test.topicus.nl/maven/openedge-logo.jpg</logo>
 	</organization>
 	<inceptionYear>2003</inceptionYear>
 	<package>nl.openedge.baritus</package>
-	<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	<logo>http://test.topicus.nl/maven/openedge-logo.jpg</logo>
 	<shortDescription>Baritus is an open source framework for building Java web applications.</shortDescription>
 	<description>
 		Baritus is an open source framework for building Java web applications. Baritus is a powerfull extension 
@@ -24,7 +24,7 @@
 		<version>
 			<id>1.0</id>
 			<name>1.0</name>
-			<tag>B1_0</tag>
+			<tag>BARITUS_1_0</tag>
 		</version>
 	</versions>
 	<branches />
@@ -87,7 +87,7 @@
 
 		<dependency>
 			<id>commons-collections</id>
-			<version>3.0-dev</version>
+			<version>3.0</version>
 			<url>http://jakarta.apache.org/commons/collections/</url>
 		</dependency>
 

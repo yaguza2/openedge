@@ -13,13 +13,13 @@
       <p>
         The Baritus User Guide is intended to help developers get acquainted with Baritus.
 		If you have any suggestions or comments please feel free to post them to the
-        <a href="mailto:todo@sourceforge.net">list</a>.
+        <a href="http://lists.sourceforge.net/lists/listinfo/baritus-user">list</a>.
       </p>
     </section>
   <section name="Overview">
     <p>
-    <code>Baritus</code> is an open source framework for building Java web applications. 
-	<code>Baritus</code> is a powerfull extension of Maverick that focusus on developing web 
+    Baritus is an open source framework for building Java web applications. 
+	Baritus is a powerfull extension of Maverick that focusus on developing web 
 	applications using plain old java objects.
 	</p>
 	<p>

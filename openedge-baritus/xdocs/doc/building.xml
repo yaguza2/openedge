@@ -16,7 +16,7 @@
       
       <p>
         The downloaded install archive contains everything required to build Baritus. 
-		The install archive has a single top-level directory named <code>openedge-baritus</code> 
+		The install archive has a single top-level directory named openedge-baritus 
 		with all the project related files beneath that. You can now unpack the install archive.
       </p>
       <p>
