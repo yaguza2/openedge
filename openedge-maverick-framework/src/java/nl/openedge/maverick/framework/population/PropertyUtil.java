@@ -28,7 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework;
+package nl.openedge.maverick.framework.population;
+
 
 import org.apache.commons.beanutils.*;
 
@@ -55,7 +56,7 @@ public final class PropertyUtil
 	 * @exception InvocationTargetException if the property accessor method
 	 *  throws an exception
 	 */
-	protected static Class definePropertyType(
+	public static Class definePropertyType(
 		Object target,
 		String name,
 		String propName)
@@ -123,7 +124,7 @@ public final class PropertyUtil
 	 * @exception InvocationTargetException if the property accessor method
 	 *  throws an exception
 	 */
-	protected static void invokeSetter(
+	public  static void invokeSetter(
 		Object target,
 		String propName,
 		String key,
@@ -160,14 +161,19 @@ public final class PropertyUtil
 	 *
 	 * @param bean The bean
 	 * @param name The property name
+	 * @param propertyDescriptor The property descriptor
 	 *
 	 * @exception IllegalAccessException if the caller does not have
 	 *  access to the property accessor method
 	 * @exception InvocationTargetException if the property accessor method
 	 *  throws an exception
 	 */
-	protected static TargetPropertyMeta calculate(Object bean, String name)
-		throws IllegalAccessException, InvocationTargetException
+	public  static TargetPropertyMeta calculate(
+		Object bean, 
+		String name, 
+		PropertyDescriptor propertyDescriptor)
+		throws IllegalAccessException, 
+		InvocationTargetException
 	{
 
 		String propName = null; // Simple name of target property
@@ -219,6 +225,7 @@ public final class PropertyUtil
 			}
 			propName = propName.substring(0, j);
 		}
-		return new TargetPropertyMeta(target, name, propName, key, index);
+		
+		return new TargetPropertyMeta(target, name, propName, key, index, propertyDescriptor);
 	}
 }

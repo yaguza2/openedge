@@ -28,126 +28,43 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework;
+package nl.openedge.maverick.framework.population;
+
+import nl.openedge.maverick.framework.AbstractCtrl;
 
 /**
- * utility class that describes a property
- * @author (copied from the Apache Jakarta BeanUtils project)
+ * @author Eelco Hillenius
  */
-final class TargetPropertyMeta
+public abstract class AbstractFieldPopulator
 {
-
-	private int index = -1; // Indexed subscript value (if any)
-	private String name;
-	private String propName; // Simple name of target property
-	private String key; // Mapped key value (if any)
-	private Object target;
+	
+	/** reference to the controller */
+	private AbstractCtrl ctrl = null;
 
 	/**
-	 * construct
-	 * @param target
-	 * @param name
-	 * @param propName
-	 * @param key
-	 * @param index
+	 * default constructor
 	 */
-	public TargetPropertyMeta(
-		Object target, String name, String propName, String key, int index)
+	public AbstractFieldPopulator(AbstractCtrl ctrl)
 	{
-		setTarget(target);
-		setName(name);
-		setPropName(propName);
-		setKey(key);
-		setIndex(index);
+		setCtrl(ctrl);
+	}
+	
+	/**
+	 * get reference to the controller
+	 * @return reference to the controller
+	 */
+	public AbstractCtrl getCtrl()
+	{
+		return ctrl;
 	}
 
 	/**
-	 * get target
-	 * @return Object
+	 * set reference to the controller
+	 * @param ctrl reference to the controller
 	 */
-	public Object getTarget()
+	public void setCtrl(AbstractCtrl ctrl)
 	{
-		return target;
+		this.ctrl = ctrl;
 	}
 
-	/**
-	 * set target
-	 * @param target
-	 */
-	public void setTarget(Object target)
-	{
-		this.target = target;
-	}
-
-	/**
-	 * get key
-	 * @return String
-	 */
-	public String getKey()
-	{
-		return key;
-	}
-
-	/**
-	 * set key
-	 * @param key
-	 */
-	public void setKey(String key)
-	{
-		this.key = key;
-	}
-
-	/**
-	 * get index
-	 * @return int
-	 */
-	public int getIndex()
-	{
-		return index;
-	}
-
-	/**
-	 * set index
-	 * @param index
-	 */
-	public void setIndex(int index)
-	{
-		this.index = index;
-	}
-
-	/**
-	 * get name
-	 * @return String
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * set name
-	 * @param name
-	 */
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	/**
-	 * get property name
-	 * @return String
-	 */
-	public String getPropName()
-	{
-		return propName;
-	}
-
-	/**
-	 * set property name
-	 * @param propName
-	 */
-	public void setPropName(String propName)
-	{
-		this.propName = propName;
-	}
 }

@@ -32,8 +32,6 @@ package nl.openedge.maverick.framework;
 
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -57,13 +55,13 @@ import javax.servlet.http.HttpSession;
 
 import nl.openedge.access.AccessFilter;
 import nl.openedge.access.UserPrincipal;
+import nl.openedge.maverick.framework.population.*;
+import nl.openedge.maverick.framework.population.FieldPopulator;
 import nl.openedge.maverick.framework.velocity.tools.UrlTool;
 import nl.openedge.maverick.framework.validation.*;
 
 import org.jdom.Element;
 
-import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.MultiHashMap;
@@ -156,19 +154,24 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/**
 	 * subclasses can register fieldValidators for custom validation on field level
 	 */
-	protected MultiMap fieldValidators = null;
+	private MultiMap fieldValidators = null;
 	
 	/**
 	 * Subclasses can register custom populators that override the default population
 	 * process for a given property. Custom populators are stored by name of the property. 
 	 */
-	protected Map fieldPopulators = null;
+	private Map fieldPopulators = null;
+	
+	/**
+	 * the default field populator
+	 */
+	private FieldPopulator defaultFieldPopulator = new DefaultFieldPopulator(this);
 	
 	/**
 	 * subclasses can register formValidators for custom validation on form level
 	 * formValidators will be called AFTER field validators executed SUCCESSFULLY
 	 */
-	protected List formValidators = null;
+	private List formValidators = null;
 	
 	/**
 	 * Optional objects that can be used to switch whether validation with
@@ -176,6 +179,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @author Eelco Hillenius
 	 */
 	private List globalValidatorActivationRules = null;
+
 	
 	/**
 	 * is called before any handling like form population etc.
@@ -551,7 +555,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}
 					
 					// resolve and get some more info we need for the target
-					targetPropertyMeta = PropertyUtil.calculate(formBean, name);
+					targetPropertyMeta = PropertyUtil.calculate(formBean, name, propertyDescriptor);
 					
 					if (propertyDescriptor instanceof MappedPropertyDescriptor) 
 					{
@@ -573,8 +577,21 @@ public abstract class AbstractCtrl implements ControllerSingleton
 						targetType = propertyDescriptor.getPropertyType();
 					}
 					
-					success = setPropertyOnForm(cctx, formBean, name, value, propertyDescriptor,
-						targetPropertyMeta, locale);
+					// first, see if we have a custom populator registered for the given field
+					FieldPopulator fieldPopulator = null;
+					if(fieldPopulators != null)
+					{
+						fieldPopulator = (FieldPopulator)fieldPopulators.get(name);	
+					}
+					
+					if(fieldPopulator == null) // if no custom populator was found, we use the default
+					{
+						fieldPopulator = defaultFieldPopulator;
+					}
+					
+					// execute population on form
+					success = fieldPopulator.setProperty(
+						cctx, formBean, name, value, targetPropertyMeta, locale);
 					
 				}
 				catch (Exception e)
@@ -601,185 +618,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		
 		return succeeded;
-	}
-	
-	/*
-	 * Convert the specified value to the required type
-	 */
-	private boolean setPropertyOnForm(
-		ControllerContext cctx,	
-		AbstractForm formBean,
-		String name,
-		Object value,
-		PropertyDescriptor propertyDescriptor,
-		TargetPropertyMeta targetPropertyMeta,
-		Locale locale)
-		throws Exception
-	{
-		Object newValue = null;
-		boolean success = true;
-		Object target = targetPropertyMeta.getTarget();
-		Class targetType = propertyDescriptor.getPropertyType();
-		Converter converter = null;
-		
-		if(targetType.isArray()) 
-		{
-			Class componentType = targetType.getComponentType();
-
-			if(converter == null) converter = 
-				ConverterRegistry.getInstance().lookup(componentType, locale);
-
-			Method reader = propertyDescriptor.getReadMethod();
-			Object[] originalArray = (Object[])reader.invoke(target, new Object[]{});
-			
-			if(targetPropertyMeta.getIndex() < 0)
-				// target is an array and name of property is not indexed 
-				// (a property is indexed in form: myproperty[1]; getIndex() would be 1 in 
-				//	this case and the actual property to navigate is an array element 
-				//	instead of the whole array).
-			{
-				String[] values = null;
-				if(value instanceof String[]) values = (String[])value;
-				else values = new String[]{ String.valueOf(value) };
-				
-				Object[] array = null;
-				if((originalArray == null) || (originalArray.length < values.length)) 
-					// overwrite completely with a new or larger array
-				{
-					array = (Object[])Array.newInstance(componentType, values.length);
-					// set new array on target object
-					Method setter = propertyDescriptor.getWriteMethod();
-					setter.invoke(target, new Object[]{array});
-				}
-				else // use existing and overwrite first part or whole array if lengths are equal
-				{
-					array = originalArray;					
-				}
-			
-				int index = 0;
-				for ( ; index < values.length; index++) 
-				{
-					Object converted = null;
-					try 
-					{
-					
-						if( (values[index] == null || (values[index].trim().equals(""))) 
-							&& isSetNullForEmptyString())
-						{
-							converted = null;
-						}
-						else
-						{
-							converted = converter.convert(componentType, values[index]);
-						}
-					
-						Array.set(array, index, converted);
-	
-					} 
-					catch (ConversionException e) 
-					{
-						String nameWithIndex = name + '[' + index + "]";
-						setConversionErrorForField(cctx, formBean, nameWithIndex, values[index], e);
-						setOverrideField(cctx, formBean, nameWithIndex, values[index], e, null);
-						success = false;
-					}
-					catch (Exception e) 
-					{
-						e.printStackTrace();
-						String nameWithIndex = name + '[' + index + "]";
-						setConversionErrorForField(cctx, formBean, nameWithIndex, values[index], e);
-						setOverrideField(cctx, formBean, nameWithIndex, values[index], e, null);
-						success = false;
-					}
-				}				
-			}
-			else // the target is one specific element in the array
-			{
-				String stringValue = null;
-				if(value instanceof String[]) stringValue = ((String[])value)[0];
-				else stringValue = String.valueOf(value);
-				int index = targetPropertyMeta.getIndex();
-				Method setter = null;
-				Object converted = null;
-
-				try
-				{
-					
-					if( (stringValue == null || (stringValue.trim().equals(""))) 
-						&& isSetNullForEmptyString())
-					{
-						converted = null;
-					}
-					else
-					{
-						converted = converter.convert(
-							targetType, stringValue);
-					}
-
-					// replace value in array
-					originalArray[index] = converted;
-				}
-				catch (ConversionException e)
-				{
-					setConversionErrorForField(cctx, formBean, name, stringValue, e);
-					setOverrideField(cctx, formBean, name, stringValue, e, null);
-					success = false;	
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					setConversionErrorForField(cctx, formBean, name, stringValue, e);
-					setOverrideField(cctx, formBean, name, stringValue, e, null);
-					success = false;	
-				}			
-			}
-			
-		}
-		else // it's not an array
-		{
-			String stringValue = null;
-			if(value instanceof String[]) stringValue = ((String[])value)[0];
-			else stringValue = String.valueOf(value);
-
-			if(converter == null) converter = 
-				ConverterRegistry.getInstance().lookup(targetType, locale);
-			
-			Method setter = null;
-			Object converted = null;
-			try
-			{
-				setter = propertyDescriptor.getWriteMethod();
-				
-				if( (stringValue == null || (stringValue.trim().equals(""))) 
-					&& isSetNullForEmptyString())
-				{
-					converted = null;
-				}
-				else
-				{
-					converted = converter.convert(
-						targetType, stringValue);
-				}
-				
-				setter.invoke(target, new Object[]{converted});
-			}
-			catch (ConversionException e)
-			{
-				setConversionErrorForField(cctx, formBean, name, stringValue, e);
-				setOverrideField(cctx, formBean, name, stringValue, e, null);
-				success = false;	
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				setConversionErrorForField(cctx, formBean, name, stringValue, e);
-				setOverrideField(cctx, formBean, name, stringValue, e, null);
-				success = false;	
-			}			
-		}
-
-		return success;
-
 	}
 	
 	/* handle custom validation for all fields */
@@ -1005,7 +843,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param triedValue value that was tried for population
 	 * @param t exception
 	 */
-	protected void setConversionErrorForField(
+	public void setConversionErrorForField(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		String name, 
@@ -1119,7 +957,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param validator the validator that was the cause of the validation failure, if one
 	 * 	(is null if this was a conversion error)
 	 */
-	private void setOverrideField(
+	public void setOverrideField(
 		ControllerContext cctx, 
 		AbstractForm formBean, 
 		String name, 
@@ -1195,7 +1033,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param formBean form
 	 * @return true if validation succeeded, false otherwise
 	 * @deprecated use the classes from nl.openedge.maverick.framework.validation,
-	 * 		in particular interface FieldValidator
+	 * 		in particular interface FieldValidator. This method will be removed in version 1.3
 	 */
 	protected boolean validateForm(ControllerContext ctx, AbstractForm formBean) 
 	{
@@ -1364,7 +1202,33 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	
 	//**************************** populators ********************************************/
 	
-	//TODO vul populators in... Locale sensitive!
+	/**
+	 * Register a field populator for the given fieldName. 
+	 * Field populators override the default population of a property on the current form
+	 * @param fieldName name of field
+	 * @param populator populator instance
+	 */
+	protected void addPopulator(String fieldName, FieldPopulator populator)
+	{
+		if(fieldPopulators == null)
+		{
+			fieldPopulators = new HashMap();
+		}
+		fieldPopulators.put(fieldName, populator);
+	}
+
+	
+	/**
+	 * de-register the field populator that was registered with the given fieldName
+	 * @param fieldName name of field
+	 */
+	protected void removePopulator(String fieldName)
+	{
+		if(fieldPopulators != null)
+		{
+			fieldPopulators.remove(fieldName);
+		}
+	}
 
 	//*************************** utility methods for localized messages ********************/
 	
@@ -1592,7 +1456,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * an empty String false. This property is true by default
 	 * @return boolean
 	 */
-	protected boolean isSetNullForEmptyString()
+	public boolean isSetNullForEmptyString()
 	{
 		return setNullForEmptyString;
 	}
@@ -1602,7 +1466,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * an empty String false. This property is true by default
 	 * @param b
 	 */
-	protected void setSetNullForEmptyString(boolean b)
+	public void setSetNullForEmptyString(boolean b)
 	{
 		setNullForEmptyString = b;
 	}
