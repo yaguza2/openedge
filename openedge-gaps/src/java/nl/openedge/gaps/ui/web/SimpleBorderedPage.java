@@ -9,10 +9,11 @@
  */
 package nl.openedge.gaps.ui.web;
 
-import com.voicetribe.wicket.Component;
-import com.voicetribe.wicket.Container;
-import com.voicetribe.wicket.markup.html.HtmlPage;
-import com.voicetribe.wicket.markup.html.border.Border;
+import wicket.Component;
+import wicket.Container;
+import wicket.markup.html.HtmlPage;
+import wicket.markup.html.border.Border;
+
 
 /**
  * This base class also creates a border for each page subclass, automatically adding 
@@ -39,7 +40,7 @@ public abstract class SimpleBorderedPage extends HtmlPage
     /**
      * Adding children to instances of this class causes those children to
      * be added to the border child instead.  
-     * @see com.voicetribe.wicket.Container#add(com.voicetribe.wicket.Component)
+     * @see wicket.Container#add(wicket.Component)
      */
     public Container add(final Component child)
     {

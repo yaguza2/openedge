@@ -17,6 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wicket.RequestCycle;
+import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.IOnChangeListener;
+import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.IValidationErrorHandler;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.panel.Panel;
+import wicket.markup.html.table.ListItem;
+import wicket.markup.html.table.ListView;
+
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.ParameterRegistry;
@@ -29,19 +43,6 @@ import nl.openedge.gaps.core.parameters.impl.PercentageParameter;
 import nl.openedge.gaps.core.parameters.impl.StringParameter;
 import nl.openedge.gaps.support.ParameterBuilder;
 
-import com.voicetribe.wicket.RequestCycle;
-import com.voicetribe.wicket.markup.html.HtmlContainer;
-import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.form.CheckBox;
-import com.voicetribe.wicket.markup.html.form.DropDownChoice;
-import com.voicetribe.wicket.markup.html.form.Form;
-import com.voicetribe.wicket.markup.html.form.IOnChangeListener;
-import com.voicetribe.wicket.markup.html.form.TextField;
-import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
-import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.panel.Panel;
-import com.voicetribe.wicket.markup.html.table.ListItem;
-import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Panel voor parameters.
@@ -168,7 +169,7 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
          */
         public void handleSubmit(RequestCycle cycle)
         {
@@ -194,7 +195,7 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
          */
         public void handleSubmit(RequestCycle cycle)
         {
@@ -262,7 +263,7 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
+         * @see wicket.markup.html.form.Form#handleSubmit(wicket.RequestCycle)
          */
         public void handleSubmit(RequestCycle cycle)
         {   
@@ -312,7 +313,7 @@ public class ParameterPanel extends Panel
             }
 
             /**
-             * @see com.voicetribe.wicket.markup.html.form.IOnChangeListener#selectionChanged(com.voicetribe.wicket.RequestCycle, java.lang.Object)
+             * @see wicket.markup.html.form.IOnChangeListener#selectionChanged(wicket.RequestCycle, java.lang.Object)
              */
             public void selectionChanged(RequestCycle cycle, Object newSelection)
             {
@@ -337,7 +338,7 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
          */
         protected void populateItem(ListItem cell)
         {
@@ -403,7 +404,7 @@ public class ParameterPanel extends Panel
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
          */
         protected void populateItem(ListItem cell)
         {
@@ -438,7 +439,7 @@ public class ParameterPanel extends Panel
             }
 
             /**
-             * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+             * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
              */
             protected void populateItem(ListItem cell)
             {
@@ -463,7 +464,7 @@ public class ParameterPanel extends Panel
             }
 
             /**
-             * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+             * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
              */
             protected void populateItem(ListItem cell)
             {
@@ -490,7 +491,7 @@ public class ParameterPanel extends Panel
                 }
 
                 /**
-                 * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+                 * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
                  */
                 protected void populateItem(ListItem cell)
                 {

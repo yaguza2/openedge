@@ -15,10 +15,11 @@ import nl.openedge.util.hibernate.HibernateHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.voicetribe.util.convert.ConverterRegistry;
-import com.voicetribe.util.time.Duration;
-import com.voicetribe.wicket.ApplicationSettings;
-import com.voicetribe.wicket.WebApplication;
+import wicket.ApplicationSettings;
+import wicket.WebApplication;
+import wicket.util.convert.ConverterRegistry;
+import wicket.util.time.Duration;
+
 
 /**
  * Webapplicatie klasse GAPS.

@@ -9,7 +9,7 @@
  */
 package nl.openedge.gaps.ui.web;
 
-import com.voicetribe.wicket.markup.html.border.Border;
+import wicket.markup.html.border.Border;
 
 /**
  * Border component.

@@ -21,11 +21,12 @@ import nl.openedge.gaps.core.parameters.SaveException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.voicetribe.util.convert.ConverterRegistry;
-import com.voicetribe.util.convert.FormattingUtils;
-import com.voicetribe.wicket.ApplicationSettings;
-import com.voicetribe.wicket.DetachableModel;
-import com.voicetribe.wicket.RequestCycle;
+import wicket.ApplicationSettings;
+import wicket.DetachableModel;
+import wicket.RequestCycle;
+import wicket.util.convert.ConverterRegistry;
+import wicket.util.convert.FormattingUtils;
+
 
 /**
  * Model voor parameters.
@@ -53,7 +54,7 @@ public class ParameterModel extends DetachableModel
     }
 
     /**
-     * @see com.voicetribe.wicket.IModel#getObject()
+     * @see wicket.IModel#getObject()
      */
     public Object getObject()
     {
@@ -71,7 +72,7 @@ public class ParameterModel extends DetachableModel
         }
     }
     /**
-     * @see com.voicetribe.wicket.PropertyModel#setObject(java.io.Serializable)
+     * @see wicket.PropertyModel#setObject(java.io.Serializable)
      */
     public void setObject(Object object)
     {
@@ -106,7 +107,7 @@ public class ParameterModel extends DetachableModel
     }
 
     /**
-     * @see com.voicetribe.wicket.DetachableModel#doAttach(com.voicetribe.wicket.RequestCycle)
+     * @see wicket.DetachableModel#doAttach(wicket.RequestCycle)
      */
     protected void doAttach(RequestCycle cycle)
     {
@@ -116,7 +117,7 @@ public class ParameterModel extends DetachableModel
     }
 
     /**
-     * @see com.voicetribe.wicket.DetachableModel#doDetach(com.voicetribe.wicket.RequestCycle)
+     * @see wicket.DetachableModel#doDetach(wicket.RequestCycle)
      */
     protected void doDetach(RequestCycle cycle)
     {

@@ -13,16 +13,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.markup.html.HtmlContainer;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.panel.Panel;
+import wicket.markup.html.table.ListItem;
+import wicket.markup.html.table.ListView;
+
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.groups.StructuralGroup;
 
-import com.voicetribe.wicket.markup.html.HtmlContainer;
-import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
-import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.panel.Panel;
-import com.voicetribe.wicket.markup.html.table.ListItem;
-import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Panel voor groepen.
@@ -82,7 +83,7 @@ public class ParameterGroupPanel extends Panel
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
          */
         protected void populateItem(ListItem cell)
         {

@@ -14,21 +14,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import wicket.Model;
+import wicket.RequestCycle;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.HtmlComponent;
+import wicket.markup.html.HtmlPage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.table.ListItem;
+import wicket.markup.html.table.ListView;
+import wicket.util.convert.ConverterRegistry;
+import wicket.util.convert.FormattingUtils;
+
 import nl.openedge.gaps.core.groups.ParameterGroup;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.impl.NestedParameter;
 
-import com.voicetribe.util.convert.ConverterRegistry;
-import com.voicetribe.util.convert.FormattingUtils;
-import com.voicetribe.wicket.Model;
-import com.voicetribe.wicket.RequestCycle;
-import com.voicetribe.wicket.markup.ComponentTag;
-import com.voicetribe.wicket.markup.MarkupStream;
-import com.voicetribe.wicket.markup.html.HtmlComponent;
-import com.voicetribe.wicket.markup.html.HtmlPage;
-import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.table.ListItem;
-import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * Pagina voor geneste parameters.
@@ -122,7 +123,7 @@ public final class NestedParameterPopupPage extends HtmlPage
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
          */
         protected void populateItem(ListItem cell)
         {
@@ -147,7 +148,7 @@ public final class NestedParameterPopupPage extends HtmlPage
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
          */
         protected void populateItem(ListItem cell)
         {
@@ -187,7 +188,7 @@ public final class NestedParameterPopupPage extends HtmlPage
          * Allows modification of component tag.
          * @param cycle The request cycle
          * @param tag The tag to modify
-         * @see com.voicetribe.wicket.Component#handleComponentTag(RequestCycle, com.voicetribe.wicket.markup.ComponentTag)
+         * @see wicket.Component#handleComponentTag(RequestCycle, wicket.markup.ComponentTag)
          */
         protected final void handleComponentTag(final RequestCycle cycle, final ComponentTag tag)
         {
@@ -196,7 +197,7 @@ public final class NestedParameterPopupPage extends HtmlPage
         }
 
         /**
-         * @see com.voicetribe.wicket.Component#handleBody(com.voicetribe.wicket.RequestCycle, com.voicetribe.wicket.markup.MarkupStream, com.voicetribe.wicket.markup.ComponentTag)
+         * @see wicket.Component#handleBody(wicket.RequestCycle, wicket.markup.MarkupStream, wicket.markup.ComponentTag)
          */
         protected void handleBody(final RequestCycle cycle, final MarkupStream markupStream, final ComponentTag openTag)
         {

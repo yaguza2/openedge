@@ -9,7 +9,7 @@
  */
 package nl.openedge.gaps.ui.web;
 
-import com.voicetribe.wicket.PageParameters;
+import wicket.PageParameters;
 
 
 /**

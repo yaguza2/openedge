@@ -12,6 +12,13 @@ package nl.openedge.gaps.ui.web;
 import java.util.Arrays;
 import java.util.List;
 
+import wicket.PageParameters;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.ExternalPageLink;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.table.ListItem;
+import wicket.markup.html.table.ListView;
+
 import nl.openedge.gaps.core.Entity;
 import nl.openedge.gaps.core.groups.Group;
 import nl.openedge.gaps.core.groups.ParameterGroup;
@@ -19,12 +26,6 @@ import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.support.ParameterBrowser;
 
-import com.voicetribe.wicket.PageParameters;
-import com.voicetribe.wicket.markup.html.basic.Label;
-import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
-import com.voicetribe.wicket.markup.html.link.Link;
-import com.voicetribe.wicket.markup.html.table.ListItem;
-import com.voicetribe.wicket.markup.html.table.ListView;
 
 /**
  * De GAPS onderhoud pagina.
@@ -119,7 +120,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
         }
 
         /**
-         * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+         * @see wicket.markup.html.table.Table#populateCell(wicket.markup.html.table.Cell)
          */
         protected void populateItem(ListItem cell)
         {
