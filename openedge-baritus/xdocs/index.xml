@@ -9,13 +9,6 @@
 
   <body>
 
-    <section name="About this Guide">
-      <p>
-        The Baritus User Guide is intended to help developers get acquainted with Baritus.
-		If you have any suggestions or comments please feel free to post them to the
-        <a href="http://lists.sourceforge.net/lists/listinfo/baritus-user">list</a>.
-      </p>
-    </section>
   <section name="Overview">
     <p>
     Baritus is an open source framework for building Java web applications. 
