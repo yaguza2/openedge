@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <classpath>
-    <classpathentry kind="src" path="src/main/java"/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="lib/junit.jar" sourcepath="/openedge-util/libsrc/junit-src.jar"/>
-    <classpathentry kind="lib" path="lib/commons-beanutils-1.5.jar" sourcepath="/openedge-util/libsrc/commons-beanutils-1.5-src.jar"/>
-    <classpathentry kind="lib" path="lib/jakarta-ojb-1.0pre-cvs.jar"/>
-    <classpathentry kind="lib" path="lib/commons-lang-1.0.1.jar" sourcepath="/openedge-util/libsrc/commons-lang-1.0.1-src.jar"/>
-    <classpathentry kind="lib" path="lib/standard.jar" sourcepath="/openedge-util/libsrc/jstl-standard-src.jar"/>
-    <classpathentry kind="lib" path="lib/jstl.jar" sourcepath="/openedge-util/libsrc/jstl-standard-src.jar"/>
-    <classpathentry kind="lib" path="lib/commons-dbcp-1.0.jar" sourcepath="/openedge-util/libsrc/commons-dbcp-1.0-src.jar"/>
-    <classpathentry kind="output" path="build"/>
+  <classpathentry kind="src" path="src/main/java">
+  </classpathentry>
+  <classpathentry kind="src" path="src/test">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
+  </classpathentry>
+  <classpathentry kind="var" rootpath="JRE_SRCROOT" path="JRE_LIB" sourcepath="JRE_SRC">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.5.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.0.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/commons-lang/jars/commons-lang-1.0.1.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/jstl/jars/jstl-1.0.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/jakarta-taglibs-standard/jars/jakarta-taglibs-standard-1.0.3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/ojb/jars/ojb-1.0pre-cvs.jar">
+  </classpathentry>
+  <classpathentry kind="output" path="target/classes">
+  </classpathentry>
 </classpath>

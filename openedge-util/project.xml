@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project>
+  <pomVersion>3</pomVersion>
+  <id>oeutils</id>
+  <name>OpenEdge Utils</name>
+  <currentVersion>1.0</currentVersion>
+  <organization>
+    <name>Open Edge</name>
+    <url>http://www.openedge.nl/</url>
+    <logo>/images/logo.jpg</logo>
+  </organization>
+  <inceptionYear>2002</inceptionYear>
+  <package>nl.openedge.util</package>
+  <logo>/images/maven.jpg</logo>
+  <!-- Gump integration -->
+
+  <!-- <gumpRepositoryId>jakarta</gumpRepositoryId> -->
+  
+  <description>OpenEdge Utils is a project for utility classes/ helpers that are usefull enough to share amongst projects, but are too small to have their own project</description>
+  <shortDescription>Reusable Utilities</shortDescription>
+  <url>http://maven.apache.org/</url>
+
+  <repository>
+    <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-access</connection>
+  </repository>
+  
+  <!-- <versions>
+    <version>
+      <id>b9</id>
+      <name>1.0-beta-9</name>
+      <tag>MAVEN_1_0_B9</tag>
+    </version>
+    <version>
+      <id>b10</id>
+      <name>1.0-beta-10</name>
+      <tag>HEAD</tag>
+    </version>
+  </versions> -->
+  <branches></branches>
+  <mailingLists>
+  </mailingLists>
+  
+  <developers>
+    <developer>
+      <name>Eelco Hillenius</name>
+      <id>eelco</id>
+      <email>eelco.hillenius@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Sander Hofstee</name>
+      <id>sander</id>
+      <email>sander.hofstee@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>KlaasJan Brand</name>
+      <id>eelco</id>
+      <email>klaas.jan.brand@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 1.1</name>
+      <url>http://cvs.apache.org/viewcvs.cgi/*checkout*/maven/LICENSE.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <dependencies>
+
+    <dependency>
+      <id>commons-beanutils</id>
+      <version>1.5</version>
+      <url>http://jakarta.apache.org/commons/beanutils/</url>
+    </dependency>
+
+    <dependency>
+      <id>commons-dbcp</id>
+      <version>1.0</version>
+      <url>http://jakarta.apache.org/commons/dbcp/</url>
+    </dependency>
+
+    <dependency>
+      <id>commons-lang</id>
+      <version>1.0.1</version>
+      <url>http://jakarta.apache.org/commons/lang/</url>
+    </dependency>
+    
+    <dependency>
+      <id>jstl</id>
+      <version>1.0</version>
+      <url>http://java.sun.com/products/jsp/jstl/</url>
+    </dependency>
+    
+    <dependency>
+      <id>jakarta-taglibs-standard</id>
+      <version>1.0.3</version>
+      <url>http://jakarta.apache.org/taglibs/</url>
+    </dependency>
+
+    <dependency>
+      <id>ojb</id>
+      <version>1.0pre-cvs</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <nagEmailAddress>info@openedge.nl</nagEmailAddress>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <aspectSourceDirectory/>
+
+    <unitTest>
+      <resources>
+        <resource>
+          <directory>src/java/test</directory>
+          <includes>
+            <include>**/*.werk</include>
+            <include>**/*.xml</include>
+            <include>**/*.properties</include>
+          </includes>
+        </resource>
+      </resources>
+
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+<!--
+      <excludes>
+        <exclude>**/*.java</exclude>
+      </excludes>
+-->
+
+    </unitTest>
+
+    <resources>
+      <resource>
+        <directory>src/java/main</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+
+  </build>
+
+</project>
