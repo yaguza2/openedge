@@ -8,6 +8,7 @@ package nl.openedge.gaps.core.parameters.test;
 
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.List;
 
 import junit.framework.TestCase;
 import nl.openedge.gaps.core.NotFoundException;
@@ -38,6 +39,7 @@ import nl.openedge.gaps.support.ParameterBrowser;
 import nl.openedge.gaps.support.ParameterBuilder;
 import nl.openedge.gaps.support.ParameterBuilderException;
 import nl.openedge.gaps.support.berekeningen.BerekeningInterpreter;
+import nl.openedge.gaps.util.CacheUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -113,6 +115,39 @@ public abstract class AbstractParameterTest extends TestCase
 		VersionRegistry.updateVersion(nieuweVersieSubParamGroep);
 //		Parameter checkParam2 = (Parameter) browser
 //				.navigate("/super/subgroep:subparamgroep/teststring");
+
+        Object pos = browser.navigate("/");
+        assertNotNull(pos);
+        assertTrue(pos instanceof StructuralRootGroup);
+        builder.navigate("/");
+        builder.createParameterGroup("rootParamGroup", "test voor groep direct onder root");
+        // schoon caches, zodat we zeker weten dat de resultaten vers uit de database komen
+        // zoals dit het geval zou zijn na een herstart van de applicatie
+        CacheUtil.resetCache();
+
+        // navigeer naar root
+        pos = browser.navigate("/");
+        assertNotNull(pos);
+        assertTrue(pos instanceof StructuralRootGroup);
+        StructuralGroup root = (StructuralGroup) pos;
+
+        // check of 'super' nog steeds bekend is als structuurgroep onder de rootgroep
+        List structChildIds = root.getStructuralChildIds();
+        assertNotNull(structChildIds);
+        assertFalse(structChildIds.isEmpty());
+        StructuralGroup[] cchilds = root.getStructuralChilds();
+        assertNotNull(cchilds);
+        assertEquals(1, cchilds.length);
+        assertEquals("super", cchilds[0].getLocalId());
+
+        // check of er nog steeds 2 parametergroepen onder de rootgroep hangen
+        //(nml de default en de groep die we hiervoor hebben toegevoegd).
+        List paramChildIds = root.getParameterChildIds();
+        assertNotNull(paramChildIds);
+        assertFalse(paramChildIds.isEmpty());
+        ParameterGroup[] pchilds = root.getParameterChilds();
+        assertNotNull(pchilds);
+        assertEquals(2, pchilds.length);
 	}
 
 	/**
