@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.2 2004-02-25 10:33:08 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-02-25 10:33:08 $
+ * $Id: FormBeanCtrl.java,v 1.3 2004-02-25 21:53:28 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-02-25 21:53:28 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,7 +34,6 @@ import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -59,14 +58,12 @@ import nl.openedge.baritus.util.MessageUtils;
 import nl.openedge.baritus.util.ValueUtils;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
-import nl.openedge.baritus.validation.ValidationRuleDependend;
 import nl.openedge.baritus.validation.ValidatorActivationRule;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.MultiMap;
-import org.apache.commons.lang.exception.NestableException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ConfigException;
@@ -102,7 +99,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/** session key for the current locale */
 	public static final String SESSION_KEY_CURRENT_LOCALE = "_currentLocale";
 	
-	/** 
+	/*
 	 * Key for request attribute that is used to store the formbean context.
 	 * This key is used to be able to reuse the formbean context with
 	 * multiple commands within the same request without having to figure out
@@ -114,10 +111,10 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	
 	//--------------------- logs --------------------------------------------------/
 	
-	/** log for this class */
+	/* log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
 	
-	/** population log */
+	/* population log */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
 
 
@@ -128,6 +125,16 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 	// registry for form validators, field validators and rules that apply to them
 	private ValidatorRegistry validatorRegistry = new ValidatorRegistry();
+	
+	// default delegate for validation. Users of this framework can add
+	// validator delegates if they want, e.g. ones that are based on
+	// commons validator or formproc. This instance of ValidatorDelegate however,
+	// will allways be executed (first).
+	private ValidatorDelegate defaultValidatorDelegate
+		= new DefaultValidatorDelegate(validatorRegistry, this);
+		
+	// validator delegates
+	private List validatorDelegates = null;
 	
 	// registry for form interceptors
 	private InterceptorRegistry interceptorRegistry = new InterceptorRegistry();
@@ -436,8 +443,24 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			popSuccessRequestParams && popSuccessRequestAttribs);
 		
 		// do custom validation
-		succeeded = doCustomValidation(
+		succeeded = defaultValidatorDelegate.doValidation(
 			cctx, formBeanContext, _execParams, allParameters, locale, succeeded);
+			
+		List additionalValidators = getValidatorDelegates();
+		if(additionalValidators != null) // if there are any delegates registered
+		{
+			for(Iterator i = additionalValidators.iterator(); i.hasNext(); )
+			{ // loop through them
+				boolean _succeeded = succeeded; // set to last known val
+				
+				ValidatorDelegate valDel = (ValidatorDelegate)i.next();
+				_succeeded = valDel.doValidation(
+					cctx, formBeanContext, executionParams,
+					allParameters, locale, _succeeded);
+				
+				if(!_succeeded) succeeded = false;
+			}
+		}
 		
 		return succeeded;
 	}
@@ -716,223 +739,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 
 	
-	/* handle custom validation for all fields */
-	private boolean doCustomValidation(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext, 
-		ExecutionParams _execParams,
-		Map parameters,
-		Locale locale,
-		boolean succeeded)
-	{
-		
-		if(parameters == null || parameters.isEmpty()) return succeeded;
-		
-		MultiMap fieldValidators = validatorRegistry.getFieldValidators();
-		List formValidators = validatorRegistry.getFormValidators();
-		List globalValidatorActivationRules = 
-			validatorRegistry.getGlobalValidatorActivationRules();
-		
-		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
-			(formValidators != null && (!formValidators.isEmpty())))
-		{
-	
-			boolean doCustomValidation = true;
-			// see if there's any globally (form level) defined rules
-			if(globalValidatorActivationRules != null && (!globalValidatorActivationRules.isEmpty()))
-			{
-				for(Iterator i = globalValidatorActivationRules.iterator(); i.hasNext(); )
-				{
-					ValidatorActivationRule rule = (ValidatorActivationRule)i.next();
-					doCustomValidation = rule.allowValidation(cctx, formBeanContext); // fire rule
-					if(!doCustomValidation) break;
-				}
-			}
-			
-			if(doCustomValidation)
-			{
-				// if fieldValidators were registered
-				if(fieldValidators != null && (!fieldValidators.isEmpty()))
-				{
-					Iterator names = parameters.keySet().iterator(); // loop through the properties
-					while(names.hasNext())
-					{
-						String name = (String)names.next();
-						if (name == null) continue;
-						if(formBeanContext.getOverrideField(name) == null) 
-							// see if there allready was an error registered
-						{
-							Collection propertyValidators = (Collection)fieldValidators.get(name);
-							// these are the fieldValidators for one property
-							if(propertyValidators != null)
-							{
-								try
-								{
-									succeeded = doCustomValidationForOneField(
-										cctx, formBeanContext, locale, succeeded, 
-										name, propertyValidators);
-								}
-								catch (Exception e)
-								{
-									if(populationLog.isDebugEnabled())
-									{
-										// when in debug mode, print the stacktrace
-										populationLog.error(e.getMessage(), e);
-									}
-									populationLog.error(e.getMessage());
-									// ignore
-								}
-							}	
-						} // else an error allready occured; do not validate
-					}	
-				}
-				// if we are still successful so far, check with the form level validators
-				if( (succeeded || _execParams.isDoFormValidationIfFieldValidationFailed()) 
-					&& (formValidators != null))
-				{
-					// check all registered until either all fired successfully or
-					// one did not fire succesfully
-					for(Iterator i = formValidators.iterator(); i.hasNext(); )
-					{
-						FormValidator fValidator = (FormValidator)i.next();
-						boolean fireValidator = true;
-						if(fValidator instanceof ValidationRuleDependend)
-						{
-							ValidatorActivationRule fRule = 
-								((ValidationRuleDependend)fValidator).getValidationActivationRule();
-							if(fRule != null)
-							{
-								if(!fRule.allowValidation(cctx, formBeanContext))
-								{
-									fireValidator = false;
-								}	
-							}
-						}
-						if(fireValidator)
-						{
-							if(!fValidator.isValid(cctx, formBeanContext))
-							{
-								succeeded = false;
-								String[] msg = fValidator.getErrorMessage(
-									cctx, formBeanContext, locale);
-									
-								if(msg != null && (msg.length > 0))
-								{
-									formBeanContext.setError(msg[0], msg[1]);	
-								}
-							}	
-						}
-						// else ignore
-					}
-				}
-			}
-
-		}
-		
-		return succeeded;
-	}
-	
-	/* handle the custom validation for one field */
-	private boolean doCustomValidationForOneField(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		Locale locale,
-		boolean succeeded,
-		String name,
-		Collection propertyValidators)
-		throws Exception
-	{
-		// get target value;
-		// this could be done a bit more efficient, as we allready had
-		// the (converted) value when populating. Working more efficient 
-		// (like with a converted value cache) would make the API of
-		// populators less straightforward, and by getting the property
-		// from the bean instead of using the converted value, we are
-		// sure that we get the property the proper (java beans) way.
-		Object value = PropertyUtils.getProperty(formBeanContext.getBean(), name);
-		
-		// for all validators for this field
-		for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
-		{
-			FieldValidator validator = (FieldValidator)j.next();
-			boolean validateField = true;
-								
-			if(validator instanceof ValidationRuleDependend) // should we execute rule
-			{
-				ValidatorActivationRule rule = 
-					((ValidationRuleDependend)validator)
-						.getValidationActivationRule();
-				if(rule != null)
-				{
-					validateField = rule.allowValidation(cctx, formBeanContext); //test
-					
-					if(populationLog.isDebugEnabled())
-					{
-						populationLog.debug( name + ": rule " + rule + 
-							((validateField) ? " ALLOWS" : " DISALLOWS") +
-							" validation with " + validator);
-					}
-				}
-			}
-								
-			if(validateField)
-			{
-				// execute validation method
-				boolean success;
-				try
-				{
-					success = validator.isValid(cctx, formBeanContext, name, value);
-				}
-				catch (Exception e)
-				{
-					String msg = "validator " + validator + " threw exception: " +
-						e.getMessage() + " on property " + name + " with value " +
-						value;
-					throw new NestableException(msg, e);
-				}
-				
-				if(populationLog.isDebugEnabled())
-				{
-					populationLog.debug( "validation" +
-						((success) ? " PASSED" : " FAILED") +
-						" for field " + name + " using validator " + validator);
-				}
-				
-				if(!success)
-				{
-					succeeded = false;
-					try
-					{
-						String msgName = MessageUtils.getLocalizedMessage(getPropertyNameKey(name));
-						String msg = validator.getErrorMessage(
-							cctx, formBeanContext, (msgName != null) ? msgName : name, value, locale);
-						
-						if(msg != null)
-						{
-							formBeanContext.setError(name, msg);	
-						}
-					}
-					catch (Exception e)
-					{
-						if(populationLog.isDebugEnabled())
-						{
-							// print with stacktrace if debug enabled
-							populationLog.error(e.getMessage(), e);
-						}
-						else
-						{
-							populationLog.error(e.getMessage());
-						}
-						formBeanContext.setError(name, e.getMessage());
-					}
-					setOverrideField(cctx, formBeanContext, name, value, null, validator);
-					break;
-				}	
-			}
-		}
-		return succeeded;	
-	}
-	
 	/*
 	 * Called when populating the form failed.
 	 * @param cctx maverick context
@@ -993,14 +799,14 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * uses getConversionErrorLabelKey to get the specific label.
 	 * NOTE: this will be used in case of conversion errors ONLY. If a validator
 	 * causes an error (after normal conversion) the error message of the validator
-	 * will be used, not this method
+	 * will be used, not this method.
 	 * 
 	 * The message is formatted with objects triedValue, name (by calling getPropertyNameKey)
 	 * and t, so you can use {0}, {1} and {2} resp. with your custom message.
 	 * 
 	 * If there is an entry in the default resource bundle that has form:
 	 * 		formname.[name] (eg. formname.firstname and formname.lastname)
-	 * 		the name parameter {1} will be replaced with this value
+	 * 		the name parameter {1} will be replaced with this value.
 	 * 
 	 * @param cctx controller context
 	 * @param formBeanContext context with form bean
@@ -1055,7 +861,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * get the message bundle key for the given property name
+	 * get the message bundle key for the given property name.
+	 * 
 	 * @param name property name
 	 * @return String the message bundle key of the property, defaults to "formname." + name
 	 */
@@ -1066,7 +873,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	
 	/**
 	 * get the message bundle key for a conversion error for the given type 
-	 * and field with the given name
+	 * and field with the given name.
+	 * 
 	 * @param type type of the target property that threw the conversion error
 	 * @param name name of the target property
 	 * @param triedValue the value that could not be converted to the type of the 
@@ -1114,7 +922,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * set on the form or did not pass validation. by registering the 'original' value
 	 * (possibly modified by overrides of either this method or the 'getOverrideValue'
 	 * of the validator that was the cause of the validation failure) end users can have
-	 * their 'wrong' input value shown
+	 * their 'wrong' input value shown.
+	 * 
 	 * @param cctx controller context
 	 * @param formBeanContext context with form bean
 	 * @param name name of the field
@@ -1171,8 +980,50 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	//**************************** validators ********************************************/
 	
 	/**
+	 * add a validator delegate.
+	 * ValidatorDelegates can do validation on input and populated form beans.
+	 * Besides the allways used DefaultValidatorDelegate, users of Baritus
+	 * can register additional delegates, for instance to be able to plug in
+	 * validator mechanisms like FormProc or Commons Validator.
+	 * 
+	 * @param validatorDelegate
+	 */
+	protected void addValidatorDelegate(ValidatorDelegate validatorDelegate)
+	{
+		if(validatorDelegates == null)
+		{
+			validatorDelegates = new ArrayList(1);
+		}
+		validatorDelegates.add(validatorDelegate);
+	}
+	
+	/**
+	 * remove a validator delegate.
+	 * 
+	 * @param validatorDelegate
+	 */
+	protected void removeValidatorDelegate(ValidatorDelegate validatorDelegate)
+	{
+		if(validatorDelegates != null)
+		{
+			validatorDelegates.remove(validatorDelegate);
+		}
+	}
+	
+	/**
+	 * get the list of registered validator delegates.
+	 * 
+	 * @return the list of registered validator delegates, possibly null.
+	 */
+	protected List getValidatorDelegates()
+	{
+		return validatorDelegates;	
+	}
+	
+	/**
 	 * register a field validator for the given fieldName. 
 	 * multiple fieldValidators for one key are allowed. 
+	 * 
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
@@ -1182,9 +1033,10 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * register a form validator
+	 * register a form validator.
 	 * form validators will be called after the field level validators executed
 	 * successfully, and thus can be used to check consistency etc.
+	 * 
 	 * @param validator the form level validator
 	 */
 	protected void addValidator(FormValidator validator)
@@ -1193,7 +1045,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * de-register the fieldValidators that were registered with the given fieldName
+	 * de-register the fieldValidators that were registered with the given fieldName.
+	 * 
 	 * @param fieldName name of field
 	 */
 	protected void removeValidators(String fieldName)
@@ -1202,7 +1055,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * de-register the given validator that was registered with the given fieldName
+	 * de-register the given validator that was registered with the given fieldName.
+	 * 
 	 * @param fieldName name of field
 	 * @param the validator to remove for the given field
 	 */
@@ -1212,7 +1066,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * de-register the given form level validator
+	 * de-register the given form level validator.
+	 * 
 	 * @param validator form validator
 	 */
 	protected void removeValidator(FormValidator validator)
@@ -1221,7 +1076,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * register the rule for the whole form
+	 * register the rule for the whole form.
+	 * 
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
@@ -1231,8 +1087,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * de-register the given rule for the whole form
-	 * @param fieldName
+	 * de-register the given rule for the whole form.
+	 * 
+	 * @param rule global rule to remove
 	 */
 	protected void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
@@ -1240,7 +1097,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * get the fieldValidators that were registered with the given fieldName
+	 * get the fieldValidators that were registered with the given fieldName.
+	 * 
 	 * @param fieldName name of the field
 	 * @return MultiMap the fieldValidators that were registered with the given fieldName
 	 */
@@ -1254,7 +1112,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	
 	/**
 	 * Register a field populator for the given fieldName. 
-	 * Field populators override the default population of a property on the current form
+	 * Field populators override the default population of a property on the current form.
+	 * 
 	 * @param fieldName name of field
 	 * @param populator populator instance
 	 */
@@ -1265,7 +1124,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 	
 	/**
-	 * de-register the field populator that was registered with the given fieldName
+	 * de-register the field populator that was registered with the given fieldName.
+	 * 
 	 * @param fieldName name of field
 	 */
 	protected void removePopulator(String fieldName)
@@ -1316,7 +1176,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	//**************************** interceptors *******************************************/
 	
 	/**
-	 * add an interceptor to the current list of interceptors
+	 * add an interceptor to the current list of interceptors.
+	 * 
 	 * @param interceptor the interceptor to add to the current list of interceptors
 	 */
 	protected void addInterceptor(Interceptor interceptor)
@@ -1325,7 +1186,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * add an interceptor to the current list of interceptors at the specified position
+	 * add an interceptor to the current list of interceptors at the specified position.
+	 * 
 	 * @param index index position where to insert the interceptor
 	 * @param interceptor the interceptor to add to the current list of interceptors
 	 */
@@ -1336,7 +1198,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 	
 	/**
-	 * remove an interceptor from the current list of interceptors
+	 * remove an interceptor from the current list of interceptors.
+	 * 
 	 * @param interceptor the interceptor to remove from the current list of interceptors
 	 */
 	protected void removeInterceptor(Interceptor interceptor)
@@ -1347,10 +1210,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	// ************************ misc utility- and property methods *********************/
 	
 	/**
-	 * check if the value is null or empty
+	 * check if the value is null or empty.
+	 * 
 	 * @param value object to check on
-	 * @return true if value is not null AND not empty (e.g. 
-	 * in case of a String or Collection)
+	 * @return true if value is not null AND not empty 
+	 * 	(e.g. in case of a String or Collection)
 	 */	
 	protected boolean isNullOrEmpty(Object value)
 	{
@@ -1358,7 +1222,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * get localized message for given key
+	 * get localized message for given key.
+	 * 
 	 * @param key key of message
 	 * @return String localized message
 	 */
@@ -1369,7 +1234,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 
 	/**
 	 * get localized message for given key and locale. 
-	 * If locale is null, the default locale will be used
+	 * If locale is null, the default locale will be used.
+	 * 
 	 * @param key key of message
 	 * @param locale locale for message
 	 * @return String localized message
@@ -1382,7 +1248,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/**
 	 * get localized message for given key and locale
 	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
+	 * If locale is null, the default locale will be used.
+	 * 
 	 * @param key key of message
 	 * @param locale locale for message
 	 * @param parameters parameters for the message
@@ -1396,7 +1263,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/**
 	 * get localized message for given key and locale
 	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used
+	 * If locale is null, the default locale will be used.
+	 * 
 	 * @param key key of message
 	 * @param locale locale for message
 	 * @param parameters parameters for the message
@@ -1415,7 +1283,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * IF a user is set in the form, the preferedLocale will be checked for this user.
 	 * IF a locale is found as an attribute in the session with key 
 	 * 		SESSION_KEY_CURRENT_LOCALE, the previous found locale(s) 
-	 * 		will be replaced with this value
+	 * 		will be replaced with this value.
+	 * 
 	 * @param cctx controller context
 	 * @param formBeanContext context
 	 * @return Locale the prefered locale
@@ -1441,7 +1310,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * get error view. 'error' by default
+	 * get error view. 'error' by default.
+	 * 
 	 * @param cctx controller context
 	 * @param formBeanContext context
 	 * @return String logical name of view
