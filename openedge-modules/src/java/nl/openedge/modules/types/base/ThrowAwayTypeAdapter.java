@@ -31,7 +31,9 @@
 package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ModuleLookupException;
+import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.ModuleAdapter;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for throw away modules
@@ -62,14 +64,20 @@ public class ThrowAwayTypeAdapter extends ModuleAdapter
 			throw new ModuleLookupException(ex);
 		}
 		
+
 		try
 		{
 			executeInitCommands(instance);
 		}
-		catch (Exception e)
+		catch (InitCommandException e)
 		{
 			throw new ModuleLookupException(e);
 		}
+		catch (ConfigException e)
+		{
+			throw new ModuleLookupException(e);
+		}
+
 
 		return instance;
 	}

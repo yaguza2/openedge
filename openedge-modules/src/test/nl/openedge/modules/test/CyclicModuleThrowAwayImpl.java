@@ -28,64 +28,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.base;
+package nl.openedge.modules.test;
 
-import nl.openedge.modules.ModuleLookupException;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.ModuleAdapter;
-import nl.openedge.modules.types.initcommands.InitCommandException;
+import nl.openedge.modules.types.base.ThrowAwayType;
+import nl.openedge.modules.types.initcommands.DependentType;
 
 /**
- * wrapper for singleton modules per Thread
  * @author Eelco Hillenius
  */
-public class ThreadSingletonTypeAdapter extends ModuleAdapter
+public class CyclicModuleThrowAwayImpl implements DependentType, ThrowAwayType
 {
-	
-	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
+
+	private DependentType reference = null;
+
+	public CyclicModuleThrowAwayImpl()
+	{
+		System.out.println(this + " created!");
+	}
 
 	/**
-	 * get instance of module
-	 * @return new instance for each request
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
+	 * @return DependentType
 	 */
-	public Object getModule() throws ModuleLookupException
+	public DependentType getReference()
 	{
-		Object singletonInstance = singletonInstanceHolder.get();
-		
-		synchronized(this)
-		{
-			if(singletonInstance == null)
-			{
+		return reference;
+	}
 
-				try
-				{
-					singletonInstance = moduleClass.newInstance();
-					
-					singletonInstanceHolder.set(singletonInstance);
-					
-					executeInitCommands(singletonInstance);
-				}
-				catch (InstantiationException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (InitCommandException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (ConfigException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-
-			}
-		}
-		return singletonInstance;
+	/**
+	 * @param reference
+	 */
+	public void setReference(DependentType reference)
+	{
+		this.reference = reference;
 	}
 
 }

@@ -50,7 +50,7 @@ public abstract class AbstractTestBase extends TestCase
 
 	/** access factory */
 	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
+	protected static boolean initialised = false;
 
 	/** construct */
 	public AbstractTestBase(String name) throws Exception

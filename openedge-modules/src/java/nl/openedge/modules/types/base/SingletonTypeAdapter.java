@@ -31,7 +31,9 @@
 package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ModuleLookupException;
+import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.ModuleAdapter;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * wrapper for singleton modules
@@ -54,18 +56,31 @@ public class SingletonTypeAdapter extends ModuleAdapter
 		{
 			if(this.singletonInstance == null)
 			{
-		
+
 				try
 				{
 					singletonInstance = moduleClass.newInstance();
 					
 					executeInitCommands(singletonInstance);
-					
 				}
-				catch (Exception ex)
+				
+				catch (InstantiationException e)
 				{
-					throw new ModuleLookupException(ex);
-				}	
+					throw new ModuleLookupException(e);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new ModuleLookupException(e);
+				}
+				catch (InitCommandException e)
+				{
+					throw new ModuleLookupException(e);
+				}
+				catch (ConfigException e)
+				{
+					throw new ModuleLookupException(e);
+				}
+
 			}
 		}
 		return singletonInstance;

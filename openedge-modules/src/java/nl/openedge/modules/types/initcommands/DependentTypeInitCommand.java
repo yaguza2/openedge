@@ -50,6 +50,8 @@ public class DependentTypeInitCommand implements InitCommand
 	
 	private List namedDependencies = null;
 	
+	private String componentName;
+	
 
 	/**
 	 * initialize
@@ -63,6 +65,7 @@ public class DependentTypeInitCommand implements InitCommand
 	{
 		
 		this.moduleFactory = moduleFactory;
+		this.componentName = componentName;
 		loadDependencies(componentNode);
 	}
 	
@@ -94,18 +97,27 @@ public class DependentTypeInitCommand implements InitCommand
 	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+		throws InitCommandException, ConfigException, CyclicDependencyException
 	{
 
 		if(componentInstance instanceof DependentType)
 		{
 			// create decorator with instance
 			DependentTypeDeco solver = new DependentTypeDeco();
+			solver.setComponentName(this.componentName);
 			solver.setComponentInstance((DependentType)componentInstance);
 			solver.setNamedDependencies(this.namedDependencies);
 			solver.setModuleFactory(this.moduleFactory);
 			
-			solver.execute(componentInstance);
+//			try
+//			{
+				solver.execute(componentInstance);
+//			}
+//			catch(CyclicDependencyException e)
+//			{
+//				e.printStackTrace();
+//				throw new InitCommandException(e);
+//			}
 			
 		}
 		else

@@ -28,64 +28,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.base;
-
-import nl.openedge.modules.ModuleLookupException;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.ModuleAdapter;
-import nl.openedge.modules.types.initcommands.InitCommandException;
+package nl.openedge.modules.types.initcommands;
 
 /**
- * wrapper for singleton modules per Thread
+ * Thrown when a cyclic dependency is detected
  * @author Eelco Hillenius
  */
-public class ThreadSingletonTypeAdapter extends ModuleAdapter
+public class CyclicDependencyException extends RuntimeException
 {
-	
-	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
 
 	/**
-	 * get instance of module
-	 * @return new instance for each request
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
+	 * construct
 	 */
-	public Object getModule() throws ModuleLookupException
+	public CyclicDependencyException()
 	{
-		Object singletonInstance = singletonInstanceHolder.get();
-		
-		synchronized(this)
-		{
-			if(singletonInstance == null)
-			{
+		super();
+	}
 
-				try
-				{
-					singletonInstance = moduleClass.newInstance();
-					
-					singletonInstanceHolder.set(singletonInstance);
-					
-					executeInitCommands(singletonInstance);
-				}
-				catch (InstantiationException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (InitCommandException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (ConfigException e)
-				{
-					throw new ModuleLookupException(e);
-				}
+	/**
+	 * construct with message
+	 * @param message
+	 */
+	public CyclicDependencyException(String message)
+	{
+		super(message);
+	}
 
-			}
-		}
-		return singletonInstance;
+	/**
+	 * construct with message and cause
+	 * @param message
+	 * @param cause
+	 */
+	public CyclicDependencyException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * construct with cause
+	 * @param cause
+	 */
+	public CyclicDependencyException(Throwable cause)
+	{
+		super(cause);
 	}
 
 }

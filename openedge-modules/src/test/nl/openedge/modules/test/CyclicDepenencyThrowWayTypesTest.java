@@ -28,64 +28,69 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.base;
+package nl.openedge.modules.test;
 
-import nl.openedge.modules.ModuleLookupException;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import nl.openedge.modules.JDOMConfigurator;
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.ModuleFactoryFactory;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.ModuleAdapter;
-import nl.openedge.modules.types.initcommands.InitCommandException;
+import nl.openedge.modules.config.URLHelper;
+import nl.openedge.modules.types.initcommands.CyclicDependencyException;
 
 /**
- * wrapper for singleton modules per Thread
- * @author Eelco Hillenius
+ * modules related tests
+ * 
+ * @author E.F. Hillenius
  */
-public class ThreadSingletonTypeAdapter extends ModuleAdapter
+public class CyclicDepenencyThrowWayTypesTest extends TestCase
 {
-	
-	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
 
 	/**
-	 * get instance of module
-	 * @return new instance for each request
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
+	 * construct with name
+	 * @param name
 	 */
-	public Object getModule() throws ModuleLookupException
+	public CyclicDepenencyThrowWayTypesTest(String name) throws Exception
 	{
-		Object singletonInstance = singletonInstanceHolder.get();
-		
-		synchronized(this)
+		super(name);
+	}
+
+	public void testLoadCyclicModuleFactory() throws Exception
+	{
+
+		try
 		{
-			if(singletonInstance == null)
+
+			URL url =
+				URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml",
+					AbstractTestBase.class,
+					null);
+
+			JDOMConfigurator c = new JDOMConfigurator(url);
+			ModuleFactory moduleFactory = ModuleFactoryFactory.getInstance();
+
+			// if we get here, the cycle was not detected
+			fail("cycle was not detected!");
+
+		}
+		catch (ConfigException e)
+		{
+			if(e.getCause() instanceof CyclicDependencyException)
 			{
-
-				try
-				{
-					singletonInstance = moduleClass.newInstance();
-					
-					singletonInstanceHolder.set(singletonInstance);
-					
-					executeInitCommands(singletonInstance);
-				}
-				catch (InstantiationException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (InitCommandException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-				catch (ConfigException e)
-				{
-					throw new ModuleLookupException(e);
-				}
-
+				System.err.println(
+					"successfully detected cycle during startup\n" 
+					+ e.getMessage());	
+			}
+			else
+			{
+				e.printStackTrace();
+				fail(e.getMessage());	
 			}
 		}
-		return singletonInstance;
 	}
 
 }
+

@@ -32,6 +32,8 @@ package nl.openedge.modules.types.initcommands;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -61,6 +63,12 @@ public class DependentTypeDeco
 	/** instance of module factory */
 	protected ModuleFactory moduleFactory = null;
 	
+	/** name of the component */
+	protected String componentName = null;
+	
+	/** used for cycle check */
+	protected static ThreadLocal referenceHolder = new ThreadLocal(); 
+	
 	/**
 	 * construct
 	 */
@@ -85,14 +93,42 @@ public class DependentTypeDeco
 	}
 	
 	public void setDependencies(Object componentInstance)
+		throws CyclicDependencyException
 	{
 
 		if(namedDependencies != null && (namedDependencies.size() > 0))
 		{
+	
+			Set references = (Set)referenceHolder.get();
+			
+			if(references == null)
+			{
+				references = new TreeSet();
+				references.add(componentName);
+				referenceHolder.set(references);
+			}
 			
 			for(Iterator i = namedDependencies.iterator(); i.hasNext(); )
 			{
 				NamedDependency dep = (NamedDependency)i.next();
+				
+				if(references.contains(dep.getModuleName()))
+				{
+					// got a cycle!
+					String name = dep.getModuleName();
+					String message = "\n\ncomponent with name " +
+						this.componentName + " has a cyclic dependency:" +
+						" component with name " + name + 
+						" was allready referenced. \nHere's a list of" +
+						" references where the cycle was detected:\n" +
+						references.toString() + " -> " + name + "\n";
+					
+					throw new CyclicDependencyException(message);
+				}
+				else
+				{
+					references.add(dep.getModuleName());
+				}
 				
 				// get module
 				Object gotYa = moduleFactory.getModule(dep.getModuleName());
@@ -109,6 +145,8 @@ public class DependentTypeDeco
 					throw new ModuleLookupException(e);
 				}
 			}
+			
+			referenceHolder.set(null);
 		}
 	}
 	
@@ -150,6 +188,24 @@ public class DependentTypeDeco
 	public static boolean isWasAdded()
 	{
 		return wasAdded;
+	}
+	
+	/**
+	 * get component name
+	 * @return String
+	 */
+	public String getComponentName()
+	{
+		return componentName;
+	}
+
+	/**
+	 * set component name
+	 * @param componentName name of the component
+	 */
+	public void setComponentName(String componentName)
+	{
+		this.componentName = componentName;
 	}
 
 	/**
@@ -193,6 +249,6 @@ public class DependentTypeDeco
 			// test it
 			setDependencies(componentInstance);
 		}	
-	} 
+	}
 
 }
