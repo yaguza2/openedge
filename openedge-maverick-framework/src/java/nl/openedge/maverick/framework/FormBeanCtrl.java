@@ -126,15 +126,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	private boolean noCache = true;
 	
 	/**
-	 * if population/ validation did not succeed, should we copy ALL currentRequest
-	 * parameters to the override values map (and thus giving you the option
-	 * of re-displaying the user input), or should we just fill the override fields
-	 * with the fields that failed?
-	 * the default is true (copy the whole currentRequest) 
-	 */
-	private boolean copyRequestToOverride = true;
-	
-	/**
 	 * If we get an empty string, should it be translated to a null (true) or should
 	 * the empty String be kept (false). This property is true by default
 	 */
@@ -187,6 +178,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * 
 	 */	
 	private boolean includeRequestAttributes = false;
+	
+	/**
+	 * Indicates whether the form validators should be executed when one of the 
+	 * field validators failed. Default == true
+	 */
+	private boolean doFormValidationIfFieldValidationFailed = true;
 
 	/**
 	 * subclasses can register fieldValidators for custom validation on field level
@@ -755,7 +752,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					{
 						String name = (String)names.next();
 						if (name == null) continue;
-						if(formBeanContext.getError(name) == null) 
+						if(formBeanContext.getOverrideField(name) == null) 
 						{
 							Collection propertyValidators = (Collection)fieldValidators.get(name);
 							// these are the fieldValidators for one property
@@ -780,7 +777,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					}	
 				}
 				// if we are still successful so far, check with the form level validators
-				if(succeeded && (formValidators != null))
+				if( (doFormValidationIfFieldValidationFailed || succeeded) 
+					&& (formValidators != null))
 				{
 					// check all registered until either all fired successfully or
 					// one did not fire succesfully
@@ -900,12 +898,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		if(formBeanContext == null) return;
 		// set the current model
 		cctx.setModel(formBeanContext);
-		
-		if(copyRequestToOverride)
-		{
-			// first, set overrides for the current request parameters
-			formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	
-		}
+
+		// first, set overrides for the current request parameters
+		formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	
 		
 		// do further (possibly user specific) error handling and/ or
 		// view preparing
@@ -1731,29 +1726,27 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * if population/ validation did not succeed, should we copy ALL currentRequest
-	 * parameters to the override values map (and thus giving you the option
-	 * of re-displaying the user input), or should we just fill the override fields
-	 * with the fields that failed?
-	 * @return boolean whether to copy the whole currentRequest to the override fields or just the
-	 * 	fields that failed
+	 * Indicates whether the form validators should be executed when one of the 
+	 * field validators failed. Default == true
+	 * 
+	 * @return boolean Whether the form validators should be executed when one of the 
+	 * 		field validators failed
 	 */
-	protected boolean isCopyRequestToOverride()
+	public boolean isDoFormValidationIfFieldValidationFailed()
 	{
-		return copyRequestToOverride;
+		return doFormValidationIfFieldValidationFailed;
 	}
 
 	/**
-	 * if population/ validation did not succeed, should we copy ALL currentRequest
-	 * parameters to the override values map (and thus giving you the option
-	 * of re-displaying the user input), or should we just fill the override fields
-	 * with the fields that failed?
-	 * @param b whether to copy the whole currentRequest to the override fields or just the
-	 * 	fields that failed
+	 * Indicates whether the form validators should be executed when one of the 
+	 * field validators failed. Default == true
+	 * 
+	 * @param b whether the form validators should be executed when one of the 
+	 * 		field validators failed
 	 */
-	protected void setCopyRequestToOverride(boolean b)
+	public void setDoFormValidationIfFieldValidationFailed(boolean b)
 	{
-		copyRequestToOverride = b;
+		doFormValidationIfFieldValidationFailed = b;
 	}
 
 }

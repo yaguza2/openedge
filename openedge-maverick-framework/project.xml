@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>openedge-maverick-framework</id>
 	<name>openedge-maverick-framework</name>
-	<currentVersion>1.4</currentVersion>
+	<currentVersion>1.4.1</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -16,6 +16,11 @@
 	<url>http://maven.apache.org/</url>
 
 	<versions>
+		<version>
+			<id>1.4.1</id>
+			<name>1.4.1</name>
+			<tag>B1_4_1</tag>
+		</version>
 		<version>
 			<id>1.4</id>
 			<name>1.4</name>

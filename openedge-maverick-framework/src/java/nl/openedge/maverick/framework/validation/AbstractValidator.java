@@ -123,6 +123,7 @@ public abstract class AbstractValidator
 		}
 		catch (RuntimeException e)
 		{
+			msg = key;
 			e.printStackTrace();
 		}
 		return msg;
