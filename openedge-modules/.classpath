@@ -14,6 +14,6 @@
     <classpathentry kind="var" path="MAVEN_REPO/mm.mysql/jars/mm.mysql-2.0.14-bin.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.1.2.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/openedge-utils/jars/openedge-utils-SNAPSHOT.jar"/>
+    <classpathentry kind="src" path="/openedge-util"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>

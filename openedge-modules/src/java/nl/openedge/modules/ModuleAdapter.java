@@ -32,6 +32,8 @@ package nl.openedge.modules;
 
 import java.util.Map;
 
+import nl.openedge.util.config.*;
+
 import org.jdom.Element;
 
 /**

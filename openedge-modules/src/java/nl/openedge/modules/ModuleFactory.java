@@ -32,7 +32,6 @@ package nl.openedge.modules;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,14 +46,14 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import nl.openedge.util.DateConverter;
+import nl.openedge.util.config.ConfigException;
+import nl.openedge.util.config.URLHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -65,9 +64,6 @@ import org.quartz.Trigger;
 /**
  * The ModuleFactory constructs and initialises objects that are used within
  * the autorisation framework. 
- * 
- * <p>The ModuleFactory can be initialised in several environments; in effect 
- * a web application environment and a standalone environment.
  * 
  * <p>Clients of the ModuleFactory should either construct the factory with an
  * instance of <code>javax.servlet.ServletContext</code> or with an instance
@@ -106,8 +102,6 @@ public class ModuleFactory implements CriticalEventObserver {
 	 * OpenEdge Modules configuration file.  Defaults to DEFAULT_CONFIG_FILE.
 	 */
 	protected static final String INITPARAM_CONFIG_FILE = "oemodules.configFile";
-	
-	private static ModuleFactory _instance = null;
 
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
@@ -126,58 +120,24 @@ public class ModuleFactory implements CriticalEventObserver {
 
 	/** observers for module factory events */
 	protected List observers = new ArrayList();
-
+	
 	/**
-	 * get singleton instance
-	 * NOTE that instantiate MUST be called once prior to using this method
-	 * @return
+	 * construct with configuration node
+	 * @param factoryNode configuration node for this factory
 	 */
-	public static ModuleFactory getInstance() {
-		return _instance;
+	public ModuleFactory(Element factoryNode) throws ConfigException {
+		internalInit(factoryNode, null);
 	}
 	
-	/*
-	 * hidden constructor
-	 */
-	private ModuleFactory() {
-		// do nothing
-	}
-
 	/**
-	 * construct and initialise with configDocument
+	 * construct with configuration node
+	 * @param factoryNode configuration node for this factory
+	 * @param servletContext servlet context when working in a webapp environment
 	 */
-	public static ModuleFactory instantiate(String configDocument, ModuleFactoryObserver observer) 
-				throws ConfigException {
+	public ModuleFactory(Element factoryNode, ServletContext servletContext)
+				 throws ConfigException {
+		internalInit(factoryNode, servletContext);
 		
-		_instance = new ModuleFactory();
-		if(observer != null) _instance.observers.add(observer);
-		Document configuration = _instance.loadConfigDocumentFromUrl(configDocument);
-		_instance.internalInit(configuration, null);
-		return _instance;
-	}
-	
-	/**
-	 * construct and initialise with URL to configDocument
-	 */
-	public static ModuleFactory instantiate(URL configURL, ModuleFactoryObserver observer) throws ConfigException {
-		
-		_instance = new ModuleFactory();
-		if(observer != null) _instance.observers.add(observer);
-		Document configuration = _instance.loadConfigDocumentFromUrl(configURL);
-		_instance.internalInit(configuration, null);
-		return _instance;
-	}
-	
-	/**
-	 * construct and initialise with servletContext
-	 */
-	public static ModuleFactory instantiate(ServletContext servletContext, ModuleFactoryObserver observer) throws ConfigException {
-
-		_instance = new ModuleFactory();
-		if(observer != null) _instance.observers.add(observer);
-		Document configuration = _instance.loadConfigDocumentInWebApp(servletContext);
-		_instance.internalInit(configuration, servletContext);
-		return _instance;
 	}
 	
 	/**
@@ -199,13 +159,11 @@ public class ModuleFactory implements CriticalEventObserver {
 //-------------------------------------- INIT METHODS -------------------------//
 	
 	/* do 'real' initialisation */
-	private void internalInit(Document configuration, ServletContext servletContext) 
+	private void internalInit(Element factoryNode, ServletContext servletContext) 
 					throws ConfigException {
 		
 		// initialise BeanUtils converters
 		initConverters();
-		// get doc root
-		Element root = configuration.getRootElement();
 		// get node for quartz scheduler
 		ClassLoader classLoader =
 			Thread.currentThread().getContextClassLoader();
@@ -213,13 +171,13 @@ public class ModuleFactory implements CriticalEventObserver {
 			classLoader = ModuleFactory.class.getClassLoader();
 		}
 		// get node for modules
-		Element modulesNode = root.getChild("modules");
+		Element modulesNode = factoryNode.getChild("modules");
 		// load modules into modules map
 		Map[] mods = getModules(modulesNode, classLoader);
 		this.modules = mods[0];
 		this.jobs = mods[1];
 		
-		Element schedulerNode = root.getChild("scheduler");
+		Element schedulerNode = factoryNode.getChild("scheduler");
 		if(schedulerNode != null) {
 			
 			// load triggers into trigger map
@@ -256,7 +214,7 @@ public class ModuleFactory implements CriticalEventObserver {
 			properties = new Properties();
 			String proploc = node.getAttributeValue("properties");
 			try {
-				URL urlproploc = convertToURL(proploc, context);
+				URL urlproploc = URLHelper.convertToURL(proploc, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			} catch(IOException ioe) {
@@ -474,106 +432,6 @@ public class ModuleFactory implements CriticalEventObserver {
 			}
 		}
 		
-	}
-
-	/**
-	 * @return a loaded JDOM document containing the configuration information.
-	 */
-	protected Document loadConfigDocumentFromUrl(String configDocument) 
-				throws ConfigException {
-					
-		try {
-			java.net.URL configURL = convertToURL(configDocument, null);
-			if(configURL == null) throw new ConfigException(configDocument + 
-					" should be a document but is empty");
-			log.info("Loading config from " + configURL);
-			
-			return internalLoad(configURL);
-			
-		} catch (IOException ex) {
-			throw new ConfigException(ex);
-		}
-	}
-	
-	/**
-	 * @return a loaded JDOM document containing the configuration information.
-	 */
-	protected Document loadConfigDocumentFromUrl(URL configURL) 
-				throws ConfigException {
-					
-		if(configURL == null) throw new ConfigException(configURL + 
-				" should be a document but is empty");
-		log.info("Loading config from " + configURL);
-		
-		return internalLoad(configURL);
-	}
-	
-	/**
-	 * @return a loaded JDOM document containing the configuration information.
-	 */
-	protected Document loadConfigDocumentInWebApp(ServletContext servletContext) 
-				throws ConfigException {
-					
-		try	{
-			String configFile = (String)servletContext.getAttribute(KEY_CONFIG_FILE);
-			if (configFile == null)
-				configFile = servletContext.getInitParameter(INITPARAM_CONFIG_FILE);
-			if (configFile == null)
-				configFile = DEFAULT_CONFIG_FILE;
-
-			java.net.URL configURL = convertToURL(configFile, servletContext);
-			if(configURL == null) throw new ConfigException(configFile + 
-					" should be a document but is empty");
-			log.info("Loading config from " + configURL.toString());
-
-			return internalLoad(configURL);
-			
-		} catch (IOException ex) {
-			throw new ConfigException(ex);
-		}
-	}
-	
-	/*
-	 * @return a loaded JDOM document containing the configuration information.
-	 */
-	private Document internalLoad(URL configURL) throws ConfigException {
-		
-		try {				
-			log.info("Loading config from " + configURL.toString());
-			try {
-				SAXBuilder builder = new SAXBuilder();
-				return builder.build(configURL.openStream(), configURL.toString());
-			}
-			catch (org.jdom.JDOMException jde) {
-				
-				throw new ConfigException(jde);
-			}
-		}
-		catch (IOException ex) {
-			
-			throw new ConfigException(ex);
-		}
-	}
-	
-	/**
-	 * Interprets some absolute URLs as external paths, otherwise generates URL
-	 * appropriate for loading from internal webapp or, servletContext is null,
-	 * loading from the classpath.
-	 */
-	protected URL convertToURL(String path, ServletContext servletContext) 
-			throws MalformedURLException {
-		
-		if (path.startsWith("file:") || path.startsWith("http:") || 
-				path.startsWith("https:") || path.startsWith("ftp:")) {
-			return new URL(path);
-		} else if(servletContext != null) {
-			// Quick sanity check
-			if (!path.startsWith("/"))
-				path = "/" + path;
-			return servletContext.getResource(path);
-		} else {
-			return getClass().getResource(path);			
-		}
 	}
 	
 	/**

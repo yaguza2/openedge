@@ -30,6 +30,8 @@
  */
 package nl.openedge.modules;
 
+import nl.openedge.util.config.*;
+
 import org.apache.commons.beanutils.BeanUtils;
 
 /**

@@ -32,6 +32,7 @@ package nl.openedge.modules.test;
 
 import junit.framework.TestCase;
 
+import nl.openedge.modules.Configurator;
 import nl.openedge.modules.ModuleFactory;
 
 /**
@@ -68,8 +69,13 @@ public abstract class AbstractTestBase extends TestCase {
 		
 		if(!initialised) {
 			try {
-				moduleFactory = ModuleFactory.instantiate(
-					System.getProperty("configfile", "/oemodules.xml"), null);
+				Configurator c = new Configurator(
+					System.getProperty("configfile", "/oemodules.xml"));
+				
+				
+				
+				//moduleFactory = ModuleFactory.instantiate(
+				//	System.getProperty("configfile", "/oemodules.xml"), null);
 			} catch(Exception e) {
 				e.printStackTrace();
 				throw e;

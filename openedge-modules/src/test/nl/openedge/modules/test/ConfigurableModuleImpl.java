@@ -32,9 +32,9 @@ package nl.openedge.modules.test;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.ConfigException;
 import nl.openedge.modules.Configurable;
 import nl.openedge.modules.SingletonModule;
+import nl.openedge.util.config.ConfigException;
 
 /**
  * @author Eelco Hillenius

@@ -33,6 +33,8 @@ package nl.openedge.modules;
 import java.util.Iterator;
 import java.util.List;
 
+import nl.openedge.util.config.*;
+
 import org.jdom.Element;
 import org.quartz.JobDataMap;
 
