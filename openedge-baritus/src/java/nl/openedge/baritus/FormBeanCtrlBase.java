@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.6 2004-04-05 09:56:22 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-05 09:56:22 $
+ * $Id: FormBeanCtrlBase.java,v 1.7 2004-04-06 07:40:04 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-06 07:40:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -386,7 +386,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			Map parameters = new HashMap();
 			HttpSession httpSession = cctx.getRequest().getSession();
 			Enumeration enum = httpSession.getAttributeNames();
-			while(enum.hasMoreElements())
+			if(enum != null) while(enum.hasMoreElements())
 			{
 				String attrName = (String)enum.nextElement();
 				parameters.put(attrName, httpSession.getAttribute(attrName));	
@@ -416,7 +416,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			Map parameters = new HashMap();
 			HttpServletRequest request = cctx.getRequest();
 			Enumeration enum = request.getAttributeNames();
-			while(enum.hasMoreElements())
+			if(enum != null) while(enum.hasMoreElements())
 			{
 				String attrName = (String)enum.nextElement();
 				if(!REQUEST_ATTRIBUTE_FORMBEANCONTEXT.equals(attrName))
