@@ -522,7 +522,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			{
 				key = "invalid.field.input.date";
 			}
-			else if(descriptor.getPropertyType().getName().equals("int"))
+			else if(descriptor.getPropertyType().getName().equals("int") 
+				|| descriptor.getPropertyType().getName().equals("java.lang.Integer"))
 			{
 				key = "invalid.field.input.integer";
 			}
