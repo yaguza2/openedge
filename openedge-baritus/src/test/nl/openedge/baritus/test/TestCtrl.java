@@ -1,7 +1,7 @@
 /*
- * $Id: TestCtrl.java,v 1.1.1.1 2004-02-24 20:34:17 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:17 $
+ * $Id: TestCtrl.java,v 1.2 2004-02-28 13:06:05 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-28 13:06:05 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.baritus.test;
 
 import java.util.Locale;
@@ -66,23 +66,28 @@ public class TestCtrl extends FormBeanCtrl
 	/**
 	 * @see nl.openedge.baritus.FormBeanCtrl#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
 	 */
-	protected Object makeFormBean(ControllerContext cctx)
+	protected Object makeFormBean(
+		FormBeanContext formBeanContext,
+		ControllerContext cctx)
 	{
 		this.bean = new TestBean();
 		return bean;
 	}
-	
+
 	/**
 	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
 	 */
 	public void init(Element controllerNode) throws ConfigException
-	{		
+	{
 		addPopulator("uppercaseTest", new ToUpperCasePopulator());
-		addPopulator("ignore", new IgnoreFieldPopulator()); // block property by field name
-		addPopulator(Pattern.compile("(.)*ByRegex$"), 
-			new IgnoreFieldPopulator()); // block property by regex pattern
+		addPopulator("ignore", new IgnoreFieldPopulator());
+		// block property by field name
+		addPopulator(
+			Pattern.compile("(.)*ByRegex$"),
+			new IgnoreFieldPopulator());
+		// block property by regex pattern
 	}
-	
+
 	/**
 	 * get test bean
 	 * @return TestBean instance of test bean
@@ -91,7 +96,7 @@ public class TestCtrl extends FormBeanCtrl
 	{
 		return bean;
 	}
-	
+
 	/**
 	 * get view
 	 * @return String name of view
@@ -110,7 +115,7 @@ public class TestCtrl extends FormBeanCtrl
 	{
 		// hack to be able to get the formBeanContext
 		this.formBeanContext = formBeanContext;
-		
+
 		return super.getLocaleForRequest(cctx, formBeanContext);
 	}
 

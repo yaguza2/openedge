@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.5 2004-02-27 19:52:23 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-02-27 19:52:23 $
+ * $Id: FormBeanCtrl.java,v 1.6 2004-02-28 13:05:52 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-02-28 13:05:52 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -196,7 +196,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		try 
 		{	
 			// let controller create form
-			bean = getFormBean(cctx);
+			bean = getFormBean(formBeanContext, cctx);
 			formBeanContext.setBean(bean);
 			
 			// intercept before population
@@ -323,9 +323,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/* get the form bean */
-	private Object getFormBean(ControllerContext cctx)
+	private Object getFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
 	{
-		return this.makeFormBean(cctx);
+		return this.makeFormBean(formBeanContext, cctx);
 	}
 	
 	/*
@@ -952,10 +952,15 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * This method can be overriden to perform application logic.
+	 * This method must be overriden to perform application logic.
 	 *
 	 * @param formBeanContext context with the populated bean returned by makeFormBean().
 	 * @param cctx maverick controller context.
+	 * 
+	 * @return String view to display
+	 * @throws Exception As a last fallthrough, exceptions are handled by the framework.
+	 *  It is advisable however, to keep control of the error reporting, and let this
+	 *  method do the exception handling
 	 */
 	protected abstract String perform(
 		FormBeanContext formBeanContext, 
@@ -964,10 +969,24 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 												
 	/**
 	 * This method will be called to produce a bean whose properties
-	 * will be populated with the http currentRequest parameters.  The parameters
-	 * are useful for doing things like persisting beans across requests.
+	 * will be populated with the http currentRequest parameters. The resulting object
+	 * will be placed in the formBeanContext after this call.
+	 * 
+	 * @param formBeanContext the form bean context. If this is the first control within
+	 * 	a request, the formBeanContext will be empty. If this is a not the first 
+	 *  control that is called within a request (i.e. more controls are linked together),
+	 *  and execution parameters property reuseFormBeanContext is true (which is the
+	 *  default), the formBeanContext may allready contain error registrations, and
+	 *  contains the formBean that was used in the control before this one.
+	 * @param cctx controller context with references to request, response etc.
+	 * 
+	 * @return Object instance of bean that should be populated. Right after the call
+	 *  to makeFormBean, the instance will be set in the formBeanContext as property 'bean'
+	 * 
 	 */
-	protected abstract Object makeFormBean(ControllerContext cctx);
+	protected abstract Object makeFormBean(
+		FormBeanContext formBeanContext, 
+		ControllerContext cctx);
 	
 	/**
 	 * @see ControllerSingleton@init
