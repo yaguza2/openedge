@@ -1,4 +1,10 @@
 -------------------------------------------------
+1.1.2
+
+- SessionStats implements java.io.Serializable.
+
+
+-------------------------------------------------
 1.1.1
 
 - Moved Velocity tools from project OpenEdge maverick framework to this project.

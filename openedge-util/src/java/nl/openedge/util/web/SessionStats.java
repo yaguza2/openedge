@@ -31,13 +31,14 @@
 
 package nl.openedge.util.web;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Records extra information about a session
  * @author	Eelco Hillenius
  */
-public class SessionStats
+public class SessionStats implements Serializable
 {
 
 	private String remoteAddr;
