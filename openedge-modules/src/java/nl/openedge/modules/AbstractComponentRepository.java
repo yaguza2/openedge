@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -45,8 +46,6 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.modules.ComponentLookupException;
-import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.observers.ChainedEvent;
@@ -82,10 +81,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	private static Log log = LogFactory.getLog(AbstractComponentRepository.class);
 
 	/** holder for component builders */
-	protected Map components = new HashMap();
+	protected Map components = Collections.synchronizedMap(new HashMap());
 
 	/** holder for component component factorys that implement job interface */
-	protected Map jobs = new HashMap();
+	protected Map jobs = Collections.synchronizedMap(new HashMap());
 
 	/** holder for triggers */
 	protected Map triggers = null;
@@ -94,7 +93,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	protected Scheduler scheduler;
 
 	/** observers for component factory events */
-	protected List observers = new ArrayList();
+	protected List observers = Collections.synchronizedList(new ArrayList());
 	
 	/** servlet context if provided */
 	protected ServletContext servletContext = null;
@@ -114,7 +113,12 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	public void addObserver(ComponentRepositoryObserver observer)
 	{
 		if (observer != null)
-			this.observers.add(observer);
+		{
+			if(!observers.contains(observer))
+			{
+				this.observers.add(observer);		
+			}
+		}
 	}
 
 	/**
@@ -150,7 +154,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			ServletContext servletContext) 
 			throws ConfigException
 	{
-
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
 		{
@@ -179,7 +182,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		Element schedulerNode = rootNode.getChild("scheduler");
 		if (schedulerNode != null)
 		{
-
 			// load triggers into trigger map
 			this.triggers = addTriggers(schedulerNode, classLoader);
 
@@ -214,7 +216,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			log.info("scheduler node was not found; " +
 				"scheduler will not be started");
 		}
-
 	}
 	
 	/**
@@ -222,7 +223,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	protected void testModules() throws ComponentLookupException
 	{
-		
 		String[] names = getComponentNames();
 		int size = names.length;
 		
@@ -244,7 +244,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	protected void initQuartz(Element node, ServletContext context) 
 		throws ConfigException, SchedulerException
 	{
-
 		Properties properties = null;
 		if (node != null)
 		{
@@ -302,12 +301,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			ClassLoader classLoader) 
 			throws ConfigException
 	{
-
 		// iterate components
 		List componentNodes = componentsNode.getChildren("component");
 		for (Iterator i = componentNodes.iterator(); i.hasNext();)
 		{
-
 			Element node = (Element)i.next();
 			String name = node.getAttributeValue("name");
 			if (components.get(name) != null)
@@ -328,7 +325,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			}
 			
 			addComponent(name, clazz, node);
-
 		}
 		log.info("loading components done");
 		return components;
@@ -381,12 +377,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	protected Map addTriggers(Element schedulerNode, ClassLoader classLoader) 
 		throws ConfigException
 	{
-
-		Map triggers = new HashMap();
+		Map triggers = Collections.synchronizedMap(new HashMap());
 		List trigs = schedulerNode.getChildren("trigger");
 		for (Iterator i = trigs.iterator(); i.hasNext();)
 		{
-
 			Trigger trigger = null;
 			Element triggerNode = (Element)i.next();
 			String name = triggerNode.getAttributeValue("name");
@@ -413,7 +407,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			if (parameters != null)
 				for (Iterator j = parameters.iterator(); j.hasNext();)
 				{
-
 					Element pNode = (Element)j.next();
 					paramMap.put(pNode.getAttributeValue("name"), 
 						pNode.getAttributeValue("value"));
@@ -437,13 +430,11 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader) 
 		throws ConfigException
 	{
-
 		//get job excecution map from config
 		Element execNode = schedulerNode.getChild("jobExecutionMap");
 		List execs = execNode.getChildren("job");
 		for (Iterator i = execs.iterator(); i.hasNext();)
 		{
-
 			Element e = (Element)i.next();
 			String triggerName = e.getAttributeValue("trigger");
 			String componentName = e.getAttributeValue("component");
@@ -534,11 +525,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	protected void fireSchedulerStartedEvent(Scheduler scheduler)
 	{
-
 		SchedulerStartedEvent evt = new SchedulerStartedEvent(this, scheduler);
 		for (Iterator i = observers.iterator(); i.hasNext();)
 		{
-
 			ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
 			if (mo instanceof SchedulerObserver)
 			{
@@ -553,11 +542,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	protected void fireModulesLoadedEvent()
 	{
-
 		ComponentsLoadedEvent evt = new ComponentsLoadedEvent(this);
 		for (Iterator i = observers.iterator(); i.hasNext();)
 		{
-
 			ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
 			if (mo instanceof ComponentObserver)
 			{
@@ -581,10 +568,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	protected void fireCriticalEvent(ChainedEvent evt)
 	{
-
 		for (Iterator i = observers.iterator(); i.hasNext();)
 		{
-
 			ComponentRepositoryObserver mo = (ComponentRepositoryObserver)i.next();
 			if (mo instanceof ChainedEventObserver)
 			{
@@ -598,7 +583,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	public Object getComponent(String name)
 	{
-
 		ComponentFactory componentFactory = 
 			(ComponentFactory)components.get(name);
 		if (componentFactory == null)

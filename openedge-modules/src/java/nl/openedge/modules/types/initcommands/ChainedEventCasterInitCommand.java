@@ -39,25 +39,29 @@ import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventCaster;
 import nl.openedge.modules.observers.ChainedEventObserver;
+import nl.openedge.modules.observers.ComponentObserver;
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
 
 /**
  * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ChainedEventCasterInitCommand implements InitCommand
+public class ChainedEventCasterInitCommand 
+	implements InitCommand, ComponentObserver
 {
 	
 	private ComponentRepository componentRepository = null;
+	private boolean executeInitCommands = true;
 
 	/**
 	 * initialize
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
 	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
+			String componentName, 
+			Element componentNode,
+			ComponentRepository componentRepository)
+			throws ConfigException
 	{
 		this.componentRepository = componentRepository;
 	}
@@ -69,46 +73,58 @@ public class ChainedEventCasterInitCommand implements InitCommand
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
-
-		if(componentInstance instanceof ChainedEventCaster)
+		if(executeInitCommands)
 		{
-			((ChainedEventCaster)componentInstance)
-				.addObserver(this.componentRepository);
-		}
-		else
-		{
+			executeInitCommands = false;
 			
-			Class clazz = componentInstance.getClass();
-			try
+			if(componentInstance instanceof ChainedEventCaster)
 			{
-				Method initMethod = clazz.getMethod(
-					"addObserver",new Class[]{ChainedEventObserver.class});
-				initMethod.invoke(componentInstance, 
-					new Object[]{this.componentRepository});
+				((ChainedEventCaster)componentInstance)
+					.addObserver(this.componentRepository);
 			}
-			catch (SecurityException e)
+			else
 			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalArgumentException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new ConfigException(e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new ConfigException(e);
-			}
-				
+				Class clazz = componentInstance.getClass();
+				try
+				{
+					Method initMethod = clazz.getMethod(
+						"addObserver",new Class[]{ChainedEventObserver.class});
+					initMethod.invoke(componentInstance, 
+						new Object[]{this.componentRepository});
+				}
+				catch (SecurityException e)
+				{
+					throw new ConfigException(e);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new ConfigException(e);
+				}
+				catch (NoSuchMethodException e)
+				{
+					throw new ConfigException(e);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new ConfigException(e);
+				}
+				catch (InvocationTargetException e)
+				{
+					throw new ConfigException(e);
+				}
+			}	
 		}
-
+	}
+	
+	/**
+	 * fired after all components are (re)loaded; 
+	 * @param evt event
+	 */
+	public void modulesLoaded(ComponentsLoadedEvent evt)
+	{
+		// set flag
+		this.executeInitCommands = true;
+			
 	}
 
 }
