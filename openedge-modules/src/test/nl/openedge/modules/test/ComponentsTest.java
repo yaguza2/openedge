@@ -339,6 +339,9 @@ public class ComponentsTest extends AbstractTestBase
 
 		assertNotSame(t1.getModule1(), t2.getModule1());
 		
+		assertEquals(OtherThreadSingletonComponentImpl.class,
+			t1.getModule3().getClass());
+		
 	}
 
 
@@ -347,21 +350,36 @@ public class ComponentsTest extends AbstractTestBase
 		private ThreadSingletonComponentImpl module1 = null;
 		
 		private ThreadSingletonComponentImpl module2 = null;
+		
+		private OtherThreadSingletonComponentImpl module3 = null;
 	
 		public void run()
 		{
-			module1 = (ThreadSingletonComponentImpl)
-				componentFactory.getComponent("ThreadSingletonTest");
+			try
+			{
+				module1 = (ThreadSingletonComponentImpl)
+					componentFactory.getComponent("ThreadSingletonTest");
+				module2 = (ThreadSingletonComponentImpl)
+					componentFactory.getComponent("ThreadSingletonTest");
+				module3 = (OtherThreadSingletonComponentImpl)
+					componentFactory.getComponent("OtherThreadSingletonTest");
+			}
+			catch (RuntimeException e)
+			{
+				e.printStackTrace();
+			}
 		}
-		
 		public ThreadSingletonComponentImpl getModule1()
 		{
 			return module1;
 		}
-		
 		public ThreadSingletonComponentImpl getModule2()
 		{
-			return module1;
+			return module2;
+		}
+		public OtherThreadSingletonComponentImpl getModule3()
+		{
+			return module3;
 		}
 	}
 

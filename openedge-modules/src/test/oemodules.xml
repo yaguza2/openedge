@@ -79,6 +79,14 @@
 		
 		<component name="ThreadSingletonTest" 
 				class="nl.openedge.modules.test.ThreadSingletonComponentImpl"/>
+			
+		<component name="OtherThreadSingletonTest" 
+				class="nl.openedge.modules.test.OtherThreadSingletonComponentImpl"/>
+		
+		<!--
+		<component name="RemoteComponentTest" register="true"
+				class="nl.openedge.modules.test.RemoteComponentImpl" rmiName="remoteTest" />
+		-->
 	
 	</components>
 	
