@@ -20,7 +20,7 @@
           <tr><th>Document</th><th>Description</th></tr>
           <tr><td><a href="download.html">Download</a></td>
             <td>
-              Before you can start using This document
+              <!-- ?? Before you can start using -->This document
               provides links to the various distributions available
 			  for OpenEdge Modules.
             </td>

@@ -15,7 +15,7 @@
 				how to use types and (init)commands
 			</li>
 			<li>
-				how to use Quartz (if you want to use the sceduler)
+				how to use Quartz (if you want to use the scheduler)
 			</li>
 			<li>
 				how to configure Quartz and OpenEdge Modules in
@@ -32,12 +32,12 @@
 			'base types' and '(init)commands'.
 		</p>
 		<p>
-			A component will be handled differently by the container (or actually
+			A component will be handled different by the container (or actually
 			a creator delegate) according its type.
-			A component allways is-a base type. If a component does not yet have
+			A component always is-a base type. If a component does not yet have
 			a base type assigned, it will be handled as the default type. Also, a 
 			component can never be of more than one base type. For example, a
-			component never is both a singleton and a throwaway component.
+			component never can be both a singleton and a throwaway component.
 		</p>
 		<p>
 			The other types, InitCommands, are used for different purposes. A 

@@ -39,7 +39,7 @@
       ]]></source>
       
       <p>
-		The above layout is confirm the Maven standard directory layout, 
+		The above layout conforms to the Maven standard directory layout, 
 		where <code>src/java</code> has the main sources, 
 		<code>src/test</code> has the unit tests and 
 		<code>src/etc</code> has additional sources and documents.
@@ -58,7 +58,7 @@
 	<section name="Preparing for Quartz">
       
 	  <p>
-		As OpenEdge Modules wraps as lightly as possible around Quartz,
+		As OpenEdge Modules wraps as light as possible around Quartz,
 		much of the preparation depends on how you want to use Quartz.
 		It's best to check out 
 		<a target="_new" href="http://www.part.net/quartz.html">Quartz itself</a>.

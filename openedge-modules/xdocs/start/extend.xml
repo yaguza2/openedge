@@ -9,7 +9,7 @@
   <body>
     <section name="Building Maven">
       <p>
-        Building Maven is a little different than your typical Java
+        Building Maven is a little different from your typical Java
         build because Maven uses itself to build itself!  Thus, in order
         to successfully build Maven, a bootstrapping process is required
         to jumpstart the build.  Fortunately, the details of this have
