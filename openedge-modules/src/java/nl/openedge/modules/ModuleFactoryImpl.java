@@ -456,6 +456,7 @@ public class ModuleFactoryImpl implements ModuleFactory {
 	 * Initialize the custom beanutils converters here
 	 */
 	public void initConverters() {
+		// TODO: make this configurable
 		DateConverter dc = new DateConverter();
 		ConvertUtils.register( dc, java.util.Date.class);
 	}
