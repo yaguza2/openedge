@@ -34,6 +34,9 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author	Eelco Hillenius, Sander Hofstee
  * @version	$Id$
@@ -43,7 +46,7 @@ import java.text.*;
  */
 public final class DateFormatHelper
 {
-
+	private static Log log = LogFactory.getLog(DateFormatHelper.class);
 	private static LinkedHashMap formatters = new LinkedHashMap();
 	private static SimpleDateFormat defaultFormatter = null;
 	private static String defaultFormatterString = null;
@@ -53,7 +56,8 @@ public final class DateFormatHelper
 	/* test for unwanted length of dd, MM, yyyy */
 	private static boolean checkForSize = true;
 
-	static {
+	static 
+	{
 		loadFormatters();
 	}
 
@@ -76,14 +80,14 @@ public final class DateFormatHelper
 		}
 		catch (Exception e)
 		{
-			System.err.println("");
 			try
 			{
 				loadFromFile("dateformathelper.default.cfg");
 			}
 			catch (Exception e2)
 			{
-				e2.printStackTrace();
+				log.error(e.getMessage(), e);
+				log.error(e2.getMessage(), e2);
 			}
 		}
 
@@ -185,7 +189,7 @@ public final class DateFormatHelper
 	public static String format(Date date)
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat(defaultFormatter.toPattern());
-		return defaultFormatter.format(date);
+		return sdf.format(date);
 	}
 
 	/**
@@ -342,7 +346,7 @@ public final class DateFormatHelper
 			}
 		}
 		
-		System.out.println("used " + ((SimpleDateFormat)df).toPattern()
+		log.info("used " + ((SimpleDateFormat)df).toPattern()
 			+ " for " + stringDate);
 
 		return date;	
