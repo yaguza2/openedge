@@ -45,6 +45,8 @@ import org.apache.velocity.runtime.RuntimeConstants;
 public final class RIEventHandler implements ReferenceInsertionEventHandler
 {
 	private AbstractForm model;
+	/* prefix for form, default = "model" */
+	private String modelPrefix = "model.";
 	private Context context;
 	
 	/**
@@ -104,18 +106,52 @@ public final class RIEventHandler implements ReferenceInsertionEventHandler
 				Object storedRawValue = overrideFields.get(name);
 				String storedValue = null;
 				
+				// first, try default
 				if(storedRawValue != null)
 				{
-					storedValue = ConvertUtils.convert(storedRawValue);	
+					storedValue = ConvertUtils.convert(storedRawValue);
+					if(storedValue != null) 
+					{
+						value = storedValue;
+					}	
 				}
-				if(storedValue != null) 
+				else // try without model prefix (if it has one)
 				{
-					value = storedValue;
+					if(name.startsWith(modelPrefix))
+					{
+						name = name.substring(modelPrefix.length());
+						
+						storedRawValue = overrideFields.get(name);
+						if(storedRawValue != null)
+						{
+							storedValue = ConvertUtils.convert(storedRawValue);
+							if(storedValue != null) 
+							{
+								value = storedValue;
+							}	
+						}
+					}
 				}
 			}
 
 		}
 		return value;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getModelPrefix()
+	{
+		return modelPrefix;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setModelPrefix(String string)
+	{
+		modelPrefix = string;
 	}
 
 }
