@@ -1,7 +1,7 @@
 /*
- * $Id: TestCtrl.java,v 1.7 2004-05-23 10:26:58 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-05-23 10:26:58 $
+ * $Id: TestCtrl.java,v 1.8 2004-06-05 09:18:28 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-06-05 09:18:28 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -83,6 +83,7 @@ public class TestCtrl extends FormBeanCtrlBase
 		ExecutionParams params = getExecutionParams(null);
 		params.setIncludeSessionAttributes(true);
 		params.setIncludeRequestAttributes(true);
+		fixExecutionParams(params);
 		
 		addPopulator("uppercaseTest", new ToUpperCasePopulator());
 		addPopulator("ignore", new IgnoreFieldPopulator());

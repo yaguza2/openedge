@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.10 2004-06-03 19:58:07 eelco12 Exp $
- * $Revision: 1.10 $
- * $Date: 2004-06-03 19:58:07 $
+ * $Id: PopulationTest.java,v 1.11 2004-06-05 09:18:28 eelco12 Exp $
+ * $Revision: 1.11 $
+ * $Date: 2004-06-05 09:18:28 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -40,6 +40,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import nl.openedge.baritus.ExecutionParams;
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.test.mock.MockHttpServletRequest;
@@ -569,7 +570,9 @@ public class PopulationTest extends TestCase
 	public void testNonStrictParsing()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams(null).setStrictPopulationMode(false);
+		ExecutionParams params = ctrl.getExecutionParams(null);
+		params.setStrictPopulationMode(false);
+		ctrl.fixExecutionParams(params);
 		Map requestParams = new HashMap();
 		requestParams.put("not-a-valid-name", "foo"); // test simple string
 		request.setupGetParameterMap(requestParams);
@@ -641,7 +644,9 @@ public class PopulationTest extends TestCase
 	public void testTrimString3()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams(null).setTrimStringInputValues(false);
+		ExecutionParams params = ctrl.getExecutionParams(null);
+		params.setTrimStringInputValues(false);
+		ctrl.fixExecutionParams(params);
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimString", "    notbetrimmed     ");
 		request.setupGetParameterMap(requestParams);
@@ -666,7 +671,9 @@ public class PopulationTest extends TestCase
 	public void testTrimString4()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams(null).setTrimStringInputValues(false);
+		ExecutionParams params = ctrl.getExecutionParams(null);
+		params.setTrimStringInputValues(false);
+		ctrl.fixExecutionParams(params);
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimStringArray[0]", "    notbetrimmed     ");
 		request.setupGetParameterMap(requestParams);

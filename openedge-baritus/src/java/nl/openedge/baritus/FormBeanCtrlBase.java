@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.13 2004-06-03 17:01:55 eelco12 Exp $
- * $Revision: 1.13 $
- * $Date: 2004-06-03 17:01:55 $
+ * $Id: FormBeanCtrlBase.java,v 1.14 2004-06-05 09:18:28 eelco12 Exp $
+ * $Revision: 1.14 $
+ * $Date: 2004-06-05 09:18:28 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -1269,7 +1269,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			params = (ExecutionParams)executionParams.clone();
 		}
 
-		return executionParams;
+		return params;
 	}
 
 	/**
