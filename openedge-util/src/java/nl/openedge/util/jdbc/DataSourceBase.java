@@ -105,7 +105,7 @@ public abstract class DataSourceBase {
 	 *	defaultAutoCommit=false
 	 * 
 	 * @param constructionParameters populated map to create datasource
-	 * @param createNew if true, we'll look if a datasource was allready initialized which can be used in that case 
+	 * @param createOnce if true, we'll look if a datasource was allready initialized which can be used in that case 
 	 */
 	public DataSourceBase(Map constructionParameters, boolean createOnce) throws Exception {
 		

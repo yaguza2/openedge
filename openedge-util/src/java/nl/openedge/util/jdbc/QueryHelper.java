@@ -83,6 +83,26 @@ public class QueryHelper extends DataSourceBase {
 	public QueryHelper(Map constructionParameters) throws Exception {
 		super(constructionParameters);
 	}
+	
+	/**
+	 * construct and create datasource with given parameters
+	 * Use a map like:
+	 * 
+	 *	driverClassName=org.gjt.mm.mysql.Driver
+	 *	url=jdbc:mysql://localhost:3306/foo_db
+	 *	username=root
+	 *	password=
+	 *	maxActive=20
+	 *	maxIdle=10
+	 *	maxWait=5000
+	 *	defaultAutoCommit=false
+	 * 
+	 * @param constructionParameters populated map to create datasource
+	 * @param createOnce if true, we'll look if a datasource was allready initialized which can be used in that case 
+	 */
+	public QueryHelper(Map constructionParameters, boolean createOnce) throws Exception {
+		super(constructionParameters, createOnce);
+	}
 
 	/**
 	 * excecute query and return result
