@@ -41,23 +41,26 @@ import javax.swing.tree.VariableHeightLayoutCache;
 
 /**
  * Holder and handler for tree state.
+ * 
  * @author Eelco Hillenius
  */
-public final class TreeStateCache 
-	extends VariableHeightLayoutCache
-	implements Serializable
+public final class TreeStateCache extends VariableHeightLayoutCache implements Serializable
 {
 
 	/** currently selected path. */
 	private TreePath selectedPath;
+
 	/** query that was used to select the current selected path. */
 	private String selectedPathQuery;
+
 	/** the objects owned by the selected path. */
 	private List pathContent;
 
 	/**
 	 * expand the selected path and set selection to currently selected path.
-	 * @param selection new selection
+	 * 
+	 * @param selection
+	 *            new selection
 	 */
 	public void setSelectedPath(TreePath selection)
 	{
@@ -66,34 +69,41 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * expand the selected path and set selection to currently selected path
-	 * and set the content owned by the selected path.
-	 * @param selection new selection
-	 * @param content owned by selection
+	 * expand the selected path and set selection to currently selected path and set the content
+	 * owned by the selected path.
+	 * 
+	 * @param selection
+	 *            new selection
+	 * @param content
+	 *            owned by selection
 	 */
-	public void setSelectedPath(TreePath selection, List pathContent)
+	public void setSelectedPath(TreePath selection, List content)
 	{
 		setSelectedPath(selection);
-		this.pathContent = pathContent;
+		this.pathContent = content;
 	}
 
 	/**
-	 * expand the selected path and set selection to currently selected path
-	 * , set the content owned by the selected path and set query that was 
-	 * used to get the selection.
-	 * @param selection new selection
-	 * @param content owned by selection
-	 * @param selectedPathQuery query that was used to get selection  
+	 * expand the selected path and set selection to currently selected path , set the content owned
+	 * by the selected path and set query that was used to get the selection.
+	 * 
+	 * @param selection
+	 *            new selection
+	 * @param content
+	 *            owned by selection
+	 * @param query
+	 *            query that was used to get selection
 	 */
-	public void setSelectedPath(TreePath selection, List pathContent, 
-		String selectedPathQuery)
+	public void setSelectedPath(
+			TreePath selection, List content, String query)
 	{
-		setSelectedPath(selection, pathContent);
-		this.selectedPathQuery = selectedPathQuery;
+		setSelectedPath(selection, content);
+		this.selectedPathQuery = query;
 	}
 
 	/**
 	 * get the currently selected path.
+	 * 
 	 * @return TreePath the currently select path
 	 */
 	public TreePath getSelectedPath()
@@ -107,6 +117,7 @@ public final class TreeStateCache
 
 	/**
 	 * get the content that is owned by the current path.
+	 * 
 	 * @return List list of content
 	 */
 	public List getPathContent()
@@ -116,7 +127,9 @@ public final class TreeStateCache
 
 	/**
 	 * set the content that is owned by the current path.
-	 * @param list list of content 
+	 * 
+	 * @param list
+	 *            list of content
 	 */
 	public void setPathContent(List list)
 	{
@@ -125,6 +138,7 @@ public final class TreeStateCache
 
 	/**
 	 * Get the selected path query.
+	 * 
 	 * @return String the selected path query
 	 */
 	public String getSelectedPathQuery()
@@ -134,7 +148,9 @@ public final class TreeStateCache
 
 	/**
 	 * Set the selected path query.
-	 * @param selectedPathQuery the selected path query
+	 * 
+	 * @param selectedPathQuery
+	 *            the selected path query
 	 */
 	public void setSelectedPathQuery(String selectedPathQuery)
 	{
@@ -142,9 +158,8 @@ public final class TreeStateCache
 	}
 
 	/**
-	 * Returns an <code>Enumerator</code> that increments over the visible paths
-	 * starting at the root. The ordering of the enumeration
-	 * is based on how the paths are displayed.
+	 * Returns an <code>Enumerator</code> that increments over the visible paths starting at the
+	 * root. The ordering of the enumeration is based on how the paths are displayed.
 	 * 
 	 * @return an <code>Enumerator</code> that increments over the visible paths
 	 */
@@ -157,45 +172,51 @@ public final class TreeStateCache
 
 	/**
 	 * get tree path in model for given user object.
-	 * @param userObject object to look for in model
+	 * 
+	 * @param userObject
+	 *            object to look for in model
 	 * @return TreePath the treepath for the given user object
 	 */
 	public TreePath findTreePath(Object userObject)
 	{
 		TreePath path = null;
 		DefaultMutableTreeNode endNode = findNodeForPath(userObject);
-		if(endNode != null)
+		if (endNode != null)
 		{
-			path = new TreePath(endNode.getPath());	
+			path = new TreePath(endNode.getPath());
 		}
 		return path;
 	}
 
 	/**
 	 * find the node in model that has arg as its userObject.
-	 * @param userObject object to look for in model
+	 * 
+	 * @param userObject
+	 *            object to look for in model
 	 * @return DefaultMutableTreeNode
 	 */
 	public DefaultMutableTreeNode findNodeForPath(Object userObject)
 	{
 
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)getModel().getRoot();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) getModel().getRoot();
 		return findNodeRecursively(root, null, userObject);
 	}
 
 	/**
 	 * find the child nodes recursively.
-	 * @param currentNode the current node
-	 * @param resultNode node of last result
-	 * @param userObject the user object
+	 * 
+	 * @param currentNode
+	 *            the current node
+	 * @param currentResultNode
+	 *            node of last result
+	 * @param userObject
+	 *            the user object
 	 * @return resulting node
 	 */
-	private DefaultMutableTreeNode findNodeRecursively(
-		DefaultMutableTreeNode currentNode,
-		DefaultMutableTreeNode resultNode,
-		Object userObject)
+	private DefaultMutableTreeNode findNodeRecursively(DefaultMutableTreeNode currentNode,
+			DefaultMutableTreeNode currentResultNode, Object userObject)
 	{
-
+		DefaultMutableTreeNode resultNode = currentResultNode;
 		int childCount = currentNode.getChildCount();
 		if (currentNode.getUserObject().equals(userObject))
 		{
@@ -205,9 +226,8 @@ public final class TreeStateCache
 		{
 			for (int i = 0; i < childCount; i++)
 			{
-				resultNode =
-					findNodeRecursively((DefaultMutableTreeNode)
-						currentNode.getChildAt(i), resultNode, userObject);
+				resultNode = findNodeRecursively(
+						(DefaultMutableTreeNode) currentNode.getChildAt(i), resultNode, userObject);
 				if (resultNode != null)
 				{
 					// found it! break loop

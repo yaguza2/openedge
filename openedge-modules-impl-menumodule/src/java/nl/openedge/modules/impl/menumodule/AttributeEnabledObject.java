@@ -41,35 +41,45 @@ public interface AttributeEnabledObject
 {
 	/**
 	 * Get attribute.
-	 * @param name the name of attribute
+	 * 
+	 * @param name
+	 *            the name of attribute
 	 * @return the value of the attribute or null if it does not exist
 	 */
-	public Object getAttribute(String name);
+	Object getAttribute(String name);
+
 	/**
 	 * Get attributes.
+	 * 
 	 * @return the (possibly empty) Map with all the attributes
 	 */
-	public Map getAttributes();
+	Map getAttributes();
+
 	/**
-	 * Registers a new Attribute with this filter, overriding any attribute 
-	 * already registered under that name.
+	 * Registers a new Attribute with this filter, overriding any attribute already registered under
+	 * that name.
 	 * 
-	 * @param name name of the attribute
-	 * @param value value of the attribute
+	 * @param name
+	 *            name of the attribute
+	 * @param value
+	 *            value of the attribute
 	 */
-	public void putAttribute(String name, Object value);
+	void putAttribute(String name, Object value);
+
 	/**
-	 * Registers all attributes in the Map, overriding any existing attribute with
-	 * the same name.
+	 * Registers all attributes in the Map, overriding any existing attribute with the same name.
 	 * 
-	 * @param attributes the attributes
+	 * @param attributes
+	 *            the attributes
 	 */
-	public void putAllAttributes(Map attributes);
+	void putAllAttributes(Map attributes);
+
 	/**
-	 * Removes the attribute with the specified name if it exists, 
-	 * if it doesnt exist nothing happens.
+	 * Removes the attribute with the specified name if it exists, if it doesnt exist nothing
+	 * happens.
 	 * 
-	 * @param name the name of the attribute
+	 * @param name
+	 *            the name of the attribute
 	 */
-	public void removeAttribute(String name);
+	void removeAttribute(String name);
 }

@@ -35,55 +35,61 @@ import junit.framework.Test;
 import nl.openedge.access.AccessHelper;
 import nl.openedge.modules.JDOMConfigurator;
 
-
 /**
  * Test decorator for MenuTest.
  */
-public final class MenuTestDecorator extends TestSetup {
+public final class MenuTestDecorator extends TestSetup
+{
 
-    /**
-     * Construct.
-     * @param test
-     */
-    public MenuTestDecorator(Test test)
-    {
-        super(test);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param test
+	 */
+	public MenuTestDecorator(Test test)
+	{
+		super(test);
+	}
 
-    /**
-     * @see junit.extensions.TestSetup#setUp()
-     */
-    protected void setUp() throws Exception
-    {
-        super.setUp();
+	/**
+	 * @see junit.extensions.TestSetup#setUp()
+	 */
+	protected void setUp() throws Exception
+	{
+		super.setUp();
 		setUpModules();
 		setUpAccessFactory();
-    }
-    /**
-     * @see junit.extensions.TestSetup#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+	}
+
+	/**
+	 * @see junit.extensions.TestSetup#tearDown()
+	 */
+	protected void tearDown() throws Exception
+	{
+		super.tearDown();
+	}
+
 	/**
 	 * loadModules is een helper method die de componenten laad.
+	 * 
 	 * @throws Exception
 	 */
 	private void setUpModules() throws Exception
 	{
 		JDOMConfigurator c = new JDOMConfigurator("test.oemodules.xml");
 	}
-		
+
 	/**
 	 * laad de access factory
+	 * 
 	 * @throws Exception
 	 */
 	private void setUpAccessFactory() throws Exception
 	{
 		try
 		{
-			AccessHelper.reload(
-				System.getProperty("configfile", "/test.oeaccess.properties"), "test");
+			AccessHelper.reload(System.getProperty("configfile", "/test.oeaccess.properties"),
+					"test");
 		}
 		catch (Exception e)
 		{

@@ -42,7 +42,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Eelco Hillenius
  */
-public final class RequestScopeTestFilterForOneItem extends AbstractMenuFilter implements RequestScopeMenuFilter
+public final class RequestScopeTestFilterForOneItem extends AbstractMenuFilter implements
+		RequestScopeMenuFilter
 {
 
 	public final static String TEST_CONTEXT_KEY = "nodeleveltestkey";
@@ -51,17 +52,21 @@ public final class RequestScopeTestFilterForOneItem extends AbstractMenuFilter i
 
 	/**
 	 * test method
-	 * @param menuItem menu item
-	 * @param context de filter context
-	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
+	 * 
+	 * @param menuItem
+	 *            menu item
+	 * @param context
+	 *            de filter context
+	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
+	 *      java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = true;
 		log.info("I am being called!");
-		
+
 		context.put(TEST_CONTEXT_KEY, new Object());
-		
+
 		return accepted;
 	}
 

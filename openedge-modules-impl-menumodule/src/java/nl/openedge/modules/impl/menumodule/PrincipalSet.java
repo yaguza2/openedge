@@ -37,29 +37,31 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * decorator for sets of principals.
- * NOTE: though not strong typed, this set should 
- * never contain other set elements other than Principals
+ * decorator for sets of principals. NOTE: though not strong typed, this set should never contain
+ * other set elements other than Principals
+ * 
  * @author Eelco Hillenius
  */
 public final class PrincipalSet implements Set
 {
- 	/** decorated instance. */
+	/** decorated instance. */
 	private Set decorated = null;
-	
+
 	/**
 	 * construct with set to decorate.
-	 * @param toDecorate set to decorate
+	 * 
+	 * @param toDecorate
+	 *            set to decorate
 	 */
 	public PrincipalSet(Set toDecorate)
 	{
-		if(toDecorate == null)
+		if (toDecorate == null)
 		{
 			this.decorated = new HashSet();
 		}
 		else
 		{
-			this.decorated = toDecorate;	
+			this.decorated = toDecorate;
 		}
 	}
 
@@ -76,7 +78,7 @@ public final class PrincipalSet implements Set
 	 */
 	public void clear()
 	{
-		decorated.clear();	
+		decorated.clear();
 	}
 
 	/**
@@ -118,42 +120,42 @@ public final class PrincipalSet implements Set
 	{
 		return decorated.addAll(c);
 	}
-	
+
 	/**
-	 * Checks if object o is contained in this set.
-	 * Additionally, in case elements with name '*' are found 
-	 * (where * stands for 'valid for all instances'),
-	 * the occurance will be checked on type instead of the equals method
+	 * Checks if object o is contained in this set. Additionally, in case elements with name '*' are
+	 * found (where * stands for 'valid for all instances'), the occurance will be checked on type
+	 * instead of the equals method
+	 * 
 	 * @see java.util.Collection#contains(java.lang.Object)
 	 */
 	public boolean contains(Object o)
 	{
 		Iterator i = iterator();
-		if (o==null) 
+		if (o == null)
 		{
 			while (i.hasNext())
 			{
-				if (i.next()==null)
+				if (i.next() == null)
 				{
-					return true;	
+					return true;
 				}
 			}
-		} 
-		else 
+		}
+		else
 		{
-			Principal that = (Principal)o;
-			
-			if(that.getName().equals("*"))
+			Principal that = (Principal) o;
+
+			if (that.getName().equals("*"))
 			{
 				while (i.hasNext())
 				{
-					Principal p = (Principal)i.next();
+					Principal p = (Principal) i.next();
 					// test on class instead of name
-					if(p.getClass().isAssignableFrom(o.getClass()))
+					if (p.getClass().isAssignableFrom(o.getClass()))
 					{
-						return true;				
+						return true;
 					}
-				}				
+				}
 			}
 			else
 			{
@@ -161,9 +163,9 @@ public final class PrincipalSet implements Set
 				{
 					if (o.equals(i.next()))
 					{
-						return true;	
+						return true;
 					}
-				}	
+				}
 			}
 		}
 		return false;
@@ -176,8 +178,8 @@ public final class PrincipalSet implements Set
 	{
 		Iterator e = c.iterator();
 		while (e.hasNext())
-			if(!contains(e.next()))
-			return false;
+			if (!contains(e.next()))
+				return false;
 
 		return true;
 	}

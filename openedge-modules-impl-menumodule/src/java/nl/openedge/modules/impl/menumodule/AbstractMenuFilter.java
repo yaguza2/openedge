@@ -41,56 +41,56 @@ import java.util.Map;
 public abstract class AbstractMenuFilter implements MenuFilter
 {
 
-    /** attributes of this filter. */
-    private HashMap attributes = new HashMap(2);
+	/** attributes of this filter. */
+	private HashMap attributes = new HashMap(2);
 
-    /**
-     * Construct.
-     */
-    public AbstractMenuFilter()
-    {
-        // nothing here
-    }
+	/**
+	 * Construct.
+	 */
+	public AbstractMenuFilter()
+	{
+		// nothing here
+	}
 
-    /**
-     * @see nl.openedge.modules.impl.menumodule.MenuFilter#getAttribute(java.lang.String)
-     */
-    public Object getAttribute(String name)
-    {
-        return attributes.get(name);
-    }
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#getAttribute(java.lang.String)
+	 */
+	public Object getAttribute(String name)
+	{
+		return attributes.get(name);
+	}
 
-    /**
-     * @see nl.openedge.modules.impl.menumodule.MenuFilter#getAttributes()
-     */
-    public Map getAttributes()
-    {
-        return attributes;
-    }
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#getAttributes()
+	 */
+	public Map getAttributes()
+	{
+		return attributes;
+	}
 
-    /**
-     * @see nl.openedge.modules.impl.menumodule.MenuFilter#putAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
-    public void putAttribute(String name, Object value)
-    {
-        attributes.put(name, value);
-    }
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#putAttribute(java.lang.String,
+	 *      java.lang.Object)
+	 */
+	public void putAttribute(String name, Object value)
+	{
+		attributes.put(name, value);
+	}
 
-    /**
-     * @see nl.openedge.modules.impl.menumodule.MenuFilter#putAllAttributes(java.util.Map)
-     */
-    public void putAllAttributes(Map attributes)
-    {
-        this.attributes.putAll(attributes);
-    }
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#putAllAttributes(java.util.Map)
+	 */
+	public void putAllAttributes(Map newAttributes)
+	{
+		this.attributes.putAll(newAttributes);
+	}
 
-    /**
-     * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#removeAttribute(java.lang.String)
-     */
-    public void removeAttribute(String name)
-    {
-        attributes.remove(name);
-    }
+	/**
+	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#removeAttribute(java.lang.String)
+	 */
+	public void removeAttribute(String name)
+	{
+		attributes.remove(name);
+	}
 
 }

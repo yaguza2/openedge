@@ -42,26 +42,31 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Eelco Hillenius
  */
-public final class ApplicationScopeTestFilter extends AbstractMenuFilter implements ApplicationScopeMenuFilter
+public final class ApplicationScopeTestFilter extends AbstractMenuFilter implements
+		ApplicationScopeMenuFilter
 {
 
 	private static Log log = LogFactory.getLog(ApplicationScopeTestFilter.class);
 
 	/**
 	 * test method
-	 * @param menuItem menu item
-	 * @param context de filter context
-	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
+	 * 
+	 * @param menuItem
+	 *            menu item
+	 * @param context
+	 *            de filter context
+	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
+	 *      java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = true;
 
-		if(menuItem.getLink().equals("/admin.onderhoud.filtertest.m"))
+		if (menuItem.getLink().equals("/admin.onderhoud.filtertest.m"))
 		{
 			accepted = false;
 		}
-		
+
 		return accepted;
 	}
 

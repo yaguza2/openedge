@@ -32,38 +32,40 @@ package nl.openedge.modules.impl.menumodule;
 
 import java.util.Map;
 
-import nl.openedge.modules.impl.menumodule.MenuItem;
-import nl.openedge.modules.impl.menumodule.RequestScopeMenuFilter;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * Allways disables all.
+ * 
  * @author Sander Hofstee
  */
 public final class DisabledFilter extends AbstractMenuFilter implements RequestScopeMenuFilter
 {
-    /** Log. */
+	/** Log. */
 	private static Log log = LogFactory.getLog(DisabledFilter.class);
 
 	/**
 	 * Allways disables.
-	 * @param menuItem menu item
-	 * @param context de filter context
+	 * 
+	 * @param menuItem
+	 *            menu item
+	 * @param context
+	 *            de filter context
 	 * @return boolean true allways
-	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
+	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
+	 *      java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = true;
-	
+
 		if (log.isDebugEnabled())
 		{
 			log.debug("DisabledFilter:" + menuItem.getTag() + " is disabled.");
 		}
 		menuItem.setEnabled(false);
-		
+
 		return accepted;
 	}
 

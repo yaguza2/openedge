@@ -2,5 +2,6 @@
 <fileset-config file-format-version="1.0.0">
     <fileset name="Topicus Checks" enabled="true" check-config-name="Topicus Checks">
         <file-match-pattern match-pattern=".java$" include-pattern="true"/>
+        <file-match-pattern match-pattern="Test" include-pattern="false"/>
     </fileset>
 </fileset-config>

@@ -42,33 +42,39 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Eelco Hillenius
  */
-public final class RequestScopeTestFilter extends AbstractMenuFilter implements RequestScopeMenuFilter
+public final class RequestScopeTestFilter extends AbstractMenuFilter implements
+		RequestScopeMenuFilter
 {
+	/** key for context. */
+	public static final String TEST_CONTEXT_KEY = "testkey";
 
+	/** log. */
 	private static Log log = LogFactory.getLog(RequestScopeTestFilter.class);
-	
-	public final static String TEST_CONTEXT_KEY = "testkey";
 
 	/**
 	 * test method
-	 * @param menuItem menu item
-	 * @param context de filter context
-	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
+	 * 
+	 * @param menuItem
+	 *            menu item
+	 * @param context
+	 *            de filter context
+	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
+	 *      java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = true;
 
-		if(context.get(TEST_CONTEXT_KEY) != null)
+		if (context.get(TEST_CONTEXT_KEY) != null)
 		{
-		
-			if(menuItem.getLink().equals("/zoeken.m"))
+
+			if (menuItem.getLink().equals("/zoeken.m"))
 			{
 				accepted = false;
 			}
-			
+
 		}
-		
+
 		return accepted;
 	}
 

@@ -42,34 +42,34 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Filters on authorisations with Access/ JAAS.
+ * 
  * @author Eelco Hillenius
  */
 public final class AuthorizationFilter extends AbstractMenuFilter implements SessionScopeMenuFilter
 {
-    /** Log. */
+	/** Log. */
 	private static Log log = LogFactory.getLog(AuthorizationFilter.class);
 
 	/**
-	 * accepts if the subject stored in the context has permission for this item
-	 * @param menuItem menu item
-	 * @param context de filter context
-	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem, java.util.Map)
+	 * accepts if the subject stored in the context has permission for this item.
+	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
+	 *      java.util.Map)
 	 */
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = false; // default is to deny
-		
+
 		String link = menuItem.getLink();
 		int ix = link.indexOf('?'); // strip parameter and '?'
-		if(ix != -1)
+		if (ix != -1)
 		{
 			link = link.substring(0, ix);
 		}
 
-		Subject subject = (Subject)context.get(MenuFilter.CONTEXT_KEY_SUBJECT);
+		Subject subject = (Subject) context.get(MenuFilter.CONTEXT_KEY_SUBJECT);
 		try
 		{
-			
+
 			// check authorisation
 			AccessHelper.checkPermissionForSubject(new AuthPermission(link), subject);
 			// no exception: subject is authorised
@@ -80,12 +80,12 @@ public final class AuthorizationFilter extends AbstractMenuFilter implements Ses
 		catch (SecurityException se)
 		{
 			// no permission
-			if(log.isDebugEnabled())
+			if (log.isDebugEnabled())
 			{
 				log.debug(subject + " has no permission for " + menuItem);
 			}
 		}
-		
+
 		return accepted;
 	}
 
