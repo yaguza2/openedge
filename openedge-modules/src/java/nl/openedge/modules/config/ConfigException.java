@@ -32,7 +32,7 @@ package nl.openedge.modules.config;
 
 /**
  * ConfigExceptions are exceptions that are related to 
- * invallid configurations
+ * invalid configurations
  * 
  * @author Eelco Hillenius
  */

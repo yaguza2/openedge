@@ -334,7 +334,7 @@ public final class LoginModuleImpl implements LoginModule
 
 			if (!succeeded)
 				throw new LoginException(
-					"Authentication failed: Invallid combination of username and password");
+					"Authentication failed: Invalid combination of username and password");
 
 			// save input as shared state only if
 			// authentication succeeded
