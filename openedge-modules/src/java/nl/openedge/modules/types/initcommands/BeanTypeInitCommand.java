@@ -92,16 +92,21 @@ public class BeanTypeInitCommand implements InitCommand
 
 		if(properties != null)
 		{
+			boolean success = true;
 			// try to set its properties
 			try
 			{
-				//BeanUtils.populate(componentInstance, this.properties);
-				populate(componentInstance, this.properties);
+				success = populate(componentInstance, this.properties);
 			}
 			catch (Exception e)
 			{
 				throw new ConfigException(e);
-			}	
+			}
+			if(!success)
+			{
+				throw new ConfigException(
+					"there were errors during population of " + componentInstance);
+			}
 		}
 	}
 	
