@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.6 2004-03-29 15:26:52 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-03-29 15:26:52 $
+ * $Id: FormBeanContext.java,v 1.7 2004-04-02 09:52:24 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-02 09:52:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -53,6 +53,7 @@ import org.apache.commons.logging.LogFactory;
  * attributes you do not want to include as properties in your form bean. 
  *  
  * @author Eelco Hillenius
+ * @author Maurice Marrink
  */
 public final class FormBeanContext
 {
@@ -71,6 +72,9 @@ public final class FormBeanContext
 
 	/* overriden values as strings */
 	private Map overrideFields = null;
+	
+	/* the current controller */
+	private FormBeanCtrlBase controller = null;
 	
 	/* 
 	 * if, for some reason, you want to store extra attributes in this context
@@ -794,6 +798,24 @@ public final class FormBeanContext
 	public boolean containsValue(Object value)
 	{
 		return (attributes != null) ? attributes.containsValue(value) : false;
+	}
+
+	/**
+	 * get current controller
+	 * @return FormBeanCtrlBase
+	 */
+	public FormBeanCtrlBase getController()
+	{
+		return controller;
+	}
+
+	/**
+	 * set current controller
+	 * @param controller current controller
+	 */
+	public void setController(FormBeanCtrlBase controller)
+	{
+		this.controller = controller;
 	}
 
 }

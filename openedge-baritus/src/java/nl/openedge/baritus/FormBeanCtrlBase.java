@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: FormBeanCtrlBase.java,v 1.4 2004-04-02 09:52:24 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-02 09:52:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -185,6 +185,8 @@ public abstract class FormBeanCtrlBase implements Controller
 		
 		// get the form bean context and set it in the flow interceptor context
 		FormBeanContext formBeanContext = getFormBeanContext(cctx, execParams);
+		// set the current controller to be able to use methods like getPropertyNameKey etc
+		formBeanContext.setController(this);
 		cctx.setModel(formBeanContext); // set context as model
 		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
