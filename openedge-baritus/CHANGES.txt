@@ -1,8 +1,15 @@
+1.0.4
+-------------------------------------------------
+- Fixes Maurice:
+	- removed redundant Locale parameter in ValidationDelegate interface and in some
+		of the private methods of FormBeanCtrlBase
+	- removed redundant check on override field in DefaultValidatorDelegate
+	- added exception handling and logging for form validators
+
 1.0.3
+-------------------------------------------------
 - Typo 'stictPopulationMode' -> 'strictPopulationMode', class ExcecutionParams
 - Fix in OgnlFieldPopulator: conversion was done twice in some cases
-
--------------------------------------------------
 
 1.0.2
 -------------------------------------------------
