@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.1.1.1 2004-02-24 20:33:58 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:33:58 $
+ * $Id: FormBeanCtrl.java,v 1.2 2004-02-25 10:33:08 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-25 10:33:08 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -75,20 +75,7 @@ import org.infohazard.maverick.flow.ControllerSingleton;
 import org.jdom.Element;
 
 /**
- * FormBeanCtrl is a base class for singleton controllers which use
- * external FormBeans rather than populating themselves. 
- * 
- * It is the more refined version of FormBeanUser from the maverick project.
- * Using (extending) this class gives you:
- * <ul>
- * 	<li>automatic population of the form</li>
- * 	<li>plugable conversion mechanism (using BeanUtils)</li>
- * 	<li>flexible, localized error handling</li>
- * 	<li>plugable form-level and field-level validation</li>
- * 	<li>mechanism to get the last input for fields if conversion failed</li>
- * </ul>
- * 
- * Please read the 'usage' document for examples of how to use this class.
+ * @TODO document me!
  * 
  * @see org.infohazard.maverick.ctl.FormBeanUser
  * @see org.apache.commons.beanutils.BeanUtils
@@ -172,7 +159,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		String viewName = SUCCESS; // default view
 		
-		if(executionParams.isNoCache())
+		ExecutionParams _execParams = getExecutionParams();
+		if(_execParams.isNoCache())
 		{
 			doSetNoCache(cctx); // set no cache headers
 		}
@@ -183,7 +171,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		String flowInterceptView = null; // view possibly assigned by an interceptor
 		
 		// get the form bean context and set it in the flow interceptor context
-		FormBeanContext formBeanContext = getFormBeanContext(cctx);
+		FormBeanContext formBeanContext = getFormBeanContext(cctx, _execParams);
 		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
 		// flow intercept before make form bean
@@ -217,7 +205,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			formBeanContext.setCurrentLocale(locale); // and set in context
 			
 			// populate
-			populated = populateFormBean(cctx, formBeanContext, locale);
+			populated = populateFormBean(cctx, formBeanContext, locale, _execParams);
 			
 		} 
 		catch(Exception e)
@@ -241,7 +229,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		try
 		{	
 			// was the bean population successful?
-			if(populated || executionParams.isDoPerformIfFieldValidationFailed()) 
+			if(populated || _execParams.isDoPerformIfFieldValidationFailed()) 
 			{
 				// flow intercept after population
 				intercDlg.doInterceptAfterPopulation(cctx, formBeanContext);
@@ -303,10 +291,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	
 	
 	/* get the formBeanContext */
-	private FormBeanContext getFormBeanContext(ControllerContext cctx)
+	private FormBeanContext getFormBeanContext(
+		ControllerContext cctx,
+		ExecutionParams _execParams)
 	{
 		FormBeanContext formBeanContext = null;
-		if(executionParams.isReuseFormBeanContext()) 
+		if(_execParams.isReuseFormBeanContext()) 
 			// if true, see if an instance was save earlier request
 		{
 			formBeanContext = (FormBeanContext)
@@ -342,7 +332,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	private boolean populateFormBean(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
-		Locale locale) 
+		Locale locale,
+		ExecutionParams _execParams) 
 		throws Exception 
 	{
 
@@ -370,7 +361,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		}
 		
 		// controller parameters
-		if(executionParams.isIncludeControllerParameters() &&
+		if(_execParams.isIncludeControllerParameters() &&
 			(cctx.getControllerParams() != null))
 		{
 			Map parameters = new HashMap(cctx.getControllerParams());
@@ -383,7 +374,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		}		
 
 		// session attributes
-		if(executionParams.isIncludeSessionAttributes())
+		if(_execParams.isIncludeSessionAttributes())
 		{
 			Map parameters = new HashMap();
 			HttpSession httpSession = cctx.getRequest().getSession();
@@ -413,7 +404,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			cctx, formBeanContext, reqParameters, locale);
 
 		// request attributes
-		if(executionParams.isIncludeRequestAttributes())
+		if(_execParams.isIncludeRequestAttributes())
 		{
 			Map parameters = new HashMap();
 			HttpServletRequest request = cctx.getRequest();
@@ -446,7 +437,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		// do custom validation
 		succeeded = doCustomValidation(
-			cctx, formBeanContext, allParameters, locale, succeeded);
+			cctx, formBeanContext, _execParams, allParameters, locale, succeeded);
 		
 		return succeeded;
 	}
@@ -729,6 +720,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	private boolean doCustomValidation(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
+		ExecutionParams _execParams,
 		Map parameters,
 		Locale locale,
 		boolean succeeded)
@@ -795,7 +787,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					}	
 				}
 				// if we are still successful so far, check with the form level validators
-				if( (succeeded || executionParams.isDoFormValidationIfFieldValidationFailed()) 
+				if( (succeeded || _execParams.isDoFormValidationIfFieldValidationFailed()) 
 					&& (formValidators != null))
 				{
 					// check all registered until either all fired successfully or
@@ -1473,9 +1465,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * @TODO document me!
+	 * Get the execution params that are used to influence the execution
+	 * of the formBeanCtrl (like population, validation, etc).
 	 * 
-	 * @return
+	 * @return ExecutionParams the execution params that are used to influence the execution
+	 * of the formBeanCtrl (like population, validation, etc).
 	 */
 	public ExecutionParams getExecutionParams()
 	{
@@ -1483,9 +1477,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * @TODO document me!
+	 * set the execution params that are used to influence the execution
+	 * of the formBeanCtrl (like population, validation, etc).
 	 * 
-	 * @param params
+	 * @param params the execution params that are used to influence the execution
+	 * of the formBeanCtrl (like population, validation, etc).
 	 */
 	public void setExecutionParams(ExecutionParams params)
 	{
