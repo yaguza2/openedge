@@ -7,7 +7,7 @@
  * Copyright (c) 2003, Promedico ICT B.V.
  * All rights reserved.
  */
-package nl.openedge.maverick.framework.util;
+package nl.openedge.maverick.framework.velocity.tools;
 
 import java.util.HashMap;
 import java.util.Map;

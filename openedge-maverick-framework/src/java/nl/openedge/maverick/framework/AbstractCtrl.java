@@ -54,7 +54,7 @@ import javax.servlet.http.HttpSession;
 
 import nl.openedge.access.AccessFilter;
 import nl.openedge.access.UserPrincipal;
-import nl.openedge.maverick.framework.util.UrlTool;
+import nl.openedge.maverick.framework.velocity.tools.UrlTool;
 import nl.openedge.maverick.framework.validation.*;
 
 import org.jdom.Element;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="src" path="src/java"/>
+    <classpathentry kind="src" path="src/test"/>
     <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/servletapi-2.3-src.jar"/>
@@ -20,7 +21,7 @@
     <classpathentry kind="var" path="MAVEN_REPO/odmg/jars/odmg-3.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/odmg-3.0-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/bcel/jars/bcel-5.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/bcel-5.1-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/cglib/jars/cglib-1.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/cglib-1.0-src.jar"/>
+        path="MAVEN_REPO/cglib/jars/cglib-1.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/cglib-src-1.0.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/maverick/jars/maverick-2.2.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/maverick-2.2.0-src.jar"/>
     <classpathentry kind="var"
