@@ -1,7 +1,7 @@
 /*
- * $Id: PropertyNotNullFormValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: PropertyNotNullFormValidator.java,v 1.2 2004-04-04 18:22:33 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-04 18:22:33 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,7 +34,8 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFormValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import ognl.Ognl;
+
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -107,10 +108,8 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 		boolean valid = false;
 		try
 		{
-			if(PropertyUtils.getProperty(bean, propertyName) != null)
-			{
-				valid = true;		
-			}
+			Object property = Ognl.getValue(propertyName, bean);
+			valid = (property != null);
 		}
 		catch (Exception e)
 		{

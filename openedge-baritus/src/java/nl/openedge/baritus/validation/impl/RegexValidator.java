@@ -1,7 +1,7 @@
 /*
- * $Id: RegexValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:54 $
+ * $Id: RegexValidator.java,v 1.3 2004-04-04 18:22:33 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:22:33 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -35,10 +35,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.util.ValueUtils;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -155,7 +155,7 @@ public class RegexValidator extends AbstractFieldValidator
 	{
 		if(pattern == null) throw new RuntimeException("pattern is not provided!");
 		
-		String toMatch = ConvertUtils.convert(value); // convert to String
+		String toMatch = ValueUtils.convertToString(value); // convert to String
 		Matcher matcher = pattern.matcher(toMatch); // create a matcher
 
 		return (mode == MODE_VALID_IF_MATCHES) ? matcher.matches() : !matcher.matches();
@@ -171,10 +171,9 @@ public class RegexValidator extends AbstractFieldValidator
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String fieldName,
-		Object value,
-		Locale locale)
+		Object value)
 	{
-		
+		Locale locale = formBeanContext.getCurrentLocale();
 		String key = getMessagePrefix();
 		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
 	}

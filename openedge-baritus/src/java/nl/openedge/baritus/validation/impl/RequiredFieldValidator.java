@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredFieldValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:54 $
+ * $Id: RequiredFieldValidator.java,v 1.3 2004-04-04 18:22:33 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:22:33 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -146,10 +146,9 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String fieldName,
-		Object value,
-		Locale locale)
+		Object value)
 	{
-
+		Locale locale = formBeanContext.getCurrentLocale();
 		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{fieldName});
 	}
 
