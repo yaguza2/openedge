@@ -306,7 +306,84 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 		
 		<para>
 			In this section, we will look at the <literal>FormBeanContext</literal> in more detail.
-		</para>	
+		</para>
+		
+		<para>
+			The FormBeanContext is your interface between controllers and views and between
+			controllers within the same request. Also, FormBeanContext has the utility methods
+			that helps you to properly display values of the form bean. Furthermore,
+			FormBeanContext keeps references to the form bean, the current (request scoped) locale
+			and, in case errors occured during population/ validation, to error messages and the
+			original input values. And lastely, FormBeanContext acts as a Map/ attribute decorator
+			that you can use for request scoped atrributes you do not want to include in the
+			population/ validation process.
+		</para>
+		
+		<sect2 id="using-s4a">
+			<title>References</title>
+
+        <itemizedlist spacing="compact">
+            <listitem>
+                <para>
+					The form bean (property 'bean') is the object that you provided for population with
+					method 'makeFormBean'.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                   Property 'currentLocale' is the locale that will be used for this request. FormBeanCtrl
+				   gets the locale by calling it protected method 'getLocaleForRequest' and sets it
+				   as currentLocale in the FormBeanContext right after creating the formBeanContext.
+                </para>
+            </listitem>
+        </itemizedlist>
+		
+		</sect2>
+		
+		<sect2 id="using-s4b">
+			<title>Attributes</title>
+
+        <itemizedlist spacing="compact">
+            <listitem>
+                <para>
+					Map property 'errors' is used to store errors that occure during population and
+					validation. You can use this map to store additional error messages as well.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                   Map property 'overrideFields' is used to store the original input values when
+				   population or validation generated errors.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+					Map property 'attributes' can be used to store additional attributes that should
+					be available to the next controllers and views in the execution chain without it
+					having any effect on population and validation, like end-user messages that
+					are not errors. FormBeanContext acts as a wrapper for the attributes, so you
+					should use the map methods like get(key), set(key, value) etc. This has the advantage
+					of being able to compactely use these attributes in the view. E.g, say we have
+					attribute with name 'myAttrib' stored as a FormBeanContxt attribute, in Velocity
+					we could display this atribute like: '$model.myAttrib'.
+                </para>
+            </listitem>
+        </itemizedlist>
+		
+		</sect2>
+		
+		<sect2 id="using-s4b">
+			<title>Utility methods</title>
+
+        <itemizedlist spacing="compact">
+            <listitem>
+                <para>
+					TODO
+                </para>
+            </listitem>
+        </itemizedlist>
+		
+		</sect2>
 		
 	</sect1>
 	
