@@ -9,6 +9,8 @@ import nl.openedge.access.Resource;
 public class DefaultResource implements Resource {
 	
 	private String resourceKey;
+	
+	private int resourcePermissions = 0;
 
 	/**
 	 * constructor, with key
@@ -31,6 +33,21 @@ public class DefaultResource implements Resource {
 	 */
 	public void setResourceKey(String resourceKey) {
 		this.resourceKey = resourceKey;
+	}
+
+	/**
+	 * @return int
+	 */
+	public int getResourcePermissions() {
+		return resourcePermissions;
+	}
+
+	/**
+	 * Sets the resourcePermissions.
+	 * @param resourcePermissions The resourcePermissions to set
+	 */
+	public void setResourcePermissions(int defaultPermissions) {
+		this.resourcePermissions = defaultPermissions;
 	}
 
 }
