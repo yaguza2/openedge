@@ -149,7 +149,6 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 			keyFields.put("user_name", user.getName());
 			result = delete("oeaccess_user_role", keyFields);
 			result = delete("oeaccess_user_attribs", keyFields);
-			result = delete("oeaccess_user_permission", keyFields);
 		
 		} catch(Exception e) {
 			throw new AccessException(e);

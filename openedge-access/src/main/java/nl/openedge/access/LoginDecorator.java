@@ -2,16 +2,13 @@ package nl.openedge.access;
 
 import java.security.Principal;
 
+import javax.security.auth.Subject;
+
 /**
  * 
  * Logon decorators can add principals to a subject.
- * Classes implementing this interface should be configured like:<code><pre>
- *	<login-decorators>
- *		<decorator class="org.stuff.MyDecorator"/>
- *		<decorator class="com.company.AnotherDecorator"/>
- *	</login-decorators>
- * </pre></code>
- * within the <code><user-manager></user-manager></code> tags.
+ * Classes implementing this interface should be configured in
+ * the JAAS configuration file.
  * 
  * The configured decorators are evaluated in the commit() method of the 
  * LoginModule and the resulting Principals will be stored with the subject
@@ -25,6 +22,11 @@ import java.security.Principal;
  */
 public interface LoginDecorator {
 
-	public Principal[] getPrincipals();
+	/**
+	 * get extra principals for this subject
+	 * @param subject immutable subject
+	 * @return
+	 */
+	public Principal[] getPrincipals(final Subject subject);
 
 }

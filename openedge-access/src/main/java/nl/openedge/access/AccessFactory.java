@@ -118,7 +118,9 @@ public class AccessFactory {
 					"nl.openedge.access.impl.rdbms.DataSourceDelegate.");
 				
 				try {
-					Class cls = Class.forName(delegate);
+					Class cls =  Thread.currentThread()
+									   .getContextClassLoader()
+									   .loadClass(delegate);
 					DataSourceDelegate d = (DataSourceDelegate)cls.newInstance();
 					DataSource ds = d.getDataSource(XML.getParams(dsNode));
 					if(ds == null) throw new ConfigException(
@@ -244,7 +246,9 @@ public class AccessFactory {
 		UserManager manager = null;
 		String managerCls = XML.getValue(configNode, "class");
 		try {
-			Class cls = Class.forName(managerCls);
+			Class cls =  Thread.currentThread()
+							   .getContextClassLoader()
+							   .loadClass(managerCls);
 			manager = (UserManager)cls.newInstance();
 			manager.init(configNode);
 			

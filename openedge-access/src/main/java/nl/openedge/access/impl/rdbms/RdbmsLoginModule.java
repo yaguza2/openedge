@@ -1,5 +1,6 @@
 package nl.openedge.access.impl.rdbms;
 
+import java.security.Principal;
 import java.util.*;
 
 import javax.security.auth.spi.LoginModule;
@@ -92,12 +93,15 @@ public class RdbmsLoginModule extends RdbmsUserManager
 	private boolean succeeded = false;
 	private boolean commitSucceeded = false;
 	
-	private static final String NAME = "javax.security.auth.login.name";
-	private static final String PWD = "javax.security.auth.login.password";
+	public static final String NAME = "javax.security.auth.login.name";
+	public static final String PWD = "javax.security.auth.login.password";
 
     // temporary state
-    Vector tempCredentials;
-    Vector tempPrincipals;
+    protected Vector tempCredentials;
+    protected Vector tempPrincipals;
+    
+    // decorator if provided
+    protected LoginDecorator decorator = null;
     
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
@@ -134,6 +138,21 @@ public class RdbmsLoginModule extends RdbmsUserManager
 			"true".equalsIgnoreCase((String)options.get("storePass"));
 		clearPass =
 			"true".equalsIgnoreCase((String)options.get("clearPass"));
+			
+		// see if there's a LoginDecorater configured
+		String decoClass = (String)options.get("decorator");
+		if(decoClass != null) {
+			// got one, try to instantiate
+			try {				
+				Class cls = Thread.currentThread()
+								  .getContextClassLoader()
+								  .loadClass(decoClass);
+				this.decorator = (LoginDecorator)cls.newInstance();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
     }
 
 	/**
@@ -344,6 +363,16 @@ public class RdbmsLoginModule extends RdbmsUserManager
 
                 subject.getPrincipals().addAll(tempPrincipals);
                 subject.getPublicCredentials().addAll(tempCredentials);
+
+				// decorate if a decorator was set
+				if(decorator != null) {
+					Principal[] extraPrincipals = 
+							decorator.getPrincipals(subject);
+					if(extraPrincipals != null) {
+						subject.getPrincipals().add(
+							Arrays.asList(extraPrincipals));
+					}
+				}
 
                 tempPrincipals.clear();
                 tempCredentials.clear();
