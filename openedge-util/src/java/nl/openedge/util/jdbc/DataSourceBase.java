@@ -30,6 +30,7 @@
  */
 package nl.openedge.util.jdbc;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -42,22 +43,20 @@ import org.apache.commons.dbcp.BasicDataSource;
 /**
  * @author Eelco Hillenius
  */
-public abstract class DataSourceBase
+public class DataSourceBase
 {
 
-	private static boolean initialized = false;
-
 	/** datasource */
-	protected static DataSource _dataSource = null;
+	protected DataSource _dataSource = null;
+	protected static Map _instances = new HashMap(4);
 
 	/**
-	 * construct and get datasource from JNDI location
+	 * get datasource from JNDI location
 	 * @param jndiRef
 	 * @throws Exception
 	 */
 	public DataSourceBase(String jndiRef) throws Exception
 	{
-
 		Context ctx = new InitialContext();
 		_dataSource = (DataSource)ctx.lookup(jndiRef);
 	}
@@ -72,7 +71,7 @@ public abstract class DataSourceBase
 	}
 
 	/**
-	 * construct and create datasource with given parameters
+	 * create datasource with given parameters
 	 * Use a map like:
 	 * 
 	 *	driverClassName=org.gjt.mm.mysql.Driver
@@ -88,41 +87,8 @@ public abstract class DataSourceBase
 	 */
 	public DataSourceBase(Map constructionParameters) throws Exception
 	{
-
 		_dataSource = new BasicDataSource();
 		BeanUtils.populate(_dataSource, constructionParameters);
-		initialized = true;
-
-	}
-
-	/**
-	 * construct and create datasource with given parameters
-	 * Use a map like:
-	 * 
-	 *	driverClassName=org.gjt.mm.mysql.Driver
-	 *	url=jdbc:mysql://localhost:3306/foo_db
-	 *	username=root
-	 *	password=
-	 *	maxActive=20
-	 *	maxIdle=10
-	 *	maxWait=5000
-	 *	defaultAutoCommit=false
-	 * 
-	 * @param constructionParameters populated map to create datasource
-	 * @param createOnce if true, we'll look if a datasource was allready 
-	 * 		initialized which can be used in that case 
-	 */
-	public DataSourceBase(Map constructionParameters, boolean createOnce) 
-		throws Exception
-	{
-
-		if (!initialized && createOnce)
-		{
-			_dataSource = new BasicDataSource();
-			BeanUtils.populate(_dataSource, constructionParameters);
-			initialized = true;
-		}
-
 	}
 
 	/**
@@ -139,6 +105,63 @@ public abstract class DataSourceBase
 	public void setDataSource(DataSource dataSource)
 	{
 		_dataSource = dataSource;
+	}
+	
+	/**
+	 * get datasource with given jndiRef
+	 * @param jndiRef
+	 * @return DataSource
+	 * @throws Exception
+	 */
+	public static DataSource getDataSource(String jndiRef) throws Exception
+	{
+		DataSource ds = null;
+		DataSourceBase base = null;
+		synchronized(DataSourceBase.class)
+		{
+			base = (DataSourceBase)_instances.get(jndiRef);
+			if(base == null)
+			{
+				base = new DataSourceBase(jndiRef);
+				_instances.put(jndiRef, base);
+			}	
+		}
+		ds = base.getDataSource();
+		return ds;
+	}
+	
+	/**
+	 * get datasource with given parameters
+	 * Use a map like:
+	 * 
+	 *	driverClassName=org.gjt.mm.mysql.Driver
+	 *	url=jdbc:mysql://localhost:3306/foo_db
+	 *	username=root
+	 *	password=
+	 *	maxActive=20
+	 *	maxIdle=10
+	 *	maxWait=5000
+	 *	defaultAutoCommit=false
+	 * 
+	 * @param constructionParameters populated map to create datasource
+	 * @return DataSource
+	 * @throws Exception
+	 */
+	public static DataSource getDataSource(Map constructionParameters) throws Exception
+	{
+		DataSource ds = null;
+		DataSourceBase base = null;
+		synchronized(DataSourceBase.class)
+		{
+			base = (DataSourceBase)_instances.get(constructionParameters);
+			if(base == null)
+			{
+				base = new DataSourceBase(constructionParameters);
+				_instances.put(constructionParameters, base);
+			}	
+		}
+		ds = base.getDataSource();
+		return ds;
 	}
 
 }
