@@ -35,6 +35,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
+ * Compares using introspection
+ * 
  * @author	Johan Compagner
  * @author	Eelco Hillenius
  */
@@ -53,8 +55,8 @@ public class GenericComparator implements Comparator
 	 * @throws NoSuchMethodException
 	 * @throws ClassNotFoundException
 	 */
-	public GenericComparator(Class cls, String sField, boolean bAscending) 
-			throws NoSuchFieldException
+	public GenericComparator(Class cls, String sField, boolean bAscending)
+		throws NoSuchFieldException
 	{
 		fillMethods(sField, cls);
 		if (bAscending)
@@ -73,11 +75,12 @@ public class GenericComparator implements Comparator
 	 * @param object	object to test on
 	 * @return Method that can be called directely
 	 */
-	protected void fillMethods(String propertyName, Class cls) 
+	protected void fillMethods(String propertyName, Class cls)
 		throws NoSuchFieldException
 	{
 		_alMethods = new ArrayList();
-		StringTokenizer tk = new StringTokenizer(propertyName, "."); // split on '.'
+		StringTokenizer tk = new StringTokenizer(propertyName, ".");
+		// split on '.'
 		Class currentClass = cls;
 		while (tk.hasMoreTokens())
 		{
@@ -95,14 +98,14 @@ public class GenericComparator implements Comparator
 	 * @return Method
 	 * @throws NoSuchFieldException
 	 */
-	protected Method findMethod(String propertyName, Class cls) 
+	protected Method findMethod(String propertyName, Class cls)
 		throws NoSuchFieldException
 	{
 
 		Method m = null;
 		String methodName =
-			"get" + propertyName.substring(0, 1).toUpperCase() + 
-			propertyName.substring(1, propertyName.length());
+			"get" + propertyName.substring(0, 1).toUpperCase()
+				+ propertyName.substring(1, propertyName.length());
 		try
 		{
 			m = cls.getMethod(methodName, null);
@@ -113,15 +116,14 @@ public class GenericComparator implements Comparator
 			try
 			{
 				methodName =
-					"is"
-						+ propertyName.substring(0, 1).toUpperCase()
+					"is" + propertyName.substring(0, 1).toUpperCase()
 						+ propertyName.substring(1, propertyName.length());
 				m = cls.getMethod(methodName, null);
 			}
 			catch (Exception e2)
 			{
 				throw new NoSuchFieldException(
-						cls.getName() + "->" + propertyName);
+					cls.getName() + "->" + propertyName);
 			}
 		}
 		return m;
@@ -134,9 +136,7 @@ public class GenericComparator implements Comparator
 	 * @throws NoSuchFieldException
 	 */
 	protected Object getPropertyValueOnObject(Object o)
-		throws NoSuchFieldException, 
-				IllegalAccessException, 
-				InvocationTargetException
+		throws NoSuchFieldException, IllegalAccessException, InvocationTargetException
 	{
 		if (o == null)
 			return o;
@@ -157,10 +157,8 @@ public class GenericComparator implements Comparator
 	 */
 	public int compare(Object o1, Object o2)
 	{
-
 		try
 		{
-
 			Object o1Return = getPropertyValueOnObject(o1);
 			Object o2Return = getPropertyValueOnObject(o2);
 			// Both null then equal
@@ -178,8 +176,11 @@ public class GenericComparator implements Comparator
 		catch (Exception e)
 		{
 
-			System.err.println("sorting failed:" + o1.getClass().getName() 
-				+ " compared to " + o2.getClass().getName());
+			System.err.println(
+				"sorting failed:"
+					+ o1.getClass().getName()
+					+ " compared to "
+					+ o2.getClass().getName());
 			e.printStackTrace();
 		}
 		return 0;
