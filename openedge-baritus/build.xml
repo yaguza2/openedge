@@ -6,7 +6,7 @@
 
 -->
 
-<project name="Baritus" default="jar" basedir=".">
+<project name="Baritus" default="refdoc" basedir=".">
 
 	<!-- Give user a chance to override without editing this file or typing -D -->
 	<property file="build.properties"/>
