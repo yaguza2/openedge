@@ -43,6 +43,12 @@ import org.infohazard.maverick.flow.ControllerContext;
 public abstract class AbstractFormValidator extends AbstractValidator
 	implements FormValidator, ValidationRuleDependend
 {
+	
+	/* 
+	 * key that will be used for storing the error message 
+	 * if null or not provided, property messagePrefix will be used instead
+	 */
+	private String errorKey = null;
 
 	/**
 	 * construct
@@ -69,10 +75,31 @@ public abstract class AbstractFormValidator extends AbstractValidator
 		AbstractForm form,
 		Locale locale)
 	{
-		
 		String key = getMessagePrefix();
 		String msg = getLocalizedMessage(key, locale);
-		return new String[]{key, msg};
+		String storeKey = getErrorKey();
+		if(storeKey == null) storeKey = key;
+		return new String[]{storeKey, msg};
+	}
+
+	/**
+	 * get the key that will be used for storing the error message
+	 * if null or not provided, property messagePrefix will be used instead
+	 * @return String key that will be used for storing the error message
+	 */
+	public String getErrorKey()
+	{
+		return errorKey;
+	}
+
+	/**
+	 * set the key that will be used for storing the error message
+	 * if null or not provided, property messagePrefix will be used instead
+	 * @param string the key that will be used for storing the error message
+	 */
+	public void setErrorKey(String string)
+	{
+		errorKey = string;
 	}
 
 }
