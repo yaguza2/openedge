@@ -31,6 +31,7 @@
 package nl.openedge.maverick.framework;
 
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.servlet.ServletConfig;
@@ -42,9 +43,9 @@ import nl.openedge.maverick.framework.converters.BooleanConverter;
 import nl.openedge.maverick.framework.converters.ByteConverter;
 import nl.openedge.maverick.framework.converters.ByteLocaleConverter;
 import nl.openedge.maverick.framework.converters.CharacterConverter;
-import nl.openedge.maverick.framework.converters.DateLocaleConverter;
 import nl.openedge.maverick.framework.converters.DoubleConverter;
 import nl.openedge.maverick.framework.converters.DoubleLocaleConverter;
+import nl.openedge.maverick.framework.converters.FallbackDateConverter;
 import nl.openedge.maverick.framework.converters.FloatConverter;
 import nl.openedge.maverick.framework.converters.FloatLocaleConverter;
 import nl.openedge.maverick.framework.converters.IntegerConverter;
@@ -156,7 +157,9 @@ public class ApplicationServlet extends HttpServlet
 		reg.register(new ShortLocaleConverter(), Short.TYPE);
 		reg.register(new ShortLocaleConverter(), Short.class);
 		
-		reg.register(new DateLocaleConverter(), Date.class);
+		reg.register(new FallbackDateConverter(), Date.class);
+		reg.register(new FallbackDateConverter(), java.sql.Date.class);
+		reg.register(new FallbackDateConverter(), Timestamp.class);
 
 	}
 	

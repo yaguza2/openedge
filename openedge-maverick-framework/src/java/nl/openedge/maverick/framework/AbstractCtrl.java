@@ -34,6 +34,7 @@ import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -417,12 +418,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @return Locale the prefered locale
 	 */
 	protected Locale getLocaleForRequest(ControllerContext cctx, AbstractForm form)
-	{
-		Locale locale = cctx.getRequest().getLocale();
-		
-		UserPrincipal up = form.getUser();
-		if(up != null)
+	{	
+		Locale locale = null;
+		Principal p = form.getUser();
+		if(p != null && (p instanceof UserPrincipal))
 		{
+			UserPrincipal up = (UserPrincipal)p;
 			if(up.getPreferedLocale() != null)
 			{
 				locale = up.getPreferedLocale();
@@ -435,6 +436,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		{
 			locale = temp;
 		}
+
+		if(locale == null)
+		{
+			locale = cctx.getRequest().getLocale();
+		}	
 		
 		return locale;		
 	}

@@ -32,13 +32,18 @@ package nl.openedge.maverick.framework;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import nl.openedge.access.UserPrincipal;
+import nl.openedge.maverick.framework.converters.Formatter;
+
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * AbstractForm is a base class to be used with AbstractCtrl.
@@ -63,8 +68,8 @@ public abstract class AbstractForm
 	/** should we redirect? */
 	private boolean redirect = false;
 
-	/** validated user */
-	private UserPrincipal user = null;
+	/** validated user principal */
+	private Principal user = null;
 	
 	/** the current locale */
 	private Locale currentLocale = null; 
@@ -129,7 +134,7 @@ public abstract class AbstractForm
 	 * get user
 	 * @return UserPrincipal
 	 */
-	public UserPrincipal getUser()
+	public Principal getUser()
 	{
 		return user;
 	}
@@ -138,7 +143,7 @@ public abstract class AbstractForm
 	 * set user
 	 * @param user 
 	 */
-	public void setUser(UserPrincipal user)
+	public void setUser(Principal user)
 	{
 		this.user = user;
 	}
@@ -356,6 +361,95 @@ public abstract class AbstractForm
 			}	
 		}
 	}
+	
+// ----------------------- DISPLAY/ OUTPUT METHODS ---------------------//
+
+   /**
+	* get the display string of the property with the given name without using a pattern
+	* 
+	* If a Converter is found for the type of the property that implements 
+	* nl.openedge.maverick.framework.converters.Formatter, that converter 
+	* will be used for formatting the property (using the format(property, pattern) method).
+	* If not, ConvertUtils of the BeanUtils package is used to get the string
+	* representation of the property
+	* 
+	* @param name name of the property
+	* @return String the display string
+	*/	
+   public String displayProperty(String name)
+   {
+   		return displayProperty(name, null);
+   }
+
+   /**
+	* get the display string of the property with the given name, optionally 
+	* using the given pattern.
+	* 
+	* If a Converter is found for the type of the property that implements 
+	* nl.openedge.maverick.framework.converters.Formatter, that converter 
+	* will be used for formatting the property (using the format(property, pattern) method).
+	* If not, ConvertUtils of the BeanUtils package is used to get the string
+	* representation of the property
+	* 
+	* @param name name of the property
+	* @pattern optional pattern to use for formatting
+	* @return String
+	*/	
+   public String displayProperty(String name, String pattern)
+   {
+	   if(name == null) return null;
+		
+	   String value = null;
+	   try
+	   {
+		   Object _value = PropertyUtils.getProperty(this, name);
+		   if(_value != null)
+		   {
+			   Converter converter = ConverterRegistry.getInstance().lookup(
+				   _value.getClass(), getCurrentLocale());
+			   if((converter != null) && (converter instanceof Formatter))
+			   {
+				   value = ((Formatter)converter).format(_value, pattern);
+			   }
+			   else
+			   {
+				   value = ConvertUtils.convert(_value);
+			   }	
+		   }
+	   }
+	   catch (Exception e)
+	   {
+		   return null;
+	   }
+
+	   Map _overrideFields = getOverrideFields();
+	   boolean wasOverriden = false;
+	   if( _overrideFields != null ) 
+	   {
+		   Object storedRawValue = _overrideFields.get(name);
+		   String storedValue = null;
+		   // first, try default
+		   if(storedRawValue != null)
+		   {
+			   wasOverriden = true;
+			   if(storedRawValue instanceof String)
+			   {
+				   storedValue = (String)storedRawValue;
+			   }
+			   else
+			   {
+				   storedValue = ConvertUtils.convert(storedRawValue);
+			   }
+				
+			   if(storedValue != null) 
+			   {
+				   value = storedValue;
+			   }	
+		   }
+	   }
+
+	   return value;
+   }
 	
 // ----------------------- UTILITY METHODS -----------------------------//
 

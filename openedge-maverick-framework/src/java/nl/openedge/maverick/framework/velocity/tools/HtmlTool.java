@@ -37,6 +37,7 @@ public class HtmlTool
 		encoding.put(new Character('&'), "&amp;");
 		encoding.put(new Character('"'), "&#034;");
 		encoding.put(new Character('\''), "&#039;");
+		encoding.put(new Character('ë'), "&euml;");
 	}
 
 	/**
