@@ -18,7 +18,12 @@
       <subsection name="Overview of the Getting Started Documentation">
         <table>
           <tr><th>Document</th><th>Description</th></tr>
-          <tr><td><a href="download.html">Download</a></td>
+          <tr><td><a href="motivation.html">Goals and motivation</a></td>
+            <td>
+              The goals for and history of this project are stated in this document. 
+            </td>
+          </tr>
+		  <tr><td><a href="download.html">Download</a></td>
             <td>
               This document
               provides links to the distributions available
@@ -36,6 +41,12 @@
             <td>
               This document provides a short tutorial on the usage of
 			  OpenEdge Maverick Framework. 
+            </td>
+          </tr>
+          <tr><td><a href="bestpractices.html">Best practices</a></td>
+            <td>
+              As there are numerous ways to use this project, some hints are provided as to 
+			  what we think are the best ways of using it.
             </td>
           </tr>
         </table>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Using OpenEdge Maverick framework</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+	
+    <section name="Goals/ Why this project was conceived">
+      <p>
+		There's no shortage of OSS webframeworks. Most of them are of good quality and ready for use in
+		real-world applications. The aims of webframeworks like these are in non-technical terms: getting a
+		better productivity when building applications, and achieving that these webapplications are 
+		more flexible and better maintainable than those that are build without similar frameworks.
+	  </p>
+
+	  <p>
+		<source>
+<![CDATA[
+		TODO: code comes here     
+]]>
+		</source>
+		<br/>				
+	  </p>
+	</section>
+   
+ </body>
+</document>
