@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Validates if a date is before a given date
+ * Validates if a date is before a given date.
  * 
  * @author hofstee
  */
@@ -51,86 +51,100 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Error key.
 	 */
-	private final static String DEFAULT_MESSAGE_KEY = "invalid.field.input.before";
+	private static final String DEFAULT_MESSAGE_KEY = "invalid.field.input.before";
 
 	/**
-	 * Logger
+	 * Logger.
 	 */
 	private Log log = LogFactory.getLog(BeforeValidator.class);
 
-    /**
-     * Construct.
-     */
-    public BeforeValidator()
-    {
-        setMessageKey(DEFAULT_MESSAGE_KEY);
-    }
-    /**
-     * Construct.
-     * @param dateToCheck
-     */
-    public BeforeValidator(Calendar dateToCheck)
-    {
-        super(dateToCheck);
-        setMessageKey(DEFAULT_MESSAGE_KEY);
-    }
-    /**
-     * Construct.
-     * @param dateToCheck
-     */
-    public BeforeValidator(Date dateToCheck)
-    {
-        super(dateToCheck);
-        setMessageKey(DEFAULT_MESSAGE_KEY);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     */
-    public BeforeValidator(String messageKey)
-    {
-        super(messageKey);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     * @param dateToCheck
-     */
-    public BeforeValidator(String messageKey, Calendar dateToCheck)
-    {
-        super(messageKey, dateToCheck);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     * @param dateToCheck
-     */
-    public BeforeValidator(String messageKey, Date dateToCheck)
-    {
-        super(messageKey, dateToCheck);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     * @param rule
-     */
-    public BeforeValidator(String messageKey, ValidationActivationRule rule)
-    {
-        super(messageKey, rule);
-    }
+	/**
+	 * Construct.
+	 */
+	public BeforeValidator()
+	{
+		setMessageKey(DEFAULT_MESSAGE_KEY);
+	}
 
 	/**
-	 * Check valid. If false an error message is set with parameters:
-	 * {value, fieldName, checkDate}.
-	 * @return true if value is a Date or Calendar and is before or equal to after.
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
-	 * @throws IllegalArgumentException when value == null.
+	 * Construct.
+	 * 
+	 * @param dateToCheck date to check
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
+	public BeforeValidator(Calendar dateToCheck)
+	{
+		super(dateToCheck);
+		setMessageKey(DEFAULT_MESSAGE_KEY);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param dateToCheck date to check
+	 */
+	public BeforeValidator(Date dateToCheck)
+	{
+		super(dateToCheck);
+		setMessageKey(DEFAULT_MESSAGE_KEY);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 */
+	public BeforeValidator(String messageKey)
+	{
+		super(messageKey);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 * @param dateToCheck date to check
+	 */
+	public BeforeValidator(String messageKey, Calendar dateToCheck)
+	{
+		super(messageKey, dateToCheck);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 * @param dateToCheck date to check
+	 */
+	public BeforeValidator(String messageKey, Date dateToCheck)
+	{
+		super(messageKey, dateToCheck);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 * @param rule validation activation rule
+	 */
+	public BeforeValidator(String messageKey, ValidationActivationRule rule)
+	{
+		super(messageKey, rule);
+	}
+
+	/**
+	 * Check valid. If false an error message is set with parameters: {value, fieldName, checkDate}.
+	 * @param cctx controller context
+	 * @param formBeanContext form bean context
+	 * @param fieldName field name
+	 * @param value object to check
+	 * @return true if value is a Date or Calendar and is before or equal to after.
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
+	 * @throws IllegalArgumentException
+	 *             when value == null.
+	 */
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
+			String fieldName, Object value)
 	{
 		boolean before = false;
 		Date compareAfter = null;
@@ -144,7 +158,7 @@ public class BeforeValidator extends AbstractDateFieldValidator
 
 		// Als before datum niet is ingesteld (null) wordt de huidige datum
 		// genomen om mee te vergelijken.
-		if( dateToCheck == null)
+		if (dateToCheck == null)
 		{
 			compareAfter = new Date();
 		}
@@ -156,21 +170,21 @@ public class BeforeValidator extends AbstractDateFieldValidator
 		// vergelijk datums
 		if (value instanceof Date)
 		{
-			before = comp.compare((Date)value, compareAfter) >= 0;
+			before = comp.compare((Date) value, compareAfter) >= 0;
 		}
 		else if (value instanceof Calendar)
 		{
-			before = comp.compare(((Calendar)value).getTime(), compareAfter) >= 0;
+			before = comp.compare(((Calendar) value).getTime(), compareAfter) >= 0;
 		}
 		else
 		{
 			log.error(value.getClass() + " is not a valid date");
 		}
 
-		if(!before)
+		if (!before)
 		{
-		   setErrorMessage(formBeanContext, fieldName, getMessageKey(),
-		       new Object[]{value, fieldName, compareAfter});
+			setErrorMessage(formBeanContext, fieldName, getMessageKey(), new Object[]
+				{value, fieldName, compareAfter});
 		}
 
 		return before;

@@ -34,256 +34,291 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Base class for Jetty test cases where the Jetty Server should be started in a
- * seperate VM. Classes that override this test case will
- * have a remove (VM wise) Jetty server started and stopped automatically for each test case.
- * the methods setUp and tearDown are finalized in this class, please use one
- * of the methods 'beforeSetup', 'afterSetup', 'beforeTearDown' and 'afterTearDown'.
+ * Base class for Jetty test cases where the Jetty Server should be started in a seperate VM.
+ * Classes that override this test case will have a remove (VM wise) Jetty server started and
+ * stopped automatically for each test case. the methods setUp and tearDown are finalized in this
+ * class, please use one of the methods 'beforeSetup', 'afterSetup', 'beforeTearDown' and
+ * 'afterTearDown'.
  * <p>
- * Method 'beforeSetup' is particularly usefull, as it can be used to configure the
- * Jetty server that is to be created and run. An example of how to do is:<br/>
+ * Method 'beforeSetup' is particularly usefull, as it can be used to configure the Jetty server
+ * that is to be created and run. An example of how to do is: <br/>
  * </p>
  * <p>
+ * 
  * <pre>
  * public void beforeSetUp()
  * {
- *   setPort(8098);
- *   setWebappContextRoot("src/webapp");
- *   setContextPath("/test");
- *   // setStartCommand(new String[]{"cmd", "/C", "start", "java"}); // start in seperate window
- *   setStartCommand(new String[]{"java"}); // platform safe
+ * 	setPort(8098);
+ * 	setWebappContextRoot(&quot;src/webapp&quot;);
+ * 	setContextPath(&quot;/test&quot;);
+ * 	// setStartCommand(new String[]{&quot;cmd&quot;, &quot;/C&quot;, &quot;start&quot;, &quot;java&quot;}); // start in seperate window
+ * 	setStartCommand(new String[]
+ * 		{&quot;java&quot;}); // platform safe
  * }
  * </pre>
+ * 
  * </p>
+ * 
  * @author Eelco Hillenius
  */
 public class JettyExternalVMTestCase extends AbstractJettyTestCase
 {
-    /** logger. */
-    private static Log log = LogFactory.getLog(JettyExternalVMTestCase.class);
+	/** logger. */
+	private static Log log = LogFactory.getLog(JettyExternalVMTestCase.class);
 
-    /**
-     * command to execute; see Runtime.exec(String[]).
-     * Eg {"cmd", "/C", "start", "java"} opens a new window on DOS systems using
-     * that window for output, and {"java"} starts an invisible process where the
-     * output will be intercepted and interleaved with the current output (commons logger).
-     * Default == { "java" }.
-     */
-    private String[] startCommand = 
-        new String[] { "java" };
+	/**
+	 * command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start", "java"} opens a new
+	 * window on DOS systems using that window for output, and {"java"} starts an invisible process
+	 * where the output will be intercepted and interleaved with the current output (commons
+	 * logger). Default == { "java" }.
+	 */
+	private String[] startCommand = new String[]
+		{"java"};
 
-    /** Remote proces. */
-    private Process process = null;
+	/** Remote proces. */
+	private Process process = null;
 
-    /** command port. */
-    private int monitorPort = Integer.getInteger("STOP.PORT", 8079).intValue();
+	/** command port. */
+	private int monitorPort = Integer.getInteger("STOP.PORT", 8079).intValue();
 
-    /** auth key. */
-    private String commKey = System.getProperty("STOP.KEY", "mortbay");
+	/** auth key. */
+	private String commKey = System.getProperty("STOP.KEY", "mortbay");
 
-    /** adress of Jetty instance */
-    private String host = "127.0.0.1";
+	/** adress of Jetty instance */
+	private String host = "127.0.0.1";
 
-    /**
-     * Maximum number of ping tries.
-     */
-    private int maxTries = 60;
+	/**
+	 * Maximum number of ping tries.
+	 */
+	private int maxTries = 60;
 
-    /**
-     * Miliseconds to wait between ping tries.
-     */
-    private long sleepBetweenTries = 1000;
+	/**
+	 * Miliseconds to wait between ping tries.
+	 */
+	private long sleepBetweenTries = 1000;
 
-    /**
-     * Construct.
-     */
-    public JettyExternalVMTestCase()
-    {
-        super();
-    }
-    /**
-     * Construct with test case name.
-     * @param name test case name
-     */
-    public JettyExternalVMTestCase(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyExternalVMTestCase()
+	{
+		super();
+	}
 
-    /**
-     * Start Jetty; inhereting classes can override methods
-     * beforeSetUp and afterSetUp for test case specific behaviour.
-     * @throws Exception
-     * @see junit.extensions.TestSetup#setUp()
-     */
-    public void setUp() throws Exception
-    {
-        // first let current test case set up fixture
-        beforeSetUp();
-        try
-        {
-            if(process == null)
-            {
-                String[] startCommandWithArgs = Util.addCommandArguments(
-                        startCommand, getJettyConfig(), getPort(),
-                        getWebappContextRoot(), getContextPath(), isUseJettyPlus());
+	/**
+	 * Construct with test case name.
+	 * 
+	 * @param name
+	 *            test case name
+	 */
+	public JettyExternalVMTestCase(String name)
+	{
+		super(name);
+	}
 
-                JettyExternalVMStartupWorker worker = new JettyExternalVMStartupWorker(
-                    startCommandWithArgs, monitorPort, commKey, maxTries, sleepBetweenTries);
-                worker.start(); // start worker trhead
-                worker.join(); // wait for worker to finish
+	/**
+	 * Start Jetty; inhereting classes can override methods beforeSetUp and afterSetUp for test case
+	 * specific behaviour.
+	 * 
+	 * @throws Exception
+	 * @see junit.extensions.TestSetup#setUp()
+	 */
+	public void setUp() throws Exception
+	{
+		// first let current test case set up fixture
+		beforeSetUp();
+		try
+		{
+			if (process == null)
+			{
+				String[] startCommandWithArgs = Util.addCommandArguments(startCommand,
+						getJettyConfig(), getPort(), getWebappContextRoot(), getContextPath(),
+						isUseJettyPlus());
 
-                // throw exception if the worker was not able to start Jetty in time
-                if(!worker.isJettyStarted())
-                {
-                    String msg = "Starting Jetty in a seperate VM failed";
-                    throw new Exception(msg);
-                }
-                process = worker.getProcess(); // keep reference to external process
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            throw e;
-        }
-        // call for further set up
-        afterSetUp();
-    }
+				JettyExternalVMStartupWorker worker = new JettyExternalVMStartupWorker(
+						startCommandWithArgs, monitorPort, commKey, maxTries, sleepBetweenTries);
+				worker.start(); // start worker trhead
+				worker.join(); // wait for worker to finish
 
-    /**
-     * Stop Jetty; inhereting classes can override methods
-     * beforeTearDown and afterTearDown for test case specific behaviour.
-     * @throws Exception
-     * @see junit.extensions.TestSetup#tearDown()
-     */
-    public void tearDown() throws Exception
-    {
-        // first let current test case tear down fixture
-        beforeTearDown();
+				// throw exception if the worker was not able to start Jetty in time
+				if (!worker.isJettyStarted())
+				{
+					String msg = "Starting Jetty in a seperate VM failed";
+					throw new Exception(msg);
+				}
+				process = worker.getProcess(); // keep reference to external process
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw e;
+		}
+		// call for further set up
+		afterSetUp();
+	}
 
-        JettyHelper.issueStopCommandToMonitor(commKey, host, monitorPort);
-        int exitval;
-        try
-        {
-            // wait for possible output
-            long wait = 500;
-            Thread.sleep(wait);
-            exitval = process.exitValue();
-        }
-        catch(RuntimeException e)
-        {
-            log.error(e.getMessage(), e);
-            log.error("process is still busy; wait for process to end...");
-            exitval = process.waitFor();
-        }
-        log.info("process finished with exitcode " + exitval);
-        // call for further tear down
-        afterTearDown();
-    }
+	/**
+	 * Stop Jetty; inhereting classes can override methods beforeTearDown and afterTearDown for test
+	 * case specific behaviour.
+	 * 
+	 * @throws Exception
+	 * @see junit.extensions.TestSetup#tearDown()
+	 */
+	public void tearDown() throws Exception
+	{
+		// first let current test case tear down fixture
+		beforeTearDown();
 
-    /**
-     * Get commKey.
-     * @return String Returns the commKey.
-     */
-    public String getCommKey()
-    {
-        return commKey;
-    }
-    /**
-     * Set commKey.
-     * @param commKey commKey to set.
-     */
-    public void setCommKey(String commKey)
-    {
-        this.commKey = commKey;
-    }
-    /**
-     * Get host.
-     * @return String Returns the host.
-     */
-    public String getHost()
-    {
-        return host;
-    }
-    /**
-     * Set host.
-     * @param host host to set.
-     */
-    public void setHost(String host)
-    {
-        this.host = host;
-    }
-    /**
-     * Get monitorPort.
-     * @return int Returns the monitorPort.
-     */
-    public int getMonitorPort()
-    {
-        return monitorPort;
-    }
-    /**
-     * Set monitorPort.
-     * @param monitorPort monitorPort to set.
-     */
-    public void setMonitorPort(int monitorPort)
-    {
-        this.monitorPort = monitorPort;
-    }
-    /**
-     * Get maximum number of ping tries.
-     * @return int Returns the maxTries.
-     */
-    public int getMaxTries()
-    {
-        return maxTries;
-    }
-    /**
-     * Set maximum number of ping tries.
-     * @param maxTries maximum number of ping tries to set.
-     */
-    public void setMaxTries(int maxTries)
-    {
-        this.maxTries = maxTries;
-    }
-    /**
-     * Get sleepBetweenTries.
-     * @return long Returns the sleepBetweenTries.
-     */
-    public long getSleepBetweenTries()
-    {
-        return sleepBetweenTries;
-    }
-    /**
-     * Set sleepBetweenTries.
-     * @param sleepBetweenTries sleepBetweenTries to set.
-     */
-    public void setSleepBetweenTries(long sleepBetweenTries)
-    {
-        this.sleepBetweenTries = sleepBetweenTries;
-    }
-    /**
-     * Get command to execute; see Runtime.exec(String[]).
-     * Eg {"cmd", "/C", "start", "java"} opens a new window on DOS systems using
-     * that window for output, and {"java"} starts an invisible process where the
-     * output will be intercepted and interleaved with the current output (commons logger).
-     * Default == { "java" }.
-     * @return String[] command to execute
-     */
-    public String[] getStartCommand()
-    {
-        return startCommand;
-    }
-    /**
-     * Set command to execute; see Runtime.exec(String[]).
-     * Eg {"cmd", "/C", "start", "java"} opens a new window on DOS systems using
-     * that window for output, and {"java"} starts an invisible process where the
-     * output will be intercepted and interleaved with the current output (commons logger).
-     * Default == { "java" }.
-     * @param startCommand command to execute
-     */
-    public void setStartCommand(String[] startCommand)
-    {
-        this.startCommand = startCommand;
-    }
+		JettyHelper.issueStopCommandToMonitor(commKey, host, monitorPort);
+		int exitval;
+		try
+		{
+			// wait for possible output
+			long wait = 500;
+			Thread.sleep(wait);
+			exitval = process.exitValue();
+		}
+		catch (RuntimeException e)
+		{
+			log.error(e.getMessage(), e);
+			log.error("process is still busy; wait for process to end...");
+			exitval = process.waitFor();
+		}
+		log.info("process finished with exitcode " + exitval);
+		// call for further tear down
+		afterTearDown();
+	}
+
+	/**
+	 * Get commKey.
+	 * 
+	 * @return String Returns the commKey.
+	 */
+	public String getCommKey()
+	{
+		return commKey;
+	}
+
+	/**
+	 * Set commKey.
+	 * 
+	 * @param commKey
+	 *            commKey to set.
+	 */
+	public void setCommKey(String commKey)
+	{
+		this.commKey = commKey;
+	}
+
+	/**
+	 * Get host.
+	 * 
+	 * @return String Returns the host.
+	 */
+	public String getHost()
+	{
+		return host;
+	}
+
+	/**
+	 * Set host.
+	 * 
+	 * @param host
+	 *            host to set.
+	 */
+	public void setHost(String host)
+	{
+		this.host = host;
+	}
+
+	/**
+	 * Get monitorPort.
+	 * 
+	 * @return int Returns the monitorPort.
+	 */
+	public int getMonitorPort()
+	{
+		return monitorPort;
+	}
+
+	/**
+	 * Set monitorPort.
+	 * 
+	 * @param monitorPort
+	 *            monitorPort to set.
+	 */
+	public void setMonitorPort(int monitorPort)
+	{
+		this.monitorPort = monitorPort;
+	}
+
+	/**
+	 * Get maximum number of ping tries.
+	 * 
+	 * @return int Returns the maxTries.
+	 */
+	public int getMaxTries()
+	{
+		return maxTries;
+	}
+
+	/**
+	 * Set maximum number of ping tries.
+	 * 
+	 * @param maxTries
+	 *            maximum number of ping tries to set.
+	 */
+	public void setMaxTries(int maxTries)
+	{
+		this.maxTries = maxTries;
+	}
+
+	/**
+	 * Get sleepBetweenTries.
+	 * 
+	 * @return long Returns the sleepBetweenTries.
+	 */
+	public long getSleepBetweenTries()
+	{
+		return sleepBetweenTries;
+	}
+
+	/**
+	 * Set sleepBetweenTries.
+	 * 
+	 * @param sleepBetweenTries
+	 *            sleepBetweenTries to set.
+	 */
+	public void setSleepBetweenTries(long sleepBetweenTries)
+	{
+		this.sleepBetweenTries = sleepBetweenTries;
+	}
+
+	/**
+	 * Get command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start", "java"} opens a
+	 * new window on DOS systems using that window for output, and {"java"} starts an invisible
+	 * process where the output will be intercepted and interleaved with the current output (commons
+	 * logger). Default == { "java" }.
+	 * 
+	 * @return String[] command to execute
+	 */
+	public String[] getStartCommand()
+	{
+		return startCommand;
+	}
+
+	/**
+	 * Set command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start", "java"} opens a
+	 * new window on DOS systems using that window for output, and {"java"} starts an invisible
+	 * process where the output will be intercepted and interleaved with the current output (commons
+	 * logger). Default == { "java" }.
+	 * 
+	 * @param startCommand
+	 *            command to execute
+	 */
+	public void setStartCommand(String[] startCommand)
+	{
+		this.startCommand = startCommand;
+	}
 }

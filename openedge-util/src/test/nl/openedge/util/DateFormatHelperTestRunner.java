@@ -37,24 +37,26 @@ import nl.openedge.util.DateFormatHelper;
 
 /**
  * Deze test bewijst dat dat DateFormatHelper thread safe is
+ * 
  * @author Eelco Hillenius
  */
-public final class DateFormatHelperTestRunner 
+public final class DateFormatHelperTestRunner
 {
-	
+
 	private static int year = 1945;
+
 	private static int month = 3;
+
 	private static int date = 1;
-	
-	
+
 	/**
 	 * Construct
 	 */
 	public DateFormatHelperTestRunner()
 	{
-		
+
 	}
-	
+
 	/**
 	 * test threads
 	 */
@@ -62,7 +64,7 @@ public final class DateFormatHelperTestRunner
 	{
 		try
 		{
-			for(int i = 0; i < 200; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				DateInputThread t = new DateInputThread();
 				t.start();
@@ -71,18 +73,19 @@ public final class DateFormatHelperTestRunner
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	/**
 	 * main hook
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
 	{
-		new DateFormatHelperTestRunner().test();		
+		new DateFormatHelperTestRunner().test();
 	}
-	
+
 	/*
 	 * test thread
 	 */
@@ -96,7 +99,7 @@ public final class DateFormatHelperTestRunner
 			String input = "010445";
 			try
 			{
-				for(int i = 0; i < 1000; i++)
+				for (int i = 0; i < 1000; i++)
 				{
 					Date dat = DateFormatHelper.fallbackParse(input);
 					Calendar cal = Calendar.getInstance(); // 01-04-1945
@@ -104,27 +107,27 @@ public final class DateFormatHelperTestRunner
 					int y = cal.get(Calendar.YEAR);
 					int m = cal.get(Calendar.MONTH);
 					int d = cal.get(Calendar.DATE);
-					
-					if(y != year)
+
+					if (y != year)
 					{
-						throw new Exception(y  + " != " + year);
+						throw new Exception(y + " != " + year);
 					}
-					if(m != month)
+					if (m != month)
 					{
-						throw new Exception(m  + " != " + month);
+						throw new Exception(m + " != " + month);
 					}
-					if(d != date)
+					if (d != date)
 					{
-						throw new Exception(d  + " != " + date);
+						throw new Exception(d + " != " + date);
 					}
-					
+
 					// test of er geen deadlocks kunnen voorkomen
 					DateFormatHelper.format(dat);
 					DateFormatHelper.format(dat.getTime());
 					DateFormatHelper.format("dd-M-yyyy", dat);
 					DateFormatHelper.format("dd-M-yyyy", dat.getTime());
-					
-					long wait = (long)(Math.random() * 100);
+
+					long wait = (long) (Math.random() * 100);
 					//System.out.println(wait);
 					Thread.sleep(wait);
 
@@ -136,11 +139,9 @@ public final class DateFormatHelperTestRunner
 				System.out.println("testing " + this + " failed");
 				e.printStackTrace();
 			}
-		
+
 		}
 	}
 
-
 }
-
 

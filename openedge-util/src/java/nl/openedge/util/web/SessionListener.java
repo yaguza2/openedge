@@ -44,18 +44,17 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Keeps track of sessions
- * @author	Eelco Hillenius
+ * 
+ * @author Eelco Hillenius
  */
-public class SessionListener implements 
-	HttpSessionListener, HttpSessionActivationListener
+public class SessionListener implements HttpSessionListener, HttpSessionActivationListener
 {
 
 	/* logger */
 	private Log log = LogFactory.getLog(SessionListener.class);
 
 	/* sessions */
-	private final static List sessions = 
-		Collections.synchronizedList(new ArrayList());
+	private final static List sessions = Collections.synchronizedList(new ArrayList());
 
 	/**
 	 * default constructor
@@ -66,9 +65,10 @@ public class SessionListener implements
 	}
 
 	/**
-	 * Record the fact that a session has been created.
-	 * add session to internal store
-	 * @param event session event
+	 * Record the fact that a session has been created. add session to internal store
+	 * 
+	 * @param event
+	 *            session event
 	 */
 	public void sessionCreated(HttpSessionEvent event)
 	{
@@ -78,9 +78,10 @@ public class SessionListener implements
 	}
 
 	/**
-	 * Record the fact that a session has been destroyed.
-	 * Remove session from internal store
-	 * @param event session event
+	 * Record the fact that a session has been destroyed. Remove session from internal store
+	 * 
+	 * @param event
+	 *            session event
 	 */
 	public void sessionDestroyed(HttpSessionEvent event)
 	{
@@ -91,7 +92,9 @@ public class SessionListener implements
 
 	/**
 	 * Notification that the session is about to be passivated
-	 * @param event session event
+	 * 
+	 * @param event
+	 *            session event
 	 */
 	public void sessionWillPassivate(HttpSessionEvent event)
 	{
@@ -102,7 +105,9 @@ public class SessionListener implements
 
 	/**
 	 * Notification that the session has just been activated
-	 * @param event session event
+	 * 
+	 * @param event
+	 *            session event
 	 */
 	public void sessionDidActivate(HttpSessionEvent event)
 	{
@@ -113,6 +118,7 @@ public class SessionListener implements
 
 	/**
 	 * get known sessions (for this server)
+	 * 
 	 * @return List sessions known to this listener
 	 */
 	public static List getSessions()

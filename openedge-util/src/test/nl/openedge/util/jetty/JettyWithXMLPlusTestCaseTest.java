@@ -32,52 +32,54 @@ package nl.openedge.util.jetty;
 
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Testcase for JettyTestCase with xml config document and usage of JettyPlus.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyWithXMLPlusTestCaseTest extends JettyTestCase
 {
-    /** addres to ping. */
-    private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
+	/** addres to ping. */
+	private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
 
-    /**
-     * Construct.
-     */
-    public JettyWithXMLPlusTestCaseTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyWithXMLPlusTestCaseTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with test name.
-     * @param name name of test
-     */
-    public JettyWithXMLPlusTestCaseTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with test name.
+	 * 
+	 * @param name
+	 *            name of test
+	 */
+	public JettyWithXMLPlusTestCaseTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPing() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPing() throws Exception
+	{
 		String pingBody = HttpHelper.get("http://localhost:8098/test/ping.txt");
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
-     */
-    public void beforeSetUp()
-    {
-	    String config = "jetty-decorator-test-normal.xml";
-	    setJettyConfig(config, JettyDecoratorWithXMLTest.class);
-	    setUseJettyPlus(false);
-    }
+	/**
+	 * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
+	 */
+	public void beforeSetUp()
+	{
+		String config = "jetty-decorator-test-normal.xml";
+		setJettyConfig(config, JettyDecoratorWithXMLTest.class);
+		setUseJettyPlus(false);
+	}
 
 }

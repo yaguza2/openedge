@@ -33,38 +33,43 @@ package nl.openedge.util;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-
 /**
  * Met deze klasse kun je een iterator wrapper zodat deze voldoet aan de Enumerator interface.
- *
+ * 
  * @author Eelco Hillenius
  */
-public class IteratorToEnumeratorDecorator implements Enumeration {
+public class IteratorToEnumeratorDecorator implements Enumeration
+{
 
-    /**
-     * De gewrapte iterator.
-     */
-    private Iterator iterator = null;
+	/**
+	 * De gewrapte iterator.
+	 */
+	private Iterator iterator = null;
 
-    /**
-     * Construct met iterator.
-     * @param deIterator de iterator die gewrapt dient te worden
-     */
-    public IteratorToEnumeratorDecorator(final Iterator deIterator) {
-        this.iterator = deIterator;
-    }
+	/**
+	 * Construct met iterator.
+	 * 
+	 * @param deIterator
+	 *            de iterator die gewrapt dient te worden
+	 */
+	public IteratorToEnumeratorDecorator(final Iterator deIterator)
+	{
+		this.iterator = deIterator;
+	}
 
-    /**
-     * @see java.util.Enumeration#hasMoreElements()
-     */
-    public boolean hasMoreElements() {
-        return iterator.hasNext();
-    }
+	/**
+	 * @see java.util.Enumeration#hasMoreElements()
+	 */
+	public boolean hasMoreElements()
+	{
+		return iterator.hasNext();
+	}
 
-    /**
-     * @see java.util.Enumeration#nextElement()
-     */
-    public Object nextElement() {
-        return iterator.next();
-    }
+	/**
+	 * @see java.util.Enumeration#nextElement()
+	 */
+	public Object nextElement()
+	{
+		return iterator.next();
+	}
 }

@@ -34,171 +34,196 @@ import junit.framework.TestCase;
 
 /**
  * Base class for Jetty TestDecorators.
- *
+ * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractJettyTestCase extends TestCase
 {
-    /** calling class for getting config resource. */
-    private static Class callee = JettyDecorator.class;
-
-    /** 
-     * Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-     * be instantiated, if false, org.mortbay.jetty.Server will be instantiated.
-     */
-    private boolean useJettyPlus = false;
-
-    /** URL of jetty configuration document*/
-    private String jettyConfig;
-
-    /** root folder of web application. */
-    private String webappContextRoot = "/."; 
-    /** port for http requests. */
-    private int port = 8080;
-    /** context path (webapp name). */
-    private String contextPath = "/";
-
-    /**
-     * Construct.
-     */
-    public AbstractJettyTestCase()
-    {
-        super();
-    }
-    /**
-     * Construct with test case name.
-     * @param name test case name
-     */
-    public AbstractJettyTestCase(String name)
-    {
-        super(name);
-    }
-
-    /**
-     * Get jettyConfig; URL of jetty configuration document.
-     * @return String Returns the URL of jetty configuration document.
-     */
-    public String getJettyConfig()
-    {
-        return jettyConfig;
-    }
-    /**
-     * Set jettyConfig; URL of jetty configuration document.
-     * @param newJettyConfig URL of jetty configuration document.
-     * @param classCallee calling class for getting config resource
-     */
-    public void setJettyConfig(String newJettyConfig, Class classCallee)
-    {
-        jettyConfig = newJettyConfig;
-        callee = classCallee;
-    }
-    /**
-     * Get whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-     * be instantiated, if false, org.mortbay.jetty.plus.Server will be instantiated.
-     * @return boolean whether to use JettyPlus.
-     */
-    public boolean isUseJettyPlus()
-    {
-        return useJettyPlus;
-    }
-    /**
-     * Set whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-     * be instantiated, if false, org.mortbay.jetty.plus.Server will be instantiated.
-     * @param useJettyPlus whether to use JettyPlus.
-     */
-    public void setUseJettyPlus(boolean doUseJettyPlus)
-    {
-        useJettyPlus = doUseJettyPlus;
-    }
-    /**
-     * Get port for http requests.
-     * @return int Returns the port.
-     */
-    public int getPort()
-    {
-        return port;
-    }
-    /**
-     * Set port for http requests.
-     * @param port port for http requests.
-     */
-    public void setPort(int newPort)
-    {
-        port = newPort;
-    }
-    /**
-     * Get root folder of web application.
-     * @return String Returns the webappContextRoot.
-     */
-    public String getWebappContextRoot()
-    {
-        return webappContextRoot;
-    }
-    /**
-     * Set root folder of web application.
-     * @param webappContextRoot webappContextRoot to set.
-     */
-    public void setWebappContextRoot(String newWebappContextRoot)
-    {
-        webappContextRoot = newWebappContextRoot;
-    }
-    /**
-     * Get context path (webapp name).
-     * @return String Returns the context path (webapp name).
-     */
-    public String getContextPath()
-    {
-        return contextPath;
-    }
-    /**
-     * Set context path (webapp name).
-     * @param contextPath context path (webapp name).
-     */
-    public void setContextPath(String newContextPath)
-    {
-        contextPath = newContextPath;
-    }
-
-    /**
-     * Sets up the fixture; use this method in particular for configuring the setup
-     * of Jetty. Eg:
-	 * public void beforeSetUp()
-	 * {
-	 *   setPort(8098);
-	 *   setWebappContextRoot("src/webapp");
-	 *   setContextPath("/test");
-	 * }
-	 * This method is called before a test is executed but before Jetty is actually started.
-     */
-    protected void beforeSetUp()
-    {
-        // noop
-    }
-
-    /**
-     * Sets up the fixture.
-	 * This method is called before a test is executed but after Jetty is started.
-     */
-    protected void afterSetUp()
-    {
-        // noop
-    }
+	/** calling class for getting config resource. */
+	private static Class callee = JettyDecorator.class;
 
 	/**
-	 * Tears down the fixture.
-	 * This method is called after a test is executed but before Jetty is actually stopped.
+	 * Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be instantiated, if
+	 * false, org.mortbay.jetty.Server will be instantiated.
 	 */
-    protected void beforeTearDown()
-    {
-        // noop
-    }
+	private boolean useJettyPlus = false;
+
+	/** URL of jetty configuration document */
+	private String jettyConfig;
+
+	/** root folder of web application. */
+	private String webappContextRoot = "/.";
+
+	/** port for http requests. */
+	private int port = 8080;
+
+	/** context path (webapp name). */
+	private String contextPath = "/";
 
 	/**
-	 * Tears down the fixture.
-	 * This method is called after a test is executed and after Jetty is stopped.
+	 * Construct.
 	 */
-    protected void afterTearDown()
-    {
-        // noop
-    }
+	public AbstractJettyTestCase()
+	{
+		super();
+	}
+
+	/**
+	 * Construct with test case name.
+	 * 
+	 * @param name
+	 *            test case name
+	 */
+	public AbstractJettyTestCase(String name)
+	{
+		super(name);
+	}
+
+	/**
+	 * Get jettyConfig; URL of jetty configuration document.
+	 * 
+	 * @return String Returns the URL of jetty configuration document.
+	 */
+	public String getJettyConfig()
+	{
+		return jettyConfig;
+	}
+
+	/**
+	 * Set jettyConfig; URL of jetty configuration document.
+	 * 
+	 * @param newJettyConfig
+	 *            URL of jetty configuration document.
+	 * @param classCallee
+	 *            calling class for getting config resource
+	 */
+	public void setJettyConfig(String newJettyConfig, Class classCallee)
+	{
+		jettyConfig = newJettyConfig;
+		callee = classCallee;
+	}
+
+	/**
+	 * Get whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be instantiated, if
+	 * false, org.mortbay.jetty.plus.Server will be instantiated.
+	 * 
+	 * @return boolean whether to use JettyPlus.
+	 */
+	public boolean isUseJettyPlus()
+	{
+		return useJettyPlus;
+	}
+
+	/**
+	 * Set whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be instantiated, if
+	 * false, org.mortbay.jetty.plus.Server will be instantiated.
+	 * 
+	 * @param useJettyPlus
+	 *            whether to use JettyPlus.
+	 */
+	public void setUseJettyPlus(boolean doUseJettyPlus)
+	{
+		useJettyPlus = doUseJettyPlus;
+	}
+
+	/**
+	 * Get port for http requests.
+	 * 
+	 * @return int Returns the port.
+	 */
+	public int getPort()
+	{
+		return port;
+	}
+
+	/**
+	 * Set port for http requests.
+	 * 
+	 * @param port
+	 *            port for http requests.
+	 */
+	public void setPort(int newPort)
+	{
+		port = newPort;
+	}
+
+	/**
+	 * Get root folder of web application.
+	 * 
+	 * @return String Returns the webappContextRoot.
+	 */
+	public String getWebappContextRoot()
+	{
+		return webappContextRoot;
+	}
+
+	/**
+	 * Set root folder of web application.
+	 * 
+	 * @param webappContextRoot
+	 *            webappContextRoot to set.
+	 */
+	public void setWebappContextRoot(String newWebappContextRoot)
+	{
+		webappContextRoot = newWebappContextRoot;
+	}
+
+	/**
+	 * Get context path (webapp name).
+	 * 
+	 * @return String Returns the context path (webapp name).
+	 */
+	public String getContextPath()
+	{
+		return contextPath;
+	}
+
+	/**
+	 * Set context path (webapp name).
+	 * 
+	 * @param contextPath
+	 *            context path (webapp name).
+	 */
+	public void setContextPath(String newContextPath)
+	{
+		contextPath = newContextPath;
+	}
+
+	/**
+	 * Sets up the fixture; use this method in particular for configuring the setup of Jetty. Eg:
+	 * public void beforeSetUp() { setPort(8098); setWebappContextRoot("src/webapp");
+	 * setContextPath("/test"); } This method is called before a test is executed but before Jetty
+	 * is actually started.
+	 */
+	protected void beforeSetUp()
+	{
+		// noop
+	}
+
+	/**
+	 * Sets up the fixture. This method is called before a test is executed but after Jetty is
+	 * started.
+	 */
+	protected void afterSetUp()
+	{
+		// noop
+	}
+
+	/**
+	 * Tears down the fixture. This method is called after a test is executed but before Jetty is
+	 * actually stopped.
+	 */
+	protected void beforeTearDown()
+	{
+		// noop
+	}
+
+	/**
+	 * Tears down the fixture. This method is called after a test is executed and after Jetty is
+	 * stopped.
+	 */
+	protected void afterTearDown()
+	{
+		// noop
+	}
 }

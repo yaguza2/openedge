@@ -37,123 +37,128 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 
 /**
- * JUnit decorator for starting and stopping a local instance
- * Jetty for usage with test cases.
+ * JUnit decorator for starting and stopping a local instance Jetty for usage with test cases.
  * <p>
- * It uses property 'jettyConfig' to
- * load the - mandatory - Jetty configuration document.
- * Eg '/jetty-test-config.xml' is loaded from the classpath root
- * (so providing the configuration document in the root of the test classes
- * folder will suffice) but 'file://c:/mydir/myconfig.xml' should work as well.
- * If property 'jettyConfig' is not provided (default == null),
- * the properties 'port', 'webappContextRoot' and 'contextPath' are used to start a
- * Jetty instance.
+ * It uses property 'jettyConfig' to load the - mandatory - Jetty configuration document. Eg
+ * '/jetty-test-config.xml' is loaded from the classpath root (so providing the configuration
+ * document in the root of the test classes folder will suffice) but 'file://c:/mydir/myconfig.xml'
+ * should work as well. If property 'jettyConfig' is not provided (default == null), the properties
+ * 'port', 'webappContextRoot' and 'contextPath' are used to start a Jetty instance.
  * </p>
  * <p>
- * Property useJettyPlus (default == false) is used to decide whether JettyPlus
- * should be used, or just the basic version of Jetty. JettyPlus provides support
- * for JNDI, datasources, transactions etc.
+ * Property useJettyPlus (default == false) is used to decide whether JettyPlus should be used, or
+ * just the basic version of Jetty. JettyPlus provides support for JNDI, datasources, transactions
+ * etc.
  * </p>
  * <p>
- * 	Usage:
+ * Usage:
+ * 
  * <pre>
- * ...
- *   public static Test suite() 
- *   {
- *	    TestSuite suite = new TestSuite();
- *	    suite.addTest(new JettyDecoratorWithArgsTest("testPing"));
- *	    JettyDecorator deco = new JettyDecorator(suite);
- *	    deco.setPort(8098);
- *	    deco.setWebappContextRoot("src/webapp");
- *	    deco.setContextPath("/test");
- *	    deco.setUseJettyPlus(false);
- *	    return deco;
- *   }
- * ...
+ * 
+ *  ...
+ *    public static Test suite() 
+ *    {
+ * 	    TestSuite suite = new TestSuite();
+ * 	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
+ * 	    JettyDecorator deco = new JettyDecorator(suite);
+ * 	    deco.setPort(8098);
+ * 	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
+ * 	    deco.setContextPath(&quot;/test&quot;);
+ * 	    deco.setUseJettyPlus(false);
+ * 	    return deco;
+ *    }
+ *  ...
+ *  
  * </pre>
- * Jetty will be started before the tests are actually run, and will be stopped
- * afterwards.
+ * 
+ * Jetty will be started before the tests are actually run, and will be stopped afterwards.
  * </p>
+ * 
  * @author Eelco Hillenius
  */
 public class JettyDecorator extends AbstractJettyDecorator
 {
-    /** instance of jetty server. */
-    private static Server jettyServer = null;
+	/** instance of jetty server. */
+	private static Server jettyServer = null;
 
-    /** logger. */
-    private static Log log = LogFactory.getLog(JettyDecorator.class);
+	/** logger. */
+	private static Log log = LogFactory.getLog(JettyDecorator.class);
 
-    /**
-     * construct with test.
-     * @param test test case
-     */
-    public JettyDecorator(final Test test)
-    {
-        super(test);
-    }
+	/**
+	 * construct with test.
+	 * 
+	 * @param test
+	 *            test case
+	 */
+	public JettyDecorator(final Test test)
+	{
+		super(test);
+	}
 
-    /**
-     * Start Jetty.
-     * @throws Exception
-     * @see junit.extensions.TestSetup#setUp()
-     */
-    public void setUp() throws Exception
-    {
-        // start Jetty
-        try
-        {
-            if(getJettyConfig() != null)
-            {
-                // start Jetty with config document
-                jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
-            }
-            else
-            {
-                // start Jetty with arguments (port etc.)
-                jettyServer = JettyHelper.startJetty(
-                    getPort(), getWebappContextRoot(), getContextPath(), isUseJettyPlus());
-            }
-        }
-        catch (Exception e)
-        {
-            log.error(e.getMessage(), e);
-            throw e;           
-        } 
-        catch (Throwable e) // catch runtime excepions like cnf exceptions etc.
-        {
-            log.error(e.getMessage(), e);
-            throw new Exception(e); // wrap and rethrow
-        }
-    }
+	/**
+	 * Start Jetty.
+	 * 
+	 * @throws Exception
+	 * @see junit.extensions.TestSetup#setUp()
+	 */
+	public void setUp() throws Exception
+	{
+		// start Jetty
+		try
+		{
+			if (getJettyConfig() != null)
+			{
+				// start Jetty with config document
+				jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
+			}
+			else
+			{
+				// start Jetty with arguments (port etc.)
+				jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
+						getContextPath(), isUseJettyPlus());
+			}
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+		catch (Throwable e) // catch runtime excepions like cnf exceptions etc.
+		{
+			log.error(e.getMessage(), e);
+			throw new Exception(e); // wrap and rethrow
+		}
+	}
 
-    /**
-     * Stop Jetty.
-     * @throws Exception
-     * @see junit.extensions.TestSetup#tearDown()
-     */
-    public void tearDown() throws Exception
-    {
-        try 
-        {
-            log.info("Stopping Jetty");
-            jettyServer.stop();
-            log.info("Jetty stopped");
-        } 
-        catch (Exception e)
-        {
-            log.error(e.getMessage(), e);
-            //throw e;
-        } 
-    }
+	/**
+	 * Stop Jetty.
+	 * 
+	 * @throws Exception
+	 * @see junit.extensions.TestSetup#tearDown()
+	 */
+	public void tearDown() throws Exception
+	{
+		try
+		{
+			log.info("Stopping Jetty");
+			jettyServer.stop();
+			log.info("Jetty stopped");
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			//throw e;
+		}
+	}
 
-    /**
-     * Get jettyServer; unit tests might actually get the current instance of the server
-     * to work with though this is generally bad practice.
-     * @return Server Returns the jettyServer.
-     */
-    public static Server getJettyServer()
-    {
-        return jettyServer;
-    }
+	/**
+	 * Get jettyServer; unit tests might actually get the current instance of the server to work
+	 * with though this is generally bad practice.
+	 * 
+	 * @return Server Returns the jettyServer.
+	 */
+	public static Server getJettyServer()
+	{
+		return jettyServer;
+	}
 }

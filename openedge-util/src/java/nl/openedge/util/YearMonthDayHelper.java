@@ -37,224 +37,245 @@ import java.util.Date;
 import nl.openedge.util.rekenen.Rekenhulp;
 
 /**
- * Comparator with static helper methods for comparing and constructing dates
- * where only the year/month/day fields are relevant (the time fields are
- * actually reset).
+ * Comparator with static helper methods for comparing and constructing dates where only the
+ * year/month/day fields are relevant (the time fields are actually reset).
  * 
  * @author Eelco Hillenius
  */
 public final class YearMonthDayHelper implements Comparator
 {
-    /**
-     * We use this property to be able to fix 'today' on a date for testing.
-     */
-    private static Date today = null;
+	/**
+	 * We use this property to be able to fix 'today' on a date for testing.
+	 */
+	private static Date today = null;
 
-    /**
-     * Compare date1 with date2 and return -1, 0 (zero) or 1 if date1 is before,
-     * the same, or after date2.
-     * 
-     * @param date1 first date
-     * @param date2 second date
-     * @return int -1, 0 (zero) or 1 if date1 is before, the same, or after date2
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
-    public int compare(Object date1, Object date2)
-    {
-        return internalCompare(date1, date2);
-    }
+	/**
+	 * Compare date1 with date2 and return -1, 0 (zero) or 1 if date1 is before, the same, or after
+	 * date2.
+	 * 
+	 * @param date1
+	 *            first date
+	 * @param date2
+	 *            second date
+	 * @return int -1, 0 (zero) or 1 if date1 is before, the same, or after date2
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
+	public int compare(Object date1, Object date2)
+	{
+		return internalCompare(date1, date2);
+	}
 
-    /**
-     * Compare date1 with date2 and return -1, 0 (zero) or 1 if date1 is before,
-     * the same, or after date2.
-     * 
-     * @param date1 first date
-     * @param date2 second date
-     * @return int -1, 0 (zero) or 1 if date1 is before, the same, or after date2
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
-    protected static int internalCompare(Object date1, Object date2)
-    {
-        if(date1 == null || date2 == null) { throw new IllegalArgumentException("ongeldige argumenten: " + date1
-                + ", " + date2); }
+	/**
+	 * Compare date1 with date2 and return -1, 0 (zero) or 1 if date1 is before, the same, or after
+	 * date2.
+	 * 
+	 * @param date1
+	 *            first date
+	 * @param date2
+	 *            second date
+	 * @return int -1, 0 (zero) or 1 if date1 is before, the same, or after date2
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
+	protected static int internalCompare(Object date1, Object date2)
+	{
+		if (date1 == null || date2 == null)
+		{
+			throw new IllegalArgumentException("ongeldige argumenten: " + date1 + ", " + date2);
+		}
 
-        YearMonthDay jmd1 = new YearMonthDay((Date)date1);
-        YearMonthDay jmd2 = new YearMonthDay((Date)date2);
+		YearMonthDay jmd1 = new YearMonthDay((Date) date1);
+		YearMonthDay jmd2 = new YearMonthDay((Date) date2);
 
-        int jaarVerschil = jmd1.getYear() - jmd2.getYear();
-        int maandVerschil = jmd1.getMonth() - jmd2.getMonth();
-        int dagVerschil = jmd1.getDayInMonth() - jmd2.getDayInMonth();
+		int jaarVerschil = jmd1.getYear() - jmd2.getYear();
+		int maandVerschil = jmd1.getMonth() - jmd2.getMonth();
+		int dagVerschil = jmd1.getDayInMonth() - jmd2.getDayInMonth();
 
-        if(jaarVerschil != 0)
-        {
-            return Rekenhulp.sign(jaarVerschil);
-        }
-        else if(maandVerschil != 0)
-        {
-            return Rekenhulp.sign(maandVerschil);
-        }
-        else if(dagVerschil != 0)
-        {
-            return Rekenhulp.sign(dagVerschil);
-        }
-        else
-        {
-            return 0;
-        }
-    }
+		if (jaarVerschil != 0)
+		{
+			return Rekenhulp.sign(jaarVerschil);
+		}
+		else if (maandVerschil != 0)
+		{
+			return Rekenhulp.sign(maandVerschil);
+		}
+		else if (dagVerschil != 0)
+		{
+			return Rekenhulp.sign(dagVerschil);
+		}
+		else
+		{
+			return 0;
+		}
+	}
 
-    /**
-     * Construct a date object based on the given parameters.
-     * 
-     * @param year the year
-     * @param month month (january = 1, february = 2; note that this differs from
-     * 	Calendar that counts months from 0 (zero) to 11).
-     * @param dayInMonth day in month
-     * @return Date date object based on the given parameters 
-     */
-    public static Date getDate(int year, int month, int dayInMonth)
-    {
-        Calendar calendar = getCalendar(year, month, dayInMonth);
-        return calendar.getTime();
-    }
+	/**
+	 * Construct a date object based on the given parameters.
+	 * 
+	 * @param year
+	 *            the year
+	 * @param month
+	 *            month (january = 1, february = 2; note that this differs from Calendar that counts
+	 *            months from 0 (zero) to 11).
+	 * @param dayInMonth
+	 *            day in month
+	 * @return Date date object based on the given parameters
+	 */
+	public static Date getDate(int year, int month, int dayInMonth)
+	{
+		Calendar calendar = getCalendar(year, month, dayInMonth);
+		return calendar.getTime();
+	}
 
-    /**
-     * Construct a calendar object based on the given parameters.
-     * 
-     * @param year the year
-     * @param month month (january = 1, february = 2; note that this differs from
-     * 	Calendar that counts months from 0 (zero) to 11).
-     * @param dayInMonth day in month
-     * @return Calendar calendar object based on the given parameters 
-     */
-    public static Calendar getCalendar(int year, int month, int dayInMonth)
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, getCalendarMonth(month));
-        calendar.set(Calendar.DAY_OF_MONTH, dayInMonth);
-        return calendar;
-    }
+	/**
+	 * Construct a calendar object based on the given parameters.
+	 * 
+	 * @param year
+	 *            the year
+	 * @param month
+	 *            month (january = 1, february = 2; note that this differs from Calendar that counts
+	 *            months from 0 (zero) to 11).
+	 * @param dayInMonth
+	 *            day in month
+	 * @return Calendar calendar object based on the given parameters
+	 */
+	public static Calendar getCalendar(int year, int month, int dayInMonth)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, getCalendarMonth(month));
+		calendar.set(Calendar.DAY_OF_MONTH, dayInMonth);
+		return calendar;
+	}
 
-    /**
-     * Whether date1 is after date2 disregarding the time fields.
-     * 
-     * @param date1 first date
-     * @param date2 second date
-     * @return boolean Whether date1 is after date2 disregarding the time fields
-     */
-    public static boolean after(Date date1, Date date2)
-    {
-        return (internalCompare(date1, date2) > 0);
-    }
+	/**
+	 * Whether date1 is after date2 disregarding the time fields.
+	 * 
+	 * @param date1
+	 *            first date
+	 * @param date2
+	 *            second date
+	 * @return boolean Whether date1 is after date2 disregarding the time fields
+	 */
+	public static boolean after(Date date1, Date date2)
+	{
+		return (internalCompare(date1, date2) > 0);
+	}
 
-    /**
-     * Whether date1 is after or on date2 disregarding the time fields.
-     * 
-     * @param date1 first date
-     * @param date2 second date
-     * @return boolean Whether date1 is after or on date2 disregarding the time fields
-     */
-    public static boolean afterOrSame(Date date1, Date date2)
-    {
-        return (internalCompare(date1, date2) >= 0);
-    }
+	/**
+	 * Whether date1 is after or on date2 disregarding the time fields.
+	 * 
+	 * @param date1
+	 *            first date
+	 * @param date2
+	 *            second date
+	 * @return boolean Whether date1 is after or on date2 disregarding the time fields
+	 */
+	public static boolean afterOrSame(Date date1, Date date2)
+	{
+		return (internalCompare(date1, date2) >= 0);
+	}
 
-    /**
-     * Whether date1 is before date2 disregarding the time fields.
-     * 
-     * @param datum1 first date
-     * @param datum2 second date
-     * @return boolean Whether date1 is before date2 disregarding the time fields
-     */
-    public static boolean before(Date date1, Date date2)
-    {
-        return (internalCompare(date1, date2) < 0);
-    }
+	/**
+	 * Whether date1 is before date2 disregarding the time fields.
+	 * 
+	 * @param date1
+	 *            first date
+	 * @param date2
+	 *            second date
+	 * @return boolean Whether date1 is before date2 disregarding the time fields
+	 */
+	public static boolean before(Date date1, Date date2)
+	{
+		return (internalCompare(date1, date2) < 0);
+	}
 
-    /**
-     * Whether date1 is before or on date2 disregarding the time fields.
-     * 
-     * @param datum1 first date
-     * @param datum2 second date
-     * @return boolean Whether date1 is before or on date2 disregarding the time fields
-     */
-    public static boolean beforeOrSame(Date datum1, Date datum2)
-    {
-        return (internalCompare(datum1, datum2) <= 0);
-    }
+	/**
+	 * Whether date1 is before or on date2 disregarding the time fields.
+	 * 
+	 * @param datum1
+	 *            first date
+	 * @param datum2
+	 *            second date
+	 * @return boolean Whether date1 is before or on date2 disregarding the time fields
+	 */
+	public static boolean beforeOrSame(Date datum1, Date datum2)
+	{
+		return (internalCompare(datum1, datum2) <= 0);
+	}
 
-    /**
-     * Whether date1 is on (the same as) date2 disregarding the time fields.
-     * 
-     * @param datum1 eerste datum
-     * @param datum2 tweede datum
-     * @return boolean Whether date1 is on (the same as) date2 disregarding the time fields
-     */
-    public static boolean same(Date datum1, Date datum2)
-    {
-        return (internalCompare(datum1, datum2) == 0);
-    }
+	/**
+	 * Whether date1 is on (the same as) date2 disregarding the time fields.
+	 * 
+	 * @param datum1
+	 *            eerste datum
+	 * @param datum2
+	 *            tweede datum
+	 * @return boolean Whether date1 is on (the same as) date2 disregarding the time fields
+	 */
+	public static boolean same(Date datum1, Date datum2)
+	{
+		return (internalCompare(datum1, datum2) == 0);
+	}
 
-    /**
-     * The Calendar component counts months from 0 (zero) till 11,
-     * but we want months from 1 till 12, give the Calendar month from
-     * our month.
-     * 
-     * @param yearMonthDayMonth our month (1 - 12)
-     * @return int converted month (yearMonthDayMonth - 1)
-     */
-    public static int getCalendarMonth(int yearMonthDayMonth)
-    {
-        return yearMonthDayMonth - 1;
-    }
+	/**
+	 * The Calendar component counts months from 0 (zero) till 11, but we want months from 1 till
+	 * 12, give the Calendar month from our month.
+	 * 
+	 * @param yearMonthDayMonth
+	 *            our month (1 - 12)
+	 * @return int converted month (yearMonthDayMonth - 1)
+	 */
+	public static int getCalendarMonth(int yearMonthDayMonth)
+	{
+		return yearMonthDayMonth - 1;
+	}
 
-    /**
-     * The Calendar component counts months from 0 (zero) till 11,
-     * but we want months from 1 till 12, give the our month from
-     * the calendar month.
-     * 
-     * @param calendarMonth calendar month (0 - 11)
-     * @return int converted month (calendarMonth + 1)
-     */
-    public static int getYearMonthDayMonth(int calendarMonth)
-    {
-        return calendarMonth + 1;
-    }
+	/**
+	 * The Calendar component counts months from 0 (zero) till 11, but we want months from 1 till
+	 * 12, give the our month from the calendar month.
+	 * 
+	 * @param calendarMonth
+	 *            calendar month (0 - 11)
+	 * @return int converted month (calendarMonth + 1)
+	 */
+	public static int getYearMonthDayMonth(int calendarMonth)
+	{
+		return calendarMonth + 1;
+	}
 
-    /**
-     * Give todays' date with the time fields cleared. If static variable
-     * 'today' is set, that will be returned - use this only for test
-     * purposes!
-     *
-     * @return Date todays' date with the time fields cleared
-     */
-    public static Date getToday()
-    {
-        if(today == null)
-        {
-            Calendar calendar = Calendar.getInstance();
-            int jaar = calendar.get(Calendar.YEAR);
-            int maand = calendar.get(Calendar.MONTH);
-            int dag = calendar.get(Calendar.DAY_OF_MONTH);
-            calendar.clear(); // clear all fields
-            calendar.set(jaar, maand, dag); // and set fields we are interested in
-            return calendar.getTime();
-        }
-        else
-        {
-            return today; // return test property
-        }
-    }
+	/**
+	 * Give todays' date with the time fields cleared. If static variable 'today' is set, that will
+	 * be returned - use this only for test purposes!
+	 * 
+	 * @return Date todays' date with the time fields cleared
+	 */
+	public static Date getToday()
+	{
+		if (today == null)
+		{
+			Calendar calendar = Calendar.getInstance();
+			int jaar = calendar.get(Calendar.YEAR);
+			int maand = calendar.get(Calendar.MONTH);
+			int dag = calendar.get(Calendar.DAY_OF_MONTH);
+			calendar.clear(); // clear all fields
+			calendar.set(jaar, maand, dag); // and set fields we are interested in
+			return calendar.getTime();
+		}
+		else
+		{
+			return today; // return test property
+		}
+	}
 
-    /**
-     * Set dummy today; we use this property to be able to fix 'today' on a date for testing.
-     * 
-     * @param dummyToday dummy today
-     */
-    public static void setToday(Date dummyToday)
-    {
-        today = dummyToday;
-    }
+	/**
+	 * Set dummy today; we use this property to be able to fix 'today' on a date for testing.
+	 * 
+	 * @param dummyToday
+	 *            dummy today
+	 */
+	public static void setToday(Date dummyToday)
+	{
+		today = dummyToday;
+	}
 }

@@ -40,28 +40,29 @@ import java.util.Date;
 public class TestBean
 {
 
-    /**
-     * Test date.
-     */
-    private Date testDate;
+	/**
+	 * Test date.
+	 */
+	private Date testDate;
 
-    /**
-     * Get testDate.
-     * 
-     * @return Date Returns the testDate.
-     */
-    public Date getTestDate()
-    {
-        return testDate;
-    }
+	/**
+	 * Get testDate.
+	 * 
+	 * @return Date Returns the testDate.
+	 */
+	public Date getTestDate()
+	{
+		return testDate;
+	}
 
-    /**
-     * Set testDate.
-     * 
-     * @param deTestDatum testDate to set.
-     */
-    public void setTestDate(final Date deTestDatum)
-    {
-        this.testDate = deTestDatum;
-    }
+	/**
+	 * Set testDate.
+	 * 
+	 * @param deTestDatum
+	 *            testDate to set.
+	 */
+	public void setTestDate(final Date deTestDatum)
+	{
+		this.testDate = deTestDatum;
+	}
 }

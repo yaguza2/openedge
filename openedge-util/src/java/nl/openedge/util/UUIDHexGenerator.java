@@ -6,13 +6,12 @@ package nl.openedge.util;
 import java.io.Serializable;
 
 /**
- * <b>uuid.hex</b><br>
+ * <b>uuid.hex </b> <br>
  * <br>
- * A <tt>UUIDGenerator</tt> that returns a string of length 32,
- * This string will consist of only hex digits. Optionally, 
- * the string may be generated with seperators between each 
- * component of the UUID.
- *
+ * A <tt>UUIDGenerator</tt> that returns a string of length 32, This string will consist of only
+ * hex digits. Optionally, the string may be generated with seperators between each component of the
+ * UUID.
+ * 
  * @see UUIDStringGenerator
  * @author Gavin King
  */
@@ -20,12 +19,13 @@ import java.io.Serializable;
 public class UUIDHexGenerator extends UUIDGenerator
 {
 
-	// seperator
+	/** seperator. */
 	private String sep;
 
 	/**
-	 * construct using the given seperator
-	 * @param seperator
+	 * construct using the given seperator.
+	 * 
+	 * @param seperator seperator
 	 */
 	public UUIDHexGenerator(String seperator)
 	{
@@ -33,7 +33,7 @@ public class UUIDHexGenerator extends UUIDGenerator
 	}
 
 	/**
-	 * construct using an empty string for the seperator
+	 * construct using an empty string for the seperator.
 	 */
 	public UUIDHexGenerator()
 	{
@@ -41,9 +41,10 @@ public class UUIDHexGenerator extends UUIDGenerator
 	}
 
 	/**
-	 * format value
-	 * @param intval
-	 * @return String
+	 * format value.
+	 * 
+	 * @param intval intvalue to format
+	 * @return String formatted intval
 	 */
 	protected String format(int intval)
 	{
@@ -55,6 +56,7 @@ public class UUIDHexGenerator extends UUIDGenerator
 
 	/**
 	 * format value
+	 * 
 	 * @param shortval
 	 * @return String
 	 */
@@ -68,21 +70,14 @@ public class UUIDHexGenerator extends UUIDGenerator
 
 	/**
 	 * generate uuid
+	 * 
 	 * @param obj
 	 * @return Serializable
 	 */
 	public Serializable generate()
 	{
-		return new StringBuffer(36)
-			.append(format(getIP()))
-			.append(sep)
-			.append(format(getJVM()))
-			.append(sep)
-			.append(format(getHiTime()))
-			.append(sep)
-			.append(format(getLoTime()))
-			.append(sep)
-			.append(format(getCount()))
-			.toString();
+		return new StringBuffer(36).append(format(getIP())).append(sep).append(format(getJVM()))
+				.append(sep).append(format(getHiTime())).append(sep).append(format(getLoTime()))
+				.append(sep).append(format(getCount())).toString();
 	}
 }

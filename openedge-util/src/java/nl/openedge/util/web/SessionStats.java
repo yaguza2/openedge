@@ -36,14 +36,18 @@ import java.util.HashMap;
 
 /**
  * Records extra information about a session
- * @author	Eelco Hillenius
+ * 
+ * @author Eelco Hillenius
  */
 public class SessionStats implements Serializable
 {
 
 	private String remoteAddr;
+
 	private String remoteHost;
+
 	private int hitCount = 0;
+
 	private HashMap attributes = new HashMap();
 
 	/**
@@ -65,6 +69,7 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Returns the hitCount.
+	 * 
 	 * @return int
 	 */
 	public int getHitCount()
@@ -74,6 +79,7 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Returns the remoteAddr.
+	 * 
 	 * @return String
 	 */
 	public String getRemoteAddr()
@@ -83,7 +89,9 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Sets the remoteAddr.
-	 * @param remoteAddr The remoteAddr to set
+	 * 
+	 * @param remoteAddr
+	 *            The remoteAddr to set
 	 */
 	public void setRemoteAddr(String remoteAddr)
 	{
@@ -98,6 +106,7 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Returns the attributes.
+	 * 
 	 * @return HashMap
 	 */
 	public HashMap getAttributes()
@@ -107,7 +116,9 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Get named attribute
-	 * @param key key (name) of attribute
+	 * 
+	 * @param key
+	 *            key (name) of attribute
 	 * @return attribute or null if nothing is stored under the given key
 	 */
 	public Object getAttribute(String key)
@@ -117,8 +128,11 @@ public class SessionStats implements Serializable
 
 	/**
 	 * put (possibly overwrite) named attribute
-	 * @param key key (name) of attribute
-	 * @param attribute	attribute to store
+	 * 
+	 * @param key
+	 *            key (name) of attribute
+	 * @param attribute
+	 *            attribute to store
 	 */
 	public void putAttribute(String key, Object attribute)
 	{
@@ -127,7 +141,9 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Sets the attributes.
-	 * @param attributes The attributes to set
+	 * 
+	 * @param attributes
+	 *            The attributes to set
 	 */
 	public void setAttributes(HashMap attributes)
 	{
@@ -136,6 +152,7 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Returns the remoteHost.
+	 * 
 	 * @return String
 	 */
 	public String getRemoteHost()
@@ -145,7 +162,9 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Sets the remoteHost.
-	 * @param remoteHost The remoteHost to set
+	 * 
+	 * @param remoteHost
+	 *            The remoteHost to set
 	 */
 	public void setRemoteHost(String remoteHost)
 	{

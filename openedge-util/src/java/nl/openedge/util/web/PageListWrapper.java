@@ -36,6 +36,7 @@ import java.util.List;
 
 /**
  * Helper class for creating pagelists
+ * 
  * @author Eelco Hillenius
  */
 public final class PageListWrapper
@@ -64,6 +65,7 @@ public final class PageListWrapper
 
 	/**
 	 * construct wrapper
+	 * 
 	 * @param rowCount
 	 * @param currentRow
 	 * @param rowsEachPage

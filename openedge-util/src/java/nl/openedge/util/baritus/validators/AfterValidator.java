@@ -51,84 +51,98 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Error key.
 	 */
-	private final static String DEFAULT_MESSAGE_KEY = "invalid.field.input.after";
+	private static final String DEFAULT_MESSAGE_KEY = "invalid.field.input.after";
 
-    /**
-     * Construct.
-     */
-    public AfterValidator()
-    {
-        setMessageKey(DEFAULT_MESSAGE_KEY);
-    }
-    /**
-     * Construct.
-     * @param dateToCheck
-     */
-    public AfterValidator(Calendar dateToCheck)
-    {
-        super(dateToCheck);
-        setMessageKey(DEFAULT_MESSAGE_KEY);
-    }
-    /**
-     * Construct.
-     * @param dateToCheck
-     */
-    public AfterValidator(Date dateToCheck)
-    {
-        super(dateToCheck);
-        setMessageKey(DEFAULT_MESSAGE_KEY);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     */
-    public AfterValidator(String messageKey)
-    {
-        super(messageKey);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     * @param dateToCheck
-     */
-    public AfterValidator(String messageKey, Calendar dateToCheck)
-    {
-        super(messageKey, dateToCheck);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     * @param dateToCheck
-     */
-    public AfterValidator(String messageKey, Date dateToCheck)
-    {
-        super(messageKey, dateToCheck);
-    }
-    /**
-     * Construct.
-     * @param messageKey
-     * @param rule
-     */
-    public AfterValidator(String messageKey, ValidationActivationRule rule)
-    {
-        super(messageKey, rule);
-    }
-
-    /** Log. */
-    private static Log log = LogFactory.getLog(AfterValidator.class);
+	/** Log. */
+	private static Log log = LogFactory.getLog(AfterValidator.class);
 
 	/**
-	 * Check valid. If false an error message is set with parameters:
-	 * {value, fieldName, checkDate}.
-	 * @return true if value is a Date or Calendar and is before or equal to before.
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
-	 * @throws IllegalArgumentException when value == null.
+	 * Construct.
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
+	public AfterValidator()
+	{
+		setMessageKey(DEFAULT_MESSAGE_KEY);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param dateToCheck date to check
+	 */
+	public AfterValidator(Calendar dateToCheck)
+	{
+		super(dateToCheck);
+		setMessageKey(DEFAULT_MESSAGE_KEY);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param dateToCheck date to check
+	 */
+	public AfterValidator(Date dateToCheck)
+	{
+		super(dateToCheck);
+		setMessageKey(DEFAULT_MESSAGE_KEY);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 */
+	public AfterValidator(String messageKey)
+	{
+		super(messageKey);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 * @param dateToCheck date to check
+	 */
+	public AfterValidator(String messageKey, Calendar dateToCheck)
+	{
+		super(messageKey, dateToCheck);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 * @param dateToCheck date to check
+	 */
+	public AfterValidator(String messageKey, Date dateToCheck)
+	{
+		super(messageKey, dateToCheck);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param messageKey the message key
+	 * @param rule the validation activation rule
+	 */
+	public AfterValidator(String messageKey, ValidationActivationRule rule)
+	{
+		super(messageKey, rule);
+	}
+
+	/**
+	 * Check valid. If false an error message is set with parameters: {value, fieldName, checkDate}.
+	 * @param cctx controller context
+	 * @param formBeanContext form bean context
+	 * @param fieldName field name
+	 * @param value object to check
+	 * @return true if value is a Date or Calendar and is before or equal to before.
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
+	 * @throws IllegalArgumentException
+	 *             when value == null.
+	 */
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
+			String fieldName, Object value)
 	{
 		boolean after = false;
 		Date compareBefore = null;
@@ -142,7 +156,7 @@ public class AfterValidator extends AbstractDateFieldValidator
 
 		// Als before datum niet is ingesteld (null) wordt de huidige datum
 		// genomen om mee te vergelijken.
-		if( dateToCheck == null)
+		if (dateToCheck == null)
 		{
 			compareBefore = new Date();
 		}
@@ -154,21 +168,21 @@ public class AfterValidator extends AbstractDateFieldValidator
 		// vergelijk datums
 		if (value instanceof Date)
 		{
-			after = comp.compare((Date)value, compareBefore) <= 0;
+			after = comp.compare((Date) value, compareBefore) <= 0;
 		}
 		else if (value instanceof Calendar)
 		{
-			after = comp.compare(((Calendar)value).getTime(), compareBefore) <= 0;
+			after = comp.compare(((Calendar) value).getTime(), compareBefore) <= 0;
 		}
 		else
 		{
 			log.error(value.getClass() + " is not a valid date");
 		}
 
-		if(!after)
+		if (!after)
 		{
-		   setErrorMessage(formBeanContext, fieldName, getMessageKey(),
-		       new Object[]{value, fieldName, compareBefore});
+			setErrorMessage(formBeanContext, fieldName, getMessageKey(), new Object[]
+				{value, fieldName, compareBefore});
 		}
 
 		return after;

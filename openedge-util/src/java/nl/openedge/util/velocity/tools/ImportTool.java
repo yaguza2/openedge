@@ -57,8 +57,8 @@ import org.apache.velocity.tools.view.tools.ViewTool;
 
 /**
  * @author Shawn Bayern
- * @author E.F. Hillenius (just the hack... thanks Shawn Bayern!)
- * $Id$
+ * @author E.F. Hillenius (just the hack... thanks Shawn Bayern!) $Id: ImportTool.java,v 1.3
+ *         2004/06/27 20:49:06 hillenius Exp $
  * @see org.apache.taglibs.standard.tag.common.core.ImportSupport
  */
 public class ImportTool implements ViewTool
@@ -73,21 +73,22 @@ public class ImportTool implements ViewTool
 	/** A reference to the HttpServletResponse. */
 	protected HttpServletResponse response;
 
-	/** <p>Valid characters in a scheme.</p>
-	 *  <p>RFC 1738 says the following:</p>
-	 *  <blockquote>
-	 *   Scheme names consist of a sequence of characters. The lower
-	 *   case letters "a"--"z", digits, and the characters plus ("+"),
-	 *   period ("."), and hyphen ("-") are allowed. For resiliency,
-	 *   programs interpreting URLs should treat upper case letters as
-	 *   equivalent to lower case in scheme names (e.g., allow "HTTP" as
-	 *   well as "http").
-	 *  </blockquote>
-	 * <p>We treat as absolute any URL that begins with such a scheme name,
-	 * followed by a colon.</p>
+	/**
+	 * <p>
+	 * Valid characters in a scheme.
+	 * </p>
+	 * <p>
+	 * RFC 1738 says the following:
+	 * </p>
+	 * <blockquote>Scheme names consist of a sequence of characters. The lower case letters
+	 * "a"--"z", digits, and the characters plus ("+"), period ("."), and hyphen ("-") are allowed.
+	 * For resiliency, programs interpreting URLs should treat upper case letters as equivalent to
+	 * lower case in scheme names (e.g., allow "HTTP" as well as "http"). </blockquote>
+	 * <p>
+	 * We treat as absolute any URL that begins with such a scheme name, followed by a colon.
+	 * </p>
 	 */
-	public static final String VALID_SCHEME_CHARS = 
-		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
+	public static final String VALID_SCHEME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
 
 	/** Default character encoding for response. */
 	public static final String DEFAULT_ENCODING = "ISO-8859-1";
@@ -114,9 +115,11 @@ public class ImportTool implements ViewTool
 
 	/**
 	 * Initializes this tool.
-	 *
-	 * @param obj the current ViewContext
-	 * @throws IllegalArgumentException if the param is not a ViewContext
+	 * 
+	 * @param obj
+	 *            the current ViewContext
+	 * @throws IllegalArgumentException
+	 *             if the param is not a ViewContext
 	 */
 	public void init(Object obj)
 	{
@@ -124,10 +127,9 @@ public class ImportTool implements ViewTool
 		if (!(obj instanceof ViewContext))
 		{
 
-			throw new IllegalArgumentException(
-				"Tool can only be wasAdded with a ViewContext");
+			throw new IllegalArgumentException("Tool can only be wasAdded with a ViewContext");
 		}
-		ViewContext context = (ViewContext)obj;
+		ViewContext context = (ViewContext) obj;
 		this.request = context.getRequest();
 		this.response = context.getResponse();
 		this.application = context.getServletContext();
@@ -137,23 +139,17 @@ public class ImportTool implements ViewTool
 	// Actual URL importation logic
 
 	/*
-	 * Overall strategy:  we have two entry points, acquireString() and
-	 * acquireReader().  The latter passes data through unbuffered if
-	 * possible (but note that it is not always possible -- specifically
-	 * for cases where we must use the RequestDispatcher.  The remaining
-	 * methods handle the common.core logic of loading either a URL or a local
-	 * resource.
-	 *
-	 * We consider the 'natural' form of absolute URLs to be Readers and
-	 * relative URLs to be Strings.  Thus, to avoid doing extra work,
-	 * acquireString() and acquireReader() delegate to one another as
-	 * appropriate.  (Perhaps I could have spelled things out more clearly,
-	 * but I thought this implementation was instructive, not to mention
-	 * somewhat cute...)
+	 * Overall strategy: we have two entry points, acquireString() and acquireReader(). The latter
+	 * passes data through unbuffered if possible (but note that it is not always possible --
+	 * specifically for cases where we must use the RequestDispatcher. The remaining methods handle
+	 * the common.core logic of loading either a URL or a local resource. We consider the 'natural'
+	 * form of absolute URLs to be Readers and relative URLs to be Strings. Thus, to avoid doing
+	 * extra work, acquireString() and acquireReader() delegate to one another as appropriate.
+	 * (Perhaps I could have spelled things out more clearly, but I thought this implementation was
+	 * instructive, not to mention somewhat cute...)
 	 */
 
-	private String acquireString(String url, boolean isAbsoluteUrl) 
-				throws IOException
+	private String acquireString(String url, boolean isAbsoluteUrl) throws IOException
 	{
 		if (isAbsoluteUrl)
 		{
@@ -165,7 +161,7 @@ public class ImportTool implements ViewTool
 			// under JIT, testing seems to show this simple loop is as fast
 			// as any of the alternatives
 			while ((i = r.read()) != -1)
-				sb.append((char)i);
+				sb.append((char) i);
 
 			return sb.toString();
 		}
@@ -173,8 +169,7 @@ public class ImportTool implements ViewTool
 		{
 
 			// URL is relative, so we must be an HTTP request
-			if (!(request instanceof HttpServletRequest && 
-					response instanceof HttpServletResponse))
+			if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
 				throw new RuntimeException("IMPORT_REL_WITHOUT_HTTP");
 
 			// retrieve an appropriate ServletContext
@@ -210,8 +205,7 @@ public class ImportTool implements ViewTool
 			// disallow inappropriate response codes per JSTL spec
 			if (irw.getStatus() < 200 || irw.getStatus() > 299)
 			{
-				throw new RuntimeException(irw.getStatus() + " " 
-					+ stripSession(targetUrl));
+				throw new RuntimeException(irw.getStatus() + " " + stripSession(targetUrl));
 			}
 
 			// recover the response String from our wrapper
@@ -219,8 +213,7 @@ public class ImportTool implements ViewTool
 		}
 	}
 
-	private Reader acquireReader(String url, boolean isAbsoluteUrl) 
-		throws IOException
+	private Reader acquireReader(String url, boolean isAbsoluteUrl) throws IOException
 	{
 		if (!isAbsoluteUrl)
 		{
@@ -243,7 +236,7 @@ public class ImportTool implements ViewTool
 				// before returning
 				if (uc instanceof HttpURLConnection)
 				{
-					int status = ((HttpURLConnection)uc).getResponseCode();
+					int status = ((HttpURLConnection) uc).getResponseCode();
 					if (status < 200 || status > 299)
 						throw new RuntimeException(status + " " + target);
 				}
@@ -265,8 +258,7 @@ public class ImportTool implements ViewTool
 	// Public utility methods
 
 	/**
-	 * Returns <tt>true</tt> if our current URL is absolute,
-	 * <tt>false</tt> otherwise.
+	 * Returns <tt>true</tt> if our current URL is absolute, <tt>false</tt> otherwise.
 	 */
 	public static boolean isAbsoluteUrl(String url)
 	{
@@ -290,10 +282,9 @@ public class ImportTool implements ViewTool
 	}
 
 	/**
-	 * Strips a servlet session ID from <tt>url</tt>.  The session ID
-	 * is encoded as a URL "path parameter" beginning with "jsessionid=".
-	 * We thus remove anything we find between ";jsessionid=" (inclusive)
-	 * and either EOS or a subsequent ';' (exclusive).
+	 * Strips a servlet session ID from <tt>url</tt>. The session ID is encoded as a URL "path
+	 * parameter" beginning with "jsessionid=". We thus remove anything we find between
+	 * ";jsessionid=" (inclusive) and either EOS or a subsequent ';' (exclusive).
 	 */
 	public static String stripSession(String url)
 	{
@@ -319,27 +310,20 @@ public class ImportTool implements ViewTool
 		// Overview
 
 		/*
-		 * We provide either a Writer or an OutputStream as requested.
-		 * We actually have a true Writer and an OutputStream backing
-		 * both, since we don't want to use a character encoding both
-		 * ways (Writer -> OutputStream -> Writer).  So we use no
-		 * encoding at all (as none is relevant) when the target resource
-		 * uses a Writer.  And we decode the OutputStream's bytes
-		 * using OUR tag's 'charEncoding' attribute, or ISO-8859-1
-		 * as the default.  We thus ignore setLocale() and setContentType()
-		 * in this wrapper.
-		 *
-		 * In other words, the target's asserted encoding is used
-		 * to convert from a Writer to an OutputStream, which is typically
-		 * the medium through with the target will communicate its
-		 * ultimate response.  Since we short-circuit that mechanism
-		 * and read the target's characters directly if they're offered
+		 * We provide either a Writer or an OutputStream as requested. We actually have a true
+		 * Writer and an OutputStream backing both, since we don't want to use a character encoding
+		 * both ways (Writer -> OutputStream -> Writer). So we use no encoding at all (as none is
+		 * relevant) when the target resource uses a Writer. And we decode the OutputStream's bytes
+		 * using OUR tag's 'charEncoding' attribute, or ISO-8859-1 as the default. We thus ignore
+		 * setLocale() and setContentType() in this wrapper. In other words, the target's asserted
+		 * encoding is used to convert from a Writer to an OutputStream, which is typically the
+		 * medium through with the target will communicate its ultimate response. Since we
+		 * short-circuit that mechanism and read the target's characters directly if they're offered
 		 * as such, we simply ignore the target's encoding assertion.
 		 */
 
 		//************************************************************
 		// Data
-
 		/** The Writer we convey. */
 		private StringWriter sw = new StringWriter();
 
@@ -413,11 +397,10 @@ public class ImportTool implements ViewTool
 			return status;
 		}
 
-		/** 
-		 * Retrieves the buffered output, using the containing tag's 
-		 * 'charEncoding' attribute, or the tag's default encoding,
-		 * <b>if necessary</b>.
-			 */
+		/**
+		 * Retrieves the buffered output, using the containing tag's 'charEncoding' attribute, or
+		 * the tag's default encoding, <b>if necessary </b>.
+		 */
 		// not simply toString() because we need to throw
 		// UnsupportedEncodingException
 		public String getString() throws UnsupportedEncodingException

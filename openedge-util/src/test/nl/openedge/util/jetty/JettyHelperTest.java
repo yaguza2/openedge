@@ -36,69 +36,70 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 
-
 /**
  * Testcase for JettyHelper.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyHelperTest extends TestCase
 {
-    /** Log. */
-    private Log log = LogFactory.getLog(JettyHelperTest.class);
-    /**
-     * Localhost constant.
-     */
-    private final static String LOCALHOST = "127.0.0.1";
-    /**
-     * Construct.
-     */
-    public JettyHelperTest()
-    {
-        super();
-    }
+	/** Log. */
+	private Log log = LogFactory.getLog(JettyHelperTest.class);
 
-    /**
-     * Construct with test name.
-     * @param name name of test
-     */
-    public JettyHelperTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Localhost constant.
+	 */
+	private final static String LOCALHOST = "127.0.0.1";
 
-    /**
-     * Test local (in this VM) startup of Jetty and monitor and shutdown.
-     *
-     * @throws Exception
-     */
-    public void testLocalStartupAndShutdownWithMonitor() throws Exception
-    {
-        String testMonitorCommKey = "mortbay";
-        int testMonitorPort = 8078;
-        int jettyServerPort = 8099;
-        String webContextRoot = "src/webapp";
-        String contextPath = "/test";
+	/**
+	 * Construct.
+	 */
+	public JettyHelperTest()
+	{
+		super();
+	}
 
-        // start server
-        Server server = JettyHelper.startJetty(
-            jettyServerPort, webContextRoot, contextPath, false);
+	/**
+	 * Construct with test name.
+	 * 
+	 * @param name
+	 *            name of test
+	 */
+	public JettyHelperTest(String name)
+	{
+		super(name);
+	}
 
-        // start monitor
-        JettyMonitor.startMonitor(server, testMonitorCommKey, testMonitorPort);
+	/**
+	 * Test local (in this VM) startup of Jetty and monitor and shutdown.
+	 * 
+	 * @throws Exception
+	 */
+	public void testLocalStartupAndShutdownWithMonitor() throws Exception
+	{
+		String testMonitorCommKey = "mortbay";
+		int testMonitorPort = 8078;
+		int jettyServerPort = 8099;
+		String webContextRoot = "src/webapp";
+		String contextPath = "/test";
 
-        Thread.sleep(1000); // wait a bit longer to be sure that everything is really up
-        
-        // ping for startup
-          boolean started = JettyHelper.pingMonitorForServerStarted(
-             testMonitorCommKey, LOCALHOST, testMonitorPort, 30, 1000);
-         assertTrue(started);
-         log.info("Stopping Jetty");
+		// start server
+		Server server = JettyHelper.startJetty(jettyServerPort, webContextRoot, contextPath, false);
 
-         // issue stop command; throws exception when issueing failed
-         JettyHelper.issueStopCommandToMonitor(
-             testMonitorCommKey, LOCALHOST, testMonitorPort);
-         log.info("Jetty stopped");
-    }
+		// start monitor
+		JettyMonitor.startMonitor(server, testMonitorCommKey, testMonitorPort);
+
+		Thread.sleep(1000); // wait a bit longer to be sure that everything is really up
+
+		// ping for startup
+		boolean started = JettyHelper.pingMonitorForServerStarted(testMonitorCommKey, LOCALHOST,
+				testMonitorPort, 30, 1000);
+		assertTrue(started);
+		log.info("Stopping Jetty");
+
+		// issue stop command; throws exception when issueing failed
+		JettyHelper.issueStopCommandToMonitor(testMonitorCommKey, LOCALHOST, testMonitorPort);
+		log.info("Jetty stopped");
+	}
 
 }

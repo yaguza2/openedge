@@ -35,60 +35,63 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Test for JettyDecorator that spawns a new process/ new VM where Jetty is started.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyExternalVMDecoratorWithArgsTest extends TestCase
 {
 
-    /**
-     * Construct.
-     */
-    public JettyExternalVMDecoratorWithArgsTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyExternalVMDecoratorWithArgsTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with name.
-     * @param name test name
-     */
-    public JettyExternalVMDecoratorWithArgsTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with name.
+	 * 
+	 * @param name
+	 *            test name
+	 */
+	public JettyExternalVMDecoratorWithArgsTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPing() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPing() throws Exception
+	{
 		String pingBody = HttpHelper.get("http://localhost:8098/test/ping.txt");
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * Suite method.
-     * @return Test suite
-     */
-    public static Test suite() 
-    {
-	    TestSuite suite = new TestSuite();
-	    suite.addTest(new JettyExternalVMDecoratorWithArgsTest("testPing"));
-	    JettyExternalVMDecorator deco = new JettyExternalVMDecorator(suite);
-	    deco.setPort(8098);
-	    deco.setWebappContextRoot("src/webapp");
-	    deco.setContextPath("/test");
-	    deco.setUseJettyPlus(false);
-	    
-	    // comment this for non-Windows systems (in that case {"java"} will be used).
-	    //deco.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
+	/**
+	 * Suite method.
+	 * 
+	 * @return Test suite
+	 */
+	public static Test suite()
+	{
+		TestSuite suite = new TestSuite();
+		suite.addTest(new JettyExternalVMDecoratorWithArgsTest("testPing"));
+		JettyExternalVMDecorator deco = new JettyExternalVMDecorator(suite);
+		deco.setPort(8098);
+		deco.setWebappContextRoot("src/webapp");
+		deco.setContextPath("/test");
+		deco.setUseJettyPlus(false);
 
-	    return deco;
-    }
+		// comment this for non-Windows systems (in that case {"java"} will be used).
+		//deco.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
+
+		return deco;
+	}
 
 }

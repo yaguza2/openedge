@@ -67,14 +67,14 @@ public class UrlTool
 	}
 
 	/**
-	 * get lastrequest as string; strip given parameter 
-	 * 	(that is used to store last currentRequest in url)
+	 * get lastrequest as string; strip given parameter (that is used to store last currentRequest
+	 * in url)
+	 * 
 	 * @param currentRequest
 	 * @param parameterToStrip
 	 * @return String
 	 */
-	public static String getLastRequest(HttpServletRequest request, 
-		String parameterToStrip)
+	public static String getLastRequest(HttpServletRequest request, String parameterToStrip)
 	{
 
 		String lq = request.getRequestURL() + "?" + request.getQueryString();
@@ -82,17 +82,13 @@ public class UrlTool
 		lq = stripParameter(lq, parameterToStrip);
 		return lq;
 	}
-	
+
 	/**
-	 * Returns <tt>text</tt> performing the following substring
-	 * replacements (to facilitate output to XML/HTML pages):
-	 *
-	 *    & -> &amp;
-	 *    < -> &lt;
-	 *    > -> &gt;
-	 *    " -> &#034;
-	 *    ' -> &#039;
-	 * @param text string to transform
+	 * Returns <tt>text</tt> performing the following substring replacements (to facilitate output
+	 * to XML/HTML pages): & -> &amp; < -> &lt; > -> &gt; " -> &#034; ' -> &#039;
+	 * 
+	 * @param text
+	 *            string to transform
 	 * @return String transformed string
 	 */
 	public static String escapeXml(String text)
@@ -121,9 +117,12 @@ public class UrlTool
 	}
 
 	/**
-	 * @param text string to transform
-	 * @param scanchar char to scan for
-	 * @param with replacement string to replace scanchar
+	 * @param text
+	 *            string to transform
+	 * @param scanchar
+	 *            char to scan for
+	 * @param with
+	 *            replacement string to replace scanchar
 	 * @return String transformed string
 	 */
 	public static String replace(String text, char scanchar, String replacement)
@@ -144,9 +143,12 @@ public class UrlTool
 	}
 
 	/**
-	 * @param text string to transform
-	 * @param scanstring string to scan for
-	 * @param with replacement string to replace scanstring
+	 * @param text
+	 *            string to transform
+	 * @param scanstring
+	 *            string to scan for
+	 * @param with
+	 *            replacement string to replace scanstring
 	 * @return String transformed string
 	 */
 	public static String replace(String text, String scanstring, String replacement)

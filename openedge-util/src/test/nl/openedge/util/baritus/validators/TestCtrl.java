@@ -46,33 +46,35 @@ import org.jdom.Element;
 public class TestCtrl extends AbstractBaritusTestCtrl
 {
 
-    /**
-     * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext,
-     *      org.infohazard.maverick.flow.ControllerContext)
-     */
-    protected String perform(final FormBeanContext deFormBeanContext, final ControllerContext cctx) throws Exception
-    {
-        return view;
-    }
+	/**
+	 * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext,
+	 *      org.infohazard.maverick.flow.ControllerContext)
+	 */
+	protected String perform(final FormBeanContext deFormBeanContext, final ControllerContext cctx)
+			throws Exception
+	{
+		return view;
+	}
 
-    /**
-     * @see nl.openedge.baritus.FormBeanBase#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
-     */
-    protected Object makeFormBean(final FormBeanContext deFormBeanContext, final ControllerContext cctx)
-    {
-        this.bean = new TestBean();
-        return bean;
-    }
+	/**
+	 * @see nl.openedge.baritus.FormBeanBase#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
+	 */
+	protected Object makeFormBean(final FormBeanContext deFormBeanContext,
+			final ControllerContext cctx)
+	{
+		this.bean = new TestBean();
+		return bean;
+	}
 
-    /**
-     * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
-     */
-    public void init(final Element controllerNode) throws ConfigException
-    {
-        ExecutionParams params = getExecutionParams(null);
-        params.setIncludeSessionAttributes(true);
-        params.setIncludeRequestAttributes(true);
+	/**
+	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
+	 */
+	public void init(final Element controllerNode) throws ConfigException
+	{
+		ExecutionParams params = getExecutionParams(null);
+		params.setIncludeSessionAttributes(true);
+		params.setIncludeRequestAttributes(true);
 
-    }
+	}
 
 }

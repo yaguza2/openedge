@@ -41,150 +41,159 @@ import org.apache.commons.logging.LogFactory;
  */
 class JettyExternalVMStartupWorker extends Thread
 {
-    /** Log. */
-    private static Log log = LogFactory.getLog(JettyExternalVMStartupWorker.class);
+	/** Log. */
+	private static Log log = LogFactory.getLog(JettyExternalVMStartupWorker.class);
 
-    /** start command. */
-    private String[] startCommand;
+	/** start command. */
+	private String[] startCommand;
 
-    /**
-     * Has Jetty been started (and do we know about it).
-     */
-    private boolean jettyStarted = false;
+	/**
+	 * Has Jetty been started (and do we know about it).
+	 */
+	private boolean jettyStarted = false;
 
-    /**
-     * Pointer to the external proces.
-     */
-    private Process process = null;
+	/**
+	 * Pointer to the external proces.
+	 */
+	private Process process = null;
 
-    /**
-     * Maximum number of ping tries.
-     */
-    private int maxTries;
+	/**
+	 * Maximum number of ping tries.
+	 */
+	private int maxTries;
 
-    /**
-     * Miliseconds to wait between ping tries.
-     */
-    private long sleepBetweenTries;
+	/**
+	 * Miliseconds to wait between ping tries.
+	 */
+	private long sleepBetweenTries;
 
-    /** command port. */
-    private int monitorPort;
+	/** command port. */
+	private int monitorPort;
 
-    /** auth key. */
-    private String commKey;
+	/** auth key. */
+	private String commKey;
 
-    /**
-     * Construct worker with parameters.
-     * @param startCommand start command
-     * @param monitorPort monitor port to ping
-     * @param commKey auth key
-     * @param maxTries maximum number of ping tries
-     * @param sleepBetweenTries miliseconds to wait between ping tries
-     */
-    public JettyExternalVMStartupWorker(String[] startCommand,
-            int monitorPort, String commKey, int maxTries, long sleepBetweenTries)
-    {
-        this.startCommand = startCommand;
-        this.monitorPort = monitorPort;
-        this.commKey = commKey;
-        this.maxTries = maxTries;
-        this.sleepBetweenTries = sleepBetweenTries;
-    }
+	/**
+	 * Construct worker with parameters.
+	 * 
+	 * @param startCommand
+	 *            start command
+	 * @param monitorPort
+	 *            monitor port to ping
+	 * @param commKey
+	 *            auth key
+	 * @param maxTries
+	 *            maximum number of ping tries
+	 * @param sleepBetweenTries
+	 *            miliseconds to wait between ping tries
+	 */
+	public JettyExternalVMStartupWorker(String[] startCommand, int monitorPort, String commKey,
+			int maxTries, long sleepBetweenTries)
+	{
+		this.startCommand = startCommand;
+		this.monitorPort = monitorPort;
+		this.commKey = commKey;
+		this.maxTries = maxTries;
+		this.sleepBetweenTries = sleepBetweenTries;
+	}
 
-    /**
-     * Ping Jetty tot succes of max tries.
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    public void run()
-    {
+	/**
+	 * Ping Jetty tot succes of max tries.
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run()
+	{
 
-        try
-        {
-            // start Jetty in another VM
-            startExternalJettyInstance();
-        }
-        catch(IOException e)
-        {
-            log.error(e.getMessage(), e);
-        }
- 
-        try
-        {
-            // ping the remote monitor for startup of Jetty
-            jettyStarted = JettyHelper.pingMonitorForServerStarted(
-                commKey, "127.0.0.1", monitorPort, maxTries, sleepBetweenTries);
-            // if we get here, jetty started up successfully
-            log.info("monitor acknowledged Jetty startup");
-        }
-        catch(Exception e)
-        {
-            log.info("unable to get monitor acknowledgement of Jetty startup:", e);
-        }
-    }
+		try
+		{
+			// start Jetty in another VM
+			startExternalJettyInstance();
+		}
+		catch (IOException e)
+		{
+			log.error(e.getMessage(), e);
+		}
 
-    /**
-     * Start Jetty with OS call.
-     */
-    private void startExternalJettyInstance() throws IOException
-    {
-        log.info("execute command " + printCommand(startCommand));
-        process = Runtime.getRuntime().exec(startCommand);
+		try
+		{
+			// ping the remote monitor for startup of Jetty
+			jettyStarted = JettyHelper.pingMonitorForServerStarted(commKey, "127.0.0.1",
+					monitorPort, maxTries, sleepBetweenTries);
+			// if we get here, jetty started up successfully
+			log.info("monitor acknowledged Jetty startup");
+		}
+		catch (Exception e)
+		{
+			log.info("unable to get monitor acknowledgement of Jetty startup:", e);
+		}
+	}
 
-        // NOTE: output will only be there for the top-level proces; if the
-        // command opens another window for instance, output will be in that
-        // window and not to the process streams.
-        connectOutput(process);
-    }
+	/**
+	 * Start Jetty with OS call.
+	 */
+	private void startExternalJettyInstance() throws IOException
+	{
+		log.info("execute command " + printCommand(startCommand));
+		process = Runtime.getRuntime().exec(startCommand);
 
-    /**
-     * Print command.
-     * @param command the command
-     */
-    private String printCommand(String[] command)
-    {
-        StringBuffer b = new StringBuffer();
-        for(int i = 0; i < command.length; i++)
-        {
-            b.append(command[i]).append(" ");
-        }
-        return b.toString();
-    }
+		// NOTE: output will only be there for the top-level proces; if the
+		// command opens another window for instance, output will be in that
+		// window and not to the process streams.
+		connectOutput(process);
+	}
 
-    /**
-     * Connect output of process.
-     * 
-     * @param process the process
-     */
-    private void connectOutput(Process process)
-    {
-        InputStream errInput = process.getErrorStream();
-        LogConnector errConn = new LogConnector();
-        errConn.setInputStream(errInput);
-        errConn.start();
-        InputStream outInput = process.getInputStream();
-        LogConnector outConn = new LogConnector();
-        outConn.setInputStream(outInput);
-        outConn.start();
-    }
+	/**
+	 * Print command.
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	private String printCommand(String[] command)
+	{
+		StringBuffer b = new StringBuffer();
+		for (int i = 0; i < command.length; i++)
+		{
+			b.append(command[i]).append(" ");
+		}
+		return b.toString();
+	}
 
-    /**
-     * Whether Jetty has been started (and do we know about it).
-     * 
-     * @return boolean whether Jetty has been started (that we know).
-     */
-    public boolean isJettyStarted()
-    {
-        return jettyStarted;
-    }
+	/**
+	 * Connect output of process.
+	 * 
+	 * @param process
+	 *            the process
+	 */
+	private void connectOutput(Process process)
+	{
+		InputStream errInput = process.getErrorStream();
+		LogConnector errConn = new LogConnector();
+		errConn.setInputStream(errInput);
+		errConn.start();
+		InputStream outInput = process.getInputStream();
+		LogConnector outConn = new LogConnector();
+		outConn.setInputStream(outInput);
+		outConn.start();
+	}
 
-    /**
-     * Get process.
-     * 
-     * @return Process Returns the process.
-     */
-    public Process getProcess()
-    {
-        return process;
-    }
+	/**
+	 * Whether Jetty has been started (and do we know about it).
+	 * 
+	 * @return boolean whether Jetty has been started (that we know).
+	 */
+	public boolean isJettyStarted()
+	{
+		return jettyStarted;
+	}
+
+	/**
+	 * Get process.
+	 * 
+	 * @return Process Returns the process.
+	 */
+	public Process getProcess()
+	{
+		return process;
+	}
 }

@@ -35,119 +35,127 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 
 /**
- * Base class for Jetty test cases. Classes that override this test case will
- * have a local Jetty server started and stopped automatically for each test case.
- * the methods setUp and tearDown are finalized in this class, please use one
- * of the methods 'beforeSetup', 'afterSetup', 'beforeTearDown' and 'afterTearDown'.
+ * Base class for Jetty test cases. Classes that override this test case will have a local Jetty
+ * server started and stopped automatically for each test case. the methods setUp and tearDown are
+ * finalized in this class, please use one of the methods 'beforeSetup', 'afterSetup',
+ * 'beforeTearDown' and 'afterTearDown'.
  * <p>
- * Method 'beforeSetup' is particularly usefull, as it can be used to configure the
- * Jetty server that is to be created and run. An example of how to do is:<br/>
+ * Method 'beforeSetup' is particularly usefull, as it can be used to configure the Jetty server
+ * that is to be created and run. An example of how to do is: <br/>
  * </p>
  * <p>
+ * 
  * <pre>
  * public void beforeSetUp()
  * {
- *   setPort(8098);
- *   setWebappContextRoot("src/webapp");
- *   setContextPath("/test");
+ * 	setPort(8098);
+ * 	setWebappContextRoot(&quot;src/webapp&quot;);
+ * 	setContextPath(&quot;/test&quot;);
  * }
  * </pre>
+ * 
  * </p>
+ * 
  * @author Eelco Hillenius
  */
 public abstract class JettyTestCase extends AbstractJettyTestCase
 {
-    /** instance of jetty server. */
-    private static Server jettyServer = null;
+	/** instance of jetty server. */
+	private static Server jettyServer = null;
 
-    /** logger. */
-    private static Log log = LogFactory.getLog(JettyDecorator.class);
+	/** logger. */
+	private static Log log = LogFactory.getLog(JettyDecorator.class);
 
-    /**
-     * Construct.
-     */
-    public JettyTestCase()
-    {
-        super();
-    }
-    /**
-     * Construct with test case name.
-     * @param name test case name
-     */
-    public JettyTestCase(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyTestCase()
+	{
+		super();
+	}
 
-    /**
-     * Start Jetty; inhereting classes can override methods
-     * beforeSetUp and afterSetUp for test case specific behaviour.
-     * @throws Exception
-     * @see junit.extensions.TestSetup#setUp()
-     */
-    public final void setUp() throws Exception
-    {
-        // first let current test case set up fixture
-        beforeSetUp();
-        // start Jetty
-        long begin = System.currentTimeMillis();
-        try
-        {
-            if(getJettyConfig() != null)
-            {
-                // start Jetty with config document
-                jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
-            }
-            else
-            {
-                // start Jetty with arguments (port etc.)
-                jettyServer = JettyHelper.startJetty(
-                    getPort(), getWebappContextRoot(), getContextPath(), isUseJettyPlus());
-            }
-        }
-        catch (Exception e)
-        {
-            log.error(e.getMessage(), e);
-            throw e;           
-        } 
-        catch (Throwable e) // catch runtime excepions like cnf exceptions etc.
-        {
-            log.error(e.getMessage(), e);
-            throw new Exception(e); // wrap and rethrow
-        }
-        long end = System.currentTimeMillis();
-        log.info("Jetty Started (in " + (end - begin) + " milis)");
-        // call for further set up
-        afterSetUp();
-    }
+	/**
+	 * Construct with test case name.
+	 * 
+	 * @param name
+	 *            test case name
+	 */
+	public JettyTestCase(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Stop Jetty; inhereting classes can override methods
-     * beforeTearDown and afterTearDown for test case specific behaviour.
-     * @throws Exception
-     * @see junit.extensions.TestSetup#tearDown()
-     */
-    public final void tearDown() throws Exception
-    {
-        // first let current test case tear down fixture
-        beforeTearDown();
-        try 
-        {
-            log.info("Stopping Jetty");
-            jettyServer.stop();
-            log.info("Jetty stopped");
-        } 
-        catch (Exception e)
-        {
-            log.error(e.getMessage(), e);
-            throw e;           
-        } 
-        catch (Throwable e) 
-        {
-            log.error(e.getMessage(), e);
-            throw new Exception(e);
-        }
-        // call for further tear down
-        afterTearDown();
-    }
+	/**
+	 * Start Jetty; inhereting classes can override methods beforeSetUp and afterSetUp for test case
+	 * specific behaviour.
+	 * 
+	 * @throws Exception
+	 * @see junit.extensions.TestSetup#setUp()
+	 */
+	public final void setUp() throws Exception
+	{
+		// first let current test case set up fixture
+		beforeSetUp();
+		// start Jetty
+		long begin = System.currentTimeMillis();
+		try
+		{
+			if (getJettyConfig() != null)
+			{
+				// start Jetty with config document
+				jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
+			}
+			else
+			{
+				// start Jetty with arguments (port etc.)
+				jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
+						getContextPath(), isUseJettyPlus());
+			}
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+		catch (Throwable e) // catch runtime excepions like cnf exceptions etc.
+		{
+			log.error(e.getMessage(), e);
+			throw new Exception(e); // wrap and rethrow
+		}
+		long end = System.currentTimeMillis();
+		log.info("Jetty Started (in " + (end - begin) + " milis)");
+		// call for further set up
+		afterSetUp();
+	}
+
+	/**
+	 * Stop Jetty; inhereting classes can override methods beforeTearDown and afterTearDown for test
+	 * case specific behaviour.
+	 * 
+	 * @throws Exception
+	 * @see junit.extensions.TestSetup#tearDown()
+	 */
+	public final void tearDown() throws Exception
+	{
+		// first let current test case tear down fixture
+		beforeTearDown();
+		try
+		{
+			log.info("Stopping Jetty");
+			jettyServer.stop();
+			log.info("Jetty stopped");
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+		catch (Throwable e)
+		{
+			log.error(e.getMessage(), e);
+			throw new Exception(e);
+		}
+		// call for further tear down
+		afterTearDown();
+	}
 }

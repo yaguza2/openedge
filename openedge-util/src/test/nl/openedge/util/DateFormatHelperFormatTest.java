@@ -40,32 +40,33 @@ import junit.framework.TestCase;
 
 /**
  * Aantal DateFormatHelper gerelateerde tests
+ * 
  * @author Eelco Hillenius
  */
 public class DateFormatHelperFormatTest extends TestCase
 {
 	/**
 	 * construct
+	 * 
 	 * @param name
 	 */
 	public DateFormatHelperFormatTest(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
-	 * gaandeweg bleek dat NumberFormatters (die intern worden gebruikt door
-	 * dateformatters voor het parsen van onderdelen) parsen tot ze niet meer verder
-	 * kunnen, en dan - indien ze digits hebben kunnen parsen - het tot dan
-	 * gevonden getal terug geven (zonder exception dus)
+	 * gaandeweg bleek dat NumberFormatters (die intern worden gebruikt door dateformatters voor het
+	 * parsen van onderdelen) parsen tot ze niet meer verder kunnen, en dan - indien ze digits
+	 * hebben kunnen parsen - het tot dan gevonden getal terug geven (zonder exception dus)
 	 */
 	public void testDecimal1()
 	{
-		
+
 		try
 		{
 			DecimalFormat dcf = new DecimalFormat();
-			Number n = dcf.parse("45akdl12");		
+			Number n = dcf.parse("45akdl12");
 			// dit is toegestaan; er wordt geparsed tot a
 			assertEquals(45, n.intValue());
 		}
@@ -75,17 +76,17 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Het eerste karakter moet echter wel een getal zijn
 	 */
 	public void testDecimal2()
 	{
-		
+
 		try
 		{
 			DecimalFormat dcf = new DecimalFormat();
-			Number n = dcf.parse("h45");		
+			Number n = dcf.parse("h45");
 			fail("h45 should not have been parsed");
 		}
 		catch (Exception e)
@@ -93,34 +94,34 @@ public class DateFormatHelperFormatTest extends TestCase
 
 		}
 	}
-	
+
 	/**
-	 *	Integer (en bijv. Double) zijn echter wel strikt
+	 * Integer (en bijv. Double) zijn echter wel strikt
 	 */
 	public void testDecimal3()
 	{
-		
+
 		try
 		{
-			int i = Integer.parseInt("45akdl12");		
+			int i = Integer.parseInt("45akdl12");
 			fail("45akdl12 should not have been parsed");
 		}
 		catch (Exception e)
 		{
-			
+
 		}
 	}
-	
+
 	/**
 	 * check voor bugfix #2131: 11-12-20la mag niet worden opgevat als een geldige datum
 	 */
 	public void testInvalidFormat1()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11-12-20la");
-			
+
 			System.err.println("invalid result: 11-12-20la -> " + d);
 			fail("date should not have been parsed");
 		}
@@ -129,17 +130,17 @@ public class DateFormatHelperFormatTest extends TestCase
 
 		}
 	}
-	
+
 	/**
 	 * check voor bugfix #2131: 111220la mag niet worden opgevat als een geldige datum
 	 */
 	public void testInvalidFormat2()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("111220la");
-			
+
 			System.err.println("invalid result: 11-12-20la -> " + d);
 			fail("date should not have been parsed");
 		}
@@ -148,17 +149,17 @@ public class DateFormatHelperFormatTest extends TestCase
 
 		}
 	}
-	
+
 	/**
 	 * check voor troep
 	 */
 	public void testInvalidFormat3()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11!12!2003");
-			
+
 			System.err.println("invalid result: 11!12!2003 -> " + d);
 			fail("date should not have been parsed");
 		}
@@ -167,13 +168,13 @@ public class DateFormatHelperFormatTest extends TestCase
 
 		}
 	}
-	
+
 	/**
 	 * check voor bugfix #2131: 11122003 is een geldige datum
 	 */
 	public void testValidFormat1()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11122003");
@@ -184,13 +185,13 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check voor bugfix #2131: 11-12-2003 is een geldige datum
 	 */
 	public void testValidFormat2()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11-12-2003");
@@ -201,23 +202,23 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
-//------------------- test alle configuratie items uit dateformathelper.cfg -------------
-	
+
+	//------------------- test alle configuratie items uit dateformathelper.cfg -------------
+
 	/**
 	 * check ddMMyy
 	 */
 	public void testValidFormatddMMyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("111203");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -226,21 +227,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check ddMMyy
 	 */
 	public void testValidFormatddMMyyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11122003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -249,21 +250,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d-M-yy
 	 */
 	public void testValidFormatd_M_yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1-2-03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -272,21 +273,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d-MM-yy
 	 */
 	public void testValidFormatd_MM_yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1-12-03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -295,21 +296,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd-M-yy
 	 */
 	public void testValidFormatdd_M_yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11-2-03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -318,24 +319,24 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd-MM-yy
 	 */
 	public void testValidFormatdd_MM_yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11-12-03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
-			
+
 			System.out.println(d);
-			
+
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -344,21 +345,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d-M-yyyy
 	 */
 	public void testValidFormatd_M_yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1-2-2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -367,21 +368,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d-MM-yyyy
 	 */
 	public void testValidFormatd_MM_yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1-12-2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -390,21 +391,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd-M-yyyy
 	 */
 	public void testValidFormatdd_M_yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11-2-2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -413,21 +414,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd-MM-yyyy
 	 */
 	public void testValidFormatdd_MM_yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11-12-2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -436,21 +437,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d/M/yy
 	 */
 	public void testValidFormatd__M__yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1/2/03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -459,21 +460,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d/MM/yy
 	 */
 	public void testValidFormatd__MM__yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1/12/03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -482,21 +483,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd/M/yy
 	 */
 	public void testValidFormatdd__M__yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11/2/03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -505,21 +506,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd/MM/yy
 	 */
 	public void testValidFormatdd__MM__yy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11/12/03");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -528,21 +529,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d/M/yyyy
 	 */
 	public void testValidFormatd__M__yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1/2/2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -551,21 +552,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check d/MM/yyyy
 	 */
 	public void testValidFormatd__MM__yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("1/12/2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(1, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -574,21 +575,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd/M/yyyy
 	 */
 	public void testValidFormatdd__M__yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11/2/2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(2-1, c.get(Calendar.MONTH));
+			assertEquals(2 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -597,21 +598,21 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * check dd/MM/yyyy
 	 */
 	public void testValidFormatdd__MM__yyyy()
 	{
-		
+
 		try
 		{
 			Date d = DateFormatHelper.fallbackParse("11/12/2003");
-			
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(d);
 			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12-1, c.get(Calendar.MONTH));
+			assertEquals(12 - 1, c.get(Calendar.MONTH));
 			assertEquals(2003, c.get(Calendar.YEAR));
 		}
 		catch (Exception e)
@@ -620,5 +621,5 @@ public class DateFormatHelperFormatTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 }

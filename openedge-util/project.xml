@@ -206,10 +206,64 @@
 		</dependency>
 		<!-- END XML -->
 	
+		<!-- Begin afhankelijkheden SOAP -->
+		
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.1</version>
+			<type>jar</type>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>saaj</artifactId>
+			<version>1.1</version>
+			<type>jar</type>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+		</dependency>
+
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>jaxrpc</artifactId>
+			<version>1.0</version>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+			<url>http://xml.apache.org/axis/</url>
+		</dependency>
+
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.4</version>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+			<url>http://oss.software.ibm.com/developerworks/projects/wsdl4j/</url>
+		</dependency>
+
+		<!-- Einde afhankelijkheden SOAP -->
+
 		<dependency>
 			<id>hibernate</id>
 			<version>2.1.4</version>
 			<url>http://www.hibernate.org/</url>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.4</version>
+			<type>jar</type>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
 		</dependency>
 	
 	    <!--

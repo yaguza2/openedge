@@ -35,120 +35,150 @@ import junit.framework.Test;
 
 /**
  * Base class for Jetty TestDecorators.
- *
+ * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractJettyDecorator extends TestSetup
 {
-    /** calling class for getting config resource. */
-    private static Class callee = JettyDecorator.class;
+	/** calling class for getting config resource. */
+	private static Class callee = JettyDecorator.class;
 
-    /** 
-     * Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-     * be instantiated, if false, org.mortbay.jetty.Server will be instantiated.
-     */
-    private boolean useJettyPlus = false;
+	/**
+	 * Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be instantiated, if
+	 * false, org.mortbay.jetty.Server will be instantiated.
+	 */
+	private boolean useJettyPlus = false;
 
-    /** URL of jetty configuration document*/
-    private String jettyConfig;
+	/** URL of jetty configuration document */
+	private String jettyConfig;
 
-    /** root folder of web application. */
-    private String webappContextRoot = "/."; 
-    /** port for http requests. */
-    private int port = 8080;
-    /** context path (webapp name). */
-    private String contextPath = "/";
+	/** root folder of web application. */
+	private String webappContextRoot = "/.";
 
-    /**
-     * Construct with test to decorate.
-     * @param test test to decorate
-     */
-    public AbstractJettyDecorator(Test test)
-    {
-        super(test);
-    }
-    /**
-     * Get jettyConfig; URL of jetty configuration document.
-     * @return String Returns the URL of jetty configuration document.
-     */
-    public String getJettyConfig()
-    {
-        return jettyConfig;
-    }
-    /**
-     * Set jettyConfig; URL of jetty configuration document.
-     * @param newJettyConfig URL of jetty configuration document.
-     * @param classCallee calling class for getting config resource
-     */
-    public void setJettyConfig(String newJettyConfig, Class classCallee)
-    {
-        jettyConfig = newJettyConfig;
-        callee = classCallee;
-    }
-    /**
-     * Get whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-     * be instantiated, if false, org.mortbay.jetty.plus.Server will be instantiated.
-     * @return boolean whether to use JettyPlus.
-     */
-    public boolean isUseJettyPlus()
-    {
-        return useJettyPlus;
-    }
-    /**
-     * Set whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-     * be instantiated, if false, org.mortbay.jetty.plus.Server will be instantiated.
-     * @param useJettyPlus whether to use JettyPlus.
-     */
-    public void setUseJettyPlus(boolean doUseJettyPlus)
-    {
-        useJettyPlus = doUseJettyPlus;
-    }
-    /**
-     * Get port for http requests.
-     * @return int Returns the port.
-     */
-    public int getPort()
-    {
-        return port;
-    }
-    /**
-     * Set port for http requests.
-     * @param port port for http requests.
-     */
-    public void setPort(int newPort)
-    {
-        port = newPort;
-    }
-    /**
-     * Get root folder of web application.
-     * @return String Returns the webappContextRoot.
-     */
-    public String getWebappContextRoot()
-    {
-        return webappContextRoot;
-    }
-    /**
-     * Set root folder of web application.
-     * @param webappContextRoot webappContextRoot to set.
-     */
-    public void setWebappContextRoot(String newWebappContextRoot)
-    {
-        webappContextRoot = newWebappContextRoot;
-    }
-    /**
-     * Get context path (webapp name).
-     * @return String Returns the context path (webapp name).
-     */
-    public String getContextPath()
-    {
-        return contextPath;
-    }
-    /**
-     * Set context path (webapp name).
-     * @param contextPath context path (webapp name).
-     */
-    public void setContextPath(String newContextPath)
-    {
-        contextPath = newContextPath;
-    }
+	/** port for http requests. */
+	private int port = 8080;
+
+	/** context path (webapp name). */
+	private String contextPath = "/";
+
+	/**
+	 * Construct with test to decorate.
+	 * 
+	 * @param test
+	 *            test to decorate
+	 */
+	public AbstractJettyDecorator(Test test)
+	{
+		super(test);
+	}
+
+	/**
+	 * Get jettyConfig; URL of jetty configuration document.
+	 * 
+	 * @return String Returns the URL of jetty configuration document.
+	 */
+	public String getJettyConfig()
+	{
+		return jettyConfig;
+	}
+
+	/**
+	 * Set jettyConfig; URL of jetty configuration document.
+	 * 
+	 * @param newJettyConfig
+	 *            URL of jetty configuration document.
+	 * @param classCallee
+	 *            calling class for getting config resource
+	 */
+	public void setJettyConfig(String newJettyConfig, Class classCallee)
+	{
+		jettyConfig = newJettyConfig;
+		callee = classCallee;
+	}
+
+	/**
+	 * Get whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be instantiated, if
+	 * false, org.mortbay.jetty.plus.Server will be instantiated.
+	 * 
+	 * @return boolean whether to use JettyPlus.
+	 */
+	public boolean isUseJettyPlus()
+	{
+		return useJettyPlus;
+	}
+
+	/**
+	 * Set whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be instantiated, if
+	 * false, org.mortbay.jetty.plus.Server will be instantiated.
+	 * 
+	 * @param useJettyPlus
+	 *            whether to use JettyPlus.
+	 */
+	public void setUseJettyPlus(boolean doUseJettyPlus)
+	{
+		useJettyPlus = doUseJettyPlus;
+	}
+
+	/**
+	 * Get port for http requests.
+	 * 
+	 * @return int Returns the port.
+	 */
+	public int getPort()
+	{
+		return port;
+	}
+
+	/**
+	 * Set port for http requests.
+	 * 
+	 * @param port
+	 *            port for http requests.
+	 */
+	public void setPort(int newPort)
+	{
+		port = newPort;
+	}
+
+	/**
+	 * Get root folder of web application.
+	 * 
+	 * @return String Returns the webappContextRoot.
+	 */
+	public String getWebappContextRoot()
+	{
+		return webappContextRoot;
+	}
+
+	/**
+	 * Set root folder of web application.
+	 * 
+	 * @param webappContextRoot
+	 *            webappContextRoot to set.
+	 */
+	public void setWebappContextRoot(String newWebappContextRoot)
+	{
+		webappContextRoot = newWebappContextRoot;
+	}
+
+	/**
+	 * Get context path (webapp name).
+	 * 
+	 * @return String Returns the context path (webapp name).
+	 */
+	public String getContextPath()
+	{
+		return contextPath;
+	}
+
+	/**
+	 * Set context path (webapp name).
+	 * 
+	 * @param contextPath
+	 *            context path (webapp name).
+	 */
+	public void setContextPath(String newContextPath)
+	{
+		contextPath = newContextPath;
+	}
 }

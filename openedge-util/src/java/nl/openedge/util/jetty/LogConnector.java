@@ -43,157 +43,175 @@ import org.apache.commons.logging.LogFactory;
 public class LogConnector extends Thread
 {
 
-    /** the inputstream to connect. */
-    private InputStream inputStream;
+	/** the inputstream to connect. */
+	private InputStream inputStream;
 
-    /** string buffer for internal use. */
-    private StringBuffer buffer = new StringBuffer();
+	/** string buffer for internal use. */
+	private StringBuffer buffer = new StringBuffer();
 
-    /** logger. */
-    private Log log = LogFactory.getLog(LogConnector.class);
+	/** logger. */
+	private Log log = LogFactory.getLog(LogConnector.class);
 
-    /** prefix all output to the log with this. */
-    private String linePrefix = "** REMOTE ** >";
+	/** prefix all output to the log with this. */
+	private String linePrefix = "** REMOTE ** >";
 
-    /** postfix all output to the log with this. */
-    private String linePostfix = EMPTY_STRING;
+	/** postfix all output to the log with this. */
+	private String linePostfix = EMPTY_STRING;
 
-    /** constant for empty string. */
-    private final static String EMPTY_STRING = "";
+	/** constant for empty string. */
+	private final static String EMPTY_STRING = "";
 
-    /** interval for reading from the stream. */
-    private long readInterval = 100;
+	/** interval for reading from the stream. */
+	private long readInterval = 100;
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
-    public void run()
-    {
-        while(true) // do until break out (like when inputstream closes).
-        {
-            int c;
-            char chr;
-            try
-            {
-                while((c = inputStream.read()) != -1) // until input stops
-                {
-                    chr = (char)c;
-                    if(chr == '\n') // if newline
-                    {
-                        buffer.insert(0, linePrefix);
-                        buffer.append(linePostfix);
-                        log.info(buffer.toString());
-                        buffer.delete(0, buffer.length());
-                    }
-                    else // append to buffer until newline
-                    {
-                        buffer.append(chr);
-                    }
-                }
-                //Thread.sleep(100);
-                Thread.yield();
-            }
-            catch(Exception e)
-            {
-                log.error(e.getMessage());
-                if(buffer.length() > 0) // flush buffer if it is not empty
-                {
-                    log.info(buffer.toString());
-                }
-                break; // and leave thread
-            }
-        }
-    }
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run()
+	{
+		while (true) // do until break out (like when inputstream closes).
+		{
+			int c;
+			char chr;
+			try
+			{
+				while ((c = inputStream.read()) != -1) // until input stops
+				{
+					chr = (char) c;
+					if (chr == '\n') // if newline
+					{
+						buffer.insert(0, linePrefix);
+						buffer.append(linePostfix);
+						log.info(buffer.toString());
+						buffer.delete(0, buffer.length());
+					}
+					else
+					// append to buffer until newline
+					{
+						buffer.append(chr);
+					}
+				}
+				//Thread.sleep(100);
+				Thread.yield();
+			}
+			catch (Exception e)
+			{
+				log.error(e.getMessage());
+				if (buffer.length() > 0) // flush buffer if it is not empty
+				{
+					log.info(buffer.toString());
+				}
+				break; // and leave thread
+			}
+		}
+	}
 
-    /**
-     * Get is.
-     * 
-     * @return InputStream Returns the is.
-     */
-    public InputStream getInputStream()
-    {
-        return inputStream;
-    }
+	/**
+	 * Get is.
+	 * 
+	 * @return InputStream Returns the is.
+	 */
+	public InputStream getInputStream()
+	{
+		return inputStream;
+	}
 
-    /**
-     * Set is.
-     * 
-     * @param is is to set.
-     */
-    public void setInputStream(InputStream is)
-    {
-        this.inputStream = is;
-    }
+	/**
+	 * Set is.
+	 * 
+	 * @param is
+	 *            is to set.
+	 */
+	public void setInputStream(InputStream is)
+	{
+		this.inputStream = is;
+	}
 
-    /**
-     * Get log.
-     * 
-     * @return Log Returns the log.
-     */
-    public Log getLog()
-    {
-        return log;
-    }
+	/**
+	 * Get log.
+	 * 
+	 * @return Log Returns the log.
+	 */
+	public Log getLog()
+	{
+		return log;
+	}
 
-    /**
-     * Set log.
-     * 
-     * @param log log to set.
-     */
-    public void setLog(Log log)
-    {
-        this.log = log;
-    }
-    /**
-     * Get linePrefix; prefix all output to the log with this.
-     * @return String Returns the linePrefix.
-     */
-    public String getLinePrefix()
-    {
-        return linePrefix;
-    }
-    /**
-     * Set linePrefix; prefix all output to the log with this.
-     * @param linePrefix linePrefix to set.
-     */
-    public void setLinePrefix(String linePrefix)
-    {
-        if(linePrefix == null)
-        {
-            linePrefix = EMPTY_STRING;
-        }
-        this.linePrefix = linePrefix;
-    }
-    /**
-     * Get linePostfix; postfix all output to the log with this.
-     * @return String Returns the linePostfix.
-     */
-    public String getLinePostfix()
-    {
-        return linePostfix;
-    }
-    /**
-     * Set linePostfix; postfix all output to the log with this.
-     * @param linePostfix linePostfix to set.
-     */
-    public void setLinePostfix(String linePostfix)
-    {
-        this.linePostfix = linePostfix;
-    }
-    /**
-     * Get interval for reading from the stream.
-     * @return long Returns the readInterval.
-     */
-    public long getReadInterval()
-    {
-        return readInterval;
-    }
-    /**
-     * Set interval for reading from the stream.
-     * @param readInterval readInterval to set.
-     */
-    public void setReadInterval(long readInterval)
-    {
-        this.readInterval = readInterval;
-    }
+	/**
+	 * Set log.
+	 * 
+	 * @param log
+	 *            log to set.
+	 */
+	public void setLog(Log log)
+	{
+		this.log = log;
+	}
+
+	/**
+	 * Get linePrefix; prefix all output to the log with this.
+	 * 
+	 * @return String Returns the linePrefix.
+	 */
+	public String getLinePrefix()
+	{
+		return linePrefix;
+	}
+
+	/**
+	 * Set linePrefix; prefix all output to the log with this.
+	 * 
+	 * @param linePrefix
+	 *            linePrefix to set.
+	 */
+	public void setLinePrefix(String linePrefix)
+	{
+		if (linePrefix == null)
+		{
+			linePrefix = EMPTY_STRING;
+		}
+		this.linePrefix = linePrefix;
+	}
+
+	/**
+	 * Get linePostfix; postfix all output to the log with this.
+	 * 
+	 * @return String Returns the linePostfix.
+	 */
+	public String getLinePostfix()
+	{
+		return linePostfix;
+	}
+
+	/**
+	 * Set linePostfix; postfix all output to the log with this.
+	 * 
+	 * @param linePostfix
+	 *            linePostfix to set.
+	 */
+	public void setLinePostfix(String linePostfix)
+	{
+		this.linePostfix = linePostfix;
+	}
+
+	/**
+	 * Get interval for reading from the stream.
+	 * 
+	 * @return long Returns the readInterval.
+	 */
+	public long getReadInterval()
+	{
+		return readInterval;
+	}
+
+	/**
+	 * Set interval for reading from the stream.
+	 * 
+	 * @param readInterval
+	 *            readInterval to set.
+	 */
+	public void setReadInterval(long readInterval)
+	{
+		this.readInterval = readInterval;
+	}
 }

@@ -45,74 +45,74 @@ import org.xml.sax.SAXException;
 
 /**
  * XIS deserializer for SerializedAndZipped objects.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class SerializedAndZippedDeserializer extends DeserializerImpl
 {
 
-    /**
-     * Construct and create a new working copy of the value to deserialize.
-     */
-    public SerializedAndZippedDeserializer()
-    {
-        value = new SerializedAndZipped();
-    }
+	/**
+	 * Construct and create a new working copy of the value to deserialize.
+	 */
+	public SerializedAndZippedDeserializer()
+	{
+		value = new SerializedAndZipped();
+	}
 
-    /**
-     * @see org.apache.axis.message.SOAPHandler#onStartChild(java.lang.String,
-     *      java.lang.String, java.lang.String, org.xml.sax.Attributes,
-     *      org.apache.axis.encoding.DeserializationContext)
-     */
-    public SOAPHandler onStartChild(final String namespace, final String localName, final String prefix,
-            final Attributes attributes, final DeserializationContext context) throws SAXException
-    {
+	/**
+	 * @see org.apache.axis.message.SOAPHandler#onStartChild(java.lang.String, java.lang.String,
+	 *      java.lang.String, org.xml.sax.Attributes,
+	 *      org.apache.axis.encoding.DeserializationContext)
+	 */
+	public SOAPHandler onStartChild(final String namespace, final String localName,
+			final String prefix, final Attributes attributes, final DeserializationContext context)
+			throws SAXException
+	{
 
-        // These can come in either order.
-        Deserializer dSer = context.getDeserializerForType(Constants.XSD_STRING);
-        // register this class as a callback target
-        CallbackTarget target = new CallbackTarget(this, localName);
-        dSer.registerValueTarget(target);
+		// These can come in either order.
+		Deserializer dSer = context.getDeserializerForType(Constants.XSD_STRING);
+		// register this class as a callback target
+		CallbackTarget target = new CallbackTarget(this, localName);
+		dSer.registerValueTarget(target);
 
-        return (SOAPHandler)dSer;
-    }
+		return (SOAPHandler) dSer;
+	}
 
-    /**
-     * @see org.apache.axis.encoding.Callback#setValue(java.lang.Object,
-     *      java.lang.Object)
-     */
-    public void setValue(final Object value, final Object hint)
-    {
+	/**
+	 * @see org.apache.axis.encoding.Callback#setValue(java.lang.Object, java.lang.Object)
+	 */
+	public void setValue(final Object value, final Object hint)
+	{
 
-        if(log.isDebugEnabled())
-        {
-            log.debug("setValue (hint = " + hint + ") " + value);
-        }
-        if(SerializedAndZipped.COMPRESSED_DATA.equals(hint))
-        { // decode the string value
-            String encoded = (String)value;
-            byte[] data = Base64.decode(encoded);
-            try
-            {
-                Ognl.setValue((String)hint, this.value, data);
-            }
-            catch(OgnlException e)
-            {
-                log.error(e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-        else
-        { // just use Ognl to set the value
-            try
-            {
-                Ognl.setValue((String)hint, this.value, value);
-            }
-            catch(OgnlException e)
-            {
-                log.error(e.getMessage(), e);
-                throw new RuntimeException(e);
-            }
-        }
-    }
+		if (log.isDebugEnabled())
+		{
+			log.debug("setValue (hint = " + hint + ") " + value);
+		}
+		if (SerializedAndZipped.COMPRESSED_DATA.equals(hint))
+		{ // decode the string value
+			String encoded = (String) value;
+			byte[] data = Base64.decode(encoded);
+			try
+			{
+				Ognl.setValue((String) hint, this.value, data);
+			}
+			catch (OgnlException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+		}
+		else
+		{ // just use Ognl to set the value
+			try
+			{
+				Ognl.setValue((String) hint, this.value, value);
+			}
+			catch (OgnlException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+		}
+	}
 }

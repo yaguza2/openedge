@@ -30,49 +30,55 @@
  */
 package nl.openedge.util.net;
 
-
 /**
  * Exception class for HttpHelper.
- *
+ * 
  * @author Eelco Hillenius
  */
 public final class HttpHelperException extends Exception
 {
 
-    /**
-     * Construct.
-     */
-    public HttpHelperException()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public HttpHelperException()
+	{
+		super();
+	}
 
-    /**
-     * Construct.
-     * @param message the message
-     */
-    public HttpHelperException(String message)
-    {
-        super(message);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public HttpHelperException(String message)
+	{
+		super(message);
+	}
 
-    /**
-     * Construct.
-     * @param cause the cause
-     */
-    public HttpHelperException(Throwable cause)
-    {
-        super(cause);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param cause
+	 *            the cause
+	 */
+	public HttpHelperException(Throwable cause)
+	{
+		super(cause);
+	}
 
-    /**
-     * Construct.
-     * @param message the message
-     * @param cause the cause
-     */
-    public HttpHelperException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
+	 */
+	public HttpHelperException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 
 }

@@ -35,55 +35,58 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Test for JettyDecorator with xml config file.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyDecoratorWithXMLTest extends TestCase
 {
 
-    /**
-     * Construct.
-     */
-    public JettyDecoratorWithXMLTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyDecoratorWithXMLTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with name.
-     * @param name test name
-     */
-    public JettyDecoratorWithXMLTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with name.
+	 * 
+	 * @param name
+	 *            test name
+	 */
+	public JettyDecoratorWithXMLTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPing() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPing() throws Exception
+	{
 		String pingBody = HttpHelper.get("http://localhost:8098/test/ping.txt");
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * Suite method.
-     * @return Test suite
-     */
-    public static Test suite() 
-    {
-	    TestSuite suite = new TestSuite();
-	    suite.addTest(new JettyDecoratorWithXMLTest("testPing"));
-	    JettyDecorator deco = new JettyDecorator(suite);
-	    String config = "jetty-decorator-test-normal.xml";
-	    deco.setJettyConfig(config, JettyDecoratorWithXMLTest.class);
-	    deco.setUseJettyPlus(false);
-	    return deco;
-    }
+	/**
+	 * Suite method.
+	 * 
+	 * @return Test suite
+	 */
+	public static Test suite()
+	{
+		TestSuite suite = new TestSuite();
+		suite.addTest(new JettyDecoratorWithXMLTest("testPing"));
+		JettyDecorator deco = new JettyDecorator(suite);
+		String config = "jetty-decorator-test-normal.xml";
+		deco.setJettyConfig(config, JettyDecoratorWithXMLTest.class);
+		deco.setUseJettyPlus(false);
+		return deco;
+	}
 
 }

@@ -37,77 +37,81 @@ import nl.openedge.util.net.HttpHelper;
 
 /**
  * Test starting of both a local and a remote (in seperate VM) instance of Jetty.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyDecoratorLocalAndExternalVMTest extends TestCase
 {
-    /**
-     * Construct.
-     */
-    public JettyDecoratorLocalAndExternalVMTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyDecoratorLocalAndExternalVMTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with name.
-     * @param name test name
-     */
-    public JettyDecoratorLocalAndExternalVMTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with name.
+	 * 
+	 * @param name
+	 *            test name
+	 */
+	public JettyDecoratorLocalAndExternalVMTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPingLocal() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPingLocal() throws Exception
+	{
 		String pingBody = HttpHelper.get("http://localhost:8098/test/ping.txt");
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPingExternalVM() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPingExternalVM() throws Exception
+	{
 		String pingBody = HttpHelper.get("http://localhost:8099/test/ping.txt");
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * Suite method.
-     * @return Test suite
-     */
-    public static Test suite() 
-    {
-	    TestSuite suite = new TestSuite();
-	    suite.addTest(new JettyDecoratorLocalAndExternalVMTest("testPingLocal"));
-	    suite.addTest(new JettyDecoratorLocalAndExternalVMTest("testPingExternalVM"));
+	/**
+	 * Suite method.
+	 * 
+	 * @return Test suite
+	 */
+	public static Test suite()
+	{
+		TestSuite suite = new TestSuite();
+		suite.addTest(new JettyDecoratorLocalAndExternalVMTest("testPingLocal"));
+		suite.addTest(new JettyDecoratorLocalAndExternalVMTest("testPingExternalVM"));
 
-	    // first decorator (local Jetty start)
-	    JettyDecorator localDecorator = new JettyDecorator(suite);
-	    localDecorator.setPort(8098);
-	    localDecorator.setWebappContextRoot("src/webapp");
-	    localDecorator.setContextPath("/test");
-	    localDecorator.setUseJettyPlus(false);
-	    
-	    // second decorator (external VM Jetty start)
-	    // !embedding localDecorator in externalVMDecorator so both decorators will be used!
-	    JettyExternalVMDecorator externalVMDecorator = 
-	        new JettyExternalVMDecorator(localDecorator);
-	    externalVMDecorator.setPort(8099);
-	    externalVMDecorator.setWebappContextRoot("src/webapp");
-	    externalVMDecorator.setContextPath("/test");
-	    externalVMDecorator.setUseJettyPlus(false);
-	    
-	    // comment this for non-Windows systems (in that case {"java"} will be used).
-	    //externalVMDecorator.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
+		// first decorator (local Jetty start)
+		JettyDecorator localDecorator = new JettyDecorator(suite);
+		localDecorator.setPort(8098);
+		localDecorator.setWebappContextRoot("src/webapp");
+		localDecorator.setContextPath("/test");
+		localDecorator.setUseJettyPlus(false);
 
-	    return externalVMDecorator;
-    }
+		// second decorator (external VM Jetty start)
+		// !embedding localDecorator in externalVMDecorator so both decorators will be used!
+		JettyExternalVMDecorator externalVMDecorator = new JettyExternalVMDecorator(localDecorator);
+		externalVMDecorator.setPort(8099);
+		externalVMDecorator.setWebappContextRoot("src/webapp");
+		externalVMDecorator.setContextPath("/test");
+		externalVMDecorator.setUseJettyPlus(false);
+
+		// comment this for non-Windows systems (in that case {"java"} will be used).
+		//externalVMDecorator.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
+
+		return externalVMDecorator;
+	}
 }

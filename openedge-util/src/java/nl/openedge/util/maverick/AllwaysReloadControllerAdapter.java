@@ -39,10 +39,9 @@ import org.infohazard.maverick.flow.ControllerSingleton;
 import org.jdom.Element;
 
 /**
- * This adapter masquerades as a singleton controller but actually
- * creates single-use instance controllers AND initializes the controllers
- * if they are of type ControllerSingleton.
- *
+ * This adapter masquerades as a singleton controller but actually creates single-use instance
+ * controllers AND initializes the controllers if they are of type ControllerSingleton.
+ * 
  * @author Eelco Hillenius
  */
 public class AllwaysReloadControllerAdapter implements ControllerSingleton
@@ -55,7 +54,9 @@ public class AllwaysReloadControllerAdapter implements ControllerSingleton
 
 	/**
 	 * Create the adapter.
-	 * @param controllerClass the controller class
+	 * 
+	 * @param controllerClass
+	 *            the controller class
 	 */
 	public AllwaysReloadControllerAdapter(Class controllerClass)
 	{
@@ -64,18 +65,21 @@ public class AllwaysReloadControllerAdapter implements ControllerSingleton
 
 	/**
 	 * Save the reference to the controller node so we can use it later on.
+	 * 
 	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
 	 */
 	public void init(Element controllerNode) throws ConfigException
 	{
-	    this.controllerNode = controllerNode;
+		this.controllerNode = controllerNode;
 	}
 
 	/**
-	 * Instantiates a single-use controller, executes it, and returns the result.
-	 * If the controller is of type ControllerSingleton, it is initialized with
-	 * the saved reference of the xml node of the controller first.
-	 * @param cctx the controller context.
+	 * Instantiates a single-use controller, executes it, and returns the result. If the controller
+	 * is of type ControllerSingleton, it is initialized with the saved reference of the xml node of
+	 * the controller first.
+	 * 
+	 * @param cctx
+	 *            the controller context.
 	 * @return String logical view name (result of command method call of controller)
 	 * @throws ServletException
 	 */
@@ -83,10 +87,10 @@ public class AllwaysReloadControllerAdapter implements ControllerSingleton
 	{
 		try
 		{
-			Controller instance = (Controller)this.controllerClass.newInstance();
-			if(instance instanceof ControllerSingleton)
+			Controller instance = (Controller) this.controllerClass.newInstance();
+			if (instance instanceof ControllerSingleton)
 			{
-			    ((ControllerSingleton)instance).init(controllerNode);
+				((ControllerSingleton) instance).init(controllerNode);
 			}
 			return instance.go(cctx);
 		}

@@ -39,25 +39,25 @@ import nl.openedge.baritus.converters.Formatter;
 import nl.openedge.util.DateFormatHelper;
 
 /**
- * converts a given value to a date, trying multiple options using DateFormatHelper.
- * NOTE: this works for NON-localized applications. Use DateLocaleConverter for
- * localized applications
+ * converts a given value to a date, trying multiple options using DateFormatHelper. NOTE: this
+ * works for NON-localized applications. Use DateLocaleConverter for localized applications
  * 
  * @author Klaasjan Brand
  * @author Eelco Hillenius
  */
 public final class FallbackDateConverter implements Converter, Formatter
 {
-
 	/**
-	 * converts the given value to a date, trying multiple options using DateFormatHelper
-	 * @param type type to convert to
-	 * @param value object to convert
+	 * converts the given value to a date, trying multiple options using DateFormatHelper.
+	 * 
+	 * @param type
+	 *            type to convert to
+	 * @param value
+	 *            object to convert
 	 * @see org.apache.commons.beanutils.Converter#convert(java.lang.Class, java.lang.Object)
 	 */
 	public Object convert(Class type, Object value)
 	{
-
 		if (value == null)
 		{
 			return null;
@@ -77,8 +77,7 @@ public final class FallbackDateConverter implements Converter, Formatter
 			}
 			catch (ParseException e)
 			{
-				throw new ConversionException(
-					"Can't convert " + sDate + " to a date");
+				throw new ConversionException("Can't convert " + sDate + " to a date");
 			}
 		}
 		else if (value instanceof java.util.Date)
@@ -87,7 +86,7 @@ public final class FallbackDateConverter implements Converter, Formatter
 		}
 		else if (value instanceof java.sql.Date)
 		{
-			stdDate = new java.util.Date(((java.sql.Date)value).getTime());
+			stdDate = new java.util.Date(((java.sql.Date) value).getTime());
 		}
 		else if (value instanceof Long)
 		{
@@ -115,31 +114,41 @@ public final class FallbackDateConverter implements Converter, Formatter
 			throw new ConversionException(type + " is an unsupported type");
 		}
 	}
-	
+
 	/**
-	 * Convert the specified input object into a locale-sensitive output string
-	 *
-	 * @param value The input object to be formatted
-	 * @param pattern The pattern is used for the conversion
-	 *
-	 * @exception IllegalArgumentException if formatting cannot be performed successfully
+	 * Convert the specified input object into a locale-sensitive output string.
+	 * 
+	 * @param value
+	 *            The input object to be formatted
+	 * @param pattern
+	 *            The pattern is used for the conversion
+	 * @exception IllegalArgumentException
+	 *                if formatting cannot be performed successfully
+	 * @return formatted value
 	 */
-	public String format(Object value, String pattern) throws IllegalArgumentException
+	public String format(Object value, String pattern)
 	{
-		if(value == null) return null;
+		if (value == null)
+			return null;
 
 		Date date = null;
-		if(value instanceof Date)
+		if (value instanceof Date)
 		{
-			date = (Date)value;
+			date = (Date) value;
 		}
 		else
 		{
-			date = (Date)convert(Date.class, value);
+			date = (Date) convert(Date.class, value);
 		}
 
-		return (pattern != null) ?
-			DateFormatHelper.format(pattern, date) : DateFormatHelper.format(date);
+		if (pattern != null)
+		{
+			return DateFormatHelper.format(pattern, date);
+		}
+		else
+		{
+			return DateFormatHelper.format(date);
+		}
 	}
 
 }

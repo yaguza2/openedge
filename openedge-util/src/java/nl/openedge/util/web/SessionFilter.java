@@ -44,7 +44,8 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Simple filter that tracks sessions
- * @author	Eelco Hillenius
+ * 
+ * @author Eelco Hillenius
  */
 public class SessionFilter implements Filter
 {
@@ -56,12 +57,12 @@ public class SessionFilter implements Filter
 	 */
 	public SessionFilter()
 	{
-		// nothing here		
+		// nothing here
 	}
 
 	/**
-	 * The filter configuration object we are associated with.  If this value
-	 * is null, this filter instance is not currently configured.
+	 * The filter configuration object we are associated with. If this value is null, this filter
+	 * instance is not currently configured.
 	 */
 	private FilterConfig filterConfig = null;
 
@@ -75,28 +76,31 @@ public class SessionFilter implements Filter
 	}
 
 	/**
-	 * Time the processing that is performed by all subsequent filters in the
-	 * current filter stack, including the ultimately invoked servlet.
-	 *
-	 * @param request The servlet request we are processing
-	 * @param result The servlet response we are creating
-	 * @param chain The filter chain we are processing
-	 *
-	 * @exception IOException if an input/output error occurs
-	 * @exception ServletException if a servlet error occurs
+	 * Time the processing that is performed by all subsequent filters in the current filter stack,
+	 * including the ultimately invoked servlet.
+	 * 
+	 * @param request
+	 *            The servlet request we are processing
+	 * @param result
+	 *            The servlet response we are creating
+	 * @param chain
+	 *            The filter chain we are processing
+	 * @exception IOException
+	 *                if an input/output error occurs
+	 * @exception ServletException
+	 *                if a servlet error occurs
 	 */
-	public void doFilter(ServletRequest request, 
-		ServletResponse response, FilterChain chain)
-		throws IOException, ServletException
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException
 	{
 
 		try
 		{
 
-			HttpServletRequest httpRequest = (HttpServletRequest)request;
+			HttpServletRequest httpRequest = (HttpServletRequest) request;
 			HttpSession session = httpRequest.getSession();
 
-			SessionStats stats = (SessionStats)session.getAttribute(SESSION_STATS_KEY);
+			SessionStats stats = (SessionStats) session.getAttribute(SESSION_STATS_KEY);
 			if (stats == null)
 			{
 				stats = new SessionStats();
@@ -120,8 +124,9 @@ public class SessionFilter implements Filter
 
 	/**
 	 * Place this filter into service.
-	 *
-	 * @param filterConfig The filter configuration object
+	 * 
+	 * @param filterConfig
+	 *            The filter configuration object
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{

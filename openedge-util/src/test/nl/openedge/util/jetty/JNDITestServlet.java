@@ -40,35 +40,36 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  * Simple test servlet for testing JettyPlus; JNDI is only possible when JettyPlus is started
  * instead of the default Jetty server.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JNDITestServlet extends HttpServlet
 {
-    /**
-     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-    {
-        PrintWriter out = resp.getWriter();
-        String answer = null;
-        try
-        {
-            InitialContext ctx = new InitialContext();
-            String testName = "java:comp/env/testEntry";
-            answer = (String)ctx.lookup(testName);
-        }
-        catch(NamingException e)
-        {
-            e.printStackTrace();
-            answer = e.getMessage();
-        }
-        out.print(answer);
-        out.flush();
-        out.close();
-    }
+	/**
+	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse)
+	 */
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+			IOException
+	{
+		PrintWriter out = resp.getWriter();
+		String answer = null;
+		try
+		{
+			InitialContext ctx = new InitialContext();
+			String testName = "java:comp/env/testEntry";
+			answer = (String) ctx.lookup(testName);
+		}
+		catch (NamingException e)
+		{
+			e.printStackTrace();
+			answer = e.getMessage();
+		}
+		out.print(answer);
+		out.flush();
+		out.close();
+	}
 }

@@ -53,28 +53,30 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	/**
 	 * Error key.
 	 */
-	private final static String DEFAULT_MESSAGE_KEY = "invalid.field.input";
+	private static final String DEFAULT_MESSAGE_KEY = "invalid.field.input";
 
 	/**
 	 * Message key.
 	 */
 	private String messageKey = DEFAULT_MESSAGE_KEY;
-	
+
 	/**
 	 * The date to check against.
 	 */
 	private Date dateToCheck = null;
 
-	/** 
+	/**
 	 * The pattern to use when parsing the date.
 	 */
 	private String datePattern = "dd-MM-yyyy";
 
 	/**
-	 * Creates a AfterValidator with the error message key and the 
-	 * date to check against.
-	 * @param messageKey message key
-	 * @param dateToCheck date to check
+	 * Creates a AfterValidator with the error message key and the date to check against.
+	 * 
+	 * @param messageKey
+	 *            message key
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AbstractDateFieldValidator(String messageKey, Date dateToCheck)
 	{
@@ -83,8 +85,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the DEFAULT_PREFIX as error key
-	 * and today as the date to check against.
+	 * Creates a AfterValidator with the DEFAULT_PREFIX as error key and today as the date to check
+	 * against.
 	 */
 	public AbstractDateFieldValidator()
 	{
@@ -92,9 +94,11 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the 
-	 * date to check against before.
-	 * @param dateToCheck date to check
+	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the date to check against
+	 * before.
+	 * 
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AbstractDateFieldValidator(Date dateToCheck)
 	{
@@ -103,7 +107,9 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * Creates a AfterValidator with the error key prefix and today to check against before.
-	 * @param messageKey message key
+	 * 
+	 * @param messageKey
+	 *            message key
 	 */
 	public AbstractDateFieldValidator(String messageKey)
 	{
@@ -111,10 +117,12 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error message key and the 
-	 * date to check against.
-	 * @param messageKey message key
-	 * @param dateToCheck date to check
+	 * Creates a AfterValidator with the error message key and the date to check against.
+	 * 
+	 * @param messageKey
+	 *            message key
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AbstractDateFieldValidator(String messageKey, Calendar dateToCheck)
 	{
@@ -122,10 +130,12 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error message key and the 
-	 * date to check against.
-	 * @param messageKey message key
-	 * @param rule activation rule
+	 * Creates a AfterValidator with the error message key and the date to check against.
+	 * 
+	 * @param messageKey
+	 *            message key
+	 * @param rule
+	 *            activation rule
 	 */
 	public AbstractDateFieldValidator(String messageKey, ValidationActivationRule rule)
 	{
@@ -134,9 +144,10 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the 
-	 * date to check against.
-	 * @param dateToCheck date to check
+	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the date to check against.
+	 * 
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AbstractDateFieldValidator(Calendar dateToCheck)
 	{
@@ -145,6 +156,7 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * Gets the date to check.
+	 * 
 	 * @return the date to check
 	 */
 	public Date getDateToCheck()
@@ -153,8 +165,10 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Sets the date to check
-	 * @param dateToCheck The date to check.
+	 * Sets the date to check.
+	 * 
+	 * @param dateToCheck
+	 *            The date to check.
 	 */
 	public void setDateToCheck(Date dateToCheck)
 	{
@@ -166,8 +180,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Tries to format value to a DateFormat. If this doesn't work, 
-	 * returns value unchanged.
+	 * Tries to format value to a DateFormat. If this doesn't work, returns value unchanged.
+	 * 
 	 * @see nl.openedge.maverick.framework.validation.AbstractFieldValidator#getOverrideValue(java.lang.Object)
 	 */
 	public Object getOverrideValue(Object value)
@@ -177,10 +191,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 		{
 			try
 			{
-				result =
-					DateFormatHelper.format(
-						datePattern,
-						DateFormatHelper.fallbackParse((String)value));
+				result = DateFormatHelper.format(datePattern, DateFormatHelper
+						.fallbackParse((String) value));
 			}
 			catch (ParseException e)
 			{
@@ -189,20 +201,18 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 		}
 		else if (value instanceof Date)
 		{
-			result = DateFormatHelper.format(datePattern, (Date)value);
+			result = DateFormatHelper.format(datePattern, (Date) value);
 		}
 		else if (value instanceof Calendar)
 		{
-			result =
-				DateFormatHelper.format(
-					datePattern,
-					((Calendar)value).getTime());
+			result = DateFormatHelper.format(datePattern, ((Calendar) value).getTime());
 		}
 		return result;
 	}
 
 	/**
-	 * Return the pattern used to format the error value if it is a date
+	 * Return the pattern used to format the error value if it is a date.
+	 * 
 	 * @return Returns the datePattern.
 	 */
 	public String getDatePattern()
@@ -211,8 +221,10 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Set the pattern used to format the error value if it is a date
-	 * @param datePattern The datePattern to set.
+	 * Set the pattern used to format the error value if it is a date.
+	 * 
+	 * @param datePattern
+	 *            The datePattern to set.
 	 */
 	public void setDatePattern(String datePattern)
 	{
@@ -220,36 +232,35 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object,
+	 *      java.util.Locale)
 	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value,
-		Locale locale)
+	public String getErrorMessage(ControllerContext cctx, FormBeanContext formBeanContext,
+			String fieldName, Object value, Locale locale)
 	{
-		return getLocalizedMessage(
-			getMessageKey(),
-			locale,
-			new Object[] { getOverrideValue(value), fieldName });
+		return getLocalizedMessage(getMessageKey(), locale, new Object[]
+			{getOverrideValue(value), fieldName});
 	}
 
-    /**
-     * Get prefix.
-     * @return String Returns the prefix.
-     */
-    public String getMessageKey()
-    {
-        return messageKey;
-    }
+	/**
+	 * Get prefix.
+	 * 
+	 * @return String Returns the prefix.
+	 */
+	public String getMessageKey()
+	{
+		return messageKey;
+	}
 
-    /**
-     * Set prefix.
-     * @param prefix prefix to set.
-     */
-    public void setMessageKey(String prefix)
-    {
-        this.messageKey = prefix;
-    }
+	/**
+	 * Set prefix.
+	 * 
+	 * @param prefix
+	 *            prefix to set.
+	 */
+	public void setMessageKey(String prefix)
+	{
+		this.messageKey = prefix;
+	}
 }

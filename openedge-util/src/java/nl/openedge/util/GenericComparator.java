@@ -32,53 +32,67 @@ package nl.openedge.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.StringTokenizer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Compares using introspection
+ * Compares using introspection.
  * 
- * @author	Johan Compagner
- * @author	Eelco Hillenius
+ * @author Johan Compagner
+ * @author Eelco Hillenius
  */
 public class GenericComparator implements Comparator
 {
+	/** Log. */
+	private static Log log = LogFactory.getLog(GenericComparator.class);
 
-	private ArrayList _alMethods;
-	private int _iAscending;
-	private static Object[] args = new Object[0];
+	/** Arguments. */
+	private Object[] args = new Object[0];
+
+	/** all methods. */
+	private ArrayList internalAllMethods;
+
+	/** whether to sort ascending (true) or descending (false). */
+	private int internalIsAscending;
 
 	/**
-	 * constructor
-	 * @param cls
-	 * @param sField
-	 * @param bAscending
-	 * @throws NoSuchMethodException
-	 * @throws ClassNotFoundException
+	 * constructor.
+	 * 
+	 * @param cls class
+	 * @param sField the field name
+	 * @param bAscending whether this is ascending
+	 * @throws NoSuchFieldException when field could not be found
 	 */
 	public GenericComparator(Class cls, String sField, boolean bAscending)
-		throws NoSuchFieldException
+			throws NoSuchFieldException
 	{
 		fillMethods(sField, cls);
 		if (bAscending)
 		{
-			_iAscending = 1;
+			internalIsAscending = 1;
 		}
 		else
 		{
-			_iAscending = -1;
+			internalIsAscending = -1;
 		}
 	}
 
 	/**
-	 * get method for property
-	 * @param name		name property
-	 * @param object	object to test on
-	 * @return Method that can be called directely
+	 * get method for property.
+	 * 
+	 * @param propertyName
+	 *            name property
+	 * @param cls
+	 *            class of object to test on
+	 * @throws NoSuchFieldException when field could not be found
 	 */
-	protected void fillMethods(String propertyName, Class cls)
-		throws NoSuchFieldException
+	protected void fillMethods(String propertyName, Class cls) throws NoSuchFieldException
 	{
-		_alMethods = new ArrayList();
+		internalAllMethods = new ArrayList();
 		StringTokenizer tk = new StringTokenizer(propertyName, ".");
 		// split on '.'
 		Class currentClass = cls;
@@ -87,64 +101,80 @@ public class GenericComparator implements Comparator
 			String currentProperty = tk.nextToken();
 			Method m = findMethod(currentProperty, currentClass);
 			currentClass = m.getReturnType();
-			_alMethods.add(m);
+			internalAllMethods.add(m);
 		}
 	}
 
 	/**
-	 * find method
-	 * @param propertyName
-	 * @param cls
-	 * @return Method
-	 * @throws NoSuchFieldException
+	 * find method.
+	 * 
+	 * @param propertyName property name
+	 * @param cls class
+	 * @return Method the method
+	 * @throws NoSuchFieldException when field could not be found
 	 */
-	protected Method findMethod(String propertyName, Class cls)
-		throws NoSuchFieldException
+	protected Method findMethod(String propertyName, Class cls) throws NoSuchFieldException
 	{
-
 		Method m = null;
-		String methodName =
-			"get" + propertyName.substring(0, 1).toUpperCase()
+		String methodName = "get"
+				+ propertyName.substring(0, 1).toUpperCase()
 				+ propertyName.substring(1, propertyName.length());
 		try
 		{
 			m = cls.getMethod(methodName, null);
 		}
-		catch (Exception e1)
+		catch (NoSuchMethodException e1)
 		{
 			// give the booleans a chance
 			try
 			{
-				methodName =
-					"is" + propertyName.substring(0, 1).toUpperCase()
+				methodName = "is"
+						+ propertyName.substring(0, 1).toUpperCase()
 						+ propertyName.substring(1, propertyName.length());
 				m = cls.getMethod(methodName, null);
 			}
-			catch (Exception e2)
+			catch (NoSuchMethodException e2)
 			{
-				throw new NoSuchFieldException(
-					cls.getName() + "->" + propertyName);
+				throw new NoSuchFieldException(cls.getName() + "->" + propertyName);
 			}
 		}
 		return m;
 	}
 
 	/**
-	 * get Value on Object
-	 * @param o
+	 * get Value on Object.
+	 * 
+	 * @param object the object
 	 * @return Object
-	 * @throws NoSuchFieldException
+     * @exception IllegalAccessException    if this <code>Method</code> object
+     *              enforces Java language access control and the underlying
+     *              method is inaccessible.
+     * @exception IllegalArgumentException  if the method is an
+     *              instance method and the specified object argument
+     *              is not an instance of the class or interface
+     *              declaring the underlying method (or of a subclass
+     *              or implementor thereof); if the number of actual
+     *              and formal parameters differ; if an unwrapping
+     *              conversion for primitive arguments fails; or if,
+     *              after possible unwrapping, a parameter value
+     *              cannot be converted to the corresponding formal
+     *              parameter type by a method invocation conversion.
+     * @exception InvocationTargetException if the underlying method
+     *              throws an exception.
+     * @exception NoSuchFieldException if the field could not be found
 	 */
-	protected Object getPropertyValueOnObject(Object o)
-		throws NoSuchFieldException, IllegalAccessException, InvocationTargetException
+	protected Object getPropertyValueOnObject(Object object) throws NoSuchFieldException,
+			IllegalAccessException, InvocationTargetException
 	{
-		if (o == null)
-			return o;
-		Object currentObject = o;
-
-		for (int i = 0; i < _alMethods.size(); i++)
+		if (object == null)
 		{
-			Method m = (Method)_alMethods.get(i);
+			return null;
+		}
+		Object currentObject = object;
+
+		for (int i = 0; i < internalAllMethods.size(); i++)
+		{
+			Method m = (Method) internalAllMethods.get(i);
 			currentObject = m.invoke(currentObject, args);
 			if (currentObject == null)
 				return null;
@@ -157,32 +187,36 @@ public class GenericComparator implements Comparator
 	 */
 	public int compare(Object o1, Object o2)
 	{
-		try
-		{
-			Object o1Return = getPropertyValueOnObject(o1);
-			Object o2Return = getPropertyValueOnObject(o2);
-			// Both null then equal
-			if (o1Return == null && o2Return == null)
-				return 0;
-			// o1 == null then o1 is greater
-			if (o1Return == null)
-				return 1 * _iAscending;
-			// o2 == null then o2 is greater
-			if (o2Return == null)
-				return -1 * _iAscending;
-			// else let them decide
-			return ((Comparable)o1Return).compareTo(o2Return) * _iAscending;
-		}
-		catch (Exception e)
-		{
-
-			System.err.println(
-				"sorting failed:"
-					+ o1.getClass().getName()
-					+ " compared to "
-					+ o2.getClass().getName());
-			e.printStackTrace();
-		}
-		return 0;
+			try
+			{
+				Object o1Return = getPropertyValueOnObject(o1);
+				Object o2Return = getPropertyValueOnObject(o2);
+				// Both null then equal
+				if (o1Return == null && o2Return == null)
+					return 0;
+				// o1 == null then o1 is greater
+				if (o1Return == null)
+					return 1 * internalIsAscending;
+				// o2 == null then o2 is greater
+				if (o2Return == null)
+					return -1 * internalIsAscending;
+				// else let them decide
+				return ((Comparable) o1Return).compareTo(o2Return) * internalIsAscending;
+			}
+			catch (NoSuchFieldException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+			catch (IllegalAccessException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
+			catch (InvocationTargetException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
 	}
 }

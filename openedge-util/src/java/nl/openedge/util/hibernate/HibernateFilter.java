@@ -47,88 +47,83 @@ import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 
 /**
- * Filter which manages a ThreadLocal hibernate session.  Obtain the session
- * by calling HibernateFilter.getSession().
- *
+ * Filter which manages a ThreadLocal hibernate session. Obtain the session by calling
+ * HibernateFilter.getSession().
+ * 
  * @author Jeff Schnitzer, Eelco Hillenius
  */
 public final class HibernateFilter extends HibernateHelperThreadLocaleImpl implements Filter
 {
 
-	// logger
+	/** log. */
 	private Log log = LogFactory.getLog(HibernateFilter.class);
-	
-	// whether this filter 'works' or not
+
+	/** whether this filter 'works' or not. */
 	private boolean active = false;
 
 	/**
-	 * Initialise filter.
-	 * 
-	 * If an initparameter 'config' exists use the value to configure the
+	 * Initialise filter. If an initparameter 'config' exists use the value to configure the
 	 * HibernateHelperThreadLocaleImpl.
 	 * 
-	 * @param filterConfig the filter config object
+	 * @param filterConfig
+	 *            the filter config object
+	 * @throws ServletException when a servlet exception occurs
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		HibernateHelperDelegate delegate = HibernateHelper.getDelegate();
-		if(delegate instanceof HibernateHelperThreadLocaleImpl)
+		if (delegate instanceof HibernateHelperThreadLocaleImpl)
 		{
 			active = true;
 		}
 		else
 		{
-			log.warn("This filter only functions when used with " +
-				HibernateHelperThreadLocaleImpl.class.getName() + 
-				" as the HibernateHelperDelegate for HibernateHelper");
+			log.warn("This filter only functions when used with "
+					+ HibernateHelperThreadLocaleImpl.class.getName()
+					+ " as the HibernateHelperDelegate for HibernateHelper");
 		}
-		
-		if(active)
+
+		if (active)
 		{
 			// call to super will read config and create hibernate factory
-			try
+			String configStr = filterConfig.getInitParameter("config");
+			if (configStr != null)
 			{
-				String configStr = filterConfig.getInitParameter("config");
-				if (configStr != null)
-				{
-					URL configUrl = HibernateFilter.class.getClassLoader().getResource(configStr);
-					log.info("Using configfile " + configUrl.toString());
-					super.setConfigURL(configUrl);
-				}
-				super.init();
+				URL configUrl = HibernateFilter.class.getClassLoader().getResource(configStr);
+				log.info("Using configfile " + configUrl.toString());
+				super.setConfigURL(configUrl);
 			}
-			catch (Exception e)
-			{
-				log.fatal(e.getMessage());
-				throw new ServletException(e);
-			}
+			super.init();
 		}
 	}
 
 	/**
-	 * Execute filter. If active == true, this filter tries to open a session,
-	 * execute the next filters/ servlets and finally (at the end of the request
-	 * execution) tries to close the session again.
-	 * @param request http request
-	 * @param response http response
-	 * @param chain filter chain
-	 * @throws IOException
-	 * @throws ServletException
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 * Execute filter. If active == true, this filter tries to open a session, execute the next
+	 * filters/ servlets and finally (at the end of the request execution) tries to close the
+	 * session again.
+	 * 
+	 * @param request
+	 *            http request
+	 * @param response
+	 *            http response
+	 * @param chain
+	 *            filter chain
+	 * @throws IOException when an io related exception occurs
+	 * @throws ServletException when a servlet exception occurs
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
-	public void doFilter(ServletRequest request, 
-		ServletResponse response, FilterChain chain)
-		throws IOException, ServletException
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException
 	{
-		
-		if(active)
+		if (active)
 		{
-			Session session = (Session)hibernateHolder.get();
+			Session session = (Session) getHibernateHolder().get();
 			if (session != null)
 			{
 				log.warn("A session is already associated with this thread!  "
-				+ "Someone must have called getSession() outside of the context "
-				+ "of a servlet request; closing session");
+						+ "Someone must have called getSession() outside of the context "
+						+ "of a servlet request; closing session");
 				try
 				{
 					session.close();
@@ -138,7 +133,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 					log.error(e);
 					throw new ServletException(e);
 				}
-				hibernateHolder.set(null);
+				getHibernateHolder().set(null);
 			}
 		}
 
@@ -148,16 +143,16 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 		}
 		finally
 		{
-			if(active)
+			if (active)
 			{
-				Session sess = (Session)hibernateHolder.get();
-	
+				Session sess = (Session) getHibernateHolder().get();
+
 				//log.info(Thread.currentThread() + ": closing " + sess);
 				if (sess != null)
 				{
-	
-					hibernateHolder.set(null);
-	
+
+					getHibernateHolder().set(null);
+
 					try
 					{
 						sess.close();
@@ -174,7 +169,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 
 	/**
 	 * Destroy this filter.
-	 *
+	 * 
 	 * @see javax.servlet.Filter#destroy()
 	 */
 	public void destroy()

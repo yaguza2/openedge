@@ -32,53 +32,55 @@ package nl.openedge.util.jetty;
 
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Test for JettyTestCase that spawns a new process/ new VM where Jetty will be started.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyExternalVMWithArgsTestCaseTest extends JettyExternalVMTestCase
 {
-    /**
-     * Construct.
-     */
-    public JettyExternalVMWithArgsTestCaseTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyExternalVMWithArgsTestCaseTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with name.
-     * @param name test name
-     */
-    public JettyExternalVMWithArgsTestCaseTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with name.
+	 * 
+	 * @param name
+	 *            test name
+	 */
+	public JettyExternalVMWithArgsTestCaseTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPing() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPing() throws Exception
+	{
 		String pingBody = HttpHelper.get("http://localhost:8098/test/ping.txt");
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
-     */
-    public void beforeSetUp()
-    {
-        setUseJettyPlus(true);
-	    setPort(8098);
-	    setWebappContextRoot("src/webapp");
-	    setContextPath("/test");
+	/**
+	 * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
+	 */
+	public void beforeSetUp()
+	{
+		setUseJettyPlus(true);
+		setPort(8098);
+		setWebappContextRoot("src/webapp");
+		setContextPath("/test");
 
-	    // comment this for non-Windows systems (in that case {"java"} will be used).
-	    //setStartCommand(new String[]{"cmd", "/C", "start", "java"});
-    }
+		// comment this for non-Windows systems (in that case {"java"} will be used).
+		//setStartCommand(new String[]{"cmd", "/C", "start", "java"});
+	}
 
 }

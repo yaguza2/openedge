@@ -32,54 +32,56 @@ package nl.openedge.util.jetty;
 
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Testcase for JettyTestCase with simple arguments.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyTestCaseTest extends JettyTestCase
 {
-    /** addres to ping. */
-    private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
+	/** addres to ping. */
+	private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
 
-    /**
-     * Construct.
-     */
-    public JettyTestCaseTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyTestCaseTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with test name.
-     * @param name name of test
-     */
-    public JettyTestCaseTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with test name.
+	 * 
+	 * @param name
+	 *            name of test
+	 */
+	public JettyTestCaseTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test the ping page of the test webapp.
-     * @throws Exception
-     */
-    public void testPing() throws Exception
-    {
+	/**
+	 * Test the ping page of the test webapp.
+	 * 
+	 * @throws Exception
+	 */
+	public void testPing() throws Exception
+	{
 		String pingBody = HttpHelper.get(theAddress);
 		assertEquals("hi!", pingBody);
-    }
+	}
 
-    /**
-     * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
-     */
-    public void beforeSetUp()
-    {
-        setUseJettyPlus(true);
-	    setPort(8098);
-	    setWebappContextRoot("src/webapp");
-	    setContextPath("/test");
-        this.theAddress = "http://localhost:8098/test/ping.txt";
-    }
+	/**
+	 * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
+	 */
+	public void beforeSetUp()
+	{
+		setUseJettyPlus(true);
+		setPort(8098);
+		setWebappContextRoot("src/webapp");
+		setContextPath("/test");
+		this.theAddress = "http://localhost:8098/test/ping.txt";
+	}
 
 }

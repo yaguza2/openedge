@@ -45,60 +45,59 @@ import nl.openedge.util.IteratorToEnumeratorDecorator;
 public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServletRequest
 {
 
-    /**
-     * Request attributes.
-     */
-    private Map attributes = new HashMap();
+	/**
+	 * Request attributes.
+	 */
+	private Map attributes = new HashMap();
 
-    /**
-     * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
-     */
-    public long getDateHeader(final String arg0)
-    {
-        return System.currentTimeMillis();
-    }
+	/**
+	 * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
+	 */
+	public long getDateHeader(final String arg0)
+	{
+		return System.currentTimeMillis();
+	}
 
-    /**
-     * Geeft null allways.
-     * 
-     * @see javax.servlet.ServletRequest#getLocale()
-     */
-    public Locale getLocale()
-    {
-        return null;
-    }
+	/**
+	 * Geeft null allways.
+	 * 
+	 * @see javax.servlet.ServletRequest#getLocale()
+	 */
+	public Locale getLocale()
+	{
+		return null;
+	}
 
-    /**
-     * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
-     */
-    public Object getAttribute(final String anAttributeName)
-    {
-        return attributes.get(anAttributeName);
-    }
+	/**
+	 * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
+	 */
+	public Object getAttribute(final String anAttributeName)
+	{
+		return attributes.get(anAttributeName);
+	}
 
-    /**
-     * @see javax.servlet.ServletRequest#getAttributeNames()
-     */
-    public Enumeration getAttributeNames()
-    {
-        return new IteratorToEnumeratorDecorator(attributes.keySet().iterator());
-    }
+	/**
+	 * @see javax.servlet.ServletRequest#getAttributeNames()
+	 */
+	public Enumeration getAttributeNames()
+	{
+		return new IteratorToEnumeratorDecorator(attributes.keySet().iterator());
+	}
 
-    /**
-     * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
-     */
-    public void removeAttribute(final String anAttributeToRemove)
-    {
-        attributes.remove(anAttributeToRemove);
-    }
+	/**
+	 * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
+	 */
+	public void removeAttribute(final String anAttributeToRemove)
+	{
+		attributes.remove(anAttributeToRemove);
+	}
 
-    /**
-     * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
-     *      java.lang.Object)
-     */
-    public void setAttribute(final String attributeName, final Object attributeValue)
-    {
-        attributes.put(attributeName, attributeValue);
-    }
+	/**
+	 * @see javax.servlet.ServletRequest#setAttribute(java.lang.String, java.lang.Object)
+	 */
+	public void setAttribute(final String attributeName, final Object attributeValue)
+	{
+		attributes.put(attributeName, attributeValue);
+	}
 
 }

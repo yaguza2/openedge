@@ -4,10 +4,14 @@
 package nl.openedge.util;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * The base class for ID generators that use a UUID algorithm. This
- * class implements the algorithm, subclasses define the ID format.
+ * The base class for ID generators that use a UUID algorithm. This class implements the algorithm,
+ * subclasses define the ID format.
  * 
  * @see UUIDHexGenerator
  * @see UUIDStringGenerator
@@ -16,26 +20,43 @@ import java.net.InetAddress;
 
 public abstract class UUIDGenerator
 {
+	/** ip adress. */
+	private static final int IP_ADDRESS;
 
-	private static final int ip;
-	private static short counter = (short)0;
-	private static final int jvm = (int) (System.currentTimeMillis() >>> 8);
+	/** counter. */
+	private static short counter = (short) 0;
 
-	static {
+	/** really usefull, it's for keeping checkstyle from wheeping. */
+	private static final int JVM_SHIFT = 8;
+
+	/** really usefull, it's for keeping checkstyle from wheeping. */
+	private static final int HIGH_TIME_SHIFT = 32;
+
+	/** JVM_TIME time. */
+	private static final int JVM_TIME = (int) (System.currentTimeMillis() >>> JVM_SHIFT);
+
+	/** log. */
+	private static Log log = LogFactory.getLog(UUIDGenerator.class);
+
+	static
+	{
 		int ipadd;
+
 		try
 		{
 			ipadd = BytesHelper.toInt(InetAddress.getLocalHost().getAddress());
 		}
-		catch (Exception e)
+		catch (UnknownHostException e)
 		{
+			log.error(e.getMessage(), e);
 			ipadd = 0;
 		}
-		ip = ipadd;
+
+		IP_ADDRESS = ipadd;
 	}
 
 	/**
-	 * construct
+	 * construct.
 	 */
 	public UUIDGenerator()
 	{
@@ -43,19 +64,22 @@ public abstract class UUIDGenerator
 	}
 
 	/**
-	 * Unique across JVMs on this machine (unless they load this class
-	 * in the same quater second - very unlikely)
-	 * @return int
+	 * Unique across JVMs on this machine (unless they load this class in the same
+	 * quater second - very unlikely).
+	 * 
+	 * @return int jvm time
 	 */
 	protected int getJVM()
 	{
-		return jvm;
+		return JVM_TIME;
 	}
 
 	/**
-	 * Unique in a millisecond for this JVM instance (unless there
-	 * are > Short.MAX_VALUE instances created in a millisecond)
-	 * @return short
+	 * Unique in a millisecond for this JVM instance
+	 * (unless there are > Short.MAX_VALUE instances
+	 * created in a millisecond).
+	 * 
+	 * @return short count
 	 */
 	protected short getCount()
 	{
@@ -68,27 +92,31 @@ public abstract class UUIDGenerator
 	}
 
 	/**
-	 * Unique in a local network
-	 * @return int
+	 * Unique in a local network.
+	 * 
+	 * @return int ip address
 	 */
 	protected int getIP()
 	{
-		return ip;
+		return IP_ADDRESS;
 	}
 
 	/**
-	 * Unique down to millisecond
-	 * @return short
+	 * Get hi time (unique down to millisecond).
+	 * 
+	 * @return short hi time
 	 */
 	protected short getHiTime()
 	{
-		return (short) (System.currentTimeMillis() >>> 32);
+		return (short) (System.currentTimeMillis() >>> HIGH_TIME_SHIFT);
 	}
+
 	/**
-	 * @return int
+	 * Get lo time.
+	 * @return int lo time
 	 */
 	protected int getLoTime()
 	{
-		return (int)System.currentTimeMillis();
+		return (int) System.currentTimeMillis();
 	}
 }

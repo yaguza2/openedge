@@ -36,17 +36,19 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author Eelco Hillenius
- * Select an array element
- * This is deliberately NOT supported in Velocity, but I want it anyway ;-)
+ * @author Eelco Hillenius Select an array element This is deliberately NOT supported in Velocity,
+ *         but I want it anyway ;-)
  */
 public class ArrayTool
 {
 
 	/**
 	 * Get the element at the given index
-	 * @param array Object array
-	 * @param index index of element
+	 * 
+	 * @param array
+	 *            Object array
+	 * @param index
+	 *            index of element
 	 * @return Object at position index or null
 	 */
 	public static Object elementAt(Object[] array, int index)
@@ -62,6 +64,7 @@ public class ArrayTool
 
 	/**
 	 * wrap as list
+	 * 
 	 * @param o1
 	 * @return
 	 */
@@ -74,6 +77,7 @@ public class ArrayTool
 
 	/**
 	 * wrap as list
+	 * 
 	 * @param o1
 	 * @param o2
 	 * @return
@@ -88,6 +92,7 @@ public class ArrayTool
 
 	/**
 	 * wrap as list
+	 * 
 	 * @param o1
 	 * @param o2
 	 * @param o3
@@ -104,6 +109,7 @@ public class ArrayTool
 
 	/**
 	 * wrap as list
+	 * 
 	 * @param o1
 	 * @param o2
 	 * @param o3
@@ -122,9 +128,9 @@ public class ArrayTool
 
 	/**
 	 * the length of the input array.
+	 * 
 	 * @param array
-	 * @return the length of the input array.
-	 * 	if array == null return -1.
+	 * @return the length of the input array. if array == null return -1.
 	 */
 	public static int size(Object[] array)
 	{
@@ -137,46 +143,55 @@ public class ArrayTool
 
 	/**
 	 * Uses elementAt to return the last element in array.
+	 * 
 	 * @param array
 	 * @return
-	 */	
+	 */
 	public static Object getLast(Object[] array)
 	{
 		return elementAt(array, array.length - 1);
 	}
-	
+
 	/**
 	 * pretty print the contents of an array
-	 * @param array array
+	 * 
+	 * @param array
+	 *            array
 	 * @return String
 	 */
 	public static String printArray(Object[] array)
 	{
-		if(array == null) return "null";
+		if (array == null)
+			return "null";
 		StringBuffer b = new StringBuffer("{");
 		int length = array.length;
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 		{
 			b.append(array[i]);
-			if((i+1) < length) b.append(", ");
+			if ((i + 1) < length)
+				b.append(", ");
 		}
 		b.append("}");
 		return b.toString();
 	}
-	
+
 	/**
 	 * pretty print the contents of a Collection
-	 * @param c collection
+	 * 
+	 * @param c
+	 *            collection
 	 * @return String
 	 */
 	public static String printCollection(Collection c)
 	{
-		if(c == null) return "null";
+		if (c == null)
+			return "null";
 		StringBuffer b = new StringBuffer("{");
-		for(Iterator i = c.iterator(); i.hasNext(); )
+		for (Iterator i = c.iterator(); i.hasNext();)
 		{
 			b.append(i.next());
-			if(i.hasNext()) b.append(", ");
+			if (i.hasNext())
+				b.append(", ");
 		}
 		b.append("}");
 		return b.toString();

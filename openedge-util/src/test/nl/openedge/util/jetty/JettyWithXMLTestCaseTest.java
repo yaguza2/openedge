@@ -32,53 +32,54 @@ package nl.openedge.util.jetty;
 
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Testcase for JettyTestCase with xml config document.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyWithXMLTestCaseTest extends JettyTestCase
 {
-    /** addres to ping. */
-    private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
+	/** addres to ping. */
+	private String theAddress = "/mighty/bad/location (should be overriden by setup method)!";
 
-    /**
-     * Construct.
-     */
-    public JettyWithXMLTestCaseTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyWithXMLTestCaseTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with test name.
-     * @param name name of test
-     */
-    public JettyWithXMLTestCaseTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with test name.
+	 * 
+	 * @param name
+	 *            name of test
+	 */
+	public JettyWithXMLTestCaseTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test servlet that gets answer from JNDI var from web xml file file.
-     * @throws Exception
-     */
-    public void testJNDIServlet() throws Exception
-    {
-		String jndiValueFromServlet = HttpHelper.get(
-		    "http://localhost:8098/test/servlet/jnditest");
+	/**
+	 * Test servlet that gets answer from JNDI var from web xml file file.
+	 * 
+	 * @throws Exception
+	 */
+	public void testJNDIServlet() throws Exception
+	{
+		String jndiValueFromServlet = HttpHelper.get("http://localhost:8098/test/servlet/jnditest");
 		assertEquals("testValue", jndiValueFromServlet);
-    }
+	}
 
-    /**
-     * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
-     */
-    public void beforeSetUp()
-    {
-	    String config = "jetty-decorator-test-plus.xml";
-	    setJettyConfig(config, JettyDecoratorWithXMLTest.class);
-	    setUseJettyPlus(true);
-    }
+	/**
+	 * @see nl.openedge.util.jetty.JettyTestCase#beforeSetUp()
+	 */
+	public void beforeSetUp()
+	{
+		String config = "jetty-decorator-test-plus.xml";
+		setJettyConfig(config, JettyDecoratorWithXMLTest.class);
+		setUseJettyPlus(true);
+	}
 
 }

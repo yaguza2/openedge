@@ -35,56 +35,58 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import nl.openedge.util.net.HttpHelper;
 
-
 /**
  * Test for JettyDecorator with xml config file and use of JettyPlus.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JettyDecoratorWithXMLPlusTest extends TestCase
 {
 
-    /**
-     * Construct.
-     */
-    public JettyDecoratorWithXMLPlusTest()
-    {
-        super();
-    }
+	/**
+	 * Construct.
+	 */
+	public JettyDecoratorWithXMLPlusTest()
+	{
+		super();
+	}
 
-    /**
-     * Construct with name.
-     * @param name test name
-     */
-    public JettyDecoratorWithXMLPlusTest(String name)
-    {
-        super(name);
-    }
+	/**
+	 * Construct with name.
+	 * 
+	 * @param name
+	 *            test name
+	 */
+	public JettyDecoratorWithXMLPlusTest(String name)
+	{
+		super(name);
+	}
 
-    /**
-     * Test servlet that gets answer from JNDI var from web xml file file.
-     * @throws Exception
-     */
-    public void testJNDIServlet() throws Exception
-    {
-		String jndiValueFromServlet = HttpHelper.get(
-		    "http://localhost:8098/test/servlet/jnditest");
+	/**
+	 * Test servlet that gets answer from JNDI var from web xml file file.
+	 * 
+	 * @throws Exception
+	 */
+	public void testJNDIServlet() throws Exception
+	{
+		String jndiValueFromServlet = HttpHelper.get("http://localhost:8098/test/servlet/jnditest");
 		assertEquals("testValue", jndiValueFromServlet);
-    }
+	}
 
-    /**
-     * Suite method.
-     * @return Test suite
-     */
-    public static Test suite() 
-    {
-	    TestSuite suite = new TestSuite();
-	    suite.addTest(new JettyDecoratorWithXMLPlusTest("testJNDIServlet"));
-	    JettyDecorator deco = new JettyDecorator(suite);
-	    String config = "jetty-decorator-test-plus.xml";
-	    deco.setJettyConfig(config, JettyDecoratorWithXMLPlusTest.class);
-	    deco.setUseJettyPlus(true);
-	    return deco;
-    }
+	/**
+	 * Suite method.
+	 * 
+	 * @return Test suite
+	 */
+	public static Test suite()
+	{
+		TestSuite suite = new TestSuite();
+		suite.addTest(new JettyDecoratorWithXMLPlusTest("testJNDIServlet"));
+		JettyDecorator deco = new JettyDecorator(suite);
+		String config = "jetty-decorator-test-plus.xml";
+		deco.setJettyConfig(config, JettyDecoratorWithXMLPlusTest.class);
+		deco.setUseJettyPlus(true);
+		return deco;
+	}
 
 }

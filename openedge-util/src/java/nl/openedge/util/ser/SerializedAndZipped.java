@@ -40,108 +40,110 @@ import java.io.Serializable;
 public final class SerializedAndZipped implements Serializable, Cloneable
 {
 
-    /**
-     * Member compressed data data, value = 'compressedData'.
-     */
-    public static final String COMPRESSED_DATA = "compressedData";
+	/**
+	 * Member compressed data data, value = 'compressedData'.
+	 */
+	public static final String COMPRESSED_DATA = "compressedData";
 
-    /**
-     * zipped object data array.
-     */
-    private byte[] compressedData;
+	/**
+	 * zipped object data array.
+	 */
+	private byte[] compressedData;
 
-    /**
-     * Member uncompressed data length, value = 'uncompressedDataLength'.
-     */
-    public static final String UNCOMPRESSED_DATA_LENGTH = "uncompressedDataLength";
+	/**
+	 * Member uncompressed data length, value = 'uncompressedDataLength'.
+	 */
+	public static final String UNCOMPRESSED_DATA_LENGTH = "uncompressedDataLength";
 
-    /**
-     * de original length of object data array.
-     */
-    private int uncompressedDataLength;
+	/**
+	 * de original length of object data array.
+	 */
+	private int uncompressedDataLength;
 
-    /**
-     * Construct.
-     */
-    public SerializedAndZipped()
-    {
-        // nothing here
-    }
-    /**
-     * Construct with original length and compressed data.
-     * 
-     * @param uncompressedDataLength
-     * @param compressedData
-     */
-    public SerializedAndZipped(int uncompressedDataLength, byte[] compressedData)
-    {
-        this.uncompressedDataLength = uncompressedDataLength;
-        this.compressedData = compressedData;
-    }
+	/**
+	 * Construct.
+	 */
+	public SerializedAndZipped()
+	{
+		// nothing here
+	}
 
-    /**
-     * Get objectData.
-     * 
-     * @return byte[] Returns the objectData.
-     */
-    public byte[] getCompressedData()
-    {
-        return compressedData;
-    }
+	/**
+	 * Construct with original length and compressed data.
+	 * 
+	 * @param uncompressedDataLength
+	 * @param compressedData
+	 */
+	public SerializedAndZipped(int uncompressedDataLength, byte[] compressedData)
+	{
+		this.uncompressedDataLength = uncompressedDataLength;
+		this.compressedData = compressedData;
+	}
 
-    /**
-     * Set objectData.
-     * 
-     * @param objectData objectData to set.
-     */
-    public void setCompressedData(byte[] objectData)
-    {
-        this.compressedData = objectData;
-    }
+	/**
+	 * Get objectData.
+	 * 
+	 * @return byte[] Returns the objectData.
+	 */
+	public byte[] getCompressedData()
+	{
+		return compressedData;
+	}
 
-    /**
-     * Get originalLength.
-     * 
-     * @return int Returns the originalLength.
-     */
-    public int getUncompressedDataLength()
-    {
-        return uncompressedDataLength;
-    }
+	/**
+	 * Set objectData.
+	 * 
+	 * @param objectData
+	 *            objectData to set.
+	 */
+	public void setCompressedData(byte[] objectData)
+	{
+		this.compressedData = objectData;
+	}
 
-    /**
-     * Set originalLength.
-     * 
-     * @param originalLength originalLength to set.
-     */
-    public void setUncompressedDataLength(int originalLength)
-    {
-        this.uncompressedDataLength = originalLength;
-    }
+	/**
+	 * Get originalLength.
+	 * 
+	 * @return int Returns the originalLength.
+	 */
+	public int getUncompressedDataLength()
+	{
+		return uncompressedDataLength;
+	}
 
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-        return "SerializedAndZipped {uncompressedDataLength = "
-            + uncompressedDataLength + ", compressedData = "
-            + compressedData + "}";
-    }
+	/**
+	 * Set originalLength.
+	 * 
+	 * @param originalLength
+	 *            originalLength to set.
+	 */
+	public void setUncompressedDataLength(int originalLength)
+	{
+		this.uncompressedDataLength = originalLength;
+	}
 
-    /**
-     * @see java.lang.Object#clone()
-     */
-    protected Object clone()
-    {
-        try
-        {
-            return super.clone();
-        }
-        catch(CloneNotSupportedException e)
-        {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "SerializedAndZipped {uncompressedDataLength = "
+				+ uncompressedDataLength + ", compressedData = " + compressedData + "}";
+	}
+
+	/**
+	 * @see java.lang.Object#clone()
+	 */
+	protected Object clone()
+	{
+		try
+		{
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 }

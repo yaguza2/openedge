@@ -40,33 +40,39 @@ import org.apache.axis.Constants;
 import org.apache.axis.encoding.SerializerFactory;
 
 /**
- * AXIS Serializer factory for SerializedAndZipped objects.
- * An example of a deployment (.wsdd) script:
+ * AXIS Serializer factory for SerializedAndZipped objects. An example of a deployment (.wsdd)
+ * script:
+ * 
  * <pre>
- * &lt;deployment name="polisservice" xmlns="http://xml.apache.org/axis/wsdd/"
- * 	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java"
- *	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance"&gt;
- *	&lt;service name="polisservice" provider="java:RPC"&gt;
- *		&lt;parameter name="alias" value="polisservice"/&gt;
- *		&lt;parameter name="className" value="nl.levob.flexipluspensioen.webservices.PolisService"/&gt;
- *		&lt;parameter name="allowedMethods" value="*"/&gt;
- *		&lt;parameter name="scope" value="Request"/&gt;
- *		&lt;typeMapping xmlns:ns="http://levob/flexipluspensioen/"
- * 			qname="ns:SerializedAndZipped"
- * 			languageSpecificType="java:nl.openedge.util.ser.SerializedAndZipped"
- * 			serializer="nl.openedge.util.ser.SerializedAndZippedSerializerFactory"
- * 			deserializer="nl.openedge.util.ser.SerializedAndZippedDeserializerFactory"
- * 			encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" /&gt;
- *	&lt;/service&gt;
- * &lt;/deployment&gt;
+ * 
+ *  &lt;deployment name=&quot;polisservice&quot; xmlns=&quot;http://xml.apache.org/axis/wsdd/&quot;
+ *  	xmlns:java=&quot;http://xml.apache.org/axis/wsdd/providers/java&quot;
+ * 	xmlns:xsi=&quot;http://www.w3.org/2000/10/XMLSchema-instance&quot;&gt;
+ * 	&lt;service name=&quot;polisservice&quot; provider=&quot;java:RPC&quot;&gt;
+ * 		&lt;parameter name=&quot;alias&quot; value=&quot;polisservice&quot;/&gt;
+ * 		&lt;parameter name=&quot;className&quot; value=&quot;nl.levob.flexipluspensioen.webservices.PolisService&quot;/&gt;
+ * 		&lt;parameter name=&quot;allowedMethods&quot; value=&quot;*&quot;/&gt;
+ * 		&lt;parameter name=&quot;scope&quot; value=&quot;Request&quot;/&gt;
+ * 		&lt;typeMapping xmlns:ns=&quot;http://levob/flexipluspensioen/&quot;
+ *  			qname=&quot;ns:SerializedAndZipped&quot;
+ *  			languageSpecificType=&quot;java:nl.openedge.util.ser.SerializedAndZipped&quot;
+ *  			serializer=&quot;nl.openedge.util.ser.SerializedAndZippedSerializerFactory&quot;
+ *  			deserializer=&quot;nl.openedge.util.ser.SerializedAndZippedDeserializerFactory&quot;
+ *  			encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot; /&gt;
+ * 	&lt;/service&gt;
+ *  &lt;/deployment&gt;
+ *  
  * </pre>
+ * 
  * </p>
  * <p>
- * 	This can then be consumed by a AXIS client like:
+ * This can then be consumed by a AXIS client like:
+ * 
  * <pre>
- * QName typeQName = new QName("http://levob/flexipluspensioen/", "SerializedAndZipped");
- * SerializedAndZipped serializedAndZipped = SerializeAndZipWSHelper.getRemoteObjects(endpoint, "getPolissen", typeQName);
+ * QName typeQName = new QName(&quot;http://levob/flexipluspensioen/&quot;, &quot;SerializedAndZipped&quot;);SerializedAndZipped serializedAndZipped = SerializeAndZipWSHelper.getRemoteObjects(endpoint, &quot;getPolissen&quot;, typeQName);
+ *  
  * </pre>
+ * 
  * </p>
  * 
  * @author Eelco Hillenius
@@ -74,35 +80,35 @@ import org.apache.axis.encoding.SerializerFactory;
 public class SerializedAndZippedSerializerFactory implements SerializerFactory
 {
 
-    /**
-     * Construct.
-     */
-    public SerializedAndZippedSerializerFactory()
-    {
-        // noop
-    }
+	/**
+	 * Construct.
+	 */
+	public SerializedAndZippedSerializerFactory()
+	{
+		// noop
+	}
 
-    /** SAX mechanisms. */
-    private List mechanisms = null;
+	/** SAX mechanisms. */
+	private List mechanisms = null;
 
-    /**
-     * @see javax.xml.rpc.encoding.SerializerFactory#getSerializerAs(java.lang.String)
-     */
-    public Serializer getSerializerAs(final String string)
-    {
-        return new SerializedAndZippedSerializer();
-    }
+	/**
+	 * @see javax.xml.rpc.encoding.SerializerFactory#getSerializerAs(java.lang.String)
+	 */
+	public Serializer getSerializerAs(final String string)
+	{
+		return new SerializedAndZippedSerializer();
+	}
 
-    /**
-     * @see javax.xml.rpc.encoding.SerializerFactory#getSupportedMechanismTypes()
-     */
-    public Iterator getSupportedMechanismTypes()
-    {
-        if(mechanisms == null)
-        {
-            mechanisms = new ArrayList();
-            mechanisms.add(Constants.AXIS_SAX);
-        }
-        return mechanisms.iterator();
-    }
+	/**
+	 * @see javax.xml.rpc.encoding.SerializerFactory#getSupportedMechanismTypes()
+	 */
+	public Iterator getSupportedMechanismTypes()
+	{
+		if (mechanisms == null)
+		{
+			mechanisms = new ArrayList();
+			mechanisms.add(Constants.AXIS_SAX);
+		}
+		return mechanisms.iterator();
+	}
 }

@@ -19,7 +19,10 @@
 	<classpathentry kind="var" path="JAVA_HOME/lib/tools.jar"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/ognl-2.6.5-src.jar" kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.5.jar"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/axis-1.1-src.jar" kind="var" path="MAVEN_REPO/axis/jars/axis-1.1.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/saaj-1.1-src.jar" kind="var" path="MAVEN_REPO/axis/jars/saaj-1.1.jar"/>
+	<classpathentry sourcepath="JAVA_SRC_JARS/wsdl4j-1.4-src.jar" kind="var" path="MAVEN_REPO/wsdl4j/jars/wsdl4j-1.4.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/jaxrpc-1.0-src.jar" kind="var" path="MAVEN_REPO/axis/jars/jaxrpc-1.0.jar"/>
 	<classpathentry sourcepath="JAVA_SRC_JARS/velocity-1.4-src.jar" kind="var" path="MAVEN_REPO/velocity/jars/velocity-1.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -11,6 +11,7 @@ package nl.openedge.util.hibernate;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -22,14 +23,14 @@ import nl.openedge.util.URLHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.infohazard.maverick.flow.ConfigException;
 
 /**
  * Helper class to be able to transparantly obtain and configure Hibernate sessions.
  * <p>
- * Before HibernateHelper can be used, HibernateHelper.init() should be called once.
- * After this, you can obtain the current session with HibernateHelper.getSession();
- * If you use the HibernateFiler from this package, you do not need to 
- * (or better you should never) close the session.
+ * Before HibernateHelper can be used, HibernateHelper.init() should be called once. After this, you
+ * can obtain the current session with HibernateHelper.getSession(); If you use the HibernateFiler
+ * from this package, you do not need to (or better you should never) close the session.
  * </p>
  * <p>
  * If you want to close the session, preferably use HibernateHelper.closeSession().
@@ -40,14 +41,10 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * providing hibernatehelper.properties in the classpath root with properties:
  * <ul>
- *  <li>
- *      delegate: the fully classified classname of the delegate implementation.
- *      The default implementation is nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl.
- *      To override, eg: 'delegate=nl.levob.util.hibernate.HibernateHelperReloadConfigImpl'. 
- *  </li>
- *  <li>
- *      hibernateConfig: the url of the hibernate configuration to use.
- *  </li>
+ * <li>delegate: the fully classified classname of the delegate implementation. The default
+ * implementation is nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl. To override, eg:
+ * 'delegate=nl.levob.util.hibernate.HibernateHelperReloadConfigImpl'.</li>
+ * <li>hibernateConfig: the url of the hibernate configuration to use.</li>
  * </ul>
  * </p>
  * <p>
@@ -56,67 +53,68 @@ import org.apache.commons.logging.LogFactory;
  * 'hibernatehelper.properties.hibernateConfig' for the hibernate configuration location.
  * </p>
  * <p>
- * Setting the config url like: HibernateHelper.setConfigURL(myUrl);
- * Note that this will override the hibernateConfig variable as well.
+ * Setting the config url like: HibernateHelper.setConfigURL(myUrl); Note that this will override
+ * the hibernateConfig variable as well.
  * </p>
  * <p>
  * By default, the configuration is loaded from the file 'hibernate.cfg.xml' in the classpath root.
  * 
  * @author Eelco Hillenius
  */
-public class HibernateHelper {
-	
-    // log
-    private static Log log = LogFactory.getLog(HibernateHelper.class);
+public class HibernateHelper
+{
+	/** close current session on setSession. */
+	public static final int ACTION_CLOSE = 1;
 
-    /** close current session on setSession */
-    public final static int ACTION_CLOSE = 1;
+	/** disconnect current session on setSession. */
+	public static final int ACTION_DISCONNECT = 2;
 
-    /** disconnect current session on setSession */
-    public final static int ACTION_DISCONNECT = 2;
+	/**
+	 * key of the system property for setting the delegate. value =
+	 * hibernatehelper.properties.delegate
+	 */
+	public static final String SYSTEM_PROPERTY_DELEGATE =
+		"hibernatehelper.properties.delegate";
 
-    /**
-     * key of the system property for setting the delegate.
-     * value = hibernatehelper.properties.delegate
-     */
-    public final static String SYSTEM_PROPERTY_DELEGATE = 
-        "hibernatehelper.properties.delegate";
+	/**
+	 * key of the system property for setting the hibernate config. value =
+	 * hibernatehelper.properties.hibernateConfig
+	 */
+	public static final String SYSTEM_PROPERTY_HIBERNATE_CONFIG =
+		"hibernatehelper.properties.hibernateConfig";
 
-    /**
-     * key of the system property for setting the hibernate config.
-     * value = hibernatehelper.properties.hibernateConfig
-     */
-    public final static String SYSTEM_PROPERTY_HIBERNATE_CONFIG = 
-        "hibernatehelper.properties.hibernateConfig";
+	/**
+	 * key of the property (from file) for setting the delegate. value = delegate.
+	 */
+	public static final String PROPERTY_DELEGATE = "delegate";
 
-    /**
-     * key of the property (from file) for setting the delegate.
-     * value = delegate.
-     */
-    public final static String PROPERTY_DELEGATE = "delegate";
+	/**
+	 * key of the property (from file) for setting the hibernate config.
+	 * value = hibernateConfig.
+	 */
+	public static final String PROPERTY_HIBERNATE_CONFIG = "hibernateConfig";
 
-    /**
-     * key of the property (from file) for setting the hibernate config.
-     * value = hibernateConfig.
-     */
-    public final static String PROPERTY_HIBERNATE_CONFIG = "hibernateConfig";
+	/**
+	 * filename of properties for HibernateHelper. value = /hibernatehelper.properties
+	 */
+	public static final String PROPERTIES_LOCATION = "/hibernatehelper.properties";
 
-    /**
-     * filename of properties for HibernateHelper. value = /hibernatehelper.properties
-     */
-    public final static String PROPERTIES_LOCATION = "/hibernatehelper.properties";
-    
-    // the implementation delegate; does the 'real' work for this class.
+	/** Log. */
+	private static Log log = LogFactory.getLog(HibernateHelper.class);
+
+	/** the implementation delegate; does the 'real' work for this class. */
 	private static HibernateHelperDelegate delegate = null;
-	static // initialize the helper
+	static
+	// initialize the helper
 	{
-	    initialize();
+		initialize();
 	}
-    
+
 	/**
 	 * Initialise.
+	 * @throws ConfigException when initialization failed
 	 */
-	public static void init() throws Exception
+	public static void init() throws ConfigException
 	{
 		delegate.init();
 	}
@@ -126,8 +124,8 @@ public class HibernateHelper {
 	 */
 	private static void initialize()
 	{
-	    String filename = PROPERTIES_LOCATION;
-	    // first, see if there are system properties defined
+		String filename = PROPERTIES_LOCATION;
+		// first, see if there are system properties defined
 		Properties properties = new Properties();
 		InputStream is = null;
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -139,16 +137,16 @@ public class HibernateHelper {
 		{ // classloader fallthrough
 			is = HibernateHelper.class.getResourceAsStream(filename);
 		}
-		if(is != null)
+		if (is != null)
 		{ // if an inputstream was found, try to read properties object from it
 			try
 			{
-                properties.load(is);
-            }
+				properties.load(is);
+			}
 			catch (IOException e)
 			{
-                log.error(e.getMessage(), e);
-            }
+				log.error(e.getMessage(), e);
+			}
 		}
 		// do further initialization
 		initializeDelegate(properties);
@@ -157,106 +155,124 @@ public class HibernateHelper {
 
 	/**
 	 * Initialize the delegate.
-	 * @param properties the properties
+	 * 
+	 * @param properties
+	 *            the properties
 	 */
 	private static void initializeDelegate(Properties properties)
 	{
-	    String delegateImplClass = System.getProperty(SYSTEM_PROPERTY_DELEGATE);
-		if(delegateImplClass == null) // if not a system property
+		String delegateImplClass = System.getProperty(SYSTEM_PROPERTY_DELEGATE);
+		if (delegateImplClass == null) // if not a system property
 		{
-		    delegateImplClass = properties.getProperty(PROPERTY_DELEGATE);    
+			delegateImplClass = properties.getProperty(PROPERTY_DELEGATE);
 		}
-		if(delegateImplClass != null) // try to load the delegate
+		if (delegateImplClass != null) // try to load the delegate
 		{
-		    try
-		    {
-		        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		        if(loader == null)
-		        {
-		            loader = HibernateHelper.class.getClassLoader();
-		        }
+			try
+			{
+				ClassLoader loader = Thread.currentThread().getContextClassLoader();
+				if (loader == null)
+				{
+					loader = HibernateHelper.class.getClassLoader();
+				}
 				Class clazz = loader.loadClass(delegateImplClass);
-				delegate = (HibernateHelperDelegate)clazz.newInstance();
-		    }
-		    catch(Exception e)
-		    {
-		        log.error(e.getMessage(), e);
-		    }
+				delegate = (HibernateHelperDelegate) clazz.newInstance();
+			}
+			catch (ClassNotFoundException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+			catch (InstantiationException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+			catch (IllegalAccessException e)
+			{
+				log.error(e.getMessage(), e);
+			}
 		}
-		if(delegate == null) // if no delegate was given or instantiation failed
+		if (delegate == null) // if no delegate was given or instantiation failed
 		{
-			log.info("fallback on default HibernateHelperDelegate implementation: " +
-				HibernateHelperThreadLocaleImpl.class.getName());
+			log.info("fallback on default HibernateHelperDelegate implementation: "
+					+ HibernateHelperThreadLocaleImpl.class.getName());
 			delegate = new HibernateHelperThreadLocaleImpl();
-		}    
+		}
 	}
 
 	/**
 	 * initialize hibernate config.
-	 * @param properties the properties
+	 * 
+	 * @param properties
+	 *            the properties
 	 */
 	private static void initializeHibernateConfig(Properties properties)
 	{
-	    String hibernateConfig = System.getProperty(SYSTEM_PROPERTY_HIBERNATE_CONFIG);
-        // is the default configuration location overriden?
-		if(hibernateConfig == null) // if not a system property
+		String hibernateConfig = System.getProperty(SYSTEM_PROPERTY_HIBERNATE_CONFIG);
+		// is the default configuration location overriden?
+		if (hibernateConfig == null) // if not a system property
 		{
-		    hibernateConfig = properties.getProperty(PROPERTY_HIBERNATE_CONFIG);    
+			hibernateConfig = properties.getProperty(PROPERTY_HIBERNATE_CONFIG);
 		}
-		if(hibernateConfig != null)
+		if (hibernateConfig != null)
 		{
-            log.info("using Hibernate config from URL: " + hibernateConfig);
-            try
-            {
-                URL config = URLHelper.convertToURL(hibernateConfig, HibernateHelper.class);
-                if(config != null)
-                {
-                    setConfigURL(config);   
-                }
-                else
-                {
-                    log.error("unable to construct URL from " + hibernateConfig);
-                }
-            }
-            catch(Exception e)
-            {
-                log.error(e.getMessage(), e);
-            }
-		}		    
+			log.info("using Hibernate config from URL: " + hibernateConfig);
+			try
+			{
+				URL config = URLHelper.convertToURL(hibernateConfig, HibernateHelper.class);
+				if (config != null)
+				{
+					setConfigURL(config);
+				}
+				else
+				{
+					log.error("unable to construct URL from " + hibernateConfig);
+				}
+			}
+			catch (MalformedURLException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+		}
 	}
-	
+
 	/**
 	 * Get session for this Thread.
-	 *
+	 * 
 	 * @return an appropriate Session object
+	 * @throws HibernateException when an unexpected Hibernate exception occurs
 	 */
 	public static Session getSession() throws HibernateException
 	{
 		return delegate.getSession();
 	}
-	
+
 	/**
 	 * Close session for this Thread.
+	 * @throws HibernateException when an unexpected Hibernate exception occurs
 	 */
 	public static void closeSession() throws HibernateException
 	{
 		delegate.closeSession();
 	}
-	
+
 	/**
 	 * disconnect session and remove from threadlocal for this Thread.
+	 * @throws HibernateException when an unexpected Hibernate exception occurs
 	 */
 	public static void disconnectSession() throws HibernateException
 	{
 		delegate.disconnectSession();
 	}
-	
+
 	/**
 	 * Set current session.
-	 * @param session hibernate session
-	 * @param actionForCurrentSession one of the constants 
-	 * 		HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current session
-	 * 		HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current session
+	 * 
+	 * @param session
+	 *            hibernate session
+	 * @param actionForCurrentSession
+	 *            one of the constants HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current
+	 *            session HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current
+	 *            session
 	 */
 	public static void setSession(Session session, int actionForCurrentSession)
 	{
@@ -272,15 +288,16 @@ public class HibernateHelper {
 	{
 		return delegate.getSessionFactory();
 	}
-	
+
 	/**
 	 * Set the Hibernate session factory.
 	 * 
-	 * @param factory the Hibernate session factory
+	 * @param theFactory
+	 *            the Hibernate session factory
 	 */
-	public static void setSessionFactory(SessionFactory factory)
+	public static void setSessionFactory(SessionFactory theFactory)
 	{
-		HibernateHelperThreadLocaleImpl.factory = factory;
+		delegate.setSessionFactory(theFactory);
 	}
 
 	/**
@@ -296,11 +313,12 @@ public class HibernateHelper {
 	/**
 	 * Set the configuration URL.
 	 * 
-	 * @param url the configuration URL
+	 * @param url
+	 *            the configuration URL
 	 */
 	public static void setConfigURL(URL url)
 	{
-        log.info("use config from " + url);
+		log.info("use config from " + url);
 		delegate.setConfigURL(url);
 	}
 
@@ -315,7 +333,8 @@ public class HibernateHelper {
 	}
 
 	/**
-	 * get factory level interceptor class name
+	 * get factory level interceptor class name.
+	 * 
 	 * @return String factory level interceptor class name
 	 */
 	public static String getInterceptorClass()
@@ -324,8 +343,10 @@ public class HibernateHelper {
 	}
 
 	/**
-	 * set factory level interceptor class name
-	 * @param interceptor factory level interceptor class name
+	 * set factory level interceptor class name.
+	 * 
+	 * @param className
+	 *            factory level interceptor class name
 	 */
 	public static void setInterceptorClass(String className)
 	{
@@ -333,9 +354,9 @@ public class HibernateHelper {
 	}
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all
-	 * sessions, if false, a new - and thus thread safe - instance will be created
-	 * for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
+	 * new - and thus thread safe - instance will be created for session.
+	 * 
 	 * @return boolean
 	 */
 	public static boolean isSingleInterceptor()
@@ -344,24 +365,27 @@ public class HibernateHelper {
 	}
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all
-	 * sessions, if false, a new - and thus thread safe - instance will be created
-	 * for session.
-	 * @param b
+	 * If true, only one instance will be created of the interceptor for
+	 * all sessions, if false, a new - and thus thread safe - instance
+	 * will be created for session.
+	 * 
+	 * @param b If true, only one instance will be created of the interceptor for
+	 * all sessions, if false, a new - and thus thread safe - instance
+	 * will be created for session
 	 */
 	public static void setSingleInterceptor(boolean b)
 	{
 		delegate.setSingleInterceptor(b);
 	}
 
-
-    /**
-     * Get the concrete instance of helper delegate.
-     * 
-     * @return HibernateHelperDelegate the concrete instance of helper delegate
-     */
-    public static HibernateHelperDelegate getDelegate() {
-        return delegate;
-    }
+	/**
+	 * Get the concrete instance of helper delegate.
+	 * 
+	 * @return HibernateHelperDelegate the concrete instance of helper delegate
+	 */
+	public static HibernateHelperDelegate getDelegate()
+	{
+		return delegate;
+	}
 
 }

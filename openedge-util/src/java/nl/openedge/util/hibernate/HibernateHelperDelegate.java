@@ -32,98 +32,117 @@ package nl.openedge.util.hibernate;
 
 import java.net.URL;
 
+import org.infohazard.maverick.flow.ConfigException;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
 
 /**
+ * Interface for implementing the behaviour of HibernateHelper.
  * @author Eelco Hillenius
  */
-public interface HibernateHelperDelegate {
-	
-	/**
-	 * initialise
-	 */
-	public void init() throws Exception;
+public interface HibernateHelperDelegate
+{
 
 	/**
-	 * Get session for this Thread
-	 *
+	 * initialise.
+	 * @throws ConfigException when an exception occurs during initialization
+	 */
+	void init() throws ConfigException;
+
+	/**
+	 * Get session for this Thread.
+	 * 
 	 * @return an appropriate Session object
+	 * @throws HibernateException when an unexpected Hibernate exception occurs
 	 */
-	public Session getSession() throws HibernateException;
-	
+	Session getSession() throws HibernateException;
+
 	/**
-	 * close session for this Thread
+	 * close session for this Thread.
+	 * @throws HibernateException when an unexpected Hibernate exception occurs
 	 */
-	public void closeSession() throws HibernateException;
-	
+	void closeSession() throws HibernateException;
+
 	/**
-	 * disconnect session and remove from threadlocal for this Thread
+	 * disconnect session and remove from threadlocal for this Thread.
+	 * @throws HibernateException when an unexpected Hibernate exception occurs
 	 */
-	public void disconnectSession() throws HibernateException;
-	
+	void disconnectSession() throws HibernateException;
+
 	/**
-	 * set current session
-	 * @param session hibernate session
-	 * @param actionForCurrentSession one of the constants 
-	 * 		HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current session
-	 * 		HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current session
+	 * set current session.
+	 * 
+	 * @param session
+	 *            hibernate session
+	 * @param actionForCurrentSession
+	 *            one of the constants HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current
+	 *            session HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current
+	 *            session
 	 */
-	public void setSession(Session session, int actionForCurrentSession);
+	void setSession(Session session, int actionForCurrentSession);
 
 	/**
 	 * @return the hibernate session factory
 	 */
-	public SessionFactory getSessionFactory();
-	
-	/**
-	 * @param factory
-	 */
-	public void setSessionFactory(SessionFactory factory);
+	SessionFactory getSessionFactory();
 
 	/**
-	 * @return URL
+	 * Set the session factory.
+	 * @param factory the session factory
 	 */
-	public URL getConfigURL();
+	void setSessionFactory(SessionFactory factory);
 
 	/**
-	 * @param url
+	 * Get the configuration URL.
+	 * @return URL the configuration url
 	 */
-	public void setConfigURL(URL url);
+	URL getConfigURL();
+
+	/**
+	 * Set the configuration URL.
+	 * @param url the configuration URL
+	 */
+	void setConfigURL(URL url);
 
 	/**
 	 * @return Configuration
 	 */
-	public Configuration getConfiguration();
-	
+	Configuration getConfiguration();
+
 	/**
-	 * get factory level interceptor class name
+	 * get factory level interceptor class name.
+	 * 
 	 * @return String factory level interceptor class name
 	 */
-	public String getInterceptorClass();
+	String getInterceptorClass();
 
 	/**
-	 * set factory level interceptor class name
-	 * @param interceptor factory level interceptor class name
+	 * set factory level interceptor class name.
+	 * 
+	 * @param className
+	 *            factory level interceptor class name
 	 */
-	public void setInterceptorClass(String className);
+	void setInterceptorClass(String className);
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all
-	 * sessions, if false, a new - and thus thread safe - instance will be created
-	 * for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
+	 * new - and thus thread safe - instance will be created for session.
+	 * 
 	 * @return boolean
 	 */
-	public boolean isSingleInterceptor();
+	boolean isSingleInterceptor();
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all
-	 * sessions, if false, a new - and thus thread safe - instance will be created
-	 * for session.
-	 * @param b
+	 * If true, only one instance will be created of the interceptor for all sessions,
+	 * if false, a new - and thus thread safe - instance will be created for session.
+	 * 
+	 * @param b If true, only one instance will be created of the interceptor
+	 * for all sessions, if false, a new - and thus thread safe - instance will
+	 * be created for session
 	 */
-	public void setSingleInterceptor(boolean b);
+	void setSingleInterceptor(boolean b);
 
 }

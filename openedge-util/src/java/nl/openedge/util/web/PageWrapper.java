@@ -33,6 +33,7 @@ package nl.openedge.util.web;
 
 /**
  * Wraps info about one page
+ * 
  * @author Eelco Hillenius
  */
 public class PageWrapper
@@ -40,8 +41,10 @@ public class PageWrapper
 
 	/* current page number */
 	private int number;
+
 	/* starting row or element */
 	private int startRow;
+
 	/* number of rows for this page */
 	private int numberOfRows;
 
