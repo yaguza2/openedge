@@ -16,6 +16,7 @@ import java.util.Locale;
 import nl.openedge.maverick.framework.converters.BaseLocaleConverter;
 import nl.openedge.maverick.framework.converters.Formatter;
 import nl.openedge.maverick.framework.converters.LocaleFormatter;
+import nl.openedge.maverick.framework.converters.NoopConverter;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
@@ -52,6 +53,11 @@ public final class ConverterRegistry
 	 * singleton instance
 	 */
 	private static ConverterRegistry _instance = null;
+	
+	/**
+	 * converter for final fallthrough
+	 */
+	private static NoopConverter noopConverter = new NoopConverter();
 
 	/*
 	 * hidden constructor
@@ -277,6 +283,11 @@ public final class ConverterRegistry
 			// still not found, finally try generic non-localized registration with ConvertUtils
 		{
 			converter = ConvertUtils.lookup(clazz);
+		}
+		
+		if(converter == null) // STILL not found; return no-op 
+		{
+			converter = noopConverter;
 		}
 		
 		return converter;

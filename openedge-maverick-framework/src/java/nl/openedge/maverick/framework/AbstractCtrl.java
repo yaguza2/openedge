@@ -32,6 +32,7 @@ package nl.openedge.maverick.framework;
 
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -535,7 +536,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		boolean succeeded = true;
 		PropertyDescriptor propertyDescriptor = null;
 		TargetPropertyMeta targetPropertyMeta = null;
-		Class targetType = null;
 		
 		// first, see if there are matches with registered regex populators
 		if(regexFieldPopulators != null) // there are registrations
@@ -548,41 +548,61 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				for(Iterator j = parameters.keySet().iterator(); j.hasNext(); )
 				{
 					String name = (String)j.next();
-					Matcher matcher = pattern.matcher(name);
-					if(matcher.matches())
+					Object value = parameters.get(name);
+					
+					if(value != null)
 					{
-						FieldPopulator fieldPopulator = (FieldPopulator)
-							regexFieldPopulators.get(pattern);
-						Object value = parameters.get(name);
-						
-						keysToBeRemoved.add(name);
-
-						TargetPropertyMeta propInfo = null;
-						try 
-						{
-							// get the descriptor
-							propertyDescriptor = 
-								PropertyUtils.getPropertyDescriptor(form, name);
-							// resolve and get some more info we need for the target
-							targetPropertyMeta = PropertyUtil.calculate(
-								form, name, propertyDescriptor);
-
-							if (propertyDescriptor == null) 
-							{
-								continue; // Skip this property setter
-							}
-						}
-						catch (Exception e) 
-						{
-							continue; // Skip this property setter
-						}
-
-						boolean success;
 						try
-						{
-							// execute population on form
-							success = fieldPopulator.setProperty(
-								cctx, form, name, value, targetPropertyMeta, locale);
+						{						
+							Matcher matcher = pattern.matcher(name);
+							if(matcher.matches())
+							{
+								FieldPopulator fieldPopulator = (FieldPopulator)
+									regexFieldPopulators.get(pattern);
+								
+								keysToBeRemoved.add(name);
+		
+								TargetPropertyMeta propInfo = null;
+								try 
+								{
+									// get the descriptor
+									propertyDescriptor = getPropertyDescriptor(form, name);
+		
+									if (propertyDescriptor == null) 
+									{
+										continue; // Skip this property setter
+									}
+								}
+								catch (NoSuchMethodException e) 
+								{
+									continue; // Skip this property setter
+								}
+								
+								// resolve and get some more info we need for the target
+								targetPropertyMeta = PropertyUtil.calculate(
+									form, name, propertyDescriptor);
+		
+								boolean success;
+								try
+								{
+									// execute population on form
+									success = fieldPopulator.setProperty(
+										cctx, form, name, value, targetPropertyMeta, locale);
+								}
+								catch (Exception e)
+								{
+									log.error(e);
+									if(log.isDebugEnabled())
+									{
+										e.printStackTrace();
+									}
+									continue;
+								}
+								if(!success)
+								{
+									succeeded = false;
+								}
+							}
 						}
 						catch (Exception e)
 						{
@@ -593,12 +613,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 							}
 							continue;
 						}
-						if(!success)
-						{
-							succeeded = false;
-						}
 					}
-					
 				}
 			}
 			if(!keysToBeRemoved.isEmpty()) // for all found matches, remove the parameter
@@ -652,8 +667,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					try 
 					{
 						// get the descriptor
-						propertyDescriptor = 
-							PropertyUtils.getPropertyDescriptor(form, name);
+						propertyDescriptor = PropertyUtils.getPropertyDescriptor(form, name);
 						if (propertyDescriptor == null) 
 						{
 							continue; // Skip this property setter
@@ -667,25 +681,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					// resolve and get some more info we need for the target
 					targetPropertyMeta = PropertyUtil.calculate(form, name, propertyDescriptor);
 					
-					if (propertyDescriptor instanceof MappedPropertyDescriptor) 
-					{
-						MappedPropertyDescriptor pd = 
-							(MappedPropertyDescriptor)propertyDescriptor;
-						if(pd.getMappedWriteMethod() == null) continue; // skip non-writeable
-						targetType = pd.getMappedPropertyType();
-					}
-					else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
-					{
-						IndexedPropertyDescriptor pd = 
-							(IndexedPropertyDescriptor)propertyDescriptor;
-						if(pd.getIndexedWriteMethod() == null) continue; // skip non-writeable
-						targetType = pd.getIndexedPropertyType();
-					}
-					else 
-					{
-						if(propertyDescriptor.getWriteMethod() == null) continue; // skip non-writeable
-						targetType = propertyDescriptor.getPropertyType();
-					}
+					// get the descriptor
+					propertyDescriptor = getPropertyDescriptor(form, name);
 
 					// See if we have a custom populator registered for the given field
 					FieldPopulator fieldPopulator = null;
@@ -721,6 +718,41 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		return succeeded;
 	}
+	
+	/*
+	 * get the property descriptor
+	 * @param form current form
+	 * @param name property name
+	 * @return PropertyDescriptor descriptor if found AND if has writeable method 
+	 */
+	private PropertyDescriptor getPropertyDescriptor(
+		AbstractForm form, 
+		String name) 
+		throws IllegalAccessException, 
+		InvocationTargetException, 
+		NoSuchMethodException
+	{
+		
+		PropertyDescriptor propertyDescriptor = PropertyUtils.getPropertyDescriptor(form, name);
+
+		if (propertyDescriptor instanceof MappedPropertyDescriptor) 
+		{
+			MappedPropertyDescriptor pd = (MappedPropertyDescriptor)propertyDescriptor;
+			if(pd.getMappedWriteMethod() == null) propertyDescriptor = null;
+		}
+		else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
+		{
+			IndexedPropertyDescriptor pd = (IndexedPropertyDescriptor)propertyDescriptor;
+			if(pd.getIndexedWriteMethod() == null) propertyDescriptor = null;
+		}
+		else 
+		{
+			if(propertyDescriptor.getWriteMethod() == null) propertyDescriptor = null;
+		}
+		
+		return propertyDescriptor;
+	}
+
 	
 	/* handle custom validation for all fields */
 	private boolean doCustomValidation(

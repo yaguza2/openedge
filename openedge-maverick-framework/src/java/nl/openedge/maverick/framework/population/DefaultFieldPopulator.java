@@ -87,7 +87,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 		boolean success = true;
 		Object target = targetPropertyMeta.getTarget();
 		PropertyDescriptor propertyDescriptor = targetPropertyMeta.getPropertyDescriptor();
-		Class targetType = propertyDescriptor.getPropertyType();
+		Class targetType = getTargetType(propertyDescriptor);
 		Converter converter = null;
 		
 		AbstractCtrl ctrl = getCtrl();
@@ -118,8 +118,8 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				{
 					array = (Object[])Array.newInstance(componentType, values.length);
 					// set new array on target object
-					Method setter = propertyDescriptor.getWriteMethod();
-					setter.invoke(target, new Object[]{array});
+					//Method setter = propertyDescriptor.getWriteMethod();
+					setTargetProperty(targetPropertyMeta, target, array);
 				}
 				else // use existing and overwrite first part or whole array if lengths are equal
 				{
@@ -169,7 +169,6 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				if(requestValue instanceof String[]) stringValue = ((String[])requestValue)[0];
 				else stringValue = String.valueOf(requestValue);
 				int index = targetPropertyMeta.getIndex();
-				Method setter = null;
 				Object converted = null;
 
 				try
@@ -213,13 +212,10 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 
 			if(converter == null) converter = 
 				ConverterRegistry.getInstance().lookup(targetType, locale);
-			
-			Method setter = null;
+
 			Object converted = null;
 			try
 			{
-				setter = propertyDescriptor.getWriteMethod();
-				
 				if( (stringValue == null || (stringValue.trim().equals(""))) 
 					&& ctrl.isSetNullForEmptyString())
 				{
@@ -231,7 +227,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 						targetType, stringValue);
 				}
 				
-				setter.invoke(target, new Object[]{converted});
+				setTargetProperty(targetPropertyMeta, target, converted);
 			}
 			catch (ConversionException e)
 			{
@@ -251,4 +247,5 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 		return success;
 
 	}
+
 }

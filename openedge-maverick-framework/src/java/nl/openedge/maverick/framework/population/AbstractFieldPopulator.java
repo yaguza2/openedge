@@ -30,6 +30,14 @@
  */
 package nl.openedge.maverick.framework.population;
 
+import java.beans.IndexedPropertyDescriptor;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.apache.commons.beanutils.MappedPropertyDescriptor;
+import org.apache.commons.beanutils.PropertyUtils;
+
 import nl.openedge.maverick.framework.AbstractCtrl;
 
 /**
@@ -65,6 +73,94 @@ public abstract class AbstractFieldPopulator
 	public void setCtrl(AbstractCtrl ctrl)
 	{
 		this.ctrl = ctrl;
+	}
+	
+	/**
+	 * get the target type from this property descriptor
+	 * @param propertyDescriptor
+	 * @return Class the type of the target
+	 */
+	protected Class getTargetType(PropertyDescriptor propertyDescriptor)
+	{
+		Class targetType;
+		if (propertyDescriptor instanceof MappedPropertyDescriptor) 
+		{
+			MappedPropertyDescriptor pd = (MappedPropertyDescriptor)propertyDescriptor;
+			targetType = pd.getMappedPropertyType();
+		}
+		else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
+		{
+			IndexedPropertyDescriptor pd = (IndexedPropertyDescriptor)propertyDescriptor;
+			targetType = pd.getIndexedPropertyType();
+		}
+		else 
+		{
+			targetType = propertyDescriptor.getPropertyType();
+		}
+		return targetType;
+	}
+	
+	/**
+	 * get the write method for this property
+	 * @param propertyDescriptor property descriptor
+	 * @return Method write method
+	 */
+	protected Method getWriteMethod(PropertyDescriptor propertyDescriptor)
+	{
+		Method method = null;
+		
+		if (propertyDescriptor instanceof MappedPropertyDescriptor) 
+		{
+			MappedPropertyDescriptor pd = (MappedPropertyDescriptor)propertyDescriptor;
+			method = pd.getMappedWriteMethod();
+		}
+		else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
+		{
+			IndexedPropertyDescriptor pd = (IndexedPropertyDescriptor)propertyDescriptor;
+			method = pd.getIndexedWriteMethod();
+		}
+		else 
+		{
+			method = propertyDescriptor.getWriteMethod();
+		}
+		
+		return method;
+	}
+	
+	/**
+	 * set property on target
+	 * @param targetPropertyMeta
+	 * @param targetObject object to set property on
+	 * @param value value of property to set
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 */
+	protected void setTargetProperty(
+		TargetPropertyMeta targetPropertyMeta,
+		Object targetObject,
+		Object value) 
+		throws IllegalAccessException, 
+		InvocationTargetException, 
+		NoSuchMethodException
+	{
+		if (targetPropertyMeta.getIndex() >= 0) 
+		{
+			PropertyUtils.setIndexedProperty(
+				targetObject, targetPropertyMeta.getPropName(),
+				targetPropertyMeta.getIndex(), value);
+		} 
+		else if (targetPropertyMeta.getKey() != null) 
+		{
+			PropertyUtils.setMappedProperty(
+				targetObject, targetPropertyMeta.getPropName(),
+				targetPropertyMeta.getKey(), value);
+		} 
+		else 
+		{
+			PropertyUtils.setProperty(
+				targetObject, targetPropertyMeta.getPropName(), value);
+		}
 	}
 
 }
