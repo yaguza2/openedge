@@ -92,6 +92,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/** log for this class */
 	private static Log log = LogFactory.getLog(AbstractCtrl.class);
 	
+	/** special performance log */
+	private static Log performanceLog = 
+		LogFactory.getLog("nl.openedge.maverick.framework.performance");
+	
 	/** if true, the no cache headers will be set */
 	private boolean noCache = true;
 	
@@ -169,6 +173,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public final String go(ControllerContext cctx) throws ServletException 
 	{
+		long tsBegin = System.currentTimeMillis();
+		
 		String viewName = SUCCESS;
 		if(noCache)
 		{
@@ -181,8 +187,17 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			// let controller create form
 			formBean = this.makeFormBean(cctx);
 			
+			long tsBeginBefore = System.currentTimeMillis();
+			
 			// intercept before
 			doBefore(cctx, formBean);
+			
+			if(performanceLog.isDebugEnabled())
+			{
+				long tsEndBefore = System.currentTimeMillis();
+				performanceLog.debug("execution of " + this + ".doBefore: " +
+					(tsEndBefore - tsBeginBefore) + " milis");
+			}
 
 			if(needsValidUser)
 			{
@@ -199,8 +214,17 @@ public abstract class AbstractCtrl implements ControllerSingleton
 
 					viewName = getErrorView(cctx, formBean);
 					
+					long tsBeginAfter = System.currentTimeMillis();
+
 					// intercept after
 					doAfter(cctx, formBean);
+
+					if(performanceLog.isDebugEnabled())
+					{
+						long tsEndAfter = System.currentTimeMillis();
+						performanceLog.debug("execution of " + this + ".doAfter: " +
+							(tsEndAfter - tsBeginAfter) + " milis");
+					}
 		
 					return viewName;
 				}	
@@ -283,8 +307,24 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			viewName = getErrorView(cctx, formBean);
 		}
 		
+		long tsBeginAfter = System.currentTimeMillis();
+
 		// intercept after
 		doAfter(cctx, formBean);
+
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEndAfter = System.currentTimeMillis();
+			performanceLog.debug("execution of " + this + ".doAfter: " +
+				(tsEndAfter - tsBeginAfter) + " milis");
+		}
+		
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("total execution of " + this + ": " +
+				(tsEnd - tsBegin) + " milis");
+		}
 		
 		return viewName;
 	}
@@ -452,6 +492,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		Locale locale,
 		boolean succeeded)
 	{
+		
+		long tsBegin = System.currentTimeMillis();
 
 		boolean doCustomValidation = true;
 		// see if there's any globally (form level) defined rules
@@ -531,6 +573,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				}
 			}
 		}
+		
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("execution of " + this + ".doCustomValidation: " +
+				(tsEnd - tsBegin) + " milis");
+		}
+		
 		return succeeded;
 	}
 	
@@ -881,7 +931,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		if(validator != null)
 		{
 			Object value = validator.getOverrideValue(triedValue);
-			formBean.setOverrideField(name, value);
+			formBean.setOverrideField(name, triedValue);
 		}
 		else
 		{
@@ -908,6 +958,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		Locale locale) 
 		throws Exception 
 	{
+		long tsBegin = System.currentTimeMillis();
 		// default behavoir
 		boolean retval = true;
 		retval = populateWithErrorReport(cctx, formBean, 
@@ -922,6 +973,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			retval = populateWithErrorReport(
 				cctx, formBean, cctx.getControllerParams(), locale);
 		}
+
+		if(performanceLog.isDebugEnabled())
+		{
+			long tsEnd = System.currentTimeMillis();
+			performanceLog.debug("execution of " + this + ".populateForm: " +
+				(tsEnd - tsBegin) + " milis");
+		}
+		
 		return retval;
 	}
 	
