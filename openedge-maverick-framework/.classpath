@@ -37,7 +37,7 @@
     <classpathentry kind="var"
         path="MAVEN_REPO/openedge-modules/jars/openedge-modules-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-modules-SNAPSHOT-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-access/jars/openedge-access-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-access-SNAPSHOT-src.jar"/>
+        path="MAVEN_REPO/openedge-access/jars/openedge-access-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-access/src/java"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/oe-mailjob/jars/oe-mailjob-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-mailjob-SNAPSHOT-src.jar"/>
     <classpathentry kind="var"
