@@ -30,6 +30,16 @@
  */
 package nl.openedge.maverick.framework.util;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Map;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import nl.openedge.maverick.framework.AbstractForm;
 
 /**
@@ -37,6 +47,11 @@ import nl.openedge.maverick.framework.AbstractForm;
  */
 public class FieldTool
 {
+	
+	/* prefix for form, default = "model" */
+	private String modelPrefix = "model.";
+	
+	private static Log log = LogFactory.getLog(FieldTool.class);
 
 	/**
 	 * print error message
@@ -62,6 +77,169 @@ public class FieldTool
 		
 		// fallback
 		return null;	
+	}
+
+	/**
+	 * get value from form as a String
+	 * @param bean bean with field
+	 * @param name name of field
+	 * @return String
+	 */	
+	public String getFormValueAsString(Object bean, String name)
+	{
+		if( (bean == null) || (name == null)) return null;
+		String value = null;
+		AbstractForm model = null;
+		if(bean instanceof AbstractForm)
+		{
+			model = (AbstractForm)model;
+		}
+		try
+		{
+			value = BeanUtils.getProperty(bean, name);
+		}
+		catch (Exception e)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.error(
+					"error while handling property " + name + " with object " + bean );
+				log.error(e.getMessage(), e);			
+			}
+
+			return null;
+		}
+		if(model != null)
+		{
+			Map overrideFields = model.getOverrideFields();
+			if( overrideFields != null ) 
+			{
+		
+				Object storedRawValue = overrideFields.get(name);
+				String storedValue = null;
+				// first, try default
+				if(storedRawValue != null)
+				{
+					storedValue = ConvertUtils.convert(storedRawValue);
+					if(storedValue != null) 
+					{
+						value = storedValue;
+					}	
+				}
+				else // try without model prefix (if it has one)
+				{
+					if(name.startsWith(modelPrefix))
+					{
+						name = name.substring(modelPrefix.length());
+					
+						storedRawValue = overrideFields.get(name);
+						if(storedRawValue != null)
+						{
+							storedValue = ConvertUtils.convert(storedRawValue);
+							if(storedValue != null) 
+							{
+								value = storedValue;
+							}	
+						}
+					}
+				}
+			}	
+		}
+		return value;
+	}
+	
+	/**
+	 * get value from form as a String formatted as pattern
+	 * @param bean bean with field
+	 * @param name name of field
+	 * @param pattern for format
+	 * @return String
+	 */	
+	public String getFormattedFormValueAsString(Object bean, String name, String pattern)
+	{
+		if((bean == null) || (name == null) || (pattern == null)) return null;
+		Object value = null;
+		String converted = null;
+		AbstractForm model = null;
+		if(bean instanceof AbstractForm)
+		{
+			model = (AbstractForm)model;
+		}
+		try
+		{
+			value = PropertyUtils.getProperty(bean, name);
+		}
+		catch (Exception e)
+		{
+			if(log.isDebugEnabled())
+			{
+				log.error(
+					"error while handling property " + name + " with object " + bean );
+				log.error(e.getMessage(), e);			
+			}
+
+			return null;
+		}
+		if(model != null)
+		{
+			Map overrideFields = model.getOverrideFields();
+			if( overrideFields != null ) 
+			{
+		
+				Object storedRawValue = overrideFields.get(name);
+				// first, try default
+				if(storedRawValue == null)
+				{
+					if(name.startsWith(modelPrefix))
+					{
+						name = name.substring(modelPrefix.length());
+						storedRawValue = overrideFields.get(name);
+					}
+				}
+				if(storedRawValue != null)
+				{
+					value = storedRawValue;
+				}
+			}	
+		}
+		if(value != null)
+		{
+			if( (value instanceof java.util.Date) || (value instanceof java.sql.Date) )
+			{
+				SimpleDateFormat df = new SimpleDateFormat(pattern);
+				converted = df.format((java.util.Date)value);
+			}
+			else if(value instanceof Number)
+			{
+				DecimalFormat df = new DecimalFormat(pattern);
+				converted = df.format(value);
+			}
+			else
+			{
+				converted = ConvertUtils.convert(value);
+				System.err.println("unable to apply pattern to field " + name + " of object " +
+					bean + ": type " + value.getClass().getName() + 
+					" cannot be used with a pattern. default conversion: " +
+					value + "->" + converted);
+			}	
+		}
+		return converted;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getModelPrefix()
+	{
+		return modelPrefix;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setModelPrefix(String string)
+	{
+		modelPrefix = string;
 	}
 
 }

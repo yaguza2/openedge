@@ -55,8 +55,6 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.Template;
-import org.apache.velocity.app.event.EventCartridge;
-import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.view.servlet.VelocityViewServlet;
 
@@ -184,15 +182,15 @@ public class ApplicationServlet extends VelocityViewServlet
 			if(model != null) 
 			{
 				
-				if(model instanceof AbstractForm) 
-				{
-					EventCartridge ec = new EventCartridge();
-					ReferenceInsertionEventHandler evtHandler = 
-						new RIEventHandler(
-						(AbstractForm)model, context);
-					ec.addEventHandler(evtHandler);
-					ec.attachToContext(context);
-				}
+//				if(model instanceof AbstractForm) 
+//				{
+//					EventCartridge ec = new EventCartridge();
+//					ReferenceInsertionEventHandler evtHandler = 
+//						new RIEventHandler(
+//						(AbstractForm)model, context);
+//					ec.addEventHandler(evtHandler);
+//					ec.attachToContext(context);
+//				}
 			}
 
 			// bail if we can't find the template
