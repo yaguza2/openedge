@@ -30,140 +30,84 @@
  */
 package nl.openedge.util.baritus.validators;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import nl.openedge.baritus.FormBeanContext;
-import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 import nl.openedge.util.DateComparator;
-import nl.openedge.util.DateFormatHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Validates if a date is after a given date
+ * Validates if a date is after a given date.
  * 
  * @author hofstee
  */
-public class AfterValidator extends AbstractFieldValidator
+public class AfterValidator extends AbstractDateFieldValidator
 {
-	/**
-	 * Logger
-	 */
-	private Log log = LogFactory.getLog(AfterValidator.class);
+    /**
+     * Construct.
+     */
+    public AfterValidator()
+    {
+    }
+    /**
+     * Construct.
+     * @param dateToCheck
+     */
+    public AfterValidator(Calendar dateToCheck)
+    {
+        super(dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param dateToCheck
+     */
+    public AfterValidator(Date dateToCheck)
+    {
+        super(dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     */
+    public AfterValidator(String messageKey)
+    {
+        super(messageKey);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     * @param dateToCheck
+     */
+    public AfterValidator(String messageKey, Calendar dateToCheck)
+    {
+        super(messageKey, dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     * @param dateToCheck
+     */
+    public AfterValidator(String messageKey, Date dateToCheck)
+    {
+        super(messageKey, dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     * @param rule
+     */
+    public AfterValidator(String messageKey, ValidationActivationRule rule)
+    {
+        super(messageKey, rule);
+    }
 
-	/**
-	 * Error key
-	 */
-	private final static String DEFAULT_PREFIX = "invalid.field.input.after";
-
-	/**
-	 * The date to check against
-	 */
-	private Date before = null;
-
-	/** 
-	 * The pattern to use when parsing the date
-	 */
-	private String datePattern = "dd-MM-yyyy";
-
-	/**
-	 * Creates a AfterValidator with the error key prefix and the 
-	 * date to check against before.
-	 * @param prefix
-	 * @param before
-	 */
-	public AfterValidator(String prefix, Date before)
-	{
-		super(prefix);
-		setBefore(before);
-	}
-
-	/**
-	 * Creates a AfterValidator with the DEFAULT_PREFIX as error key
-	 * and today as the date to check against.
-	 */
-	public AfterValidator()
-	{
-		super(DEFAULT_PREFIX);
-	}
-
-	/**
-	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the 
-	 * date to check against before.
-	 * @param prefix
-	 * @param before
-	 */
-	public AfterValidator(Date before)
-	{
-		this(DEFAULT_PREFIX, before);
-	}
-
-	/**
-	 * Creates a AfterValidator with the error key prefix and today to check against before.
-	 * @param prefix
-	 * @param before
-	 */
-	public AfterValidator(String prefix)
-	{
-		this(prefix, new Date());
-	}
-
-	/**
-	 * Creates a AfterValidator with the error key prefix and the 
-	 * date to check against before.
-	 * @param prefix
-	 * @param before
-	 */
-	public AfterValidator(String prefix, Calendar before)
-	{
-		this(prefix, before.getTime());
-	}
-
-	/**
-	 * @param messagePrefix
-	 * @param rule
-	 */
-	public AfterValidator(String messagePrefix, ValidationActivationRule rule)
-	{
-		super(messagePrefix, rule);
-	}
-
-	/**
-	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the 
-	 * date to check against before.
-	 * @param prefix
-	 * @param before
-	 */
-	public AfterValidator(Calendar before)
-	{
-		this(DEFAULT_PREFIX, before.getTime());
-	}
-
-	/**
-	 * @return Returns the before.
-	 */
-	public Date getBefore()
-	{
-		return before;
-	}
-
-	/**
-	 * @param before The before to set.
-	 */
-	public void setBefore(Date before)
-	{
-		if (before == null)
-		{
-			throw new IllegalArgumentException("unable to validate null value");
-		}
-		this.before = before;
-	}
+    /** Log. */
+    private static Log log = LogFactory.getLog(AfterValidator.class);
 
 	/**
 	 * @return true if value is a Date or Calendar and is before or equal to before.
@@ -179,6 +123,7 @@ public class AfterValidator extends AbstractFieldValidator
 		boolean after = false;
 		Date compareBefore = null;
 		DateComparator comp = new DateComparator();
+		Date dateToCheck = getDateToCheck();
 
 		if (value == null)
 		{
@@ -187,13 +132,13 @@ public class AfterValidator extends AbstractFieldValidator
 
 		// Als before datum niet is ingesteld (null) wordt de huidige datum
 		// genomen om mee te vergelijken.
-		if( before == null)
+		if( dateToCheck == null)
 		{
 			compareBefore = new Date();
 		}
 		else
 		{
-			compareBefore = before;
+			compareBefore = dateToCheck;
 		}
 
 		// vergelijk datums
@@ -213,73 +158,4 @@ public class AfterValidator extends AbstractFieldValidator
 		return after;
 	}
 
-	/**
-	 * Tries to format value to a DateFormat. If this doesn't work, 
-	 * returns value unchanged.
-	 * @see nl.openedge.maverick.framework.validation.AbstractFieldValidator#getOverrideValue(java.lang.Object)
-	 */
-	public Object getOverrideValue(Object value)
-	{
-		String result = "";
-		if (value instanceof String)
-		{
-			try
-			{
-				result =
-					DateFormatHelper.format(
-						datePattern,
-						DateFormatHelper.fallbackParse((String)value));
-			}
-			catch (ParseException e)
-			{
-				// value is not a valid date; ignore
-			}
-		}
-		else if (value instanceof Date)
-		{
-			result = DateFormatHelper.format(datePattern, (Date)value);
-		}
-		else if (value instanceof Calendar)
-		{
-			result =
-				DateFormatHelper.format(
-					datePattern,
-					((Calendar)value).getTime());
-		}
-		return result;
-	}
-
-	/**
-	 * Return the pattern used to format the error value if it is a date
-	 * @return Returns the datePattern.
-	 */
-	public String getDatePattern()
-	{
-		return datePattern;
-	}
-
-	/**
-	 * Set the pattern used to format the error value if it is a date
-	 * @param datePattern The datePattern to set.
-	 */
-	public void setDatePattern(String datePattern)
-	{
-		this.datePattern = datePattern;
-	}
-
-	/**
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value,
-		Locale locale)
-	{
-		return getLocalizedMessage(
-			getMessagePrefix(),
-			locale,
-			new Object[] { getOverrideValue(value), fieldName });
-	}
 }

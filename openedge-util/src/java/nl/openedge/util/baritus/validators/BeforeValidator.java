@@ -30,16 +30,12 @@
  */
 package nl.openedge.util.baritus.validators;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import nl.openedge.baritus.FormBeanContext;
-import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 import nl.openedge.util.DateComparator;
-import nl.openedge.util.DateFormatHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,121 +46,70 @@ import org.infohazard.maverick.flow.ControllerContext;
  * 
  * @author hofstee
  */
-public class BeforeValidator extends AbstractFieldValidator
+public class BeforeValidator extends AbstractDateFieldValidator
 {
 	/**
 	 * Logger
 	 */
 	private Log log = LogFactory.getLog(BeforeValidator.class);
 
-	/**
-	 * Error key
-	 */
-	private final static String DEFAULT_PREFIX = "invalid.field.input.before";
-
-	/**
-	 * The date to check against
-	 */
-	private Date after = null;
-
-	/** 
-	 * The pattern to use when parsing the date
-	 */
-	private String datePattern = "dd-MM-yyyy";
-
-	/**
-	 * Creates a BeforeValidator with the error key prefix and the 
-	 * date to check against after.
-	 * @param prefix
-	 * @param after
-	 */
-	public BeforeValidator(String prefix, Date after)
-	{
-		super(prefix);
-		setAfter(after);
-	}
-
-	/**
-	 * Creates a BeforeValidator with the DEFAULT_PREFIX as error key
-	 * and today as the date to check against.
-	 *
-	 */
-	public BeforeValidator()
-	{
-		super(DEFAULT_PREFIX);
-	}
-
-	/**
-	 * Creates a BeforeValidator with the error key DEFAULT_PREFIX and the 
-	 * date to check against after.
-	 * @param prefix
-	 * @param after
-	 */
-	public BeforeValidator(Date after)
-	{
-		this(DEFAULT_PREFIX, after);
-	}
-
-	/**
-	 * Creates a BeforeValidator with the error key prefix and today to check against after.
-	 * @param prefix
-	 * @param after
-	 */
-	public BeforeValidator(String prefix)
-	{
-		super(prefix);
-	}
-
-	/**
-	 * Creates a BeforeValidator with the error key prefix and the 
-	 * date to check against after.
-	 * @param prefix
-	 * @param after
-	 */
-	public BeforeValidator(String prefix, Calendar after)
-	{
-		this(prefix, after.getTime());
-	}
-
-	/**
-	 * @param messagePrefix
-	 * @param rule
-	 */
-	public BeforeValidator(String messagePrefix, ValidationActivationRule rule)
-	{
-		super(messagePrefix, rule);
-	}
-
-	/**
-	 * Creates a BeforeValidator with the error key DEFAULT_PREFIX and the 
-	 * date to check against after.
-	 * @param prefix
-	 * @param after
-	 */
-	public BeforeValidator(Calendar after)
-	{
-		this(DEFAULT_PREFIX, after.getTime());
-	}
-
-	/**
-	 * @return Returns the after.
-	 */
-	public Date getAfter()
-	{
-		return after;
-	}
-
-	/**
-	 * @param after The after to set.
-	 */
-	public void setAfter(Date after)
-	{
-		if (after == null)
-		{
-			throw new IllegalArgumentException("unable to validate null value");
-		}
-		this.after = after;
-	}
+    /**
+     * Construct.
+     */
+    public BeforeValidator()
+    {
+    }
+    /**
+     * Construct.
+     * @param dateToCheck
+     */
+    public BeforeValidator(Calendar dateToCheck)
+    {
+        super(dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param dateToCheck
+     */
+    public BeforeValidator(Date dateToCheck)
+    {
+        super(dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     */
+    public BeforeValidator(String messageKey)
+    {
+        super(messageKey);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     * @param dateToCheck
+     */
+    public BeforeValidator(String messageKey, Calendar dateToCheck)
+    {
+        super(messageKey, dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     * @param dateToCheck
+     */
+    public BeforeValidator(String messageKey, Date dateToCheck)
+    {
+        super(messageKey, dateToCheck);
+    }
+    /**
+     * Construct.
+     * @param messageKey
+     * @param rule
+     */
+    public BeforeValidator(String messageKey, ValidationActivationRule rule)
+    {
+        super(messageKey, rule);
+    }
 
 	/**
 	 * @return true if value is a Date or Calendar and is before or equal to after.
@@ -179,6 +124,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		boolean before = false;
 		Date compareAfter = null;
+		Date dateToCheck = getDateToCheck();
 		DateComparator comp = new DateComparator();
 
 		if (value == null)
@@ -188,13 +134,13 @@ public class BeforeValidator extends AbstractFieldValidator
 
 		// Als before datum niet is ingesteld (null) wordt de huidige datum
 		// genomen om mee te vergelijken.
-		if( after == null)
+		if( dateToCheck == null)
 		{
 			compareAfter = new Date();
 		}
 		else
 		{
-			compareAfter = after;
+			compareAfter = dateToCheck;
 		}
 
 		// vergelijk datums
@@ -214,70 +160,4 @@ public class BeforeValidator extends AbstractFieldValidator
 		return before;
 	}
 
-	/**
-	 * Tries to format value to a DateFormat.
-	 * @see nl.openedge.maverick.framework.validation.AbstractFieldValidator#getOverrideValue(java.lang.Object)
-	 */
-	public Object getOverrideValue(Object value)
-	{
-		String result = "";
-		if (value instanceof String)
-		{
-			try
-			{
-				result =
-					DateFormatHelper.format(
-						datePattern,
-						DateFormatHelper.fallbackParse((String)value));
-			}
-			catch (ParseException e)
-			{
-				// value is not a valid date; ignore
-			}
-		}
-		else if (value instanceof Date)
-		{
-			result = DateFormatHelper.format(datePattern, (Date)value);
-		}
-		else if (value instanceof Calendar)
-		{
-			result =
-				DateFormatHelper.format(
-					datePattern,
-					((Calendar)value).getTime());
-		}
-		return result;
-	}
-
-	/**
-	 * @return Returns the datePattern.
-	 */
-	public String getDatePattern()
-	{
-		return datePattern;
-	}
-
-	/**
-	 * @param datePattern The datePattern to set.
-	 */
-	public void setDatePattern(String datePattern)
-	{
-		this.datePattern = datePattern;
-	}
-
-	/**
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value,
-		Locale locale)
-	{
-		return getLocalizedMessage(
-			getMessagePrefix(),
-			locale,
-			new Object[] { getOverrideValue(value), fieldName });
-	}
 }
