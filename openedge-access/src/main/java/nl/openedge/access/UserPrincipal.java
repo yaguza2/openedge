@@ -177,8 +177,8 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 * Sets the roles.
 	 * @param roles The roles to set
 	 */
-	public void setRoles(List groups) {
-		this.roles = groups;
+	public void setRoles(List roles) {
+		this.roles = roles;
 	}
 
 	/**
