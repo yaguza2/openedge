@@ -37,12 +37,16 @@
 	Furthermore, the format method in AbstractForm can be used to format values that do
 	not have to be looked up (or cannot looked up) in the form.
 
-- custom field populators can be registered on field level. Besides extra flexibility, this
-	has a special security releated purpose: you might want to 'block' the population
-	of certain properties like id's etc. The population is done like this:
+- custom field populators can be registered on field level and on regexp level. 
+	Besides extra flexibility, this has a special security releated purpose: 
+	you might want to 'block' the population of certain properties like id's etc. 
+	The population is done like this:
 	
-		1. see if a custom field populator is registered for the current field name.
-		2. if so, use this, if not, use the default populator.
+		1. if any regexp populators were registered, for all fields that are matched the 
+			these populators are used and the fields are removed from the list.
+		2. for the remainder: see if a custom field populator is registered for the 
+			current field name. If found, use this populator, if not:
+		3. use the default populator.
 	
 - the current locale is stored in AbstractForm. The current locale is found with 
 	the protected method getLocaleForRequest in AbstractCtrl and works as following:
