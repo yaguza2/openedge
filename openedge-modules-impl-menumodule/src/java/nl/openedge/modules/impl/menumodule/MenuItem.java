@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * An item that fits within a menu tree
@@ -47,8 +48,10 @@ public final class MenuItem implements Serializable
 	private String link;
 	// als er aliases zijn, stoppen we die hier als String in
 	private HashSet aliases = null;
+	//attributen van het menu
 	private Map attributes = null;
-	private String queryString;
+	//request parameters
+	private Properties parameters;
 	private boolean enabled = true;
 	private String shortCutKey = null;
 	
@@ -253,21 +256,28 @@ public final class MenuItem implements Serializable
 	}
 
 	/**
-	 * @return String
+	 * @return all request parameters in a string
 	 */
 	public String getQueryString()
 	{
-		return queryString;
+		if(parameters==null || parameters.isEmpty())
+			return "";
+		else
+		{
+			StringBuffer result=new StringBuffer(25);
+			Iterator it=parameters.keySet().iterator();
+			String key,value;
+			while(it.hasNext())
+			{
+				key=(String)it.next();
+				value=parameters.getProperty(key);
+				result.append(key).append("=").append(value);
+				if(it.hasNext())
+					result.append("&");
+			}
+			return result.toString();	
+		}
 	}
-
-	/**
-	 * @param string
-	 */
-	public void setQueryString(String string)
-	{
-		queryString = string;
-	}
-
 	/**
 	 * @return List
 	 */
@@ -353,6 +363,35 @@ public final class MenuItem implements Serializable
 	public void setAttributes(Map map)
 	{
 		attributes = map;
+	}
+
+	/**
+	 * @return
+	 */
+	public Properties getParameters()
+	{
+		return parameters;
+	}
+
+	/**
+	 * @param map
+	 */
+	public void setParameters(Properties map)
+	{
+		parameters= map;
+	}
+	public void addParameters(Properties params)
+	{
+		if(parameters==null)
+			parameters=params;
+		else
+			parameters.putAll(params);
+	}
+	public void addParameter(String name,String value)
+	{
+		if(parameters==null)
+			parameters=new Properties();
+		parameters.setProperty(name,value);
 	}
 
 }

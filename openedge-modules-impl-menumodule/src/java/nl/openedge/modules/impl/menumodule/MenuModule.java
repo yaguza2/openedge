@@ -30,8 +30,10 @@
  */
 package nl.openedge.modules.impl.menumodule;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -39,7 +41,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
@@ -83,6 +87,9 @@ public final class MenuModule
 	private ServletContext servletContext;
 	
 	private TreeModel menuModel = null;
+	
+	private Pattern pAnd=Pattern.compile("&");
+	private Pattern pIs=Pattern.compile("=");
 
 	/* logger */
 	private static Log log = LogFactory.getLog(MenuModule.class);
@@ -242,7 +249,21 @@ public final class MenuModule
 		
 		return model;
 	}
-	
+	private Properties parseParameters(String params)throws UnsupportedEncodingException
+	{
+		String[] all=pAnd.split(params);
+		Properties prop=new Properties();
+		String[] current=null;
+		for(int i=0;i<all.length;i++)
+		{
+			current=pIs.split(all[i],2);
+			if(current.length>=2)
+				prop.setProperty(URLEncoder.encode(current[0],"UTF-8"),URLEncoder.encode(current[1],"UTF-8"));
+			else
+				prop.setProperty(URLEncoder.encode(current[0],"UTF-8"),"");
+		}
+		return prop;
+	}
 	/* voeg childs recursief toe */
 	private void addChilds(
 		Element currentElement,
@@ -273,7 +294,8 @@ public final class MenuModule
 					if(ix < link.length())
 					{
 						String queryString = link.substring(ix+1, link.length());
-						childItem.setQueryString(queryString);	
+						childItem.addParameters(parseParameters(queryString));
+						addParameters(childItem, childElement);	
 					}
 					link = link.substring(0, ix);
 				}
@@ -402,7 +424,29 @@ public final class MenuModule
 		}
 
 	}
-	
+	private void addParameters(MenuItem childItem,Element currentElement)throws Exception
+	{
+		
+		// voeg filters voor node toe indien aanwezig
+		List attributes = currentElement.getChildren("parameter");
+		if(!attributes.isEmpty())
+		{
+			for(Iterator i = attributes.iterator(); i.hasNext(); )
+			{
+				Element attribNode = (Element)i.next();
+				String attribName = URLEncoder.encode(attribNode.getAttributeValue("name"),"UTF-8");
+				String attribValue = URLEncoder.encode(attribNode.getTextNormalize(),"UTF-8");
+				childItem.addParameter(attribName, attribValue);
+				if(log.isDebugEnabled())
+				{
+					log.debug("parameter " + attribName + "{" +
+						attribValue + "} geregistreerd als een request parameter voor " + 
+						childItem.getTag());					
+				}
+			}			
+		}
+
+	}
 	/* voeg aliases voor menu items toe (nooit voor root) */
 	private void addAliases(
 		MenuItem childItem,
@@ -709,7 +753,7 @@ public final class MenuModule
 						childItem.setTag(tempItem.getTag());
 						childItem.setEnabled(tempItem.isEnabled());
 						childItem.setShortCutKey(tempItem.getShortCutKey());
-						childItem.setQueryString(tempItem.getQueryString());
+						childItem.setParameters(tempItem.getParameters());
 						childItem.setAttributes(tempItem.getAttributes());
 						
 						if(i < (depth - 1))

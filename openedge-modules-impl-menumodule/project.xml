@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>oe-menu</id>
   <name>OpenEdge Menu Module</name>
-  <currentVersion>1.1.1</currentVersion>
+  <currentVersion>1.1.2</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -22,6 +22,11 @@
   </repository> -->
   
   <versions>
+	<version>
+      <id>1.1.2</id>
+      <name>1.1.2</name>
+      <tag>B1_1_2</tag>
+    </version>
     <version>
       <id>1.1.1</id>
       <name>1.1.1</name>

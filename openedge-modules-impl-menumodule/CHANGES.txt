@@ -1,4 +1,13 @@
 -------------------------------------------------
+1.1.2
+
+- added dtd for the xml , dtd is not yet enforced by the code
+- replaced setQueryString in MenuItem with new request parameter structure
+- it is now possible to add xml element parameter (equal to attribute) to specify parameters for the url
+- getQueryString now returns dynamicly build String dependend on the request parameters
+- added url encoding to the parameters
+
+-------------------------------------------------
 1.1.1
 
 - Moved class TreeStateCache from OpenEdge Util to this project, package:
