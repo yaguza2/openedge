@@ -77,7 +77,7 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
  * 
  * Resources can be added to the repository like this:
  * <code>
- * StringResourceRepositoryFactory vsRepository = null;
+ * StringResourceRepository vsRepository = null;
  * vsRepository = StringResourceRepositoryFactory.getRepository();
  * 
  * String myTemplateName = "/somewhere/intherepo/name";
