@@ -55,7 +55,8 @@ public class SessionListener
 	private Log log = LogFactory.getLog(SessionListener.class);
 	
 	/* sessions */
-	private List sessions = Collections.synchronizedList(new ArrayList());
+	private final static List sessions = 
+		Collections.synchronizedList(new ArrayList());
 
 	/**
 	 * default constructor
@@ -73,7 +74,7 @@ public class SessionListener
     public void sessionCreated(HttpSessionEvent event) {
 		
 		log.info(event.getSession().getId() + " created");
-		//sessions.add(event.getSession());
+		sessions.add(event.getSession());
     }
 
 
@@ -85,7 +86,7 @@ public class SessionListener
     public void sessionDestroyed(HttpSessionEvent event) {
 
 		log.info(event.getSession().getId() + " destroyed");
-		//sessions.remove(event.getSession());
+		sessions.remove(event.getSession());
     }
     
 	/**
@@ -95,6 +96,7 @@ public class SessionListener
 	public void sessionWillPassivate(HttpSessionEvent event) {
 		
 		log.info(event.getSession().getId() + " passivated");	
+		sessions.remove(event.getSession());
 	}
 	
 	/**
@@ -104,7 +106,16 @@ public class SessionListener
 	public void sessionDidActivate(HttpSessionEvent event) {
 		
 		log.info(event.getSession().getId() + " activated");
+		sessions.add(event.getSession());
 	}
     	
+	/**
+	 * get known sessions (for this server)
+	 * @return List sessions known to this listener
+	 */
+	public static List getSessions() {
+		return Collections.unmodifiableList(sessions);
+	}
+
 }
 
