@@ -90,7 +90,7 @@
 		</dependency>
 
 		<dependency>
-			<id>openedge-utils</id>
+			<id>openedge-util</id>
 			<version>SNAPSHOT</version>
 			<properties>
 				<war.bundle>true</war.bundle>
