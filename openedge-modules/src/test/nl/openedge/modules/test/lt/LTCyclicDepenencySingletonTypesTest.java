@@ -28,38 +28,74 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules.test.lt;
 
-import nl.openedge.modules.types.base.ThrowAwayType;
-import nl.openedge.modules.types.initcommands.DependentType;
+import java.net.URL;
+
+import junit.framework.TestCase;
+
+import nl.openedge.modules.JDOMConfigurator;
+import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.RepositoryFactory;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.config.URLHelper;
+import nl.openedge.modules.impl.lt.LooselyTypedComponentRepository;
+import nl.openedge.modules.types.initcommands.CyclicDependencyException;
 
 /**
- * @author Eelco Hillenius
+ * components related tests
+ * 
+ * @author E.F. Hillenius
  */
-public class CyclicModuleThrowAwayImpl implements DependentType, ThrowAwayType
+public class LTCyclicDepenencySingletonTypesTest extends TestCase
 {
 
-	private DependentType reference = null;
-
-	public CyclicModuleThrowAwayImpl()
+	/**
+	 * construct with name
+	 * @param name
+	 */
+	public LTCyclicDepenencySingletonTypesTest(String name) throws Exception
 	{
-		System.out.println(this + " created!");
+		super(name);
 	}
 
-	/**
-	 * @return DependentType
-	 */
-	public DependentType getReference()
+	public void testLoadCyclicComponentFactory() throws Exception
 	{
-		return reference;
-	}
 
-	/**
-	 * @param reference
-	 */
-	public void setReference(DependentType reference)
-	{
-		this.reference = reference;
+		try
+		{
+
+			URL url =					
+				URLHelper.convertToURL("/cyclic-singleton-oeltmodules.xml",
+					AbstractTestBase.class,
+					null);
+					
+			RepositoryFactory.setImplementingClass(
+				LooselyTypedComponentRepository.class.getName());
+
+			JDOMConfigurator c = new JDOMConfigurator(url);
+			
+			ComponentRepository cRepo = RepositoryFactory.getInstance();
+
+			// if we get here, the cycle was not detected
+			fail("cycle was not detected!");
+
+		}
+		catch (ConfigException e)
+		{
+			if(e.getCause() instanceof CyclicDependencyException)
+			{
+				System.err.println(
+					"successfully detected cycle during startup\n" 
+					+ e.getMessage());	
+			}
+			else
+			{
+				e.printStackTrace();
+				fail(e.getMessage());	
+			}
+		}
 	}
 
 }
+

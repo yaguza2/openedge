@@ -30,6 +30,14 @@
  */
 package nl.openedge.modules.test.lt;
 
+import java.util.List;
+
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+
+import nl.openedge.modules.types.base.SingletonType;
+
 
 /**
  * components related tests
@@ -167,28 +175,28 @@ public class LTComponentsTest extends AbstractTestBase
 		}
 	}
 
-//	public void testJobComponent()
-//	{
-//
-//		try
-//		{
-//
-//			Scheduler scheduler = componentFactory.getScheduler();
-//			assertNotNull(scheduler);			
-//
-//			JobDetail jd = scheduler.getJobDetail("QuartzTest", "DEFAULT");
-//			assertNotNull(jd);
-//			
-//			Trigger t = scheduler.getTrigger("testTrigger_QuartzTest", "DEFAULT");
-//			assertNotNull(t);
-//
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//			fail(e.getMessage());
-//		}
-//	}
+	public void testJobComponent()
+	{
+
+		try
+		{
+
+			Scheduler scheduler = componentFactory.getScheduler();
+			assertNotNull(scheduler);			
+
+			JobDetail jd = scheduler.getJobDetail("QuartzTest", "DEFAULT");
+			assertNotNull(jd);
+			
+			Trigger t = scheduler.getTrigger("testTrigger_QuartzTest", "DEFAULT");
+			assertNotNull(t);
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 	
 	public void testBlancoComponent()
 	{
@@ -236,105 +244,105 @@ public class LTComponentsTest extends AbstractTestBase
 		}
 	}
 	
-//	public void testGetComponentsByType()
-//	{
-//
-//		try
-//		{
-//
-//			List mods1 = 
-//				componentFactory.getComponentsByType(SingletonType.class, false);
-//			
-//			assertTrue( mods1.size() > 1 );
-//			
-//			List mods2 =
-//				componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
-//				
-//			assertTrue( mods2.size() == 1 );
-//
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//			fail(e.getMessage());
-//		}
-//	}
-//	
-//	public void testDependentComponent()
-//	{
-//
-//		try
-//		{
-//
-//			DependentComponentImpl module = (DependentComponentImpl)
-//				componentFactory.getComponent("DependendComponentTest");
-//				
-//			assertNotNull(module.getBeanComponent());
-//			
-//			assertNotNull(module.getConfigComponent());
-//
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//			fail(e.getMessage());
-//		}
-//	}
+	public void testGetComponentsByType()
+	{
+
+		try
+		{
+
+			List mods1 = 
+				componentFactory.getComponentsByType(SingletonType.class, false);
+			
+			assertTrue( mods1.size() == 0 );
+			
+			List mods2 =
+				componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
+				
+			assertTrue( mods2.size() == 1 );
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 	
-//	public void testThreadSingletonComponent()
-//	{
-//		
-//		ThreadSingletonThread t1 = new ThreadSingletonThread();
-//		ThreadSingletonThread t2 = new ThreadSingletonThread();
-//		
-//		t1.start();
-//		t2.start();
-//		
-//		try
-//		{
-//			t1.join();
-//			t2.join();
-//		}
-//		catch (InterruptedException e)
-//		{
-//			e.printStackTrace();
-//		}
-//
-//		assertNotNull(t1.getModule1());
-//		assertNotNull(t1.getModule2());
-//		
-//		assertNotNull(t2.getModule1());
-//		assertNotNull(t2.getModule2());
-//
-//		assertSame(t1.getModule1(), t1.getModule2());
-//
-//		assertNotSame(t1.getModule1(), t2.getModule1());
-//		
-//	}
-//
-//
-//	class ThreadSingletonThread extends Thread
-//	{
-//		private ThreadSingletonComponentImpl module1 = null;
-//		
-//		private ThreadSingletonComponentImpl module2 = null;
-//	
-//		public void run()
-//		{
-//			module1 = (ThreadSingletonComponentImpl)
-//				componentFactory.getComponent("ThreadSingletonTest");
-//		}
-//		
-//		public ThreadSingletonComponentImpl getModule1()
-//		{
-//			return module1;
-//		}
-//		
-//		public ThreadSingletonComponentImpl getModule2()
-//		{
-//			return module1;
-//		}
-//	}
+	public void testDependentComponent()
+	{
+
+		try
+		{
+
+			DependentComponentImpl module = (DependentComponentImpl)
+				componentFactory.getComponent("DependendComponentTest");
+				
+			assertNotNull(module.getBeanComponent());
+			
+			assertNotNull(module.getConfigComponent());
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testThreadSingletonComponent()
+	{
+		
+		ThreadSingletonThread t1 = new ThreadSingletonThread();
+		ThreadSingletonThread t2 = new ThreadSingletonThread();
+		
+		t1.start();
+		t2.start();
+		
+		try
+		{
+			t1.join();
+			t2.join();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+
+		assertNotNull(t1.getModule1());
+		assertNotNull(t1.getModule2());
+		
+		assertNotNull(t2.getModule1());
+		assertNotNull(t2.getModule2());
+
+		assertSame(t1.getModule1(), t1.getModule2());
+
+		assertNotSame(t1.getModule1(), t2.getModule1());
+		
+	}
+
+
+	class ThreadSingletonThread extends Thread
+	{
+		private ThreadSingletonComponentImpl module1 = null;
+		
+		private ThreadSingletonComponentImpl module2 = null;
+	
+		public void run()
+		{
+			module1 = (ThreadSingletonComponentImpl)
+				componentFactory.getComponent("ThreadSingletonTest");
+		}
+		
+		public ThreadSingletonComponentImpl getModule1()
+		{
+			return module1;
+		}
+		
+		public ThreadSingletonComponentImpl getModule2()
+		{
+			return module1;
+		}
+	}
 
 }
 

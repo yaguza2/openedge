@@ -31,7 +31,10 @@
 package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ComponentLookupException;
+import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ComponentObserver;
+import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
@@ -40,9 +43,12 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
  * @author Eelco Hillenius
  */
 public class ThreadSingletonTypeFactory extends AbstractComponentFactory
+	implements ComponentObserver
 {
 	
 	protected static ThreadLocal singletonInstanceHolder = new ThreadLocal();
+
+	private boolean executeInitCommands = true;
 
 	/**
 	 * get instance of module
@@ -63,8 +69,7 @@ public class ThreadSingletonTypeFactory extends AbstractComponentFactory
 					singletonInstance = componentClass.newInstance();
 					
 					singletonInstanceHolder.set(singletonInstance);
-					
-					executeInitCommands(singletonInstance);
+
 				}
 				catch (InstantiationException e)
 				{
@@ -73,6 +78,17 @@ public class ThreadSingletonTypeFactory extends AbstractComponentFactory
 				catch (IllegalAccessException e)
 				{
 					throw new ComponentLookupException(e);
+				}
+
+			}
+			
+			if(executeInitCommands)
+			{
+				executeInitCommands = false;
+			
+				try
+				{
+					executeInitCommands(singletonInstance);	
 				}
 				catch (InitCommandException e)
 				{
@@ -84,10 +100,33 @@ public class ThreadSingletonTypeFactory extends AbstractComponentFactory
 					e.printStackTrace();
 					throw new ComponentLookupException(e);
 				}
-
 			}
+			
 		}
+		
 		return singletonInstance;
 	}
+
+	/**
+	 * set component factory
+	 * @param factory component factory
+	 */
+	public void setComponentRepository(ComponentRepository factory)
+	{
+		componentRepository = factory;
+		componentRepository.addObserver(this);
+	}
+	
+	/**
+	 * fired after all components are (re)loaded; 
+	 * @param evt event
+	 */
+	public void modulesLoaded(ComponentsLoadedEvent evt)
+	{
+		// set flag
+		this.executeInitCommands = true;
+			
+	}
+
 
 }

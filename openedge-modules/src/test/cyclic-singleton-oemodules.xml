@@ -1,49 +1,34 @@
 <?xml version="1.0"?>
 <components-config>
 
-	<scheduler properties="/quartz.properties">
-
-		<trigger name="testTrigger" group="DEFAULT"
-				 class="org.quartz.SimpleTrigger">
-			<parameter name="repeatInterval" value="2000"/>
-			<parameter name="repeatCount" value="-1"/>
-		</trigger>
-		
-		<jobExecutionMap>
-			<job trigger="testTrigger" component="QuartzTest" />
-		</jobExecutionMap>
-
-	</scheduler>
-	
 	<components>
-
 		
 		<!-- Test ThrowAways -->
-		<component name="CyclicThrowAwayTest1A"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+		<component name="CyclicSingletonTest1A"
+				class="nl.openedge.modules.test.CyclicComponentSingletonImpl">
 				
-			<dependency componentName="CyclicThrowAwayTest1B" propertyName="reference"/>
+			<dependency componentName="CyclicSingletonTest1B" propertyName="reference"/>
 			
 		</component>
 		
-		<component name="CyclicThrowAwayTest1B"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+		<component name="CyclicSingletonTest1B"
+				class="nl.openedge.modules.test.CyclicComponentSingletonImpl">
 				
-			<dependency componentName="CyclicThrowAwayTest1C" propertyName="reference"/>
+			<dependency componentName="CyclicSingletonTest1C" propertyName="reference"/>
 			
 		</component>
 		
-		<component name="CyclicThrowAwayTest1C"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+		<component name="CyclicSingletonTest1C"
+				class="nl.openedge.modules.test.CyclicComponentSingletonImpl">
 				
-			<dependency componentName="CyclicThrowAwayTest1D" propertyName="reference"/>
+			<dependency componentName="CyclicSingletonTest1D" propertyName="reference"/>
 			
 		</component>
 		
-		<component name="CyclicThrowAwayTest1D"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+		<component name="CyclicSingletonTest1D"
+				class="nl.openedge.modules.test.CyclicComponentSingletonImpl">
 				
-			<dependency componentName="CyclicThrowAwayTest1B" propertyName="reference"/>
+			<dependency componentName="CyclicSingletonTest1B" propertyName="reference"/>
 			
 		</component>
 		<!-- END Test ThrowAways -->

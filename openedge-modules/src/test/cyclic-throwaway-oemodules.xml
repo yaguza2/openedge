@@ -1,47 +1,32 @@
 <?xml version="1.0"?>
 <components-config>
-
-	<scheduler properties="/quartz.properties">
-
-		<trigger name="testTrigger" group="DEFAULT"
-				 class="org.quartz.SimpleTrigger">
-			<parameter name="repeatInterval" value="2000"/>
-			<parameter name="repeatCount" value="-1"/>
-		</trigger>
-		
-		<jobExecutionMap>
-			<job trigger="testTrigger" component="QuartzTest" />
-		</jobExecutionMap>
-
-	</scheduler>
 	
 	<components>
 
-		
 		<!-- Test ThrowAways -->
 		<component name="CyclicThrowAwayTest1A"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+				class="nl.openedge.modules.test.CyclicComponentThrowAwayImpl">
 				
 			<dependency componentName="CyclicThrowAwayTest1B" propertyName="reference"/>
 			
 		</component>
 		
 		<component name="CyclicThrowAwayTest1B"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+				class="nl.openedge.modules.test.CyclicComponentThrowAwayImpl">
 				
 			<dependency componentName="CyclicThrowAwayTest1C" propertyName="reference"/>
 			
 		</component>
 		
 		<component name="CyclicThrowAwayTest1C"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+				class="nl.openedge.modules.test.CyclicComponentThrowAwayImpl">
 				
 			<dependency componentName="CyclicThrowAwayTest1D" propertyName="reference"/>
 			
 		</component>
 		
 		<component name="CyclicThrowAwayTest1D"
-				class="nl.openedge.modules.test.CyclicModuleThrowAwayImpl">
+				class="nl.openedge.modules.test.CyclicComponentThrowAwayImpl">
 				
 			<dependency componentName="CyclicThrowAwayTest1B" propertyName="reference"/>
 			

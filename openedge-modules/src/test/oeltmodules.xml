@@ -103,16 +103,20 @@
 			</init-commands>
 				
 		</component>
-<!--			
+			
 		<component name="DependendComponentTest"
 				class="nl.openedge.modules.test.lt.DependentComponentImpl">
+				
+			<init-commands>
+				<command>dependent</command>
+			</init-commands>
 				
 			<dependency componentName="BeanTest" propertyName="beanComponent"/>
 			<dependency componentName="ConfigurableTest" propertyName="configComponent"/>
 			
 		</component>
--->		
-		<component name="ThreadSingletonTest" 
+		
+		<component name="ThreadSingletonTest" type="threadSingleton"
 				class="nl.openedge.modules.test.lt.ThreadSingletonComponentImpl"/>
 -->	
 	</components>

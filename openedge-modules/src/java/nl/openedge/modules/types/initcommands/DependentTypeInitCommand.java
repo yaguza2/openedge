@@ -100,23 +100,13 @@ public class DependentTypeInitCommand implements InitCommand
 		throws InitCommandException, ConfigException, CyclicDependencyException
 	{
 
-//		if(componentInstance instanceof DependentType)
-//		{
-			// create decorator with instance
-			DependentTypeWrapper solver = new DependentTypeWrapper();
-			solver.setComponentName(this.componentName);
-			solver.setComponentInstance((DependentType)componentInstance);
-			solver.setNamedDependencies(this.namedDependencies);
-			solver.setModuleFactory(this.moduleFactory);
+		DependentTypeWrapper solver = new DependentTypeWrapper();
+		solver.setComponentName(this.componentName);
+		solver.setComponentInstance(componentInstance);
+		solver.setNamedDependencies(this.namedDependencies);
+		solver.setModuleFactory(this.moduleFactory);
 
-			solver.execute(componentInstance);
-
-//		}
-//		else
-//		{
-//			throw new InitCommandException(
-//			"component is not of type " + DependentType.class.getName());	
-//		}
+		solver.execute(componentInstance);
 		
 	}
 
