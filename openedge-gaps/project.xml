@@ -9,6 +9,7 @@
         <url>http://www.openedge.nl</url>
     </organization>
     <inceptionYear>2004</inceptionYear>
+    <package>nl.openedge.gaps</package>
     <logo>/images/logo.gif</logo>
     <shortDescription>Generiek Applicatie Parameter Systeem</shortDescription>
     <repository/>
@@ -146,8 +147,8 @@
         <dependency>
             <groupId>openedge-util</groupId>
             <artifactId>openedge-util</artifactId>
-            <version>1.2.10</version>
-            <jar>openedge-util-1.2.10.jar</jar>
+            <version>1.2.11</version>
+            <jar>openedge-util-1.2.11.jar</jar>
             <type>jar</type>
             <properties/>
         </dependency>
