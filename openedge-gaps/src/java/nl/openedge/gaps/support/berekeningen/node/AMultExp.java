@@ -4,97 +4,119 @@ package nl.openedge.gaps.support.berekeningen.node;
 
 import nl.openedge.gaps.support.berekeningen.analysis.Analysis;
 
-public final class AMultExp extends PExp {
+public final class AMultExp extends PExp
+{
 
-    private PExp _left_;
+	private PExp _left_;
 
-    private PExp _right_;
+	private PExp _right_;
 
-    public AMultExp() {
-    }
+	public AMultExp()
+	{
+	}
 
-    public AMultExp(PExp _left_, PExp _right_) {
-        setLeft(_left_);
+	public AMultExp(PExp _left_, PExp _right_)
+	{
+		setLeft(_left_);
 
-        setRight(_right_);
+		setRight(_right_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AMultExp((PExp) cloneNode(_left_), (PExp) cloneNode(_right_));
-    }
+	public Object clone()
+	{
+		return new AMultExp((PExp) cloneNode(_left_), (PExp) cloneNode(_right_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAMultExp(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAMultExp(this);
+	}
 
-    public PExp getLeft() {
-        return _left_;
-    }
+	public PExp getLeft()
+	{
+		return _left_;
+	}
 
-    public void setLeft(PExp node) {
-        if (_left_ != null) {
-            _left_.parent(null);
-        }
+	public void setLeft(PExp node)
+	{
+		if (_left_ != null)
+		{
+			_left_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _left_ = node;
-    }
+		_left_ = node;
+	}
 
-    public PExp getRight() {
-        return _right_;
-    }
+	public PExp getRight()
+	{
+		return _right_;
+	}
 
-    public void setRight(PExp node) {
-        if (_right_ != null) {
-            _right_.parent(null);
-        }
+	public void setRight(PExp node)
+	{
+		if (_right_ != null)
+		{
+			_right_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _right_ = node;
-    }
+		_right_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_left_) + toString(_right_);
-    }
+	public String toString()
+	{
+		return "" + toString(_left_) + toString(_right_);
+	}
 
-    void removeChild(Node child) {
-        if (_left_ == child) {
-            _left_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_left_ == child)
+		{
+			_left_ = null;
+			return;
+		}
 
-        if (_right_ == child) {
-            _right_ = null;
-            return;
-        }
+		if (_right_ == child)
+		{
+			_right_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_left_ == oldChild) {
-            setLeft((PExp) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_left_ == oldChild)
+		{
+			setLeft((PExp) newChild);
+			return;
+		}
 
-        if (_right_ == oldChild) {
-            setRight((PExp) newChild);
-            return;
-        }
+		if (_right_ == oldChild)
+		{
+			setRight((PExp) newChild);
+			return;
+		}
 
-    }
+	}
 }

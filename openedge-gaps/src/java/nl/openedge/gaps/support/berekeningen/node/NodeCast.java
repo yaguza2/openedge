@@ -2,14 +2,17 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public class NodeCast implements Cast {
+public class NodeCast implements Cast
+{
 
-    public final static NodeCast instance = new NodeCast();
+	public final static NodeCast instance = new NodeCast();
 
-    private NodeCast() {
-    }
+	private NodeCast()
+	{
+	}
 
-    public Object cast(Object o) {
-        return (Node) o;
-    }
+	public Object cast(Object o)
+	{
+		return (Node) o;
+	}
 }

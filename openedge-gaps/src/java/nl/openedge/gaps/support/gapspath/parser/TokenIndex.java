@@ -17,59 +17,73 @@ import nl.openedge.gaps.support.gapspath.node.TRBrace;
 import nl.openedge.gaps.support.gapspath.node.TRBracket;
 import nl.openedge.gaps.support.gapspath.node.TSlash;
 
-class TokenIndex extends AnalysisAdapter {
+class TokenIndex extends AnalysisAdapter
+{
 
-    int index;
+	int index;
 
-    public void caseTAnd(TAnd node) {
-        index = 0;
-    }
+	public void caseTAnd(TAnd node)
+	{
+		index = 0;
+	}
 
-    public void caseTOr(TOr node) {
-        index = 1;
-    }
+	public void caseTOr(TOr node)
+	{
+		index = 1;
+	}
 
-    public void caseTLBracket(TLBracket node) {
-        index = 2;
-    }
+	public void caseTLBracket(TLBracket node)
+	{
+		index = 2;
+	}
 
-    public void caseTRBracket(TRBracket node) {
-        index = 3;
-    }
+	public void caseTRBracket(TRBracket node)
+	{
+		index = 3;
+	}
 
-    public void caseTLBrace(TLBrace node) {
-        index = 4;
-    }
+	public void caseTLBrace(TLBrace node)
+	{
+		index = 4;
+	}
 
-    public void caseTRBrace(TRBrace node) {
-        index = 5;
-    }
+	public void caseTRBrace(TRBrace node)
+	{
+		index = 5;
+	}
 
-    public void caseTSlash(TSlash node) {
-        index = 6;
-    }
+	public void caseTSlash(TSlash node)
+	{
+		index = 6;
+	}
 
-    public void caseTAt(TAt node) {
-        index = 7;
-    }
+	public void caseTAt(TAt node)
+	{
+		index = 7;
+	}
 
-    public void caseTColon(TColon node) {
-        index = 8;
-    }
+	public void caseTColon(TColon node)
+	{
+		index = 8;
+	}
 
-    public void caseTId(TId node) {
-        index = 9;
-    }
+	public void caseTId(TId node)
+	{
+		index = 9;
+	}
 
-    public void caseTEq(TEq node) {
-        index = 10;
-    }
+	public void caseTEq(TEq node)
+	{
+		index = 10;
+	}
 
-    public void caseTQuote(TQuote node) {
-        index = 11;
-    }
+	public void caseTQuote(TQuote node)
+	{
+		index = 11;
+	}
 
-    public void caseEOF(EOF node) {
-        index = 12;
-    }
+	public void caseEOF(EOF node)
+	{
+		index = 12;
+	}
 }

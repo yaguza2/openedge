@@ -4,169 +4,206 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AParamPath extends PPath {
+public final class AParamPath extends PPath
+{
 
-    private PStructGroup _structGroup_;
+	private PStructGroup _structGroup_;
 
-    private PParamGroup _paramGroup_;
+	private PParamGroup _paramGroup_;
 
-    private PParam _param_;
+	private PParam _param_;
 
-    private POptions _options_;
+	private POptions _options_;
 
-    public AParamPath() {
-    }
+	public AParamPath()
+	{
+	}
 
-    public AParamPath(PStructGroup _structGroup_, PParamGroup _paramGroup_, PParam _param_,
-            POptions _options_) {
-        setStructGroup(_structGroup_);
+	public AParamPath(PStructGroup _structGroup_, PParamGroup _paramGroup_,
+			PParam _param_, POptions _options_)
+	{
+		setStructGroup(_structGroup_);
 
-        setParamGroup(_paramGroup_);
+		setParamGroup(_paramGroup_);
 
-        setParam(_param_);
+		setParam(_param_);
 
-        setOptions(_options_);
+		setOptions(_options_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AParamPath((PStructGroup) cloneNode(_structGroup_),
-                (PParamGroup) cloneNode(_paramGroup_), (PParam) cloneNode(_param_),
-                (POptions) cloneNode(_options_));
-    }
+	public Object clone()
+	{
+		return new AParamPath((PStructGroup) cloneNode(_structGroup_),
+				(PParamGroup) cloneNode(_paramGroup_), (PParam) cloneNode(_param_),
+				(POptions) cloneNode(_options_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAParamPath(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAParamPath(this);
+	}
 
-    public PStructGroup getStructGroup() {
-        return _structGroup_;
-    }
+	public PStructGroup getStructGroup()
+	{
+		return _structGroup_;
+	}
 
-    public void setStructGroup(PStructGroup node) {
-        if (_structGroup_ != null) {
-            _structGroup_.parent(null);
-        }
+	public void setStructGroup(PStructGroup node)
+	{
+		if (_structGroup_ != null)
+		{
+			_structGroup_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _structGroup_ = node;
-    }
+		_structGroup_ = node;
+	}
 
-    public PParamGroup getParamGroup() {
-        return _paramGroup_;
-    }
+	public PParamGroup getParamGroup()
+	{
+		return _paramGroup_;
+	}
 
-    public void setParamGroup(PParamGroup node) {
-        if (_paramGroup_ != null) {
-            _paramGroup_.parent(null);
-        }
+	public void setParamGroup(PParamGroup node)
+	{
+		if (_paramGroup_ != null)
+		{
+			_paramGroup_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _paramGroup_ = node;
-    }
+		_paramGroup_ = node;
+	}
 
-    public PParam getParam() {
-        return _param_;
-    }
+	public PParam getParam()
+	{
+		return _param_;
+	}
 
-    public void setParam(PParam node) {
-        if (_param_ != null) {
-            _param_.parent(null);
-        }
+	public void setParam(PParam node)
+	{
+		if (_param_ != null)
+		{
+			_param_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _param_ = node;
-    }
+		_param_ = node;
+	}
 
-    public POptions getOptions() {
-        return _options_;
-    }
+	public POptions getOptions()
+	{
+		return _options_;
+	}
 
-    public void setOptions(POptions node) {
-        if (_options_ != null) {
-            _options_.parent(null);
-        }
+	public void setOptions(POptions node)
+	{
+		if (_options_ != null)
+		{
+			_options_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _options_ = node;
-    }
+		_options_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_structGroup_) + toString(_paramGroup_) + toString(_param_)
-                + toString(_options_);
-    }
+	public String toString()
+	{
+		return ""
+				+ toString(_structGroup_) + toString(_paramGroup_) + toString(_param_)
+				+ toString(_options_);
+	}
 
-    void removeChild(Node child) {
-        if (_structGroup_ == child) {
-            _structGroup_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_structGroup_ == child)
+		{
+			_structGroup_ = null;
+			return;
+		}
 
-        if (_paramGroup_ == child) {
-            _paramGroup_ = null;
-            return;
-        }
+		if (_paramGroup_ == child)
+		{
+			_paramGroup_ = null;
+			return;
+		}
 
-        if (_param_ == child) {
-            _param_ = null;
-            return;
-        }
+		if (_param_ == child)
+		{
+			_param_ = null;
+			return;
+		}
 
-        if (_options_ == child) {
-            _options_ = null;
-            return;
-        }
+		if (_options_ == child)
+		{
+			_options_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_structGroup_ == oldChild) {
-            setStructGroup((PStructGroup) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_structGroup_ == oldChild)
+		{
+			setStructGroup((PStructGroup) newChild);
+			return;
+		}
 
-        if (_paramGroup_ == oldChild) {
-            setParamGroup((PParamGroup) newChild);
-            return;
-        }
+		if (_paramGroup_ == oldChild)
+		{
+			setParamGroup((PParamGroup) newChild);
+			return;
+		}
 
-        if (_param_ == oldChild) {
-            setParam((PParam) newChild);
-            return;
-        }
+		if (_param_ == oldChild)
+		{
+			setParam((PParam) newChild);
+			return;
+		}
 
-        if (_options_ == oldChild) {
-            setOptions((POptions) newChild);
-            return;
-        }
+		if (_options_ == oldChild)
+		{
+			setOptions((POptions) newChild);
+			return;
+		}
 
-    }
+	}
 }

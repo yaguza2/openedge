@@ -2,14 +2,17 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public class NoCast implements Cast {
+public class NoCast implements Cast
+{
 
-    public final static NoCast instance = new NoCast();
+	public final static NoCast instance = new NoCast();
 
-    private NoCast() {
-    }
+	private NoCast()
+	{
+	}
 
-    public Object cast(Object o) {
-        return o;
-    }
+	public Object cast(Object o)
+	{
+		return o;
+	}
 }

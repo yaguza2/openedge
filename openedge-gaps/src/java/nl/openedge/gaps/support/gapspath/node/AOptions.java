@@ -4,132 +4,161 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AOptions extends POptions {
+public final class AOptions extends POptions
+{
 
-    private TLBrace _lBrace_;
+	private TLBrace _lBrace_;
 
-    private POptionsBlock _optionsBlock_;
+	private POptionsBlock _optionsBlock_;
 
-    private TRBrace _rBrace_;
+	private TRBrace _rBrace_;
 
-    public AOptions() {
-    }
+	public AOptions()
+	{
+	}
 
-    public AOptions(TLBrace _lBrace_, POptionsBlock _optionsBlock_, TRBrace _rBrace_) {
-        setLBrace(_lBrace_);
+	public AOptions(TLBrace _lBrace_, POptionsBlock _optionsBlock_, TRBrace _rBrace_)
+	{
+		setLBrace(_lBrace_);
 
-        setOptionsBlock(_optionsBlock_);
+		setOptionsBlock(_optionsBlock_);
 
-        setRBrace(_rBrace_);
+		setRBrace(_rBrace_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AOptions((TLBrace) cloneNode(_lBrace_),
-                (POptionsBlock) cloneNode(_optionsBlock_), (TRBrace) cloneNode(_rBrace_));
-    }
+	public Object clone()
+	{
+		return new AOptions((TLBrace) cloneNode(_lBrace_),
+				(POptionsBlock) cloneNode(_optionsBlock_), (TRBrace) cloneNode(_rBrace_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAOptions(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAOptions(this);
+	}
 
-    public TLBrace getLBrace() {
-        return _lBrace_;
-    }
+	public TLBrace getLBrace()
+	{
+		return _lBrace_;
+	}
 
-    public void setLBrace(TLBrace node) {
-        if (_lBrace_ != null) {
-            _lBrace_.parent(null);
-        }
+	public void setLBrace(TLBrace node)
+	{
+		if (_lBrace_ != null)
+		{
+			_lBrace_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _lBrace_ = node;
-    }
+		_lBrace_ = node;
+	}
 
-    public POptionsBlock getOptionsBlock() {
-        return _optionsBlock_;
-    }
+	public POptionsBlock getOptionsBlock()
+	{
+		return _optionsBlock_;
+	}
 
-    public void setOptionsBlock(POptionsBlock node) {
-        if (_optionsBlock_ != null) {
-            _optionsBlock_.parent(null);
-        }
+	public void setOptionsBlock(POptionsBlock node)
+	{
+		if (_optionsBlock_ != null)
+		{
+			_optionsBlock_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _optionsBlock_ = node;
-    }
+		_optionsBlock_ = node;
+	}
 
-    public TRBrace getRBrace() {
-        return _rBrace_;
-    }
+	public TRBrace getRBrace()
+	{
+		return _rBrace_;
+	}
 
-    public void setRBrace(TRBrace node) {
-        if (_rBrace_ != null) {
-            _rBrace_.parent(null);
-        }
+	public void setRBrace(TRBrace node)
+	{
+		if (_rBrace_ != null)
+		{
+			_rBrace_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _rBrace_ = node;
-    }
+		_rBrace_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_lBrace_) + toString(_optionsBlock_) + toString(_rBrace_);
-    }
+	public String toString()
+	{
+		return "" + toString(_lBrace_) + toString(_optionsBlock_) + toString(_rBrace_);
+	}
 
-    void removeChild(Node child) {
-        if (_lBrace_ == child) {
-            _lBrace_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_lBrace_ == child)
+		{
+			_lBrace_ = null;
+			return;
+		}
 
-        if (_optionsBlock_ == child) {
-            _optionsBlock_ = null;
-            return;
-        }
+		if (_optionsBlock_ == child)
+		{
+			_optionsBlock_ = null;
+			return;
+		}
 
-        if (_rBrace_ == child) {
-            _rBrace_ = null;
-            return;
-        }
+		if (_rBrace_ == child)
+		{
+			_rBrace_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_lBrace_ == oldChild) {
-            setLBrace((TLBrace) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_lBrace_ == oldChild)
+		{
+			setLBrace((TLBrace) newChild);
+			return;
+		}
 
-        if (_optionsBlock_ == oldChild) {
-            setOptionsBlock((POptionsBlock) newChild);
-            return;
-        }
+		if (_optionsBlock_ == oldChild)
+		{
+			setOptionsBlock((POptionsBlock) newChild);
+			return;
+		}
 
-        if (_rBrace_ == oldChild) {
-            setRBrace((TRBrace) newChild);
-            return;
-        }
+		if (_rBrace_ == oldChild)
+		{
+			setRBrace((TRBrace) newChild);
+			return;
+		}
 
-    }
+	}
 }

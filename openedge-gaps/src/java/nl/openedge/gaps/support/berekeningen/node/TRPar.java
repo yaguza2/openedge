@@ -4,27 +4,33 @@ package nl.openedge.gaps.support.berekeningen.node;
 
 import nl.openedge.gaps.support.berekeningen.analysis.Analysis;
 
-public final class TRPar extends Token {
+public final class TRPar extends Token
+{
 
-    public TRPar() {
-        super.setText(")");
-    }
+	public TRPar()
+	{
+		super.setText(")");
+	}
 
-    public TRPar(int line, int pos) {
-        super.setText(")");
-        setLine(line);
-        setPos(pos);
-    }
+	public TRPar(int line, int pos)
+	{
+		super.setText(")");
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TRPar(getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TRPar(getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTRPar(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTRPar(this);
+	}
 
-    public void setText(String text) {
-        throw new RuntimeException("Cannot change TRPar text.");
-    }
+	public void setText(String text)
+	{
+		throw new RuntimeException("Cannot change TRPar text.");
+	}
 }

@@ -4,23 +4,28 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class EOF extends Token {
+public final class EOF extends Token
+{
 
-    public EOF() {
-        setText("");
-    }
+	public EOF()
+	{
+		setText("");
+	}
 
-    public EOF(int line, int pos) {
-        setText("");
-        setLine(line);
-        setPos(pos);
-    }
+	public EOF(int line, int pos)
+	{
+		setText("");
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new EOF(getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new EOF(getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseEOF(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseEOF(this);
+	}
 }

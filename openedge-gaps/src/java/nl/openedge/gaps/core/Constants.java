@@ -11,18 +11,20 @@ import java.util.Locale;
 /**
  * Klasse voor constanten.
  */
-public final class Constants {
+public final class Constants
+{
 
-    /** constante voor Nederlandse locale. */
-    public static final Locale NEDERLANDSE_LOCALE = new Locale("nl", "NL");
+	/** constante voor Nederlandse locale. */
+	public static final Locale NEDERLANDSE_LOCALE = new Locale("nl", "NL");
 
-    /** globale naam voor root parameter groep, waarde == ROOT. */
-    public static final String ROOT_ID = "DEFAULT";
+	/** globale naam voor root parameter groep, waarde == ROOT. */
+	public static final String ROOT_ID = "DEFAULT";
 
-    /**
-     * Verbogen constructor.
-     */
-    private Constants() {
-        // niets
-    }
+	/**
+	 * Verbogen constructor.
+	 */
+	private Constants()
+	{
+		// niets
+	}
 }

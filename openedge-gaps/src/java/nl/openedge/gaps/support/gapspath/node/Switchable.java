@@ -2,7 +2,8 @@
 
 package nl.openedge.gaps.support.gapspath.node;
 
-public interface Switchable {
+public interface Switchable
+{
 
-    void apply(Switch sw);
+	void apply(Switch sw);
 }

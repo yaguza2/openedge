@@ -4,98 +4,120 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AOrOptionsPartTail extends POptionsPartTail {
+public final class AOrOptionsPartTail extends POptionsPartTail
+{
 
-    private TOr _or_;
+	private TOr _or_;
 
-    private POptionsPart _optionsPart_;
+	private POptionsPart _optionsPart_;
 
-    public AOrOptionsPartTail() {
-    }
+	public AOrOptionsPartTail()
+	{
+	}
 
-    public AOrOptionsPartTail(TOr _or_, POptionsPart _optionsPart_) {
-        setOr(_or_);
+	public AOrOptionsPartTail(TOr _or_, POptionsPart _optionsPart_)
+	{
+		setOr(_or_);
 
-        setOptionsPart(_optionsPart_);
+		setOptionsPart(_optionsPart_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AOrOptionsPartTail((TOr) cloneNode(_or_),
-                (POptionsPart) cloneNode(_optionsPart_));
-    }
+	public Object clone()
+	{
+		return new AOrOptionsPartTail((TOr) cloneNode(_or_),
+				(POptionsPart) cloneNode(_optionsPart_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAOrOptionsPartTail(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAOrOptionsPartTail(this);
+	}
 
-    public TOr getOr() {
-        return _or_;
-    }
+	public TOr getOr()
+	{
+		return _or_;
+	}
 
-    public void setOr(TOr node) {
-        if (_or_ != null) {
-            _or_.parent(null);
-        }
+	public void setOr(TOr node)
+	{
+		if (_or_ != null)
+		{
+			_or_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _or_ = node;
-    }
+		_or_ = node;
+	}
 
-    public POptionsPart getOptionsPart() {
-        return _optionsPart_;
-    }
+	public POptionsPart getOptionsPart()
+	{
+		return _optionsPart_;
+	}
 
-    public void setOptionsPart(POptionsPart node) {
-        if (_optionsPart_ != null) {
-            _optionsPart_.parent(null);
-        }
+	public void setOptionsPart(POptionsPart node)
+	{
+		if (_optionsPart_ != null)
+		{
+			_optionsPart_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _optionsPart_ = node;
-    }
+		_optionsPart_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_or_) + toString(_optionsPart_);
-    }
+	public String toString()
+	{
+		return "" + toString(_or_) + toString(_optionsPart_);
+	}
 
-    void removeChild(Node child) {
-        if (_or_ == child) {
-            _or_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_or_ == child)
+		{
+			_or_ = null;
+			return;
+		}
 
-        if (_optionsPart_ == child) {
-            _optionsPart_ = null;
-            return;
-        }
+		if (_optionsPart_ == child)
+		{
+			_optionsPart_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_or_ == oldChild) {
-            setOr((TOr) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_or_ == oldChild)
+		{
+			setOr((TOr) newChild);
+			return;
+		}
 
-        if (_optionsPart_ == oldChild) {
-            setOptionsPart((POptionsPart) newChild);
-            return;
-        }
+		if (_optionsPart_ == oldChild)
+		{
+			setOptionsPart((POptionsPart) newChild);
+			return;
+		}
 
-    }
+	}
 }

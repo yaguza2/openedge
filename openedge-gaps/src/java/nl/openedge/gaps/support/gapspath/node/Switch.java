@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.gapspath.node;
 
-public interface Switch {
+public interface Switch
+{
 }

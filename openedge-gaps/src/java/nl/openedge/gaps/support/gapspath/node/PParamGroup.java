@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.gapspath.node;
 
-public abstract class PParamGroup extends Node {
+public abstract class PParamGroup extends Node
+{
 }

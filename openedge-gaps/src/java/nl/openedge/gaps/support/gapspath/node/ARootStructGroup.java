@@ -4,63 +4,78 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class ARootStructGroup extends PStructGroup {
+public final class ARootStructGroup extends PStructGroup
+{
 
-    private TSlash _slash_;
+	private TSlash _slash_;
 
-    public ARootStructGroup() {
-    }
+	public ARootStructGroup()
+	{
+	}
 
-    public ARootStructGroup(TSlash _slash_) {
-        setSlash(_slash_);
+	public ARootStructGroup(TSlash _slash_)
+	{
+		setSlash(_slash_);
 
-    }
+	}
 
-    public Object clone() {
-        return new ARootStructGroup((TSlash) cloneNode(_slash_));
-    }
+	public Object clone()
+	{
+		return new ARootStructGroup((TSlash) cloneNode(_slash_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseARootStructGroup(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseARootStructGroup(this);
+	}
 
-    public TSlash getSlash() {
-        return _slash_;
-    }
+	public TSlash getSlash()
+	{
+		return _slash_;
+	}
 
-    public void setSlash(TSlash node) {
-        if (_slash_ != null) {
-            _slash_.parent(null);
-        }
+	public void setSlash(TSlash node)
+	{
+		if (_slash_ != null)
+		{
+			_slash_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _slash_ = node;
-    }
+		_slash_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_slash_);
-    }
+	public String toString()
+	{
+		return "" + toString(_slash_);
+	}
 
-    void removeChild(Node child) {
-        if (_slash_ == child) {
-            _slash_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_slash_ == child)
+		{
+			_slash_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_slash_ == oldChild) {
-            setSlash((TSlash) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_slash_ == oldChild)
+		{
+			setSlash((TSlash) newChild);
+			return;
+		}
 
-    }
+	}
 }

@@ -2,45 +2,55 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public abstract class Token extends Node {
+public abstract class Token extends Node
+{
 
-    private String text;
+	private String text;
 
-    private int line;
+	private int line;
 
-    private int pos;
+	private int pos;
 
-    public String getText() {
-        return text;
-    }
+	public String getText()
+	{
+		return text;
+	}
 
-    public void setText(String text) {
-        this.text = text;
-    }
+	public void setText(String text)
+	{
+		this.text = text;
+	}
 
-    public int getLine() {
-        return line;
-    }
+	public int getLine()
+	{
+		return line;
+	}
 
-    public void setLine(int line) {
-        this.line = line;
-    }
+	public void setLine(int line)
+	{
+		this.line = line;
+	}
 
-    public int getPos() {
-        return pos;
-    }
+	public int getPos()
+	{
+		return pos;
+	}
 
-    public void setPos(int pos) {
-        this.pos = pos;
-    }
+	public void setPos(int pos)
+	{
+		this.pos = pos;
+	}
 
-    public String toString() {
-        return text + " ";
-    }
+	public String toString()
+	{
+		return text + " ";
+	}
 
-    void removeChild(Node child) {
-    }
+	void removeChild(Node child)
+	{
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-    }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+	}
 }

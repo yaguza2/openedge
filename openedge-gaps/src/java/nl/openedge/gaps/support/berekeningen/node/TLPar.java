@@ -4,27 +4,33 @@ package nl.openedge.gaps.support.berekeningen.node;
 
 import nl.openedge.gaps.support.berekeningen.analysis.Analysis;
 
-public final class TLPar extends Token {
+public final class TLPar extends Token
+{
 
-    public TLPar() {
-        super.setText("(");
-    }
+	public TLPar()
+	{
+		super.setText("(");
+	}
 
-    public TLPar(int line, int pos) {
-        super.setText("(");
-        setLine(line);
-        setPos(pos);
-    }
+	public TLPar(int line, int pos)
+	{
+		super.setText("(");
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TLPar(getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TLPar(getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTLPar(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTLPar(this);
+	}
 
-    public void setText(String text) {
-        throw new RuntimeException("Cannot change TLPar text.");
-    }
+	public void setText(String text)
+	{
+		throw new RuntimeException("Cannot change TLPar text.");
+	}
 }

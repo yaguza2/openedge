@@ -17,59 +17,73 @@ import nl.openedge.gaps.support.berekeningen.node.TPlus;
 import nl.openedge.gaps.support.berekeningen.node.TRBrace;
 import nl.openedge.gaps.support.berekeningen.node.TRPar;
 
-class TokenIndex extends AnalysisAdapter {
+class TokenIndex extends AnalysisAdapter
+{
 
-    int index;
+	int index;
 
-    public void caseTLPar(TLPar node) {
-        index = 0;
-    }
+	public void caseTLPar(TLPar node)
+	{
+		index = 0;
+	}
 
-    public void caseTRPar(TRPar node) {
-        index = 1;
-    }
+	public void caseTRPar(TRPar node)
+	{
+		index = 1;
+	}
 
-    public void caseTPlus(TPlus node) {
-        index = 2;
-    }
+	public void caseTPlus(TPlus node)
+	{
+		index = 2;
+	}
 
-    public void caseTMinus(TMinus node) {
-        index = 3;
-    }
+	public void caseTMinus(TMinus node)
+	{
+		index = 3;
+	}
 
-    public void caseTMult(TMult node) {
-        index = 4;
-    }
+	public void caseTMult(TMult node)
+	{
+		index = 4;
+	}
 
-    public void caseTDiv(TDiv node) {
-        index = 5;
-    }
+	public void caseTDiv(TDiv node)
+	{
+		index = 5;
+	}
 
-    public void caseTComma(TComma node) {
-        index = 6;
-    }
+	public void caseTComma(TComma node)
+	{
+		index = 6;
+	}
 
-    public void caseTLBrace(TLBrace node) {
-        index = 7;
-    }
+	public void caseTLBrace(TLBrace node)
+	{
+		index = 7;
+	}
 
-    public void caseTRBrace(TRBrace node) {
-        index = 8;
-    }
+	public void caseTRBrace(TRBrace node)
+	{
+		index = 8;
+	}
 
-    public void caseTNumber(TNumber node) {
-        index = 9;
-    }
+	public void caseTNumber(TNumber node)
+	{
+		index = 9;
+	}
 
-    public void caseTId(TId node) {
-        index = 10;
-    }
+	public void caseTId(TId node)
+	{
+		index = 10;
+	}
 
-    public void caseTFuncid(TFuncid node) {
-        index = 11;
-    }
+	public void caseTFuncid(TFuncid node)
+	{
+		index = 11;
+	}
 
-    public void caseEOF(EOF node) {
-        index = 12;
-    }
+	public void caseEOF(EOF node)
+	{
+		index = 12;
+	}
 }

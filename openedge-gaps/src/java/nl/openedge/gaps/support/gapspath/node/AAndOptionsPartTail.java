@@ -4,98 +4,120 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AAndOptionsPartTail extends POptionsPartTail {
+public final class AAndOptionsPartTail extends POptionsPartTail
+{
 
-    private TAnd _and_;
+	private TAnd _and_;
 
-    private POptionsPart _optionsPart_;
+	private POptionsPart _optionsPart_;
 
-    public AAndOptionsPartTail() {
-    }
+	public AAndOptionsPartTail()
+	{
+	}
 
-    public AAndOptionsPartTail(TAnd _and_, POptionsPart _optionsPart_) {
-        setAnd(_and_);
+	public AAndOptionsPartTail(TAnd _and_, POptionsPart _optionsPart_)
+	{
+		setAnd(_and_);
 
-        setOptionsPart(_optionsPart_);
+		setOptionsPart(_optionsPart_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AAndOptionsPartTail((TAnd) cloneNode(_and_),
-                (POptionsPart) cloneNode(_optionsPart_));
-    }
+	public Object clone()
+	{
+		return new AAndOptionsPartTail((TAnd) cloneNode(_and_),
+				(POptionsPart) cloneNode(_optionsPart_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAAndOptionsPartTail(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAAndOptionsPartTail(this);
+	}
 
-    public TAnd getAnd() {
-        return _and_;
-    }
+	public TAnd getAnd()
+	{
+		return _and_;
+	}
 
-    public void setAnd(TAnd node) {
-        if (_and_ != null) {
-            _and_.parent(null);
-        }
+	public void setAnd(TAnd node)
+	{
+		if (_and_ != null)
+		{
+			_and_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _and_ = node;
-    }
+		_and_ = node;
+	}
 
-    public POptionsPart getOptionsPart() {
-        return _optionsPart_;
-    }
+	public POptionsPart getOptionsPart()
+	{
+		return _optionsPart_;
+	}
 
-    public void setOptionsPart(POptionsPart node) {
-        if (_optionsPart_ != null) {
-            _optionsPart_.parent(null);
-        }
+	public void setOptionsPart(POptionsPart node)
+	{
+		if (_optionsPart_ != null)
+		{
+			_optionsPart_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _optionsPart_ = node;
-    }
+		_optionsPart_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_and_) + toString(_optionsPart_);
-    }
+	public String toString()
+	{
+		return "" + toString(_and_) + toString(_optionsPart_);
+	}
 
-    void removeChild(Node child) {
-        if (_and_ == child) {
-            _and_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_and_ == child)
+		{
+			_and_ = null;
+			return;
+		}
 
-        if (_optionsPart_ == child) {
-            _optionsPart_ = null;
-            return;
-        }
+		if (_optionsPart_ == child)
+		{
+			_optionsPart_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_and_ == oldChild) {
-            setAnd((TAnd) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_and_ == oldChild)
+		{
+			setAnd((TAnd) newChild);
+			return;
+		}
 
-        if (_optionsPart_ == oldChild) {
-            setOptionsPart((POptionsPart) newChild);
-            return;
-        }
+		if (_optionsPart_ == oldChild)
+		{
+			setOptionsPart((POptionsPart) newChild);
+			return;
+		}
 
-    }
+	}
 }

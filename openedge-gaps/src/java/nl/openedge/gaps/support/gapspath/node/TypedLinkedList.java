@@ -6,117 +6,143 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-public class TypedLinkedList extends LinkedList {
+public class TypedLinkedList extends LinkedList
+{
 
-    Cast cast;
+	Cast cast;
 
-    public TypedLinkedList() {
-        super();
+	public TypedLinkedList()
+	{
+		super();
 
-        cast = NoCast.instance;
-    }
+		cast = NoCast.instance;
+	}
 
-    public TypedLinkedList(Collection c) {
-        super(c);
+	public TypedLinkedList(Collection c)
+	{
+		super(c);
 
-        cast = NoCast.instance;
-    }
+		cast = NoCast.instance;
+	}
 
-    public TypedLinkedList(Cast cast) {
-        super();
+	public TypedLinkedList(Cast cast)
+	{
+		super();
 
-        this.cast = cast;
-    }
+		this.cast = cast;
+	}
 
-    public TypedLinkedList(Collection c, Cast cast) {
-        super(c);
+	public TypedLinkedList(Collection c, Cast cast)
+	{
+		super(c);
 
-        this.cast = cast;
-    }
+		this.cast = cast;
+	}
 
-    public Cast getCast() {
-        return cast;
-    }
+	public Cast getCast()
+	{
+		return cast;
+	}
 
-    public void add(int index, Object element) {
-        super.add(index, cast.cast(element));
-    }
+	public void add(int index, Object element)
+	{
+		super.add(index, cast.cast(element));
+	}
 
-    public boolean add(Object o) {
-        return super.add(cast.cast(o));
-    }
+	public boolean add(Object o)
+	{
+		return super.add(cast.cast(o));
+	}
 
-    public boolean addAll(Collection c) {
-        Object[] elements = c.toArray();
-        for (int i = 0; i < elements.length; i++) {
-            super.add(cast.cast(elements[i]));
-        }
-        return true;
-    }
+	public boolean addAll(Collection c)
+	{
+		Object[] elements = c.toArray();
+		for (int i = 0; i < elements.length; i++)
+		{
+			super.add(cast.cast(elements[i]));
+		}
+		return true;
+	}
 
-    public boolean addAll(int index, Collection c) {
-        int pos = index;
-        Object[] elements = c.toArray();
-        for (int i = 0; i < elements.length; i++) {
-            super.add(pos++, cast.cast(elements[i]));
-        }
-        return true;
-    }
+	public boolean addAll(int index, Collection c)
+	{
+		int pos = index;
+		Object[] elements = c.toArray();
+		for (int i = 0; i < elements.length; i++)
+		{
+			super.add(pos++, cast.cast(elements[i]));
+		}
+		return true;
+	}
 
-    public void addFirst(Object o) {
-        super.addFirst(cast.cast(o));
-    }
+	public void addFirst(Object o)
+	{
+		super.addFirst(cast.cast(o));
+	}
 
-    public void addLast(Object o) {
-        super.addLast(cast.cast(o));
-    }
+	public void addLast(Object o)
+	{
+		super.addLast(cast.cast(o));
+	}
 
-    public ListIterator listIterator(int index) {
-        return new TypedLinkedListIterator(super.listIterator(index));
-    }
+	public ListIterator listIterator(int index)
+	{
+		return new TypedLinkedListIterator(super.listIterator(index));
+	}
 
-    private class TypedLinkedListIterator implements ListIterator {
+	private class TypedLinkedListIterator implements ListIterator
+	{
 
-        ListIterator iterator;
+		ListIterator iterator;
 
-        TypedLinkedListIterator(ListIterator iterator) {
-            this.iterator = iterator;
-        }
+		TypedLinkedListIterator(ListIterator iterator)
+		{
+			this.iterator = iterator;
+		}
 
-        public boolean hasNext() {
-            return iterator.hasNext();
-        }
+		public boolean hasNext()
+		{
+			return iterator.hasNext();
+		}
 
-        public Object next() {
-            return iterator.next();
-        }
+		public Object next()
+		{
+			return iterator.next();
+		}
 
-        public boolean hasPrevious() {
-            return iterator.hasPrevious();
-        }
+		public boolean hasPrevious()
+		{
+			return iterator.hasPrevious();
+		}
 
-        public Object previous() {
-            return iterator.previous();
-        }
+		public Object previous()
+		{
+			return iterator.previous();
+		}
 
-        public int nextIndex() {
-            return iterator.nextIndex();
-        }
+		public int nextIndex()
+		{
+			return iterator.nextIndex();
+		}
 
-        public int previousIndex() {
-            return iterator.previousIndex();
-        }
+		public int previousIndex()
+		{
+			return iterator.previousIndex();
+		}
 
-        public void remove() {
-            iterator.remove();
-        }
+		public void remove()
+		{
+			iterator.remove();
+		}
 
-        public void set(Object o) {
-            iterator.set(cast.cast(o));
-        }
+		public void set(Object o)
+		{
+			iterator.set(cast.cast(o));
+		}
 
-        public void add(Object o) {
-            iterator.add(cast.cast(o));
-        }
-    }
+		public void add(Object o)
+		{
+			iterator.add(cast.cast(o));
+		}
+	}
 }

@@ -2,7 +2,8 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public interface Cast {
+public interface Cast
+{
 
-    Object cast(Object o);
+	Object cast(Object o);
 }

@@ -4,14 +4,16 @@ package nl.openedge.gaps.support.gapspath.parser;
 
 import java.util.ArrayList;
 
-final class State {
+final class State
+{
 
-    int state;
+	int state;
 
-    ArrayList nodes;
+	ArrayList nodes;
 
-    State(int state, ArrayList nodes) {
-        this.state = state;
-        this.nodes = nodes;
-    }
+	State(int state, ArrayList nodes)
+	{
+		this.state = state;
+		this.nodes = nodes;
+	}
 }

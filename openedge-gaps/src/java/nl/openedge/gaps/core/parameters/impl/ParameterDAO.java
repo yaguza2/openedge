@@ -28,218 +28,264 @@ import org.apache.commons.logging.LogFactory;
 /**
  * DAO/ utility klasse voor parameters.
  */
-public final class ParameterDAO {
+public final class ParameterDAO
+{
 
-    /** Log. */
-    private static Log log = LogFactory.getLog(ParameterDAO.class);
+	/** Log. */
+	private static Log log = LogFactory.getLog(ParameterDAO.class);
 
-    /**
-     * Construct.
-     */
-    public ParameterDAO() {
-        //
-    }
+	/**
+	 * Construct.
+	 */
+	public ParameterDAO()
+	{
+		//
+	}
 
-    /**
-     * Zoekt parameter op gegeven pad.
-     * @param path zoekpad
-     * @param version de versie voor de zoektocht
-     * @return de parameter of null indien niet gevonden
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public Parameter findParameter(String path, Version version) throws ParameterDAOException {
+	/**
+	 * Zoekt parameter op gegeven pad.
+	 * @param path zoekpad
+	 * @param version de versie voor de zoektocht
+	 * @return de parameter of null indien niet gevonden
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public Parameter findParameter(String path, Version version)
+			throws ParameterDAOException
+	{
 
-        ParameterWrapper wrapper = findParameterWrapper(path, version);
-        Parameter param = unpackParameter(wrapper);
-        return param;
-    }
+		ParameterWrapper wrapper = findParameterWrapper(path, version);
+		Parameter param = unpackParameter(wrapper);
+		return param;
+	}
 
-    /**
-     * Pak representatie object uit naar {@link Parameter}.
-     * @param wrapper representatie object.
-     * @return de uitgepakte parameter of null indien de wrapper null was
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public Parameter unpackParameter(ParameterWrapper wrapper) throws ParameterDAOException {
+	/**
+	 * Pak representatie object uit naar {@link Parameter}.
+	 * @param wrapper representatie object.
+	 * @return de uitgepakte parameter of null indien de wrapper null was
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public Parameter unpackParameter(ParameterWrapper wrapper)
+			throws ParameterDAOException
+	{
 
-        Parameter param = null;
-        if (wrapper != null) {
-            SerializedAndZipped data = wrapper.getData();
-            try {
-                param = (Parameter) SerializeAndZipHelper.unzipAndDeserialize(data);
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-                throw new ParameterDAOException(e);
-            } catch (DataFormatException e) {
-                log.error(e.getMessage(), e);
-                throw new ParameterDAOException(e);
-            } catch (ClassNotFoundException e) {
-                log.error(e.getMessage(), e);
-                throw new ParameterDAOException(e);
-            }
-        }
-        return param;
-    }
+		Parameter param = null;
+		if (wrapper != null)
+		{
+			SerializedAndZipped data = wrapper.getData();
+			try
+			{
+				param = (Parameter) SerializeAndZipHelper.unzipAndDeserialize(data);
+			}
+			catch (IOException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new ParameterDAOException(e);
+			}
+			catch (DataFormatException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new ParameterDAOException(e);
+			}
+			catch (ClassNotFoundException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new ParameterDAOException(e);
+			}
+		}
+		return param;
+	}
 
-    /**
-     * Pak de gegeven parameter in.
-     * @param parameter parameter.
-     * @return de ingepakte parameter of null indien de parameter null was
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public ParameterWrapper packParameter(Parameter parameter) throws ParameterDAOException {
+	/**
+	 * Pak de gegeven parameter in.
+	 * @param parameter parameter.
+	 * @return de ingepakte parameter of null indien de parameter null was
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public ParameterWrapper packParameter(Parameter parameter)
+			throws ParameterDAOException
+	{
 
-        ParameterWrapper wrapper = null;
-        if (parameter != null) {
-            try {
-                SerializedAndZipped data = SerializeAndZipHelper.serializeAndZip(parameter);
-                wrapper = new ParameterWrapper();
-                wrapper.setData(data);
-                wrapper.setPath(parameter.getId());
-                wrapper.setVersionId(parameter.getVersion().getName());
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-                throw new ParameterDAOException(e);
-            }
-        }
-        return wrapper;
-    }
+		ParameterWrapper wrapper = null;
+		if (parameter != null)
+		{
+			try
+			{
+				SerializedAndZipped data = SerializeAndZipHelper
+						.serializeAndZip(parameter);
+				wrapper = new ParameterWrapper();
+				wrapper.setData(data);
+				wrapper.setPath(parameter.getId());
+				wrapper.setVersionId(parameter.getVersion().getName());
+			}
+			catch (IOException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new ParameterDAOException(e);
+			}
+		}
+		return wrapper;
+	}
 
-    /**
-     * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven parameter.
-     * @param parameter de parameter
-     * @return de parameter wrapper of null indien niet gevonden
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public ParameterWrapper findParameterWrapper(Parameter parameter) throws ParameterDAOException {
+	/**
+	 * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven parameter.
+	 * @param parameter de parameter
+	 * @return de parameter wrapper of null indien niet gevonden
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public ParameterWrapper findParameterWrapper(Parameter parameter)
+			throws ParameterDAOException
+	{
 
-        return findParameterWrapper(parameter.getId(), parameter.getVersion());
-    }
+		return findParameterWrapper(parameter.getId(), parameter.getVersion());
+	}
 
-    /**
-     * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven pad/ version.
-     * @param path zoekpad
-     * @param version de versie voor de zoektocht
-     * @return de parameter wrapper of null indien niet gevonden
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public ParameterWrapper findParameterWrapper(String path, Version version)
-            throws ParameterDAOException {
+	/**
+	 * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven pad/ version.
+	 * @param path zoekpad
+	 * @param version de versie voor de zoektocht
+	 * @return de parameter wrapper of null indien niet gevonden
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public ParameterWrapper findParameterWrapper(String path, Version version)
+			throws ParameterDAOException
+	{
 
-        ParameterWrapper wrapper = null;
-        Session session = null;
-        Transaction tx = null;
-        try {
-            session = HibernateHelper.getSession();
-            tx = session.beginTransaction();
-            List results = session.find(
-                    "from " + ParameterWrapper.class.getName()
-                    + " pw where pw.path = ? and pw.versionId = ?",
-                    new Object[] { path, version.getName() },
-                    new Type[] { Hibernate.STRING, Hibernate.STRING });
-            tx.commit();
-            if ((results != null) && (!results.isEmpty())) {
-                if (results.size() > 1) { throw new ParameterDAOException(
-                        "meer dan 1 resultaat gevonden; database state is ambigu!"); }
-                wrapper = (ParameterWrapper) results.get(0);
-            }
-        } catch (HibernateException e) {
-            log.error(e.getMessage(), e);
-            rollback(tx);
-            throw new ParameterDAOException(e);
-        }
-        return wrapper;
-    }
+		ParameterWrapper wrapper = null;
+		Session session = null;
+		Transaction tx = null;
+		try
+		{
+			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
+			List results = session.find("from "
+					+ ParameterWrapper.class.getName()
+					+ " pw where pw.path = ? and pw.versionId = ?", new Object[] {path,
+					version.getName()}, new Type[] {Hibernate.STRING, Hibernate.STRING});
+			tx.commit();
+			if ((results != null) && (!results.isEmpty()))
+			{
+				if (results.size() > 1)
+				{
+					throw new ParameterDAOException(
+							"meer dan 1 resultaat gevonden; database state is ambigu!");
+				}
+				wrapper = (ParameterWrapper) results.get(0);
+			}
+		}
+		catch (HibernateException e)
+		{
+			log.error(e.getMessage(), e);
+			rollback(tx);
+			throw new ParameterDAOException(e);
+		}
+		return wrapper;
+	}
 
-    /**
-     * Slaat de gegeven parameter op in de database.
-     * @param param de parameter
-     * @return de evt bijgewerkte parameter
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public Parameter saveOrUpdateParameter(Parameter param) throws ParameterDAOException {
+	/**
+	 * Slaat de gegeven parameter op in de database.
+	 * @param param de parameter
+	 * @return de evt bijgewerkte parameter
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public Parameter saveOrUpdateParameter(Parameter param) throws ParameterDAOException
+	{
 
-        if (param == null) { return param; }
-        Session session = null;
-        Transaction tx = null;
-        ParameterWrapper wrapper = findParameterWrapper(param);
-        try {
-            session = HibernateHelper.getSession();
-            tx = session.beginTransaction();
-            if (wrapper != null) { // update; parameter bestaat reeds
-                Long wrapperId = wrapper.getId();
-                session.evict(wrapper);
-                wrapper = packParameter(param); // zip/ serialiseer de groep
-                wrapper.setId(wrapperId);
-                session.update(wrapper);
-                if (log.isDebugEnabled()) {
-                    log.debug("parameter " + param + " bijgewerkt");
-                }
-            } else { // create; parameter niet gevonden
-                wrapper = packParameter(param); // zip/ serialiseer de parameter
-                Serializable id = session.save(wrapper);
-                id = session.save(wrapper);
-                if (log.isDebugEnabled()) {
-                    log.debug("parameter " + param + " toegevoegd (intern id = " + id + ")");
-                }
-            }
-            tx.commit();
-        } catch (HibernateException e) {
-            log.error(e.getMessage(), e);
-            rollback(tx);
-        }
-//        if(param instanceof NestedParameter) { // recurse
-//            NestedParameter nested = (NestedParameter)param;
-//            Parameter[] params = nested.get();
-//            if(params != null) {
-//                int len = params.length;
-//                for(int i = 0; i < len; i++) {
-//                    saveOrUpdateParameter(params[i]);
-//                }
-//            }
-//        }
-        return param;
-    }
+		if (param == null)
+		{
+			return param;
+		}
+		Session session = null;
+		Transaction tx = null;
+		ParameterWrapper wrapper = findParameterWrapper(param);
+		try
+		{
+			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
+			if (wrapper != null)
+			{ // update; parameter bestaat reeds
+				Long wrapperId = wrapper.getId();
+				session.evict(wrapper);
+				wrapper = packParameter(param); // zip/ serialiseer de groep
+				wrapper.setId(wrapperId);
+				session.update(wrapper);
+				if (log.isDebugEnabled())
+				{
+					log.debug("parameter " + param + " bijgewerkt");
+				}
+			}
+			else
+			{ // create; parameter niet gevonden
+				wrapper = packParameter(param); // zip/ serialiseer de parameter
+				Serializable id = session.save(wrapper);
+				id = session.save(wrapper);
+				if (log.isDebugEnabled())
+				{
+					log.debug("parameter "
+							+ param + " toegevoegd (intern id = " + id + ")");
+				}
+			}
+			tx.commit();
+		}
+		catch (HibernateException e)
+		{
+			log.error(e.getMessage(), e);
+			rollback(tx);
+		}
+		return param;
+	}
 
-    /**
-     * Verwijderd de gegeven parameter uit de database.
-     * @param param de parameter
-     * @throws GroupDAOException bij onverwachte fouten
-     */
-    public void deleteParameter(Parameter param) throws ParameterDAOException {
+	/**
+	 * Verwijderd de gegeven parameter uit de database.
+	 * @param param de parameter
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public void deleteParameter(Parameter param) throws ParameterDAOException
+	{
 
-        //TODO check op actieve versie
-        // het verwijderen van een parameter zal in
-        // praktijk slechts worden toegestaan indien de parameter nog niet met
-        // een actieve versie was verbonden
-        if (param == null) { return; }
-        Session session = null;
-        Transaction tx = null;
-        ParameterWrapper wrapper = findParameterWrapper(param);
-        try {
-            session = HibernateHelper.getSession();
-            tx = session.beginTransaction();
-            if (wrapper != null) { // verwijder
-                session.delete(wrapper);
-            }
-            tx.commit();
-        } catch (HibernateException e) {
-            log.error(e.getMessage(), e);
-            rollback(tx);
-        }
-    }
+		//TODO check op actieve versie
+		// het verwijderen van een parameter zal in
+		// praktijk slechts worden toegestaan indien de parameter nog niet met
+		// een actieve versie was verbonden
+		if (param == null)
+		{
+			return;
+		}
+		Session session = null;
+		Transaction tx = null;
+		ParameterWrapper wrapper = findParameterWrapper(param);
+		try
+		{
+			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
+			if (wrapper != null)
+			{ // verwijder
+				session.delete(wrapper);
+			}
+			tx.commit();
+		}
+		catch (HibernateException e)
+		{
+			log.error(e.getMessage(), e);
+			rollback(tx);
+		}
+	}
 
-    /**
-     * Rollback transactie.
-     * @param tx transactie
-     */
-    private void rollback(Transaction tx) {
-        if (tx != null) {
-            try {
-                tx.rollback();
-            } catch (HibernateException e1) {
-                log.error(e1.getMessage(), e1);
-            }
-        }
-    }
+	/**
+	 * Rollback transactie.
+	 * @param tx transactie
+	 */
+	private void rollback(Transaction tx)
+	{
+		if (tx != null)
+		{
+			try
+			{
+				tx.rollback();
+			}
+			catch (HibernateException e1)
+			{
+				log.error(e1.getMessage(), e1);
+			}
+		}
+	}
 }

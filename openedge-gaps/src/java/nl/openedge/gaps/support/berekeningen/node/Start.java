@@ -4,93 +4,115 @@ package nl.openedge.gaps.support.berekeningen.node;
 
 import nl.openedge.gaps.support.berekeningen.analysis.Analysis;
 
-public final class Start extends Node {
+public final class Start extends Node
+{
 
-    private PBlock _pBlock_;
+	private PBlock _pBlock_;
 
-    private EOF _eof_;
+	private EOF _eof_;
 
-    public Start() {
-    }
+	public Start()
+	{
+	}
 
-    public Start(PBlock _pBlock_, EOF _eof_) {
-        setPBlock(_pBlock_);
-        setEOF(_eof_);
-    }
+	public Start(PBlock _pBlock_, EOF _eof_)
+	{
+		setPBlock(_pBlock_);
+		setEOF(_eof_);
+	}
 
-    public Object clone() {
-        return new Start((PBlock) cloneNode(_pBlock_), (EOF) cloneNode(_eof_));
-    }
+	public Object clone()
+	{
+		return new Start((PBlock) cloneNode(_pBlock_), (EOF) cloneNode(_eof_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseStart(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseStart(this);
+	}
 
-    public PBlock getPBlock() {
-        return _pBlock_;
-    }
+	public PBlock getPBlock()
+	{
+		return _pBlock_;
+	}
 
-    public void setPBlock(PBlock node) {
-        if (_pBlock_ != null) {
-            _pBlock_.parent(null);
-        }
+	public void setPBlock(PBlock node)
+	{
+		if (_pBlock_ != null)
+		{
+			_pBlock_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _pBlock_ = node;
-    }
+		_pBlock_ = node;
+	}
 
-    public EOF getEOF() {
-        return _eof_;
-    }
+	public EOF getEOF()
+	{
+		return _eof_;
+	}
 
-    public void setEOF(EOF node) {
-        if (_eof_ != null) {
-            _eof_.parent(null);
-        }
+	public void setEOF(EOF node)
+	{
+		if (_eof_ != null)
+		{
+			_eof_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _eof_ = node;
-    }
+		_eof_ = node;
+	}
 
-    void removeChild(Node child) {
-        if (_pBlock_ == child) {
-            _pBlock_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_pBlock_ == child)
+		{
+			_pBlock_ = null;
+			return;
+		}
 
-        if (_eof_ == child) {
-            _eof_ = null;
-            return;
-        }
-    }
+		if (_eof_ == child)
+		{
+			_eof_ = null;
+			return;
+		}
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_pBlock_ == oldChild) {
-            setPBlock((PBlock) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_pBlock_ == oldChild)
+		{
+			setPBlock((PBlock) newChild);
+			return;
+		}
 
-        if (_eof_ == oldChild) {
-            setEOF((EOF) newChild);
-            return;
-        }
-    }
+		if (_eof_ == oldChild)
+		{
+			setEOF((EOF) newChild);
+			return;
+		}
+	}
 
-    public String toString() {
-        return "" + toString(_pBlock_) + toString(_eof_);
-    }
+	public String toString()
+	{
+		return "" + toString(_pBlock_) + toString(_eof_);
+	}
 }

@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public abstract class PBlock extends Node {
+public abstract class PBlock extends Node
+{
 }

@@ -2,9 +2,11 @@
 
 package nl.openedge.gaps.support.gapspath.lexer;
 
-public class LexerException extends Exception {
+public class LexerException extends Exception
+{
 
-    public LexerException(String message) {
-        super(message);
-    }
+	public LexerException(String message)
+	{
+		super(message);
+	}
 }

@@ -31,65 +31,66 @@ import nl.openedge.gaps.support.berekeningen.node.TPlus;
 import nl.openedge.gaps.support.berekeningen.node.TRBrace;
 import nl.openedge.gaps.support.berekeningen.node.TRPar;
 
-public interface Analysis extends Switch {
+public interface Analysis extends Switch
+{
 
-    Object getIn(Node node);
+	Object getIn(Node node);
 
-    void setIn(Node node, Object in);
+	void setIn(Node node, Object in);
 
-    Object getOut(Node node);
+	Object getOut(Node node);
 
-    void setOut(Node node, Object out);
+	void setOut(Node node, Object out);
 
-    void caseStart(Start node);
+	void caseStart(Start node);
 
-    void caseABlock(ABlock node);
+	void caseABlock(ABlock node);
 
-    void caseAIfThen(AIfThen node);
+	void caseAIfThen(AIfThen node);
 
-    void caseAPlusExp(APlusExp node);
+	void caseAPlusExp(APlusExp node);
 
-    void caseAMinusExp(AMinusExp node);
+	void caseAMinusExp(AMinusExp node);
 
-    void caseADivExp(ADivExp node);
+	void caseADivExp(ADivExp node);
 
-    void caseAMultExp(AMultExp node);
+	void caseAMultExp(AMultExp node);
 
-    void caseACastPlusExp(ACastPlusExp node);
+	void caseACastPlusExp(ACastPlusExp node);
 
-    void caseACastMinusExp(ACastMinusExp node);
+	void caseACastMinusExp(ACastMinusExp node);
 
-    void caseANumberExp(ANumberExp node);
+	void caseANumberExp(ANumberExp node);
 
-    void caseAIdExp(AIdExp node);
+	void caseAIdExp(AIdExp node);
 
-    void caseACallExp(ACallExp node);
+	void caseACallExp(ACallExp node);
 
-    void caseTLPar(TLPar node);
+	void caseTLPar(TLPar node);
 
-    void caseTRPar(TRPar node);
+	void caseTRPar(TRPar node);
 
-    void caseTPlus(TPlus node);
+	void caseTPlus(TPlus node);
 
-    void caseTMinus(TMinus node);
+	void caseTMinus(TMinus node);
 
-    void caseTMult(TMult node);
+	void caseTMult(TMult node);
 
-    void caseTDiv(TDiv node);
+	void caseTDiv(TDiv node);
 
-    void caseTComma(TComma node);
+	void caseTComma(TComma node);
 
-    void caseTLBrace(TLBrace node);
+	void caseTLBrace(TLBrace node);
 
-    void caseTRBrace(TRBrace node);
+	void caseTRBrace(TRBrace node);
 
-    void caseTBlank(TBlank node);
+	void caseTBlank(TBlank node);
 
-    void caseTNumber(TNumber node);
+	void caseTNumber(TNumber node);
 
-    void caseTId(TId node);
+	void caseTId(TId node);
 
-    void caseTFuncid(TFuncid node);
+	void caseTFuncid(TFuncid node);
 
-    void caseEOF(EOF node);
+	void caseEOF(EOF node);
 }

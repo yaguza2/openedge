@@ -34,71 +34,72 @@ import nl.openedge.gaps.support.gapspath.node.TRBrace;
 import nl.openedge.gaps.support.gapspath.node.TRBracket;
 import nl.openedge.gaps.support.gapspath.node.TSlash;
 
-public interface Analysis extends Switch {
+public interface Analysis extends Switch
+{
 
-    Object getIn(Node node);
+	Object getIn(Node node);
 
-    void setIn(Node node, Object in);
+	void setIn(Node node, Object in);
 
-    Object getOut(Node node);
+	Object getOut(Node node);
 
-    void setOut(Node node, Object out);
+	void setOut(Node node, Object out);
 
-    void caseStart(Start node);
+	void caseStart(Start node);
 
-    void caseAGroupPath(AGroupPath node);
+	void caseAGroupPath(AGroupPath node);
 
-    void caseAParamPath(AParamPath node);
+	void caseAParamPath(AParamPath node);
 
-    void caseARootStructGroup(ARootStructGroup node);
+	void caseARootStructGroup(ARootStructGroup node);
 
-    void caseAStructGroup(AStructGroup node);
+	void caseAStructGroup(AStructGroup node);
 
-    void caseAStructGroupTail(AStructGroupTail node);
+	void caseAStructGroupTail(AStructGroupTail node);
 
-    void caseAParamGroup(AParamGroup node);
+	void caseAParamGroup(AParamGroup node);
 
-    void caseAParam(AParam node);
+	void caseAParam(AParam node);
 
-    void caseAArraySelect(AArraySelect node);
+	void caseAArraySelect(AArraySelect node);
 
-    void caseAAttribute(AAttribute node);
+	void caseAAttribute(AAttribute node);
 
-    void caseAOptions(AOptions node);
+	void caseAOptions(AOptions node);
 
-    void caseAOptionsBlock(AOptionsBlock node);
+	void caseAOptionsBlock(AOptionsBlock node);
 
-    void caseAAndOptionsPartTail(AAndOptionsPartTail node);
+	void caseAAndOptionsPartTail(AAndOptionsPartTail node);
 
-    void caseAOrOptionsPartTail(AOrOptionsPartTail node);
+	void caseAOrOptionsPartTail(AOrOptionsPartTail node);
 
-    void caseAOptionsPart(AOptionsPart node);
+	void caseAOptionsPart(AOptionsPart node);
 
-    void caseTAnd(TAnd node);
+	void caseTAnd(TAnd node);
 
-    void caseTOr(TOr node);
+	void caseTOr(TOr node);
 
-    void caseTLBracket(TLBracket node);
+	void caseTLBracket(TLBracket node);
 
-    void caseTRBracket(TRBracket node);
+	void caseTRBracket(TRBracket node);
 
-    void caseTLBrace(TLBrace node);
+	void caseTLBrace(TLBrace node);
 
-    void caseTRBrace(TRBrace node);
+	void caseTRBrace(TRBrace node);
 
-    void caseTSlash(TSlash node);
+	void caseTSlash(TSlash node);
 
-    void caseTAt(TAt node);
+	void caseTAt(TAt node);
 
-    void caseTColon(TColon node);
+	void caseTColon(TColon node);
 
-    void caseTId(TId node);
+	void caseTId(TId node);
 
-    void caseTEq(TEq node);
+	void caseTEq(TEq node);
 
-    void caseTQuote(TQuote node);
+	void caseTQuote(TQuote node);
 
-    void caseTBlank(TBlank node);
+	void caseTBlank(TBlank node);
 
-    void caseEOF(EOF node);
+	void caseEOF(EOF node);
 }

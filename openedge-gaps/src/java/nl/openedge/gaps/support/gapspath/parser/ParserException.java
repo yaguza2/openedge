@@ -4,16 +4,19 @@ package nl.openedge.gaps.support.gapspath.parser;
 
 import nl.openedge.gaps.support.gapspath.node.Token;
 
-public class ParserException extends Exception {
+public class ParserException extends Exception
+{
 
-    Token token;
+	Token token;
 
-    public ParserException(Token token, String message) {
-        super(message);
-        this.token = token;
-    }
+	public ParserException(Token token, String message)
+	{
+		super(message);
+		this.token = token;
+	}
 
-    public Token getToken() {
-        return token;
-    }
+	public Token getToken()
+	{
+		return token;
+	}
 }

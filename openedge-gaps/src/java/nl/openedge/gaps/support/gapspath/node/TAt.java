@@ -4,23 +4,28 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class TAt extends Token {
+public final class TAt extends Token
+{
 
-    public TAt(String text) {
-        setText(text);
-    }
+	public TAt(String text)
+	{
+		setText(text);
+	}
 
-    public TAt(String text, int line, int pos) {
-        setText(text);
-        setLine(line);
-        setPos(pos);
-    }
+	public TAt(String text, int line, int pos)
+	{
+		setText(text);
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TAt(getText(), getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TAt(getText(), getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTAt(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTAt(this);
+	}
 }

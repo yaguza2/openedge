@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.gapspath.node;
 
-public abstract class PStructGroupTail extends Node {
+public abstract class PStructGroupTail extends Node
+{
 }

@@ -4,23 +4,28 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class TEq extends Token {
+public final class TEq extends Token
+{
 
-    public TEq(String text) {
-        setText(text);
-    }
+	public TEq(String text)
+	{
+		setText(text);
+	}
 
-    public TEq(String text, int line, int pos) {
-        setText(text);
-        setLine(line);
-        setPos(pos);
-    }
+	public TEq(String text, int line, int pos)
+	{
+		setText(text);
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TEq(getText(), getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TEq(getText(), getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTEq(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTEq(this);
+	}
 }

@@ -32,152 +32,198 @@ import nl.openedge.gaps.support.berekeningen.node.TPlus;
 import nl.openedge.gaps.support.berekeningen.node.TRBrace;
 import nl.openedge.gaps.support.berekeningen.node.TRPar;
 
-public class AnalysisAdapter implements Analysis {
+public class AnalysisAdapter implements Analysis
+{
 
-    private Hashtable in;
+	private Hashtable in;
 
-    private Hashtable out;
+	private Hashtable out;
 
-    public Object getIn(Node node) {
-        if (in == null) { return null; }
+	public Object getIn(Node node)
+	{
+		if (in == null)
+		{
+			return null;
+		}
 
-        return in.get(node);
-    }
+		return in.get(node);
+	}
 
-    public void setIn(Node node, Object in) {
-        if (this.in == null) {
-            this.in = new Hashtable(1);
-        }
+	public void setIn(Node node, Object in)
+	{
+		if (this.in == null)
+		{
+			this.in = new Hashtable(1);
+		}
 
-        if (in != null) {
-            this.in.put(node, in);
-        } else {
-            this.in.remove(node);
-        }
-    }
+		if (in != null)
+		{
+			this.in.put(node, in);
+		}
+		else
+		{
+			this.in.remove(node);
+		}
+	}
 
-    public Object getOut(Node node) {
-        if (out == null) { return null; }
+	public Object getOut(Node node)
+	{
+		if (out == null)
+		{
+			return null;
+		}
 
-        return out.get(node);
-    }
+		return out.get(node);
+	}
 
-    public void setOut(Node node, Object out) {
-        if (this.out == null) {
-            this.out = new Hashtable(1);
-        }
+	public void setOut(Node node, Object out)
+	{
+		if (this.out == null)
+		{
+			this.out = new Hashtable(1);
+		}
 
-        if (out != null) {
-            this.out.put(node, out);
-        } else {
-            this.out.remove(node);
-        }
-    }
+		if (out != null)
+		{
+			this.out.put(node, out);
+		}
+		else
+		{
+			this.out.remove(node);
+		}
+	}
 
-    public void caseStart(Start node) {
-        defaultCase(node);
-    }
+	public void caseStart(Start node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseABlock(ABlock node) {
-        defaultCase(node);
-    }
+	public void caseABlock(ABlock node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAIfThen(AIfThen node) {
-        defaultCase(node);
-    }
+	public void caseAIfThen(AIfThen node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAPlusExp(APlusExp node) {
-        defaultCase(node);
-    }
+	public void caseAPlusExp(APlusExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAMinusExp(AMinusExp node) {
-        defaultCase(node);
-    }
+	public void caseAMinusExp(AMinusExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseADivExp(ADivExp node) {
-        defaultCase(node);
-    }
+	public void caseADivExp(ADivExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAMultExp(AMultExp node) {
-        defaultCase(node);
-    }
+	public void caseAMultExp(AMultExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseACastPlusExp(ACastPlusExp node) {
-        defaultCase(node);
-    }
+	public void caseACastPlusExp(ACastPlusExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseACastMinusExp(ACastMinusExp node) {
-        defaultCase(node);
-    }
+	public void caseACastMinusExp(ACastMinusExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseANumberExp(ANumberExp node) {
-        defaultCase(node);
-    }
+	public void caseANumberExp(ANumberExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAIdExp(AIdExp node) {
-        defaultCase(node);
-    }
+	public void caseAIdExp(AIdExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseACallExp(ACallExp node) {
-        defaultCase(node);
-    }
+	public void caseACallExp(ACallExp node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTLPar(TLPar node) {
-        defaultCase(node);
-    }
+	public void caseTLPar(TLPar node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTRPar(TRPar node) {
-        defaultCase(node);
-    }
+	public void caseTRPar(TRPar node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTPlus(TPlus node) {
-        defaultCase(node);
-    }
+	public void caseTPlus(TPlus node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTMinus(TMinus node) {
-        defaultCase(node);
-    }
+	public void caseTMinus(TMinus node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTMult(TMult node) {
-        defaultCase(node);
-    }
+	public void caseTMult(TMult node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTDiv(TDiv node) {
-        defaultCase(node);
-    }
+	public void caseTDiv(TDiv node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTComma(TComma node) {
-        defaultCase(node);
-    }
+	public void caseTComma(TComma node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTLBrace(TLBrace node) {
-        defaultCase(node);
-    }
+	public void caseTLBrace(TLBrace node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTRBrace(TRBrace node) {
-        defaultCase(node);
-    }
+	public void caseTRBrace(TRBrace node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTBlank(TBlank node) {
-        defaultCase(node);
-    }
+	public void caseTBlank(TBlank node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTNumber(TNumber node) {
-        defaultCase(node);
-    }
+	public void caseTNumber(TNumber node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTId(TId node) {
-        defaultCase(node);
-    }
+	public void caseTId(TId node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTFuncid(TFuncid node) {
-        defaultCase(node);
-    }
+	public void caseTFuncid(TFuncid node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseEOF(EOF node) {
-        defaultCase(node);
-    }
+	public void caseEOF(EOF node)
+	{
+		defaultCase(node);
+	}
 
-    public void defaultCase(Node node) {
-    }
+	public void defaultCase(Node node)
+	{
+	}
 }

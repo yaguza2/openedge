@@ -14,33 +14,37 @@ import org.infohazard.maverick.flow.ControllerContext;
 /**
  * Dummy control zodat interceptors etc worden afgevuurd.
  */
-public class OnderhoudGroepenCtrl extends AbstractBaseCtrl {
+public class OnderhoudGroepenCtrl extends AbstractBaseCtrl
+{
 
-    /**
-     * Doet niets.
-     * @param formBeanContext baritus context
-     * @param cctx maverick context
-     * @return String altijd success
-     * @throws java.lang.Exception
-     * @see nl.openedge.baritus.FormBeanCtrlBase#perform(nl.openedge.baritus.FormBeanContext,
-     *      org.infohazard.maverick.flow.ControllerContext)
-     */
-    protected String perform(final FormBeanContext formBeanContext, final ControllerContext cctx) {
+	/**
+	 * Doet niets.
+	 * @param formBeanContext baritus context
+	 * @param cctx maverick context
+	 * @return String altijd success
+	 * @throws java.lang.Exception
+	 * @see nl.openedge.baritus.FormBeanCtrlBase#perform(nl.openedge.baritus.FormBeanContext,
+	 *      org.infohazard.maverick.flow.ControllerContext)
+	 */
+	protected String perform(final FormBeanContext formBeanContext,
+			final ControllerContext cctx)
+	{
 
-        return SUCCESS;
-    }
+		return SUCCESS;
+	}
 
-    /**
-     * @param formBeanContext baritus context
-     * @param cctx maverick context
-     * @return Object plain object; zetten properties niet mogelijk
-     * @see nl.openedge.baritus.FormBeanCtrlBase#makeFormBean(nl.openedge.baritus.FormBeanContext,
-     *      org.infohazard.maverick.flow.ControllerContext)
-     */
-    protected Object makeFormBean(final FormBeanContext formBeanContext,
-            final ControllerContext cctx) {
+	/**
+	 * @param formBeanContext baritus context
+	 * @param cctx maverick context
+	 * @return Object plain object; zetten properties niet mogelijk
+	 * @see nl.openedge.baritus.FormBeanCtrlBase#makeFormBean(nl.openedge.baritus.FormBeanContext,
+	 *      org.infohazard.maverick.flow.ControllerContext)
+	 */
+	protected Object makeFormBean(final FormBeanContext formBeanContext,
+			final ControllerContext cctx)
+	{
 
-        return new Object();
-    }
+		return new Object();
+	}
 
 }

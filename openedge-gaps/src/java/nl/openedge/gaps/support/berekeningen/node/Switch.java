@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public interface Switch {
+public interface Switch
+{
 }

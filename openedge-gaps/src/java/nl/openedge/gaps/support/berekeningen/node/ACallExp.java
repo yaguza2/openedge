@@ -8,112 +8,139 @@ import java.util.ListIterator;
 
 import nl.openedge.gaps.support.berekeningen.analysis.Analysis;
 
-public final class ACallExp extends PExp {
+public final class ACallExp extends PExp
+{
 
-    private TFuncid _func_;
+	private TFuncid _func_;
 
-    private final LinkedList _params_ = new TypedLinkedList(new Params_Cast());
+	private final LinkedList _params_ = new TypedLinkedList(new Params_Cast());
 
-    public ACallExp() {
-    }
+	public ACallExp()
+	{
+	}
 
-    public ACallExp(TFuncid _func_, List _params_) {
-        setFunc(_func_);
+	public ACallExp(TFuncid _func_, List _params_)
+	{
+		setFunc(_func_);
 
-        {
-            this._params_.clear();
-            this._params_.addAll(_params_);
-        }
+		{
+			this._params_.clear();
+			this._params_.addAll(_params_);
+		}
 
-    }
+	}
 
-    public Object clone() {
-        return new ACallExp((TFuncid) cloneNode(_func_), cloneList(_params_));
-    }
+	public Object clone()
+	{
+		return new ACallExp((TFuncid) cloneNode(_func_), cloneList(_params_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseACallExp(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseACallExp(this);
+	}
 
-    public TFuncid getFunc() {
-        return _func_;
-    }
+	public TFuncid getFunc()
+	{
+		return _func_;
+	}
 
-    public void setFunc(TFuncid node) {
-        if (_func_ != null) {
-            _func_.parent(null);
-        }
+	public void setFunc(TFuncid node)
+	{
+		if (_func_ != null)
+		{
+			_func_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _func_ = node;
-    }
+		_func_ = node;
+	}
 
-    public LinkedList getParams() {
-        return _params_;
-    }
+	public LinkedList getParams()
+	{
+		return _params_;
+	}
 
-    public void setParams(List list) {
-        _params_.clear();
-        _params_.addAll(list);
-    }
+	public void setParams(List list)
+	{
+		_params_.clear();
+		_params_.addAll(list);
+	}
 
-    public String toString() {
-        return "" + toString(_func_) + toString(_params_);
-    }
+	public String toString()
+	{
+		return "" + toString(_func_) + toString(_params_);
+	}
 
-    void removeChild(Node child) {
-        if (_func_ == child) {
-            _func_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_func_ == child)
+		{
+			_func_ = null;
+			return;
+		}
 
-        if (_params_.remove(child)) { return; }
+		if (_params_.remove(child))
+		{
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_func_ == oldChild) {
-            setFunc((TFuncid) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_func_ == oldChild)
+		{
+			setFunc((TFuncid) newChild);
+			return;
+		}
 
-        for (ListIterator i = _params_.listIterator(); i.hasNext();) {
-            if (i.next() == oldChild) {
-                if (newChild != null) {
-                    i.set(newChild);
-                    oldChild.parent(null);
-                    return;
-                }
+		for (ListIterator i = _params_.listIterator(); i.hasNext();)
+		{
+			if (i.next() == oldChild)
+			{
+				if (newChild != null)
+				{
+					i.set(newChild);
+					oldChild.parent(null);
+					return;
+				}
 
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
-        }
+				i.remove();
+				oldChild.parent(null);
+				return;
+			}
+		}
 
-    }
+	}
 
-    private class Params_Cast implements Cast {
+	private class Params_Cast implements Cast
+	{
 
-        public Object cast(Object o) {
-            PExp node = (PExp) o;
+		public Object cast(Object o)
+		{
+			PExp node = (PExp) o;
 
-            if ((node.parent() != null) && (node.parent() != ACallExp.this)) {
-                node.parent().removeChild(node);
-            }
+			if ((node.parent() != null) && (node.parent() != ACallExp.this))
+			{
+				node.parent().removeChild(node);
+			}
 
-            if ((node.parent() == null) || (node.parent() != ACallExp.this)) {
-                node.parent(ACallExp.this);
-            }
+			if ((node.parent() == null) || (node.parent() != ACallExp.this))
+			{
+				node.parent(ACallExp.this);
+			}
 
-            return node;
-        }
-    }
+			return node;
+		}
+	}
 }

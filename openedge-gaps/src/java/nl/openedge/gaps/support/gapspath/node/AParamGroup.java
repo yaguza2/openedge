@@ -4,97 +4,119 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AParamGroup extends PParamGroup {
+public final class AParamGroup extends PParamGroup
+{
 
-    private TColon _colon_;
+	private TColon _colon_;
 
-    private TId _id_;
+	private TId _id_;
 
-    public AParamGroup() {
-    }
+	public AParamGroup()
+	{
+	}
 
-    public AParamGroup(TColon _colon_, TId _id_) {
-        setColon(_colon_);
+	public AParamGroup(TColon _colon_, TId _id_)
+	{
+		setColon(_colon_);
 
-        setId(_id_);
+		setId(_id_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AParamGroup((TColon) cloneNode(_colon_), (TId) cloneNode(_id_));
-    }
+	public Object clone()
+	{
+		return new AParamGroup((TColon) cloneNode(_colon_), (TId) cloneNode(_id_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAParamGroup(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAParamGroup(this);
+	}
 
-    public TColon getColon() {
-        return _colon_;
-    }
+	public TColon getColon()
+	{
+		return _colon_;
+	}
 
-    public void setColon(TColon node) {
-        if (_colon_ != null) {
-            _colon_.parent(null);
-        }
+	public void setColon(TColon node)
+	{
+		if (_colon_ != null)
+		{
+			_colon_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _colon_ = node;
-    }
+		_colon_ = node;
+	}
 
-    public TId getId() {
-        return _id_;
-    }
+	public TId getId()
+	{
+		return _id_;
+	}
 
-    public void setId(TId node) {
-        if (_id_ != null) {
-            _id_.parent(null);
-        }
+	public void setId(TId node)
+	{
+		if (_id_ != null)
+		{
+			_id_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _id_ = node;
-    }
+		_id_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_colon_) + toString(_id_);
-    }
+	public String toString()
+	{
+		return "" + toString(_colon_) + toString(_id_);
+	}
 
-    void removeChild(Node child) {
-        if (_colon_ == child) {
-            _colon_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_colon_ == child)
+		{
+			_colon_ = null;
+			return;
+		}
 
-        if (_id_ == child) {
-            _id_ = null;
-            return;
-        }
+		if (_id_ == child)
+		{
+			_id_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_colon_ == oldChild) {
-            setColon((TColon) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_colon_ == oldChild)
+		{
+			setColon((TColon) newChild);
+			return;
+		}
 
-        if (_id_ == oldChild) {
-            setId((TId) newChild);
-            return;
-        }
+		if (_id_ == oldChild)
+		{
+			setId((TId) newChild);
+			return;
+		}
 
-    }
+	}
 }

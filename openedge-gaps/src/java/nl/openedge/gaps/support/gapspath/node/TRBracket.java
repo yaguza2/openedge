@@ -4,23 +4,28 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class TRBracket extends Token {
+public final class TRBracket extends Token
+{
 
-    public TRBracket(String text) {
-        setText(text);
-    }
+	public TRBracket(String text)
+	{
+		setText(text);
+	}
 
-    public TRBracket(String text, int line, int pos) {
-        setText(text);
-        setLine(line);
-        setPos(pos);
-    }
+	public TRBracket(String text, int line, int pos)
+	{
+		setText(text);
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TRBracket(getText(), getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TRBracket(getText(), getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTRBracket(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTRBracket(this);
+	}
 }

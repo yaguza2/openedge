@@ -35,164 +35,213 @@ import nl.openedge.gaps.support.gapspath.node.TRBrace;
 import nl.openedge.gaps.support.gapspath.node.TRBracket;
 import nl.openedge.gaps.support.gapspath.node.TSlash;
 
-public class AnalysisAdapter implements Analysis {
+public class AnalysisAdapter implements Analysis
+{
 
-    private Hashtable in;
+	private Hashtable in;
 
-    private Hashtable out;
+	private Hashtable out;
 
-    public Object getIn(Node node) {
-        if (in == null) { return null; }
+	public Object getIn(Node node)
+	{
+		if (in == null)
+		{
+			return null;
+		}
 
-        return in.get(node);
-    }
+		return in.get(node);
+	}
 
-    public void setIn(Node node, Object in) {
-        if (this.in == null) {
-            this.in = new Hashtable(1);
-        }
+	public void setIn(Node node, Object in)
+	{
+		if (this.in == null)
+		{
+			this.in = new Hashtable(1);
+		}
 
-        if (in != null) {
-            this.in.put(node, in);
-        } else {
-            this.in.remove(node);
-        }
-    }
+		if (in != null)
+		{
+			this.in.put(node, in);
+		}
+		else
+		{
+			this.in.remove(node);
+		}
+	}
 
-    public Object getOut(Node node) {
-        if (out == null) { return null; }
+	public Object getOut(Node node)
+	{
+		if (out == null)
+		{
+			return null;
+		}
 
-        return out.get(node);
-    }
+		return out.get(node);
+	}
 
-    public void setOut(Node node, Object out) {
-        if (this.out == null) {
-            this.out = new Hashtable(1);
-        }
+	public void setOut(Node node, Object out)
+	{
+		if (this.out == null)
+		{
+			this.out = new Hashtable(1);
+		}
 
-        if (out != null) {
-            this.out.put(node, out);
-        } else {
-            this.out.remove(node);
-        }
-    }
+		if (out != null)
+		{
+			this.out.put(node, out);
+		}
+		else
+		{
+			this.out.remove(node);
+		}
+	}
 
-    public void caseStart(Start node) {
-        defaultCase(node);
-    }
+	public void caseStart(Start node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAGroupPath(AGroupPath node) {
-        defaultCase(node);
-    }
+	public void caseAGroupPath(AGroupPath node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAParamPath(AParamPath node) {
-        defaultCase(node);
-    }
+	public void caseAParamPath(AParamPath node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseARootStructGroup(ARootStructGroup node) {
-        defaultCase(node);
-    }
+	public void caseARootStructGroup(ARootStructGroup node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAStructGroup(AStructGroup node) {
-        defaultCase(node);
-    }
+	public void caseAStructGroup(AStructGroup node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAStructGroupTail(AStructGroupTail node) {
-        defaultCase(node);
-    }
+	public void caseAStructGroupTail(AStructGroupTail node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAParamGroup(AParamGroup node) {
-        defaultCase(node);
-    }
+	public void caseAParamGroup(AParamGroup node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAParam(AParam node) {
-        defaultCase(node);
-    }
+	public void caseAParam(AParam node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAArraySelect(AArraySelect node) {
-        defaultCase(node);
-    }
+	public void caseAArraySelect(AArraySelect node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAAttribute(AAttribute node) {
-        defaultCase(node);
-    }
+	public void caseAAttribute(AAttribute node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAOptions(AOptions node) {
-        defaultCase(node);
-    }
+	public void caseAOptions(AOptions node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAOptionsBlock(AOptionsBlock node) {
-        defaultCase(node);
-    }
+	public void caseAOptionsBlock(AOptionsBlock node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAAndOptionsPartTail(AAndOptionsPartTail node) {
-        defaultCase(node);
-    }
+	public void caseAAndOptionsPartTail(AAndOptionsPartTail node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAOrOptionsPartTail(AOrOptionsPartTail node) {
-        defaultCase(node);
-    }
+	public void caseAOrOptionsPartTail(AOrOptionsPartTail node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseAOptionsPart(AOptionsPart node) {
-        defaultCase(node);
-    }
+	public void caseAOptionsPart(AOptionsPart node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTAnd(TAnd node) {
-        defaultCase(node);
-    }
+	public void caseTAnd(TAnd node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTOr(TOr node) {
-        defaultCase(node);
-    }
+	public void caseTOr(TOr node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTLBracket(TLBracket node) {
-        defaultCase(node);
-    }
+	public void caseTLBracket(TLBracket node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTRBracket(TRBracket node) {
-        defaultCase(node);
-    }
+	public void caseTRBracket(TRBracket node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTLBrace(TLBrace node) {
-        defaultCase(node);
-    }
+	public void caseTLBrace(TLBrace node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTRBrace(TRBrace node) {
-        defaultCase(node);
-    }
+	public void caseTRBrace(TRBrace node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTSlash(TSlash node) {
-        defaultCase(node);
-    }
+	public void caseTSlash(TSlash node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTAt(TAt node) {
-        defaultCase(node);
-    }
+	public void caseTAt(TAt node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTColon(TColon node) {
-        defaultCase(node);
-    }
+	public void caseTColon(TColon node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTId(TId node) {
-        defaultCase(node);
-    }
+	public void caseTId(TId node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTEq(TEq node) {
-        defaultCase(node);
-    }
+	public void caseTEq(TEq node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTQuote(TQuote node) {
-        defaultCase(node);
-    }
+	public void caseTQuote(TQuote node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseTBlank(TBlank node) {
-        defaultCase(node);
-    }
+	public void caseTBlank(TBlank node)
+	{
+		defaultCase(node);
+	}
 
-    public void caseEOF(EOF node) {
-        defaultCase(node);
-    }
+	public void caseEOF(EOF node)
+	{
+		defaultCase(node);
+	}
 
-    public void defaultCase(Node node) {
-    }
+	public void defaultCase(Node node)
+	{
+	}
 }

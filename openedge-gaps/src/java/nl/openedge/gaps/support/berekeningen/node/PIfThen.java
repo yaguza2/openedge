@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public abstract class PIfThen extends Node {
+public abstract class PIfThen extends Node
+{
 }

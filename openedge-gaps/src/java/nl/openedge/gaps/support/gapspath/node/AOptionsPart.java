@@ -4,203 +4,247 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AOptionsPart extends POptionsPart {
+public final class AOptionsPart extends POptionsPart
+{
 
-    private TId _parameter_;
+	private TId _parameter_;
 
-    private TEq _eq_;
+	private TEq _eq_;
 
-    private TQuote _leftQuote_;
+	private TQuote _leftQuote_;
 
-    private TId _selectExpr_;
+	private TId _selectExpr_;
 
-    private TQuote _rightQuote_;
+	private TQuote _rightQuote_;
 
-    public AOptionsPart() {
-    }
+	public AOptionsPart()
+	{
+	}
 
-    public AOptionsPart(TId _parameter_, TEq _eq_, TQuote _leftQuote_, TId _selectExpr_,
-            TQuote _rightQuote_) {
-        setParameter(_parameter_);
+	public AOptionsPart(TId _parameter_, TEq _eq_, TQuote _leftQuote_, TId _selectExpr_,
+			TQuote _rightQuote_)
+	{
+		setParameter(_parameter_);
 
-        setEq(_eq_);
+		setEq(_eq_);
 
-        setLeftQuote(_leftQuote_);
+		setLeftQuote(_leftQuote_);
 
-        setSelectExpr(_selectExpr_);
+		setSelectExpr(_selectExpr_);
 
-        setRightQuote(_rightQuote_);
+		setRightQuote(_rightQuote_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AOptionsPart((TId) cloneNode(_parameter_), (TEq) cloneNode(_eq_),
-                (TQuote) cloneNode(_leftQuote_), (TId) cloneNode(_selectExpr_),
-                (TQuote) cloneNode(_rightQuote_));
-    }
+	public Object clone()
+	{
+		return new AOptionsPart((TId) cloneNode(_parameter_), (TEq) cloneNode(_eq_),
+				(TQuote) cloneNode(_leftQuote_), (TId) cloneNode(_selectExpr_),
+				(TQuote) cloneNode(_rightQuote_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAOptionsPart(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAOptionsPart(this);
+	}
 
-    public TId getParameter() {
-        return _parameter_;
-    }
+	public TId getParameter()
+	{
+		return _parameter_;
+	}
 
-    public void setParameter(TId node) {
-        if (_parameter_ != null) {
-            _parameter_.parent(null);
-        }
+	public void setParameter(TId node)
+	{
+		if (_parameter_ != null)
+		{
+			_parameter_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _parameter_ = node;
-    }
+		_parameter_ = node;
+	}
 
-    public TEq getEq() {
-        return _eq_;
-    }
+	public TEq getEq()
+	{
+		return _eq_;
+	}
 
-    public void setEq(TEq node) {
-        if (_eq_ != null) {
-            _eq_.parent(null);
-        }
+	public void setEq(TEq node)
+	{
+		if (_eq_ != null)
+		{
+			_eq_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _eq_ = node;
-    }
+		_eq_ = node;
+	}
 
-    public TQuote getLeftQuote() {
-        return _leftQuote_;
-    }
+	public TQuote getLeftQuote()
+	{
+		return _leftQuote_;
+	}
 
-    public void setLeftQuote(TQuote node) {
-        if (_leftQuote_ != null) {
-            _leftQuote_.parent(null);
-        }
+	public void setLeftQuote(TQuote node)
+	{
+		if (_leftQuote_ != null)
+		{
+			_leftQuote_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _leftQuote_ = node;
-    }
+		_leftQuote_ = node;
+	}
 
-    public TId getSelectExpr() {
-        return _selectExpr_;
-    }
+	public TId getSelectExpr()
+	{
+		return _selectExpr_;
+	}
 
-    public void setSelectExpr(TId node) {
-        if (_selectExpr_ != null) {
-            _selectExpr_.parent(null);
-        }
+	public void setSelectExpr(TId node)
+	{
+		if (_selectExpr_ != null)
+		{
+			_selectExpr_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _selectExpr_ = node;
-    }
+		_selectExpr_ = node;
+	}
 
-    public TQuote getRightQuote() {
-        return _rightQuote_;
-    }
+	public TQuote getRightQuote()
+	{
+		return _rightQuote_;
+	}
 
-    public void setRightQuote(TQuote node) {
-        if (_rightQuote_ != null) {
-            _rightQuote_.parent(null);
-        }
+	public void setRightQuote(TQuote node)
+	{
+		if (_rightQuote_ != null)
+		{
+			_rightQuote_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _rightQuote_ = node;
-    }
+		_rightQuote_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_parameter_) + toString(_eq_) + toString(_leftQuote_)
-                + toString(_selectExpr_) + toString(_rightQuote_);
-    }
+	public String toString()
+	{
+		return ""
+				+ toString(_parameter_) + toString(_eq_) + toString(_leftQuote_)
+				+ toString(_selectExpr_) + toString(_rightQuote_);
+	}
 
-    void removeChild(Node child) {
-        if (_parameter_ == child) {
-            _parameter_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_parameter_ == child)
+		{
+			_parameter_ = null;
+			return;
+		}
 
-        if (_eq_ == child) {
-            _eq_ = null;
-            return;
-        }
+		if (_eq_ == child)
+		{
+			_eq_ = null;
+			return;
+		}
 
-        if (_leftQuote_ == child) {
-            _leftQuote_ = null;
-            return;
-        }
+		if (_leftQuote_ == child)
+		{
+			_leftQuote_ = null;
+			return;
+		}
 
-        if (_selectExpr_ == child) {
-            _selectExpr_ = null;
-            return;
-        }
+		if (_selectExpr_ == child)
+		{
+			_selectExpr_ = null;
+			return;
+		}
 
-        if (_rightQuote_ == child) {
-            _rightQuote_ = null;
-            return;
-        }
+		if (_rightQuote_ == child)
+		{
+			_rightQuote_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_parameter_ == oldChild) {
-            setParameter((TId) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_parameter_ == oldChild)
+		{
+			setParameter((TId) newChild);
+			return;
+		}
 
-        if (_eq_ == oldChild) {
-            setEq((TEq) newChild);
-            return;
-        }
+		if (_eq_ == oldChild)
+		{
+			setEq((TEq) newChild);
+			return;
+		}
 
-        if (_leftQuote_ == oldChild) {
-            setLeftQuote((TQuote) newChild);
-            return;
-        }
+		if (_leftQuote_ == oldChild)
+		{
+			setLeftQuote((TQuote) newChild);
+			return;
+		}
 
-        if (_selectExpr_ == oldChild) {
-            setSelectExpr((TId) newChild);
-            return;
-        }
+		if (_selectExpr_ == oldChild)
+		{
+			setSelectExpr((TId) newChild);
+			return;
+		}
 
-        if (_rightQuote_ == oldChild) {
-            setRightQuote((TQuote) newChild);
-            return;
-        }
+		if (_rightQuote_ == oldChild)
+		{
+			setRightQuote((TQuote) newChild);
+			return;
+		}
 
-    }
+	}
 }

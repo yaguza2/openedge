@@ -4,27 +4,33 @@ package nl.openedge.gaps.support.berekeningen.node;
 
 import nl.openedge.gaps.support.berekeningen.analysis.Analysis;
 
-public final class TComma extends Token {
+public final class TComma extends Token
+{
 
-    public TComma() {
-        super.setText(",");
-    }
+	public TComma()
+	{
+		super.setText(",");
+	}
 
-    public TComma(int line, int pos) {
-        super.setText(",");
-        setLine(line);
-        setPos(pos);
-    }
+	public TComma(int line, int pos)
+	{
+		super.setText(",");
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TComma(getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TComma(getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTComma(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTComma(this);
+	}
 
-    public void setText(String text) {
-        throw new RuntimeException("Cannot change TComma text.");
-    }
+	public void setText(String text)
+	{
+		throw new RuntimeException("Cannot change TComma text.");
+	}
 }

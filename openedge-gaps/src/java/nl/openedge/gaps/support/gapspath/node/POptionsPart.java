@@ -2,5 +2,6 @@
 
 package nl.openedge.gaps.support.gapspath.node;
 
-public abstract class POptionsPart extends Node {
+public abstract class POptionsPart extends Node
+{
 }

@@ -2,7 +2,8 @@
 
 package nl.openedge.gaps.support.berekeningen.node;
 
-public interface Switchable {
+public interface Switchable
+{
 
-    void apply(Switch sw);
+	void apply(Switch sw);
 }

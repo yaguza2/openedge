@@ -4,27 +4,33 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class TSlash extends Token {
+public final class TSlash extends Token
+{
 
-    public TSlash() {
-        super.setText("/");
-    }
+	public TSlash()
+	{
+		super.setText("/");
+	}
 
-    public TSlash(int line, int pos) {
-        super.setText("/");
-        setLine(line);
-        setPos(pos);
-    }
+	public TSlash(int line, int pos)
+	{
+		super.setText("/");
+		setLine(line);
+		setPos(pos);
+	}
 
-    public Object clone() {
-        return new TSlash(getLine(), getPos());
-    }
+	public Object clone()
+	{
+		return new TSlash(getLine(), getPos());
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseTSlash(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseTSlash(this);
+	}
 
-    public void setText(String text) {
-        throw new RuntimeException("Cannot change TSlash text.");
-    }
+	public void setText(String text)
+	{
+		throw new RuntimeException("Cannot change TSlash text.");
+	}
 }

@@ -4,203 +4,247 @@ package nl.openedge.gaps.support.gapspath.node;
 
 import nl.openedge.gaps.support.gapspath.analysis.Analysis;
 
-public final class AArraySelect extends PArraySelect {
+public final class AArraySelect extends PArraySelect
+{
 
-    private TLBracket _lBracket_;
+	private TLBracket _lBracket_;
 
-    private TQuote _leftQuote_;
+	private TQuote _leftQuote_;
 
-    private TId _selectExpr_;
+	private TId _selectExpr_;
 
-    private TQuote _rightQuote_;
+	private TQuote _rightQuote_;
 
-    private TRBracket _rBracket_;
+	private TRBracket _rBracket_;
 
-    public AArraySelect() {
-    }
+	public AArraySelect()
+	{
+	}
 
-    public AArraySelect(TLBracket _lBracket_, TQuote _leftQuote_, TId _selectExpr_,
-            TQuote _rightQuote_, TRBracket _rBracket_) {
-        setLBracket(_lBracket_);
+	public AArraySelect(TLBracket _lBracket_, TQuote _leftQuote_, TId _selectExpr_,
+			TQuote _rightQuote_, TRBracket _rBracket_)
+	{
+		setLBracket(_lBracket_);
 
-        setLeftQuote(_leftQuote_);
+		setLeftQuote(_leftQuote_);
 
-        setSelectExpr(_selectExpr_);
+		setSelectExpr(_selectExpr_);
 
-        setRightQuote(_rightQuote_);
+		setRightQuote(_rightQuote_);
 
-        setRBracket(_rBracket_);
+		setRBracket(_rBracket_);
 
-    }
+	}
 
-    public Object clone() {
-        return new AArraySelect((TLBracket) cloneNode(_lBracket_), (TQuote) cloneNode(_leftQuote_),
-                (TId) cloneNode(_selectExpr_), (TQuote) cloneNode(_rightQuote_),
-                (TRBracket) cloneNode(_rBracket_));
-    }
+	public Object clone()
+	{
+		return new AArraySelect((TLBracket) cloneNode(_lBracket_),
+				(TQuote) cloneNode(_leftQuote_), (TId) cloneNode(_selectExpr_),
+				(TQuote) cloneNode(_rightQuote_), (TRBracket) cloneNode(_rBracket_));
+	}
 
-    public void apply(Switch sw) {
-        ((Analysis) sw).caseAArraySelect(this);
-    }
+	public void apply(Switch sw)
+	{
+		((Analysis) sw).caseAArraySelect(this);
+	}
 
-    public TLBracket getLBracket() {
-        return _lBracket_;
-    }
+	public TLBracket getLBracket()
+	{
+		return _lBracket_;
+	}
 
-    public void setLBracket(TLBracket node) {
-        if (_lBracket_ != null) {
-            _lBracket_.parent(null);
-        }
+	public void setLBracket(TLBracket node)
+	{
+		if (_lBracket_ != null)
+		{
+			_lBracket_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _lBracket_ = node;
-    }
+		_lBracket_ = node;
+	}
 
-    public TQuote getLeftQuote() {
-        return _leftQuote_;
-    }
+	public TQuote getLeftQuote()
+	{
+		return _leftQuote_;
+	}
 
-    public void setLeftQuote(TQuote node) {
-        if (_leftQuote_ != null) {
-            _leftQuote_.parent(null);
-        }
+	public void setLeftQuote(TQuote node)
+	{
+		if (_leftQuote_ != null)
+		{
+			_leftQuote_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _leftQuote_ = node;
-    }
+		_leftQuote_ = node;
+	}
 
-    public TId getSelectExpr() {
-        return _selectExpr_;
-    }
+	public TId getSelectExpr()
+	{
+		return _selectExpr_;
+	}
 
-    public void setSelectExpr(TId node) {
-        if (_selectExpr_ != null) {
-            _selectExpr_.parent(null);
-        }
+	public void setSelectExpr(TId node)
+	{
+		if (_selectExpr_ != null)
+		{
+			_selectExpr_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _selectExpr_ = node;
-    }
+		_selectExpr_ = node;
+	}
 
-    public TQuote getRightQuote() {
-        return _rightQuote_;
-    }
+	public TQuote getRightQuote()
+	{
+		return _rightQuote_;
+	}
 
-    public void setRightQuote(TQuote node) {
-        if (_rightQuote_ != null) {
-            _rightQuote_.parent(null);
-        }
+	public void setRightQuote(TQuote node)
+	{
+		if (_rightQuote_ != null)
+		{
+			_rightQuote_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _rightQuote_ = node;
-    }
+		_rightQuote_ = node;
+	}
 
-    public TRBracket getRBracket() {
-        return _rBracket_;
-    }
+	public TRBracket getRBracket()
+	{
+		return _rBracket_;
+	}
 
-    public void setRBracket(TRBracket node) {
-        if (_rBracket_ != null) {
-            _rBracket_.parent(null);
-        }
+	public void setRBracket(TRBracket node)
+	{
+		if (_rBracket_ != null)
+		{
+			_rBracket_.parent(null);
+		}
 
-        if (node != null) {
-            if (node.parent() != null) {
-                node.parent().removeChild(node);
-            }
+		if (node != null)
+		{
+			if (node.parent() != null)
+			{
+				node.parent().removeChild(node);
+			}
 
-            node.parent(this);
-        }
+			node.parent(this);
+		}
 
-        _rBracket_ = node;
-    }
+		_rBracket_ = node;
+	}
 
-    public String toString() {
-        return "" + toString(_lBracket_) + toString(_leftQuote_) + toString(_selectExpr_)
-                + toString(_rightQuote_) + toString(_rBracket_);
-    }
+	public String toString()
+	{
+		return ""
+				+ toString(_lBracket_) + toString(_leftQuote_) + toString(_selectExpr_)
+				+ toString(_rightQuote_) + toString(_rBracket_);
+	}
 
-    void removeChild(Node child) {
-        if (_lBracket_ == child) {
-            _lBracket_ = null;
-            return;
-        }
+	void removeChild(Node child)
+	{
+		if (_lBracket_ == child)
+		{
+			_lBracket_ = null;
+			return;
+		}
 
-        if (_leftQuote_ == child) {
-            _leftQuote_ = null;
-            return;
-        }
+		if (_leftQuote_ == child)
+		{
+			_leftQuote_ = null;
+			return;
+		}
 
-        if (_selectExpr_ == child) {
-            _selectExpr_ = null;
-            return;
-        }
+		if (_selectExpr_ == child)
+		{
+			_selectExpr_ = null;
+			return;
+		}
 
-        if (_rightQuote_ == child) {
-            _rightQuote_ = null;
-            return;
-        }
+		if (_rightQuote_ == child)
+		{
+			_rightQuote_ = null;
+			return;
+		}
 
-        if (_rBracket_ == child) {
-            _rBracket_ = null;
-            return;
-        }
+		if (_rBracket_ == child)
+		{
+			_rBracket_ = null;
+			return;
+		}
 
-    }
+	}
 
-    void replaceChild(Node oldChild, Node newChild) {
-        if (_lBracket_ == oldChild) {
-            setLBracket((TLBracket) newChild);
-            return;
-        }
+	void replaceChild(Node oldChild, Node newChild)
+	{
+		if (_lBracket_ == oldChild)
+		{
+			setLBracket((TLBracket) newChild);
+			return;
+		}
 
-        if (_leftQuote_ == oldChild) {
-            setLeftQuote((TQuote) newChild);
-            return;
-        }
+		if (_leftQuote_ == oldChild)
+		{
+			setLeftQuote((TQuote) newChild);
+			return;
+		}
 
-        if (_selectExpr_ == oldChild) {
-            setSelectExpr((TId) newChild);
-            return;
-        }
+		if (_selectExpr_ == oldChild)
+		{
+			setSelectExpr((TId) newChild);
+			return;
+		}
 
-        if (_rightQuote_ == oldChild) {
-            setRightQuote((TQuote) newChild);
-            return;
-        }
+		if (_rightQuote_ == oldChild)
+		{
+			setRightQuote((TQuote) newChild);
+			return;
+		}
 
-        if (_rBracket_ == oldChild) {
-            setRBracket((TRBracket) newChild);
-            return;
-        }
+		if (_rBracket_ == oldChild)
+		{
+			setRBracket((TRBracket) newChild);
+			return;
+		}
 
-    }
+	}
 }
