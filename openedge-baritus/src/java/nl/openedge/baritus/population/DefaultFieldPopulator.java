@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultFieldPopulator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: DefaultFieldPopulator.java,v 1.4 2004-04-02 09:50:22 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-02 09:50:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -48,8 +48,10 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.LogConstants;
 
 /**
- * Default populator for bean properties. Tries to set a property using introspection
+ * Default populator for bean properties. Tries to set a property using introspection.
+ * 
  * @author Eelco Hillenius
+ * @author Sander Hofstee
  */
 public final class DefaultFieldPopulator extends AbstractFieldPopulator
 {
@@ -104,12 +106,8 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 
 			Method reader = propertyDescriptor.getReadMethod();
 			Object[] originalArray = (Object[])reader.invoke(target, new Object[]{});
-			
-			if(targetPropertyMeta.getIndex() < 0)
-				// target is an array and name of property is not indexed 
-				// (a property is indexed in form: myproperty[1]; getIndex() would be 1 in 
-				//	this case and the actual property to navigate is an array element 
-				//	instead of the whole array).
+
+			if(targetPropertyMeta.getIndexesAndKeys().length < 1)
 			{
 				Object[] values = (Object[])requestValue;
 				
@@ -177,14 +175,17 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					}
 				}				
 			}
-			else // the target is one specific element in the array
+			else
 			{
+				int index = -1;
 				if(requestValue instanceof String[]) // convert to plain string 
 				{
+					index = 0;
 					requestValue = ((String[])requestValue)[0];
 				}  
 				// else keep original
-				int index = targetPropertyMeta.getIndex();
+				//TODO HELP!!!!
+				index = ((Integer)targetPropertyMeta.getIndexesAndKeys()[0]).intValue();
 				Object converted = null;
 
 				try
@@ -211,6 +212,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					}
 
 					// replace value in array
+					//TODO HELP!!!!
 					originalArray[index] = converted;
 				}
 				catch (ConversionException e)
@@ -240,7 +242,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 			if(requestValue instanceof String[]) // convert to plain string 
 			{
 				requestValue = ((String[])requestValue)[0];
-			}  
+			} 
 			// else keep original
 
 			if(converter == null) converter = 

@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldPopulator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: AbstractFieldPopulator.java,v 1.4 2004-04-02 09:50:22 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-02 09:50:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,6 +37,7 @@ import java.lang.reflect.Method;
 
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 
 import nl.openedge.baritus.FormBeanCtrlBase;
 
@@ -44,6 +45,7 @@ import nl.openedge.baritus.FormBeanCtrlBase;
  * Convenience class for populators.
  * 
  * @author Eelco Hillenius
+ * @author Sander Hofstee
  */
 public abstract class AbstractFieldPopulator implements FieldPopulator
 {
@@ -139,6 +141,10 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 	
 	/**
 	 * set property on target
+	 * 
+	 * There is one special case, for multidimensional Maps and lists
+	 * a method signature public void setProperty(Object[], Object) can
+	 * be used to set the values.
 	 * @param targetPropertyMeta
 	 * @param targetObject object to set property on
 	 * @param value value of property to set
@@ -154,22 +160,38 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 		InvocationTargetException, 
 		NoSuchMethodException
 	{
-		if (targetPropertyMeta.getIndex() >= 0) 
-		{
-			PropertyUtils.setIndexedProperty(
-				targetObject, targetPropertyMeta.getPropName(),
-				targetPropertyMeta.getIndex(), value);
-		} 
-		else if (targetPropertyMeta.getKey() != null) 
-		{
-			PropertyUtils.setMappedProperty(
-				targetObject, targetPropertyMeta.getPropName(),
-				targetPropertyMeta.getKey(), value);
-		} 
-		else 
+		if (targetPropertyMeta.getIndexesAndKeys().length == 0)
 		{
 			PropertyUtils.setProperty(
 				targetObject, targetPropertyMeta.getPropName(), value);
+		}
+		else if (targetPropertyMeta.getIndexesAndKeys().length == 1) 
+		{
+			Object indexOrKey = targetPropertyMeta.getIndexesAndKeys()[0]; 
+			
+			if (indexOrKey instanceof Integer)
+			{
+				int index = ((Integer)indexOrKey).intValue();
+				PropertyUtils.setIndexedProperty(
+					targetObject, targetPropertyMeta.getPropName(),
+					index, value);
+			}
+			else
+			{
+				PropertyUtils.setMappedProperty(
+					targetObject, targetPropertyMeta.getPropName(),
+					(String)indexOrKey, value);
+			}
+		} 
+		else 
+		{
+			String setterMethod = "set"
+				+ StringUtils.capitalise(targetPropertyMeta.getPropertyDescriptor().getName());
+			Class[] paramTypes = {Object[].class, Object.class};
+			Method setter = targetObject.getClass().getMethod(setterMethod, paramTypes);
+			
+			Object[] params = {targetPropertyMeta.getIndexesAndKeys(), value};
+			setter.invoke(targetObject, params);
 		}
 	}
 

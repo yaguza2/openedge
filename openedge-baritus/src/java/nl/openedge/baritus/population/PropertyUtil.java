@@ -1,7 +1,7 @@
 /*
- * $Id: PropertyUtil.java,v 1.1.1.1 2004-02-24 20:34:11 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:11 $
+ * $Id: PropertyUtil.java,v 1.2 2004-04-02 09:50:22 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-02 09:50:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -32,14 +32,19 @@ package nl.openedge.baritus.population;
 
 
 import org.apache.commons.beanutils.*;
+import org.apache.commons.lang.StringUtils;
 
 import java.beans.IndexedPropertyDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Utility class for property population
+ * Utility class for property population.
+ * 
  * @author Eelco Hillenius
+ * @author Sander Hofstee
  */
 public final class PropertyUtil
 {
@@ -177,8 +182,6 @@ public final class PropertyUtil
 	{
 
 		String propName = null; // Simple name of target property
-		int index = -1; // Indexed subscript value (if any)
-		String key = null; // Mapped key value (if any)
 
 		Object target = bean;
 		int delim = name.lastIndexOf(PropertyUtils.NESTED_DELIM);
@@ -197,35 +200,52 @@ public final class PropertyUtil
 
 		// Calculate the property name, index, and key values
 		propName = name;
-		int i = propName.indexOf(PropertyUtils.INDEXED_DELIM);
-		if (i >= 0)
-		{
-			int k = propName.indexOf(PropertyUtils.INDEXED_DELIM2);
-			try
-			{
-				index = Integer.parseInt(propName.substring(i + 1, k));
-			}
-			catch (NumberFormatException e)
-			{
-				;
-			}
-			propName = propName.substring(0, i);
-		}
-		int j = propName.indexOf(PropertyUtils.MAPPED_DELIM);
-		if (j >= 0)
-		{
-			int k = propName.indexOf(PropertyUtils.MAPPED_DELIM2);
-			try
-			{
-				key = propName.substring(j + 1, k);
-			}
-			catch (IndexOutOfBoundsException e)
-			{
-				;
-			}
-			propName = propName.substring(0, j);
-		}
+		Object[] index = getIndexesAndKeys(propName);
 		
-		return new TargetPropertyMeta(target, name, propName, key, index, propertyDescriptor);
+		return new TargetPropertyMeta(target, name, propName, index, propertyDescriptor);
+	}
+	
+	/**
+	 * Retrieves all the indexes and keys from the propertyName.
+	 * 
+	 * @param propName name of property
+	 * @return Object[] all the indexes and keys from the propertyName
+	 */
+	private static Object[] getIndexesAndKeys(String propName)
+	{
+		List result = new ArrayList(1);
+		String[] lookForStart = {Character.toString(PropertyUtils.INDEXED_DELIM)
+			, Character.toString(PropertyUtils.MAPPED_DELIM)};
+		String[] lookForEnd = {Character.toString(PropertyUtils.INDEXED_DELIM2)
+			, Character.toString(PropertyUtils.MAPPED_DELIM2)};
+		
+		int startIndex = StringUtils.indexOfAny(propName, lookForStart);
+		int endIndex = StringUtils.indexOfAny(propName, lookForEnd);
+		
+		while (startIndex >= 0 && endIndex > startIndex)
+		{
+			String indexOrKey = propName.substring(startIndex + 1, endIndex);
+			
+			/*
+			 * It's an indexed property
+			 */
+			if (propName.charAt(startIndex) == PropertyUtils.INDEXED_DELIM)
+			{
+				Integer index = new Integer(indexOrKey);
+				result.add(index);
+			}
+			/*
+			 * It's a mapped property
+			 */
+			else
+			{
+				result.add(indexOrKey);
+			}
+			propName = propName.substring(endIndex +1);
+			startIndex = StringUtils.indexOfAny(propName, lookForStart);
+			endIndex = StringUtils.indexOfAny(propName, lookForEnd);
+		}
+	
+		return result.toArray();
 	}
 }

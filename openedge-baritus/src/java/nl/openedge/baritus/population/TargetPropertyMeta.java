@@ -1,7 +1,7 @@
 /*
- * $Id: TargetPropertyMeta.java,v 1.1.1.1 2004-02-24 20:34:11 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:11 $
+ * $Id: TargetPropertyMeta.java,v 1.2 2004-04-02 09:50:22 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-02 09:50:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -33,16 +33,17 @@ package nl.openedge.baritus.population;
 import java.beans.PropertyDescriptor;
 
 /**
- * utility class that describes a property
+ * Utility class that describes a property.
+ * 
  * @author (copied and slightely adjusted from the Apache Jakarta BeanUtils project)
+ * @author Sander Hofstee
  */
 public final class TargetPropertyMeta
 {
 
-	private int index = -1; // Indexed subscript value (if any)
+	private Object[] indexesAndKeys = null; // Indexed subscript value (if any)
 	private String name;
 	private String propName; // Simple name of target property
-	private String key; // Mapped key value (if any)
 	private Object target; // target object
 	private PropertyDescriptor propertyDescriptor = null; // property descriptor
 
@@ -52,22 +53,20 @@ public final class TargetPropertyMeta
 	 * @param name property name
 	 * @param propName simple (end name) of the property
 	 * @param key mapped key value (if any)
-	 * @param index indexed subscript value (if any)
+	 * @param indexesAndKeys indexed subscript value (if any)
 	 * @param propertyDescriptor property descriptor of target property
 	 */
 	public TargetPropertyMeta(
 		Object target, 
 		String name, 
 		String propName, 
-		String key, 
-		int index,
+		Object[] indexesAndKeys,
 		PropertyDescriptor propertyDescriptor)
 	{
 		setTarget(target);
 		setName(name);
 		setPropName(propName);
-		setKey(key);
-		setIndex(index);
+		setIndexesAndKeys(indexesAndKeys);
 		setPropertyDescriptor(propertyDescriptor);
 	}
 
@@ -90,39 +89,21 @@ public final class TargetPropertyMeta
 	}
 
 	/**
-	 * get key
-	 * @return String
-	 */
-	public String getKey()
-	{
-		return key;
-	}
-
-	/**
-	 * set key
-	 * @param key
-	 */
-	public void setKey(String key)
-	{
-		this.key = key;
-	}
-
-	/**
-	 * get index
+	 * get indexesAndKeys
 	 * @return int
 	 */
-	public int getIndex()
+	public Object[] getIndexesAndKeys()
 	{
-		return index;
+		return indexesAndKeys;
 	}
 
 	/**
-	 * set index
-	 * @param index
+	 * set indexesAndKeys
+	 * @param indexesAndKeys
 	 */
-	public void setIndex(int index)
+	public void setIndexesAndKeys(Object[] index)
 	{
-		this.index = index;
+		this.indexesAndKeys = index;
 	}
 
 	/**

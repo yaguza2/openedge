@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.2 2004-04-01 09:20:35 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-01 09:20:35 $
+ * $Id: TestBean.java,v 1.3 2004-04-02 09:50:22 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-02 09:50:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,12 +31,17 @@
  
 package nl.openedge.baritus.test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
+ * Test bean.
+ * 
  * @author Eelco Hillenius
+ * @author Sander Hofstee
  */
 public class TestBean
 {
@@ -75,6 +80,12 @@ public class TestBean
 	{
 		"", ""
 	};
+	
+	private List listProperty = new ArrayList();
+	
+	private List multiDimensionalList = new ArrayList();
+	
+	private Map multiDimensionalMap = new HashMap();
 
 
 	/**
@@ -347,6 +358,106 @@ public class TestBean
 	public void setToValidate3(String[] strings)
 	{
 		toValidate3 = strings;
+	}
+	
+	/**
+	 * @return Returns the listProperty.
+	 */
+	public java.util.List getListProperty()
+	{
+		return listProperty;
+	}
+	/**
+	 * @param listProperty The listProperty to set.
+	 */
+	public void setListProperty(java.util.List listProperty)
+	{
+		this.listProperty = listProperty;
+	}
+	
+	public void setListProperty(int index, Object element)
+	{
+		listProperty.add(index, element);
+	}
+	
+	public Object getListProperty(int index)
+	{
+		return listProperty.get(index);
+	}
+	/**
+	 * @return
+	 */
+	public List getMultiDimensionalList()
+	{
+		return multiDimensionalList;
+	}
+
+	/**
+	 * @param list
+	 */
+	public void setMultiDimensionalList(List list)
+	{
+		multiDimensionalList = list;
+	}
+	
+	/**
+	 * 
+	 * @param keys
+	 * @param value
+	 */
+	public void setMultiDimensionalList(Object[] keys, Object value)
+	{
+		List attribute = null;
+		int index1 = ((Integer)keys[0]).intValue();
+//		int index2 = ((Integer)keys[1]).intValue();
+		
+		try
+		{
+			attribute = (List)multiDimensionalList.get(index1);
+		}
+		catch (Exception e)
+		{
+			attribute = new ArrayList();
+			multiDimensionalList.add(attribute);
+		}
+		attribute.add(value);
+	}
+
+	/**
+	 * @return
+	 */
+	public Map getMultiDimensionalMap()
+	{
+		return multiDimensionalMap;
+	}
+
+	/**
+	 * @param map
+	 */
+	public void setMultiDimensionalMap(Map map)
+	{
+		multiDimensionalMap = map;
+	}
+	
+	/**
+	 * 
+	 * @param keys
+	 * @param value
+	 */
+	public void setMultiDimensionalMap(Object[] keys, Object value)
+	{
+		Map attribute = null;
+		if (multiDimensionalMap.containsKey(keys[0]))
+		{
+			attribute = (Map)multiDimensionalMap.get(keys[0]);
+		}
+		else
+		{
+			attribute = new HashMap();
+		}
+		
+		attribute.put(keys[1], value);
+		multiDimensionalMap.put(keys[0], attribute);
 	}
 
 }
