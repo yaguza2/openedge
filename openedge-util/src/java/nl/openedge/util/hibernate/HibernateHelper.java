@@ -30,6 +30,9 @@
  */
 package nl.openedge.util.hibernate;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
@@ -41,6 +44,8 @@ import net.sf.hibernate.cfg.Configuration;
  * @author Eelco Hillenius
  */
 public abstract class HibernateHelper {
+	  
+	private static Log log = LogFactory.getLog(HibernateHelper.class);
 	    
     /**
      * Holds the current hibernate session, if one has been created.
@@ -71,12 +76,15 @@ public abstract class HibernateHelper {
      */
     public static Session getSession() throws HibernateException {
     	
+		//log.info(Thread.currentThread() + ": get session");
         Session sess = (Session)hibernateHolder.get();
-        
         if (sess == null && factory != null) {
         	
             sess = factory.openSession();
+			//log.info(Thread.currentThread() + "create session");
             hibernateHolder.set(sess);
+        } else {
+			//log.info(Thread.currentThread() + ": got it");
         }
         
         return sess;

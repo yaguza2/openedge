@@ -39,6 +39,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 
@@ -49,6 +52,8 @@ import net.sf.hibernate.Session;
  * @author Jeff Schnitzer, Eelco Hillenius
  */
 public class HibernateFilter extends HibernateHelper implements Filter {    
+   
+    private Log log = LogFactory.getLog(HibernateFilter.class);
     
     /**
      * initialise
@@ -72,22 +77,24 @@ public class HibernateFilter extends HibernateHelper implements Filter {
                 + "Someone must have called getSession() outside of the context "
                 + "of a servlet request.");
             
-        try
-        {
+        try {
             chain.doFilter(request, response);
         }
-        finally
-        {
+        finally {
             Session sess = (Session)hibernateHolder.get();
-            if (sess != null)
-            {
+            
+			//log.info(Thread.currentThread() + ": closing " + sess);
+            if (sess != null) {
+            	
                 hibernateHolder.set(null);
                 
-                try
-                {
+                try {
                     sess.close();
                 }
-                catch (HibernateException ex) { throw new ServletException(ex); }
+                catch (HibernateException ex) { 
+                	ex.printStackTrace();
+                	throw new ServletException(ex); 
+                }
             }
         }
     }
