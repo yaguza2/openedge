@@ -130,13 +130,13 @@
 
     <dependency>
       <id>openedge-utils</id>
-      <version>1.0</version>
+      <version>SNAPSHOT</version>
       <url>http://www.openedge.nl</url>
     </dependency>
     
     <dependency>
       <id>openedge-modules</id>
-      <version>1.0</version>
+      <version>SNAPSHOT</version>
       <url>http://www.openedge.nl</url>
     </dependency>
 
