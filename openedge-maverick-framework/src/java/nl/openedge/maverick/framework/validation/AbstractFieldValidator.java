@@ -62,6 +62,9 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	}
 
 	/**
+	 * get the error message. default returns the resource bundle message where
+	 * key = messagePrefix + fieldName, with {0} substituted with the value
+	 * and {1} substituted with the field name
 	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
@@ -75,4 +78,15 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 		String key = getMessagePrefix() + fieldName;
 		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
 	}
+	
+	/**
+	 * get the override value. default returns the value unchanged
+	 * @return Object unchanged value
+	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getOverrideValue(java.lang.Object)
+	 */
+	public Object getOverrideValue(Object value)
+	{
+		return value;
+	}
+	
 }

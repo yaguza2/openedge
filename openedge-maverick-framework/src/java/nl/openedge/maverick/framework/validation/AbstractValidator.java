@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
+ * convenience class
  * @author Eelco Hillenius
  */
 public abstract class AbstractValidator

@@ -480,8 +480,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					{
 						try
 						{
-							doCustomValidationForOneField(
-								cctx, formBean, locale, succeeded, name, propertyValidators);
+							succeeded = doCustomValidationForOneField(
+								cctx, formBean, locale, succeeded, 
+								name, propertyValidators);
 						}
 						catch (Exception e)
 						{
@@ -536,7 +537,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				ValidatorActivationRule rule = 
 					((ValidationRuleDependend)validator)
 						.getValidationActivationRule();
-				validateField = rule.allowValidation(cctx, formBean);
+				if(rule != null)
+				{
+					validateField = rule.allowValidation(cctx, formBean);	
+				}
 			}
 								
 			if(validateField)
@@ -546,15 +550,25 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				if(!success)
 				{
 					succeeded = false;
-					String msg = validator.getErrorMessage(
-						cctx, formBean, name, value, locale);
-					formBean.setError(name, msg);
-					// if fail on populate, set the override field so that the input
-					// value can be displayed
-					if(failOnPopulateError)
+					try
 					{
-						formBean.setOverrideField(name, value);	
+						String msg = validator.getErrorMessage(
+							cctx, formBean, name, value, locale);
+						formBean.setError(name, msg);
 					}
+					catch (Exception e)
+					{
+						if(log.isDebugEnabled())
+						{
+							e.printStackTrace();	
+						}
+						else
+						{
+							log.warn(e.getMessage());
+						}
+						formBean.setError(name, e.getMessage());
+					}
+					setOverrideField(cctx, formBean, name, value, null, validator);
 					break;
 				}	
 			}
@@ -612,6 +626,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				catch (ConversionException e) 
 				{
 					setErrorForField(cctx, formBean, (name + '|' + i), values[i], e);
+					setOverrideField(cctx, formBean, (name + '|' + i), values[i], e, null);
 					success = false;
 				}
 			}
@@ -672,6 +687,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		catch (Exception e)
 		{
 			setErrorForField(cctx, formBean, name, stringValue, e);
+			setOverrideField(cctx, formBean, name, stringValue, e, null);
 			success = false;	
 		}
 		return success;
@@ -739,7 +755,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 
 		try
 		{
-			
 			PropertyDescriptor descriptor = 
 				PropertyUtils.getPropertyDescriptor(formBean, name);
 			String key = "invalid.field.input"; 
@@ -767,17 +782,35 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			}
 
 			formBean.setError(name, msg);
-		
+		}		
+		catch (Exception e)
+		{
+			log.error(e.getMessage());
+		}
+	}
+	
+	
+	protected void setOverrideField(
+		ControllerContext cctx, 
+		AbstractForm formBean, 
+		String name, 
+		Object triedValue, 
+		Throwable t,
+		FieldValidator validator) 
+	{
+		if(validator != null)
+		{
+			Object value = validator.getOverrideValue(triedValue);
+			formBean.setOverrideField(name, triedValue);
+		}
+		else
+		{
 			// if fail on populate, set the override field so that the input
 			// value can be displayed
 			if(failOnPopulateError)
 			{
 				formBean.setOverrideField(name, triedValue);	
-			}
-		}		
-		catch (Exception e)
-		{
-			log.error(e.getMessage());
+			}	
 		}
 	}
 	

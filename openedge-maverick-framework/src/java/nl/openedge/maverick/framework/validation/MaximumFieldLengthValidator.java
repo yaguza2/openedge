@@ -85,6 +85,12 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * in case the value is an instance of string: checks whether the length of the string
+	 * is equal to or smaller than the maximumLength property
+	 * in case the value is an instance of number: checks whether the length of the integer
+	 * value is equal to or smaller than the minimumLength property
+	 * @return boolean true if the length of value is equal to or less than the
+	 * 	maxLength property, false otherwise
 	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
@@ -125,6 +131,9 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
+	 * get the error message. default returns the resource bundle message where
+	 * key = messagePrefix, with {0} substituted with the value, {1} substituted 
+	 * with the field name and {2} substituted with the maximum length
 	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(

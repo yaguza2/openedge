@@ -71,4 +71,13 @@ public interface FieldValidator
 		String fieldName,
 		Object value,
 		Locale locale);
+		
+	/**
+	 * if value is not valid, get the custom value to set as the field override
+	 * in the form
+	 * @param value the original input value
+	 * @return the value that should be used as override value
+	 */
+	public Object getOverrideValue(Object value);
+	
 }

@@ -36,6 +36,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
+ * check whether the form contains a not null property with the name of property 
+ * propertyName
  * @author Eelco Hillenius
  */
 public class PropertyNotNullFormValidator extends AbstractFormValidator
@@ -72,7 +74,10 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 	}
 
 	/**
-	 * check if the
+	 * check whether the form contains a not null property with the name of property 
+	 * propertyName
+	 * @return boolean true if property in form with name of property propertyName exists
+	 * 	and is not null, false otherwise
 	 * @see nl.openedge.maverick.framework.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm)
 	 */
 	public boolean isValid(ControllerContext cctx, AbstractForm form)
