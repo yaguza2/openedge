@@ -4,7 +4,6 @@
 	<comment>
   </comment>
 	<projects>
-		<project>openedge-util</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -45,6 +45,7 @@
         path="MAVEN_REPO/oe-mailjob/jars/oe-mailjob-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-mailjob-SNAPSHOT-src.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/oe-usermanager-hib/jars/oe-usermanager-hib-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-usermanager-hib-SNAPSHOT-src.jar"/>
-    <classpathentry kind="src" path="/openedge-util"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/openedge-utils/jars/openedge-utils-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
