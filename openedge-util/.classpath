@@ -2,7 +2,8 @@
 <classpath>
     <classpathentry kind="src" path="src/java"/>
     <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
-    <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar" sourcepath="SERVLET_SOURCE"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.5.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.0.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-lang/jars/commons-lang-1.0.1.jar"/>
