@@ -154,7 +154,7 @@ public final class DateFormatHelper
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format(String format, Date date)
+	public static synchronized String format(String format, Date date)
 	{
 		SimpleDateFormat formatter = (SimpleDateFormat)formatters.get(format);
 		if (formatter == null)
@@ -172,7 +172,7 @@ public final class DateFormatHelper
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format(String format, long time)
+	public static synchronized String format(String format, long time)
 	{
 		return format(format, new Date(time));
 	}
@@ -183,7 +183,7 @@ public final class DateFormatHelper
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format(Date date)
+	public static synchronized String format(Date date)
 	{
 		return defaultFormatter.format(date);
 	}
@@ -194,7 +194,7 @@ public final class DateFormatHelper
 	 * @return formatted date
 	 * @see SimpleDateFormat
 	 */
-	public static String format(long time)
+	public static synchronized String format(long time)
 	{
 		return defaultFormatter.format(new Date(time));
 	}
@@ -205,7 +205,7 @@ public final class DateFormatHelper
 	 * @param fallback			use all formatters before fail
 	 * @return parsed date or null if input was null or empty string
 	 */
-	public static Date fallbackParse(String stringDate) throws ParseException
+	public static synchronized Date fallbackParse(String stringDate) throws ParseException
 	{
 
 		if (stringDate == null || "".equals(stringDate.trim()))
@@ -239,7 +239,7 @@ public final class DateFormatHelper
 	 * @param stringDate		date as a string
 	 * @return parsed date
 	 */
-	public static Date parse(String stringDate) throws ParseException
+	public static synchronized Date parse(String stringDate) throws ParseException
 	{
 		return defaultFormatter.parse(stringDate);
 	}
@@ -263,7 +263,7 @@ public final class DateFormatHelper
 	 * @see SimpleDateFormat
 	 * @return parsed date
 	 */
-	public static Date parse(String stringDate, String format) throws ParseException
+	public static synchronized Date parse(String stringDate, String format) throws ParseException
 	{
 		DateFormat df = (DateFormat)formatters.get(format);
 		if (df == null)
