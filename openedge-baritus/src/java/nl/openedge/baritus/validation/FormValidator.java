@@ -1,7 +1,7 @@
 /*
- * $Id: FormValidator.java,v 1.1.1.1 2004-02-24 20:34:14 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:14 $
+ * $Id: FormValidator.java,v 1.2 2004-02-25 20:40:51 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-02-25 20:40:51 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -46,12 +46,12 @@ public interface FormValidator
 	/**
 	 * checks if form is valid
 	 * @param cctx maverick context
-	 * @param form form for this currentRequest
+	 * @param formBeanContext context with form for this currentRequest
 	 * @return true if valid, false if not.
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		FormBeanContext form);
+		FormBeanContext formBeanContext);
 
 	/**
 	 * if form is not valid, get custom error message here
