@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.14 2004-06-05 09:18:28 eelco12 Exp $
- * $Revision: 1.14 $
- * $Date: 2004-06-05 09:18:28 $
+ * $Id: FormBeanCtrlBase.java,v 1.15 2004-06-11 09:19:44 eelco12 Exp $
+ * $Revision: 1.15 $
+ * $Date: 2004-06-11 09:19:44 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -79,22 +79,22 @@ public abstract class FormBeanCtrlBase implements Controller
 
 	//-------------------------- constants ---------------------------------------/
 
-	/** Common name for the typical "success" view */
+	/** Common name for the typical "success" view. */
 	public static final String SUCCESS = "success";
 
-	/** Common name for the typical "logon" view */
+	/** Common name for the typical "logon" view. */
 	public static final String LOGON = "logon";
 
-	/** Common name for the typical "error" view */
+	/** Common name for the typical "error" view. */
 	public static final String ERROR = "error";
 
-	/** Common name for the "redirect" view */
+	/** Common name for the "redirect" view. */
 	public static final String REDIRECT = "doredirect";
 
-	/** session key for the current locale */
+	/** session key for the current locale. */
 	public static final String SESSION_KEY_CURRENT_LOCALE = "_currentLocale";
 
-	/*
+	/**
 	 * Key for request attribute that is used to store the formbean context.
 	 * This key is used to be able to reuse the formbean context with
 	 * multiple commands within the same request without having to figure out
@@ -104,7 +104,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 */
 	private static final String REQUEST_ATTRIBUTE_FORMBEANCONTEXT = "__formBeanContext";
 
-	/*
+	/**
 	 * Key for request attribute that is used to store the execution parameters
 	 * for the current request. Not intended for use outside this class.
 	 */
@@ -112,38 +112,36 @@ public abstract class FormBeanCtrlBase implements Controller
 
 	//--------------------- logs --------------------------------------------------/
 
-	/* log for this class */
+	/** log for this class. */
 	private static Log log = LogFactory.getLog(FormBeanCtrlBase.class);
 
-	/* population log */
+	/** population log. */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
 
 	//------------------------ registries ----------------------------------------/
 
-	// registry for populators by field name and the default populator
+	/** registry for populators by field name and the default populator. */
 	private PopulatorRegistry populatorRegistry = new PopulatorRegistry(this);
 
-	// registry for form validators, field validators and rules that apply to them
+	/** registry for form validators, field validators and rules that apply to them. */
 	private ValidatorRegistry validatorRegistry = new ValidatorRegistry();
 
-	// default delegate for validation. Users of this framework can add
-	// validator delegates if they want, e.g. ones that are based on
-	// commons validator or formproc. This instance of ValidatorDelegate however,
-	// will allways be executed (first).
+	 /** default delegate for validation. Users of this framework can add
+	 validator delegates if they want, e.g. ones that are based on
+	 commons validator or formproc. This instance of ValidatorDelegate however,
+	 will allways be executed (first). */
 	private ValidatorDelegate defaultValidatorDelegate = new DefaultValidatorDelegate(validatorRegistry, this);
 
-	// validator delegates
+	/** validator delegates. */
 	private List validatorDelegates = null;
 
-	// registry for form interceptors
+	/** registry for form interceptors. */
 	private InterceptorRegistry interceptorRegistry = new InterceptorRegistry();
 
-	//------------------------- paramters that influence the execution -----------/
-
+	/** paramters that influence the execution */
 	private ExecutionParams executionParams = new ExecutionParams();
 
-	//------------------------- delegates ----------------------------------------/
-
+	/** delegate for handling interception */
 	private InterceptorDelegate intercDlg = new InterceptorDelegate(interceptorRegistry);
 
 	//------------------------- methods ------------------------------------------/
@@ -277,7 +275,12 @@ public abstract class FormBeanCtrlBase implements Controller
 		return viewName;
 	}
 
-	/* get the formBeanContext */
+	/**
+	 * Get the FormBeanContext instance.
+	 * @param cctx controller context
+	 * @param _execParams execution params for this request
+	 * @return FormBeanContext instance of FormBeanContext to use
+	 */
 	private FormBeanContext getFormBeanContext(ControllerContext cctx, ExecutionParams _execParams)
 	{
 		FormBeanContext formBeanContext = null;
@@ -298,14 +301,19 @@ public abstract class FormBeanCtrlBase implements Controller
 		return formBeanContext;
 	}
 
-	/* get the form bean */
+	/**
+	 * Get the form bean for population.
+	 * @param formBeanContext current FormBeanContext instance
+	 * @param cctx controller contex
+	 * @return Object JavaBean that is to be populated
+	 */
 	private Object getFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
 	{
 		return this.makeFormBean(formBeanContext, cctx);
 	}
 
-	/*
-	 * populate the form
+	/**
+	 * populate the form.
 	 * @param cctx controller context
 	 * @param formBeanContext context with bean to populate
 	 * @throws Exception
@@ -317,11 +325,6 @@ public abstract class FormBeanCtrlBase implements Controller
 		ExecutionParams _execParams)
 		throws Exception
 	{
-
-		boolean popSuccessCtrlParams = true;
-		boolean popSuccessSessionAttribs = true;
-		boolean popSuccessRequestParams = true;
-		boolean popSuccessRequestAttribs = true;
 
 		Map allParameters = new HashMap(); // for use with validators later on
 
@@ -344,11 +347,8 @@ public abstract class FormBeanCtrlBase implements Controller
 		if (_execParams.isIncludeControllerParameters() && (cctx.getControllerParams() != null))
 		{
 			Map parameters = new HashMap(cctx.getControllerParams());
-
-			allParameters.putAll(parameters);
 			traceParameters(parameters, traceMsg, "maverick controller params");
-
-			popSuccessCtrlParams = populateWithErrorReport(cctx, formBeanContext, parameters);
+			allParameters.putAll(parameters);
 		}
 
 		// session attributes
@@ -357,28 +357,22 @@ public abstract class FormBeanCtrlBase implements Controller
 			Map parameters = new HashMap();
 			HttpSession httpSession = cctx.getRequest().getSession();
 			Enumeration enum = httpSession.getAttributeNames();
-			if (enum != null)
+			if (enum != null) {
 				while (enum.hasMoreElements())
 				{
 					String attrName = (String)enum.nextElement();
 					parameters.put(attrName, httpSession.getAttribute(attrName));
 				}
-
-			allParameters.putAll(parameters);
+			}
 			traceParameters(parameters, traceMsg, "session attributes");
-
-			popSuccessSessionAttribs = populateWithErrorReport(cctx, formBeanContext, parameters);
+			allParameters.putAll(parameters);
 		}
 
 		// request parameters
 		Map reqParameters = new HashMap();
-
 		reqParameters.putAll(cctx.getRequest().getParameterMap());
-
-		allParameters.putAll(reqParameters);
 		traceParameters(reqParameters, traceMsg, "request parameters");
-
-		popSuccessRequestParams = populateWithErrorReport(cctx, formBeanContext, reqParameters);
+		allParameters.putAll(reqParameters);
 
 		// request attributes
 		if (_execParams.isIncludeRequestAttributes())
@@ -401,11 +395,8 @@ public abstract class FormBeanCtrlBase implements Controller
 						}
 					}
 				}
-
-			allParameters.putAll(parameters);
 			traceParameters(parameters, traceMsg, "request attributes");
-
-			popSuccessRequestAttribs = populateWithErrorReport(cctx, formBeanContext, parameters);
+			allParameters.putAll(parameters);
 		}
 
 		if (populationLog.isDebugEnabled())
@@ -415,12 +406,13 @@ public abstract class FormBeanCtrlBase implements Controller
 			populationLog.debug(traceMsg);
 		}
 
-		// we consider population successfull if population of all parameters succeeded
-		boolean succeeded =
-			(popSuccessCtrlParams && popSuccessSessionAttribs && popSuccessRequestParams && popSuccessRequestAttribs);
-
+		// do population
+		boolean succeeded = populateWithErrorReport(
+		    cctx, formBeanContext, allParameters);
+		
 		// do custom validation
-		succeeded = defaultValidatorDelegate.doValidation(cctx, formBeanContext, _execParams, allParameters, succeeded);
+		succeeded = defaultValidatorDelegate.doValidation(
+		    cctx, formBeanContext, _execParams, allParameters, succeeded);
 
 		List additionalValidators = getValidatorDelegates();
 		if (additionalValidators != null) // if there are any delegates registered
@@ -430,7 +422,8 @@ public abstract class FormBeanCtrlBase implements Controller
 				boolean _succeeded = succeeded; // set to last known val
 
 				ValidatorDelegate valDel = (ValidatorDelegate)i.next();
-				_succeeded = valDel.doValidation(cctx, formBeanContext, executionParams, allParameters, _succeeded);
+				_succeeded = valDel.doValidation(
+				    cctx, formBeanContext, executionParams, allParameters, _succeeded);
 
 				if (!_succeeded)
 					succeeded = false;
@@ -440,7 +433,12 @@ public abstract class FormBeanCtrlBase implements Controller
 		return succeeded;
 	}
 
-	/* extra debug info */
+	/**
+	 * Debug method for parameters that will be used for population.
+	 * @param parameters the parameters
+	 * @param msg the message to append to logging
+	 * @param parameterSet set name to append to logging
+	 */
 	private final void traceParameters(Map parameters, StringBuffer msg, String parameterSet)
 	{
 		if (populationLog.isDebugEnabled() && (parameters != null) && (!parameters.isEmpty()))
@@ -457,36 +455,34 @@ public abstract class FormBeanCtrlBase implements Controller
 		}
 	}
 
-	/*
-	 * default populate of form: BeanUtils way; set error if anything goes wrong
+	/**
+	 * Default populate of form: Ognl way; set error if anything goes wrong.
 	 * @param cctx controller context
 	 * @param formBeanContext context with current form bean
 	 * @param parameters map with name/ values
 	 * @param locale the prefered locale
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	private boolean populateWithErrorReport(ControllerContext cctx, FormBeanContext formBeanContext, Map parameters)
+	private boolean populateWithErrorReport(
+	        ControllerContext cctx, 
+	        FormBeanContext formBeanContext, 
+	        Map parameters)
 	{
-
 		// Do nothing unless both arguments have been specified or parameters is empty
 		if ((formBeanContext == null) || (parameters == null) || (parameters.isEmpty()))
 		{
 			return true;
 		}
-
 		boolean succeeded = true;
-
 		// try regex population
 		succeeded = regexPopulateWithErrorReport(cctx, formBeanContext, parameters);
-
 		// populate remainder
 		succeeded = fieldPopulateWithErrorReport(cctx, formBeanContext, parameters, succeeded);
-
 		return succeeded;
 	}
 
-	/*
-	 * populate with regex populators if any
+	/**
+	 * Populate with regex populators if any.
 	 * @param cctx controller context
 	 * @param formBeanContext context with current form bean
 	 * @param parameters map with name/ values. parameters that are found within this method
@@ -498,9 +494,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		FormBeanContext formBeanContext,
 		Map parameters)
 	{
-
 		boolean succeeded = true;
-
 		Map regexFieldPopulators = populatorRegistry.getRegexFieldPopulators();
 		// first, see if there are matches with registered regex populators
 		if (regexFieldPopulators != null) // there are registrations
@@ -509,28 +503,23 @@ public abstract class FormBeanCtrlBase implements Controller
 			for (Iterator i = regexFieldPopulators.keySet().iterator(); i.hasNext();)
 			{
 				Pattern pattern = (Pattern)i.next();
-
 				for (Iterator j = parameters.keySet().iterator(); j.hasNext();)
 				{
 					String name = (String)j.next();
-
 					// See if we have a custom populator registered for the given field
 					if (populatorRegistry.getFieldPopulator(name) != null)
 					{
 						continue; // do not match on regexp
 					}
-
 					Object value = parameters.get(name);
-
 					try
 					{
 						Matcher matcher = pattern.matcher(name);
 						if (matcher.matches())
 						{
-							FieldPopulator fieldPopulator = (FieldPopulator)regexFieldPopulators.get(pattern);
-
+							FieldPopulator fieldPopulator = 
+							    (FieldPopulator)regexFieldPopulators.get(pattern);
 							keysToBeRemoved.add(name);
-
 							boolean success;
 							try
 							{
@@ -575,7 +564,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		return succeeded;
 	}
 
-	/*
+	/**
 	 * Populate with field populators. 
 	 * @param cctx controller context
 	 * @param formBeanContext context with current form bean
@@ -590,7 +579,6 @@ public abstract class FormBeanCtrlBase implements Controller
 		Map parameters,
 		boolean succeeded)
 	{
-
 		// Loop through the property name/value pairs to be set
 		Iterator names = parameters.keySet().iterator();
 		while (names.hasNext())
@@ -600,22 +588,17 @@ public abstract class FormBeanCtrlBase implements Controller
 			String name = (String)names.next();
 			if (name == null)
 				continue;
-
 			Object value = parameters.get(name);
-
 			try
 			{
 				// See if we have a custom populator registered for the given field
 				FieldPopulator fieldPopulator = populatorRegistry.getFieldPopulator(name);
-
 				if (fieldPopulator == null) // if no custom populator was found, we use the default
 				{
 					fieldPopulator = populatorRegistry.getDefaultFieldPopulator();
 				}
-
 				// execute population on form
 				success = fieldPopulator.setProperty(cctx, formBeanContext, name, value);
-
 			}
 			catch (Exception e)
 			{
@@ -634,7 +617,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		return succeeded;
 	}
 
-	/*
+	/**
 	 * Called when populating the form failed.
 	 * @param cctx maverick context
 	 * @param params execution params
@@ -669,12 +652,16 @@ public abstract class FormBeanCtrlBase implements Controller
 		{
 			formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());
 		}
-
 		if (populationLog.isDebugEnabled())
-			traceErrors(formBeanContext);
+		{
+		    traceErrors(formBeanContext);
+		}
 	}
 
-	/* extra debug info */
+	/**
+	 * Extra debugging logging for errors.
+	 * @param formBeanContext form bean context
+	 */
 	private final void traceErrors(FormBeanContext formBeanContext)
 	{
 		Map errors = formBeanContext.getErrors();
@@ -721,15 +708,12 @@ public abstract class FormBeanCtrlBase implements Controller
 		Object triedValue,
 		Throwable t)
 	{
-
 		try
 		{
 			String key = getConversionErrorLabelKey(targetType, name, triedValue);
-
 			String msg = null;
 			String msgName = null;
 			msgName = MessageUtils.getLocalizedMessage(getPropertyNameKey(name));
-
 			String desiredPattern = null;
 			if (t instanceof nl.openedge.baritus.converters.ConversionException)
 			{
@@ -737,7 +721,6 @@ public abstract class FormBeanCtrlBase implements Controller
 					(nl.openedge.baritus.converters.ConversionException)t;
 				desiredPattern = ex.getDesiredPattern();
 			}
-
 			if (msgName != null)
 			{
 				msg = MessageUtils.getLocalizedMessage(key, new Object[] { triedValue, msgName, t, desiredPattern });
@@ -746,7 +729,6 @@ public abstract class FormBeanCtrlBase implements Controller
 			{
 				msg = MessageUtils.getLocalizedMessage(key, new Object[] { triedValue, name, t, desiredPattern });
 			}
-
 			formBeanContext.setError(name, msg);
 		}
 		catch (Exception e)
@@ -846,6 +828,8 @@ public abstract class FormBeanCtrlBase implements Controller
 
 	/**
 	 * This method must be overriden to perform application logic.
+	 * By default, that method will only then be called when population & validation
+	 * succeeded, and no FlowExceptions were thrown by interceptors.
 	 *
 	 * @param formBeanContext context with the populated bean returned by makeFormBean().
 	 * @param cctx maverick controller context.
@@ -855,11 +839,14 @@ public abstract class FormBeanCtrlBase implements Controller
 	 *  It is advisable however, to keep control of the error reporting, and let this
 	 *  method do the exception handling
 	 */
-	protected abstract String perform(FormBeanContext formBeanContext, ControllerContext cctx) throws Exception;
+	protected abstract String perform(
+	        FormBeanContext formBeanContext, 
+	        ControllerContext cctx) 
+			throws Exception;
 
 	/**
 	 * This method will be called to produce a bean whose properties
-	 * will be populated with the http currentRequest parameters. The resulting object
+	 * will be populated with the http currentRequest parameters, the resulting object
 	 * will be placed in the formBeanContext after this call.
 	 * 
 	 * @param formBeanContext the form bean context. If this is the first control within
@@ -874,7 +861,9 @@ public abstract class FormBeanCtrlBase implements Controller
 	 *  to makeFormBean, the instance will be set in the formBeanContext as property 'bean'
 	 * 
 	 */
-	protected abstract Object makeFormBean(FormBeanContext formBeanContext, ControllerContext cctx);
+	protected abstract Object makeFormBean(
+	        FormBeanContext formBeanContext, 
+	        ControllerContext cctx);
 
 	//**************************** validators ********************************************/
 

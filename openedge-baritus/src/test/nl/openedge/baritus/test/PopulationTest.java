@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.11 2004-06-05 09:18:28 eelco12 Exp $
- * $Revision: 1.11 $
- * $Date: 2004-06-05 09:18:28 $
+ * $Id: PopulationTest.java,v 1.12 2004-06-11 09:19:43 eelco12 Exp $
+ * $Revision: 1.12 $
+ * $Date: 2004-06-11 09:19:43 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -694,6 +694,38 @@ public class PopulationTest extends TestCase
 			e.printStackTrace();
 			fail(e.getMessage());
 		}	
+	}
+	
+	/**
+	 * Tests that a request attribute overrides a request parameter,
+	 * and that the population with the request parameter is never tried
+	 * when there is an overruling parameter.
+	 */
+	public void testRequestParamAndRequestAttribPopulation()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testInteger1", "not a number at all"); // test invalid value
+		request.setupGetParameterMap(requestParams);
+		request.setAttribute("testInteger1", "1"); // this is valid, and should
+			// override the non-valid request parameter. Hence, population
+			// should not result in errors.
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+			assertNotNull(bean.getTestInteger1());
+			assertEquals(new Integer(1), bean.getTestInteger1());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 	}
 	
 // THIS TESTS AN OGNL BUG/ FEATURE
