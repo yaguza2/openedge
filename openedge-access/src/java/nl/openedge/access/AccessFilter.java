@@ -99,7 +99,7 @@ public final class AccessFilter implements Filter
 	protected static String loginRedirect;
 
 	/** OpenEdge Access factory */
-	protected static AccessFactory accessFactory = null;
+	protected static AccessController accessFactory = null;
 
 	/** keep a reference to the config for later use */
 	protected FilterConfig config = null;

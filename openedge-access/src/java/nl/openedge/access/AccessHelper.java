@@ -30,33 +30,31 @@
  */
 package nl.openedge.access;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.AccessControlException;
-import java.security.ProtectionDomain;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.PrivilegedAction;
 
 import java.security.Policy;
 import java.util.Properties;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import sun.security.provider.PolicyParser;
 
 /**
- * The AccessFactory constructs and initialises objects that are used within
+ * The AccessHelper constructs and initialises objects that are used within
  * the autorisation framework. 
  * 
- * <p>The AccessFactory can be initialised in several environments; in effect 
+ * <p>The AccessHelper can be initialised in several environments; in effect 
  * a web application environment and a standalone environment.
  * 
- * <p>Clients of the AccessFactory should either construct the factory with an
+ * <p>Clients of the AccessHelper should either construct the factory with an
  * instance of <code>javax.servlet.ServletContext</code> or with an instance
  * of <code>java.lang.String</code>. The first is for usage in a web application
  * environment and tries to read the location of the configuration document from
@@ -67,15 +65,15 @@ import sun.security.provider.PolicyParser;
  * overide this behaviour you can specify url's in the configuration document,
  * e.g: file://c:/mywinboxdrive/mydir/jaas.config. A third option is to load 
  * the configuration document from a custom location. This is done by 
- * constructing the URL yourself and constructing the AccessFactory
+ * constructing the URL yourself and constructing the AccessHelper
  * with this URL.
  * <p>In a web application environment, the constructed instance of this 
- * <code>AccessFactory</code> will be saved in the <code>ServletContext</code>
+ * <code>AccessHelper</code> will be saved in the <code>ServletContext</code>
  * under key 'oeaccess.configFile'. 
  * 
  * @author Eelco Hillenius
  */
-public final class AccessFactory
+public final class AccessHelper
 {
 
 	/**
@@ -97,46 +95,102 @@ public final class AccessFactory
 	protected static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
 	/** logger */
-	private static Log log = LogFactory.getLog(AccessFactory.class);
+	private static Log log = LogFactory.getLog(AccessHelper.class);
 
 	/**
 	 * hidden constructor. Clients should use the static methods instead
 	 */
-	protected AccessFactory()
+	protected AccessHelper()
 	{
-		// no nada	
+		//noop	
+	}
+	
+	/**
+	 * Check permission for subject. 
+	 * Use this method to allways have the same protection domain
+	 * @param permission permission to check
+	 * @param subject subject to check permission for
+	 */
+	public static void checkPermissionForSubject(Permission permission, Subject subject)
+	{
+		AccessAction action = new AccessAction(permission);
+		Subject.doAsPrivileged(subject, action, null);
+		// if we get here and return normally, the user was authorised
+		// otherwise a security exception will be thrown	
 	}
 
 	/**
-	 * construct and initialise with configDocument
+	 * construct and initialise with URL to configDocument
+	 * @param configURL url to configuration
+	 * @param appName logical name of the application. 
+	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
+	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
+	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
+	 * 		IN YOUR POLICY FILE, LIKE: codeBase "${oeaccess.appName}".
+	 * 		THE GIVEN APPNAME WILL BE SET AS A SYSTEM PROPERTY IN THE FORM:
+	 * 		"oeaccess.codesource." + appName
+	 * @param configDocument
+	 * @throws ConfigException
 	 */
-	public static void reload(String configDocument) 
+	public static void reload(String configDocument, String appName) 
 		throws ConfigException
 	{
-
+		setAppNameSystemProperty(appName);
 		Properties configuration = loadConfigFromUrl(configDocument);
 		internalInit(configuration, null);
 	}
 
 	/**
 	 * construct and initialise with URL to configDocument
+	 * @param configURL url to configuration
+	 * @param appName logical name of the application. 
+	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
+	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
+	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
+	 * 		IN YOUR POLICY FILE, LIKE: codeBase "${oeaccess.appName}".
+	 * 		THE GIVEN APPNAME WILL BE SET AS A SYSTEM PROPERTY IN THE FORM:
+	 * 		"oeaccess.codesource." + appName
+	 * @throws ConfigException
 	 */
-	public static void reload(URL configURL) throws ConfigException
+	public static void reload(URL configURL, String appName) throws ConfigException
 	{
-
+		setAppNameSystemProperty(appName);
 		Properties configuration = loadConfigFromUrl(configURL);
 		internalInit(configuration, null);
 	}
 
 	/**
-	 * construct and initialise with servletContext
+	 * construct and initialise within a servlet context
+	 * @param configURL url to configuration
+	 * @param appName logical name of the application. 
+	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
+	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
+	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
+	 * 		IN YOUR POLICY FILE, LIKE: codeBase "${oeaccess.codesource.appName}".
+	 * 		THE GIVEN APPNAME WILL BE SET AS A SYSTEM PROPERTY IN THE FORM:
+	 * 		"oeaccess.codesource." + appName
+	 * @param servletContext
+	 * @throws ConfigException
 	 */
-	public static void reload(ServletContext servletContext) 
+	public static void reload(ServletContext servletContext, String appName) 
 		throws ConfigException
 	{
-
+		setAppNameSystemProperty(appName);
 		Properties configuration = loadConfigInWebApp(servletContext);
 		internalInit(configuration, servletContext);
+	}
+	
+	/**
+	 * set codesource of this instance of openedge-access as system property in form:
+	 * "oeaccess.codesource." + appName
+	 * @param appName logical application name
+	 */
+	protected static void setAppNameSystemProperty(String appName)
+	{
+		CodeSource cs = AccessHelper.class.getProtectionDomain().getCodeSource();
+		URL csurl = cs.getLocation();
+		System.out.println("cs loc: " + csurl);
+		System.setProperty("oeaccess.codesource." + appName, csurl.toString());
 	}
 
 	/* do 'real' initialisation */
@@ -257,53 +311,17 @@ public final class AccessFactory
 			java.security.Security.setProperty(configKey, convertedPolicyURL);
 			log.info("added " + configKey + "=" + convertedPolicyURL 
 				+ " to java.security.Security properties");
-
-//			PolicyParser parser = new PolicyParser(true);
-//			
-//			ProtectionDomain pd = AccessFactory.class.getProtectionDomain();
-//			System.setProperty("codebase", 
-//				pd.getCodeSource().getLocation().toString());
-//			
-//			try
-//			{
-//				URL theUrl = new URL(convertedPolicyURL);
-//				File file = new File(theUrl.getFile());
-//				log.info("reading policies from " + file.getAbsolutePath());
-//				if(!file.isFile())
-//				{
-//					throw new RuntimeException(theUrl.toString() + " is not a valid file");	
-//				}
-//				FileReader reader = new FileReader(file);
-//				parser.read(reader);
-//				
-//				PrintWriter writer = new PrintWriter(System.out);
-//				parser.write(writer);
-//				
-//				writer.flush();
-//				writer.close();
-//			}
-//			catch (Exception e)
-//			{
-//				e.printStackTrace();
-//				throw new RuntimeException(e);
-//			}
-			
 		}
 		// reload the policy configuration to add our policies	
 		try
 		{
 			Policy policy = Policy.getPolicy();
-
+			
 			log.info("refreshing Policy");
 			policy.refresh();
 
-			Policy.setPolicy(null);
-			
-//			ProtectionDomain pd = AccessFactory.class.getProtectionDomain();
-//			log.info("using policy: " + policy.getPermissions(pd));
-
 		}
-		catch (AccessControlException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -423,8 +441,28 @@ public final class AccessFactory
 		}
 		else
 		{
-			return AccessFactory.class.getResource(path);
+			return AccessHelper.class.getResource(path);
 		}
 	}
+}
 
+/** action for checking permissions for a specific subject */
+class AccessAction implements PrivilegedAction
+{
+
+	// permission to check on
+	private Permission permission;
+
+	/** construct with uri */
+	public AccessAction(Permission permission)
+	{
+		this.permission = permission;
+	}
+
+	/** run check */
+	public Object run()
+	{
+		java.security.AccessController.checkPermission(permission);
+		return null;
+	}
 }
