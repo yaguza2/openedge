@@ -80,7 +80,6 @@
             name="attachments"
             type="nl.openedge.modules.impl.mailjob.StringClobType"
             column="attachments"
-            not-null="true"
         />
 
     </class>
