@@ -103,7 +103,7 @@ public class DependentTypeInitCommand implements InitCommand
 		if(componentInstance instanceof DependentType)
 		{
 			// create decorator with instance
-			DependentTypeDeco solver = new DependentTypeDeco();
+			DependentTypeWrapper solver = new DependentTypeWrapper();
 			solver.setComponentName(this.componentName);
 			solver.setComponentInstance((DependentType)componentInstance);
 			solver.setNamedDependencies(this.namedDependencies);

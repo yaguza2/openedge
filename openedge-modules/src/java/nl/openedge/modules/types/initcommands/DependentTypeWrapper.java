@@ -47,7 +47,7 @@ import nl.openedge.modules.observers.ComponentObserver;
  * Tries to solve the dependencies after all components have been loaded
  * @author Eelco Hillenius
  */
-public class DependentTypeDeco
+public class DependentTypeWrapper
 {
 	
 	/** the decorated instance */
@@ -72,7 +72,7 @@ public class DependentTypeDeco
 	/**
 	 * construct
 	 */
-	public DependentTypeDeco()
+	public DependentTypeWrapper()
 	{
 		// nothing here
 	}
@@ -244,7 +244,7 @@ public class DependentTypeDeco
 		public void modulesLoaded(ComponentsLoadedEvent evt)
 		{
 			// set flag
-			DependentTypeDeco.modulesLoaded = true;
+			DependentTypeWrapper.modulesLoaded = true;
 			
 			// test it
 			setDependencies(componentInstance);
