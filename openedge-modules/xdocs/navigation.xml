@@ -7,7 +7,7 @@
 		<links>
 			<item name="OpenEdge" href="http://www.openedge.nl/" />
 		</links>
-		<menu name="OpenEdge Utils">
+		<menu name="OpenEdge Modules">
 			<item name="Overview" href="/index.html" />
 			<item name="Getting Started" href="/start/index.html" collapse="true">
 				<item name="Download" href="/start/download.html" />
