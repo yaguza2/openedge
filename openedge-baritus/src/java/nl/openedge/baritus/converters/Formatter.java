@@ -1,7 +1,7 @@
 /*
- * $Id: Formatter.java,v 1.1.1.1 2004-02-24 20:34:06 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:06 $
+ * $Id: Formatter.java,v 1.2 2004-03-11 08:27:46 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-11 08:27:46 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,8 +31,8 @@
 package nl.openedge.baritus.converters;
 
 /**
- * Besides converting input, we want to format output as well. Hence this addition to the
- * default BeanUtils framework
+ * Interface for formatting values.
+ * 
  * @author Eelco Hillenius
  */
 public interface Formatter
