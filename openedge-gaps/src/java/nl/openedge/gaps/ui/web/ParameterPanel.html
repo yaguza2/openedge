@@ -28,7 +28,7 @@
      <!-- body -->
       <div id="plainParamScrollPane">
        <table id="resultstable">
-        <tbody id="plainParamScrollPane">
+         <tbody id="plainParamScrollPane">
           <tr id="wcn-plainParams">
             <td width="180">
                 <span id="wcn-name">(Naam)</span>
@@ -40,18 +40,17 @@
                 <a href="#" id="wcn-delete"><img src="images/delete.gif" border="0"/></a>
             </td>
           </tr>
-        </tbody>
-      </table>
-     </div>
-       <div class="floatright">
+         </tbody>
+       </table>
+      </div>
+      <div class="floatright">
         <input type="submit" class="strongsubmit" value="opslaan"/>
-       </div>
+      </div>
      </div>
     </form>
-    <!-- einde gewone, niet-geneste parameters -->
-    </div>
 
-    <div id="newParameterPanel">
+    <div class="floatright">
+      <div id="newParameterPanel">
         <form id="wcn-newParamForm">
           <fieldset>
             <legend>Nieuwe parameter</legend>
@@ -71,6 +70,9 @@
               <input type="submit" value="voeg toe" class="strongsubmit"/>
           </fieldset>
         </form>
+      </div>
+     </div>
+    <!-- einde gewone, niet-geneste parameters -->
     </div>
 
     <!-- container voor geneste parameters -->
@@ -78,35 +80,39 @@
 
      <!-- voor ieder blok -->
      <div id="wcn-nestedParams">
-
-      <!-- header -->
-      <!--table id="resultstable">
-        <thead>
+      <!-- form -->
+      <form id="wcn-paramForm"> 
+       <!-- body -->
+       <span id="nestedParamScrollPane">
+        <table id="resultstable">
+         <thead>
           <tr>
-            <th>
-                Tabel
-            </th>
+           <th>
+            Rij&nbsp;Parameter
+           </th>
+           <th id="wcn-header">
+            <span id="wcn-columnName">(naam)</span>
+           </th>
           </tr>
-        </thead>
-      </table-->
-
-     <!-- body -->
-     <span id="nestedParamScrollPane">
-      <table id="resultstable" border="2">
-        <tfoot>
-        </tfoot>
-        <tbody>
+         </thead>
+         <tfoot>
+         </tfoot>
+         <tbody>
           <tr id="wcn-nested">
-            <td>
-                <span id="wcn-name">(Naam)</span>
-            </td>
-            <td id="wcn-row">
-                <span id="wcn-value">(Waarde)</span>
-            </td>
+           <td>
+             <span id="wcn-name">(Naam)</span>
+           </td>
+           <td id="wcn-row">
+             <input id="wcn-value" type="text" size="10"/>
+           </td>
           </tr>
-        </tbody>
-      </table>
-     </span>
+         </tbody>
+        </table>
+       </span>
+          <div class="floatright">
+            <input type="submit" class="strongsubmit" value="opslaan"/>
+          </div>
+      </form>
     <!-- einde geneste parameters -->
     </div>
    </div>

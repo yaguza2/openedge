@@ -167,6 +167,9 @@ public final class NestedParameterPopupPage extends HtmlPage
         }
     }
 
+    /**
+     * Component voor rauwe content.
+     */
     private static class RawContentComponent extends HtmlComponent
     {
         /**

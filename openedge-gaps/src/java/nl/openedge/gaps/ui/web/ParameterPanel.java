@@ -143,7 +143,7 @@ public class ParameterPanel extends Panel
         paramForm.add(plainParametersTable);
         plainParamsPanel.add(paramForm);
         NewParameterForm newParamForm = new NewParameterForm("newParamForm", null);
-        outerPanel.add(newParamForm);
+        plainParamsPanel.add(newParamForm);
         if(grouped.getPlainParams().isEmpty())
         {
             plainParamsPanel.setVisible(false);
@@ -162,6 +162,32 @@ public class ParameterPanel extends Panel
          * @param validationErrorHandler validation error handler
          */
         public PlainParameterForm(String name,
+                IValidationErrorHandler validationErrorHandler)
+        {
+            super(name, validationErrorHandler);
+        }
+
+        /**
+         * @see com.voicetribe.wicket.markup.html.form.Form#handleSubmit(com.voicetribe.wicket.RequestCycle)
+         */
+        public void handleSubmit(RequestCycle cycle)
+        {
+            // op dit moment handelen de specifieke models achter de input
+            // velden alles af.
+        }
+    }
+
+    /**
+     * Form voor editen geneste parameters.
+     */
+    private static class NestedParameterForm extends Form
+    {
+        /**
+         * Construct.
+         * @param name component name
+         * @param validationErrorHandler validation error handler
+         */
+        public NestedParameterForm(String name,
                 IValidationErrorHandler validationErrorHandler)
         {
             super(name, validationErrorHandler);
@@ -383,9 +409,42 @@ public class ParameterPanel extends Panel
         {
             NestedParametersWrapper wrapper =
                 (NestedParametersWrapper)cell.getModelObject();
+            NestedParameter nested = (NestedParameter)wrapper.get(0); // pak eerste
+            NestedParameterForm paramForm = new NestedParameterForm("paramForm", null);
+            cell.add(paramForm);
+            NestedParameterHeaderTable headerTable =
+                new NestedParameterHeaderTable("header", nested);
+            paramForm.add(headerTable);
             NestedParameterTable table =
                 new NestedParameterTable("nested", wrapper);
-            cell.add(table);
+            paramForm.add(table);
+        }
+
+        /**
+         * Table voor de header van een groep geneste parameters.
+         * UITGANGSPUNT is dat de rijen netjes zijn gegroepeerd, en dat we zodoende
+         * gewoon de eerste rij kunnen pakken voor de kolomnamen.
+         */
+        private static class NestedParameterHeaderTable extends Table
+        {
+            /**
+             * Construct.
+             * @param componentName componentnaam
+             * @param model 1e rij van de geneste parameter
+             */
+            public NestedParameterHeaderTable(String componentName, NestedParameter nested)
+            {
+                super(componentName, Arrays.asList(nested.getNested()));
+            }
+
+            /**
+             * @see com.voicetribe.wicket.markup.html.table.Table#populateCell(com.voicetribe.wicket.markup.html.table.Cell)
+             */
+            protected void populateCell(Cell cell)
+            {
+                Parameter parameter = (Parameter)cell.getModelObject();
+                cell.add(new Label("columnName", parameter.getLocalId()));
+            }
         }
 
         /**
@@ -436,7 +495,8 @@ public class ParameterPanel extends Panel
                 protected void populateCell(Cell cell)
                 {
                     Parameter parameter = (Parameter)cell.getModelObject();
-            		cell.add(new Label("value", (Serializable)parameter.getValue().getValue()));
+                    cell.add(new TextField("value", new ParameterModel(parameter)));
+            		//cell.add(new Label("value", new ParameterModel(parameter)).setNoBreak(true));
                 }
             }
         }
