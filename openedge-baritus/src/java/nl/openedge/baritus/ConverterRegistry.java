@@ -1,7 +1,7 @@
 /*
- * $Id: ConverterRegistry.java,v 1.1.1.1 2004-02-24 20:33:53 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:33:53 $
+ * $Id: ConverterRegistry.java,v 1.2 2004-03-29 08:11:50 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-29 08:11:50 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.

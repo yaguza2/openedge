@@ -55,6 +55,8 @@ public class FooForm
 }
 ]]></programlisting>
 			
+			The validator:
+			
 		<programlisting><![CDATA[
 public class BarValidator extends AbstractFieldValidator
 {
@@ -73,6 +75,8 @@ public class BarValidator extends AbstractFieldValidator
 }
 ]]></programlisting>
 			
+			Register it with your control:
+			
 		<programlisting><![CDATA[
 public class MyCtrl
 {
@@ -88,6 +92,21 @@ public class MyCtrl
 }
 ]]></programlisting>
 			
+			And a crude example of how you can use it with a velocity template:
+			
+		<programlisting><![CDATA[
+
+		<input type="text" name="myInteger"
+			#if( $model.errors.get('myInteger') ) class="fielderror" #else class="field" #end
+			value="$!{model.displayProperty('myInteger')}">
+		
+		<br>
+		#if( $model.errors.get('myInteger')  )  
+			<span class="error"> ${model.errors.get('myInteger') } </span>
+		#end
+		
+]]></programlisting>
+						
 		</para>
 		
 	</sect1>
