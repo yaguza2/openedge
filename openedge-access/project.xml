@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>openedge-access</id>
   <name>OpenEdge Access</name>
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>1.1</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -23,9 +23,9 @@
   
   <versions>
     <version>
-      <id>1</id>
-      <name>1</name>
-      <tag>HEAD</tag>
+      <id>1.1</id>
+      <name>1.1</name>
+      <tag>B1</tag>
     </version>
   </versions>
   <branches></branches>
@@ -77,7 +77,7 @@
 
     <dependency>
       <id>commons-beanutils</id>
-      <version>1.6.1</version>
+      <version>1.7dev</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
     </dependency>
     
@@ -106,7 +106,7 @@
     
     <dependency>
       <id>openedge-modules</id>
-      <version>SNAPSHOT</version>
+      <version>1.1</version>
       <url>http://www.openedge.nl</url>
     </dependency>
 
