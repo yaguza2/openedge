@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredFieldValidator.java,v 1.3 2004-04-04 18:22:33 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-04 18:22:33 $
+ * $Id: RequiredFieldValidator.java,v 1.4 2004-04-07 10:43:12 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-07 10:43:12 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,8 +30,6 @@
  */
 package nl.openedge.baritus.validation.impl;
 
-import java.util.Locale;
-
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
@@ -56,12 +54,14 @@ import org.infohazard.maverick.flow.ControllerContext;
 public class RequiredFieldValidator extends AbstractFieldValidator
 {
 
+	private String errorMessageKey = "input.field.required";
+
 	/**
 	 * Construct using 'input.field.required' as the message prefix.
 	 */
 	public RequiredFieldValidator()
 	{
-		super("input.field.required");
+
 	}
 
 	/**
@@ -70,28 +70,29 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	 */
 	public RequiredFieldValidator(ValidationActivationRule rule)
 	{
-		super("input.field.required", rule);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * Construct using messagePrefix and the activation rule
-	 * @param messagePrefix
+	 * Construct using errorMessageKey and the activation rule
+	 * @param errorMessageKey
 	 * @param rule
 	 */
 	public RequiredFieldValidator(
-		String messagePrefix,
+		String errorMessageKey,
 		ValidationActivationRule rule)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * Construct with message prefix for error message keys.
-	 * @param messagePrefix message prefix
+	 * Construct with errorMessageKey for error message keys.
+	 * @param errorMessageKey errorMessageKey
 	 */
-	public RequiredFieldValidator(String messagePrefix)
+	public RequiredFieldValidator(String errorMessageKey)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 	}
 
 	/**
@@ -133,23 +134,32 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 				}
 			}
 		}
+		
+		if(!isValid)
+		{
+			setErrorMessage(formBeanContext, fieldName, 
+				getErrorMessageKey(), new Object[]{fieldName});
+		}
+		
 		return isValid;
+	}
+	
+	/**
+	 * Get key of error message.
+	 * @return String key of error message
+	 */
+	public String getErrorMessageKey()
+	{
+		return errorMessageKey;
 	}
 
 	/**
-	 * Get the error message. default returns the resource bundle message where
-	 * key = messagePrefix, with {0} substituted with the field name.
-	 * 
-	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
+	 * Set key of error message.
+	 * @param string key of error message
 	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
+	public void setErrorMessageKey(String string)
 	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{fieldName});
+		errorMessageKey = string;
 	}
 
 }

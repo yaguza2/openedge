@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.6 2004-03-09 08:26:14 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-03-09 08:26:14 $
+ * $Id: ExecutionParams.java,v 1.7 2004-04-07 10:43:39 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-07 10:43:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -143,6 +143,15 @@ public final class ExecutionParams
 	 * Default is true.
 	 */
 	private boolean saveReqParamsAsOverrideFieldsOnError = true;
+	
+	/**
+	 * When an unexpected error occurs, should that be interpreted as a failure,
+	 * or should it just be ignored. E.g. If you have request parameter
+	 * not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
+	 * In strict mode, this will have the effect that the population process is
+	 * marked as failed. If not in strict mode, the exception will be ignored.
+	 */
+	private boolean stictPopulationMode = true;
 
 	/**
 	 * if true, the no cache headers will be set
@@ -383,6 +392,34 @@ public final class ExecutionParams
 	public void setSaveReqParamsAsOverrideFieldsOnError(boolean b)
 	{
 		saveReqParamsAsOverrideFieldsOnError = b;
+	}
+
+	/**
+	 * When an unexpected error occurs, should that be interpreted as a failure,
+	 * or should it just be ignored. E.g. If you have request parameter
+	 * not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
+	 * In strict mode, this will have the effect that the population process is
+	 * marked as failed. If not in strict mode, the exception will be ignored.
+	 * 
+	 * @return boolean whether the population mode is strict
+	 */
+	public boolean isStictPopulationMode()
+	{
+		return stictPopulationMode;
+	}
+
+	/**
+	 * When an unexpected error occurs, should that be interpreted as a failure,
+	 * or should it just be ignored. E.g. If you have request parameter
+	 * not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
+	 * In strict mode, this will have the effect that the population process is
+	 * marked as failed. If not in strict mode, the exception will be ignored.
+	 * 
+	 * @param b whether the population mode is strict
+	 */
+	public void setStictPopulationMode(boolean b)
+	{
+		stictPopulationMode = b;
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredSessionAttributeValidator.java,v 1.1 2004-02-27 08:24:18 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-27 08:24:18 $
+ * $Id: RequiredSessionAttributeValidator.java,v 1.2 2004-04-07 10:43:12 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-07 10:43:12 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,6 +30,8 @@
  */
 package nl.openedge.baritus.validation.impl;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpSession;
 
 import nl.openedge.baritus.FormBeanContext;
@@ -47,25 +49,28 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 {
 
 	private String sessionAttributeKey = null;
+	
+	private String errorMessageKey = "required.session.attribute.not.found";
 
 	/**
-	 * construct
+	 * Construct.
 	 */
 	public RequiredSessionAttributeValidator()
 	{
-		super();
+
 	}
 
 	/**
-	 * construct with message prefix
-	 * @param messagePrefix
+	 * Construct with errorMessageKey.
+	 * @param errorMessageKey
 	 */
-	public RequiredSessionAttributeValidator(String messagePrefix)
+	public RequiredSessionAttributeValidator(String errorMessageKey)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 	}
 	
 	/**
+	 * Construct with rule.
 	 * @param rule
 	 */
 	public RequiredSessionAttributeValidator(ValidationActivationRule rule)
@@ -74,23 +79,25 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 	}
 
 	/**
-	 * @param messagePrefix
+	 * Construct with errorMessageKey and rule.
+	 * @param errorMessageKey
 	 * @param rule
 	 */
 	public RequiredSessionAttributeValidator(
-		String messagePrefix,
+		String errorMessageKey,
 		ValidationActivationRule rule)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * construct with message prefix and session attribute key to check for
-	 * @param messagePrefix
+	 * Construct with message prefix and session attribute key to check for.
+	 * @param errorMessageKey
 	 */
-	public RequiredSessionAttributeValidator(String messagePrefix, String sessionAttributeKey)
+	public RequiredSessionAttributeValidator(String errorMessageKey, String sessionAttributeKey)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 		setSessionAttributeKey(sessionAttributeKey);
 	} 
 
@@ -105,6 +112,17 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 		{
 			valid = (session.getAttribute(sessionAttributeKey) != null);
 		}
+		
+		if(!valid)
+		{
+			Locale locale = formBeanContext.getCurrentLocale();
+			String fieldName = getFieldName(formBeanContext, sessionAttributeKey);
+			String msg = getLocalizedMessage(
+				errorMessageKey, locale, 
+				new Object[]{sessionAttributeKey});
+			formBeanContext.setError(sessionAttributeKey, msg);
+		}
+		
 		return valid;
 	}
 
@@ -124,6 +142,24 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 	public void setSessionAttributeKey(String string)
 	{
 		sessionAttributeKey = string;
+	}
+	
+	/**
+	 * Get key of error message.
+	 * @return String key of error message
+	 */
+	public String getErrorMessageKey()
+	{
+		return errorMessageKey;
+	}
+
+	/**
+	 * Set key of error message.
+	 * @param string key of error message
+	 */
+	public void setErrorMessageKey(String string)
+	{
+		errorMessageKey = string;
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: AbstractValidator.java,v 1.4 2004-04-07 10:43:24 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-07 10:43:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -32,6 +32,8 @@ package nl.openedge.baritus.validation;
 
 import java.util.Locale;
 
+import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.util.MessageUtils;
 
 /**
@@ -43,8 +45,6 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 
 	private ValidationActivationRule validationActivationRule = null;
 
-	private String messagePrefix = "input.field.";
-
 	/**
 	 * construct
 	 */
@@ -54,32 +54,12 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 	}
 	
 	/**
-	 * construct with message prefix
-	 * @param messagePrefix message prefix
-	 */
-	public AbstractValidator(String messagePrefix)
-	{
-		setMessagePrefix(messagePrefix);
-	}
-	
-	/**
 	 * construct with validator activation rule
 	 * @param rule validator activation rule
 	 */
 	public AbstractValidator(ValidationActivationRule rule)
 	{
 		setValidationRule(rule);
-	}
-
-	/**
-	 * construct with validator activation rule and message prefix
-	 * @param messagePrefix message prefix
-	 * @param rule validator activation rule
-	 */
-	public AbstractValidator(String messagePrefix, ValidationActivationRule rule)
-	{
-		setValidationRule(rule);
-		setMessagePrefix(messagePrefix);
 	}
 	
 	/**
@@ -133,24 +113,6 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 	}
 
 	/**
-	 * Get the prefix for error message keys.
-	 * @return String message prefix
-	 */
-	public String getMessagePrefix()
-	{
-		return messagePrefix;
-	}
-
-	/**
-	 * Set the prefix for error message keys.
-	 * @param string message prefix
-	 */
-	public void setMessagePrefix(String string)
-	{
-		messagePrefix = string;
-	}
-
-	/**
 	 * @see nl.openedge.baritus.validation.ValidationRuleDependend#getValidationActivationRule()
 	 */
 	public ValidationActivationRule getValidationActivationRule()
@@ -172,6 +134,22 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 	public void setValidationRule(ValidationActivationRule rule)
 	{
 		this.validationActivationRule = rule;
+	}
+	
+	/**
+	 * Get the - possibly translated - name of the field. If lookup in the
+	 * resources failed, the provided name will be returned as is.
+	 * @param formBeanContext form bean context
+	 * @param name original name of field
+	 * @return String the - possibly translated - name of the field.
+	 * If lookup in the resources failed, the provided name will be returned as is.
+	 */
+	protected String getFieldName(FormBeanContext formBeanContext, String name)
+	{
+		FormBeanCtrlBase ctrl = formBeanContext.getController();
+		String fieldName = MessageUtils.getLocalizedMessage(
+			ctrl.getPropertyNameKey(name));
+		return (fieldName != null) ? fieldName : name;
 	}
 
 }

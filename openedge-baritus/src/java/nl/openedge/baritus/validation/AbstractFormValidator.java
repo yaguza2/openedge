@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFormValidator.java,v 1.4 2004-04-02 09:51:16 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-02 09:51:16 $
+ * $Id: AbstractFormValidator.java,v 1.5 2004-04-07 10:43:24 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-07 10:43:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,11 +30,6 @@
  */
 package nl.openedge.baritus.validation;
 
-import java.util.Locale;
-
-import nl.openedge.baritus.FormBeanContext;
-
-import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Convenience class with default error message handling.
@@ -43,12 +38,6 @@ import org.infohazard.maverick.flow.ControllerContext;
 public abstract class AbstractFormValidator extends AbstractValidator
 	implements FormValidator, ValidationRuleDependend
 {
-	
-	/* 
-	 * key that will be used for storing the error message 
-	 * if null or not provided, property messagePrefix will be used instead
-	 */
-	private String errorKey = null;
 
 	/**
 	 * Construct emtpy.
@@ -67,66 +56,5 @@ public abstract class AbstractFormValidator extends AbstractValidator
 		super(rule);
 	}
 
-	/**
-	 * Construct with message prefix and activation rule.
-	 * @param messagePrefix message prefix
-	 * @param rule activation rule
-	 */
-	public AbstractFormValidator(
-		String messagePrefix,
-		ValidationActivationRule rule)
-	{
-		super(messagePrefix, rule);
-	}
-
-	/**
-	 * Construct with message prefix.
-	 * @param messagePrefix message prefix
-	 */
-	public AbstractFormValidator(String messagePrefix)
-	{
-		super(messagePrefix);
-	}
-
-	/**
-	 * If the form is not valid, get custom error message here. Return null if
-	 * no message should be saved. 
-	 * @param cctx
-	 * @param formBeanContext
-	 * @return String[] the message key ([0]) and the localized error message ([1])
-	 * or null if no message should be saved here.
-	 * @see nl.openedge.baritus.validation.FormValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.util.Locale)
-	 */
-	public String[] getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext)
-	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		String key = getMessagePrefix();
-		String msg = getLocalizedMessage(key, locale);
-		String storeKey = getErrorKey();
-		if(storeKey == null) storeKey = key;
-		return new String[]{storeKey, msg};
-	}
-
-	/**
-	 * Get the key that will be used for storing the error message.
-	 * if null or not provided, property messagePrefix will be used instead
-	 * @return String key that will be used for storing the error message
-	 */
-	public String getErrorKey()
-	{
-		return errorKey;
-	}
-
-	/**
-	 * Set the key that will be used for storing the error message.
-	 * if null or not provided, property messagePrefix will be used instead
-	 * @param string the key that will be used for storing the error message
-	 */
-	public void setErrorKey(String string)
-	{
-		errorKey = string;
-	}
 
 }

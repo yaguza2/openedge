@@ -1,3 +1,8 @@
+1.0.2
+-------------------------------------------------
+- Removed call back getErrorMessage in Validator interfaces
+- Added parameter stickPopulationMode
+
 1.0.1
 -------------------------------------------------
 - Registries are now public, incl. option to set default populator with PopulatorRegistry.

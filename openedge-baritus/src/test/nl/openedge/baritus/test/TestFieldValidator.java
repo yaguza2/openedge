@@ -1,7 +1,7 @@
 /*
- * $Id: TestFieldValidator.java,v 1.2 2004-04-06 07:41:42 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-06 07:41:42 $
+ * $Id: TestFieldValidator.java,v 1.3 2004-04-07 10:43:55 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-07 10:43:55 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,6 +41,8 @@ import org.infohazard.maverick.flow.ControllerContext;
  */
 public class TestFieldValidator extends AbstractFieldValidator
 {
+	
+	private String errorMessageKey = "test.key";
 
 	/**
 	 * @param cctx
@@ -60,6 +62,11 @@ public class TestFieldValidator extends AbstractFieldValidator
 		
 		String testVal = (String)value;
 		valid = "validValue".equals(testVal);
+		
+		if(!valid)
+		{
+			setErrorMessage(formBeanContext, fieldName, errorMessageKey, null);
+		}
 		
 		return valid;
 

@@ -1,7 +1,7 @@
 /*
- * $Id: ValidationTest.java,v 1.1 2004-04-01 09:20:35 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-04-01 09:20:35 $
+ * $Id: ValidationTest.java,v 1.2 2004-04-07 10:43:54 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-07 10:43:54 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,6 +37,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.test.mock.MockHttpServletRequest;
 import nl.openedge.baritus.test.mock.MockHttpServletResponse;
@@ -157,6 +158,7 @@ public class ValidationTest extends TestCase
 			ctrl.go(mockMavCtx);
 			TestBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
+			FormBeanContext fbc = ctrl.getFormBeanContext();
 		}
 		catch (ServletException e)
 		{

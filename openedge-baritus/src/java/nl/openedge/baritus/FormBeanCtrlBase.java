@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.7 2004-04-06 07:40:04 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-04-06 07:40:04 $
+ * $Id: FormBeanCtrlBase.java,v 1.8 2004-04-07 10:43:39 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-04-07 10:43:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -809,7 +809,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @param name property name
 	 * @return String the message bundle key of the property, defaults to "formname." + name
 	 */
-	protected String getPropertyNameKey(String name)
+	public String getPropertyNameKey(String name)
 	{
 		return "formname." + name;
 	}

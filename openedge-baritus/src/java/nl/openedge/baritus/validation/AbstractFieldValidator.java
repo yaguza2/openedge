@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.5 2004-04-02 15:32:18 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-02 15:32:18 $
+ * $Id: AbstractFieldValidator.java,v 1.6 2004-04-07 10:43:24 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-07 10:43:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,8 +34,6 @@ import java.util.Locale;
 
 import nl.openedge.baritus.FormBeanContext;
 
-import org.infohazard.maverick.flow.ControllerContext;
-
 /**
  * Convenience class with default error message handling.
  * @author Eelco Hillenius
@@ -49,7 +47,7 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	 */
 	public AbstractFieldValidator()
 	{
-		super();
+
 	}
 	
 	/**
@@ -60,52 +58,6 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	{
 		super(rule);
 	}
-
-	/**
-	 * Construct with message prefix and activation rule.
-	 * @param messagePrefix message prefix
-	 * @param rule activation rule
-	 */
-	public AbstractFieldValidator(
-		String messagePrefix,
-		ValidationActivationRule rule)
-	{
-		super(messagePrefix, rule);
-	}
-
-	/**
-	 * Construct with message prefix.
-	 * @param messagePrefix message prefix
-	 */
-	public AbstractFieldValidator(String messagePrefix)
-	{
-		super(messagePrefix);
-	}
-	
-	/**
-	 * Get the error message. default returns the resource bundle message where
-	 * key = messagePrefix + fieldName, with {0} substituted with the value
-	 * and {1} substituted with the field name. Return null if no message
-	 * should be saved (e.g. when you saved the error(s) in the isValid method
-	 * 
-	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 * @param cctx controller context
-	 * @param formBeanContext form bean context
-	 * @param fieldName name of field
-	 * @param value value that did not pass validation
-	 * @return String the error message that should be saved or null if no message should
-	 * be saved.
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
-	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		String key = getMessagePrefix();
-		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
-	}
 	
 	/**
 	 * Get the override value. By default returns the value unchanged.
@@ -115,6 +67,33 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	public Object getOverrideValue(Object value)
 	{
 		return value;
+	}
+	
+	/**
+	 * set error message in formBeanContext using the provided name
+	 * (try to lookup the translated field name with key of provided name),
+	 * the current locale that is stored in the form bean context, the provided
+	 * errorMessageKey and the provided arguments for parsing the localized message;
+	 * the message will be stored in the form bean context with key that was
+	 * provided as argument name (the untranslated name of the field). If no
+	 * message was found, the provided errorMessageKey will be used.
+	 * 
+	 * @param formBeanContext form bean context
+	 * @param name untransalated name of the field
+	 * @param errorMessageKey message key for error
+	 * @param messageArguments arguments for parsing the message
+	 */
+	protected void setErrorMessage(
+		FormBeanContext formBeanContext, 
+		String name,
+		String errorMessageKey,
+		Object[] messageArguments)
+	{
+		Locale locale = formBeanContext.getCurrentLocale();
+		String fieldName = getFieldName(formBeanContext, name);
+		String msg = getLocalizedMessage(errorMessageKey, locale, messageArguments);
+		if(msg == null) msg = errorMessageKey;
+		formBeanContext.setError(name, msg);	
 	}
 	
 }

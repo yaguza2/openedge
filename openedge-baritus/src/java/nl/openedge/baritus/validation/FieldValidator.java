@@ -1,7 +1,7 @@
 /*
- * $Id: FieldValidator.java,v 1.3 2004-04-02 09:51:16 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-02 09:51:16 $
+ * $Id: FieldValidator.java,v 1.4 2004-04-07 10:43:24 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-07 10:43:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -61,25 +61,6 @@ public interface FieldValidator
 	 * @return true if valid, false if not.
 	 */
 	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value);
-
-	/**
-	 * If the value did not pass validation, this method is called to get the
-	 * error message. Return null if no message should be saved 
-	 * (e.g. when you saved the error(s) in the isValid method.
-	 * 
-	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 * @param cctx controller context
-	 * @param formBeanContext form bean context
-	 * @param fieldName name of field
-	 * @param value value that did not pass validation
-	 * @return String the error message that should be saved or null if no message should
-	 * be saved.
-	 */		
-	public String getErrorMessage(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String fieldName,

@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.5 2004-04-06 07:41:00 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-06 07:41:00 $
+ * $Id: PopulationTest.java,v 1.6 2004-04-07 10:43:54 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-07 10:43:54 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -567,6 +567,53 @@ public class PopulationTest extends TestCase
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestObject());
 			assertEquals("a test", bean.getTestObject().getTestString());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	// OGNL!
+	public void testStrictParsing()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("not-a-valid-name", "foo"); // test simple string
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView()); // should fail by default
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	// OGNL!
+	public void testNonStrictParsing()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		ctrl.getExecutionParams().setStictPopulationMode(false);
+		Map requestParams = new HashMap();
+		requestParams.put("not-a-valid-name", "foo"); // test simple string
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView()); // should be succesfull now
 		}
 		catch (ServletException e)
 		{

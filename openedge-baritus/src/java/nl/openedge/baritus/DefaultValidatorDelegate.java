@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.6 2004-04-04 18:23:19 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-04 18:23:19 $
+ * $Id: DefaultValidatorDelegate.java,v 1.7 2004-04-07 10:43:39 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-07 10:43:39 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import nl.openedge.baritus.util.MessageUtils;
 import nl.openedge.baritus.util.MultiHashMap;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
@@ -161,13 +160,6 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 							if(!fValidator.isValid(cctx, formBeanContext))
 							{
 								succeeded = false;
-								String[] msg = fValidator.getErrorMessage(
-									cctx, formBeanContext);
-									
-								if(msg != null && (msg.length > 0))
-								{
-									formBeanContext.setError(msg[0], msg[1]);	
-								}
 							}	
 						}
 						// else ignore
@@ -342,31 +334,6 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 				if(!success)
 				{
 					succeeded = false;
-					try
-					{
-						String msgName = MessageUtils.getLocalizedMessage(
-							ctrl.getPropertyNameKey(name));
-						String msg = validator.getErrorMessage(
-							cctx, formBeanContext, (msgName != null) ? msgName : name, value);
-						
-						if(msg != null)
-						{
-							formBeanContext.setError(name, msg);	
-						}
-					}
-					catch (Exception e)
-					{
-						if(populationLog.isDebugEnabled())
-						{
-							// print with stacktrace if debug enabled
-							populationLog.error(e.getMessage(), e);
-						}
-						else
-						{
-							populationLog.error(e.getMessage());
-						}
-						formBeanContext.setError(name, e.getMessage());
-					}
 					ctrl.setOverrideField(
 						cctx, formBeanContext, name, value, null, validator);
 					break;

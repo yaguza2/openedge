@@ -1,7 +1,7 @@
 /*
- * $Id: FormValidator.java,v 1.4 2004-04-02 09:51:16 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-02 09:51:16 $
+ * $Id: FormValidator.java,v 1.5 2004-04-07 10:43:24 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-07 10:43:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -48,18 +48,6 @@ public interface FormValidator
 	 * @return true if valid, false if not.
 	 */
 	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext);
-
-	/**
-	 * If the form is not valid, get custom error message here. Return null if
-	 * no message should be saved.
-	 * @param cctx maverick context
-	 * @param formBeanContext context for this currentRequest
-	 * @return String[] the message key ([0]) and the localized error message ([1])
-	 * or null if no message should be saved here.
-	 */		
-	public String[] getErrorMessage(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext);
 }

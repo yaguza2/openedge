@@ -1,7 +1,7 @@
 /*
- * $Id: OgnlFieldPopulator.java,v 1.1 2004-04-04 18:26:59 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-04-04 18:26:59 $
+ * $Id: OgnlFieldPopulator.java,v 1.2 2004-04-07 10:42:57 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-07 10:42:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
+import nl.openedge.baritus.ExecutionParams;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.LogConstants;
@@ -117,7 +118,7 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 		{
 			if(e instanceof NoSuchPropertyException)
 			{
-				// just ignore
+				// just ignore and log warning
 				populationLog.warn("property '" + name + "' not found for bean " + bean);
 			}
 			else
@@ -133,12 +134,28 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 				}
 				else
 				{
-					populationLog.error(e.getMessage(), e);
-					Class targetType = (Class)context.get(CTX_KEY_CURRENT_TARGET_TYPE);
-					value = context.get(CTX_KEY_CURRENT_TRIED_VALUE);
-					formBeanContext.setError(name, e.getMessage());	
-					ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);
-					success = false;
+					ExecutionParams params = formBeanContext.getController().getExecutionParams();
+					if(params.isStictPopulationMode())
+					{
+						populationLog.error(e.getMessage(), e);
+						Class targetType = (Class)context.get(CTX_KEY_CURRENT_TARGET_TYPE);
+						value = context.get(CTX_KEY_CURRENT_TRIED_VALUE);
+						formBeanContext.setError(name, e.getMessage());	
+						ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);
+						success = false;	
+					}
+					else
+					{
+						// just ignore and log a warning
+						if(populationLog.isDebugEnabled())
+						{
+							populationLog.warn(e.getMessage(), e);						
+						}
+						else
+						{
+							populationLog.warn(e.getMessage());							
+						}
+					}
 				}
 			}
 		}

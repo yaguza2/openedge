@@ -1,7 +1,7 @@
 /*
- * $Id: PropertyNotNullFormValidator.java,v 1.2 2004-04-04 18:22:33 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-04 18:22:33 $
+ * $Id: PropertyNotNullFormValidator.java,v 1.3 2004-04-07 10:43:12 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-07 10:43:12 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -36,6 +36,8 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import ognl.Ognl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -47,52 +49,59 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 {
 	
 	private String propertyName;
+	
+	private String errorMessageKey = "object.not.found";
+	
+	private Log log = LogFactory.getLog(PropertyNotNullFormValidator.class);
 
 	/**
 	 * construct
 	 */
 	public PropertyNotNullFormValidator()
 	{
-		super("object.not.found");
+
 	}
 
 	/**
-	 * construct with message prefix
-	 * @param messagePrefix
+	 * construct with errorMessageKey
+	 * @param errorMessageKey
 	 */
-	public PropertyNotNullFormValidator(String messagePrefix)
+	public PropertyNotNullFormValidator(String errorMessageKey)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 	}
 	
 	/**
-	 * @param rule
+	 * construct with rule
+	 * @param rule validation rule
 	 */
 	public PropertyNotNullFormValidator(ValidationActivationRule rule)
 	{
-		super("object.not.found", rule);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * @param messagePrefix
-	 * @param rule
+	 * construct with error message and rule
+	 * @param errorMessageKey message key
+	 * @param rule validation rule
 	 */
 	public PropertyNotNullFormValidator(
-		String messagePrefix,
+		String errorMessageKey,
 		ValidationActivationRule rule)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * construct with property name and message prefix
-	 * @param propertyName
-	 * @param messagePrefix
+	 * construct with property name and errorMessageKey
+	 * @param propertyName name of property
+	 * @param errorMessageKey message key
 	 */
-	public PropertyNotNullFormValidator(String propertyName, String messagePrefix)
+	public PropertyNotNullFormValidator(String propertyName, String errorMessageKey)
 	{
-		super(messagePrefix);
 		setPropertyName(propertyName);
+		setErrorMessageKey(errorMessageKey);
 	}
 
 	/**
@@ -113,7 +122,7 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 		}
 		catch (Exception e)
 		{
-			System.err.println(e.getMessage());
+			log.error(e.getMessage(), e);
 		}
 
 		return valid;
@@ -136,6 +145,24 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 	public void setPropertyName(String string)
 	{
 		propertyName = string;
+	}
+	
+	/**
+	 * Get key of error message.
+	 * @return String key of error message
+	 */
+	public String getErrorMessageKey()
+	{
+		return errorMessageKey;
+	}
+
+	/**
+	 * Set key of error message.
+	 * @param string key of error message
+	 */
+	public void setErrorMessageKey(String string)
+	{
+		errorMessageKey = string;
 	}
 
 }

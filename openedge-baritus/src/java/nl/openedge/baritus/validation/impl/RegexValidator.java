@@ -1,7 +1,7 @@
 /*
- * $Id: RegexValidator.java,v 1.3 2004-04-04 18:22:33 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-04 18:22:33 $
+ * $Id: RegexValidator.java,v 1.4 2004-04-07 10:43:12 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-07 10:43:12 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,7 +30,6 @@
  */
 package nl.openedge.baritus.validation.impl;
 
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,13 +61,15 @@ public class RegexValidator extends AbstractFieldValidator
 	
 	/* the regexp pattern to match against */
 	private Pattern pattern = null;
+	
+	private String errorMessageKey = "invalid.input";
 
 	/**
 	 * construct without parameters
 	 */
 	public RegexValidator()
 	{
-		super("invalid.input");
+		
 	}
 	
 	/**
@@ -77,30 +78,30 @@ public class RegexValidator extends AbstractFieldValidator
 	 */
 	public RegexValidator(Pattern pattern)
 	{
-		this();
 		setPattern(pattern);
 	}
 	
 	/**
-	 * construct with message prefix and pattern
-	 * @param messagePrefix 
+	 * construct with errorMessageKey and pattern
+	 * @param errorMessageKey 
 	 * @param pattern
 	 */
-	public RegexValidator(String messagePrefix, Pattern pattern)
+	public RegexValidator(String errorMessageKey, Pattern pattern)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 		setPattern(pattern);
 	}
 	
 	/**
-	 * construct with message prefix, rule and pattern 
-	 * @param messagePrefix
+	 * construct with errorMessageKey, rule and pattern 
+	 * @param errorMessageKey
 	 * @param rule
 	 * @param pattern
 	 */
-	public RegexValidator(String messagePrefix, ValidationActivationRule rule, Pattern pattern)
+	public RegexValidator(String errorMessageKey, ValidationActivationRule rule, Pattern pattern)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 		setPattern(pattern);
 	}
 	
@@ -111,35 +112,35 @@ public class RegexValidator extends AbstractFieldValidator
 	 */
 	public RegexValidator(Pattern pattern, int mode)
 	{
-		this();
 		setPattern(pattern);
 		setMode(mode);
 	}
 	
 	/**
 	 * construct with message prefix, pattern and mode
-	 * @param messagePrefix 
+	 * @param errorMessageKey 
 	 * @param pattern
 	 * @param mode
 	 */
-	public RegexValidator(String messagePrefix, Pattern pattern, int mode)
+	public RegexValidator(String errorMessageKey, Pattern pattern, int mode)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 		setPattern(pattern);
 		setMode(mode);
 	}
 	
 	/**
-	 * construct with message prefix, rule, pattern and mode 
-	 * @param messagePrefix
+	 * construct with errorMessageKey, rule, pattern and mode 
+	 * @param errorMessageKey
 	 * @param rule
 	 * @param pattern
 	 * @param mode
 	 */
 	public RegexValidator(
-		String messagePrefix, ValidationActivationRule rule, Pattern pattern, int mode)
+		String errorMessageKey, ValidationActivationRule rule, Pattern pattern, int mode)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 		setPattern(pattern);
 		setMode(mode);
 	}
@@ -158,24 +159,16 @@ public class RegexValidator extends AbstractFieldValidator
 		String toMatch = ValueUtils.convertToString(value); // convert to String
 		Matcher matcher = pattern.matcher(toMatch); // create a matcher
 
-		return (mode == MODE_VALID_IF_MATCHES) ? matcher.matches() : !matcher.matches();
-	}
-	
-	/**
-	 * Get the error message. By default returns the resource bundle message where
-	 * key = messagePrefixwith {0} substituted with the value
-	 * and {1} substituted with the field name.
-	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
-	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		String key = getMessagePrefix();
-		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
+		boolean valid = (mode == MODE_VALID_IF_MATCHES) ? matcher.matches() : !matcher.matches();
+
+		if(!valid)
+		{
+			String key = getErrorMessageKey();
+			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
+				new Object[]{value, fieldName});
+		}
+
+		return valid;
 	}
 	
 	//---------------------------------- PROPERTIES ----------------------------------------
@@ -214,6 +207,24 @@ public class RegexValidator extends AbstractFieldValidator
 	public void setPattern(Pattern pattern)
 	{
 		this.pattern = pattern;
+	}
+	
+	/**
+	 * Get key of error message.
+	 * @return String key of error message
+	 */
+	public String getErrorMessageKey()
+	{
+		return errorMessageKey;
+	}
+
+	/**
+	 * Set key of error message.
+	 * @param string key of error message
+	 */
+	public void setErrorMessageKey(String string)
+	{
+		errorMessageKey = string;
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: MaximumFieldLengthValidator.java,v 1.4 2004-04-04 18:21:55 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-04 18:21:55 $
+ * $Id: MaximumFieldLengthValidator.java,v 1.5 2004-04-07 10:43:12 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-07 10:43:12 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,12 +30,12 @@
  */
 package nl.openedge.baritus.validation.impl;
 
-import java.util.Locale;
-
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -49,65 +49,69 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	public final static int NO_MAXIMUM = -1;
 
 	private int maxLength = NO_MAXIMUM;
+	
+	private static Log log = LogFactory.getLog(MaximumFieldLengthValidator.class);
+	
+	private String errorMessageKey = "invalid.field.input.size";
 
 	/**
 	 * construct with 'invalid.field.input.size' as message prefix.
 	 */
 	public MaximumFieldLengthValidator()
 	{
-		super("invalid.field.input.size");
+
 	}
 
 	/**
-	 * Construct with message prefix for error message keys.
-	 * @param messagePrefix
+	 * Construct with errorMessageKey for error message keys.
+	 * @param errorMessageKey
 	 */
-	public MaximumFieldLengthValidator(String messagePrefix)
+	public MaximumFieldLengthValidator(String errorMessageKey)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 	}
 	
 	/**
 	 * Construct with message prefix for error message keys and set
 	 * checking on maximum length with given length of fields only.
-	 * @param messagePrefix message prefix
+	 * @param errorMessageKey message key
 	 * @param maxLength maximum length allowed for values; use -1 for no maximum
 	 */
-	public MaximumFieldLengthValidator(String messagePrefix, int maxLength)
+	public MaximumFieldLengthValidator(String errorMessageKey, int maxLength)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 		setMaxLength(maxLength);
 	}
 	
 	/**
-	 * Construct with activation rule and 'invalid.field.input.size' as message prefix.
+	 * Construct with activation rule.
 	 * @param rule activation rule
 	 */
 	public MaximumFieldLengthValidator(ValidationActivationRule rule)
 	{
-		super("invalid.field.input.size", rule);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * Construct with message prefix and activation rule.
-	 * @param messagePrefix
+	 * Construct with errorMessageKey and activation rule.
+	 * @param errorMessageKey error message key
 	 * @param rule activation rule
 	 */
 	public MaximumFieldLengthValidator(
-		String messagePrefix,
+		String errorMessageKey,
 		ValidationActivationRule rule)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * Construct with message prefix for error message keys and set
-	 * checking on maximum length with given length of fields only.
+	 * Construct with maxLength.
 	 * @param maxLength maximum length allowed for values; use -1 for no maximum
 	 */
 	public MaximumFieldLengthValidator(int maxLength)
 	{
-		this("invalid.field.input.size", maxLength);
+		setMaxLength(maxLength);
 	}
 
 	/**
@@ -150,29 +154,19 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 			else
 			{
 				// just ignore; wrong type to check on
-				System.err.println(fieldName + " with value: " + value + 
-					" is of the wrong type for checking on length"); // give a warning though
+				log.warn(fieldName + " with value: " + value + 
+					" is of the wrong type for checking on length"); 
+				// give a warning though
 			}
 		}
+		
+		if(maxExceeded)
+		{
+			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
+				new Object[]{value, fieldName, new Integer(maxLength)});
+		}
+		
 		return (!maxExceeded);
-	}
-	
-	/**
-	 * Get the error message. By default returns the resource bundle message where
-	 * key = messagePrefix, with {0} substituted with the value, {1} substituted 
-	 * with the field name and {2} substituted with the maximum length.
-	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
-	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		return getLocalizedMessage(
-			getMessagePrefix(), locale, 
-			new Object[]{value, fieldName, new Integer(maxLength)});
 	}
 
 	/**
@@ -191,6 +185,24 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	public void setMaxLength(int i)
 	{
 		maxLength = i;
+	}
+
+	/**
+	 * Get key of error message.
+	 * @return String key of error message
+	 */
+	public String getErrorMessageKey()
+	{
+		return errorMessageKey;
+	}
+
+	/**
+	 * Set key of error message.
+	 * @param string key of error message
+	 */
+	public void setErrorMessageKey(String string)
+	{
+		errorMessageKey = string;
 	}
 
 }

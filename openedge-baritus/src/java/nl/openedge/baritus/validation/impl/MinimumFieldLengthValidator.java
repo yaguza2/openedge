@@ -1,7 +1,7 @@
 /*
- * $Id: MinimumFieldLengthValidator.java,v 1.3 2004-04-04 18:22:33 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-04 18:22:33 $
+ * $Id: MinimumFieldLengthValidator.java,v 1.4 2004-04-07 10:43:12 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-07 10:43:12 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,12 +30,12 @@
  */
 package nl.openedge.baritus.validation.impl;
 
-import java.util.Locale;
-
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -49,65 +49,69 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	public final static int NO_MINIMUM = -1;
 
 	private int minLength = NO_MINIMUM;
+	
+	private static Log log = LogFactory.getLog(MinimumFieldLengthValidator.class);
+	
+	private String errorMessageKey = "invalid.field.input.size";
 
 	/**
 	 * Construct with key invalid.field.input.size for error messages.
 	 */
 	public MinimumFieldLengthValidator()
 	{
-		super("invalid.field.input.size");
+
 	}
 
 	/**
 	 * Construct with message prefix for error message keys.
 	 * @param messagePrefix message prefix
 	 */
-	public MinimumFieldLengthValidator(String messagePrefix)
+	public MinimumFieldLengthValidator(String errorMessageKey)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 	}
 	
 	/**
-	 * Construct with message prefix for error message keys and set
+	 * Construct with message key for error message keys and set
 	 * checking on minimum length with given length of fields only.
-	 * @param messagePrefix message prefix
+	 * @param errorMessageKey key for error messages
 	 * @param minLength minimum length allowed for values; use -1 for no minimum
 	 */
-	public MinimumFieldLengthValidator(String messagePrefix, int minLength)
+	public MinimumFieldLengthValidator(String errorMessageKey, int minLength)
 	{
-		super(messagePrefix);
+		setErrorMessageKey(errorMessageKey);
 		setMinLength(minLength);
 	}
 	
 	/**
-	 * Construct with activation rule and 'invalid.field.input.size' as message prefix.
+	 * Construct with activation rule.
 	 * @param rule activation rule
 	 */
 	public MinimumFieldLengthValidator(ValidationActivationRule rule)
 	{
-		super("invalid.field.input.size", rule);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * Construct with message prefix and activation rule.
-	 * @param messagePrefix
+	 * Construct with errorMessageKey and activation rule.
+	 * @param errorMessageKey
 	 * @param rule activation rule
 	 */
 	public MinimumFieldLengthValidator(
-		String messagePrefix,
+		String errorMessageKey,
 		ValidationActivationRule rule)
 	{
-		super(messagePrefix, rule);
+		setErrorMessageKey(errorMessageKey);
+		setValidationRule(rule);
 	}
 
 	/**
-	 * Construct with message prefix for error message keys and set
-	 * checking on minimum length with given length of fields only.
+	 * Construct with min length.
 	 * @param minLength minimum length allowed for values; use -1 for no minimum
 	 */
 	public MinimumFieldLengthValidator(int minLength)
 	{
-		this("invalid.field.input.size", minLength);
+		setMinLength(minLength);
 	}
 
 	/**
@@ -154,25 +158,14 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 					" is of the wrong type for checking on length"); // give a warning though
 			}
 		}
+		
+		if(minExceeded)
+		{
+			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
+				new Object[]{value, fieldName, new Integer(minLength)});
+		}
+		
 		return (!minExceeded);
-	}
-	
-	/**
-	 * Get the error message. By default returns the resource bundle message where
-	 * key = messagePrefix, with {0} substituted with the value, {1} substituted 
-	 * with the field name and {2} substituted with the minimum length.
-	 * @see nl.openedge.baritus.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
-	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		return getLocalizedMessage(
-			getMessagePrefix(), locale, 
-			new Object[]{value, fieldName, new Integer(minLength)});
 	}
 
 	/**
@@ -189,6 +182,24 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	public void setMinLength(int i)
 	{
 		minLength = i;
+	}
+	
+	/**
+	 * Get key of error message.
+	 * @return String key of error message
+	 */
+	public String getErrorMessageKey()
+	{
+		return errorMessageKey;
+	}
+
+	/**
+	 * Set key of error message.
+	 * @param string key of error message
+	 */
+	public void setErrorMessageKey(String string)
+	{
+		errorMessageKey = string;
 	}
 
 }
