@@ -34,7 +34,7 @@ package nl.openedge.modules.observers;
  * Generic interface for observers of module factory events
  * @author Eelco Hillenius
  */
-public interface ComponentFactoryObserver
+public interface ComponentRepositoryObserver
 {
 
 }

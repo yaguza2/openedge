@@ -54,9 +54,10 @@ import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
 /**
- * Factory for the module factory.
- * provides singleton access to componentFactory and stores the available
- * module types
+ * Factory that creates instances of the component repository.
+ * Provides access to ComponentRepository. Optionally it 
+ * can register the component repository with JNDI.
+ *  
  * @author Eelco Hillenius
  */
 public class RepositoryFactory implements  ObjectFactory
@@ -78,9 +79,8 @@ public class RepositoryFactory implements  ObjectFactory
 	 * get the instance of the component repository
 	 * @return ComponentRepository
 	 */
-	public static ComponentRepository getInstance()
-	{
-		
+	public static ComponentRepository getRepository()
+	{	
 		if(!initialized)
 		{
 			throw new RuntimeException("factory is not yet initialized");
@@ -213,43 +213,12 @@ public class RepositoryFactory implements  ObjectFactory
 		Context ctx, 
 		Hashtable env) 
 		throws Exception
-	{
-		
+	{	
 		log.info("ref: " + reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
 		
 		log.debug("JNDI lookup: " + name);
 		return _componentRepository;
 	}
-
-//	/**
-//	 * @see javax.naming.Referenceable#getReference()
-//	 */
-//	public Reference getReference() throws NamingException 
-//	{
-//		return new Reference(
-//			RepositoryFactory.class.getName(),
-//			new StringRefAddr("ComponentRepository Factory", null),
-//			RepositoryFactoryObjectFactory.class.getName(),
-//			null
-//		);
-//	}
-//	
-//	// TODO: remove debug info
-//	public final void readObject(ObjectInputStream in) 
-//			throws IOException, ClassNotFoundException 
-//	{
-//		log.info("deserializing");
-//		in.defaultReadObject();
-//		log.info("deserialized: " + _componentRepository);
-//	}
-//	
-//	public final void writeObject(ObjectOutputStream out) 
-//			throws IOException 
-//	{
-//		log.info("serializing: " + _componentRepository);
-//		out.defaultWriteObject();
-//		log.info("serialized");
-//	}
 
 	private static final NamingListener listener = new NamespaceChangeListener()
 	{

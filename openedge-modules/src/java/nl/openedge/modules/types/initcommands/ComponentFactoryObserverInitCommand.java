@@ -34,7 +34,7 @@ import org.jdom.Element;
 
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ComponentFactoryObserver;
+import nl.openedge.modules.observers.ComponentRepositoryObserver;
 
 /**
  * Command that populates instances using BeanUtils
@@ -67,10 +67,10 @@ public class ComponentFactoryObserverInitCommand implements InitCommand
 		throws InitCommandException, ConfigException
 	{
 
-		if(componentInstance instanceof ComponentFactoryObserver)
+		if(componentInstance instanceof ComponentRepositoryObserver)
 		{
 			moduleFactory.addObserver(
-				(ComponentFactoryObserver)componentInstance);
+				(ComponentRepositoryObserver)componentInstance);
 		}
 		else
 		{

@@ -38,7 +38,7 @@ package nl.openedge.modules.observers;
  * 
  * @author Eelco Hillenius
  */
-public interface ChainedEventObserver extends ComponentFactoryObserver 
+public interface ChainedEventObserver extends ComponentRepositoryObserver 
 {
 
 	/**

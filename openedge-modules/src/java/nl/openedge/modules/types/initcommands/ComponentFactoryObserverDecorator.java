@@ -30,13 +30,13 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import nl.openedge.modules.observers.ComponentFactoryObserver;
+import nl.openedge.modules.observers.ComponentRepositoryObserver;
 
 /**
  * @author Eelco Hillenius
  */
 public class ComponentFactoryObserverDecorator 
-	implements ComponentFactoryObserver
+	implements ComponentRepositoryObserver
 {
 
 	protected Object decorated;

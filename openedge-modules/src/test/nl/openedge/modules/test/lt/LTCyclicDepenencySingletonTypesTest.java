@@ -75,7 +75,7 @@ public class LTCyclicDepenencySingletonTypesTest extends TestCase
 
 			JDOMConfigurator c = new JDOMConfigurator(url);
 			
-			ComponentRepository cRepo = RepositoryFactory.getInstance();
+			ComponentRepository cRepo = RepositoryFactory.getRepository();
 
 			// if we get here, the cycle was not detected
 			fail("cycle was not detected!");

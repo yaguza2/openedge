@@ -37,14 +37,25 @@ import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventObserver;
-import nl.openedge.modules.observers.ComponentFactoryObserver;
+import nl.openedge.modules.observers.ComponentRepositoryObserver;
 
 
 import org.jdom.Element;
 import org.quartz.Scheduler;
 
 /**
- * The ComponentRepository constructs and initialises objects.
+ * The ComponentRepository functions as the repository for components.
+ * This is the main class that clients have to deal with. The common
+ * pattern is to get an instance of the ComponentRepository, and
+ * then get the component by name/ alias. E.g:
+ * &lt;code&gt; 
+ * 	ComponentRepository rep = RepositoryFactory.getRepository();
+ *	rModule = (MyComponent)rep.getComponent("myAlias");
+ * &lt;/code&gt;
+ * 
+ * The repository also is the the point to get the Quartz scheduler
+ * from, and where members of the <code>ComponentRepositoryObserver</code>
+ * family can register as observers.
  * 
  * @author Eelco Hillenius
  */
@@ -55,12 +66,12 @@ public interface ComponentRepository
 	
 	/**
 	 * initialize the component repository
-	 * @param factoryNode
+	 * @param rootNode
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
 	public void start(
-			Element factoryNode, 
+			Element rootNode, 
 			ServletContext servletContext) 
 			throws ConfigException;
 
@@ -68,13 +79,13 @@ public interface ComponentRepository
 	 * add observer of component repository events
 	 * @param observer
 	 */
-	public void addObserver(ComponentFactoryObserver observer);
+	public void addObserver(ComponentRepositoryObserver observer);
 
 	/**
 	 * remove observer of component repository events
 	 * @param observer
 	 */
-	public void removeObserver(ComponentFactoryObserver observer);
+	public void removeObserver(ComponentRepositoryObserver observer);
 
 	/**
 	 * returns instance of component

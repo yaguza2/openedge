@@ -51,8 +51,8 @@ import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.SchedulerObserverInitCommand;
 
 /**
- * Registry for types, adapters and init commands that can be used with
- * the loosely typed implementation of component repository
+ * Registry for types and init commands that can be used with
+ * the loosely typed implementation of the component repository
  * @author Eelco Hillenius
  */
 public class TypesRegistry

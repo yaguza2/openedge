@@ -34,8 +34,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import nl.openedge.modules.AbstractComponentRepository;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.impl.DefaultComponentRepository;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
@@ -45,12 +45,15 @@ import org.jdom.Element;
 import org.quartz.Job;
 
 /**
- * Loosely typed implementation of ComponentRepository
+ * Loosely typed implementation of ComponentRepository. If this
+ * component repository is used, components do not have to 
+ * implement any interface at all, as all type information and 
+ * coupling to InitCommands will be read from the configuration file.
  * 
  * @author Eelco Hillenius
  */
 public class LooselyTypedComponentRepository 
-	extends DefaultComponentRepository
+	extends AbstractComponentRepository
 {
 
 	/** logger */

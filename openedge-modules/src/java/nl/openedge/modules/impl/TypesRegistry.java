@@ -40,7 +40,7 @@ import org.quartz.Job;
 
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.ChainedEventCaster;
-import nl.openedge.modules.observers.ComponentFactoryObserver;
+import nl.openedge.modules.observers.ComponentRepositoryObserver;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.RegistryException;
 import nl.openedge.modules.types.base.JobTypeFactory;
@@ -61,7 +61,7 @@ import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitComman
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 /**
- * Registry for types, adapters and init commands
+ * Registry for types and init commands
  * @author Eelco Hillenius
  */
 public class TypesRegistry
@@ -136,7 +136,7 @@ public class TypesRegistry
 		initCommandTypes.add(BeanType.class);
 		initCommandTypes.add(ConfigurableType.class);
 		initCommandTypes.add(ChainedEventCaster.class);
-		initCommandTypes.add(ComponentFactoryObserver.class);
+		initCommandTypes.add(ComponentRepositoryObserver.class);
 		initCommandTypes.add(DependentType.class);
 
 		// and the commands for them
@@ -153,7 +153,7 @@ public class TypesRegistry
 			ChainedEventCasterInitCommand.class);
 			
 		initCommandClasses.put(
-			ComponentFactoryObserver.class, 
+			ComponentRepositoryObserver.class, 
 			ComponentFactoryObserverInitCommand.class);
 			
 		initCommandClasses.put(

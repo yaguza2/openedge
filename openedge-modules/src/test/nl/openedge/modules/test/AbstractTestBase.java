@@ -87,7 +87,7 @@ public abstract class AbstractTestBase extends TestCase
 						null);
 
 				JDOMConfigurator c = new JDOMConfigurator(url);
-				componentFactory = RepositoryFactory.getInstance();
+				componentFactory = RepositoryFactory.getRepository();
 
 			}
 			catch (Exception e)

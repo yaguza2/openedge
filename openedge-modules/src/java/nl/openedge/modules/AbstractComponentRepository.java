@@ -28,11 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.impl;
+package nl.openedge.modules;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,7 +45,6 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.modules.AbstractComponentRepository;
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
@@ -61,7 +58,6 @@ import nl.openedge.modules.observers.SchedulerObserver;
 import nl.openedge.modules.observers.SchedulerStartedEvent;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.base.JobTypeFactory;
-import nl.openedge.modules.types.initcommands.InitCommand;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
@@ -75,11 +71,11 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 
 /**
- * Default implementation of ComponentRepository
+ * Abstract base for implementations of ComponentRepository
  * 
  * @author Eelco Hillenius
  */
-public class DefaultComponentRepository extends AbstractComponentRepository
+public abstract class AbstractComponentRepository implements ComponentRepository
 {
 
 	/** logger */
@@ -103,7 +99,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	/**
 	 * construct
 	 */
-	public DefaultComponentRepository() 
+	public AbstractComponentRepository() 
 	{
 		// nothing here
 	}
@@ -253,7 +249,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 			try
 			{
 				URL urlproploc = URLHelper.convertToURL(
-					proploc, DefaultComponentRepository.class, context);
+					proploc, AbstractComponentRepository.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			}
@@ -341,25 +337,11 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	 * @param node
 	 * @throws ConfigException
 	 */
-	protected void addComponent(
+	protected abstract void addComponent(
 		String name, 
 		Class clazz,
 		Element node)
-		throws ConfigException
-	{
-		ComponentFactory factory = getComponentFactory(name, clazz, node);
-			
-		// store component
-		components.put(name, factory);
-			
-		// special case: see if this is a job
-		if(Job.class.isAssignableFrom(clazz))
-		{
-			jobs.put(name, factory);
-		}
-			
-		log.info("addedd " + clazz.getName() + " with name: " + name);
-	}
+		throws ConfigException;
 	
 	/**
 	 * get the component factory
@@ -369,58 +351,11 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	 * @return ComponentFactory
 	 * @throws ConfigException
 	 */
-	protected ComponentFactory getComponentFactory(
+	protected abstract ComponentFactory getComponentFactory(
 		String name, 
 		Class clazz,
 		Element node)
-		throws ConfigException
-	{
-
-		ComponentFactory factory = null;
-		
-		List baseTypes = TypesRegistry.getBaseTypes();
-		if(baseTypes == null)
-		{
-			throw new ConfigException(
-				"there are no base types registered!");
-		}
-			
-		boolean wasFoundOnce = false;
-		for(Iterator j = baseTypes.iterator(); j.hasNext(); )
-		{
-			Class baseType = (Class)j.next();
-			if(baseType.isAssignableFrom(clazz))
-			{
-				if(wasFoundOnce) // more than one base type!
-				{
-					throw new ConfigException(
-						"component " + name + 
-						" is of more than one registered base type!");
-				}
-				wasFoundOnce = true;
-					
-				factory = TypesRegistry.getComponentFactory(baseType);
-					
-			}
-		}
-		if(factory == null)
-		{		
-			factory = TypesRegistry.getDefaultComponentFactory();
-			
-			log.warn(name + " is not of any know type... using " +
-				factory + " as component factory");
-		}
-		
-		factory.setName(name);
-		factory.setComponentRepository(this);
-		factory.setComponentNode(node);
-			
-		addInitCommands(factory, clazz, node);
-			
-		factory.setComponentClass(clazz);
-		
-		return factory;		
-	}
+		throws ConfigException;
 	
 	/**
 	 * add initialization commands
@@ -429,40 +364,11 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	 * @param clazz component class
 	 * @throws ConfigException
 	 */
-	protected void addInitCommands(
+	protected abstract void addInitCommands(
 		ComponentFactory factory, 
 		Class clazz,
 		Element node)
-		throws ConfigException
-	{
-		List initCommands = TypesRegistry.getInitCommandTypes();
-		if(initCommands != null)
-		{
-			List commands = new ArrayList();
-			for(Iterator j = initCommands.iterator(); j.hasNext(); )
-			{
-				Class type = (Class)j.next();
-				if(type.isAssignableFrom(clazz))
-				{
-					// get command for this class
-					InitCommand initCommand = 
-						TypesRegistry.getInitCommand(type);
-					// initialize the command
-					initCommand.init(factory.getName(), node, this);
-					// add command to the list
-					commands.add(initCommand);
-				}
-			}
-				
-			InitCommand[] cmds = (InitCommand[])
-				commands.toArray(new InitCommand[commands.size()]);
-				
-			if(cmds.length > 0)
-			{
-				factory.setInitCommands(cmds);	
-			}
-		}		
-	}
+		throws ConfigException;
 
 	/*
 	 * get triggers from config
@@ -713,63 +619,6 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	public String[] getComponentNames()
 	{
 		return (String[])components.keySet().toArray(new String[components.size()]);
-	}
-	
-	/**
-	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class, boolean)
-	 */
-	public List getComponentsByType(Class type, boolean exact)
-	{
-		List sublist = new ArrayList();
-		
-		if(type == null)
-		{
-			return sublist;
-		}
-		
-		if(exact)
-		{
-			for(Iterator i = components.values().iterator(); i.hasNext(); )
-			{
-		
-				ComponentFactory factory = (ComponentFactory)i.next();
-				if(type.equals(factory.getComponentClass()))
-				{
-					sublist.add(getComponent(factory.getName()));
-				}	
-			}			
-		}
-		else
-		{
-			for(Iterator i = components.values().iterator(); i.hasNext(); )
-			{
-		
-				ComponentFactory factory = (ComponentFactory)i.next();
-				if(type.isAssignableFrom(factory.getComponentClass()))
-				{
-					sublist.add(getComponent(factory.getName()));
-				}
-			}	
-		}
-		
-		return sublist;
-	}
-	
-	// TODO: remove debug info
-	public void readObject(ObjectInputStream in) 
-			throws IOException, ClassNotFoundException 
-	{
-		log.info("deserializing");
-		in.defaultReadObject();
-		log.info("deserialized: " + this);
-	}
-	
-	public void writeObject(ObjectOutputStream out) 
-			throws IOException 
-	{
-		log.info("serializing: " + this);
-		out.defaultWriteObject();
-		log.info("serialized");
 	}
 
 }

@@ -35,7 +35,7 @@ package nl.openedge.modules.observers;
  * are (re)loaded (and have gone through some basic tests)
  * @author Eelco Hillenius
  */
-public interface ComponentObserver extends ComponentFactoryObserver
+public interface ComponentObserver extends ComponentRepositoryObserver
 {
 	/**
 	 * fired after all components are (re)loaded

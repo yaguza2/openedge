@@ -45,20 +45,34 @@ import org.jdom.Element;
 /**
  * <p>Clients of the ComponentRepository should either construct the factory with an
  * instance of <code>javax.servlet.ServletContext</code> or with an instance
- * of <code>java.lang.String</code>. The first is for usage in a web application
+ * of <code>java.lang.String</code>. The first is for usage within a web application
  * environment and tries to read the location of the configuration document from
- * <code>javax.servlet.ServletContext.getInitParameter("oeaccess.configFile")</code> 
- * Moreover, all other references to documents (e.g. jaas.config) in the
- * configuration file will be looked up relative to the context path of the web
- * application. The second case tries to load all files from the classpath. To
- * overide this behaviour you can specify url's in the configuration document,
- * e.g: file://c:/mywinboxdrive/mydir/mycomponents.xml. A third option is to load 
- * the configuration document from a custom location. This is done by 
- * constructing the URL yourself and constructing the ComponentRepository
- * with this URL.
- * <p>In a web application environment, the constructed instance of this 
- * <code>ComponentRepository</code> will be saved in the <code>ServletContext</code>
- * under key 'oemodules.configFile'. 
+ * <code>javax.servlet.ServletContext.getInitParameter("oemodules.configFile")</code> 
+ * If you are not within a web application context, or if you want to load the 
+ * configuration from a location outside the web application environment, you
+ * can provide an URL as either a string or an URL object,
+ * e.g: file://c:/mywinboxdrive/mydir/mycomponents.xml. If you provide a
+ * string with a relative path, e.g: /mycomponents.xml, the configurator
+ * tries to load from the classpath, where / is the classpath root.
+ * 
+ * For example, you could have a startup/ main servlet that does this:
+ * 
+ * 	protected void initComponents(ServletConfig config) throws Exception
+ *	{
+ *		new JDOMConfigurator(config.getServletContext());
+ *	}
+ *
+ * and have this in your web.xml:
+ * 
+ * 	&lt;servlet&gt;
+ *		&lt;servlet-name&gt;Application&lt;/servlet-name&gt;
+ *		&lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt;
+ *		&lt;init-param&gt;
+ *			&lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
+ *			&lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt;
+ *		&lt;/init-param&gt;
+ *		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *	&lt;/servlet&gt;
  * 
  * @author Eelco Hillenius
  */
@@ -128,16 +142,16 @@ public class JDOMConfigurator
 	}
 
 	/**
-	 * create and register the factory
+	 * create and register the component repository
 	 * @param configuration
 	 * @throws ConfigException
 	 */
-	protected void createFactory(Document configuration, 
+	protected void createRepository(Document configuration, 
 			ServletContext servletContext) throws ConfigException
 	{
 
-		Element factoryNode = configuration.getRootElement();
-		RepositoryFactory.initialize(factoryNode, servletContext);
+		Element rootNode = configuration.getRootElement();
+		RepositoryFactory.initialize(rootNode, servletContext);
 	}
 
 	/**
@@ -169,7 +183,7 @@ public class JDOMConfigurator
 	protected void reload(String configDocument) throws ConfigException
 	{
 		Document configuration = DocumentLoader.loadDocumentFromUrl(configDocument);
-		createFactory(configuration, null);
+		createRepository(configuration, null);
 	}
 
 	/**
@@ -180,7 +194,7 @@ public class JDOMConfigurator
 	protected void reload(URL configURL) throws ConfigException
 	{
 		Document configuration = DocumentLoader.loadDocumentFromUrl(configURL);
-		createFactory(configuration, null);
+		createRepository(configuration, null);
 	}
 
 	/**
@@ -198,7 +212,7 @@ public class JDOMConfigurator
 			configFile = DEFAULT_CONFIG_FILE;
 		Document configuration = DocumentLoader.loadDocumentInWebApp(
 										configFile, servletContext);
-		createFactory(configuration, servletContext);
+		createRepository(configuration, servletContext);
 	}
 
 }

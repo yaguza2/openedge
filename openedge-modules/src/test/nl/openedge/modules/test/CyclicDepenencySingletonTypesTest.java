@@ -70,7 +70,7 @@ public class CyclicDepenencySingletonTypesTest extends TestCase
 					null);
 
 			JDOMConfigurator c = new JDOMConfigurator(url);
-			ComponentRepository moduleFactory = RepositoryFactory.getInstance();
+			ComponentRepository moduleFactory = RepositoryFactory.getRepository();
 
 			// if we get here, the cycle was not detected
 			fail("cycle was not detected!");
