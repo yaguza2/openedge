@@ -167,7 +167,7 @@ public class LoginModuleImpl implements LoginModule
 
 		try
 		{
-			ComponentRepository mf = RepositoryFactory.getInstance();
+			ComponentRepository mf = RepositoryFactory.getRepository();
 			userManager = (UserManagerModule)mf.getComponent(userManagerAlias);
 		}
 		catch (Exception e)
