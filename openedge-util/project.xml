@@ -13,15 +13,12 @@
   <inceptionYear>2002</inceptionYear>
   <package>nl.openedge.util</package>
   <logo>/images/maven.jpg</logo>
-  <!-- Gump integration -->
-
-  <!-- <gumpRepositoryId>jakarta</gumpRepositoryId> -->
   
   <description>OpenEdge Utils is a project for utility classes/ helpers that are usefull enough to share amongst projects, but are too small to have their own project</description>
   <shortDescription>Reusable Utilities</shortDescription>
   <url>http://maven.apache.org/</url>
 
-  <repository>
+ <repository>
     <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-access</connection>
   </repository>
   
