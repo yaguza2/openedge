@@ -36,7 +36,34 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Decorator for starting a Jetty instance in a seperate VM.
+ * JUnit decorator for starting and stopping a Jetty instance in a seperate VM.
+ * <p>
+ * Jetty is started by doing a system call that results in starting up
+ * class JettyStarterPrg. JettyStarterPrg starts up Jetty and a admin monitor.
+ * Shutting down Jetty is done - after all tests were run - by sending a command
+ * to the admin monitor which then stops Jetty and exits the VM.
+ * The output of the process is intercepted by LogConnector and then - after some
+ * decoration - send to the Commons Logger.
+ * </p>
+ * <p>
+ * Usage:
+ * <pre>
+    public static Test suite() 
+    {
+	    TestSuite suite = new TestSuite();
+	    suite.addTest(new JettyExternalVMDecoratorWithArgsTest("testPing"));
+	    JettyExternalVMDecorator deco = new JettyExternalVMDecorator(suite);
+	    deco.setPort(8098);
+	    deco.setWebappContextRoot("src/webapp");
+	    deco.setContextPath("/test");
+	    deco.setUseJettyPlus(false);
+	    // by uncommenting the next line, on Windows a new dos box will be opened where
+	    // the VM is started and where all output will be shown.
+	    // deco.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
+	    return deco;
+    }
+ * </pre>
+ * </p>
  *
  * @author Eelco Hillenius
  */

@@ -77,7 +77,7 @@ public class JettyExternalVMWithArgsTestCaseTest extends JettyExternalVMTestCase
 	    setWebappContextRoot("src/webapp");
 	    setContextPath("/test");
 
-	    // comment this for non-Windows systems (in that case {"java"} will be used.
+	    // comment this for non-Windows systems (in that case {"java"} will be used).
 	    //setStartCommand(new String[]{"cmd", "/C", "start", "java"});
     }
 

@@ -85,7 +85,7 @@ public class JettyExternalVMDecoratorWithArgsTest extends TestCase
 	    deco.setContextPath("/test");
 	    deco.setUseJettyPlus(false);
 	    
-	    // comment this for non-Windows systems (in that case {"java"} will be used.
+	    // comment this for non-Windows systems (in that case {"java"} will be used).
 	    //deco.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
 
 	    return deco;

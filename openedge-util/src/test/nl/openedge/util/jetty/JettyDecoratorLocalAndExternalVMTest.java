@@ -105,7 +105,7 @@ public class JettyDecoratorLocalAndExternalVMTest extends TestCase
 	    externalVMDecorator.setContextPath("/test");
 	    externalVMDecorator.setUseJettyPlus(false);
 	    
-	    // comment this for non-Windows systems (in that case {"java"} will be used.
+	    // comment this for non-Windows systems (in that case {"java"} will be used).
 	    //externalVMDecorator.setStartCommand(new String[]{"cmd", "/C", "start", "java"});
 
 	    return externalVMDecorator;
