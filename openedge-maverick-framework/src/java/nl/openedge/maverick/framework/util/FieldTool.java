@@ -183,8 +183,14 @@ public class FieldTool
 
 			return null;
 		}
+		
+		/*
+		 * Als een value overridden is, NIET FORMATTEN!!!
+		 */
+		boolean overridden = false;
 		if(model != null)
 		{
+			
 			Map overrideFields = model.getOverrideFields();
 			if( overrideFields != null ) 
 			{
@@ -202,10 +208,11 @@ public class FieldTool
 				if(storedRawValue != null)
 				{
 					value = storedRawValue;
+					overridden = true;
 				}
 			}	
 		}
-		if(value != null)
+		if(value != null && !overridden)
 		{
 			Formatter formatter = (Formatter)keyedFormatters.get(pattern);
 			if(formatter != null)
