@@ -33,6 +33,7 @@ package nl.openedge.modules.impl.menumodule;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -170,7 +171,57 @@ public final class MenuItem implements Serializable
 	 */
 	public String toString()
 	{
-		return "menu -> " + link + ((active) ? " (actief)" : "");
+		StringBuffer b = new StringBuffer("menu -> " )
+			.append(link)
+			.append((active) ? " (actief)" : "");
+			
+		if( (aliases != null) || (filters != null) || (attributes != null) )
+		{
+			b.append(" {");
+		}
+		if(attributes != null)
+		{
+			b.append(" attributes:");
+			for(Iterator i = attributes.keySet().iterator(); i.hasNext(); )
+			{
+				String key = (String)i.next();
+				b.append(key).append("=").append(attributes.get(key));
+				if(i.hasNext())
+				{
+					b.append(",");
+				}
+			}
+		}
+		if(aliases != null)
+		{
+			b.append(" aliases:");
+			for(Iterator i = aliases.iterator(); i.hasNext(); )
+			{
+				b.append(i.next());
+				if(i.hasNext())
+				{
+					b.append(",");
+				}
+			}
+		}
+		if(filters != null)
+		{
+			b.append(" filters:");
+			for(Iterator i = filters.iterator(); i.hasNext(); )
+			{
+				RequestScopeMenuFilter f = (RequestScopeMenuFilter)i.next();
+				b.append(f);
+				if(i.hasNext())
+				{
+					b.append(",");
+				}
+			}
+		}
+		if( (aliases != null) || (filters != null) || (attributes != null) )
+		{
+			b.append(" }");
+		}
+		return b.toString();
 	}
 
 	/**
