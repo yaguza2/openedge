@@ -30,6 +30,8 @@
  */
 package nl.openedge.access;
 
+import java.io.Serializable;
+
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -41,8 +43,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Eelco Hillenius
  */
-public class SubjectSessionListener implements HttpSessionBindingListener
-{
+public class SubjectSessionListener implements HttpSessionBindingListener, Serializable
+{ 
 
 	private static Log log = LogFactory.getLog(SubjectSessionListener.class);
 	private Subject subject = null;
