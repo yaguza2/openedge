@@ -185,7 +185,16 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		try 
 		{	
 			// let controller create form
+			long tsBeginMakeFormBean = System.currentTimeMillis();
+
 			formBean = this.makeFormBean(cctx);
+			
+			if(performanceLog.isDebugEnabled())
+			{
+				long tsEndMakeFormBean = System.currentTimeMillis();
+				performanceLog.debug("execution of " + this + ".makeFormBean: " +
+					(tsEndMakeFormBean - tsBeginMakeFormBean) + " milis");
+			}
 			
 			long tsBeginBefore = System.currentTimeMillis();
 			
@@ -255,7 +264,17 @@ public abstract class AbstractCtrl implements ControllerSingleton
 						
 						if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
 						{
+							long tsBeginPerform = System.currentTimeMillis();
+							
 							this.perform(formBean, cctx);
+							
+							if(performanceLog.isDebugEnabled())
+							{
+								long tsEndPerform = System.currentTimeMillis();
+								performanceLog.debug("execution of " + this + ".perform: " +
+									(tsEndPerform - tsBeginPerform) + " milis");
+							}
+							
 							String lq = formBean.getLastreq();
 							lq = UrlTool.replace(lq, "|amp|", "&"); 
 							cctx.setModel(lq);
@@ -264,8 +283,17 @@ public abstract class AbstractCtrl implements ControllerSingleton
 						} 
 						else 
 						{
-		
+							long tsBeginPerform = System.currentTimeMillis();
+							
 							viewName = this.perform(formBean, cctx);
+							
+							if(performanceLog.isDebugEnabled())
+							{
+								long tsEndPerform = System.currentTimeMillis();
+								performanceLog.debug("execution of " + this + ".perform: " +
+									(tsEndPerform - tsBeginPerform) + " milis");
+							}		
+							
 						}
 					}
 					else 
@@ -279,7 +307,16 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				}
 				else
 				{
+					long tsBeginPerform = System.currentTimeMillis();
+							
 					viewName = this.perform(formBean, cctx);
+							
+					if(performanceLog.isDebugEnabled())
+					{
+						long tsEndPerform = System.currentTimeMillis();
+						performanceLog.debug("execution of " + this + ".perform: " +
+							(tsEndPerform - tsBeginPerform) + " milis");
+					}	
 				}
 			}
 			
