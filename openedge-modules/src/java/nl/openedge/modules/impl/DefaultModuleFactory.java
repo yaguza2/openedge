@@ -47,12 +47,17 @@ import javax.servlet.ServletContext;
 
 import nl.openedge.modules.ModuleLookpupException;
 import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.config.*;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
-import nl.openedge.modules.observers.*;
-import nl.openedge.modules.types.*;
-import nl.openedge.modules.types.base.*;
+import nl.openedge.modules.observers.CriticalEvent;
+import nl.openedge.modules.observers.CriticalEventObserver;
+import nl.openedge.modules.observers.ModuleFactoryObserver;
+import nl.openedge.modules.observers.SchedulerObserver;
+import nl.openedge.modules.observers.SchedulerStartedEvent;
+import nl.openedge.modules.types.AdapterFactory;
+import nl.openedge.modules.types.ModuleAdapter;
+import nl.openedge.modules.types.TypesRegistry;
+import nl.openedge.modules.types.base.JobTypeAdapter;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -416,7 +421,8 @@ public class DefaultModuleFactory implements ModuleFactory
 				{
 
 					Element pNode = (Element)j.next();
-					paramMap.put(pNode.getAttributeValue("name"), pNode.getAttributeValue("value"));
+					paramMap.put(pNode.getAttributeValue("name"), 
+						pNode.getAttributeValue("value"));
 				}
 			try
 			{ // set parameters as properties of trigger
@@ -434,7 +440,8 @@ public class DefaultModuleFactory implements ModuleFactory
 	/*
 	 * schedule jobs
 	 */
-	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader) throws ConfigException
+	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader) 
+		throws ConfigException
 	{
 
 		//get job excecution map from config

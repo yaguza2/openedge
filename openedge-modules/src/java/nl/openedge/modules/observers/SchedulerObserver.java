@@ -30,7 +30,6 @@
  */
 package nl.openedge.modules.observers;
 
-import nl.openedge.modules.config.ModuleFactoryObserver;
 
 /**
  * a scheduler observer gets the chance to do extra configuration 

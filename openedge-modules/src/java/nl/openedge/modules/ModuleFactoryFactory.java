@@ -33,7 +33,7 @@ package nl.openedge.modules;
 import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.impl.*;
+import nl.openedge.modules.impl.DefaultModuleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -32,9 +32,10 @@ package nl.openedge.modules;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.modules.config.*;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.*;
+import nl.openedge.modules.observers.CriticalEventObserver;
+import nl.openedge.modules.observers.ModuleFactoryObserver;
+
 
 import org.jdom.Element;
 import org.quartz.Scheduler;

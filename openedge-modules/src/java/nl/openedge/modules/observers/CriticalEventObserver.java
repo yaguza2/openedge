@@ -30,7 +30,6 @@
  */
 package nl.openedge.modules.observers;
 
-import nl.openedge.modules.config.ModuleFactoryObserver;
 
 /**
  * a critical even observer listenes for events that are cast by modules that 

@@ -33,7 +33,8 @@ package nl.openedge.modules.types;
 import nl.openedge.modules.ModuleFactory;
 import nl.openedge.modules.ModuleLookpupException;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.types.initcommands.*;
+import nl.openedge.modules.types.initcommands.InitCommand;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
  * common base for module wrappers
