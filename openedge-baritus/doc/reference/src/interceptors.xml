@@ -13,33 +13,23 @@
         <para>
             Interceptors provide a means to encapsulate cross-cutting code that is executed on 
 			pre-defined points in the line of execution. Interceptors are classes that implement
-			one or more interfaces from the packages 'nl.openedge.baritus.interceptors' and
-			'nl.openedge.baritus.interceptors.flow'.
+			one or more interfaces from the package 'nl.openedge.baritus.interceptors'.
         </para>
 
 		<para>
-			There are two kinds of interceptors. The first type are interceptors that
-			can be used to 'enrich' de model (formBeanContext), eg. load data, save session
-			attributes, etc. The second type of interceptors are interceptors that can
-			have an effect on the flow. These 'flow interceptors' can overrule the command
-			(perform method) and redirect to another view. The latter type can be used to
-			work with multi page forms coupled to one command or for instances implementing
-			a generic 'system error' type of view.
-		</para>
-		
-		<para>
-			The first type of interceptors are allways called before the second type. 
-			Besides that, the interception points are exactely the same for both types.
+			 Interceptors can be used to decorate the normal execution. Also, by throwing FlowExceptions, interceptors can
+			 alter the flow of execution. An interceptor can throw a FlowException if it wants Baritus to stop
+			 normal processing and go to the given declared view (using ReturnNowFlowException) such as 'error', 
+			 or dispatch to an arbitrary - non declared - URL (using DispatchNowFlowException) location.
 		</para>
 		
 	</sect1>
 	
     <sect1 id="interceptors-s2">
-        <title>Normal interceptors</title>
+        <title>Interceptors</title>
 
         <para>
-			This type of interceptors are used to add behaviour without having an influence on the
-			flow of execution.
+			The following interceptors are available.
         </para>
 		
 			<itemizedlist spacing="compact">
@@ -101,49 +91,47 @@
 			</itemizedlist>
 
 	</sect1>
-
-    <sect1 id="interceptors-s3">
-        <title>Flow interceptors</title>
+	
+    <sect1 id="interceptors-s2">
+        <title>Throwing FlowExceptions</title>
 
         <para>
-			Flow interceptors can influence the flow of execution.
+			An interceptor can alter the line of execution by thowing a FlowException. An example of when to do this is:
+			if you expect a session variable to be set, but there is none, you might want to redirect to a search page or
+			an error page. Another example: on certain non handled exceptions that are thrown in the perform
+			method, you might want to redirect to a specific error page that is different from the error page that is
+			shown when population errors occured.
         </para>
+		
+		<para>
+			There are two types of FlowExceptions that can be thrown by interceptors.
+		</para>
 		
 			<itemizedlist spacing="compact">
 
 				<listitem>
 	                <para>
-						<literal>BeforeMakeFormBeanInterceptor</literal>.
+						<literal>ReturnNowFlowException</literal>.
+						The property 'view' in this exception is used to return to Maverick as the view to display.
+						In effect, this view must correspond to a declared view (like 'error' or 'detail') in your Maverick configuration.
 	                </para>
 	            </listitem>
 				<listitem>
 	                <para>
-						<literal>BeforeMakeFormBeanInterceptor</literal>.
+						<literal>DispatchNowFlowException</literal>.
+						 The property 'dispatchPath' is used to dispatch to directly (like 'errors/critical.jsp', 'mymacro.vm' or
+						 'http://www.myserver.com/support'.
 	                </para>
 	            </listitem>
-				<listitem>
-	                <para>
-						<literal>BeforeMakeFormBeanInterceptor</literal>.
-	                </para>
-	            </listitem>
-				<listitem>
-	                <para>
-						<literal>BeforeMakeFormBeanInterceptor</literal>.
-	                </para>
-	            </listitem>
-				<listitem>
-	                <para>
-						<literal>BeforeMakeFormBeanInterceptor</literal>.
-	                </para>
-	            </listitem>
-				<listitem>
-	                <para>
-						<literal>BeforeMakeFormBeanInterceptor</literal>.
-	                </para>
-	            </listitem>
-				
+
 			</itemizedlist>
-				
+			
+		<para>
+			Finally, with FlowException property 'executeOtherInterceptors' you can set on the exception that indicates 
+			whether (some of the) other interceptors should be executed. 
+			FlowExceptions thrown by these interceptors are ignored.
+		</para>
+
 	</sect1>
 
 	

@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationErrorInterceptor.java,v 1.2 2004-04-25 10:03:05 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-25 10:03:05 $
+ * $Id: PopulationErrorInterceptor.java,v 1.3 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -50,11 +50,17 @@ public interface PopulationErrorInterceptor extends Interceptor
 	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext context with form bean that failed to populate
-	 * @throws ServletException
+     * @param cause possibly the exception that caused the population error
+     * @throws ServletException
+     * @throws RedirectingException when an interceptor wants to redirect
+     * @throws DirectReturnFlowException when an interceptor wants to return directly
 	 */
 	public void doOnPopulationError(
 		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
-		throws ServletException;
+		FormBeanContext formBeanContext,
+        Exception cause)
+        throws ServletException, 
+        DispatchNowFlowException, 
+        ReturnNowFlowException;
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: AfterPerformFlowInterceptor.java,v 1.2 2004-04-25 10:02:49 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-25 10:02:49 $
+ * $Id: FlowException.java,v 1.1 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.1 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -28,39 +28,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-package nl.openedge.baritus.interceptors.flow;
-
-import javax.servlet.ServletException;
-
-import nl.openedge.baritus.interceptors.Interceptor;
+package nl.openedge.baritus.interceptors;
 
 /**
- * Registered instances will have their command method executed after the
- * normal action execution took place. That means that makeFormBean was called,
- * the form was populated and - if that population was succesfull - the 
- * command method was called prior to this execution. Hence, this interceptor
- * will allways be executed, regardless population/ validation and regardless
- * whether the perform method actually was executed.
+ * Flow exception; base exception for flow exceptions.
  * 
  * @author Eelco Hillenius
  */
-public interface AfterPerformFlowInterceptor extends Interceptor
-{
+public abstract class FlowException extends Exception {
+    
+    /**
+     * Whether, in case of the action being ACTION_SHOW_VIEW or ACTION_DISPATCH, the registered
+     * other interceptors should be executed before displaying the view.
+     * The default is true.
+     * If true, and the current stage of intercepting is 'beforeMakeFormBean',
+     * the BeforePopulationInterceptors will be executed. If true, for all
+     * other stages except 'afterPerform' the AfterPerformInterceptors will
+     * be executed.
+     */
+    private boolean executeOtherInterceptors = true;
+	
+    /**
+	 * @return boolean
+	 */
+	public boolean isExecuteOtherInterceptors()
+	{
+		return executeOtherInterceptors;
+	}
 
 	/**
-	 * Executed after the normal action execution took place. That means that 
-	 * makeFormBean was called, the form was populated and - if that population 
-	 * was succesfull - the command method was called prior to this execution.
-	 * Hence, this interceptor will allways be executed, regardless 
-	 * population/ validation and regardless whether the perform method 
-	 * actually was executed.
-	 *  
-	 * @param ctx flow interceptor context
-	 * @return FlowInterceptorResult interception result that can have effect on flow
-	 * @throws ServletException
+	 * @param b
 	 */
-	public FlowInterceptorResult doAfterPerform(FlowInterceptorContext ctx)
-		throws ServletException;
+	public void setExecuteOtherInterceptors(boolean b)
+	{
+		executeOtherInterceptors = b;
+	}
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationErrorFlowInterceptor.java,v 1.2 2004-04-25 10:02:49 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-25 10:02:49 $
+ * $Id: DispatchNowFlowException.java,v 1.1 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.1 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -28,29 +28,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-package nl.openedge.baritus.interceptors.flow;
-
-import javax.servlet.ServletException;
-
-import nl.openedge.baritus.interceptors.Interceptor;
+package nl.openedge.baritus.interceptors;
 
 /**
- * Registered instances will have their command method executed if 
- * the model failed to populate, or did not pass validation.
+ * Flow exception; is thrown when an interceptor wants to dispatch to another
+ * URL immediately.
  * 
  * @author Eelco Hillenius
  */
-public interface PopulationErrorFlowInterceptor extends Interceptor
-{
+public final class DispatchNowFlowException extends FlowException {
 
-	/**
-	 * Executed if the model failed to populate, or did not pass validation.
-	 *  
-	 * @param ctx flow interceptor context
-	 * @return FlowInterceptorResult interception result that can have effect on flow
-	 * @throws ServletException
-	 */
-	public FlowInterceptorResult doOnPopulationException(FlowInterceptorContext ctx)
-		throws ServletException;
+    // url to dispatch to
+    private String dispatchPath;
+
+    /**
+     * Construct with dispatch path.
+     * @param dispatchPath
+     */    
+    public DispatchNowFlowException(String dispatchPath)
+    {
+        this.dispatchPath = dispatchPath;
+    }
+    
+    /**
+     * Get the path to dispatch to
+     * @return
+     */
+    public String getDispatchPath()
+    {
+        return dispatchPath;
+    }
+
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: AfterPopulationFlowInterceptor.java,v 1.2 2004-04-25 10:02:49 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-25 10:02:49 $
+ * $Id: ReturnNowFlowException.java,v 1.1 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.1 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -28,31 +28,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-package nl.openedge.baritus.interceptors.flow;
-
-import javax.servlet.ServletException;
-
-import nl.openedge.baritus.interceptors.Interceptor;
+package nl.openedge.baritus.interceptors;
 
 /**
- * Registered instances will have their command method executed before the
- * normal action execution took place, but after the form bean was populated.
+ * Flow exception; is thrown when an interceptor
+ * wants an override of the default view, and this view should be directed to immediately.
  * 
  * @author Eelco Hillenius
  */
-public interface AfterPopulationFlowInterceptor extends Interceptor
-{
+public final class ReturnNowFlowException extends FlowException {
 
-	/**
-	 * Executed before the normal action execution took place, 
-	 * but after the form bean was populated.
-	 *   
-	 * @param ctx flow interceptor context
-	 * @return FlowInterceptorResult interception result that can have effect on flow
-	 * @throws ServletException
-	 */
-	public FlowInterceptorResult doAfterPopulation(FlowInterceptorContext ctx)
-		throws ServletException;
+    private String view;
+    
+    /**
+     * Construct with view.
+     * @param view view to return
+     */
+    public ReturnNowFlowException(String view)
+    {
+        this.view = view;
+    }
+    
+    /**
+     * Get the view to return.
+     * @return String view to return
+     */
+    public String getView()
+    {
+        return view;
+    }
 
 }

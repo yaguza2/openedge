@@ -1,7 +1,7 @@
 /*
- * $Id: InterceptorDelegate.java,v 1.3 2004-04-25 10:03:19 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-25 10:03:19 $
+ * $Id: InterceptorDelegate.java,v 1.4 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003
@@ -10,29 +10,25 @@
 package nl.openedge.baritus;
 
 import java.io.IOException;
-import java.util.Stack;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.infohazard.maverick.flow.ControllerContext;
-
 import nl.openedge.baritus.interceptors.AfterPerformInterceptor;
 import nl.openedge.baritus.interceptors.AfterPopulationInterceptor;
 import nl.openedge.baritus.interceptors.BeforeMakeFormBeanInterceptor;
 import nl.openedge.baritus.interceptors.BeforePopulationInterceptor;
+import nl.openedge.baritus.interceptors.DispatchNowFlowException;
+import nl.openedge.baritus.interceptors.FlowException;
 import nl.openedge.baritus.interceptors.Interceptor;
 import nl.openedge.baritus.interceptors.PerformExceptionInterceptor;
 import nl.openedge.baritus.interceptors.PopulationErrorInterceptor;
-import nl.openedge.baritus.interceptors.flow.AfterPerformFlowInterceptor;
-import nl.openedge.baritus.interceptors.flow.AfterPopulationFlowInterceptor;
-import nl.openedge.baritus.interceptors.flow.BeforeMakeFormBeanFlowInterceptor;
-import nl.openedge.baritus.interceptors.flow.BeforePopulationFlowInterceptor;
-import nl.openedge.baritus.interceptors.flow.FlowInterceptorContext;
-import nl.openedge.baritus.interceptors.flow.FlowInterceptorResult;
-import nl.openedge.baritus.interceptors.flow.PerformExceptionFlowInterceptor;
-import nl.openedge.baritus.interceptors.flow.PopulationErrorFlowInterceptor;
+import nl.openedge.baritus.interceptors.ReturnNowFlowException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Delegate for handling interceptor actions.
@@ -43,13 +39,16 @@ final class InterceptorDelegate
 {
 	/* handle to interceptor registry */	
 	private InterceptorRegistry interceptorRegistry = null;
+    
+    /* logger */
+    private static Log log = LogFactory.getLog(InterceptorDelegate.class);
 	
-	private static int LEVEL_BEFORE_MAKE_FORMBEAN = 0;
-	private static int LEVEL_BEFORE_POPULATION = 1;
-	private static int LEVEL_POPULATION_ERROR = 2;
-	private static int LEVEL_AFTER_POPULATION = 3;
-	private static int LEVEL_PERFORM_EXCEPTION = 4;
-	private static int LEVEL_AFTER_PERFORM = 5;
+	private final static int LEVEL_BEFORE_MAKE_FORMBEAN = 0;
+	private final static int LEVEL_BEFORE_POPULATION = 1;
+	private final static int LEVEL_POPULATION_ERROR = 2;
+	private final static int LEVEL_AFTER_POPULATION = 3;
+	private final static int LEVEL_PERFORM_EXCEPTION = 4;
+	private final static int LEVEL_AFTER_PERFORM = 5;
 
 	/**
 	 * Construct the delegate with an instance of the interceptor registry.
@@ -69,7 +68,7 @@ final class InterceptorDelegate
 	
 	
 	
-	//-------------------------- normal interceptors -----------------------------/
+	//-------------------------- interceptors -----------------------------/
 	
 	/**
 	 * Called before any handling like form population etc.
@@ -81,20 +80,23 @@ final class InterceptorDelegate
 	public void doInterceptBeforeMakeFormBean(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext) 
-		throws ServletException
+        throws ServletException, FlowException
 	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			BeforeMakeFormBeanInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((BeforeMakeFormBeanInterceptor)commands[i])
-					.doBeforeMakeFormBean(cctx, formBeanContext);
-			}
-		}
+        internalDoInterceptBeforeMakeFormBean(cctx, formBeanContext, true);
 	}
+    
+    private void internalDoInterceptBeforeMakeFormBean(
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        boolean handleFlowExceptions) 
+        throws ServletException, FlowException
+    {
+        Interceptor[] commands = interceptorRegistry.getInterceptors(
+            BeforeMakeFormBeanInterceptor.class);
+
+        internalDoExecute(commands, 0, cctx, formBeanContext, 
+            handleFlowExceptions, LEVEL_BEFORE_MAKE_FORMBEAN, null);
+    }
 	
 	/**
 	 * Called before any handling like form population etc. but after makeFormBean.
@@ -106,45 +108,54 @@ final class InterceptorDelegate
 	public void doInterceptBeforePopulation(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext) 
-		throws ServletException
+        throws ServletException, FlowException
 	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			BeforePopulationInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((BeforePopulationInterceptor)commands[i])
-					.doBeforePopulation(cctx, formBeanContext);
-			}
-		}
+        internalDoInterceptBeforePopulation(cctx, formBeanContext, true);
 	}
+    
+    public void internalDoInterceptBeforePopulation(
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        boolean handleFlowExceptions) 
+        throws ServletException, FlowException
+    {
+        Interceptor[] commands = interceptorRegistry.getInterceptors(
+            BeforePopulationInterceptor.class);
+
+        internalDoExecute(commands, 0, cctx, formBeanContext, 
+            handleFlowExceptions, LEVEL_BEFORE_POPULATION, null);
+    }
 	
 	/**
 	 * Called if population or validation failed.
 	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext context with form bean that failed to populate
+     * @param cause possibly the cause of the population error
 	 * @throws ServletException
 	 */
 	public void doInterceptPopulationError(
 		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
-		throws ServletException
+		FormBeanContext formBeanContext,
+        Exception cause)
+        throws ServletException, FlowException
 	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			PopulationErrorInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((PopulationErrorInterceptor)commands[i])
-					.doOnPopulationError(cctx, formBeanContext);
-			}
-		}
+        internalDoInterceptPopulationError(cctx, formBeanContext, cause, true);
 	}
+    
+    public void internalDoInterceptPopulationError(
+        ControllerContext cctx, 
+        FormBeanContext formBeanContext,
+        Exception cause,
+        boolean handleFlowExceptions)
+        throws ServletException, FlowException
+    {
+        Interceptor[] commands = interceptorRegistry.getInterceptors(
+            PopulationErrorInterceptor.class);
+            
+        internalDoExecute(commands, 0, cctx, formBeanContext, 
+            handleFlowExceptions, LEVEL_POPULATION_ERROR, cause);
+    }
 	
 	/**
 	 * Called after population but before executing the command method.
@@ -156,45 +167,54 @@ final class InterceptorDelegate
 	public void doInterceptAfterPopulation(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext) 
-		throws ServletException
+        throws ServletException, FlowException
 	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			AfterPopulationInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((AfterPopulationInterceptor)commands[i])
-					.doAfterPopulation(cctx, formBeanContext);
-			}
-		}
+        internalDoInterceptAfterPopulation(cctx, formBeanContext, true);
 	}
+    
+    public void internalDoInterceptAfterPopulation(
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        boolean handleFlowExceptions) 
+        throws ServletException, FlowException
+    {
+        Interceptor[] commands = interceptorRegistry.getInterceptors(
+            AfterPopulationInterceptor.class);
+            
+        internalDoExecute(commands, 0, cctx, formBeanContext, 
+            handleFlowExceptions, LEVEL_AFTER_POPULATION, null);
+    }
 	
 	/**
 	 * Called when an unhandled exception occured during the execution of the command method.
 	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext context with populated (if succesful) formBean
+     * @param cause the exception that occured during perform
 	 * @throws ServletException
 	 */
 	public void doInterceptPerformException(
 		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-		throws ServletException
+		FormBeanContext formBeanContext,
+        Exception cause) 
+        throws ServletException, FlowException
 	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			PerformExceptionInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((PerformExceptionInterceptor)commands[i])
-					.doOnPerformException(cctx, formBeanContext);
-			}
-		}	
+        internalDoInterceptPerformException(cctx, formBeanContext, cause, true);
 	}
+    
+    public void internalDoInterceptPerformException(
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        Exception cause,
+        boolean handleFlowExceptions) 
+        throws ServletException, FlowException
+    {
+        Interceptor[] commands = interceptorRegistry.getInterceptors(
+            PerformExceptionInterceptor.class);
+            
+        internalDoExecute(commands, 0, cctx, formBeanContext, 
+            handleFlowExceptions, LEVEL_PERFORM_EXCEPTION, cause);  
+    }
 	
 	/**
 	 * Called after the command method is executed.
@@ -206,285 +226,183 @@ final class InterceptorDelegate
 	public void doInterceptAfterPerform(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext) 
-		throws ServletException
+        throws ServletException, FlowException
 	{
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			AfterPerformInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				((AfterPerformInterceptor)commands[i])
-					.doAfterPerform(cctx, formBeanContext);
-			}
-		}	
+        internalDoInterceptAfterPerform(cctx, formBeanContext, true);
 	}
-	
-	// -------------------------- flow interceptors -----------------------------/
-	
-	/**
-	 * Called before any handling like form population etc.
-	 * 
-	 * @param ctx flow interceptor context
-	 * @return String view to immediately show, or null if execution should
-	 * 	follow the default path
-	 * @throws ServletException
-	 */
-	public String doFlowInterceptBeforeMakeFormBean(
-		FlowInterceptorContext ctx) 
-		throws ServletException
-	{
-		FlowInterceptorResult result = null;
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			BeforeMakeFormBeanFlowInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				result = ((BeforeMakeFormBeanFlowInterceptor)commands[i])
-							.doBeforeMakeFormBean(ctx);
-				if((result != null) && (i < nbrcmds))
-				{
-					addToResultStack(ctx, result);
-				}
-			}
-		}
-		return extractViewFromResult(ctx, result, LEVEL_BEFORE_MAKE_FORMBEAN);
-	}
-	
-	/**
-	 * Called before any handling like form population etc. but after makeFormBean.
-	 * 
-	 * @param ctx flow interceptor context
-	 * @return String view to immediately show, or null if execution should
-	 * 	follow the default path
-	 * @throws ServletException
-	 */
-	public String doFlowInterceptBeforePopulation(
-		FlowInterceptorContext ctx) 
-		throws ServletException
-	{
-		FlowInterceptorResult result = null;
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			BeforePopulationFlowInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				result = ((BeforePopulationFlowInterceptor)commands[i])
-							.doBeforePopulation(ctx);
-				if((result != null) && (i < nbrcmds))
-				{
-					addToResultStack(ctx, result);
-				}
-			}
-		}
-		return extractViewFromResult(ctx, result, LEVEL_BEFORE_POPULATION);
-	}
-	
-	/**
-	 * Called if population or validation failed.
-	 * 
-	 * @param ctx flow interceptor context
-	 * @return String view to immediately show, or null if execution should
-	 * 	follow the default path
-	 * @throws ServletException
-	 */
-	public String doFlowInterceptPopulationError(
-		FlowInterceptorContext ctx) 
-		throws ServletException
-	{
-		FlowInterceptorResult result = null;
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			PopulationErrorFlowInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				result = ((PopulationErrorFlowInterceptor)commands[i])
-					.doOnPopulationException(ctx);
-				if((result != null) && (i < nbrcmds))
-				{
-					addToResultStack(ctx, result);
-				}
-			}
-		}
-		return extractViewFromResult(ctx, result, LEVEL_POPULATION_ERROR);
-	}
-	
-	/**
-	 * Called after population but before executing the command method.
-	 * 
-	 * @param ctx flow interceptor context
-	 * @return String view to immediately show, or null if execution should
-	 * 	follow the default path
-	 * @throws ServletException
-	 */
-	public String doFlowInterceptAfterPopulation(
-		FlowInterceptorContext ctx) 
-		throws ServletException
-	{
-		FlowInterceptorResult result = null;
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			AfterPopulationFlowInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				result = ((AfterPopulationFlowInterceptor)commands[i])
-							.doAfterPopulation(ctx);
-				if((result != null) && (i < nbrcmds))
-				{
-					addToResultStack(ctx, result);
-				}
-			}
-		}
-		return extractViewFromResult(ctx, result, LEVEL_AFTER_POPULATION);
-	}
-	
-	/**
-	 * Called when an unhandled exception occured during the execution of the command method.
-	 * 
-	 * @param ctx flow interceptor context
-	 * @return String view to immediately show, or null if execution should
-	 * 	follow the default path
-	 * @throws ServletException
-	 */
-	public String doFlowInterceptPerformException(
-		FlowInterceptorContext ctx) 
-		throws ServletException
-	{
-		FlowInterceptorResult result = null;
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			PerformExceptionFlowInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				result = ((PerformExceptionFlowInterceptor)commands[i])
-					.doOnPerformException(ctx);
-				if((result != null) && (i < nbrcmds))
-				{
-					addToResultStack(ctx, result);
-				}
-			}
-		}
-		return extractViewFromResult(ctx, result, LEVEL_PERFORM_EXCEPTION);
-	}
-	
-	/**
-	 * Called after the command method is executed.
-	 * 
-	 * @param ctx flow interceptor context
-	 * @return String view to immediately show, or null if execution should
-	 * 	follow the default path
-	 * @throws ServletException
-	 */
-	public String doFlowInterceptAfterPerform(
-		FlowInterceptorContext ctx) 
-		throws ServletException
-	{
-		FlowInterceptorResult result = null;
-		Interceptor[] commands = interceptorRegistry.getInterceptors(
-			AfterPerformFlowInterceptor.class);
-		if(commands != null)
-		{
-			int nbrcmds = commands.length;
-			for(int i = 0; i < nbrcmds; i++)
-			{
-				result = ((AfterPerformFlowInterceptor)commands[i])
-					.doAfterPerform(ctx);
-				if((result != null) && (i < nbrcmds))
-				{
-					addToResultStack(ctx, result);
-				}
-			}
-		}
-		return extractViewFromResult(ctx, result, LEVEL_AFTER_PERFORM);
-	}
+    
+    public void internalDoInterceptAfterPerform(
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        boolean handleFlowExceptions) 
+        throws ServletException, FlowException
+    {
+        Interceptor[] commands = interceptorRegistry.getInterceptors(
+            AfterPerformInterceptor.class);
+            
+        internalDoExecute(commands, 0, cctx, formBeanContext, 
+            handleFlowExceptions, LEVEL_AFTER_PERFORM, null);  
+    }
 
-	
-	/*
-	 * Get the view to immediately show, or null if execution should
-	 * 	follow the default path. If the action in the result object
-	 * 	is ACTION_DISPATCH, this method will execute the dispatch immediately
-	 * @param ctx
-	 * @param result
-	 * @param level
-	 * @return String 
-	 * @throws ServletException
-	 */
-	private String extractViewFromResult(
-		FlowInterceptorContext ctx, 
-		FlowInterceptorResult result,
-		int level)
-		throws ServletException
+    private void internalDoExecute(
+        Interceptor[] commands,
+        int fromPos,
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        boolean handleFlowExceptions,
+        int level,
+        Exception exception)
+        throws ServletException, FlowException
+    {
+        if(commands == null) return;
+        
+        int nbrcmds = commands.length;
+        if(fromPos >= nbrcmds) return;
+
+        for(int i = fromPos; i < nbrcmds; i++)
+        {
+            try
+            {
+                switch(level) // just a bit more efficient than instanceof, and we need level anyway
+                {
+                    case LEVEL_BEFORE_MAKE_FORMBEAN: 
+                    ((BeforeMakeFormBeanInterceptor)commands[i])
+                            .doBeforeMakeFormBean(cctx, formBeanContext);
+                        break;
+                    case LEVEL_BEFORE_POPULATION: 
+                        ((BeforePopulationInterceptor)commands[i])
+                            .doBeforePopulation(cctx, formBeanContext);
+                        break;
+                    case LEVEL_POPULATION_ERROR: 
+                        ((PopulationErrorInterceptor)commands[i])
+                            .doOnPopulationError(cctx, formBeanContext, exception);
+                        break;
+                    case LEVEL_AFTER_POPULATION: 
+                        ((AfterPopulationInterceptor)commands[i])
+                            .doAfterPopulation(cctx, formBeanContext);
+                        break;
+                    case LEVEL_PERFORM_EXCEPTION: 
+                        ((PerformExceptionInterceptor)commands[i])
+                            .doOnPerformException(cctx, formBeanContext, exception);
+                        break;
+                    case LEVEL_AFTER_PERFORM: 
+                        ((AfterPerformInterceptor)commands[i])
+                            .doAfterPerform(cctx, formBeanContext);
+                        break;
+                    
+                    default: throw new ServletException("invalid interception level " + level);
+                }
+                
+            }
+            catch (FlowException e)
+            {
+                log.debug(e.getMessage(), e);
+                if(handleFlowExceptions) 
+                {
+                    handleFlowException(
+                        cctx, formBeanContext, e, level, commands, i); 
+                }
+                throw e;
+            }
+        }       
+    }
+    
+    /*
+     * Do handling of flow exceptions
+     */
+	private void handleFlowException(
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+		FlowException flowException,
+		int level,        
+        Interceptor[] currentCommandStack, 
+        int currentCommandStackPos)
+        throws ServletException
 	{
 		String view = null;
-		if(result != null)
+		if(flowException != null)
 		{
-			if(result.getAction() == FlowInterceptorResult.ACTION_SHOW_VIEW)
+			if(flowException instanceof ReturnNowFlowException)
 			{
-				view = result.getView();
+                ReturnNowFlowException e = (ReturnNowFlowException)flowException;
+				view = e.getView();
 			}
-			else if(result.getAction() == FlowInterceptorResult.ACTION_DISPATCH)
+			else if(flowException instanceof DispatchNowFlowException)
 			{
+                DispatchNowFlowException e = (DispatchNowFlowException)flowException;
 				// dispatch request
 				try
 				{
-					HttpServletRequest request = ctx.getCctx().getRequest(); 
-					String directView = result.getView(); 
-					RequestDispatcher disp = request.getRequestDispatcher(directView);  
-					disp.forward(request, ctx.getCctx().getResponse());	
+					HttpServletRequest request = cctx.getRequest(); 
+					String dispatchPath = e.getDispatchPath(); 
+					RequestDispatcher disp = request.getRequestDispatcher(dispatchPath);
+                    if(disp == null)
+                    {
+                        throw new ServletException("dispatcher not found for path " + dispatchPath);  
+                    }
+					disp.forward(request, cctx.getResponse());	
 				}
-				catch (IOException e)
+				catch (IOException ex)
 				{
-					e.printStackTrace();
+                    log.error(ex.getMessage(), ex);
 					throw new ServletException(e);
-				}			
+				}	
 			}
 		}
-		return view;
+        
+        possiblyHandleOtherInterceptors(
+            cctx, formBeanContext, flowException, level, currentCommandStack, currentCommandStackPos);
 	}
 	
 	/* if result.isExecuteOtherNonFlowInterceptors, handle some other interceptors */
 	private void possiblyHandleOtherInterceptors(
-		FlowInterceptorContext ctx, 
-		FlowInterceptorResult result,
-		int level)
-		throws ServletException
+        ControllerContext cctx,
+        FormBeanContext formBeanContext,
+        FlowException flowException,
+        int level,
+        Interceptor[] currentCommandStack, 
+        int currentCommandStackPos)
+        throws ServletException
 	{
-		if(result.isExecuteOtherNonFlowInterceptors())
+		if(flowException.isExecuteOtherInterceptors())
 		{
+            // handle current level
+			try
+			{
+				internalDoExecute(currentCommandStack, (currentCommandStackPos + 1), 
+				    cctx, formBeanContext, false, level, null);
+			}
+			catch (FlowException e)
+			{
+				// never occurs
+                log.error(e.getMessage(), e); // but... just in case
+			}
+            
 			if(level == LEVEL_BEFORE_MAKE_FORMBEAN)
 			{
-				doInterceptBeforePopulation(ctx.getCctx(), ctx.getFormBeanContext());
+				try
+				{
+					internalDoInterceptBeforePopulation(cctx, formBeanContext, false);
+				}
+				catch (Exception e)
+				{
+                    log.error(e.getMessage(), e);
+                    // ignore rest
+				}
 			}
 			if(level != LEVEL_AFTER_PERFORM)
-			{
-				doInterceptAfterPerform(ctx.getCctx(), ctx.getFormBeanContext());
+			{	
+                try
+                {
+                    internalDoInterceptAfterPerform(cctx, formBeanContext, false);
+                }
+                catch (Exception e)
+                {
+                    log.error(e.getMessage(), e);
+                    // ignore rest
+                }
 			}
 		}
-	}
-	
-	/* add the result to the resultstack in the context, create stack if not yet created */
-	private void addToResultStack(
-		FlowInterceptorContext ctx, 
-		FlowInterceptorResult result)
-	{
-		Stack resultStack = ctx.getResultStack();
-		if(resultStack == null)
-		{
-			resultStack = new Stack();
-			ctx.setResultStack(resultStack);
-		}
-		resultStack.push(result);		
 	}
 
 }

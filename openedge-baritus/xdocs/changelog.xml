@@ -10,6 +10,33 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
+			<subsection name="1.0.8">
+				<ul>
+					<li>Interceptors and FlowInterceptors are now the same. From the docs:<br/>
+					 Interceptors can be used to decorate the normal execution. Also, by throwing FlowExceptions, interceptors can
+					 alter the flow of execution. An interceptor can throw a FlowException if it wants Baritus to stop
+					 normal processing and go to the given declared view (using ReturnNowFlowException) such as 'error', 
+					 or dispatch to an arbitrary - non declared - URL (using DispatchNowFlowException) location.						
+					</li>
+				</ul>
+			</subsection>
+	 
+			<subsection name="1.0.7">
+				<ul>
+					<li>Method signature FormBeanCtrlBase.getExecutionParams changes from:
+					getExecutionParams() to getExecutionParams(ControllerContext cctx)</li>
+					<li>The default implementation of getExecutionParams is to make a deep copy
+					of the execution parameters of this control. This copy is saved as a request attribute -
+					that is ignored by the population process - so that its' possibly changed parameters
+					can be used by other (linked) controllers within the same request without having
+					to change the parameters for all request (pre-1.0.7 just gave the reference to
+					the instance variable of the singleton controller).</li>
+					<li>If you want to override the default execution parameters for all requests (i.e. change
+					the instance variable of the execution params, you can use the method 
+					FormBeanCtrlBase.fixExecutionParams(ExecutionParams params). setExecutionParams is removed.</li>
+				</ul>
+			</subsection>
+			
 			<subsection name="1.0.6">
 				<ul>
 					<li>Small fix concerning PerformException(Flow)Interceptors.</li>

@@ -1,7 +1,7 @@
 /*
- * $Id: ValueUtils.java,v 1.2 2004-04-04 18:25:58 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-04 18:25:58 $
+ * $Id: ValueUtils.java,v 1.3 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,6 +34,9 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import nl.openedge.baritus.ConverterRegistry;
 import nl.openedge.baritus.converters.ConversionException;
 import nl.openedge.baritus.converters.Converter;
@@ -45,6 +48,9 @@ import nl.openedge.baritus.converters.Converter;
  */
 public final class ValueUtils
 {
+    
+    /* logger */
+    private static Log log = LogFactory.getLog(ValueUtils.class);
 
 	/**
 	 * check if the value is null or empty
@@ -146,7 +152,7 @@ public final class ValueUtils
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 				throw new ConversionException(e);
 			}
 		}

@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.9 2004-04-21 11:42:10 eelco12 Exp $
- * $Revision: 1.9 $
- * $Date: 2004-04-21 11:42:10 $
+ * $Id: ExecutionParams.java,v 1.10 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.10 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,6 +30,8 @@
  */
 package nl.openedge.baritus;
 
+import java.io.Serializable;
+
 /**
  * Each instance of FormBeanBase keeps an instance of ExecutionParams.
  * ExecutionParams are used to influence the execution of population,
@@ -48,7 +50,7 @@ package nl.openedge.baritus;
  * 
  * @author Eelco Hillenius
  */
-public final class ExecutionParams
+public final class ExecutionParams implements Serializable, Cloneable
 {
 
 	/** if true, the no cache headers will be set */
@@ -447,5 +449,22 @@ public final class ExecutionParams
 	{
 		trimStringInputValues = b;
 	}
+    
+    /**
+     * Clone this object.
+     * @return Object deep copy
+     * @see java.lang.Object#clone()
+     */
+    public Object clone()
+    {
+        try 
+        {
+            return super.clone();
+        } 
+        catch (CloneNotSupportedException e) 
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

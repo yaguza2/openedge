@@ -1,7 +1,7 @@
 /*
- * $Id: OgnlFieldPopulator.java,v 1.5 2004-04-21 11:42:10 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-21 11:42:10 $
+ * $Id: OgnlFieldPopulator.java,v 1.6 2004-05-23 10:26:58 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-05-23 10:26:58 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -104,7 +104,7 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 		boolean success = true;
 		Object bean = formBeanContext.getBean();
 		
-		ExecutionParams params = formBeanContext.getController().getExecutionParams();
+		ExecutionParams params = formBeanContext.getController().getExecutionParams(cctx);
 		
 		OgnlContext context = new OgnlContext();
 		context.setTypeConverter(converter);

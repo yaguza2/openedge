@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.8 2004-04-21 11:42:10 eelco12 Exp $
- * $Revision: 1.8 $
- * $Date: 2004-04-21 11:42:10 $
+ * $Id: PopulationTest.java,v 1.9 2004-05-23 10:26:58 eelco12 Exp $
+ * $Revision: 1.9 $
+ * $Date: 2004-05-23 10:26:58 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -602,7 +602,7 @@ public class PopulationTest extends TestCase
 	public void testNonStrictParsing()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams().setStrictPopulationMode(false);
+		ctrl.getExecutionParams(null).setStrictPopulationMode(false);
 		Map requestParams = new HashMap();
 		requestParams.put("not-a-valid-name", "foo"); // test simple string
 		request.setupGetParameterMap(requestParams);
@@ -674,7 +674,7 @@ public class PopulationTest extends TestCase
 	public void testTrimString3()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams().setTrimStringInputValues(false);
+		ctrl.getExecutionParams(null).setTrimStringInputValues(false);
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimString", "    notbetrimmed     ");
 		request.setupGetParameterMap(requestParams);
@@ -699,7 +699,7 @@ public class PopulationTest extends TestCase
 	public void testTrimString4()
 	{
 		TestCtrl ctrl = new TestCtrl();
-		ctrl.getExecutionParams().setTrimStringInputValues(false);
+		ctrl.getExecutionParams(null).setTrimStringInputValues(false);
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimStringArray[0]", "    notbetrimmed     ");
 		request.setupGetParameterMap(requestParams);

@@ -1,7 +1,7 @@
 /*
- * $Id: Interceptor.java,v 1.1.1.1 2004-02-24 20:34:07 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:07 $
+ * $Id: Interceptor.java,v 1.2 2004-05-23 10:26:57 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-05-23 10:26:57 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,16 +37,10 @@ package nl.openedge.baritus.interceptors;
  * Interceptors provide a means to encapsulate cross-cutting code that is 
  * executed on pre-defined points in the line of execution.
  * 
- * There are two kinds of interceptors. The first type are interceptors that
- * can be used to 'enrich' de model (formBeanContext), eg. load data, save session
- * attributes, etc. The second type of interceptors are interceptors that can
- * have an effect on the flow. These 'flow interceptors' can overrule the command
- * (perform method) and redirect to another view. The latter type can be used to
- * work with multi page forms coupled to one command or for instance implementing
- * a generic 'system error' type of view.
- * 
- * The first type of interceptors are allways called before the second type. 
- * Besides that, the interception points are exactely the same for both types.
+ * Interceptors can be used to decorate the normal execution. Also, by throwing FlowExceptions, interceptors can
+ * alter the flow of execution. An interceptor can throw a FlowException if it wants Baritus to stop
+ * normal processing and go to the given declared view (using ReturnNowFlowException) such as 'error', 
+ * or dispatch to an arbitrary - non declared - URL (using DispatchNowFlowException) location.
  *  
  * @author Eelco Hillenius
  */
