@@ -76,6 +76,10 @@ public final class FileImageServlet extends HttpServlet
 	private int bufferSize = 8192;
 	private boolean useDirectBuffers = true;
 	private static ThreadLocal bufferHolder = new ThreadLocal();
+	
+	private String notFoundImage = "images/smiley.jpg";
+	private File notFoundImageFile = null;
+	private boolean failOnNotFound = true;
 
 	/**
 	 * Process incoming HTTP GET requests
@@ -105,19 +109,37 @@ public final class FileImageServlet extends HttpServlet
 		String realFile = sctx.getRealPath(src);
 		if (realFile == null)
 		{
-			response.getOutputStream().close();
-			log.error(src + " not found!");
-			return;
+			if(failOnNotFound)
+			{
+				response.getOutputStream().close();
+				log.error(src + " not found!");
+				return;				
+			}
 		}
-
-		File concreteFile = new File(realFile);
-		if (!concreteFile.isFile())
+		File concreteFile = null;
+		if(realFile != null)
 		{
-			response.getOutputStream().close();
-			log.error(src + " not found!");
-			return;
+			concreteFile = new File(realFile);
+			if (!concreteFile.isFile())
+			{
+				if(failOnNotFound)
+				{
+					response.getOutputStream().close();
+					log.error(src + " not found!");
+					return;				
+				}
+				else
+				{
+					concreteFile = null;
+				}
+			}
 		}
 
+		if(concreteFile == null) // fallthrough
+		{
+			concreteFile = new File(notFoundImageFile.getAbsolutePath());
+		}
+		
 		response.setContentType("images/jpeg"); // always as a jpeg
 		ImageModule iModule = null;
 		ThumbnailFileCacheModule cacheModule = null;
@@ -256,11 +278,13 @@ public final class FileImageServlet extends HttpServlet
 	 */
 	public void init(ServletConfig config) throws ServletException
 	{
-
+		super.init(config);
+		
 		try
 		{
 			this.imageModuleAlias = config.getInitParameter("imageModule");
 			this.cacheModuleAlias = config.getInitParameter("cacheModule");
+			this.notFoundImage = config.getInitParameter("notFoundImage");
 			// test
 			ComponentRepository mf = RepositoryFactory.getRepository();
 			// test more
@@ -275,11 +299,44 @@ public final class FileImageServlet extends HttpServlet
 			{
 				try
 				{
-					useDirectBuffers = Boolean.valueOf(useDB).booleanValue();
+					this.useDirectBuffers = Boolean.valueOf(useDB).booleanValue();
 				}
 				catch(Exception e)
 				{
 					e.printStackTrace();
+				}
+			}
+			String fonf = config.getInitParameter("failOnNotFound");
+			if(fonf != null)
+			{
+				try
+				{
+					this.failOnNotFound = Boolean.valueOf(fonf).booleanValue();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+			
+			if(!failOnNotFound) // check
+			{
+				if(notFoundImage == null)
+				{
+					throw new Exception(
+						"if failOnNotFound == false, parameter notFoundImage" +
+						" must be provided");
+				}
+				this.notFoundImageFile = new File(config.getServletContext().getRealPath(notFoundImage));
+				if(!notFoundImageFile.isFile())
+				{
+					throw new Exception(notFoundImage + 
+						" (parameter notFoundImage) is not a file");
+				}
+				else
+				{
+					log.info("using " + notFoundImageFile.getAbsolutePath() + 
+						" as the image for unknown files");
 				}
 			}
 
