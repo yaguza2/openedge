@@ -223,7 +223,7 @@ public class ParameterPanel extends Panel
                     wrapper = new NestedParametersWrapper(size);
                     nestedParams.put(String.valueOf(size), wrapper);
                 }
-                wrapper.add(nested);
+                wrapper.addParameter(nested);
             }
         }
 
@@ -249,7 +249,7 @@ public class ParameterPanel extends Panel
              * voeg een geneste parameter toe.
              * @param param de toe te voegen geneste parameter
              */
-            public void add(NestedParameter param)
+            public void addParameter(NestedParameter param)
             {
                 add(param);
             }
