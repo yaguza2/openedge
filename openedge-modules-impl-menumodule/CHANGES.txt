@@ -1,4 +1,11 @@
 -------------------------------------------------
+1.4.1
+
+-Fixed bug that would leave the children (getChildren()) of an item unfiltered.
+In other words: getChildren() produced a list of all the children  instead of just those that were allowed in the current context.
+-Wrote JUnitTest to verify this behaviour in the future.
+
+-------------------------------------------------
 1.4
 
 - Added childs to MenuItem (duplicating tree behaviour, perhaps we should make the MenuItems extends TreeNode)

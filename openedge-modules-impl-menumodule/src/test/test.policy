@@ -14,6 +14,7 @@ grant  codeBase "${oeaccess.codesource.test}"
   permission javax.security.auth.AuthPermission "/zoeken.m";
   permission javax.security.auth.AuthPermission "/zoeken.patient.m";
   permission javax.security.auth.AuthPermission "/zoeken.passant.m";
+  permission javax.security.auth.AuthPermission "/zoeken.dokter.m";
 };
 
 grant  codeBase "${oeaccess.codesource.test}"

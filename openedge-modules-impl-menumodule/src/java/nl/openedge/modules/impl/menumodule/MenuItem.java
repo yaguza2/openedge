@@ -413,7 +413,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * Adds a parameter to the url.
 	 * Like we said only Strings are allowed.
-	 * At some time we might allow String[] as value but right now we dont so dont even try.
+	 * At some time we might allow String[] as value but right now we dont, so dont even try.
 	 * 
 	 * @param name
 	 * @param value
@@ -443,7 +443,45 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 		else
 			this.attributes.putAll(attributes);
 	}
-
+	/**
+	 * Filters out any child menuitems that have no right to be in the list based n the current context.
+	 * Basicly a little hack to keep this list in sync with the results you get if you access the children of this item via MenuModule.getMenuItems().
+	 * Since Session and RequestScopeMenuFilters are not stored inside the menuitems themselfs you can put them in the filterContext under the keys obtainable from MenuFilter.
+	 * 
+	 * @param filterContext environment variables for the filters
+	 */
+	public void applyFiltersOnChildren(Map filterContext)
+	{
+		List list=getChildren();
+		if(children==null)
+			return;
+		Iterator it=children.iterator();
+		Iterator filters=null;
+		MenuItem child=null;
+		boolean accept=true;
+		ArrayList filtered=new ArrayList();
+		while(it.hasNext())
+		{
+			accept=true;
+			child=(MenuItem)it.next();
+			list=child.getFilters();
+			if(list==null)
+			{
+				list=new ArrayList();
+				list.addAll((List)filterContext.get(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS));
+				list.addAll((List)filterContext.get(MenuFilter.CONTEXT_KEY_SESSION_FILTERS));
+			}
+			filters=list.iterator();
+			while(filters.hasNext() && accept)
+				accept=((MenuFilter)filters.next()).accept(child,filterContext);
+			if(accept)
+			{
+				child.applyFiltersOnChildren(filterContext);
+				filtered.add(child);	
+			}
+		}
+		setChildren(filtered);	
+	}
 	/**
 	 * @return
 	 */

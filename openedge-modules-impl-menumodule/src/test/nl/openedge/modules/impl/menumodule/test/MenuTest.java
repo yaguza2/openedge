@@ -32,6 +32,7 @@ package nl.openedge.modules.impl.menumodule.test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -460,7 +461,32 @@ public class MenuTest extends TestCase
 			fail(e.getMessage());
 		}		
 	}
-	
+	public void testChildListFiltering()
+	{
+		Subject subject = new Subject();
+		Set principals = new HashSet();
+		principals.add(new UserPrincipal("admin"));
+		subject.getPrincipals().addAll(principals);
+		try
+		{
+			List[] items = menuModule.getMenuItems(subject, "/zoeken.m");
+			Iterator it=items[0].iterator();
+			MenuItem actief=null;
+			while(it.hasNext())
+			{
+				actief=(MenuItem)it.next();
+				if(actief.isActive())
+					break;
+			}
+			// the menuitems in items[1] should be exactly the same as those in actief.children
+			assertEquals("Mismatch in children.",items[1],actief.getChildren()); 
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
 	//--------------------------- SETUP METHODS --------------------------------
 	
 	/**

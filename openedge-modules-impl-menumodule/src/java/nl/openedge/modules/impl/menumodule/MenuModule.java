@@ -723,7 +723,15 @@ public final class MenuModule
 	{
 		
 		long tsBegin = System.currentTimeMillis();
-		
+		Map filterContext = (Map)contextHolder.get();
+		if(filterContext == null) // fallthrough (handig voor buiten webapp framework)
+		{
+			filterContext = new HashMap();
+			contextHolder.set(filterContext);
+		}
+		filterContext.put(MenuFilter.CONTEXT_KEY_SUBJECT, subject);
+		filterContext.put(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS,requestScopedFilters);
+		filterContext.put(MenuFilter.CONTEXT_KEY_SESSION_FILTERS,sessionScopedFilters);
 		if(currentLink == null)
 		{
 			currentLink = "/";
@@ -757,7 +765,6 @@ public final class MenuModule
 
 			int depth = selection.getPathCount();
 			items = new List[depth];
-			
 			for(int i = depth - 1; i >= 0; i--)
 			{
 				DefaultMutableTreeNode currentNode = 
@@ -786,6 +793,7 @@ public final class MenuModule
 						childItem.setParameters(tempItem.getParameters());
 						childItem.setAttributes(tempItem.getAttributes());
 						childItem.setChildren(tempItem.getChildren());
+						
 						if(i < (depth - 1))
 						{
 							DefaultMutableTreeNode temp =
@@ -795,7 +803,7 @@ public final class MenuModule
 								childItem.setActive(true);
 							}
 						}
-						
+						childItem.applyFiltersOnChildren(filterContext);
 						items[i].add(childItem);
 					}	
 				}

@@ -52,6 +52,7 @@
 		<menu-item tag="Zoeken Patient" link="/zoeken.patient.m"></menu-item>
 
 		<menu-item tag="Zoek Passant" link="/zoeken.passant.m"></menu-item>
+		<menu-item tag="Zoek Dokter" link="/zoeken.dokter.m"></menu-item>
 
 	</menu-item>
 

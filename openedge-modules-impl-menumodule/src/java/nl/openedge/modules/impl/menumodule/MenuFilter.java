@@ -40,6 +40,8 @@ public interface MenuFilter extends AttributeEnabledObject
 {
 	/** special key to store a JAAS subject with in the context */
 	public final static String CONTEXT_KEY_SUBJECT = "subject";
+	public final static String CONTEXT_KEY_REQUEST_FILTERS = "request_filters";
+	public final static String CONTEXT_KEY_SESSION_FILTERS = "session_filters";
 	
 	/**
 	 * should the provided menu item, based on the given context, be a part of the result tree
