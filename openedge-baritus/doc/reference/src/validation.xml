@@ -38,6 +38,52 @@
 		<para>
 			Let us start with an example that displays some usages of the validation mechanism
 			of Baritus.
+			
+		<programlisting><![CDATA[
+public class FooForm
+{
+	private Integer myInteger;
+	
+	public Integer getMyInteger() { return myInteger; }
+	public void setMyInteger(Integer i) { myInteger = i; }
+}
+]]></programlisting>
+			
+		<programlisting><![CDATA[
+public class BarValidator extends AbstractFieldValidator
+{
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext, String fieldName, Object value)
+	{
+		Integer val = (Integer)value; // note that type conversion is allready done by the population process
+		return(val != null && val.intValue() > 10); // the value can still be null though
+	}
+	
+	public String getErrorMessage(ControllerContext cctx, FormBeanContext formBeanContext, String fieldName,
+		Object value, Locale locale)
+	{
+		// this method will be called in case isValid returned false
+		return "input " + value + " is not valid; please provide a number larger than 10";
+	}
+}
+]]></programlisting>
+			
+		<programlisting><![CDATA[
+public class MyCtrl
+{
+	...
+	
+	public void init(Element controllerNode) throws ConfigException
+	{
+		addValidator("myInteger", new BarValidator());
+		...
+	}
+	
+	...
+}
+]]></programlisting>
+			
+			TODO
+			
 		</para>
 		
 	</sect1>
