@@ -387,6 +387,16 @@ public void init(Element controllerNode) throws ConfigException
 	            </listitem>
 	            <listitem>
 	                <para>
+	                    <literal>populateAndValidate</literal> is used as an indicator whether 
+	                    population and validation should be done at all. This property is especially useful
+	                    when chaining controllers (that is, controller A has controller B as its
+	                    view, hence both A and B are executed in the same request). It is a property
+	                    of FormBeanContext instead of the ExecutionParams to provide easier access
+	                    to non-controllers.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
 	                   <literal>doFormValidationIfFieldValidationFailed</literal> (default: true).
 					   Indicates whether the form validators should be executed when one of the 
 					   field validators failed.
@@ -513,16 +523,6 @@ public void init(Element controllerNode) throws ConfigException
 						of being able to compactely use these attributes in the view. E.g, say we have
 						attribute with name 'myAttrib' stored as a FormBeanContxt attribute, in Velocity
 						we could display this atribute like: '$model.myAttrib'.
-	                </para>
-	            </listitem>
-	            <listitem>
-	                <para>
-	                    Property 'populateAndValidate' is used as an indicator whether population
-	                    and validation should be done at all. This property is especially useful
-	                    when chaining controllers (that is, controller A has controller B as its
-	                    view, hence both A and B are executed in the same request). It is a property
-	                    of FormBeanContext instead of the ExecutionParams to provide easier access
-	                    to non-controllers.
 	                </para>
 	            </listitem>
 	        </itemizedlist>

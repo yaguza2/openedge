@@ -133,7 +133,94 @@
 		</para>
 
 	</sect1>
-
 	
+    <sect1 id="interceptors-s3">
+        <title>And example</title>
+        
+        <para>
+            Here is an example of how to use interceptors.
+            In part of our imaginary application, we want to be sure that an object
+            was saved in the session, and after we checked it is, we want to
+            set that object as one of our form bean properties. If our object is not found
+            however, we want to cancel the normal Baritus behaviour and do a redirect
+            (or actually dispatch) to another location right away. Because we set
+            that object in the form bean just before population takes place 
+            (but after the makeFormBean method was called), it can be populated by 
+            the request paremeters etc. as well.
+        </para>
+        
+        <para>
+            First, there is our Interceptor. 
+        </para>
+        <programlisting><![CDATA[
+public class LoadFooFromSessionInterceptor implements BeforePopulationInterceptor {
+
+    /**
+     * Before population takes place, we get our Foo object from the session, check
+     * it's actually there (is not null) and set it in our form, so that it can be
+     * populated as well.
+     */
+    public void doBeforePopulation(
+        ControllerContext cctx, FormBeanContext formBeanContext)
+        throws ServletException, DispatchNowFlowException, ReturnNowFlowException 
+    {
+        HttpServletRequest request = cctx.getRequest();
+        HttpSession session = request.getSession();
+        Foo ourFoo = (Foo) session.getAttribute(Constants.SESSION_KEY_FOO_OBJECT);
+
+        if (ourFoo == null) 
+        { // ourFoo does not exist in the session... redirect to 'home.m'
+            throw new DispatchNowFlowException("home.m");
+        } 
+        else 
+        { //  we're ok, set in form and exit method normally
+            FooBarForm form = (FooBarForm) formBeanContext.getBean();
+            form.setFoo(ourFoo);
+        }
+    }
+}
+]]></programlisting>
+
+        <para>
+            Then, we should register the interceptor in the controllers we want to use it.  
+        </para>
+
+        <programlisting><![CDATA[
+    public void init(Element controllerNode) throws ConfigException 
+    {
+        addInterceptor(new LoadFooFromSessionInterceptor());
+    }
+]]></programlisting>
+
+        <para>
+            Baritus will now call this interceptor each time this control is
+            used right after calling makeFormBean and just before population and
+            validation takes place.
+        </para>
+	</sect1>
+	
+    <sect1 id="interceptors-s4">
+        <title>Stacking interceptors</title>
+        
+        <para>
+            Just like you can do with validators, you can stack interceptors as well.
+        </para>
+        
+        <programlisting><![CDATA[
+    public void init(Element controllerNode) throws ConfigException 
+    {
+        addInterceptor(new FooInterceptor());
+        addInterceptor(new BarInterceptor());
+        addInterceptor(new MooInterceptor());
+    }
+]]></programlisting>
+        
+        <para>
+            In the above example, all interceptors can be of the same type(s), and
+            will be called in order of registration. Thus, FooInterceptor is called
+            first, BarInterceptor after that and MooInterceptor is called last.
+        </para>
+        
+    </sect1>
 </chapter>
 

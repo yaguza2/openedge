@@ -234,13 +234,12 @@ addValidator("myField", validator);
         
         <para>
             There are two ways of escaping the default mechanism of not performing the controller
-            command method.
-        </para>
-        
-        <para>
-            The first is to skip population and validation all together. In order to achieve this,
-            you can set property 'populateAndValidate' of the FormBeanContext to false.
-            Nothing 
+            command method. The first way is to skip population and validation all together. In order to achieve this,
+            you can set property 'populateAndValidate' of the ExecutionParams to false.
+            The second way is to set property 'doPerformIfPopulationFailed' to true (false by default).
+            In this case, population and validation is performed as usually, but now
+            the perform method is allways executed, regardless of the population/ validation outcome.
+            This option should be used with care.
         </para>
 
     </sect1>
