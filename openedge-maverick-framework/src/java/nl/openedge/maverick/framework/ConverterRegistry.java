@@ -4,24 +4,66 @@
  * $Date$
  *
  * ====================================================================
- * Copyright (c) 2003
+ * Copyright (c) 2003, Open Edge B.V.
  * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer. Redistributions 
+ * in binary form must reproduce the above copyright notice, this list of 
+ * conditions and the following disclaimer in the documentation and/or other 
+ * materials provided with the distribution. Neither the name of OpenEdge B.V. 
+ * nor the names of its contributors may be used to endorse or promote products 
+ * derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.maverick.framework;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import nl.openedge.maverick.framework.converters.BaseLocaleConverter;
+import nl.openedge.maverick.framework.converters.DateLocaleConverter;
 import nl.openedge.maverick.framework.converters.Formatter;
 import nl.openedge.maverick.framework.converters.LocaleFormatter;
 import nl.openedge.maverick.framework.converters.NoopConverter;
+import nl.openedge.maverick.framework.converters.BooleanConverter;
+import nl.openedge.maverick.framework.converters.ByteConverter;
+import nl.openedge.maverick.framework.converters.ByteLocaleConverter;
+import nl.openedge.maverick.framework.converters.CharacterConverter;
+import nl.openedge.maverick.framework.converters.DoubleConverter;
+import nl.openedge.maverick.framework.converters.DoubleLocaleConverter;
+import nl.openedge.maverick.framework.converters.FloatConverter;
+import nl.openedge.maverick.framework.converters.FloatLocaleConverter;
+import nl.openedge.maverick.framework.converters.IntegerConverter;
+import nl.openedge.maverick.framework.converters.LongConverter;
+import nl.openedge.maverick.framework.converters.LongLocaleConverter;
+import nl.openedge.maverick.framework.converters.ShortConverter;
+import nl.openedge.maverick.framework.converters.ShortLocaleConverter;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.locale.LocaleConverter;
 import org.apache.commons.collections.FastHashMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This serves as the alternative for ConvertUtils. We use this instead of ConvertUtils
@@ -58,6 +100,8 @@ public final class ConverterRegistry
 	 * converter for final fallthrough
 	 */
 	private static NoopConverter noopConverter = new NoopConverter();
+	
+	private static Log log = LogFactory.getLog(ConverterRegistry.class);
 
 	/*
 	 * hidden constructor
@@ -77,8 +121,52 @@ public final class ConverterRegistry
 		if (_instance == null)
 		{
 			_instance = new ConverterRegistry();
+			_instance.registerDefaults();
 		}
 		return _instance;
+	}
+	
+	/*
+	 * register the default converters
+	 */
+	private void registerDefaults()
+	{
+		register(new BooleanConverter(), Boolean.TYPE);
+		register(new BooleanConverter(), Boolean.class);
+		
+		register(new ByteConverter(), Byte.TYPE);
+		register(new ByteConverter(), Byte.class);
+		register(new ByteLocaleConverter(), Byte.TYPE);
+		register(new ByteLocaleConverter(), Byte.class);
+		
+		register(new CharacterConverter(), Character.TYPE);
+		register(new CharacterConverter(), Character.class);
+		
+		register(new DoubleConverter(), Double.TYPE);
+		register(new DoubleConverter(), Double.class);
+		register(new DoubleLocaleConverter(), Double.TYPE);
+		register(new DoubleLocaleConverter(), Double.class);
+
+		register(new FloatConverter(), Float.TYPE);
+		register(new FloatConverter(), Float.class);
+		register(new FloatLocaleConverter(), Float.TYPE);
+		register(new FloatLocaleConverter(), Float.class);		
+		
+		register(new IntegerConverter(), Integer.TYPE);
+		register(new IntegerConverter(), Integer.class);
+			
+		register(new LongConverter(), Long.TYPE);
+		register(new LongConverter(), Long.class);
+		register(new LongLocaleConverter(), Long.TYPE);
+		register(new LongLocaleConverter(), Long.class);
+		
+		register(new ShortConverter(), Short.TYPE);
+		register(new ShortConverter(), Short.class);
+		register(new ShortLocaleConverter(), Short.TYPE);
+		register(new ShortLocaleConverter(), Short.class);
+		register(new DateLocaleConverter(), Date.class);
+		register(new DateLocaleConverter(), java.sql.Date.class);
+		register(new DateLocaleConverter(), Timestamp.class);
 	}
 
 	/**
@@ -174,7 +262,81 @@ public final class ConverterRegistry
 	 */
 	public void deregister(Class clazz)
 	{
-		converters.remove(clazz);
+		if(LocaleConverter.class.isAssignableFrom(clazz))
+		{
+			converters.remove(clazz);
+		}
+		else
+		{
+			localizedConverters.remove(clazz);	
+		}
+	}
+	
+	/**
+	 * Remove all instances registered {@link Converter} by class of converter
+	 *
+	 * @param clazz Class of converter to remove. Removes all subclasses as well.
+	 */
+	public void deregisterByConverterClass(Class clazz)
+	{
+		List keys = new ArrayList();	
+		for(Iterator i = converters.keySet().iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			Converter converter = (Converter)converters.get(key);
+			if(converter.getClass().isAssignableFrom(clazz))
+			{
+				keys.add(key);
+			}
+		}
+		for(Iterator i = keys.iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			converters.remove(key);
+			log.info("removed registration for " + key);
+		}
+		
+		keys.clear();
+		for(Iterator i = localizedConverters.keySet().iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			LocaleConverter converter = (LocaleConverter)localizedConverters.get(key);
+			if(converter.getClass().isAssignableFrom(clazz))
+			{
+				keys.add(key);
+			}
+		}
+		for(Iterator i = keys.iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			localizedConverters.remove(key);
+			log.info("removed registration for " + key);
+		}
+	}
+	
+	/**
+	 * Remove the instances of registered {@link LocaleConverter}
+	 *
+	 * @param converter instance of converter to remove
+	 */
+	public void deregister(LocaleConverter converter)
+	{
+		List keys = new ArrayList();
+		for(Iterator i = localizedConverters.keySet().iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			LocaleConverter _converter = (LocaleConverter)localizedConverters.get(key);
+			if(converter == _converter)
+			{
+				keys.add(key);
+			}
+		}
+		for(Iterator i = keys.iterator(); i.hasNext(); )
+		{
+			Object key = i.next();
+			localizedConverters.remove(key);
+			log.info("removed registration for " + key);
+		}
 	}
 	
 	/**
@@ -197,6 +359,15 @@ public final class ConverterRegistry
 	{
 		key = getLocKey(key, locale);
 		localizedConverters.remove(key);	
+	}
+	
+	/**
+	 * clear all registrations
+	 */
+	public void clear()
+	{
+		converters.clear();
+		localizedConverters.clear();
 	}
 	
 	/**

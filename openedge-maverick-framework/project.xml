@@ -3,19 +3,24 @@
 	<pomVersion>3</pomVersion>
 	<id>openedge-maverick-framework</id>
 	<name>openedge-maverick-framework</name>
-	<currentVersion>1.2.1</currentVersion>
-	  <organization>
-	    <name>Open Edge</name>
-	    <url>http://www.openedge.nl/</url>
-	    <logo>http://www.openedge.nl/images/logo.jpg</logo>
-	  </organization>
-	  <inceptionYear>2003</inceptionYear>
-	  <package>nl.openedge.maverick.framework</package>
-	  <logo>http://www.openedge.nl/images/logo.jpg</logo>
-	  <shortDescription>Framework for building webapps with Maverick</shortDescription>
-	  <url>http://maven.apache.org/</url>
+	<currentVersion>1.3</currentVersion>
+	<organization>
+		<name>Open Edge</name>
+		<url>http://www.openedge.nl/</url>
+		<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	</organization>
+	<inceptionYear>2003</inceptionYear>
+	<package>nl.openedge.maverick.framework</package>
+	<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	<shortDescription>Framework for building webapps with Maverick</shortDescription>
+	<url>http://maven.apache.org/</url>
 
 	<versions>
+		<version>
+			<id>1.3</id>
+			<name>1.3</name>
+			<tag>B1_3</tag>
+		</version>
 		<version>
 			<id>1.2.1</id>
 			<name>1.2.1</name>
@@ -33,7 +38,7 @@
 		</version>
 	</versions>
 	<branches />
-	<mailingLists></mailingLists>
+	<mailingLists />
 
 	<developers>
 		<developer>
@@ -47,6 +52,28 @@
 			<timezone>+1</timezone>
 		</developer>
 	</developers>
+
+	<developer>
+		<name>Sander Hofstee</name>
+		<id>sander</id>
+		<email>sander.hofstee@topicus.nl</email>
+		<organization>Topicus</organization>
+		<roles>
+			<role>Java Developer</role>
+		</roles>
+		<timezone>+1</timezone>
+	</developer>
+
+	<developer>
+		<name>Maurice Marrink</name>
+		<id>maurice</id>
+		<email>marrink@topicus.nl</email>
+		<organization>Topicus</organization>
+		<roles>
+			<role>Java Developer</role>
+		</roles>
+		<timezone>+1</timezone>
+	</developer>
 
 	<dependencies>
 
@@ -77,15 +104,6 @@
 		</dependency>
 
 		<dependency>
-			<id>commons-digester</id>
-			<version>1.3</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
-		</dependency>
-
-		<dependency>
 			<id>commons-logging</id>
 			<version>1.1-dev</version>
 			<properties>
@@ -113,51 +131,6 @@
 		</dependency>
 
 		<dependency>
-			<id>dom4j</id>
-			<version>1.4-dev-8</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://www.dom4j.org/</url>
-		</dependency>
-
-		<dependency>
-			<id>hibernate</id>
-			<version>2.0.2</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://hibernate.bluemars.net/</url>
-		</dependency>
-
-		<dependency>
-			<groupId>odmg</groupId>
-			<artifactId>odmg</artifactId>
-			<version>3.0</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-		</dependency>
-
-		<dependency>
-			<id>bcel</id>
-			<version>5.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://jakarta.apache.org/bcel/</url>
-		</dependency>
-
-		<dependency>
-			<id>cglib</id>
-			<version>1.0</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://cglib.sourceforge.net/</url>
-		</dependency>
-
-		<dependency>
 			<id>maverick</id>
 			<version>2.2.0</version>
 			<properties>
@@ -176,69 +149,7 @@
 		</dependency>
 
 		<dependency>
-			<id>velocity-tools</id>
-			<version>0.9</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://jakarta.apache.org/velocity/toolsubproject.html</url>
-		</dependency>
-		
-		<dependency>
-			<groupId>jaf</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.0.2</version>
-			<properties>
-				<war.bundle.jar>false</war.bundle.jar>
-			</properties>
-		</dependency>
-
-		<dependency>
-			<id>javamail</id>
-			<version>1.3</version>
-			<properties>
-				<war.bundle.jar>false</war.bundle.jar>
-			</properties>
-		</dependency>
-		
-		<dependency>
-			<id>quartz</id>
-			<version>1.2.3</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://www.part.net/quartz.html</url>
-		</dependency>
-		
-		<dependency>
-			<id>openedge-modules</id>
-			<version>1.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://www.openedge.nl</url>
-		</dependency>
-
-		<dependency>
 			<id>openedge-access</id>
-			<version>1.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://www.openedge.nl</url>
-		</dependency>
-
-		<dependency>
-			<id>oe-mailjob</id>
-			<version>1.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://www.openedge.nl</url>
-		</dependency>
-
-		<dependency>
-			<id>oe-usermanager-hib</id>
 			<version>1.1</version>
 			<properties>
 				<war.bundle.jar>true</war.bundle.jar>
@@ -255,48 +166,49 @@
 			<url>http://www.openedge.nl</url>
 		</dependency>
 
-
 	</dependencies>
 
-  <build>
-    <nagEmailAddress>eelco.hillenius@openedge.nl</nagEmailAddress>
-    
-    <sourceDirectory>src/java</sourceDirectory>
-    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
-    <unitTest>
-      <includes>
-        <include>**/*Test.java</include>
-      </includes>
-      <resources>
-        <resource>
-          <directory>${basedir}/src/test</directory>
-          <includes>
-          	<include>**/*.properties</include>
-          	<include>**/*.xml</include>
-          	<include>**/*.xsd</include>
-          	<include>**/*.dtd</include>
-          	<include>**/*.vm</include>
-          	<include>**/*.config</include>
-          	<include>**/*.policy</include>
-          </includes>
-        </resource>
-      </resources>
-    </unitTest>
+	<build>
+		<nagEmailAddress>eelco.hillenius@openedge.nl</nagEmailAddress>
 
-    <resources>
-      <resource>
-        <directory>${basedir}/src/java</directory>
-        <includes>
-          <include>**/*.properties</include>
-          <include>**/*.xml</include>
-          <include>**/*.xsd</include>
-          <include>**/*.dtd</include>
-          <include>**/*.vm</include>
-          <include>**/*.config</include>
-        </includes>
-      </resource>
-    </resources>
+		<sourceDirectory>src/java</sourceDirectory>
+		<!--
+		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+		<unitTest>
+			<includes>
+				<include>**/*Test.java</include>
+			</includes>
+			<resources>
+				<resource>
+					<directory>${basedir}/src/test</directory>
+					<includes>
+						<include>**/*.properties</include>
+						<include>**/*.xml</include>
+						<include>**/*.xsd</include>
+						<include>**/*.dtd</include>
+						<include>**/*.vm</include>
+						<include>**/*.config</include>
+						<include>**/*.policy</include>
+					</includes>
+				</resource>
+			</resources>
+		</unitTest>
+		-->
+		
+		<resources>
+			<resource>
+				<directory>${basedir}/src/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.xsd</include>
+					<include>**/*.dtd</include>
+					<include>**/*.vm</include>
+					<include>**/*.config</include>
+				</includes>
+			</resource>
+		</resources>
 
-  </build>
+	</build>
 
 </project>

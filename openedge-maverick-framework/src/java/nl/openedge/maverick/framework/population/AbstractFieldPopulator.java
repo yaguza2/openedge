@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
 
-import nl.openedge.maverick.framework.AbstractCtrl;
+import nl.openedge.maverick.framework.FormBeanCtrl;
 
 /**
  * @author Eelco Hillenius
@@ -47,12 +47,12 @@ public abstract class AbstractFieldPopulator
 {
 	
 	/** reference to the controller */
-	private AbstractCtrl ctrl = null;
+	private FormBeanCtrl ctrl = null;
 
 	/**
 	 * default constructor
 	 */
-	public AbstractFieldPopulator(AbstractCtrl ctrl)
+	public AbstractFieldPopulator(FormBeanCtrl ctrl)
 	{
 		setCtrl(ctrl);
 	}
@@ -61,7 +61,7 @@ public abstract class AbstractFieldPopulator
 	 * get reference to the controller
 	 * @return reference to the controller
 	 */
-	public AbstractCtrl getCtrl()
+	public FormBeanCtrl getCtrl()
 	{
 		return ctrl;
 	}
@@ -70,7 +70,7 @@ public abstract class AbstractFieldPopulator
 	 * set reference to the controller
 	 * @param ctrl reference to the controller
 	 */
-	public void setCtrl(AbstractCtrl ctrl)
+	public void setCtrl(FormBeanCtrl ctrl)
 	{
 		this.ctrl = ctrl;
 	}

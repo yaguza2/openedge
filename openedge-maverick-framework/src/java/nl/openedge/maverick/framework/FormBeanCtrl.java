@@ -58,9 +58,11 @@ import javax.servlet.http.HttpSession;
 
 import nl.openedge.access.AccessFilter;
 import nl.openedge.access.UserPrincipal;
+import nl.openedge.maverick.framework.interceptors.AfterPerformInterceptor;
+import nl.openedge.maverick.framework.interceptors.BeforePerformInterceptor;
+import nl.openedge.maverick.framework.interceptors.Interceptor;
 import nl.openedge.maverick.framework.population.*;
 import nl.openedge.maverick.framework.population.FieldPopulator;
-import nl.openedge.maverick.framework.velocity.tools.UrlTool;
 import nl.openedge.maverick.framework.validation.*;
 
 import org.jdom.Element;
@@ -77,7 +79,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 import org.infohazard.maverick.flow.ControllerSingleton;
 
 /**
- * AbstractCtrl is a base class for singleton controllers which use
+ * FormBeanCtrl is a base class for singleton controllers which use
  * external FormBeans rather than populating themselves. 
  * 
  * It is the more refined version of FormBeanUser from the maverick project.
@@ -97,7 +99,7 @@ import org.infohazard.maverick.flow.ControllerSingleton;
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractCtrl implements ControllerSingleton
+public abstract class FormBeanCtrl implements ControllerSingleton
 {
 	
 	/** Common name for the typical "success" view */
@@ -115,7 +117,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	public static final String SESSION_KEY_CURRENT_LOCALE = "_currentLocale";
 	
 	/** log for this class */
-	private static Log log = LogFactory.getLog(AbstractCtrl.class);
+	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
 	
 	/** special performance log */
 	private static Log performanceLog = 
@@ -192,38 +194,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/**
 	 * Optional objects that can be used to switch whether validation with
 	 * custom fieldValidators should be performed in this currentRequest
-	 * @author Eelco Hillenius
 	 */
 	private List globalValidatorActivationRules = null;
+	
+	/**
+	 * option list of interceptors. An interceptor can add behaviour to an action command.
+	 */
+	private List interceptors = null;
 
-	
-	/**
-	 * is called before any handling like form population etc.
-	 * @param cctx maverick context
-	 * @param formBean unpopulated formBean
-	 * @throws ServletException
-	 */
-	public void doBefore(
-		ControllerContext cctx,
-		AbstractForm formBean) 
-		throws ServletException
-	{
-		// noop
-	}
-	
-	/**
-	 * is called after all handling like form population etc. is done
-	 * @param cctx maverick context
-	 * @param formBean populated (if succesful) formBean
-	 * @throws ServletException
-	 */
-	public void doAfter(
-		ControllerContext cctx,
-		AbstractForm formBean) 
-		throws ServletException
-	{
-		// noop		
-	}
 	
 	/**
 	 * Executes this controller.  Override one of the other perform()
@@ -241,7 +219,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			setNoCache(cctx);
 		}
 
-		AbstractForm formBean = null;
+		FormBean formBean = null;
 		try 
 		{	
 			// let controller create form
@@ -259,7 +237,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			long tsBeginBefore = System.currentTimeMillis();
 			
 			// intercept before
-			doBefore(cctx, formBean);
+			interceptBeforePerform(cctx, formBean);
 			
 			if(performanceLog.isDebugEnabled())
 			{
@@ -286,7 +264,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					long tsBeginAfter = System.currentTimeMillis();
 
 					// intercept after
-					doAfter(cctx, formBean);
+					interceptAfterPerform(cctx, formBean);
 
 					if(performanceLog.isDebugEnabled())
 					{
@@ -306,79 +284,26 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			// populate form
 			boolean populated = populateForm(cctx, formBean, locale);
 			// go on?
-			if(!populated) // an error occured
+			if(populated) 
+			{
+				// execute command
+				long tsBeginPerform = System.currentTimeMillis();
+				viewName = this.perform(formBean, cctx);
+				
+				if(performanceLog.isDebugEnabled())
+				{
+					long tsEndPerform = System.currentTimeMillis();
+					performanceLog.debug("execution of " + this + ".perform: " +
+						(tsEndPerform - tsBeginPerform) + " milis");
+				}	
+
+			}
+			else // an error occured
 			{
 				// prepare for error command and execute it
 				internalPerformError(cctx, formBean);
 				
 				viewName = getErrorView(cctx, formBean);
-			}
-			// else the form was populated succesfully or !failOnPopulateError
-			else
-			{
-
-				if( formBean != null)
-				{
-					if( validateForm(cctx, formBean)) 
-					{
-						// passed validation, so execute 'normal' command
-						
-						if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
-						{
-							long tsBeginPerform = System.currentTimeMillis();
-							
-							this.perform(formBean, cctx);
-							
-							if(performanceLog.isDebugEnabled())
-							{
-								long tsEndPerform = System.currentTimeMillis();
-								performanceLog.debug("execution of " + this + ".perform: " +
-									(tsEndPerform - tsBeginPerform) + " milis");
-							}
-							
-							String lq = formBean.getLastreq();
-							lq = UrlTool.replace(lq, "|amp|", "&"); 
-							cctx.setModel(lq);
-							
-							viewName = REDIRECT;	
-						} 
-						else 
-						{
-							long tsBeginPerform = System.currentTimeMillis();
-							
-							viewName = this.perform(formBean, cctx);
-							
-							if(performanceLog.isDebugEnabled())
-							{
-								long tsEndPerform = System.currentTimeMillis();
-								performanceLog.debug("execution of " + this + ".perform: " +
-									(tsEndPerform - tsBeginPerform) + " milis");
-							}		
-							
-						}
-					}
-					else 
-					{
-						// did not pass validation, so prepare for error command 
-						// and execute it
-						internalPerformError(cctx, formBean);
-		
-						viewName = getErrorView(cctx, formBean);
-					}
-				}
-				else
-				{
-					long tsBeginPerform = System.currentTimeMillis();
-							
-					viewName = this.perform(formBean, cctx);
-							
-					if(performanceLog.isDebugEnabled())
-					{
-						long tsEndPerform = System.currentTimeMillis();
-						performanceLog.debug("execution of " + this + ".perform: " +
-							(tsEndPerform - tsBeginPerform) + " milis");
-					}	
-				}
 			}
 			
 		} 
@@ -408,7 +333,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		long tsBeginAfter = System.currentTimeMillis();
 
 		// intercept after
-		doAfter(cctx, formBean);
+		interceptAfterPerform(cctx, formBean);
 
 		if(performanceLog.isDebugEnabled())
 		{
@@ -426,9 +351,80 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		
 		return viewName;
 	}
+
+	/*
+	 * is called before any handling like form population etc.
+	 * @param cctx maverick context
+	 * @param formBean unpopulated formBean
+	 * @throws ServletException
+	 */
+	private void interceptBeforePerform(
+		ControllerContext cctx,
+		FormBean formBean) 
+		throws ServletException
+	{
+		Interceptor[] commands = getInterceptors(BeforePerformInterceptor.class);
+		if(commands != null)
+		{
+			int nbrcmds = commands.length;
+			for(int i = 0; i < nbrcmds; i++)
+			{
+				((BeforePerformInterceptor)commands[i]).doBeforePerform(cctx, formBean);
+			}
+		}
+	}
 	
 	/*
-	 * users can override this method to do custom populating. Call super first if you want the defaults to be set
+	 * is called after all handling like form population etc. is done
+	 * @param cctx maverick context
+	 * @param formBean populated (if succesful) formBean
+	 * @throws ServletException
+	 */
+	private void interceptAfterPerform(
+		ControllerContext cctx,
+		FormBean formBean) 
+		throws ServletException
+	{
+		Interceptor[] commands = getInterceptors(AfterPerformInterceptor.class);
+		if(commands != null)
+		{
+			int nbrcmds = commands.length;
+			for(int i = 0; i < nbrcmds; i++)
+			{
+				((AfterPerformInterceptor)commands[i]).doAfterPerform(cctx, formBean);
+			}
+		}	
+	}
+	
+	/*
+	 * get all registered interceptors of the provided type 
+	 * @param type the type
+	 * @return array of Interceptors or null if none
+	 */
+	private Interceptor[] getInterceptors(Class type)
+	{
+		Interceptor[] result = null;
+		if(interceptors != null && (!interceptors.isEmpty()))
+		{
+			List temp = new ArrayList();
+			for(Iterator i = interceptors.listIterator(); i.hasNext(); )
+			{
+				Interceptor intc = (Interceptor)i.next();
+				if(type.isAssignableFrom(intc.getClass()))
+				{
+					temp.add(intc);
+				}
+			}
+			if(!temp.isEmpty())
+			{
+				result = (Interceptor[])temp.toArray(new Interceptor[temp.size()]);
+			}
+		}
+		return result;
+	}
+	
+	/*
+	 * populate the form
 	 * @param cctx controller context
 	 * @param formBean bean to populate
 	 * @param locale
@@ -437,7 +433,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	private boolean populateForm(
 		ControllerContext cctx, 
-		AbstractForm formBean, 
+		FormBean formBean, 
 		Locale locale) 
 		throws Exception 
 	{
@@ -492,7 +488,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	private boolean populateWithErrorReport(
 		ControllerContext cctx, 
-		AbstractForm form, 
+		FormBean form, 
 		Map parameters,
 		Locale locale)
 	{
@@ -528,7 +524,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	private boolean regexPopulateWithErrorReport(
 		ControllerContext cctx, 
-		AbstractForm form, 
+		FormBean form, 
 		Map parameters,
 		Locale locale)
 	{
@@ -639,7 +635,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	private boolean fieldPopulateWithErrorReport(
 		ControllerContext cctx, 
-		AbstractForm form, 
+		FormBean form, 
 		Map parameters,
 		Locale locale,
 		boolean succeeded)
@@ -726,7 +722,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @return PropertyDescriptor descriptor if found AND if has writeable method 
 	 */
 	private PropertyDescriptor getPropertyDescriptor(
-		AbstractForm form, 
+		FormBean form, 
 		String name) 
 		throws IllegalAccessException, 
 		InvocationTargetException, 
@@ -757,7 +753,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/* handle custom validation for all fields */
 	private boolean doCustomValidation(
 		ControllerContext cctx, 
-		AbstractForm formBean, 
+		FormBean formBean, 
 		Map properties,
 		Locale locale,
 		boolean succeeded)
@@ -865,7 +861,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	/* handle the custom validation for one field */
 	private boolean doCustomValidationForOneField(
 		ControllerContext cctx,
-		AbstractForm formBean,
+		FormBean formBean,
 		Locale locale,
 		boolean succeeded,
 		String name,
@@ -930,7 +926,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	private void internalPerformError(
 		ControllerContext cctx, 
-		AbstractForm formBean)
+		FormBean formBean)
 	{
 		if(formBean == null) return;
 		// set the current model
@@ -957,7 +953,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	protected void performError(
 		ControllerContext cctx, 
-		AbstractForm form)
+		FormBean form)
 	{
 		// nothing by default
 	}
@@ -984,7 +980,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public void setConversionErrorForField(
 		ControllerContext cctx, 
-		AbstractForm formBean, 
+		FormBean formBean, 
 		String name, 
 		Object triedValue, 
 		Throwable t) 
@@ -1098,7 +1094,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public void setOverrideField(
 		ControllerContext cctx, 
-		AbstractForm formBean, 
+		FormBean formBean, 
 		String name, 
 		Object triedValue, 
 		Throwable t,
@@ -1116,41 +1112,20 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * validate the form
-	 * @param ctx current maverick context
-	 * @param formBean form
-	 * @return true if validation succeeded, false otherwise
-	 * @deprecated use the classes from nl.openedge.maverick.framework.validation,
-	 * 		in particular interface FieldValidator. This method will be removed in version 1.3
-	 */
-	protected boolean validateForm(ControllerContext ctx, AbstractForm formBean) 
-	{
-		// do nothing by default
-		return true;
-	}
-	
-	/**
 	 * This method can be overriden to perform application logic.
-	 *
-	 * Override this method if you want the model to be something
-	 * other than the formBean itself.
 	 *
 	 * @param formBean will be a bean created by makeFormBean(),
 	 * which has been populated with the http currentRequest parameters and
 	 * possibly controller parameters.
 	 */
-	protected String perform(Object formBean, ControllerContext cctx) 
-			throws Exception 
-	{	
-		return SUCCESS;
-	}
+	protected abstract String perform(Object formBean, ControllerContext cctx) throws Exception;
 												
 	/**
 	 * This method will be called to produce a simple bean whose properties
 	 * will be populated with the http currentRequest parameters.  The parameters
 	 * are useful for doing things like persisting beans across requests.
 	 */
-	protected abstract AbstractForm makeFormBean(ControllerContext cctx);
+	protected abstract FormBean makeFormBean(ControllerContext cctx);
 	
 	/**
 	 * @see ControllerSingleton@init
@@ -1366,6 +1341,35 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			regexFieldPopulators.remove(pattern);
 		}
 	}
+	
+	//**************************** interceptors *******************************************/
+	
+	/**
+	 * add an interceptor to the current list of interceptors
+	 * @param interceptor the interceptor to add to the current list of interceptors
+	 */
+	protected void addInterceptor(Interceptor interceptor)
+	{
+		if(interceptors == null)
+		{
+			interceptors = new ArrayList();
+		}
+		interceptors.add(interceptor);
+	}
+
+	
+	/**
+	 * remove an interceptor from the current list of interceptors
+	 * @param interceptor the interceptor to remove from the current list of interceptors
+	 */
+	protected void removeInterceptor(Interceptor interceptor)
+	{
+		if(interceptors != null)
+		{
+			interceptors.remove(interceptor);
+			if(interceptors.isEmpty()) interceptors = null;
+		}
+	}
 
 	//*************************** utility methods for localized messages ********************/
 	
@@ -1475,7 +1479,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param form current form
 	 * @return Locale the prefered locale
 	 */
-	protected Locale getLocaleForRequest(ControllerContext cctx, AbstractForm form)
+	protected Locale getLocaleForRequest(ControllerContext cctx, FormBean form)
 	{	
 		Locale locale = null;
 		Principal p = form.getUser();
@@ -1509,7 +1513,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param form current form
 	 * @return String logical name of view
 	 */
-	protected String getErrorView(ControllerContext cctx, AbstractForm form)
+	protected String getErrorView(ControllerContext cctx, FormBean form)
 	{
 		return ERROR;
 	}
@@ -1520,7 +1524,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param formBean bean to store user in
 	 * @return boolean; true if a user was found, false otherwise
 	 */
-	protected boolean checkUser(ControllerContext cctx, AbstractForm formBean)
+	protected boolean checkUser(ControllerContext cctx, FormBean formBean)
 	{
 
 		HttpSession session = cctx.getRequest().getSession();

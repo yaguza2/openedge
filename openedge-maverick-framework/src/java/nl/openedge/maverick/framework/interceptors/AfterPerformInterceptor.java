@@ -28,26 +28,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.converters;
+package nl.openedge.maverick.framework.interceptors;
 
-import java.util.Locale;
+import javax.servlet.ServletException;
+
+import nl.openedge.maverick.framework.FormBean;
+
+import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * a Formatter that uses a locale.
+ * Registered instances will have their command method executed after the
+ * normal action execution took place. That means that makeFormBean was called,
+ * the form was populated and - if that population was succesfull - the 
+ * command method was called prior to this execution.
+ * 
  * @author Eelco Hillenius
  */
-public interface LocaleFormatter extends Formatter
+public interface AfterPerformInterceptor extends Interceptor
 {
+
 	/**
-	 * set the locale for this instance
-	 * @param locale the locale for this instance
+	 * Executed after the normal action execution took place. That means that 
+	 * makeFormBean was called, the form was populated and - if that population 
+	 * was succesfull - the command method was called prior to this execution.
+	 * 
+	 * NOTE. You cannot be sure that the form was populated successfully. Therefore
+	 * it's dangerous and generally bad practice to rely on form properties that are 
+	 * populated from the http request. A good usage example: a lot of views need
+	 * data to fill their dropdown lists etc. In this method, you could load that data and
+	 * save it in the form (or as a request attribute if that's your style). As this method
+	 * is allways executed, you have a guaranteed data delivery to your view, regardless
+	 * the normal execution outcome of the control. 
+	 * 
+	 * @param cctx maverick context
+	 * @param formBean the (possibly succesfull) populated formBean
+	 * @throws ServletException
 	 */
-	public void setLocale(Locale locale);
-	
-	/**
-	 * get the locale for this instance
-	 * @param locale the locale for this instance
-	 * @return Locale the locale for this instance
-	 */
-	public Locale getLocale();
+	public void doAfterPerform(
+		ControllerContext cctx,
+		FormBean formBean) 
+		throws ServletException;
+
 }

@@ -48,8 +48,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * AbstractForm is a base class to be used with AbstractCtrl.
- * Using this form, you (or better AbstractCtrl) can save errors,
+ * FormBean is a base class to be used with FormBeanCtrl.
+ * Using this form, you (or better FormBeanCtrl) can save errors,
  * save override fields and save the current user.
  * 
  * Override fields are filled with the string values from the HttpServletRequest
@@ -61,14 +61,11 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Eelco Hillenius
  */
-public abstract class AbstractForm
+public abstract class FormBean
 {
 
 	/** last currentRequest */
 	private String lastreq;
-
-	/** should we redirect? */
-	private boolean redirect = false;
 
 	/** validated user principal */
 	private Principal user = null;
@@ -83,7 +80,7 @@ public abstract class AbstractForm
 	private Map overrideFields = null;
 
 	/** log for this class */
-	private static Log log = LogFactory.getLog(AbstractCtrl.class);
+	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
 
 	/** error key for stacktrace if any */
 	public final static String ERROR_KEY_STACKTRACE = "stacktrace";
@@ -94,7 +91,7 @@ public abstract class AbstractForm
 	/**
 	 * construct empty
 	 */
-	public AbstractForm()
+	public FormBean()
 	{
 		// do nothing	
 	}
@@ -116,23 +113,6 @@ public abstract class AbstractForm
 	public void setLastreq(String lastreq)
 	{
 		this.lastreq = lastreq;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isRedirect()
-	{
-		return redirect;
-	}
-
-	/**
-	 * Sets the redirect.
-	 * @param redirect The redirect to set
-	 */
-	public void setRedirect(boolean redirectHint)
-	{
-		this.redirect = redirectHint;
 	}
 
 	/**

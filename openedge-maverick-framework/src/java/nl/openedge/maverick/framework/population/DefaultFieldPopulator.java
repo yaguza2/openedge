@@ -42,8 +42,8 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 import nl.openedge.maverick.framework.*;
-import nl.openedge.maverick.framework.AbstractCtrl;
-import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.FormBeanCtrl;
+import nl.openedge.maverick.framework.FormBean;
 
 /**
  * 
@@ -58,7 +58,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 	 * construct with reference to the control
 	 * @param ctrl
 	 */
-	public DefaultFieldPopulator(AbstractCtrl ctrl)
+	public DefaultFieldPopulator(FormBeanCtrl ctrl)
 	{
 		super(ctrl);
 	}
@@ -76,7 +76,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 	 */
 	public boolean setProperty(
 		ControllerContext cctx,	
-		AbstractForm form,
+		FormBean form,
 		String name,
 		Object requestValue,
 		TargetPropertyMeta targetPropertyMeta,
@@ -90,7 +90,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 		Class targetType = getTargetType(propertyDescriptor);
 		Converter converter = null;
 		
-		AbstractCtrl ctrl = getCtrl();
+		FormBeanCtrl ctrl = getCtrl();
 		
 		if(targetType.isArray()) 
 		{

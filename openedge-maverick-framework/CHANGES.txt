@@ -1,12 +1,40 @@
-1.2.2
 -------------------------------------------------
+1.3
 
-- Added Map to method isNullOrEmpty
+- AbstractCtrl renamed to FormBeanCtrl and AbstractForm renamed to FormBean.
+
+- Removed default implementation of FormBeanCtrl.perform and set method to abstract.
+
+- Removed ApplicationServlet. Applications should provide their own startup code.
+	Defaults are now set in the ConverterRegistry.
+
+- Added Map to method isNullOrEmpty.
+
+- doBefore and doAfter are now replaced with a more generic interceptor mechanism.
+
 - Removed method getPrefixedFieldsFromRequest. Uses (like checkboxes) 
 	of this method should be replaced with a Map.
+	
+- Moved Velocity tools from this project to OpenEdge Util.
+	(was package nl.openedge.maverick.framework.velocity.tools, is now
+	 package nl.openedge.util.velocity.tools).
+	 
+- Removed lastrequest property in FormBean and redirect logica in FormBeanCtrl.
+	It was not used currently, and did not seem to add much.
+	
+- Misc documentation.
 
-1.2.1
+- Removed deprecated method validateForm.
+
+- Added clear() and deregisterByConverterClass to ConverterRegistry
+
+- Added validator RegexValidator.
+
+- Removed some not-needed dependencies.
+
+
 -------------------------------------------------
+1.2.1
 
 - Added a final fallthough for converting; if no Converter is found in the lookup, the registry
 	returns an instance of NoopConverter, which does absolutely nothing besides returning
@@ -14,6 +42,7 @@
 	
 - Fixed a bug in the population process that prevented working with mapped values (and
 	(had the potential of errors when working with indexed values).
+
 
 -------------------------------------------------
 1.2
@@ -100,7 +129,7 @@
 	
 - minor performance enhancements with population.
 
-- fixed bug that prevented working with arrays correctly
+- fixed bug that prevented working with arrays correctly.
 
 - various minor bugfixes.
 

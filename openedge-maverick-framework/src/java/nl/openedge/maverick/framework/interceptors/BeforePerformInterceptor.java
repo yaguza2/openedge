@@ -28,26 +28,36 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.converters;
+package nl.openedge.maverick.framework.interceptors;
 
-import java.util.Locale;
+import javax.servlet.ServletException;
+
+import nl.openedge.maverick.framework.FormBean;
+
+import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * a Formatter that uses a locale.
+ * Registered instances will have their command method executed before the
+ * normal action execution took place. Method makeFormBean is called prior 
+ * to this execution, but the population of the form still has to be done.
+ * 
  * @author Eelco Hillenius
  */
-public interface LocaleFormatter extends Formatter
+public interface BeforePerformInterceptor extends Interceptor
 {
+
 	/**
-	 * set the locale for this instance
-	 * @param locale the locale for this instance
+	 * Executed before the normal action execution took place. Method makeFormBean 
+	 * is called prior to this execution, but the population of the form still has 
+	 * to be done.
+	 * 
+	 * @param cctx maverick context
+	 * @param formBean the not-yet populated formBean
+	 * @throws ServletException
 	 */
-	public void setLocale(Locale locale);
-	
-	/**
-	 * get the locale for this instance
-	 * @param locale the locale for this instance
-	 * @return Locale the locale for this instance
-	 */
-	public Locale getLocale();
+	public void doBeforePerform(
+		ControllerContext cctx,
+		FormBean formBean) 
+		throws ServletException;
+
 }

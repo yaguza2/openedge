@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.population;
 
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.FormBean;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -54,7 +54,7 @@ public interface FieldPopulator
 	 */
 	public abstract boolean setProperty(
 		ControllerContext cctx,
-		AbstractForm form,
+		FormBean form,
 		String name,
 		Object requestValue,
 		TargetPropertyMeta targetPropertyMeta,

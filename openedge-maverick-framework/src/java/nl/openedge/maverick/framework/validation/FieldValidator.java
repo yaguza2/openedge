@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.validation;
 
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.FormBean;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -52,7 +52,7 @@ public interface FieldValidator
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		AbstractForm form,
+		FormBean form,
 		String fieldName,
 		Object value);
 
@@ -67,7 +67,7 @@ public interface FieldValidator
 	 */		
 	public String getErrorMessage(
 		ControllerContext cctx,
-		AbstractForm form,
+		FormBean form,
 		String fieldName,
 		Object value,
 		Locale locale);

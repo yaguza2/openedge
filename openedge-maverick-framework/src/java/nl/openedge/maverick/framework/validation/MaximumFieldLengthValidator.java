@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.validation;
 
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.FormBean;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -110,11 +110,11 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	 * value is equal to or smaller than the minimumLength property
 	 * @return boolean true if the length of value is equal to or less than the
 	 * 	maxLength property, false otherwise
-	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
-		AbstractForm form,
+		FormBean form,
 		String fieldName,
 		Object value)
 	{
@@ -153,11 +153,11 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	 * get the error message. default returns the resource bundle message where
 	 * key = messagePrefix, with {0} substituted with the value, {1} substituted 
 	 * with the field name and {2} substituted with the maximum length
-	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		AbstractForm form,
+		FormBean form,
 		String fieldName,
 		Object value,
 		Locale locale)

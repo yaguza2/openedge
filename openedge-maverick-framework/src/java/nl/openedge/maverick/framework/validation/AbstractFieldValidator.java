@@ -32,7 +32,7 @@ package nl.openedge.maverick.framework.validation;
 
 import java.util.Locale;
 
-import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.FormBean;
 
 import org.infohazard.maverick.flow.ControllerContext;
 
@@ -84,11 +84,11 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	 * get the error message. default returns the resource bundle message where
 	 * key = messagePrefix + fieldName, with {0} substituted with the value
 	 * and {1} substituted with the field name
-	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBean, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
-		AbstractForm form,
+		FormBean form,
 		String fieldName,
 		Object value,
 		Locale locale)

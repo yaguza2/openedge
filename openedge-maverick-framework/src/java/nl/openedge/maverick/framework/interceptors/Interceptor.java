@@ -28,26 +28,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework.converters;
-
-import java.util.Locale;
+package nl.openedge.maverick.framework.interceptors;
 
 /**
- * a Formatter that uses a locale.
+ * Tagging interface for interceptors. Clients should use one of the specific
+ * interfaces to actually intercept on something.
+ * 
+ * Interceptors provide a means to encapsulate cross-cutting code that is executed regarless
+ * of errors with form population and the execution of the command command (FormBeanCtrl.perform).
+ * 
+ * As a best practice, interceptors should have no effect on the form population and the
+ * execution of the command method.
+ * 
  * @author Eelco Hillenius
  */
-public interface LocaleFormatter extends Formatter
+public interface Interceptor
 {
-	/**
-	 * set the locale for this instance
-	 * @param locale the locale for this instance
-	 */
-	public void setLocale(Locale locale);
-	
-	/**
-	 * get the locale for this instance
-	 * @param locale the locale for this instance
-	 * @return Locale the locale for this instance
-	 */
-	public Locale getLocale();
+
 }
