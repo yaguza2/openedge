@@ -1,5 +1,7 @@
 package nl.openedge.access.test;
 
+import java.util.Collection;
+
 import javax.naming.InitialContext;
 
 import junit.framework.TestCase;
@@ -87,6 +89,27 @@ public abstract class AbstractTestBase extends TestCase {
 			e.printStackTrace();
 			throw e;
 		}	
+	}
+	
+	/**
+	 * Asserts that two collections contain the same elements. 
+	 * If they do not it throws an AssertionFailedError with the given message.
+	 */
+	static public void assertSameContents(String message, 
+			Collection c1, Collection c2) {
+		if(c1 == null || c2 == null || (!c1.containsAll(c2))) 
+			fail(message);
+	}
+	
+	/**
+	 * Asserts that two collections do not contain the same elements. 
+	 * If they do not, it throws an AssertionFailedError with the given message.
+	 */
+	static public void assertNotSameContents(String message,
+			Collection c1, Collection c2) {
+		if(c1 == null && c2 == null) return;
+		if(c1 == null || c2 == null || (!c1.containsAll(c2))) 
+			fail(message);
 	}
 
 }

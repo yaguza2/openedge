@@ -157,12 +157,13 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 		
 		if(user == null) return;
 		try {
-			HashMap keyFields = new HashMap(1);
-			keyFields.put("name", user.getName());
-			int result = delete("oeaccess_user", keyFields);
+		
+			Object[] params = new Object[]{ user.getName() };
+			int result = excecuteUpdate(
+				queries.getProperty("deleteUserCompletely"), params);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
-			}
+			}		
 		} catch(Exception e) {
 			throw new AccessException(e);
 		}
@@ -369,12 +370,13 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 
 		if(group == null) return;
 		try {
-			HashMap keyFields = new HashMap(1);
-			keyFields.put("name", group.getName());
-			int result = delete("oeaccess_group", keyFields);
+		
+			Object[] params = new Object[]{ group.getName() };
+			int result = excecuteUpdate(
+				queries.getProperty("deleteGroupCompletely"), params);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
-			}
+			}		
 		} catch(Exception e) {
 			throw new AccessException(e);
 		}
@@ -512,7 +514,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 			HashMap keyFields = new HashMap(2);
 			keyFields.put("user_name", user.getName());
 			keyFields.put("group_name", group.getName());
-			int result = insert("oeaccess_user_group", keyFields);
+			int result = delete("oeaccess_user_group", keyFields);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}

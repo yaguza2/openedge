@@ -1,13 +1,19 @@
+# MySQL-Front Dump 2.2
+#
+# Host: localhost   Database: openedge_website
+#--------------------------------------------------------
+# Server version 4.0.12-max-nt
+
+
 #
 # Table structure for table 'oeaccess_group'
 #
 
-DROP TABLE IF EXISTS oeaccess_group;
-CREATE TABLE oeaccess_group (
-  name varchar(250) NOT NULL default '',
-  PRIMARY KEY  (name),
-  UNIQUE KEY name (name),
-  KEY name_2 (name)
+CREATE TABLE `oeaccess_group` (
+  `name` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`name`),
+  UNIQUE KEY `name` (`name`),
+  KEY `name_2` (`name`)
 ) TYPE=MyISAM;
 
 
@@ -16,13 +22,12 @@ CREATE TABLE oeaccess_group (
 # Table structure for table 'oeaccess_group_permission'
 #
 
-DROP TABLE IF EXISTS oeaccess_group_permission;
-CREATE TABLE oeaccess_group_permission (
-  resource_name varchar(250) NOT NULL default '',
-  group_name varchar(250) NOT NULL default '',
-  permission int(11) NOT NULL default '0',
-  PRIMARY KEY  (resource_name,group_name),
-  KEY resource_name (resource_name,group_name)
+CREATE TABLE `oeaccess_group_permission` (
+  `resource_name` varchar(250) NOT NULL default '',
+  `group_name` varchar(30) NOT NULL default '',
+  `permission` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`resource_name`,`group_name`),
+  KEY `resource_name` (`resource_name`,`group_name`)
 ) TYPE=MyISAM;
 
 
@@ -31,13 +36,12 @@ CREATE TABLE oeaccess_group_permission (
 # Table structure for table 'oeaccess_resource'
 #
 
-DROP TABLE IF EXISTS oeaccess_resource;
-CREATE TABLE oeaccess_resource (
-  name varchar(250) NOT NULL default '',
-  permission int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (name),
-  UNIQUE KEY name (name),
-  KEY name_2 (name)
+CREATE TABLE `oeaccess_resource` (
+  `name` varchar(250) NOT NULL default '',
+  `permission` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`name`),
+  UNIQUE KEY `name` (`name`),
+  KEY `name_2` (`name`)
 ) TYPE=MyISAM;
 
 
@@ -46,13 +50,12 @@ CREATE TABLE oeaccess_resource (
 # Table structure for table 'oeaccess_user'
 #
 
-DROP TABLE IF EXISTS oeaccess_user;
-CREATE TABLE oeaccess_user (
-  id int(11) NOT NULL auto_increment,
-  name varchar(100) NOT NULL default '',
-  PRIMARY KEY  (id),
-  UNIQUE KEY id (id),
-  KEY id_2 (id)
+CREATE TABLE `oeaccess_user` (
+  `name` varchar(30) NOT NULL default '',
+  `password` varchar(250) NOT NULL default '',
+  PRIMARY KEY  (`name`),
+  UNIQUE KEY `name` (`name`),
+  KEY `name2` (`name`)
 ) TYPE=MyISAM;
 
 
@@ -61,16 +64,13 @@ CREATE TABLE oeaccess_user (
 # Table structure for table 'oeaccess_user_attribs'
 #
 
-DROP TABLE IF EXISTS oeaccess_user_attribs;
-CREATE TABLE oeaccess_user_attribs (
-  id int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  attrib_key varchar(250) NOT NULL default '',
-  attrib_value blob,
-  PRIMARY KEY  (id),
-  UNIQUE KEY id (id),
-  KEY id_2 (id,user_id),
-  KEY user_key (user_id,attrib_key)
+CREATE TABLE `oeaccess_user_attribs` (
+  `user_name` varchar(30) NOT NULL default '',
+  `attrib_key` varchar(250) NOT NULL default '',
+  `attrib_value` blob,
+  PRIMARY KEY  (`user_name`,`attrib_key`),
+  KEY `id_2` (`user_name`),
+  KEY `user_key` (`user_name`,`attrib_key`)
 ) TYPE=MyISAM;
 
 
@@ -79,15 +79,11 @@ CREATE TABLE oeaccess_user_attribs (
 # Table structure for table 'oeaccess_user_group'
 #
 
-DROP TABLE IF EXISTS oeaccess_user_group;
-CREATE TABLE oeaccess_user_group (
-  id int(11) NOT NULL auto_increment,
-  group_name varchar(250) NOT NULL default '',
-  user_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (id),
-  UNIQUE KEY id (id),
-  KEY id_2 (id),
-  KEY user_group (user_id,group_name)
+CREATE TABLE `oeaccess_user_group` (
+  `group_name` varchar(30) NOT NULL default '',
+  `user_name` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`group_name`,`user_name`),
+  UNIQUE KEY `user_group` (`user_name`,`group_name`)
 ) TYPE=MyISAM;
 
 
@@ -96,12 +92,11 @@ CREATE TABLE oeaccess_user_group (
 # Table structure for table 'oeaccess_user_permission'
 #
 
-DROP TABLE IF EXISTS oeaccess_user_permission;
-CREATE TABLE oeaccess_user_permission (
-  user_id int(11) NOT NULL default '0',
-  resource_name varchar(250) NOT NULL default '',
-  permission int(11) NOT NULL default '0',
-  PRIMARY KEY  (user_id,resource_name),
-  KEY user_id (user_id,resource_name)
+CREATE TABLE `oeaccess_user_permission` (
+  `user_name` varchar(30) NOT NULL default '0',
+  `resource_name` varchar(250) NOT NULL default '',
+  `permission` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`user_name`,`resource_name`),
+  KEY `user_id` (`user_name`,`resource_name`)
 ) TYPE=MyISAM;
 
