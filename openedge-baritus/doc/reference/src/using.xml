@@ -305,8 +305,93 @@ log4j.logger.nl.openedge.baritus.formatting=DEBUG
 		<title>ExecutionParams</title>
 		
 		<para>
-			Every
+			ExecutionParams can used to tune the flow of execution. Every controller instance has
+			a private reference to its own instance of ExectionParams. You can get this instance
+			by calling method getExecutionParams. If you tune the exection parameters in
+			the controller constructor or in method init, all subsequent calls to the controller
+			will be influenced by the changed parameters. For more fine grained controll, you
+			can decide to override method getExectionParams instead of using the instance variable.
 		</para>
+		
+		<sect2 id="using-s4a">
+			<title>Available parameters</title>
+	        
+			<para>
+				In this section the available execution parameters will be listed. The execution parameters
+				are properties of class ExectionParams, and can be accessed with their getters and setters.
+			</para>
+			
+			<itemizedlist spacing="compact">
+	            <listitem>
+	                <para>
+						<literal>noCache</literal> (default: true). If true, HTTP response headers that indicate that this page
+						should not be cached will be set on each request.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>setNullForEmptyString</literal> (default: true).
+						Should empty strings be interpreted as null references (true) or should
+						the empty String be interpreted as a proper empty string. The default (true)
+						is probably what you want in most cases, as HTML forms with empty fields
+						send empty strings.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>includeControllerParameters</literal> (default: false).
+					   Indicates whether the configuration parameters of the controller 
+					   shoudl be used for the population process.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>includeSessionAttributes</literal> (default: false).
+						Indicates whether the session attributes of the current session
+						should be used for the population process.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>includeRequestAttributes</literal> (default: false).
+					   Indicates whether the attributes of the current request 
+					   should be used for the population process.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>doFormValidationIfFieldValidationFailed</literal> (default: true).
+					   Indicates whether the form validators should be executed when one of the 
+					   field validators failed.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>doPerformIfPopulationFailed</literal> (default: false).
+					   Indicates whether the perform method of the control should be executed, even if population/
+					   validation failed.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>reuseFormBeanContext</literal> (default: true).
+					   Indicates whether the form bean context should be reused for multiple invocations 
+					   within the same request.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>saveReqParamsAsOverrideFieldsOnError</literal> (default: true).
+					   If population or validation fails and this property is true,
+					   all request parameters will be saved as override values. This
+					   will give you at least the full request the client sent, and
+					   guards you for the situation where properties that normally
+					   would be loaded in the command method are not set because
+					   of the population/ validation failure.
+	                </para>
+	            </listitem>
+			</itemizedlist>
+		</sect2>
 		
 	</sect1>
 	

@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.1 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: FormBeanCtrlBase.java,v 1.2 2004-03-09 08:26:14 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-09 08:26:14 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -73,10 +73,10 @@ import org.infohazard.maverick.flow.ControllerContext;
  * FormBeanBase is the class that does the real work within Baritus.
  * Usually, you should extend the singleton implementation FormBeanCtrl.
  * However, if you want to have behaviour like Maverick's ThrowawayFormBeanUser
- * (a new instance of the controller will be created on each request), you
+ * (a new instance of the controller is created on each request), you
  * can extend from this class directly. Note that as method init(Node) is
  * specific for the ControllerSingleton that is implemented in FormBeanCtrl,
- * you do not have this method at your disposal here. You should do 
+ * you do not have this method at your disposal here, hence you should do 
  * initialisation in your constructor instead.
  * 
  * @see org.infohazard.maverick.ctl.FormBeanUser
@@ -1350,10 +1350,11 @@ public abstract class FormBeanCtrlBase implements Controller
 		return ERROR;
 	}
 	
-	/*
-	 * set no cache headers
+	/**
+	 * set http response headers that indicate that this page should not be cached
+	 * @param cctx controller context
 	 */
-	private void doSetNoCache(ControllerContext cctx)
+	protected void doSetNoCache(ControllerContext cctx)
 	{
 		HttpServletResponse response = cctx.getResponse();
 		response.setHeader("Pragma", "No-cache");

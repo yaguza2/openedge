@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.5 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: ExecutionParams.java,v 1.6 2004-03-09 08:26:14 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-03-09 08:26:14 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -61,8 +61,9 @@ public final class ExecutionParams
 	private boolean setNullForEmptyString = true;
 	
 	/**
-	 * Indicates whether we should use the configuration parameters of the controller 
-	 * for the population process as well. This property is false by default.
+	 * Indicates whether the configuration parameters of the controller 
+	 * should be used for the population process. 
+	 * This property is false by default.
 	 * 
 	 * The order in which parameters/ attributes are used for population:
 	 * 1. controller parameters (if includeControllerParameters == true)
@@ -77,8 +78,9 @@ public final class ExecutionParams
 	private boolean includeControllerParameters = false;
 	
 	/**
-	 * Indicates whether we should use the session attributes of the current session
-	 * for the population process as well. This property is false by default.
+	 * Indicates whether the session attributes of the current session
+	 * should be used for the population process.
+	 * This property is false by default.
 	 * 
 	 * The order in which parameters/ attributes are used for population:
 	 * 1. controller parameters (if includeControllerParameters == true)
@@ -93,8 +95,9 @@ public final class ExecutionParams
 	private boolean includeSessionAttributes = false;
 	
 	/**
-	 * Indicates whether we should use the currentRequest attributes for the population process
-	 * as well. This property is false by default.
+	 * Indicates whether the attributes of the current request 
+	 * should be used for the population process.
+	 * This property is false by default.
 	 * 
 	 * The order in which parameters/ attributes are used for population:
 	 * 1. controller parameters (if includeControllerParameters == true)
@@ -115,20 +118,23 @@ public final class ExecutionParams
 	private boolean doFormValidationIfFieldValidationFailed = true;
 	
 	/**
-	 * Indicates whether the perform method of the control should be executed, even if the population/
-	 * validation failed. Use this only in very special cases; extended usage will
-	 * probably result in messy code. Default == false
+	 * Indicates whether the perform method of the control should be executed, 
+	 * even if population/ validation failed. 
+	 * Use this only in very special cases; extended usage will
+	 * probably result in messy code. 
+	 * Default == false
 	 */
 	private boolean doPerformIfPopulationFailed = false;
 	
 	/**
-	 * If true, reuse the context for multiple invocations within the same request.
+	 * Indicates whether the form bean context should be reused for multiple invocations 
+	 * within the same request.
 	 * Default is true.
 	 */
 	private boolean reuseFormBeanContext = true;
 	
 	/**
-	 * If population or validation failes and this property is true,
+	 * If population or validation fails and this property is true,
 	 * all request parameters will be saved as override values. This
 	 * will give you at least the full request the client sent, and
 	 * guards you for the situation where properties that normally
