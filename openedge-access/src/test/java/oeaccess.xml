@@ -14,7 +14,7 @@
 		 delegate
 	-->
 	<datasource>
-		<param name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<param name="driverClassName" value="org.gjt.mm.mysql.Driver"/>
 		<param name="url" value="jdbc:mysql://baas:3306/openedge_website"/>
 		<param name="username" value="root"/>
 		<param name="password" value=""/>
