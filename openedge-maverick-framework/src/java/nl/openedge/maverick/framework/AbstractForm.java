@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.openedge.modules.impl.usermanager.hib.UserPrincipal;
+import nl.openedge.access.UserPrincipal;
 
 /**
  * Baseclass for forms
