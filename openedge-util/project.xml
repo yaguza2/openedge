@@ -8,32 +8,26 @@
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
-    <logo>/images/logo.jpg</logo>
+    <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
   </organization>
-  <inceptionYear>2002</inceptionYear>
+  <inceptionYear>2003</inceptionYear>
   <package>nl.openedge.util</package>
-  <logo>/images/maven.jpg</logo>
-  
-  <description>OpenEdge Utils is a project for utility classes / helpers that are useful enough to share among projects, but are too small to have their own project</description>
-  <shortDescription>Reusable Utilities</shortDescription>
+  <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+  <shortDescription>OpenEdge Util: set of reusable classes and components</shortDescription>
+  <description>OpenEdge Utils is a project for reusable classes and components that are useful enough to share among projects, but are too small to have their own project</description>
   <url>http://maven.apache.org/</url>
 
-<!-- <repository>
+  <!-- <repository>
     <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
-  </repository>-->
+  </repository> -->
   
-  <!-- <versions>
+  <versions>
     <version>
-      <id>b9</id>
-      <name>1.0-beta-9</name>
-      <tag>MAVEN_1_0_B9</tag>
-    </version>
-    <version>
-      <id>b10</id>
-      <name>1.0-beta-10</name>
+      <id>1</id>
+      <name>1</name>
       <tag>HEAD</tag>
     </version>
-  </versions> -->
+  </versions>
   <branches></branches>
   <mailingLists>
   </mailingLists>
@@ -71,13 +65,13 @@
     </developer>
   </developers>
 
-  <licenses>
+  <!-- <licenses>
     <license>
       <name>The Apache Software License, Version 1.1</name>
       <url>http://cvs.apache.org/viewcvs.cgi/*checkout*/maven/LICENSE.txt</url>
       <distribution>repo</distribution>
     </license>
-  </licenses>
+  </licenses> -->
 
   <dependencies>
 
@@ -114,6 +108,7 @@
     <dependency>
       <id>ojb</id>
       <version>1.0pre-cvs</version>
+      <url>http://db.apache.org/ojb/</url>
     </dependency>
 
   </dependencies>

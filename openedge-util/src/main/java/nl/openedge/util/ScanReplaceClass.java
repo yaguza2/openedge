@@ -64,7 +64,7 @@ public final class ScanReplaceClass {
   public static String scanReplaceString(String scanString, String[] scanValue, String replaceString) {
     for (int i=0; i < scanValue.length; i++) {
       scanString = scanReplaceString(scanString, scanValue[i], replaceString);
-    }
+    }//TODO: Test voor Maven
     return scanString;
   }
 

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>werkflow</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Overview">
+    <p>
+    <code>openedge util</code> is a set of handy utility classes and components.
+    </p>
+
+  </section>
+
+</body>
+</document>
+
