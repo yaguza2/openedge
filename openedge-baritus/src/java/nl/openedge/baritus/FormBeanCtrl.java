@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.9 2004-03-01 10:00:37 eelco12 Exp $
- * $Revision: 1.9 $
- * $Date: 2004-03-01 10:00:37 $
+ * $Id: FormBeanCtrl.java,v 1.10 2004-03-01 10:07:33 eelco12 Exp $
+ * $Revision: 1.10 $
+ * $Date: 2004-03-01 10:07:33 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -425,7 +425,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				String attrName = (String)enum.nextElement();
 				if(!REQUEST_ATTRIBUTE_FORMBEANCONTEXT.equals(attrName))
 				{
-					parameters.put(attrName, request.getAttribute(attrName));	
+					// extra check for Model
+					Object param = request.getAttribute(attrName);
+					if(! (param instanceof FormBeanContext) )
+					{
+						parameters.put(attrName, param);	
+					}	
 				}	
 			}
 			
