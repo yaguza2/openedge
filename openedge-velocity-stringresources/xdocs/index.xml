@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Velocity String resources</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Overview">
+    <p>
+    <code>OpenEdge Velocity String resources</code> is a Velocity Resource loader that works with Strings. 
+		You can use this for formatting e-mails etc. Users should manualy add resources to the repository 
+		that is know by the factory of this package. 
+	</p><p>
+		Below is an example configuration for this loader.
+		Note that 'repositoryimpl' is not mandatory;
+		if not provided, the factory will fall back on using the default
+		implementation of this package.
+	</p><p>
+		In your Velocity configuration:
+		<code>
+<![CDATA[
+		stringres.resource.loader.description = Velocity StringResource loader
+		stringres.resource.loader.class = nl.openedge.velocity.stringresources.StringResourceLoader
+		stringres.resource.loader.repositoryimpl = nl.openedge.velocity.stringresources.StringResourceRepositoryImpl
+]]>
+		</code>
+		 
+		Resources can be added to the repository like this:
+		 <code>
+<![CDATA[
+		StringResourceRepositoryFactory vsRepository = null;
+		vsRepository = StringResourceRepositoryFactory.getRepository();
+		
+		String myTemplateName = "/somewhere/intherepo/name";
+		String myTemplateBody = "Hi, ${username}... this is a some template!";
+		vsRepository.putStringResource(myTemplateName, myTemplateBody);
+]]>
+		</code> 
+		After this, the templates can be retrieved as allways.
+    </p>
+
+  </section>
+
+</body>
+</document>
+
