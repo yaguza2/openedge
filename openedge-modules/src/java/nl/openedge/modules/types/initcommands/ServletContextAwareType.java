@@ -32,6 +32,8 @@ package nl.openedge.modules.types.initcommands;
 
 import javax.servlet.ServletContext;
 
+import nl.openedge.modules.config.ConfigException;
+
 /**
  * Component that wants to know about the current
  * servlet context. Note that this can be null
@@ -41,6 +43,12 @@ import javax.servlet.ServletContext;
  */
 public interface ServletContextAwareType 
 {
-
-	public void setServletContext(ServletContext servletContext);
+	/**
+	 * set the servlet context. Note that this can be null
+	 * depending on how the framework was instantiated
+	 * @param servletContext the servlet context
+	 * @throws ConfigException
+	 */
+	public void setServletContext(ServletContext servletContext)
+		throws ConfigException;
 }
