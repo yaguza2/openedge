@@ -31,6 +31,7 @@
 package nl.openedge.maverick.framework;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -47,6 +48,7 @@ import nl.openedge.maverick.framework.converters.IntegerConverter;
 import nl.openedge.maverick.framework.converters.LongConverter;
 import nl.openedge.maverick.framework.converters.ShortConverter;
 import nl.openedge.modules.JDOMConfigurator;
+import nl.openedge.util.DateConverter;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 import org.apache.commons.beanutils.ConvertUtils;
@@ -131,7 +133,8 @@ public class ApplicationServlet extends VelocityViewServlet
 		ConvertUtils.register(new LongConverter(), Long.TYPE);
 		ConvertUtils.register(new LongConverter(), Long.class);
 		ConvertUtils.register(new ShortConverter(), Short.TYPE);
-		ConvertUtils.register(new ShortConverter(), Short.class);	
+		ConvertUtils.register(new ShortConverter(), Short.class);
+		ConvertUtils.register(new DateConverter(), Date.class);	
 	}
 	
 	/**
