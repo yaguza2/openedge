@@ -53,8 +53,13 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	/**
 	 * Error key.
 	 */
-	private final static String DEFAULT_MESSAGE_KEY = "invalid.field.input.after";
+	private final static String DEFAULT_MESSAGE_KEY = "invalid.field.input";
 
+	/**
+	 * Message key.
+	 */
+	private String messageKey = DEFAULT_MESSAGE_KEY;
+	
 	/**
 	 * The date to check against.
 	 */
@@ -64,11 +69,6 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	 * The pattern to use when parsing the date.
 	 */
 	private String datePattern = "dd-MM-yyyy";
-
-	/**
-	 * Message key.
-	 */
-	private String messageKey = DEFAULT_MESSAGE_KEY;
 
 	/**
 	 * Creates a AfterValidator with the error message key and the 

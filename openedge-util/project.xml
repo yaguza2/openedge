@@ -162,8 +162,14 @@
 			<groupId>openedge</groupId>
 			<artifactId>baritus</artifactId>
 			<version>1.0.12</version>
-			<type>jar</type>
 			<url>http://baritus.sourceforge.net</url>
+		</dependency>
+
+		<dependency>
+			<groupId>ognl</groupId>
+			<artifactId>ognl</artifactId>
+			<version>2.6.5</version>
+			<url>http://ognl.org</url>
 		</dependency>
 		
 		<dependency>
@@ -175,9 +181,6 @@
 		<dependency>
 			<id>jdom</id>
 			<version>b8</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
 			<url>http://www.jdom.org/</url>
 		</dependency>
 
@@ -214,7 +217,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 
@@ -235,7 +237,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 
@@ -243,7 +244,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.objectweb-datasource</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		
@@ -251,7 +251,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.carol</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		
@@ -259,7 +258,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.jotm</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		
@@ -267,7 +265,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.ow_util_log_file</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		
@@ -275,7 +272,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.ow_util_log_wrp_log4j</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		
@@ -283,7 +279,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.jotm_jrmp_stubs</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		
@@ -291,7 +286,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.jonas_timer</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 
@@ -299,7 +293,6 @@
 			<groupId>jetty</groupId>
 			<artifactId>jetty.plus.dep.jts1_0</artifactId>
 			<version>4.2.19</version>
-			<type>jar</type>
 			<url>http://www.mortbay.com</url>
 		</dependency>
 		<!-- 

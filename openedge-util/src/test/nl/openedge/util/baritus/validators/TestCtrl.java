@@ -28,59 +28,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.util;
+package nl.openedge.util.baritus.validators;
 
-import java.util.Calendar;
+import nl.openedge.baritus.ExecutionParams;
+import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.util.baritus.AbstractBaritusTestCtrl;
 
-import nl.openedge.util.baritus.validators.AfterValidator;
-import nl.openedge.util.baritus.validators.BeforeValidator;
-import junit.framework.TestCase;
+import org.infohazard.maverick.flow.ConfigException;
+import org.infohazard.maverick.flow.ControllerContext;
+import org.jdom.Element;
 
 /**
- * Testen van before en after validators
+ * Dummy control for testing.
  * 
- * @author kbrand
+ * @author Eelco Hillenius
  */
-public class ValidatorTest extends TestCase
+public class TestCtrl extends AbstractBaritusTestCtrl
 {
-	public ValidatorTest(String name)
-	{
-		super(name);		
-	}
 
-	public void testBeforeValidator() throws Exception
-	{
-		BeforeValidator bv = new BeforeValidator();
-		Calendar cal = Calendar.getInstance();
+    /**
+     * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext,
+     *      org.infohazard.maverick.flow.ControllerContext)
+     */
+    protected String perform(final FormBeanContext deFormBeanContext, final ControllerContext cctx) throws Exception
+    {
+        return view;
+    }
 
-		// gisteren
-		cal.roll( Calendar.DAY_OF_YEAR, -1);
-		assertTrue( bv.isValid( null, null, "datum", cal));
+    /**
+     * @see nl.openedge.baritus.FormBeanBase#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
+     */
+    protected Object makeFormBean(final FormBeanContext deFormBeanContext, final ControllerContext cctx)
+    {
+        this.bean = new TestBean();
+        return bean;
+    }
 
-		// vandaag
-		cal.roll( Calendar.DAY_OF_YEAR, 1);
-		assertTrue( bv.isValid( null, null, "datum", cal));
+    /**
+     * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
+     */
+    public void init(final Element controllerNode) throws ConfigException
+    {
+        ExecutionParams params = getExecutionParams(null);
+        params.setIncludeSessionAttributes(true);
+        params.setIncludeRequestAttributes(true);
 
-		// morgen
-		cal.roll( Calendar.DAY_OF_YEAR, 1);
-		assertFalse( bv.isValid( null, null, "datum", cal));
-	}
+    }
 
-	public void testAfterValidator() throws Exception
-	{
-		AfterValidator av = new AfterValidator();
-		Calendar cal = Calendar.getInstance();
-
-		// gisteren
-		cal.roll( Calendar.DAY_OF_YEAR, -1);
-		assertFalse( av.isValid( null, null, "datum", cal));
-
-		// vandaag
-		cal.roll( Calendar.DAY_OF_YEAR, 1);
-		assertTrue( av.isValid( null, null, "datum", cal));
-
-		// morgen
-		cal.roll( Calendar.DAY_OF_YEAR, 1);
-		assertTrue( av.isValid( null, null, "datum", cal));
-	}
 }

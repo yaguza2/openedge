@@ -48,11 +48,17 @@ import org.infohazard.maverick.flow.ControllerContext;
  */
 public class AfterValidator extends AbstractDateFieldValidator
 {
+	/**
+	 * Error key.
+	 */
+	private final static String DEFAULT_MESSAGE_KEY = "invalid.field.input.after";
+
     /**
      * Construct.
      */
     public AfterValidator()
     {
+        setMessageKey(DEFAULT_MESSAGE_KEY);
     }
     /**
      * Construct.
@@ -61,6 +67,7 @@ public class AfterValidator extends AbstractDateFieldValidator
     public AfterValidator(Calendar dateToCheck)
     {
         super(dateToCheck);
+        setMessageKey(DEFAULT_MESSAGE_KEY);
     }
     /**
      * Construct.
@@ -69,6 +76,7 @@ public class AfterValidator extends AbstractDateFieldValidator
     public AfterValidator(Date dateToCheck)
     {
         super(dateToCheck);
+        setMessageKey(DEFAULT_MESSAGE_KEY);
     }
     /**
      * Construct.
@@ -110,6 +118,8 @@ public class AfterValidator extends AbstractDateFieldValidator
     private static Log log = LogFactory.getLog(AfterValidator.class);
 
 	/**
+	 * Check valid. If false an error message is set with parameters:
+	 * {value, fieldName, checkDate}.
 	 * @return true if value is a Date or Calendar and is before or equal to before.
 	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 * @throws IllegalArgumentException when value == null.
@@ -153,6 +163,12 @@ public class AfterValidator extends AbstractDateFieldValidator
 		else
 		{
 			log.error(value.getClass() + " is not a valid date");
+		}
+
+		if(!after)
+		{
+		   setErrorMessage(formBeanContext, fieldName, getMessageKey(),
+		       new Object[]{value, fieldName, compareBefore});
 		}
 
 		return after;

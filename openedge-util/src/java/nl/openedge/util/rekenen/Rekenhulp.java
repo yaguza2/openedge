@@ -34,7 +34,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
-import nl.openedge.util.JaarMaandDag;
+import nl.openedge.util.YearMonthDay;
 
 /**
  * Bevat allerlei rekenfuncties die {@link java.lang.Math} niet ondersteunt.
@@ -210,7 +210,7 @@ public final class Rekenhulp {
         }
 
         if (maandenVerschil < 0) {
-            maandenVerschil += JaarMaandDag.AANTAL_MAANDEN_IN_EEN_JAAR;
+            maandenVerschil += YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR;
         }
         return maandenVerschil;
     }
@@ -262,8 +262,8 @@ public final class Rekenhulp {
         final double bedragTweedePeriode) {
         double bedrag =
             (maandenEerstePeriode * bedragTweedePeriode
-                + (JaarMaandDag.AANTAL_MAANDEN_IN_EEN_JAAR - maandenEerstePeriode) * bedragEerstePeriode)
-                / JaarMaandDag.AANTAL_MAANDEN_IN_EEN_JAAR;
+                + (YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR - maandenEerstePeriode) * bedragEerstePeriode)
+                / YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR;
         return Rekenhulp.rondAf4(bedrag);
     }
 
