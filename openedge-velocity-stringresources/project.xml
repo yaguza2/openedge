@@ -45,7 +45,7 @@
     
     <dependency>
       <id>commons-collections</id>
-      <version>3.0-dev</version>
+      <version>2.1</version>
       <properties>
       	<war.bundle.jar>true</war.bundle.jar>
       </properties>
