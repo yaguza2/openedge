@@ -7,10 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
@@ -45,21 +41,6 @@ public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
 	public void init(Element configNode) throws ConfigException {
 
 		this.params = XML.getParams(configNode);
-		
-		String datasourceName = (String)params.get(KEY_DATASOURCE_NAME);
-		if(datasourceName == null) throw new ConfigException(
-				KEY_DATASOURCE_NAME + " is mandatory for " + getClass());
-			
-		try {
-			Context ctx = new InitialContext();
-			String environmentContext = (String)params.get("environmentContext");
-			Context envCtx = (Context) ctx.lookup(environmentContext);
-			setDataSource((DataSource)ctx.lookup(datasourceName));
-				
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConfigException(ex);
-		}
 		log.info("initialised");
 	}
 

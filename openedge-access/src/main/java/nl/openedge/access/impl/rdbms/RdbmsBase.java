@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class RdbmsBase {
 
 	/** datasource */
-	protected DataSource dataSource = null;
+	protected static DataSource dataSource = null;
 	
 	/** queries from properties file */
 	protected static Properties queries = null;
@@ -377,7 +377,7 @@ public abstract class RdbmsBase {
 	/**
 	 * @return DataSource
 	 */
-	public DataSource getDataSource() {
+	public static DataSource getDataSource() {
 		return dataSource;
 	}
 
@@ -385,8 +385,8 @@ public abstract class RdbmsBase {
 	 * Sets the dataSource.
 	 * @param dataSource The dataSource to set
 	 */
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public static void setDataSource(DataSource theDataSource) {
+		dataSource = theDataSource;
 	}
 
 }

@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 
+import nl.openedge.access.impl.rdbms.RdbmsBase;
 import nl.openedge.access.util.*;
 
 import org.apache.commons.logging.Log;
@@ -35,7 +39,7 @@ public class AccessFactory {
 	 * Name of the servlet init parameter which defines the path to the
 	 * Maverick configuration file.  Defaults to DEFAULT_CONFIG_FILE.
 	 */
-	protected static final String INITPARAM_CONFIG_FILE = "configFile";
+	protected static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
 	/** concrete access manager */
 	protected AccessManager accessManager;
@@ -73,6 +77,22 @@ public class AccessFactory {
 	private void internalInit() throws ConfigException {
 		
 		Element root = configuration.getRootElement();
+		
+		Element dsNode = root.getChild("datasource");
+		if(dsNode == null) throw new ConfigException(
+			"element datasource is mandatory for config");
+		String dataSourceRef = dsNode.getAttributeValue("reference");
+		if(dataSourceRef == null) throw new ConfigException(
+			"attribute dataSourceRef is mandatory for element datasource");
+					
+		try {
+			Context ctx = new InitialContext();
+			RdbmsBase.setDataSource((DataSource)ctx.lookup(dataSourceRef));
+			log.info("datasource loaded from " + dataSourceRef);
+		} catch(Exception e) {
+			throw new ConfigException(e);
+		}
+		
 		this.accessManager = loadAccessManager(root.getChild("access-manager"));
 		this.userManager = loadUserManager(root.getChild("user-manager"));
 	}

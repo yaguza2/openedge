@@ -1,4 +1,4 @@
-package nl.openedge.access.impl.rdbms;
+package nl.openedge.access;
 
 import javax.security.auth.callback.*;
 

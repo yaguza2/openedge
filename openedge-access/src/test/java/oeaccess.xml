@@ -1,18 +1,14 @@
 <?xml version="1.0"?>
 <access-config>
 	
+	<datasource reference="jdbc/openedge"/>
+	
 	<access-manager class="nl.openedge.access.impl.DefaultAccesManager">
 		<access-provider class="nl.openedge.access.impl.rdbms.RdbmsAccessProvider">
-			<!-- <param name="environmentContext" value="java:comp/env"/> -->
-			<param name="environmentContext" value=""/>
-			<param name="datasource" value="jdbc/openedge"/>
 		</access-provider>
 	</access-manager>
 	
 	<user-manager class="nl.openedge.access.impl.rdbms.RdbmsUserManager">
-		<!-- <param name="environmentContext" value="java:comp/env"/> -->
-		<param name="environmentContext" value=""/>
-		<param name="datasource" value="jdbc/openedge"/>
 	</user-manager>
 	
 </access-config>

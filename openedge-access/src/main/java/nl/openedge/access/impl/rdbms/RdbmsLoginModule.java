@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.*;
 
+import nl.openedge.access.*;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 
@@ -69,7 +70,8 @@ import org.apache.commons.logging.LogFactory;
  * @author  Eelco Hillenius
  */
 
-public class RdbmsLoginModule extends RdbmsUserManager implements LoginModule {
+public class RdbmsLoginModule extends RdbmsUserManager 
+		implements LoginModule {
 
     // initial state
 	private CallbackHandler callbackHandler;
@@ -254,6 +256,7 @@ public class RdbmsLoginModule extends RdbmsUserManager implements LoginModule {
             throw ex;
         } catch (Exception ex) {
 			succeeded = false;
+			ex.printStackTrace();
             throw new LoginException(ex.getMessage());
         }
     }
@@ -278,7 +281,7 @@ public class RdbmsLoginModule extends RdbmsUserManager implements LoginModule {
 			queries.getProperty("selectUserStmt"), userParams);
 		
 		if(result.getRowCount() == 0) {
-			throw new LoginException("UserPrincipal " + username + " not found");
+			throw new LoginException("User " + username + " not found");
 		} else if(result.getRowCount() > 1) {
 			throw new LoginException("Ambiguous user (located more than once): " + username);	
 		}

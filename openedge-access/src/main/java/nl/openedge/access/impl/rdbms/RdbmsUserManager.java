@@ -6,16 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
 import nl.openedge.access.AccessException;
 import nl.openedge.access.ConfigException;
+import nl.openedge.access.LoginDecorator;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.UserManager;
@@ -39,6 +36,9 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	
 	/** name of datasource to use */
 	public final static String KEY_DATASOURCE_NAME = "datasource";
+	
+	/** decorators for login modules */
+	protected LoginDecorator[] loginDecorators = null; 
 
 	/** construct */
 	public RdbmsUserManager() {
@@ -51,21 +51,6 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	public void init(Element configNode) throws ConfigException {
 
 		this.params = XML.getParams(configNode);
-		
-		String datasourceName = (String)params.get(KEY_DATASOURCE_NAME);
-		if(datasourceName == null) throw new ConfigException(
-				KEY_DATASOURCE_NAME + " is mandatory for " + getClass());
-			
-		try {
-			Context ctx = new InitialContext();
-			String environmentContext = (String)params.get("environmentContext");
-			Context envCtx = (Context) ctx.lookup(environmentContext);
-			setDataSource((DataSource)envCtx.lookup(datasourceName));
-				
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw new ConfigException(ex);
-		}
 		log.info("initialised");
 	}
 
@@ -526,6 +511,21 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 		} catch(Exception e) {
 			throw new AccessException(e);
 		}
+	}
+
+	/**
+	 * @return LoginDecorator[]
+	 */
+	public LoginDecorator[] getLogonDecorators() {
+		return loginDecorators;
+	}
+
+	/**
+	 * Sets the logonDecorators.
+	 * @param logonDecorators The logonDecorators to set
+	 */
+	public void setLogonDecorators(LoginDecorator[] logonDecorators) {
+		this.loginDecorators = logonDecorators;
 	}
 
 }
