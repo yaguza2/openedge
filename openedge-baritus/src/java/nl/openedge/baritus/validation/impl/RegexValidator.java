@@ -1,7 +1,7 @@
 /*
- * $Id: RegexValidator.java,v 1.5 2004-04-07 14:05:04 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-07 14:05:04 $
+ * $Id: RegexValidator.java,v 1.6 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -163,7 +163,6 @@ public class RegexValidator extends AbstractFieldValidator
 
 		if(!valid)
 		{
-			String key = getErrorMessageKey();
 			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
 				new Object[]{getFieldName(formBeanContext, fieldName), value});
 		}

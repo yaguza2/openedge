@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.9 2004-04-09 09:47:37 eelco12 Exp $
- * $Revision: 1.9 $
- * $Date: 2004-04-09 09:47:37 $
+ * $Id: FormBeanCtrlBase.java,v 1.10 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.10 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -534,7 +534,6 @@ public abstract class FormBeanCtrlBase implements Controller
 	{
 		
 		boolean succeeded = true;
-		Object bean = formBeanContext.getBean();
 		
 		Map regexFieldPopulators = populatorRegistry.getRegexFieldPopulators();
 		// first, see if there are matches with registered regex populators
@@ -627,8 +626,6 @@ public abstract class FormBeanCtrlBase implements Controller
 		Map parameters,
 		boolean succeeded)
 	{
-
-		Object bean = formBeanContext.getBean();
 		
 		// Loop through the property name/value pairs to be set
 		Iterator names = parameters.keySet().iterator();

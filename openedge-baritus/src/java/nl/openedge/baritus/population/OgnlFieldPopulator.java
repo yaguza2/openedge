@@ -1,7 +1,7 @@
 /*
- * $Id: OgnlFieldPopulator.java,v 1.3 2004-04-08 20:44:20 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-08 20:44:20 $
+ * $Id: OgnlFieldPopulator.java,v 1.4 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -138,7 +138,6 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 					if(params.isStrictPopulationMode())
 					{
 						populationLog.error(e.getMessage(), e);
-						Class targetType = (Class)context.get(CTX_KEY_CURRENT_TARGET_TYPE);
 						value = context.get(CTX_KEY_CURRENT_TRIED_VALUE);
 						formBeanContext.setError(name, e.getMessage());	
 						ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);

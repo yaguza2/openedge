@@ -1,7 +1,7 @@
 /*
- * $Id: NoopConverter.java,v 1.2 2004-04-04 18:27:45 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-04 18:27:45 $
+ * $Id: NoopConverter.java,v 1.3 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,7 +41,7 @@ public final class NoopConverter implements Converter
 
 	/**
 	 * noop; return value as was provided
-	 * @see org.apache.commons.beanutils.Converter#convert(java.lang.Class, java.lang.Object)
+	 * @see Converter#convert(java.lang.Class, java.lang.Object)
 	 */
 	public Object convert(Class type, Object value)
 	{

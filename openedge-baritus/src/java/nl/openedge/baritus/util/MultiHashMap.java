@@ -1,5 +1,5 @@
 /*
- * $Header: /home/brand/tst/b/openedge-baritus/src/java/nl/openedge/baritus/util/MultiHashMap.java,v 1.1 2004-04-04 18:25:43 eelco12 Exp $
+ * $Header: /home/brand/tst/b/openedge-baritus/src/java/nl/openedge/baritus/util/MultiHashMap.java,v 1.2 2004-04-09 18:44:53 eelco12 Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -244,14 +244,14 @@ public class MultiHashMap extends HashMap implements Map
 	 * @param value  the value to remove
 	 * @return the value removed (which was passed in)
 	 */
-	public Object remove(Object key, Object item)
+	public Object remove(Object key, Object value)
 	{
 		Collection valuesForKey = (Collection)super.get(key);
 		if (valuesForKey == null)
 		{
 			return null;
 		}
-		valuesForKey.remove(item);
+		valuesForKey.remove(value);
 
 		// remove the list if it is now empty
 		// (saves space, and allows equals to work)
@@ -259,7 +259,7 @@ public class MultiHashMap extends HashMap implements Map
 		{
 			remove(key);
 		}
-		return item;
+		return value;
 	}
 
 	/**

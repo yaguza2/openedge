@@ -1,7 +1,7 @@
 /*
- * $Id: ValidatorRegistry.java,v 1.5 2004-04-05 09:56:22 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-05 09:56:22 $
+ * $Id: ValidatorRegistry.java,v 1.6 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -97,7 +97,7 @@ public final class ValidatorRegistry
 	/**
 	 * de-register the given validator that was registered with the given fieldName
 	 * @param fieldName name of field
-	 * @param the validator to remove for the given field
+	 * @param validator the validator to remove for the given field
 	 */
 	public void removeValidator(String fieldName, FieldValidator validator)
 	{
@@ -121,8 +121,7 @@ public final class ValidatorRegistry
 	
 	/**
 	 * register the rule for the whole form
-	 * @param fieldName name of field
-	 * @param validator validator instance
+	 * @param rule validator activation rule
 	 */
 	public void addValidationActivationRule(ValidationActivationRule rule)
 	{
@@ -135,7 +134,7 @@ public final class ValidatorRegistry
 	
 	/**
 	 * de-register the given rule for the whole form
-	 * @param fieldName
+	 * @param rule validator activation rule
 	 */
 	public void removeValidationActivationRule(ValidationActivationRule rule)
 	{

@@ -1,7 +1,7 @@
 /*
- * $Id: DateLocaleConverter.java,v 1.1.1.1 2004-02-24 20:34:06 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:06 $
+ * $Id: DateLocaleConverter.java,v 1.2 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,11 +38,11 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * <p>Standard {@link org.apache.commons.beanutils.locale.LocaleConverter} 
+ * <p>Standard {@link LocaleConverter} 
  * implementation that converts an incoming
  * locale-sensitive String into a <code>java.util.Date</code> object,
  * optionally using a default value or throwing a 
- * {@link org.apache.commons.beanutils.ConversionException}
+ * {@link ConversionException}
  * if a conversion error occurs.</p>
  *
  * @author Yauheny Mikulski
@@ -58,8 +58,8 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	// ----------------------------------------------------------- Constructors
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs. The locale is the default locale for
 	 * this instance of the Java Virtual Machine and an unlocalized pattern is used
 	 * for the convertion.
@@ -72,8 +72,8 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	}
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs. An unlocalized pattern is used for the convertion.
 	 *
 	 * @param locale        The locale
@@ -85,8 +85,8 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	}
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs. An unlocalized pattern is used for the convertion.
 	 *
 	 * @param locale        The locale
@@ -149,7 +149,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	 * @param value The input object to be converted
 	 * @param pattern The pattern is used for the convertion
 	 *
-	 * @exception org.apache.commons.beanutils.ConversionException if conversion cannot be performed
+	 * @exception ConversionException if conversion cannot be performed
 	 *  successfully
 	 */
 	protected Object parse(Object value, String pattern) throws ConversionException

@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.8 2004-04-09 09:47:42 eelco12 Exp $
- * $Revision: 1.8 $
- * $Date: 2004-04-09 09:47:42 $
+ * $Id: DefaultValidatorDelegate.java,v 1.9 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.9 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -79,7 +79,7 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 	}
 	
 	/**
-	 * @see nl.openedge.baritus.ValidatorDelegate#doCustomValidation(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, nl.openedge.baritus.ExecutionParams, java.util.Map, java.util.Locale, boolean)
+	 * @see nl.openedge.baritus.ValidatorDelegate#doValidation(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, nl.openedge.baritus.ExecutionParams, java.util.Map, boolean)
 	 */
 	public boolean doValidation(
 		ControllerContext cctx, 
@@ -195,6 +195,8 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 		catch (Exception e)
 		{
 			success = false;
+			String msg = "validator " + fValidator + " threw exception: " + e.getMessage();
+			populationLog.error(msg);
 			populationLog.error(e.getMessage(), e);	
 		}
 		
@@ -342,7 +344,8 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 					String msg = "validator " + validator + " threw exception: " +
 						e.getMessage() + " on property " + name + " with value " +
 						value;
-					throw new Exception(e);
+					populationLog.error(msg);
+					throw e;
 				}
 				
 				if(populationLog.isDebugEnabled())

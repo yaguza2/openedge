@@ -1,7 +1,7 @@
 /*
- * $Id: DoubleLocaleConverter.java,v 1.1.1.1 2004-02-24 20:34:03 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:03 $
+ * $Id: DoubleLocaleConverter.java,v 1.2 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -43,8 +43,8 @@ public class DoubleLocaleConverter extends DecimalLocaleConverter
 	// ----------------------------------------------------------- Constructors
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs. The locale is the default locale for
 	 * this instance of the Java Virtual Machine and an unlocalized pattern is used
 	 * for the convertion.
@@ -56,8 +56,8 @@ public class DoubleLocaleConverter extends DecimalLocaleConverter
 	}
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs. An unlocalized pattern is used for the convertion.
 	 *
 	 * @param locale        The locale
@@ -68,8 +68,8 @@ public class DoubleLocaleConverter extends DecimalLocaleConverter
 	}
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs. An unlocalized pattern is used for the convertion.
 	 *
 	 * @param locale        The locale
@@ -81,8 +81,8 @@ public class DoubleLocaleConverter extends DecimalLocaleConverter
 	}
 
 	/**
-	 * Create a {@link org.apache.commons.beanutils.locale.LocaleConverter} 
-	 * that will throw a {@link org.apache.commons.beanutils.ConversionException}
+	 * Create a {@link LocaleConverter} 
+	 * that will throw a {@link ConversionException}
 	 * if a conversion error occurs.
 	 *
 	 * @param locale        The locale

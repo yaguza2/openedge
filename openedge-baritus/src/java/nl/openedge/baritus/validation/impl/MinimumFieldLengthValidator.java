@@ -1,7 +1,7 @@
 /*
- * $Id: MinimumFieldLengthValidator.java,v 1.5 2004-04-07 14:05:04 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-07 14:05:04 $
+ * $Id: MinimumFieldLengthValidator.java,v 1.6 2004-04-09 18:44:53 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-09 18:44:53 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -64,7 +64,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct with message prefix for error message keys.
-	 * @param messagePrefix message prefix
+	 * @param errorMessageKey message key of error
 	 */
 	public MinimumFieldLengthValidator(String errorMessageKey)
 	{
