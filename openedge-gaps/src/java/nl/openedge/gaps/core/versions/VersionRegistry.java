@@ -62,12 +62,12 @@ public final class VersionRegistry
 
 	/**
 	 * Geeft alle versies die bekend zijn voor de groep.
-	 * @param group de groep waarvoor alle versies dienen te worden opgehaald
+	 * @param entity de entity waarvoor alle versies dienen te worden opgehaald
 	 * @return een array van versies
 	 */
-	public static Version[] getVersions(StructuralGroup group)
+	public static Version[] getVersions(Entity entity)
 	{
-		return getDelegate().getVersions(group);
+		return getDelegate().getVersions(entity);
 	}
 
 	/**
