@@ -286,7 +286,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			formBeanContext.setCurrentLocale(locale);
 			
 			// populate form
-			boolean populated = populateForm(cctx, formBeanContext, locale);
+			boolean populated = populateFormBean(cctx, formBeanContext, locale);
 			// go on?
 			if(populated) 
 			{
@@ -364,7 +364,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * @throws Exception
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	private boolean populateForm(
+	private boolean populateFormBean(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
 		Locale locale) 
@@ -373,8 +373,10 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		long tsBegin = System.currentTimeMillis();
 		boolean success = true;
 		
+		// map to store the request parameters in
 		Map parameters = new HashMap();
-
+		// map to cache converted values in for efficiency
+		Map convertedValuesCache = new HashMap();
 		
 		// The order in which parameters/ attributes are used for population:
 		//	1. controller parameters (if includeControllerParameters == true)
@@ -422,11 +424,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		// populate using the paramters map		
 		success = populateWithErrorReport(cctx, formBeanContext, parameters, locale);
-
-		if(success) // if successful, do custom validation
-		{
-			success = doCustomValidation(cctx, formBeanContext, parameters, locale, success);
-		}
 
 		if(performanceLog.isDebugEnabled())
 		{
@@ -630,7 +627,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			Object value = parameters.get(name);
 			
 			if(!isNullOrEmpty(value))
-			{
+			{	
 				try
 				{	
 					// get the descriptor
@@ -646,7 +643,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 						FieldPopulator fieldPopulator = null;
 						if(fieldPopulators != null)
 						{
-							fieldPopulator = (FieldPopulator)fieldPopulators.get(name);	
+							fieldPopulator = (FieldPopulator)fieldPopulators.get(name);
 						}
 					
 						if(fieldPopulator == null) // if no custom populator was found, we use the default
@@ -753,6 +750,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 						String name = (String)names.next();
 						if (name == null) continue;
 						if(formBeanContext.getOverrideField(name) == null) 
+							// see if there allready was an error registered
 						{
 							Collection propertyValidators = (Collection)fieldValidators.get(name);
 							// these are the fieldValidators for one property
@@ -805,7 +803,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 								succeeded = false;
 								String[] msg = fValidator.getErrorMessage(
 									cctx, formBeanContext, locale);
-								formBeanContext.setError(msg[0], msg[1]);
+									
+								if(msg != null && (msg.length > 0))
+								{
+									formBeanContext.setError(msg[0], msg[1]);	
+								}
 							}	
 						}
 						// else ignore
@@ -816,7 +818,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			if(performanceLog.isDebugEnabled())
 			{
 				long tsEnd = System.currentTimeMillis();
-				performanceLog.debug("execution of " + this + ".doCustomValidation: " +
+				performanceLog.debug("execution of " + 
+					this + ".doCustomValidation: " +
 					(tsEnd - tsBegin) + " milis");
 			}
 		}
@@ -834,27 +837,45 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Collection propertyValidators)
 		throws Exception
 	{
+		//TODO dat kan efficienter?
 		Object value = PropertyUtils.getProperty(formBeanContext.getBean(), name);
+		
+		// for all validators for this field
 		for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
 		{
 			FieldValidator validator = (FieldValidator)j.next();
 			boolean validateField = true;
 								
-			if(validator instanceof ValidationRuleDependend)
+			if(validator instanceof ValidationRuleDependend) // should we execute rule
 			{
 				ValidatorActivationRule rule = 
 					((ValidationRuleDependend)validator)
 						.getValidationActivationRule();
 				if(rule != null)
 				{
-					validateField = rule.allowValidation(cctx, formBeanContext);	
+					validateField = rule.allowValidation(cctx, formBeanContext); //test
+					
+					if(log.isDebugEnabled())
+					{
+						log.debug( "rule " + rule + 
+							((validateField) ? " ALLOWS" : " DISALLOWS") +
+							" validation with " + validator);
+					}
 				}
 			}
 								
 			if(validateField)
 			{
-				boolean success = validator.isValid(
-					cctx, formBeanContext, name, value);
+				// execute validation method
+				boolean success = validator.isValid(cctx, formBeanContext, name, value);
+				
+				if(log.isDebugEnabled())
+				{
+					log.debug( "validation" +
+						((success) ? " PASSED" : " FAILED") +
+						" passed for field " + name);
+				}
+				
 				if(!success)
 				{
 					succeeded = false;
@@ -863,7 +884,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 						String msgName = getLocalizedMessage(getPropertyNameKey(name));
 						String msg = validator.getErrorMessage(
 							cctx, formBeanContext, (msgName != null) ? msgName : name, value, locale);
-						formBeanContext.setError(name, msg);
+						
+						if(msg != null)
+						{
+							formBeanContext.setError(name, msg);	
+						}
 					}
 					catch (Exception e)
 					{
@@ -902,9 +927,30 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		// first, set overrides for the current request parameters
 		formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	
 		
+		if(log.isDebugEnabled()) traceErrors(formBeanContext);
+		
 		// do further (possibly user specific) error handling and/ or
 		// view preparing
 		interceptPopulationError(cctx, formBeanContext);	
+	}
+	
+	/* extra debug info */
+	private final void traceErrors(FormBeanContext formBeanContext)
+	{
+		Map errors = formBeanContext.getErrors();
+		if(errors != null)
+		{
+			log.debug("population of bean " + formBeanContext.getBean() + 
+				" did not succeed; errors:");
+				
+			for(Iterator i = errors.keySet().iterator(); i.hasNext(); )
+			{
+				Object key = i.next();
+				Object value = errors.get(key);
+				log.debug("\t " + key + " == " + ConvertUtils.convert(value));
+			}
+			log.debug("----------------------------------------------------------");	
+		}
 	}
 	
 	/**

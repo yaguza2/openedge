@@ -1,11 +1,21 @@
 -------------------------------------------------
+1.4.2
+
+- if a validator returns null with getErrorMessage, the error will not be
+	set in the formBeanContext (and thus will not set any previous message
+	to null).
+	
+- extra debug info population and validation
+
+-------------------------------------------------
 1.4.1
 
-- fixed doValidation bug(s)
+- fixed doValidation bug(s).
 
-- removed not used property copyRequestToOverride
+- removed not used property copyRequestToOverride.
 
-- added optional property doFormValidationIfFieldValidationFailed (true by default)
+- added optional property doFormValidationIfFieldValidationFailed (true by default).
+
 
 -------------------------------------------------
 1.4

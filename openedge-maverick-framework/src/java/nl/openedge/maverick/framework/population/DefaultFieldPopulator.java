@@ -141,6 +141,14 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 						}
 						else
 						{
+							
+							if(log.isDebugEnabled())
+							{
+								log.debug("using converter " + converter + 
+									" for indexed property " + name +
+									" (type " + componentType + ")");
+							}
+							
 							converted = converter.convert(componentType, values[index]);
 						}
 					
@@ -184,6 +192,14 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 					}
 					else
 					{
+						
+						if(log.isDebugEnabled())
+						{
+							log.debug("using converter " + converter + 
+								" for indexed property " + name +
+								" (type " + targetType + ")");
+						}
+						
 						converted = converter.convert(
 							targetType, stringValue);
 					}
@@ -230,6 +246,12 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator implemen
 				}
 				else
 				{
+					if(log.isDebugEnabled())
+					{
+						log.debug("using converter " + converter + " for property " + name +
+							" (type " + targetType + ")");
+					}
+					
 					converted = converter.convert(
 						targetType, stringValue);
 				}
