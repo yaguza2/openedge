@@ -180,8 +180,6 @@ public class JNDIObjectFactory implements ObjectFactory
 	public static void removeInstance(String uid, 
 		String name, Properties properties)
 	{
-		//TODO: theoretically non-threadsafe...
-
 		if (name != null)
 		{
 			log.info("unbinding object: " + name);

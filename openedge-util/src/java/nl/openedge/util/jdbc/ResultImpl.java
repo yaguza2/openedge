@@ -41,9 +41,6 @@ import javax.servlet.jsp.jstl.sql.Result;
  */
 public final class ResultImpl implements Result
 {
-
-	// TODO: houd rekening met scrollable resultsets
-
 	private List rowMap;
 	private List rowByIndex;
 	private String[] columnNames;
