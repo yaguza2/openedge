@@ -38,13 +38,15 @@ import java.security.AccessControlException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import java.security.Policy;
+
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
-import nl.openedge.access.impl.rdbms.DataSourceDelegate;
 import nl.openedge.access.impl.rdbms.RdbmsBase;
 import nl.openedge.access.util.*;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
@@ -162,23 +164,14 @@ public class AccessFactory {
 				}
 			} else {
 				
-				String delegate = dsNode.getAttributeValue("delegate");
-				if(delegate == null) throw new ConfigException(
-					"element datasource should have attribute 'reference' " +
-					"that points to a datasource OR attribute 'delegate' " + 
-					"with a delegate class that confirms to the interface " + 
-					"nl.openedge.access.impl.rdbms.DataSourceDelegate.");
-				
 				try {
-					Class cls =  Thread.currentThread()
-									   .getContextClassLoader()
-									   .loadClass(delegate);
-					DataSourceDelegate d = (DataSourceDelegate)cls.newInstance();
-					DataSource ds = d.getDataSource(XML.getParams(dsNode));
-					if(ds == null) throw new ConfigException(
-							"unable to load datasource from delegate " + d);
+		
+					BasicDataSource ds = new BasicDataSource();
+				
+					BeanUtils.populate(ds, XML.getParams(dsNode));
+					
 					RdbmsBase.setDataSource(ds);
-					log.info("datasource loaded from delegate" + d);
+					log.info("datasource loaded from delegate" + ds);
 					
 				} catch(Exception e) {
 					throw new ConfigException(e);
