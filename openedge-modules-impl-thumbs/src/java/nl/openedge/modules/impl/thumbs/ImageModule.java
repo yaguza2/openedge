@@ -30,7 +30,6 @@
  */
 package nl.openedge.modules.impl.thumbs;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -39,10 +38,15 @@ import java.awt.image.Kernel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 
 import javax.activation.DataSource;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
 import javax.swing.ImageIcon;
+
+import nl.openedge.modules.types.base.SingletonType;
+import nl.openedge.util.ImageInfo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,9 +54,6 @@ import org.apache.commons.logging.LogFactory;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
-import nl.openedge.modules.types.base.SingletonType;
-import nl.openedge.util.ImageInfo;
 
 /**
  * @author Eelco Hillenius
@@ -81,7 +82,6 @@ public final class ImageModule implements SingletonType
 		}
 		return info;
 	}
-
 	/**
 	 * get resized image instance
 	 * @param is inputstream
@@ -94,9 +94,24 @@ public final class ImageModule implements SingletonType
 	public BufferedImage getImage(InputStream is, int maxSize) 
 		throws IOException
 	{
+		return getImage(is, maxSize, true);
+	}
+	/**
+	 * get resized image instance
+	 * @param is inputstream
+	 * @param maxWidth
+	 * @param maxHeight
+	 * @param maxSize
+	 * @param soften
+	 * @return BufferedImage
+	 * @throws IOException
+	 */
+	public BufferedImage getImage(InputStream is, int maxSize, boolean soften) 
+		throws IOException
+	{
 
 		BufferedImage img = ImageIO.read(is);
-		Image resizedImage;
+		Image resizedImage = img;
 		if (img == null)
 		{
 			is.close();
@@ -104,52 +119,57 @@ public final class ImageModule implements SingletonType
 		}
 		int width = img.getWidth();
 		int height = img.getHeight();
-
-		if (width > height)
+		
+		if(width > maxSize  || height > maxSize)
 		{
-			resizedImage =
-				img.getScaledInstance(maxSize, 
-					(maxSize * height) / width, Image.SCALE_SMOOTH);
+			if (width > height)
+			{
+				resizedImage =
+					img.getScaledInstance(maxSize, 
+						(maxSize * height) / width, Image.SCALE_SMOOTH);
+			}
+			else
+			{
+				resizedImage =
+					img.getScaledInstance(
+						(maxSize * width) / height, maxSize, Image.SCALE_SMOOTH);
+			}
 		}
-		else
+		else if(!soften)
 		{
-			resizedImage =
-				img.getScaledInstance(
-					(maxSize * width) / height, maxSize, Image.SCALE_SMOOTH);
+			return img;
 		}
 
 		// ensure that all the pixels in the image are loaded.
-		Image temp = new ImageIcon(resizedImage).getImage();
+		resizedImage = new ImageIcon(resizedImage).getImage();
 		// Create the buffered image.
-		img =
-			new BufferedImage(
-				temp.getWidth(null),
-				temp.getHeight(null),
-				BufferedImage.TYPE_INT_RGB);
+		img = new BufferedImage(resizedImage.getWidth(null), resizedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
 		// Copy image to buffered image.
 		Graphics g = img.createGraphics();
 		// Clear background and paint the image.
-		g.setColor(Color.white);
-		g.fillRect(0, 0, temp.getWidth(null), temp.getHeight(null));
-		g.drawImage(temp, 0, 0, null);
+		//g.setColor(Color.white);
+		//g.fillRect(0, 0, temp.getWidth(null), temp.getHeight(null));
+		g.drawImage(resizedImage, 0, 0, null);
 		g.dispose();
 		// soften thumbnail
-		float softenFactor = 0.05f;
-		float[] softenArray =
-			{
-				0,
-				softenFactor,
-				0,
-				softenFactor,
-				1 - (softenFactor * 4),
-				softenFactor,
-				0,
-				softenFactor,
-				0 };
-		Kernel kernel = new Kernel(3, 3, softenArray);
-		ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-		img = cOp.filter(img, null);
-
+		if(soften)
+		{
+			float softenFactor = 0.05f;
+			float[] softenArray =
+				{
+					0,
+					softenFactor,
+					0,
+					softenFactor,
+					1 - (softenFactor * 4),
+					softenFactor,
+					0,
+					softenFactor,
+					0 };
+			Kernel kernel = new Kernel(3, 3, softenArray);
+			ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+			img = cOp.filter(img, null);
+		}
 		return img;
 	}
 
@@ -160,12 +180,24 @@ public final class ImageModule implements SingletonType
 	 * @param maxSize max size (width or height) for resize op
 	 * @throws IOException
 	 */
-	public void writeImage(InputStream is, OutputStream os, int maxSize) 
+	public boolean writeImage(InputStream is, OutputStream os, int maxSize) 
+		throws IOException
+	{
+		return writeImage(is, os, maxSize, true);
+	}
+	/**
+	 * write image as JPG to outputstream based on datasource with resizing
+	 * @param is inputstream
+	 * @param os outputstream
+	 * @param maxSize max size (width or height) for resize op
+	 * @throws IOException
+	 */
+	public boolean writeImage(InputStream is, OutputStream os, int maxSize, boolean soften) 
 		throws IOException
 	{
 
-		BufferedImage img = getImage(is, maxSize);
-		internalWriteImage(img, os);
+		BufferedImage img = getImage(is, maxSize,soften);
+		return internalWriteImage(img, os);
 	}
 
 	/**
@@ -174,27 +206,39 @@ public final class ImageModule implements SingletonType
 	 * @param os outputstream
 	 * @throws IOException
 	 */
-	public void writeImage(InputStream is, OutputStream os) throws IOException
+	public boolean writeImage(InputStream is, OutputStream os) throws IOException
 	{
 
 		BufferedImage img = ImageIO.read(is);
-		internalWriteImage(img, os);
+		return internalWriteImage(img, os);
 	}
 
 	/* write */
-	private void internalWriteImage(BufferedImage img, OutputStream os) 
+	private boolean internalWriteImage(BufferedImage img, OutputStream os) 
 		throws IOException
 	{
 
 		if (img == null)
 		{
-			return;
+			return false;
 		}
-		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
-		JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-		param.setQuality(1.0f, true);
-		encoder.setJPEGEncodeParam(param);
-		encoder.encode(img);
+		Iterator it = ImageIO.getImageWritersByMIMEType("image/jpeg");
+		if(it.hasNext())
+		{
+			ImageWriter ir = (ImageWriter) it.next();
+			ir.setOutput(ImageIO.createImageOutputStream(os));
+			ir.write(img);
+			ir.dispose();
+		}
+		else
+		{
+			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
+			JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
+			param.setQuality(.75f, false);
+			encoder.setJPEGEncodeParam(param);
+			encoder.encode(img);
+		}
+		return true;
 	}
 
 }
