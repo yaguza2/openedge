@@ -57,7 +57,7 @@ import org.jdom.Element;
  * 
  * For example, you could have a startup/ main servlet that does this:
  * 
- * 	protected void initComponents(ServletConfig config) throws Exception
+ * 	public void init(ServletConfig config) throws ServletException
  *	{
  *		new JDOMConfigurator(config.getServletContext());
  *	}

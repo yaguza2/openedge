@@ -19,8 +19,7 @@
 				how to use Quartz (if you want to use the sceduler)
 			</li>
 			<li>
-				how to configure Quartz and OpenEdge Modules in
-				the environment you need.
+				how to use the framework.
 			</li>
 		</ul>
       </p>
@@ -155,7 +154,7 @@ public class BeanComponentImpl implements BeanType
 		
 			<li>
 				ConfigurableType<br/>
-				A <code>ConfigurableType</code>will be initialised with its XML node of
+				A <code>ConfigurableType</code>will be initialised with its (JDom) XML node of
 				the configuration file. Method <code>init(Element)</code> from the 
 				<code>Configurable</code> interface
 				will be called after creation of a new instance of classes of the 
@@ -407,6 +406,77 @@ public class SchedulerObserverImpl implements SchedulerObserver
 		<br/>
 
 		</ul><br/>
+		
+	  </subsection>
+	  
+      <subsection name="How to use Quartz">
+		<p>
+			As a standard facility, you can use Jobs and Triggers with OpenEdge modules as described earlier.
+			For more information on how to use the Quartz framework, see
+			<a target="_new" href="http://www.part.net/quartz_documentation.html">their site</a>
+		</p>
+	  </subsection>
+	  
+      <subsection name="How to use the framework">
+		<p>
+			The following section shows how you can use the framework.
+		</p>
+		
+		<subsection name="Initializing">
+			<p>
+				Before you can use the framework, you have to initialize it. You do this by constructing 
+				a JDOMConfigurator object. JDOMConfigurator has different constructors that might suit
+				your need depending on your situation.
+			<p>
+			</p>
+				For example, you could have a startup/ main servlet that does this:
+	 		      <source><![CDATA[
+	public void init(ServletConfig config) throws ServletException
+	{
+	   new nl.openedge.modules.JDOMConfigurator(config.getServletContext());
+	 }
+	 			]]></source><br/>
+				and have this in your web.xml:
+	 		      <source><![CDATA[
+	&lt;servlet&gt;
+	  &lt;servlet-name&gt;Application&lt;/servlet-name&gt;
+	  &lt;servlet-class&gt;com.foo.bar.ApplicationServlet&lt;/servlet-class&gt;
+	  &lt;init-param&gt;
+	    &lt;param-name&gt;oemodules.configFile&lt;/param-name&gt;
+	    &lt;param-value&gt;WEB-INF/oemodules.xml&lt;/param-value&gt;
+	 &lt;/init-param&gt;
+	 &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;/servlet&gt;
+	 ]]></source><br/>
+			</p>
+		</subsection>
+		
+		<subsection name="Getting Components">
+			<p>
+				You can get an instance of the component repository like this:
+			<source><![CDATA[
+ComponentRepository crepo = RepositoryFactory.getRepository();			
+			]]></source>
+			</p>
+			<p>
+				Alternatively, if you set the JNDI name like
+			<source><![CDATA[
+<jndi name="myLocation"/>
+			]]></source>
+				you can use the following snippet:
+			<source><![CDATA[
+Context ctx = new InitialContext();
+ComponentRepository crepo = (ComponentRepository)ctx.lookup("myLocation");
+			]]></source>
+			</p>
+			<p>
+				Keep in mind that at time of writing the framework was build and tested for
+				single VM use. As we (the creators of the framework) use it for constructing
+				a logic/ bussiness functionallity layer with it, where the components are
+				service centric, not datacentric, duplicates accross VMs are not a problem
+				for us. A real 
+			</p>
+			</subsection>
 		
 	  </subsection>
 	

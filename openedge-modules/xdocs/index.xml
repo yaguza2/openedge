@@ -27,20 +27,21 @@
 	<ul>
 		<li>
 			Lightweight. You can use it in the environment you want (J2EE/ standard) and the internals
-			of the framework are not too difficult to understand as it's aims are not sky-high (it is not intended to be the
+			of the framework are easy to understand as it's aims are not sky-high (it is not intended to be the
 			mother of all frameworks).
 		</li>
 		<li>
-			Easy to use. You will be up and running in less than an hour.
+			Easy to use. You should be up and running in less than an hour.
 		</li>
 		<li>
 			Flexible. It is relatively easy to plugin your own types and commands and behaviour 
 			that goes with them
 		</li>
 		<li>
-			Non (too) intrusive. Allthough for specific behaviour you have to implement specific interfaces, you do not
-			have to implement any interface at all for your components. 
-			The lately very populair pattern IoC (Inversion of Control) applies to parts of this framework.
+			Non-intrusive. Allthough for specific behaviour with the default implementation you have 
+			to implement specific interfaces, you do not have to implement any interface at all for your components. 
+			The design pattern IoC (Inversion of Control) that seems to get get a lot of attention lately
+			applies of this framework.
 		</li>
 		<li>
 			Wraps the excellent J2EE-ready sceduling framework 'Quartz' 
