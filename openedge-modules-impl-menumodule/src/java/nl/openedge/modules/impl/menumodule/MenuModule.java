@@ -681,6 +681,19 @@ public final class MenuModule
 	}
 	
 	/**
+	 * remove variable from the filter context
+	 * @param key
+	 */
+	public void removeFilterContextVariable(Object key)
+	{
+		Map context = (Map)contextHolder.get();
+		if(context != null)
+		{
+			context.remove(key);		
+		}
+	}
+	
+	/**
 	 * bewaar context variable value onder key
 	 * @param key sleutel
 	 * @param value waarde
