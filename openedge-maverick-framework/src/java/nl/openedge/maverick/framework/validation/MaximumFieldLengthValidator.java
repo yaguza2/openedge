@@ -80,7 +80,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	 */
 	public MaximumFieldLengthValidator(ValidatorActivationRule rule)
 	{
-		super(rule);
+		super("invalid.field.input.size", rule);
 	}
 
 	/**

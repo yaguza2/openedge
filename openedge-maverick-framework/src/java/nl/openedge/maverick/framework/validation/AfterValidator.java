@@ -95,14 +95,6 @@ public class AfterValidator extends AbstractFieldValidator
 	{
 		this(prefix, before.getTime());
 	}
-	
-	/**
-	 * @param rule
-	 */
-	public AfterValidator(ValidatorActivationRule rule)
-	{
-		super(rule);
-	}
 
 	/**
 	 * @param messagePrefix

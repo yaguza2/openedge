@@ -67,7 +67,7 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 	 */
 	public PropertyNotNullFormValidator(ValidatorActivationRule rule)
 	{
-		super(rule);
+		super("object.not.found", rule);
 	}
 
 	/**

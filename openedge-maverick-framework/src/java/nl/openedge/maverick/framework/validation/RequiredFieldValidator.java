@@ -58,7 +58,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	 */
 	public RequiredFieldValidator(ValidatorActivationRule rule)
 	{
-		super(rule);
+		super("input.field.required", rule);
 	}
 
 	/**
