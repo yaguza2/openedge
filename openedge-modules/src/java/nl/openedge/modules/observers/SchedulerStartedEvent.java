@@ -53,4 +53,20 @@ public class SchedulerStartedEvent extends EventObject
 		this.scheduler = scheduler;
 	}
 
+	/**
+	 * @return
+	 */
+	public Scheduler getScheduler()
+	{
+		return scheduler;
+	}
+
+	/**
+	 * @param scheduler
+	 */
+	public void setScheduler(Scheduler scheduler)
+	{
+		this.scheduler = scheduler;
+	}
+
 }
