@@ -49,7 +49,16 @@ public abstract class HibernateHelper
 {
 
 	private static Log log = LogFactory.getLog(HibernateHelper.class);
-	private static URL configURL = null;
+	
+	/**
+	 * config url
+	 */
+	protected static URL configURL = null;
+	
+	/**
+	 * Hibernate configuration object
+	 */
+	protected static Configuration configuration = null;
 
 	/**
 	 * Holds the current hibernate session, if one has been created.
@@ -74,17 +83,17 @@ public abstract class HibernateHelper
 			wasInitialised = true;
 			// Initialize hibernate
 			// configure; load mappings
-			Configuration ds = new Configuration();
+			configuration = new Configuration();
 			if(configURL != null)
 			{
-				ds.configure(configURL);	
+				configuration.configure(configURL);	
 			}
 			else
 			{
-				ds.configure();	
+				configuration.configure();	
 			}
 			// build a SessionFactory		
-			factory = ds.buildSessionFactory();
+			factory = configuration.buildSessionFactory();
 		}
 	}
 
@@ -112,7 +121,6 @@ public abstract class HibernateHelper
 	 */
 	public static SessionFactory getSessionFactory()
 	{
-
 		return factory;
 	}
 	/**
@@ -137,6 +145,14 @@ public abstract class HibernateHelper
 	public static void setConfigURL(URL url)
 	{
 		configURL = url;
+	}
+
+	/**
+	 * @return
+	 */
+	public static Configuration getConfiguration()
+	{
+		return configuration;
 	}
 
 }
