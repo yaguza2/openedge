@@ -188,42 +188,46 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				
 				viewName = getErrorView(cctx, formBean);
 			}
-			// else the form was populated succesfully
-
-			if( formBean != null)
-			{
-				if( validateForm(cctx, formBean)) 
-				{
-					// passed validation, so execute 'normal' command
-					
-					if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
-					{
-						this.perform(formBean, cctx);
-						String lq = formBean.getLastreq();
-						lq = UrlTool.replace(lq, "|amp|", "&"); 
-						cctx.setModel(lq);
-						
-						viewName = REDIRECT;	
-					} 
-					else 
-					{
-	
-						viewName = this.perform(formBean, cctx);
-					}
-				}
-				else 
-				{
-					// did not pass validation, so prepare for error command 
-					// and execute it
-					internalPerformError(cctx, formBean);
-	
-					viewName = getErrorView(cctx, formBean);
-				}
-			}
+			// else the form was populated succesfully or !failOnPopulateError
 			else
 			{
-				viewName = this.perform(formBean, cctx);
+
+				if( formBean != null)
+				{
+					if( validateForm(cctx, formBean)) 
+					{
+						// passed validation, so execute 'normal' command
+						
+						if((formBean.getLastreq() != null) && (formBean.isRedirect())) 
+						{
+							this.perform(formBean, cctx);
+							String lq = formBean.getLastreq();
+							lq = UrlTool.replace(lq, "|amp|", "&"); 
+							cctx.setModel(lq);
+							
+							viewName = REDIRECT;	
+						} 
+						else 
+						{
+		
+							viewName = this.perform(formBean, cctx);
+						}
+					}
+					else 
+					{
+						// did not pass validation, so prepare for error command 
+						// and execute it
+						internalPerformError(cctx, formBean);
+		
+						viewName = getErrorView(cctx, formBean);
+					}
+				}
+				else
+				{
+					viewName = this.perform(formBean, cctx);
+				}
 			}
+			
 		} 
 		catch (Exception e) 
 		{
