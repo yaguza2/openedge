@@ -57,15 +57,23 @@ public abstract class HibernateHelper {
      */
     protected static SessionFactory factory;
     
+    private static boolean wasInitialised = false;
+    
     /**
      * initialise
      */
-     public static void init() throws Exception {
-        // Initialize hibernate
-		// configure; load mappings
-		Configuration ds = new Configuration().configure();
-		// build a SessionFactory		
-		factory = ds.buildSessionFactory(); 
+     public static void init() throws Exception 
+     {
+        
+        if(!wasInitialised)
+        {       
+			wasInitialised = true;
+	        // Initialize hibernate
+			// configure; load mappings
+			Configuration ds = new Configuration().configure();
+			// build a SessionFactory		
+			factory = ds.buildSessionFactory();
+        } 
      }
      
     
