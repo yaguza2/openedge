@@ -1,7 +1,7 @@
 /*
- * $Id: ValidatorRegistry.java,v 1.4 2004-04-04 18:23:19 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-04 18:23:19 $
+ * $Id: ValidatorRegistry.java,v 1.5 2004-04-05 09:56:22 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-05 09:56:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -44,7 +44,7 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
  * 
  * @author Eelco Hillenius
  */
-final class ValidatorRegistry
+public final class ValidatorRegistry
 {
 
 

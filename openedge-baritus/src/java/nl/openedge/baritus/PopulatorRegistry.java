@@ -1,7 +1,7 @@
 /*
- * $Id: PopulatorRegistry.java,v 1.3 2004-04-04 18:23:19 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-04 18:23:19 $
+ * $Id: PopulatorRegistry.java,v 1.4 2004-04-05 09:56:22 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-05 09:56:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -43,7 +43,7 @@ import nl.openedge.baritus.population.OgnlFieldPopulator;
  * 
  * @author Eelco Hillenius
  */
-final class PopulatorRegistry
+public final class PopulatorRegistry
 {
 
 	private Map fieldPopulators = null;
@@ -128,15 +128,6 @@ final class PopulatorRegistry
 	{
 		return regexFieldPopulators;
 	}
-
-	/**
-	 * get the default field populator
-	 * @return FieldPopulator the default field populator
-	 */
-	public FieldPopulator getDefaultFieldPopulator()
-	{
-		return defaultFieldPopulator;
-	}
 	
 	/**
 	 * get the field populator for the provided fieldName, null if none registered
@@ -156,6 +147,24 @@ final class PopulatorRegistry
 	public Map getFieldPopulators()
 	{
 		return fieldPopulators;
+	}
+	
+	/**
+	 * get the default field populator
+	 * @return FieldPopulator the default field populator
+	 */
+	public FieldPopulator getDefaultFieldPopulator()
+	{
+		return defaultFieldPopulator;
+	}
+
+	/**
+	 * set the default field populator
+	 * @param populator the default field populator
+	 */
+	public void setDefaultFieldPopulator(FieldPopulator populator)
+	{
+		defaultFieldPopulator = populator;
 	}
 
 }

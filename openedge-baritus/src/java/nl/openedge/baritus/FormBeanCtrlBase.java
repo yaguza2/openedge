@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.5 2004-04-04 18:23:19 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-04 18:23:19 $
+ * $Id: FormBeanCtrlBase.java,v 1.6 2004-04-05 09:56:22 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-05 09:56:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -553,6 +553,13 @@ public abstract class FormBeanCtrlBase implements Controller
 				for(Iterator j = parameters.keySet().iterator(); j.hasNext(); )
 				{
 					String name = (String)j.next();
+					
+					// See if we have a custom populator registered for the given field
+					if(populatorRegistry.getFieldPopulator(name) != null)
+					{
+						continue; // do not match on regexp
+					}
+					
 					Object value = parameters.get(name);
 
 					try
@@ -1118,6 +1125,24 @@ public abstract class FormBeanCtrlBase implements Controller
 	protected void removePopulator(Pattern pattern)
 	{
 		populatorRegistry.removePopulator(pattern);
+	}
+	
+	/**
+	 * set the default field populator
+	 * @param populator the default field populator
+	 */
+	protected void setDefaultPopulator(FieldPopulator populator)
+	{
+		populatorRegistry.setDefaultFieldPopulator(populator);
+	}
+	
+	/**
+	 * get the default field populator
+	 * @return FieldPopulator the default field populator
+	 */
+	protected FieldPopulator getDefaultPopulator()
+	{
+		return populatorRegistry.getDefaultFieldPopulator();
 	}
 	
 	//**************************** interceptors *******************************************/

@@ -1,3 +1,7 @@
+1.0.1
+-------------------------------------------------
+- Registries are now public, incl. option to set default populator with PopulatorRegistry.
+- Populators that were registered per field overrule regexpr registrated populators.
 
 -------------------------------------------------
 1.0 First public SF release.
