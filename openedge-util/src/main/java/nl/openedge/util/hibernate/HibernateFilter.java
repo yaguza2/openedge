@@ -41,7 +41,6 @@ import javax.servlet.ServletResponse;
 
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
 
 /**
  * Filter which manages a ThreadLocal hibernate session.  Obtain the session
@@ -50,15 +49,6 @@ import net.sf.hibernate.SessionFactory;
  * @author Jeff Schnitzer, Eelco Hillenius
  */
 public class HibernateFilter extends HibernateHelper implements Filter {    
-    /**
-     * Holds the current hibernate session, if one has been created.
-     */
-    protected static ThreadLocal hibernateHolder = new ThreadLocal(); 
-    
-    /**
-     * Hibernate session factory
-     */
-    protected static SessionFactory factory;
     
     /**
      * initialise
