@@ -103,6 +103,34 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected boolean failOnPopulateError = false;
 	
 	/**
+	 * is called before any handling like form population etc.
+	 * @param cctx maverick context
+	 * @param formBean unpopulated formBean
+	 * @throws ServletException
+	 */
+	public void doBefore(
+		ControllerContext cctx,
+		AbstractForm formBean) 
+		throws ServletException
+	{
+		// noop
+	}
+	
+	/**
+	 * is called after all handling like form population etc. is done
+	 * @param cctx maverick context
+	 * @param formBean populated (if succesful) formBean
+	 * @throws ServletException
+	 */
+	public void doAfter(
+		ControllerContext cctx,
+		AbstractForm formBean) 
+		throws ServletException
+	{
+		// noop		
+	}
+	
+	/**
 	 * Executes this controller.  Override one of the other perform()
 	 * methods to provide application logic.
 	 *
@@ -110,7 +138,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public final String go(ControllerContext cctx) throws ServletException 
 	{
-		
+		String viewName = SUCCESS;
 		if(noCache)
 		{
 			setNoCache(cctx);
@@ -121,6 +149,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		{	
 			// let controller create form
 			formBean = this.makeFormBean(cctx);
+			
+			// intercept before
+			doBefore(cctx, formBean);
 
 			if(needsValidUser)
 			{
@@ -134,7 +165,13 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					// nope, we can't
 					formBean.setError("global.message", 
 						"user was not found in session");
-					return getErrorView(cctx, formBean);
+
+					viewName = getErrorView(cctx, formBean);
+					
+					// intercept after
+					doAfter(cctx, formBean);
+		
+					return viewName;
 				}	
 			}
 
@@ -146,9 +183,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			if(!populated && failOnPopulateError) // an error occured
 			{
 				// prepare for error command and execute it
-				internalPerformError(cctx, formBean);	
+				internalPerformError(cctx, formBean);
 				
-				return getErrorView(cctx, formBean);
+				viewName = getErrorView(cctx, formBean);
 			}
 			// else the form was populated succesfully
 
@@ -162,11 +199,13 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					String lq = formBean.getLastreq();
 					lq = UrlTool.replace(lq, "|amp|", "&"); 
 					cctx.setModel(lq);
-					return REDIRECT;	
+					
+					viewName = REDIRECT;	
 				} 
 				else 
 				{
-					return this.perform(formBean, cctx);
+
+					viewName = this.perform(formBean, cctx);
 				}
 			} 
 			else 
@@ -174,7 +213,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				// did not pass validation, so prepare for error command 
 				// and execute it
 				internalPerformError(cctx, formBean);
-				return getErrorView(cctx, formBean);
+
+				viewName = getErrorView(cctx, formBean);
 			}
 
 		} 
@@ -198,8 +238,13 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			// prepare for error command and execute it
 			internalPerformError(cctx, formBean);
 			
-			return getErrorView(cctx, formBean);
+			viewName = getErrorView(cctx, formBean);
 		}
+		
+		// intercept after
+		doAfter(cctx, formBean);
+		
+		return viewName;
 	}
 	
 	/**
