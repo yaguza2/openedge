@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.10 2004-03-01 10:07:33 eelco12 Exp $
- * $Revision: 1.10 $
- * $Date: 2004-03-01 10:07:33 $
+ * $Id: FormBeanCtrl.java,v 1.11 2004-03-01 21:15:02 eelco12 Exp $
+ * $Revision: 1.11 $
+ * $Date: 2004-03-01 21:15:02 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -166,6 +166,10 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		String viewName = SUCCESS; // default view
 		
+		Object bean = null;
+		Locale locale = null;
+		boolean populated = true;
+		
 		ExecutionParams _execParams = getExecutionParams();
 		if(_execParams.isNoCache())
 		{
@@ -182,6 +186,9 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		cctx.setModel(formBeanContext); // set context as model
 		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
+		locale = getLocaleForRequest(cctx, formBeanContext); // get the locale
+		formBeanContext.setCurrentLocale(locale); // and set in context
+		
 		// flow intercept before make form bean
 		intercDlg.doInterceptBeforeMakeFormBean(cctx, formBeanContext);
 		flowInterceptView = intercDlg.doFlowInterceptBeforeMakeFormBean(flowInterceptorContext);
@@ -189,10 +196,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		{
 			return flowInterceptView;
 		}
-		
-		Object bean = null;
-		Locale locale = null;
-		boolean populated = true;
 		
 		try 
 		{	
@@ -207,9 +210,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			{
 				return flowInterceptView;
 			}
-
-			locale = getLocaleForRequest(cctx, formBeanContext); // get the locale
-			formBeanContext.setCurrentLocale(locale); // and set in context
 			
 			// populate if property of formBeanContext populateAndValidate is true 
 			// (as it is by default)
