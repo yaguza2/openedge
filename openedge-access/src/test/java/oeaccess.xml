@@ -4,15 +4,7 @@
 	<!-- read security config from classpath here -->
 	<security 	jaas-config="/jaas.config"
 				policies="/test.policy" />
-	
-	<!-- element datasource should have attribute 'reference' that points to 
-		 a datasource OR attribute 'delegate' with a delegate class that confirms
-		 to the interface nl.openedge.access.impl.rdbms.DataSourceDelegate. As
-		 attribute 'reference' is checked first, attribute 'delegate' will be 
-		 ignored if 'reference' is found 
-		 parameter tags <param name="foo" value="bar"/> will be passed to the
-		 delegate
-	-->
+
 	<datasource>
 		<param name="driverClassName" value="org.gjt.mm.mysql.Driver"/>
 		<param name="url" value="jdbc:mysql://baas:3306/openedge_website"/>

@@ -1,20 +1,15 @@
 <?xml version="1.0"?>
 <access-config>
 	
-	<!-- element datasource should have attribute 'reference' that points to 
-		 a datasource OR attribute 'delegate' with a delegate class that confirms
-		 to the interface nl.openedge.access.impl.rdbms.DataSourceDelegate. As
-		 attribute 'reference' is checked first, attribute 'delegate' will be 
-		 ignored if 'reference' is found 
-		 parameter tags <param name="foo" value="bar"/> will be passed to the
-		 delegate
-	-->
-	<datasource delegate="nl.openedge.access.impl.rdbms.MySQLDataSourceDelegate">
-		<param name="dbname" value="openedge_website"/>
-		<param name="dbservername" value="baas"/>
-		<param name="dbport" value="3306"/>
-		<param name="dbuser" value="root"/>
-		<param name="dbpassword" value=""/>
+	<datasource>
+		<param name="driverClassName" value="org.gjt.mm.mysql.Driver"/>
+		<param name="url" value="jdbc:mysql://baas:3306/openedge_website"/>
+		<param name="username" value="root"/>
+		<param name="password" value=""/>
+		<param name="maxActive" value="20"/>
+		<param name="maxIdle" value="10"/>
+		<param name="maxWait" value="5000"/>
+		<param name="defaultAutoCommit" value="false"/>
 	</datasource>
 	
 	<user-manager class="nl.openedge.access.impl.rdbms.RdbmsUserManager">

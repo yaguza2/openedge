@@ -53,7 +53,7 @@ public class PassiveCallbackHandler implements CallbackHandler {
      */
     public PassiveCallbackHandler(String user, String pass) {
         this.username = user;
-        this.password = pass.toCharArray();
+        this.password = (pass != null) ? pass.toCharArray() : null;
     }
 
     /**
