@@ -30,20 +30,25 @@
  */
 package nl.openedge.modules.types.initcommands;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.jdom.Element;
 
 import nl.openedge.modules.ModuleFactory;
 import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ModuleFactoryObserver;
 
 /**
  * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ModuleFactoryObserverInitCommand implements InitCommand
+public class DependentTypeInitCommand implements InitCommand
 {
 	
-	protected ModuleFactory moduleFactory = null;
+	private ModuleFactory moduleFactory = null;
+	
+	private List namedDependencies = null;
 	
 
 	/**
@@ -56,28 +61,59 @@ public class ModuleFactoryObserverInitCommand implements InitCommand
 		ModuleFactory moduleFactory)
 		throws ConfigException
 	{
+		
 		this.moduleFactory = moduleFactory;
+		loadDependencies(componentNode);
+	}
+	
+	/**
+	 * load dependencies
+	 * @param componentNode configuration node
+	 */
+	protected void loadDependencies(Element componentNode)
+	{
+		List namedDeps = componentNode.getChildren("dependency");
+		namedDependencies = new ArrayList(namedDeps.size());
+		
+		for(Iterator i = namedDeps.iterator(); i.hasNext(); )
+		{
+			
+			Element node = (Element)i.next();
+			String moduleName = node.getAttributeValue("moduleName");
+			String propertyName = node.getAttributeValue("propertyName");
+			
+			namedDependencies.add(
+				new NamedDependency(moduleName, propertyName));
+		}
+			
 	}
 
 	/**
-	 * populate the component instance
+	 * create decorator that tries to solve the dependencies when all modules
+	 * are loaded
 	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
 
-		if(componentInstance instanceof ModuleFactoryObserver)
+		if(componentInstance instanceof DependentType)
 		{
-			moduleFactory.addObserver(
-				(ModuleFactoryObserver)componentInstance);
+			// create decorator with instance
+			DependentTypeDeco solver = new DependentTypeDeco();
+			solver.setComponentInstance((DependentType)componentInstance);
+			solver.setNamedDependencies(this.namedDependencies);
+			solver.setModuleFactory(this.moduleFactory);
+			
+			solver.execute(componentInstance);
+			
 		}
 		else
 		{
 			throw new InitCommandException(
-			"component is not of type " + ModuleFactoryObserver.class.getName());	
+			"component is not of type " + DependentType.class.getName());	
 		}
-
+		
 	}
 
 }

@@ -30,6 +30,8 @@
  */
 package nl.openedge.modules;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
@@ -80,6 +82,15 @@ public interface ModuleFactory extends CriticalEventObserver
 	 * @return Object module instance
 	 */
 	public Object getModule(String name);
+	
+	/**
+	 * get all modules that are instance of the given type
+	 * @param type the class
+	 * @param exact If true, only exact matches will be returned. If 
+	 * false, superclasses and interfaces will be taken into account
+	 * @return List list of modules. Never null, possibly empty
+	 */
+	public List getModulesByType(Class type, boolean exact);
 	
 	/**
 	 * returns all known names

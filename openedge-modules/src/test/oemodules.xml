@@ -60,6 +60,17 @@
 		<module name="SchedulerObserverTest"
 				class="nl.openedge.modules.test.SchedulerObserverImpl"/>
 	
+		<module name="ModulesLoadedObserverTest"
+				class="nl.openedge.modules.test.ModulesLoadedObserverImpl"/>
+			
+		<module name="DependendModuleTest"
+				class="nl.openedge.modules.test.DependendModuleImpl">
+				
+			<dependency moduleName="BeanTest" propertyName="beanModule"/>
+			<dependency moduleName="ConfigurableTest" propertyName="configModule"/>
+			
+		</module>
+			
 	</modules>
 	
 </modules-config>

@@ -52,6 +52,8 @@ import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.observers.CriticalEvent;
 import nl.openedge.modules.observers.CriticalEventObserver;
 import nl.openedge.modules.observers.ModuleFactoryObserver;
+import nl.openedge.modules.observers.ModulesLoadedEvent;
+import nl.openedge.modules.observers.ModulesLoadedObserver;
 import nl.openedge.modules.observers.SchedulerObserver;
 import nl.openedge.modules.observers.SchedulerStartedEvent;
 import nl.openedge.modules.types.AdapterFactory;
@@ -169,6 +171,9 @@ public class DefaultModuleFactory implements ModuleFactory
 			e.printStackTrace();
 			throw new ConfigException(e);	
 		}
+		
+		// fire modules loaded event
+		fireModulesLoadedEvent();
 
 		//	get node for quartz scheduler
 		Element schedulerNode = factoryNode.getChild("scheduler");
@@ -179,8 +184,10 @@ public class DefaultModuleFactory implements ModuleFactory
 			this.triggers = getTriggers(schedulerNode, classLoader);
 
 			try
-			{ // initialise quartz
+			{ 
+				// initialise quartz
 				initQuartz(schedulerNode, servletContext);
+				
 				// notify observers
 				fireSchedulerStartedEvent(scheduler);
 				
@@ -631,6 +638,25 @@ public class DefaultModuleFactory implements ModuleFactory
 			}
 		}
 	}
+	
+	/**
+	 * notify observers that all modules ware (re)loaded
+	 * @param scheduler
+	 */
+	protected void fireModulesLoadedEvent()
+	{
+
+		ModulesLoadedEvent evt = new ModulesLoadedEvent(this);
+		for (Iterator i = observers.iterator(); i.hasNext();)
+		{
+
+			ModuleFactoryObserver mo = (ModuleFactoryObserver)i.next();
+			if (mo instanceof ModulesLoadedObserver)
+			{
+				((ModulesLoadedObserver)mo).modulesLoaded(evt);
+			}
+		}
+	}
 
 	/**
 	 * fired when (according to the implementing module) a critical event occured
@@ -688,6 +714,46 @@ public class DefaultModuleFactory implements ModuleFactory
 	public String[] getModuleNames()
 	{
 		return (String[])modules.keySet().toArray(new String[modules.size()]);
+	}
+	
+	/**
+	 * @see nl.openedge.modules.ModuleFactory#getModulesByType(java.lang.Class, boolean)
+	 */
+	public List getModulesByType(Class type, boolean exact)
+	{
+		List sublist = new ArrayList();
+		
+		if(type == null)
+		{
+			return sublist;
+		}
+		
+		if(exact)
+		{
+			for(Iterator i = modules.values().iterator(); i.hasNext(); )
+			{
+		
+				ModuleAdapter adapter = (ModuleAdapter)i.next();
+				if(type.equals(adapter.getModuleClass()))
+				{
+					sublist.add(getModule(adapter.getName()));
+				}	
+			}			
+		}
+		else
+		{
+			for(Iterator i = modules.values().iterator(); i.hasNext(); )
+			{
+		
+				ModuleAdapter adapter = (ModuleAdapter)i.next();
+				if(type.isAssignableFrom(adapter.getModuleClass()))
+				{
+					sublist.add(getModule(adapter.getName()));
+				}
+			}	
+		}
+		
+		return sublist;
 	}
 
 }

@@ -28,56 +28,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ModuleFactoryObserver;
+package nl.openedge.modules.observers;
 
 /**
- * Command that populates instances using BeanUtils
+ * observers that implement this interface will be notified when all modules
+ * are (re)loaded (and have gone through some basic tests)
  * @author Eelco Hillenius
  */
-public class ModuleFactoryObserverInitCommand implements InitCommand
+public interface ModulesLoadedObserver extends ModuleFactoryObserver
 {
-	
-	protected ModuleFactory moduleFactory = null;
-	
-
 	/**
-	 * initialize
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
+	 * fired after all modules are (re)loaded
+	 * @param evt event
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ModuleFactory moduleFactory)
-		throws ConfigException
-	{
-		this.moduleFactory = moduleFactory;
-	}
-
-	/**
-	 * populate the component instance
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-
-		if(componentInstance instanceof ModuleFactoryObserver)
-		{
-			moduleFactory.addObserver(
-				(ModuleFactoryObserver)componentInstance);
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ModuleFactoryObserver.class.getName());	
-		}
-
-	}
-
+	public void modulesLoaded(ModulesLoadedEvent evt);
 }

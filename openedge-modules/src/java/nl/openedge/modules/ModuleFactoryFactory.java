@@ -54,7 +54,7 @@ public class ModuleFactoryFactory
 	/** instance of module factory */
 	protected static ModuleFactory moduleFactory = null;
 
-	/** is the factory factory initialized yet? */
+	/** is the factory factory wasAdded yet? */
 	private static boolean initialized = false;
 	
 	/* logger */
@@ -69,7 +69,7 @@ public class ModuleFactoryFactory
 		
 		if(!initialized)
 		{
-			throw new RuntimeException("factory is not yet initialized");
+			throw new RuntimeException("factory is not yet wasAdded");
 		}
 		
 		return moduleFactory;
@@ -143,13 +143,13 @@ public class ModuleFactoryFactory
 	{
 		if(initialized)
 		{
-			throw new RuntimeException("factory allready initialized");
+			throw new RuntimeException("factory allready wasAdded");
 		}
 		_implementingClass = implementingClass;
 	}
 
 	/**
-	 * reset the initialized flag
+	 * reset the wasAdded flag
 	 */
 	protected static void reset()
 	{

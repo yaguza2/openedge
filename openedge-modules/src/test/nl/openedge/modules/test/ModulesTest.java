@@ -30,6 +30,10 @@
  */
 package nl.openedge.modules.test;
 
+import java.util.List;
+
+import nl.openedge.modules.types.base.SingletonType;
+
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
@@ -209,6 +213,70 @@ public class ModulesTest extends AbstractTestBase
 					moduleFactory.getModule("SchedulerObserverTest");
 			assertNotNull(module);
 			assertNotNull(module.getEvt());
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testModulesLoadedObserver()
+	{
+
+		try
+		{
+
+			ModulesLoadedObserverImpl module = (ModulesLoadedObserverImpl)
+					moduleFactory.getModule("ModulesLoadedObserverTest");
+			assertNotNull(module);
+			assertNotNull(module.getEvt());
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testGetModulesByType()
+	{
+
+		try
+		{
+
+			List mods1 = 
+				moduleFactory.getModulesByType(SingletonType.class, false);
+			
+			assertTrue( mods1.size() > 1 );
+			
+			List mods2 =
+				moduleFactory.getModulesByType(SingletonModuleImpl.class, false);
+				
+			assertTrue( mods2.size() == 1 );
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testDependentModule()
+	{
+
+		try
+		{
+
+			DependendModuleImpl module = (DependendModuleImpl)
+				moduleFactory.getModule("DependendModuleTest");
+				
+			assertNotNull(module.getBeanModule());
+			
+			assertNotNull(module.getConfigModule());
 
 		}
 		catch (Exception e)

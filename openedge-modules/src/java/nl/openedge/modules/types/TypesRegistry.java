@@ -51,6 +51,8 @@ import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ConfigurableTypeInitCommand;
 import nl.openedge.modules.types.initcommands.CriticalEventCasterInitCommand;
+import nl.openedge.modules.types.initcommands.DependentType;
+import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ModuleFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
@@ -124,6 +126,7 @@ public class TypesRegistry
 		initCommandTypes.add(ConfigurableType.class);
 		initCommandTypes.add(CriticalEventCaster.class);
 		initCommandTypes.add(ModuleFactoryObserver.class);
+		initCommandTypes.add(DependentType.class);
 
 		// and the commands for them
 		initCommandClasses.put(
@@ -141,6 +144,10 @@ public class TypesRegistry
 		initCommandClasses.put(
 			ModuleFactoryObserver.class, 
 			ModuleFactoryObserverInitCommand.class);
+			
+		initCommandClasses.put(
+			DependentType.class, 
+			DependentTypeInitCommand.class);
 	}
 
 	/**
