@@ -19,8 +19,6 @@
     <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/jdom-b8-src.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/dom4j/jars/dom4j-1.4-dev-8.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/dom4j-1.4-dev-8-src.jar"/>
-    <classpathentry kind="var"
-        path="MAVEN_REPO/hibernate/jars/hibernate-2.0.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/hibernate-2.0.1-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/odmg/jars/odmg-3.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/odmg-3.0-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/bcel/jars/bcel-5.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/bcel-5.1-src.jar"/>
     <classpathentry kind="var"
@@ -47,5 +45,7 @@
         path="MAVEN_REPO/oe-usermanager-hib/jars/oe-usermanager-hib-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-usermanager-hib-SNAPSHOT-src.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/openedge-utils/jars/openedge-utils-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/hibernate/jars/hibernate-2.0.2.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/hibernate-2.0.2-src.jar"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
