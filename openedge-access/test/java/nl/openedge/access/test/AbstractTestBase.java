@@ -9,7 +9,10 @@ import org.gjt.mm.mysql.jdbc2.optional.MysqlConnectionPoolDataSource;
 /**
  * @author E.F. Hillenius
  * $Id$
- * based on example from Jakarta Commons DBCP project
+ * We 'fake' a datasource here using MysqlConnectionPoolDataSource
+ * For this to work rmiregistry should run and a rmi based jndi implementation
+ * has to be used, eg:
+ * java.naming.factory.initial=com.sun.jndi.rmi.registry.RegistryContextFactory
  */
 public abstract class AbstractTestBase extends TestCase {
 
