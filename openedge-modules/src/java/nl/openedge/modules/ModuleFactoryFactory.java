@@ -118,7 +118,7 @@ public class ModuleFactoryFactory
 		{
 			Class clazz = classLoader.loadClass(_implementingClass);
 			moduleFactory = (ModuleFactory)clazz.newInstance();
-			moduleFactory.init(factoryNode, servletContext);
+			moduleFactory.start(factoryNode, servletContext);
 		}
 		catch(Exception e)
 		{

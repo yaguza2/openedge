@@ -54,7 +54,7 @@ public interface ModuleFactory extends CriticalEventObserver
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
-	public void init(
+	public void start(
 			Element factoryNode, 
 			ServletContext servletContext) 
 			throws ConfigException;

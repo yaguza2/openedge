@@ -51,6 +51,10 @@
 				
 		</module>
 		
+		<module name="BlancoTest"
+				class="nl.openedge.modules.test.BlancoTypeImpl">
+		</module>
+	
 	</modules>
 	
 </modules-config>

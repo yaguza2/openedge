@@ -62,7 +62,7 @@ import org.jdom.Element;
  * 
  * @author Eelco Hillenius
  */
-public class Configurator
+public class JDOMConfigurator
 {
 
 	/**
@@ -83,13 +83,15 @@ public class Configurator
 	public static String INITPARAM_CONFIG_FILE = "oemodules.configFile";
 
 	/* logger */
-	private Log log = LogFactory.getLog(Configurator.class);
+	private Log log = LogFactory.getLog(JDOMConfigurator.class);
 
 	// only one of the following three is set at a time
 	/** pointer to url */
 	protected URL configURL = null;
+	
 	/** pointer to servlet context */
 	protected ServletContext servletContext = null;
+	
 	/** pointer to document location as a string */
 	protected String configDocument = null;
 
@@ -97,7 +99,7 @@ public class Configurator
 	 * construct and initialise with configDocument
 	 * @param configDocument location of document as a string
 	 */
-	public Configurator(String configDocument) throws ConfigException
+	public JDOMConfigurator(String configDocument) throws ConfigException
 	{
 		this.configDocument = configDocument;
 		reload(configDocument);
@@ -107,7 +109,7 @@ public class Configurator
 	 * construct and initialise with URL to configDocument
 	 * @param configURL location of document as an URL
 	 */
-	public Configurator(URL configURL) throws ConfigException
+	public JDOMConfigurator(URL configURL) throws ConfigException
 	{
 
 		this.configURL = configURL;
@@ -118,7 +120,7 @@ public class Configurator
 	 * construct and initialise with servletContext
 	 * @param servletContext servlet context of webapplication
 	 */
-	public Configurator(ServletContext servletContext) throws ConfigException
+	public JDOMConfigurator(ServletContext servletContext) throws ConfigException
 	{
 
 		this.servletContext = servletContext;

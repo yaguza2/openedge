@@ -72,29 +72,12 @@ import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 
 /**
- * The ModuleFactory constructs and initialises objects.
+ * Default implementation of ModuleFactory
  * 
  * @author Eelco Hillenius
  */
 public class DefaultModuleFactory implements ModuleFactory
 {
-
-	/**
-	 * Default location of the xml configuration file.
-	 */
-	public static final String DEFAULT_CONFIG_FILE = "/WEB-INF/oemodules.xml";
-
-	/**
-	 * If a value is set in the application attribute context with this key,
-	 * the value is used to override the setting of the configFile.
-	 */
-	public static final String KEY_CONFIG_FILE = "oemodules.configFile";
-
-	/**
-	 * Name of the servlet init parameter which defines the path to the
-	 * OpenEdge Modules configuration file.  Defaults to DEFAULT_CONFIG_FILE.
-	 */
-	protected static final String INITPARAM_CONFIG_FILE = "oemodules.configFile";
 
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
@@ -148,7 +131,7 @@ public class DefaultModuleFactory implements ModuleFactory
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
-	public void init(
+	public void start(
 			Element factoryNode, 
 			ServletContext servletContext) 
 			throws ConfigException
@@ -219,7 +202,7 @@ public class DefaultModuleFactory implements ModuleFactory
 	 * initialise the quartz scheduler
 	 * @throws Exception
 	 */
-	private void initQuartz(Element node, ServletContext context) 
+	protected void initQuartz(Element node, ServletContext context) 
 		throws ConfigException, SchedulerException
 	{
 
@@ -230,7 +213,8 @@ public class DefaultModuleFactory implements ModuleFactory
 			String proploc = node.getAttributeValue("properties");
 			try
 			{
-				URL urlproploc = URLHelper.convertToURL(proploc, DefaultModuleFactory.class, context);
+				URL urlproploc = URLHelper.convertToURL(
+					proploc, DefaultModuleFactory.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			}
@@ -294,7 +278,6 @@ public class DefaultModuleFactory implements ModuleFactory
 						+ name + " is used more than once");
 			}
 			String className = node.getAttributeValue("class");
-			ModuleAdapter adapter = null;
 			Class clazz = null;
 			try
 			{
@@ -305,86 +288,144 @@ public class DefaultModuleFactory implements ModuleFactory
 				throw new ConfigException(cnfe);
 			}
 			
-			List baseTypes = TypesRegistry.getBaseTypes();
-			if(baseTypes == null)
-			{
-				throw new ConfigException(
-					"there are no base types registered!");
-			}
-			
-			boolean wasFoundOnce = false;
-			for(Iterator j = baseTypes.iterator(); j.hasNext(); )
-			{
-				Class baseType = (Class)j.next();
-				if(baseType.isAssignableFrom(clazz))
-				{
-					if(wasFoundOnce) // more than one base type!
-					{
-						throw new ConfigException(
-							"component " + name + 
-							" is of more than one registered base type!");
-					}
-					wasFoundOnce = true;
-					
-					AdapterFactory adapterFactory =
-						TypesRegistry.getAdapterFactory(baseType);
-					
-					adapter = adapterFactory.constructAdapter(name, node);
-				}
-			}
-			if(adapter == null)
-			{
-				throw new ConfigException(
-					"no adapter could be created for " + name + 
-					", class " + clazz);
-			}
-			adapter.setName(name);
-			adapter.setModuleFactory(this);
-			
-			List initCommands = TypesRegistry.getInitCommandTypes();
-
-			if(initCommands != null)
-			{
-				List commands = new ArrayList();
-				for(Iterator j = initCommands.iterator(); j.hasNext(); )
-				{
-					Class type = (Class)j.next();
-					if(type.isAssignableFrom(clazz))
-					{
-						// get command for this class
-						InitCommand initCommand = 
-							TypesRegistry.getInitCommand(type);
-						// initialize the command
-						initCommand.init(name, node, this);
-						// add command to the list
-						commands.add(initCommand);
-					}
-				}
-				
-				InitCommand[] cmds = (InitCommand[])
-					commands.toArray(new InitCommand[commands.size()]);
-				
-				if(cmds.length > 0)
-				{
-					adapter.setInitCommands(cmds);	
-				}
-			}
-			
-			adapter.setModuleClass(clazz);
-			// store component
-			modules.put(name, adapter);
-			
-			// special case: see if this is a job
-			if(Job.class.isAssignableFrom(clazz))
-			{
-				jobs.put(name, adapter);
-			}
-			
-			log.info("stored " + className + " with name: " + name);
+			addModule(name, clazz, node);
 
 		}
 		log.info("loading modules done");
 		return modules;
+	}
+	
+	/**
+	 * add one module
+	 * @param name
+	 * @param clazz
+	 * @param node
+	 * @throws ConfigException
+	 */
+	public void addModule(
+		String name, 
+		Class clazz,
+		Element node)
+		throws ConfigException
+	{
+		ModuleAdapter adapter = getAdapter(name, clazz, node);
+			
+		// store component
+		modules.put(name, adapter);
+			
+		// special case: see if this is a job
+		if(Job.class.isAssignableFrom(clazz))
+		{
+			jobs.put(name, adapter);
+		}
+			
+		log.info("addedd " + clazz.getName() + " with name: " + name);
+	}
+	
+	/**
+	 * get the adapter
+	 * @param name component name
+	 * @param clazz component class
+	 * @param node configuration node
+	 * @return ModuleAdapter
+	 * @throws ConfigException
+	 */
+	protected ModuleAdapter getAdapter(
+		String name, 
+		Class clazz,
+		Element node)
+		throws ConfigException
+	{
+
+		ModuleAdapter adapter = null;
+		
+		List baseTypes = TypesRegistry.getBaseTypes();
+		if(baseTypes == null)
+		{
+			throw new ConfigException(
+				"there are no base types registered!");
+		}
+			
+		boolean wasFoundOnce = false;
+		for(Iterator j = baseTypes.iterator(); j.hasNext(); )
+		{
+			Class baseType = (Class)j.next();
+			if(baseType.isAssignableFrom(clazz))
+			{
+				if(wasFoundOnce) // more than one base type!
+				{
+					throw new ConfigException(
+						"component " + name + 
+						" is of more than one registered base type!");
+				}
+				wasFoundOnce = true;
+					
+				AdapterFactory adapterFactory =
+					TypesRegistry.getAdapterFactory(baseType);
+					
+				adapter = adapterFactory.constructAdapter(name, node);
+					
+			}
+		}
+		if(adapter == null)
+		{
+			AdapterFactory adapterFactory = 
+				TypesRegistry.getDefaultAdapterFactory();
+			log.warn(name + " is not of any know type... using " +
+				adapterFactory + " to construct an adapter");
+					
+			adapter = adapterFactory.constructAdapter(name, node);
+		}
+		adapter.setName(name);
+		adapter.setModuleFactory(this);
+			
+		addInitCommands(adapter, clazz, node);
+			
+		adapter.setModuleClass(clazz);
+		
+		return adapter;		
+	}
+	
+	/**
+	 * add initialization commands
+	 * @param adapter adapter
+	 * @param node config node
+	 * @param clazz component class
+	 * @throws ConfigException
+	 */
+	protected void addInitCommands(
+		ModuleAdapter adapter, 
+		Class clazz,
+		Element node)
+		throws ConfigException
+	{
+		List initCommands = TypesRegistry.getInitCommandTypes();
+		if(initCommands != null)
+		{
+			List commands = new ArrayList();
+			for(Iterator j = initCommands.iterator(); j.hasNext(); )
+			{
+				Class type = (Class)j.next();
+				if(type.isAssignableFrom(clazz))
+				{
+					// get command for this class
+					InitCommand initCommand = 
+						TypesRegistry.getInitCommand(type);
+					// initialize the command
+					initCommand.init(adapter.getName(), node, this);
+					// add command to the list
+					commands.add(initCommand);
+				}
+			}
+				
+			InitCommand[] cmds = (InitCommand[])
+				commands.toArray(new InitCommand[commands.size()]);
+				
+			if(cmds.length > 0)
+			{
+				adapter.setInitCommands(cmds);	
+			}
+		}		
 	}
 
 	/*

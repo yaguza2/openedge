@@ -169,16 +169,20 @@ public class ModulesTest extends AbstractTestBase
 			Trigger t = scheduler.getTrigger("testTrigger_QuartzTest", "DEFAULT");
 			assertNotNull(t);
 
-			System.out.print("sleep for 1/2 minute...");
-			Thread.sleep(30000);
-			System.out.println("done");
-
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+	
+	public void testBlancoModule()
+	{
+		
+		BlancoTypeImpl module = (BlancoTypeImpl)
+				moduleFactory.getModule("BlancoTest");
+		assertNotNull(module);
 	}
 
 }

@@ -85,6 +85,14 @@ public class TypesRegistry
 	 * are classes of commands for the types
 	 */
 	private static Map initCommandClasses = new HashMap(2);
+	
+	/*
+	 * the default adapter factory will be used when the 
+	 * component is not of a type registered as a base type
+	 * in this registry
+	 */
+	private static AdapterFactory defaultAdapterFactory = 
+		new SingletonTypeAdapterFactory();
 
 	/*
 	 * set the defaults 
@@ -126,6 +134,28 @@ public class TypesRegistry
 	{
 		return Collections.unmodifiableList(baseTypes);
 	}
+	
+	/**
+	 * get the default adapter factory that is to be used when 
+	 * components are not of a type registered as a base type
+	 * in this registry
+	 * @return AdapterFactory
+	 */
+	public static AdapterFactory getDefaultAdapterFactory()
+	{
+		return defaultAdapterFactory;
+	}
+
+	/**
+	 * set the default adapter factory that is to be used when 
+	 * components are not of a type registered as a base type
+	 * in this registry
+	 * @param factory the default adapter factory
+	 */
+	public static void setDefaultAdapterFactory(AdapterFactory factory)
+	{
+		defaultAdapterFactory = factory;
+	}
 
 	/**
 	 * get the adapter factory for the given type
@@ -135,6 +165,18 @@ public class TypesRegistry
 	public static AdapterFactory getAdapterFactory(Class clazz)
 	{
 		return (AdapterFactory)baseTypeAdapterFactories.get(clazz);
+	}
+	
+	/**
+	 * register an adapter factory for the given class
+	 * @param clazz the class
+	 * @param adapterFactory the adapter factory
+	 */
+	public static void registerAdapterFactory(
+		Class clazz, 
+		AdapterFactory adapterFactory)
+	{
+		baseTypeAdapterFactories.put(clazz, adapterFactory);
 	}
 
 	/**
@@ -149,7 +191,7 @@ public class TypesRegistry
 	/**
 	 * get the init command for the given type
 	 * @param clazz the type to get the init command for
-	 * @return InitCommand
+	 * @return InitCommand the command
 	 * @throws ConfigException if no command was found or instantiation failed
 	 */
 	public static InitCommand getInitCommand(Class clazz) throws ConfigException
@@ -174,4 +216,16 @@ public class TypesRegistry
 		}
 	}
 	
+	/**
+	 * register an init command for the given class
+	 * @param clazz the class
+	 * @param adapterFactory the adapter factory
+	 */
+	public static void registerInitCommand(
+		Class typeClass, 
+		Class initCommandClass)
+	{
+		initCommandClasses.put(typeClass, initCommandClass);
+	}
+
 }

@@ -34,7 +34,7 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import nl.openedge.modules.Configurator;
+import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.ModuleFactory;
 import nl.openedge.modules.ModuleFactoryFactory;
 import nl.openedge.modules.config.URLHelper;
@@ -87,7 +87,7 @@ public abstract class AbstractTestBase extends TestCase
 						AbstractTestBase.class,
 						null);
 
-				Configurator c = new Configurator(url);
+				JDOMConfigurator c = new JDOMConfigurator(url);
 				moduleFactory = ModuleFactoryFactory.getInstance();
 
 			}
