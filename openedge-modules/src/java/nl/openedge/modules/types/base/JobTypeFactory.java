@@ -70,15 +70,10 @@ public final class JobTypeFactory extends AbstractComponentFactory
 	}
 
 	/**
-	 * @throws ComponentLookupException allways, 
-	 * as you are not allowed to get a direct instance
+	 * @return null allways. Get Jobs from the scheduler
 	 */
 	public Object getComponent() throws ComponentLookupException
 	{
-
-		log.error("getting jobs from the module factory has no effect " +
-			"as they are managed by the sceduler. Get them from there instead!");
-		
 		return null;
 	}
 

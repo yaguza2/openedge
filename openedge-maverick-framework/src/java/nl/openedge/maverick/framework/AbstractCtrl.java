@@ -651,6 +651,72 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		return res;		
 	}
 	
+	/**
+	 * Returns <tt>text</tt> performing the following substring
+	 * replacements:
+	 *
+	 *    & -> &amp;
+	 *    < -> &lt;
+	 *    > -> &gt;
+	 *    " -> &#034;
+	 *    ' -> &#039;
+	 * @param text string or string[] to transform
+	 * @return String String[] transformed string
+	 */
+	protected Object escapeCharacters(Object text)
+	{
+		if (text == null)
+			return null;
+		
+		if(text instanceof String)
+		{
+			StringBuffer w = new StringBuffer();
+			escapeCharacters(w, (String)text);
+			return w.toString();		
+		}
+		else if(text instanceof String[])
+		{
+			String[] strings = (String[])text;
+			StringBuffer w = new StringBuffer();
+			int length = strings.length;
+			if(length < 1)
+			{
+				return text;
+			}
+			for(int i = 0; i < length; i++)
+			{
+				w.delete(0, w.length());
+				escapeCharacters(w, strings[i]);
+				strings[i] = w.toString();	
+			}
+			return strings;				
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	private void escapeCharacters(StringBuffer w, String text)
+	{
+		for (int i = 0; i < text.length(); i++)
+		{
+			char c = text.charAt(i);
+			if (c == '&')
+				w.append("&amp;");
+			else if (c == '<')
+				w.append("&lt;");
+			else if (c == '>')
+				w.append("&gt;");
+			else if (c == '"')
+				w.append("&#034;");
+			else if (c == '\'')
+				w.append("&#039;");
+			else
+				w.append(c);
+		}	
+	}
+	
 	/*
 	 * set no cache headers
 	 */
