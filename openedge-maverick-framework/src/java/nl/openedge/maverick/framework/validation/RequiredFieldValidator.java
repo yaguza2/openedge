@@ -94,8 +94,8 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * get the error message. default returns the resource bundle message where
-	 * key = messagePrefix, with {0} substituted with the value and {1} substituted 
-	 * with the field name
+	 * key = messagePrefix, with {0} substituted with the field name
+	 * 
 	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
@@ -106,7 +106,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 		Locale locale)
 	{
 
-		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{value, fieldName});
+		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{fieldName});
 	}
 
 }
