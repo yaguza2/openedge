@@ -116,8 +116,8 @@ public class RolePrincipal implements Principal, java.io.Serializable
 	/**
 	 * Compares the specified Object with this <code>RolePrincipal</code>
 	 * for equality.  Returns true if the given object is also a
-	 * <code>RolePrincipal</code> and the two GroupPrincipals
-	 * have the same username.
+	 * <code>RolePrincipal</code> and the two RolePrincipals
+	 * have the same name.
 	 *
 	 * <p>
 	 *

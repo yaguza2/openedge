@@ -38,11 +38,16 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
+import nl.openedge.access.AccessFilter;
+import nl.openedge.access.UserPrincipal;
 import nl.openedge.maverick.framework.util.UrlTool;
 
 import org.jdom.Element;
@@ -76,12 +81,12 @@ public abstract class AbstractCtrl implements ControllerSingleton
 
 	/** Common name for the "redirect" view */
 	public static final String REDIRECT = "doredirect";
-
-	/** session key for user */
-	public static final String SESSION_KEY_USER = "_theUser";
 	
-	
+	/** log for this class */
 	private static Logger log = Logger.getLogger(AbstractCtrl.class);
+	
+	/** if true, the no cache headers will be set */
+	private boolean noCache = true;
 	
 	/** 
 	 * sub classes can override this value. If it is true and a valid user
@@ -106,11 +111,32 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	public final String go(ControllerContext cctx) throws ServletException 
 	{
 		
+		if(noCache)
+		{
+			setNoCache(cctx);
+		}
+		
 		AbstractForm formBean = null;
 		try 
 		{	
 			// let controller create form
 			formBean = this.makeFormBean(cctx);
+
+			if(needsValidUser)
+			{
+				// see if the user was saved in the session, and if so, store in form
+				boolean foundUser = checkUser(cctx, formBean);
+				cctx.setModel(formBean);
+
+				// can we go on?
+				if ((!foundUser) && needsValidUser)
+				{
+					// nope, we can't
+					formBean.setError("global.message", 
+						"user was not found in session");
+					return ERROR;
+				}	
+			}
 
 			cctx.setModel(formBean);
 			
@@ -173,6 +199,44 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			internalPerformError(cctx, formBean);
 			
 			return ERROR;
+		}
+	}
+	
+	/**
+	 * checks if a user is saved in the session and stores in formBean if found
+	 * @param cctx Maverick context
+	 * @param formBean bean to store user in
+	 * @return boolean; true if a user was found, false otherwise
+	 */
+	protected boolean checkUser(ControllerContext cctx, AbstractForm formBean)
+	{
+
+		HttpSession session = cctx.getRequest().getSession();
+		Subject subject = (Subject)session.getAttribute(
+			AccessFilter.AUTHENTICATED_SUBJECT_KEY);
+		
+		if(subject == null)
+		{
+			return false;
+		}
+		
+		UserPrincipal user = null;
+		Set pset = subject.getPrincipals(UserPrincipal.class);	
+		if(pset != null && (!pset.isEmpty()))
+		{
+			// just get first; usually there should be only one of
+			// UserPrincipal type
+			user = (UserPrincipal)pset.iterator().next();	
+		}
+		
+		if (user != null)
+		{
+			formBean.setUser(user);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 	
@@ -589,6 +653,22 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
 		response.setDateHeader("Expires", 1);
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public boolean isNoCache()
+	{
+		return noCache;
+	}
+
+	/**
+	 * @param noCache
+	 */
+	public void setNoCache(boolean noCache)
+	{
+		this.noCache = noCache;
 	}
 
 }
