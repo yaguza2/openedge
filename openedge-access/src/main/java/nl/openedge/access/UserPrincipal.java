@@ -30,6 +30,9 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	/** roles that user is member of */
 	protected List roles;
 	
+	/** possibly the active role for this user */
+	protected RolePrincipal activeRole;
+	
 	/**
 	 * Create a UserPrincipal with a username.
 	 *
@@ -139,6 +142,21 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 */
 	public void setRoles(List groups) {
 		this.roles = groups;
+	}
+
+	/**
+	 * @return RolePrincipal
+	 */
+	public RolePrincipal getActiveRole() {
+		return activeRole;
+	}
+
+	/**
+	 * Sets the activeRole.
+	 * @param activeRole The activeRole to set
+	 */
+	public void setActiveRole(RolePrincipal activeRole) {
+		this.activeRole = activeRole;
 	}
 
 }
