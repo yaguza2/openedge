@@ -98,7 +98,7 @@ import java.util.Vector;
  * @author <a href="mailto:marcoschmidt@users.sourceforge.net">Marco Schmidt</a>.
  * @author Eelco Hillenius
  */
-public class ImageInfo {
+public final class ImageInfo {
 	
 	/**
 	 * Return value of {@link #getFormat()} for JPEG streams.
@@ -216,13 +216,31 @@ public class ImageInfo {
 	}
 
 	/**
+	 * construct ImageInfo
+	 * @param is input stream
+	 */
+	public ImageInfo(InputStream is) {
+		this.setInput(is);
+		this.check();
+	}
+	
+	/**
+	 * construct ImageInfo
+	 * @param ip data input
+	 */
+	public ImageInfo(DataInput ip) {
+		this.setInput(ip);
+		this.check();
+	}
+
+	/*
 	 * Call this method after you have provided an input stream or file
 	 * using {@link #setInput(InputStream)} or {@link #setInput(DataInput)}.
-	 * If true is returned, the file format was known and you information
+	 * If true is returned, the file format was known and information
 	 * about its content can be retrieved using the various getXyz methods.
 	 * @return if information could be retrieved from input
 	 */
-	public boolean check() {
+	protected boolean check() {
 		format = -1;
 		width = -1;
 		height = -1;
@@ -714,7 +732,7 @@ public class ImageInfo {
 	}
 
 	/**
-	 * Run over String list, return false iff at least one of the arguments
+	 * Run over String list, return false if at least one of the arguments
 	 * equals <code>-c</code>.
 	 */
 	private static boolean determineVerbosity(String[] args) {
@@ -928,77 +946,6 @@ public class ImageInfo {
 		return width;
 	}
 
-	private static void print(String sourceName, ImageInfo ii, boolean verbose) {
-		if (verbose) {
-			printVerbose(sourceName, ii);
-		} else {
-			printCompact(sourceName, ii);
-		}
-	}
-
-	private static void printCompact(String sourceName, ImageInfo imageInfo) {
-		System.out.println(
-			imageInfo.getFormatName() + ";" +
-			imageInfo.getMimeType() + ";" +
-			imageInfo.getWidth() + ";" +
-			imageInfo.getHeight() + ";" +
-			imageInfo.getBitsPerPixel() + ";" +
-			imageInfo.getNumberOfImages() + ";" +
-			imageInfo.getPhysicalWidthDpi() + ";" +
-			imageInfo.getPhysicalHeightDpi() + ";" +
-			imageInfo.getPhysicalWidthInch() + ";" +
-			imageInfo.getPhysicalHeightInch()
-		);
-	}
-
-	private static void printLine(int indentLevels, String text, float value, float minValidValue) {
-		if (value < minValidValue) {
-			return;
-		}
-		printLine(indentLevels, text, Float.toString(value));
-	}
-
-	private static void printLine(int indentLevels, String text, int value, int minValidValue) {
-		if (value >= minValidValue) {
-			printLine(indentLevels, text, Integer.toString(value));
-		}
-	}
-
-	private static void printLine(int indentLevels, String text, String value) {
-		if (value == null || value.length() == 0) {
-			return;
-		}
-		while (indentLevels-- > 0) {
-			System.out.print("\t");
-		}
-		if (text != null && text.length() > 0) {
-			System.out.print(text);
-			System.out.print(" ");
-		}
-		System.out.println(value);
-	}
-
-	private static void printVerbose(String sourceName, ImageInfo ii) {
-		printLine(0, null, sourceName);
-		printLine(1, "File format: ", ii.getFormatName());
-		printLine(1, "MIME type: ", ii.getMimeType());
-		printLine(1, "Width (pixels): ", ii.getWidth(), 1);
-		printLine(1, "Height (pixels): ", ii.getHeight(), 1);
-		printLine(1, "Bits per pixel: ", ii.getBitsPerPixel(), 1);
-		printLine(1, "Number of images: ", ii.getNumberOfImages(), 1);
-		printLine(1, "Physical width (dpi): ", ii.getPhysicalWidthDpi(), 1);
-		printLine(1, "Physical height (dpi): ", ii.getPhysicalHeightDpi(), 1);
-		printLine(1, "Physical width (inches): ", ii.getPhysicalWidthInch(), 1.0f);
-		printLine(1, "Physical height (inches): ", ii.getPhysicalHeightInch(), 1.0f);
-		int numComments = ii.getNumberOfComments();
-		printLine(1, "Number of textual comments: ", numComments, 1);
-		if (numComments > 0) {
-			for (int i = 0; i < numComments; i++) {
-				printLine(2, null, ii.getComment(i));
-			}
-		}
-	}
-
 	private int read() throws IOException {
 		if (in != null) {
 			return in.read();
@@ -1120,15 +1067,6 @@ public class ImageInfo {
 		StringBuffer result = new StringBuffer();
 		result.append((char)firstChar);
 		return readLine(result);
-	}
-
-	private static void run(String sourceName, InputStream in, ImageInfo imageInfo, boolean verbose) {
-		imageInfo.setInput(in);
-		imageInfo.setDetermineImageNumber(true);
-		imageInfo.setCollectComments(verbose);
-		if (imageInfo.check()) {
-			print(sourceName, imageInfo, verbose);
-		}
 	}
 
 	/**

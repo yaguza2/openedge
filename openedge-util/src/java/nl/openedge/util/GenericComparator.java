@@ -35,9 +35,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * @author	Johan Compagner, Eelco Hillenius
- * @version $Id$
- * 
+ * @author	Johan Compagner
+ * @author	Eelco Hillenius
  */
 public class GenericComparator implements Comparator {
 	
@@ -74,7 +73,7 @@ public class GenericComparator implements Comparator {
 						throws NoSuchFieldException
 	{
 		_alMethods = new ArrayList();
-		StringTokenizer tk = new StringTokenizer(propertyName,"."); // split op '.'
+		StringTokenizer tk = new StringTokenizer(propertyName,"."); // split on '.'
 		Class currentClass = cls;
 		while(tk.hasMoreTokens()) {
 			String currentProperty = tk.nextToken();
@@ -101,7 +100,7 @@ public class GenericComparator implements Comparator {
 		try {
 			m = cls.getMethod(methodName, null);
 		} catch(Exception e1) {
-			// nog maar een kans voor booleans
+			// give the booleans a chance
 			try {
 				methodName = "is" + propertyName.substring(0,1).toUpperCase() +
 							propertyName.substring(1,propertyName.length());
@@ -153,7 +152,8 @@ public class GenericComparator implements Comparator {
 			return ((Comparable)o1Return).compareTo(o2Return)*_iAscending;
 		} catch(Exception e) {
 			
-			System.err.println("sorting failed:" + o1.getClass().getName() + " vs " + o2.getClass().getName());
+			System.err.println("sorting failed:" + o1.getClass().getName() + 
+								" compared to " + o2.getClass().getName());
 			e.printStackTrace();
 		}
 		return 0;
