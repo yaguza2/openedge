@@ -10,7 +10,7 @@ import nl.openedge.access.AccessManager;
 import nl.openedge.access.AccessProvider;
 import nl.openedge.access.ConfigException;
 import nl.openedge.access.Credentials;
-import nl.openedge.access.Permission;
+import nl.openedge.access.AccessPermission;
 import nl.openedge.access.Resource;
 
 /**
@@ -30,12 +30,12 @@ public class DefaultAccesManager implements AccessManager {
 	}
 
 	/**
-	 * @see nl.openedge.access.AccessManager#hasPermission(nl.openedge.access.Credentials, nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessManager#hasPermission(nl.openedge.access.Credentials, nl.openedge.access.Resource, nl.openedge.access.AccessPermission)
 	 */
 	public boolean hasPermission(
 			Credentials credentials,
 			Resource resource,
-			Permission permission)
+			AccessPermission permission)
 			throws AccessException {
 		// TODO Auto-generated method stub
 		return false;

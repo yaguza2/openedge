@@ -21,7 +21,7 @@ public interface AccessManager extends Configurable {
 	public boolean hasPermission(
 		Credentials credentials,
 		Resource resource,
-		Permission permission) throws AccessException;	
+		AccessPermission permission) throws AccessException;	
 
 	/**
 	 * sets <code>AccessProvider</code>

@@ -5,6 +5,7 @@
 package nl.openedge.access;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author vries
@@ -15,13 +16,13 @@ import java.util.List;
 public interface UserManager extends Configurable {
 	
 	/**
-	 * creates a new User object
+	 * creates a new UserPrincipal object
 	 * @param id
 	 * @param name
 	 * @param password
-	 * @return User
+	 * @return UserPrincipal
 	 */
-	public User createUser(String name, String password) throws AccessException;
+	public UserPrincipal createUser(String name, String password) throws AccessException;
 	
 	/**
 	 * set password to newPassword
@@ -29,29 +30,71 @@ public interface UserManager extends Configurable {
 	 * @param newPassword
 	 * @throws AccessException
 	 */
-	public void resetPassword(User user, String newPassword) throws AccessException;
+	public void resetPassword(UserPrincipal user, String newPassword) throws AccessException;
 	
 	/**
-	 * creates a new Group object
+	 * creates a new GroupPrincipal object
 	 * @param id
 	 * @param name
-	 * @return Group
+	 * @return GroupPrincipal
 	 */
-	public Group createGroup(String name) throws AccessException;
+	public GroupPrincipal createGroup(String name) throws AccessException;
 	
 	/**
 	 * returns a user with this name
 	 * @param name
-	 * @return User
+	 * @return UserPrincipal
 	 */
-	public User getUser(String name) throws AccessException;
+	public UserPrincipal getUser(String name) throws AccessException;
+	
+	/**
+	 * get attibutes for user
+	 * @param user
+	 * @return Map
+	 * @throws AccessException
+	 */
+	public Map getUserAttributes(UserPrincipal user) throws AccessException;
+
+	/**
+	 * get a user attribute
+	 * @param user
+	 * @param key
+	 * @return Object
+	 * @throws AccessException
+	 */
+	public Object getUserAttribute(UserPrincipal user, String key) throws AccessException;
+	
+	/**
+	 * change or add a user attribute
+	 * @param user
+	 * @param key
+	 * @param value
+	 * @throws AccessException
+	 */
+	public void setUserAttibute(UserPrincipal user, String key, Object value)
+		throws AccessException;
+		
+	/**
+	 * delete a attribute for user
+	 * @param user
+	 * @param key
+	 * @throws AccessException
+	 */
+	public void removeUserAttribute(UserPrincipal user, String key) throws AccessException;
+	
+	/**
+	 * remove all attibutes for user
+	 * @param user
+	 * @throws AccessException
+	 */
+	public void removeUserAttribute(UserPrincipal user) throws AccessException;
 	
 	/**
 	 * returns a group with this id
 	 * @param id
-	 * @return Group
+	 * @return GroupPrincipal
 	 */	
-	public Group getGroup(String name) throws AccessException;
+	public GroupPrincipal getGroup(String name) throws AccessException;
 	
 	/**
 	 * list all current users
@@ -70,14 +113,14 @@ public interface UserManager extends Configurable {
 	 * @param group
 	 * @return List
 	 */
-	public List listUsersInGroup(Group group) throws AccessException;
+	public List listUsersInGroup(GroupPrincipal group) throws AccessException;
 	
 	/**
 	 * list all groups this user belongs to
 	 * @param user
 	 * @return List
 	 */
-	public List listGroupsForUser(User user) throws AccessException;
+	public List listGroupsForUser(UserPrincipal user) throws AccessException;
 	
 	/**
 	 * checks if user is in group group
@@ -85,31 +128,31 @@ public interface UserManager extends Configurable {
 	 * @param group
 	 * @return boolean
 	 */
-	public boolean isUserInGroup(User user, Group group) throws AccessException;
+	public boolean isUserInGroup(UserPrincipal user, GroupPrincipal group) throws AccessException;
 	
 	/**
 	 * adds user to group
 	 * @param user
 	 * @param group
 	 */	
-	public void addUserToGroup(User user, Group group) throws AccessException;
+	public void addUserToGroup(UserPrincipal user, GroupPrincipal group) throws AccessException;
 	
 	/**
 	 * removes user from group
 	 * @param user
 	 * @param group
 	 */
-	public void removeUserFromGroup(User user, Group group) throws AccessException;
+	public void removeUserFromGroup(UserPrincipal user, GroupPrincipal group) throws AccessException;
 	
 	/**
 	 * remove user from users
 	 * @param user
 	 */
-	public void removeUser(User user) throws AccessException;
+	public void deleteUser(UserPrincipal user) throws AccessException;
 	
 	/**
 	 * remove group from groups
 	 * @param group
 	 */
-	public void removeGroup(Group group) throws AccessException;
+	public void deleteGroup(GroupPrincipal group) throws AccessException;
 }

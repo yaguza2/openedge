@@ -2,6 +2,8 @@ package nl.openedge.access.impl.rdbms;
 
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +18,7 @@ import org.jdom.Element;
 import nl.openedge.access.AccessException;
 import nl.openedge.access.AccessProvider;
 import nl.openedge.access.ConfigException;
-import nl.openedge.access.Permission;
-import nl.openedge.access.PermissionSet;
+import nl.openedge.access.AccessPermission;
 import nl.openedge.access.Resource;
 import nl.openedge.access.impl.DefaultResource;
 import nl.openedge.access.util.XML;
@@ -64,63 +65,45 @@ public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
 
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#createPermission(nl.openedge.access.Principal, nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessProvider#createPermission(nl.openedge.access.Principal, nl.openedge.access.Resource, nl.openedge.access.AccessPermission)
 	 */
 	public void createPermission(
 			Principal entity,
 			Resource resource,
-			Permission permission)
+			AccessPermission permission)
 			throws AccessException {
 		//TODO invullen
 
 	}
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#deletePermission(nl.openedge.access.Principal, nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessProvider#deletePermission(nl.openedge.access.Principal, nl.openedge.access.Resource, nl.openedge.access.AccessPermission)
 	 */
 	public void deletePermission(
 			Principal entity,
 			Resource resource,
-			Permission permission)
+			AccessPermission permission)
 			throws AccessException {
 		// TODO Auto-generated method stub
 
 	}
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#createPermission(nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessProvider#createPermission(nl.openedge.access.Resource, nl.openedge.access.AccessPermission)
 	 */
-	public void createPermission(Resource resource, Permission permission)
+	public void createPermission(Resource resource, AccessPermission permission)
 			throws AccessException {
 		// TODO Auto-generated method stub
 
 	}
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#deletePermission(nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessProvider#deletePermission(nl.openedge.access.Resource, nl.openedge.access.AccessPermission)
 	 */
-	public void deletePermission(Resource resource, Permission permission)
+	public void deletePermission(Resource resource, AccessPermission permission)
 			throws AccessException {
 		// TODO Auto-generated method stub
 
-	}
-
-	/**
-	 * @see nl.openedge.access.AccessProvider#getPermissions(nl.openedge.access.Principal, nl.openedge.access.Resource)
-	 */
-	public PermissionSet getPermissions(Principal entity, Resource resource)
-			throws AccessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * @see nl.openedge.access.AccessProvider#getPermissions(nl.openedge.access.Resource)
-	 */
-	public PermissionSet getPermissions(Resource resource)
-			throws AccessException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**
@@ -128,10 +111,11 @@ public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
 	 */
 	public void createResource(Resource resource) throws AccessException {
 		
-		Object[] params = new Object[]{resource.getResourceKey(), new Integer(0)};
+		HashMap fields = new HashMap(2);
+		fields.put("name", resource.getResourceKey());
+		fields.put("permission", new Integer(0));
 		try {
-			int result = excecuteUpdate(
-				queries.getProperty("createResourceStmt"), params);
+			int result = insert("oeaccess_resource", fields);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}
@@ -146,10 +130,10 @@ public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
 	public Resource getResource(String resourceKey) throws AccessException {
 
 		DefaultResource resource = null;
-		Object[] params = new Object[]{resourceKey};
 		try {
-			QueryResult result = excecuteQuery(
-				queries.getProperty("getResourceStmt"), params);
+			HashMap keyFields = new HashMap(1);
+			keyFields.put("name", resourceKey);
+			QueryResult result = select("oeaccess_resource", keyFields);
 			if(result.getRowCount() == 1) {
 				Map row = result.getRows()[0];
 				resource = new DefaultResource((String)row.get("name"));
@@ -167,10 +151,10 @@ public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
 	 */
 	public void deleteResource(Resource resource) throws AccessException {
 
-		Object[] params = new Object[]{resource.getResourceKey()};
 		try {
-			int result = excecuteUpdate(
-				queries.getProperty("deleteResourceStmt"), params);
+			HashMap keyFields = new HashMap(1);
+			keyFields.put("name", resource.getResourceKey());
+			int result = delete("oeaccess_resource", keyFields);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}
@@ -184,8 +168,21 @@ public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
 	 * @see nl.openedge.access.AccessProvider#listResources()
 	 */
 	public List listResources() throws AccessException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List resources = new ArrayList();
+		try {
+			QueryResult result = select("oeaccess_resource", new HashMap(0));
+			if(result.getRowCount() == 1) {
+				Map row = result.getRows()[0];
+				DefaultResource resource = new DefaultResource((String)row.get("name"));
+				resource.setResourcePermissions(
+					((Integer)row.get("permission")).intValue());
+				resources.add(resource);
+			}
+		} catch(SQLException e) {
+			throw new AccessException(e);
+		}
+		return resources;
 	}
 
 }

@@ -225,4 +225,18 @@ public class AccessFactory {
 		}
 	}
 
+	/**
+	 * @return AccessManager
+	 */
+	public AccessManager getAccessManager() {
+		return accessManager;
+	}
+
+	/**
+	 * @return UserManager
+	 */
+	public UserManager getUserManager() {
+		return userManager;
+	}
+
 }

@@ -19,7 +19,7 @@ public interface AccessProvider extends Configurable {
 	public void createPermission(
 		Principal entity,
 		Resource resource,
-		Permission permission) throws AccessException;
+		AccessPermission permission) throws AccessException;
 
 	/**
 	 * deletes a permission on the resource for the given entity
@@ -30,7 +30,7 @@ public interface AccessProvider extends Configurable {
 	public void deletePermission(
 		Principal entity,
 		Resource resource,
-		Permission permission) throws AccessException;
+		AccessPermission permission) throws AccessException;
 		
 	/**
 	 * creates a global permission on the resource
@@ -40,7 +40,7 @@ public interface AccessProvider extends Configurable {
 	 */
 	public void createPermission(
 		Resource resource,
-		Permission permission) throws AccessException;
+		AccessPermission permission) throws AccessException;
 
 	/**
 	 * deletes a global permission on the resource
@@ -50,24 +50,7 @@ public interface AccessProvider extends Configurable {
 	 */
 	public void deletePermission(
 		Resource resource,
-		Permission permission) throws AccessException;
-
-	/**
-	 * retrieves permissions on this resource for an entity
-	 * @param entity
-	 * @param resource
-	 * @return List
-	 */
-	public PermissionSet getPermissions(Principal entity, Resource resource) 
-		throws AccessException;
-
-	/**
-	 * returns the global permissions on this resource
-	 * @param resource
-	 * @return List
-	 */
-	public PermissionSet getPermissions(Resource resource)
-		throws AccessException;
+		AccessPermission permission) throws AccessException;
 
 	/**
 	 * creates a resource

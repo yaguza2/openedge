@@ -11,8 +11,8 @@ public interface Credentials {
 	
 	/**
 	 * credentials should have a pointer to a user object
-	 * @return User
+	 * @return UserPrincipal
 	 */
-	public User getUser();
+	public UserPrincipal getUser();
 		
 }
