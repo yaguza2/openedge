@@ -30,6 +30,7 @@
  */
 package nl.openedge.util.tree;
 
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -42,7 +43,9 @@ import javax.swing.tree.VariableHeightLayoutCache;
  * Holder and handler for tree state
  * @author Eelco Hillenius
  */
-public final class TreeStateCache extends VariableHeightLayoutCache
+public final class TreeStateCache 
+	extends VariableHeightLayoutCache
+	implements Serializable
 {
 
 	/* currently selected path */
