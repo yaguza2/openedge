@@ -43,7 +43,7 @@
 
         <property
             name="message"
-            type="string"
+            type="nl.openedge.modules.impl.mailjob.StringClobType"
             column="message"
             not-null="true"
         />
@@ -64,7 +64,7 @@
 
         <property
             name="statusDetail"
-            type="string"
+            type="nl.openedge.modules.impl.mailjob.StringClobType"
             column="status_detail"
             not-null="false"
         />
