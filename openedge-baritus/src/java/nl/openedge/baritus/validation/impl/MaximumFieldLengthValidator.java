@@ -1,7 +1,7 @@
 /*
- * $Id: MaximumFieldLengthValidator.java,v 1.2 2004-03-29 15:26:54 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:54 $
+ * $Id: MaximumFieldLengthValidator.java,v 1.3 2004-04-02 18:42:56 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-02 18:42:56 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -167,10 +167,9 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String fieldName,
-		Object value,
-		Locale locale)
+		Object value)
 	{
-
+		Locale locale = formBeanContext.getCurrentLocale();
 		return getLocalizedMessage(
 			getMessagePrefix(), locale, 
 			new Object[]{value, fieldName, new Integer(maxLength)});
