@@ -77,7 +77,31 @@ public class DateComparatorTest extends TestCase
 		assertEquals(-1, comparator.compare(date1, date2));
 		
 	}
-
 	
-	
+	/**
+	 * Test comparing dates when date1 is lesser than date2
+	 */
+	public void testLesserThan()
+	{
+		Date date1 = new Date();
+		Date date2 = (Date)date1.clone();
+		date1.setDate(date1.getDate() - 1);
+		
+		assertEquals(1, comparator.compare(date1, date2));
+		
+		date1 = new Date();
+		date1.setMonth(date1.getMonth() - 1);
+		assertEquals(1, comparator.compare(date1, date2));
+		
+		date1 = new Date();
+		date1.setYear(date1.getYear() - 1);
+		assertEquals(1, comparator.compare(date1, date2));
+		
+		date1 = new Date();
+		date1.setYear(date1.getYear() - 1);
+		date2.setMonth(date2.getMonth() - 1);
+		assertEquals(1, comparator.compare(date1, date2));
+		
+	}
+		
 }
