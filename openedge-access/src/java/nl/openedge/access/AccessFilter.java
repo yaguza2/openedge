@@ -142,6 +142,13 @@ public class AccessFilter implements Filter
 		{
 			uri = uri.substring(0, sx);
 		}
+		// compact
+		while(uri.charAt(0) == '/')
+		{
+			uri = uri.substring(1);
+		}
+		// now, add 1 slash
+		uri = '/' + uri;
 
 		UriAction action = new UriAction(uri);
 		try
