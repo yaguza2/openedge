@@ -2,3 +2,4 @@ dist
 build
 maven.log
 target
+velocity.log
