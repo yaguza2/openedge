@@ -28,32 +28,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.levob.util.mock;
+package nl.openedge.util;
+
+import java.util.Calendar;
+
+import nl.openedge.util.baritus.validators.AfterValidator;
+import nl.openedge.util.baritus.validators.BeforeValidator;
+import junit.framework.TestCase;
 
 /**
- * Mock HttpServletResponse.
- *
- * @author Eelco Hillenius
+ * Testen van before en after validators
+ * 
+ * @author kbrand
  */
-public class MockHttpServletResponse extends
-        com.mockobjects.servlet.MockHttpServletResponse {
+public class ValidatorTest extends TestCase
+{
+	public ValidatorTest(String name)
+	{
+		super(name);		
+	}
 
-    /**
-     * Lege implementatie.
-     * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String,
-     *      long)
-     */
-    public void addDateHeader(final String arg0, final long arg1) {
-        // ignore
-    }
+	public void testBeforeValidator() throws Exception
+	{
+		BeforeValidator bv = new BeforeValidator();
+		Calendar cal = Calendar.getInstance();
 
-    /**
-     * Lege implementatie.
-     * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String,
-     *      long)
-     */
-    public void setDateHeader(final String arg0, final long arg1) {
-        // ignore
-    }
+		// gisteren
+		cal.roll( Calendar.DAY_OF_YEAR, -1);
+		assertTrue( bv.isValid( null, null, "datum", cal));
 
+		// vandaag
+		cal.roll( Calendar.DAY_OF_YEAR, 1);
+		assertTrue( bv.isValid( null, null, "datum", cal));
+
+		// morgen
+		cal.roll( Calendar.DAY_OF_YEAR, 1);
+		assertFalse( bv.isValid( null, null, "datum", cal));
+	}
+
+	public void testAfterValidator() throws Exception
+	{
+		AfterValidator av = new AfterValidator();
+		Calendar cal = Calendar.getInstance();
+
+		// gisteren
+		cal.roll( Calendar.DAY_OF_YEAR, -1);
+		assertFalse( av.isValid( null, null, "datum", cal));
+
+		// vandaag
+		cal.roll( Calendar.DAY_OF_YEAR, 1);
+		assertTrue( av.isValid( null, null, "datum", cal));
+
+		// morgen
+		cal.roll( Calendar.DAY_OF_YEAR, 1);
+		assertTrue( av.isValid( null, null, "datum", cal));
+	}
 }

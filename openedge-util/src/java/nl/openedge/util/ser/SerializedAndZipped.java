@@ -28,71 +28,93 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+package nl.openedge.util.ser;
 
-package nl.levob.util.mock;
-
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import nl.openedge.util.IteratorToEnumeratorDecorator;
+import java.io.Serializable;
 
 /**
- * Een mock servlet request.
- *
+ * Struct for serialized and zipped objects.
+ * 
  * @author Eelco Hillenius
  */
-public class MockHttpServletRequest extends
-        com.mockobjects.servlet.MockHttpServletRequest {
+public final class SerializedAndZipped implements Serializable, Cloneable
+{
 
     /**
-     * Request attributen.
+     * zipped object data array.
      */
-    private Map attributes = new HashMap();
+    private byte[] compressedData;
 
     /**
-     * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
+     * de original length of object data array.
      */
-    public long getDateHeader(final String arg0) {
-        return System.currentTimeMillis();
+    private int uncompressedDataLength;
+
+    /**
+     * Construct with original length and compressed data.
+     * 
+     * @param uncompressedDataLength
+     * @param compressedData
+     */
+    public SerializedAndZipped(int uncompressedDataLength, byte[] compressedData)
+    {
+        this.uncompressedDataLength = uncompressedDataLength;
+        this.compressedData = compressedData;
     }
 
     /**
-     * Geeft altijd null.
-     * @see javax.servlet.ServletRequest#getLocale()
+     * Get objectData.
+     * 
+     * @return byte[] Returns the objectData.
      */
-    public Locale getLocale() {
-        return null;
+    public byte[] getCompressedData()
+    {
+        return compressedData;
     }
 
     /**
-     * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
+     * Set objectData.
+     * 
+     * @param objectData objectData to set.
      */
-    public Object getAttribute(final String anAttributeName) {
-        return attributes.get(anAttributeName);
+    public void setCompressedData(byte[] objectData)
+    {
+        this.compressedData = objectData;
     }
 
     /**
-     * @see javax.servlet.ServletRequest#getAttributeNames()
+     * Get originalLength.
+     * 
+     * @return int Returns the originalLength.
      */
-    public Enumeration getAttributeNames() {
-        return new IteratorToEnumeratorDecorator(attributes.keySet().iterator());
+    public int getUncompressedDataLength()
+    {
+        return uncompressedDataLength;
     }
 
     /**
-     * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
+     * Set originalLength.
+     * 
+     * @param originalLength originalLength to set.
      */
-    public void removeAttribute(final String anAttributeToRemove) {
-        attributes.remove(anAttributeToRemove);
+    public void setUncompressedDataLength(int originalLength)
+    {
+        this.uncompressedDataLength = originalLength;
     }
 
     /**
-     * @see javax.servlet.ServletRequest#setAttribute(java.lang.String,
-     *      java.lang.Object)
+     * @see java.lang.Object#clone()
      */
-    public void setAttribute(final String attributeName, final Object attributeValue) {
-        attributes.put(attributeName, attributeValue);
+    protected Object clone()
+    {
+        try
+        {
+            return super.clone();
+        }
+        catch(CloneNotSupportedException e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
-
 }

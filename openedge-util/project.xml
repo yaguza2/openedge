@@ -144,7 +144,7 @@
 		<dependency>
 			<groupId>openedge</groupId>
 			<artifactId>baritus</artifactId>
-			<version>1.0</version>
+			<version>1.0.12</version>
 			<type>jar</type>
 			<url>http://baritus.sourceforge.net</url>
 		</dependency>
@@ -163,6 +163,143 @@
 			</properties>
 			<url>http://www.hibernate.org/</url>
 		</dependency>
+
+        <!--
+            Begin Mock objects
+        -->
+ 		<dependency>
+			<groupId>mockobjects</groupId>
+			<artifactId>mockobjects-core</artifactId>
+			<version>0.09</version>
+			<url>http://www.mockobjects.com/</url>
+		</dependency>
+		
+ 		<dependency>
+			<groupId>mockobjects</groupId>
+			<artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
+			<version>0.09</version>
+			<url>http://www.mockobjects.com/</url>
+		</dependency>
+        <!--
+            Einde Mock objects
+        -->
+
+		<!-- 
+			Begin Jetty Dependencies
+		-->
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.objectweb-datasource</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.carol</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.jotm</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.ow_util_log_file</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.ow_util_log_wrp_log4j</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.jotm_jrmp_stubs</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+		
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.jonas_timer</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+
+		<dependency>
+			<groupId>jetty</groupId>
+			<artifactId>jetty.plus.dep.jts1_0</artifactId>
+			<version>4.2.19</version>
+			<type>jar</type>
+			<url>http://www.mortbay.com</url>
+			<properties>
+				<war.bundle>false</war.bundle>
+			</properties>
+		</dependency>
+
+		<!-- 
+			Einde Jetty Dependencies
+		-->
 
 	</dependencies>
 
