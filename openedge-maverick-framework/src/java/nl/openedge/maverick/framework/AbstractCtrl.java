@@ -669,8 +669,9 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					succeeded = false;
 					try
 					{
+						String msgName = getLocalizedMessage(getPropertyNameKey(name));
 						String msg = validator.getErrorMessage(
-							cctx, formBean, name, value, locale);
+							cctx, formBean, (msgName != null) ? msgName : name, value, locale);
 						formBean.setError(name, msg);
 					}
 					catch (Exception e)
