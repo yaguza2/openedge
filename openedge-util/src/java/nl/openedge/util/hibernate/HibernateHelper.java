@@ -3,9 +3,8 @@
  * $Revision$
  * $Date$
  *
- * ====================================================================
- * Copyright (c) 2003
- * All rights reserved.
+ * ================================================================================
+ * Copyright (c) 2004, Open Edge B.V.,  All Rights Reserved.
  */
 package nl.openedge.util.hibernate;
 
@@ -42,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * <ul>
  * <li>delegate: the fully classified classname of the delegate implementation. The default
  * implementation is nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl. To override, eg:
- * 'delegate=nl.levob.util.hibernate.HibernateHelperReloadConfigImpl'.</li>
+ * 'delegate=nl.openedge.util.hibernate.HibernateHelperReloadConfigImpl'.</li>
  * <li>hibernateConfig: the url of the hibernate configuration to use.</li>
  * </ul>
  * </p>
@@ -72,15 +71,13 @@ public class HibernateHelper
 	 * key of the system property for setting the delegate. value =
 	 * hibernatehelper.properties.delegate
 	 */
-	public static final String SYSTEM_PROPERTY_DELEGATE =
-		"hibernatehelper.properties.delegate";
+	public static final String SYSTEM_PROPERTY_DELEGATE = "hibernatehelper.properties.delegate";
 
 	/**
 	 * key of the system property for setting the hibernate config. value =
 	 * hibernatehelper.properties.hibernateConfig
 	 */
-	public static final String SYSTEM_PROPERTY_HIBERNATE_CONFIG =
-		"hibernatehelper.properties.hibernateConfig";
+	public static final String SYSTEM_PROPERTY_HIBERNATE_CONFIG = "hibernatehelper.properties.hibernateConfig";
 
 	/**
 	 * key of the property (from file) for setting the delegate. value = delegate.
@@ -88,8 +85,7 @@ public class HibernateHelper
 	public static final String PROPERTY_DELEGATE = "delegate";
 
 	/**
-	 * key of the property (from file) for setting the hibernate config.
-	 * value = hibernateConfig.
+	 * key of the property (from file) for setting the hibernate config. value = hibernateConfig.
 	 */
 	public static final String PROPERTY_HIBERNATE_CONFIG = "hibernateConfig";
 
@@ -111,7 +107,9 @@ public class HibernateHelper
 
 	/**
 	 * Initialise.
-	 * @throws ConfigException when initialization failed
+	 * 
+	 * @throws ConfigException
+	 *             when initialization failed
 	 */
 	public static void init() throws ConfigException
 	{
@@ -238,7 +236,8 @@ public class HibernateHelper
 	 * Get session for this Thread.
 	 * 
 	 * @return an appropriate Session object
-	 * @throws HibernateException when an unexpected Hibernate exception occurs
+	 * @throws HibernateException
+	 *             when an unexpected Hibernate exception occurs
 	 */
 	public static Session getSession() throws HibernateException
 	{
@@ -247,7 +246,9 @@ public class HibernateHelper
 
 	/**
 	 * Close session for this Thread.
-	 * @throws HibernateException when an unexpected Hibernate exception occurs
+	 * 
+	 * @throws HibernateException
+	 *             when an unexpected Hibernate exception occurs
 	 */
 	public static void closeSession() throws HibernateException
 	{
@@ -256,7 +257,9 @@ public class HibernateHelper
 
 	/**
 	 * disconnect session and remove from threadlocal for this Thread.
-	 * @throws HibernateException when an unexpected Hibernate exception occurs
+	 * 
+	 * @throws HibernateException
+	 *             when an unexpected Hibernate exception occurs
 	 */
 	public static void disconnectSession() throws HibernateException
 	{
@@ -364,13 +367,12 @@ public class HibernateHelper
 	}
 
 	/**
-	 * If true, only one instance will be created of the interceptor for
-	 * all sessions, if false, a new - and thus thread safe - instance
-	 * will be created for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
+	 * new - and thus thread safe - instance will be created for session.
 	 * 
-	 * @param b If true, only one instance will be created of the interceptor for
-	 * all sessions, if false, a new - and thus thread safe - instance
-	 * will be created for session
+	 * @param b
+	 *            If true, only one instance will be created of the interceptor for all sessions, if
+	 *            false, a new - and thus thread safe - instance will be created for session
 	 */
 	public static void setSingleInterceptor(boolean b)
 	{

@@ -3,30 +3,8 @@
  * $Revision$
  * $Date$
  *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
+ * ================================================================================
+ * Copyright (c) 2004, Open Edge B.V.,  All Rights Reserved.
  */
 package nl.openedge.util.hibernate;
 
@@ -54,7 +32,6 @@ import net.sf.hibernate.Session;
  */
 public final class HibernateFilter extends HibernateHelperThreadLocaleImpl implements Filter
 {
-
 	/** log. */
 	private Log log = LogFactory.getLog(HibernateFilter.class);
 
@@ -67,7 +44,8 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 	 * 
 	 * @param filterConfig
 	 *            the filter config object
-	 * @throws ServletException when a servlet exception occurs
+	 * @throws ServletException
+	 *             when a servlet exception occurs
 	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
@@ -95,13 +73,13 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 			}
 			try
 			{
-                super.init();
-            }
+				super.init();
+			}
 			catch (ConfigException e)
-            {
-                log.error(e.getMessage(), e);
-                throw new ServletException(e);
-            }
+			{
+				log.error(e.getMessage(), e);
+				throw new ServletException(e);
+			}
 		}
 	}
 
@@ -116,8 +94,10 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 	 *            http response
 	 * @param chain
 	 *            filter chain
-	 * @throws IOException when an io related exception occurs
-	 * @throws ServletException when a servlet exception occurs
+	 * @throws IOException
+	 *             when an io related exception occurs
+	 * @throws ServletException
+	 *             when a servlet exception occurs
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
