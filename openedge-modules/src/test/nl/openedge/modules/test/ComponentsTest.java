@@ -36,6 +36,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import nl.openedge.modules.observers.ChainedEvent;
 import nl.openedge.modules.types.base.SingletonType;
 
 import org.quartz.JobDetail;
@@ -168,7 +169,10 @@ public class ComponentsTest extends AbstractTestBase
 			// call method that fires critical event
 			module.doFoo();
 			// the observer should now have received a critical event
-			assertNotNull(observer.getCriticalEvent());
+			ChainedEvent evt = observer.getCriticalEvent();
+			assertNotNull(evt);
+			
+			assertEquals(1, ChainedEventObserverImpl.getNumberOfEventsReceived());
 
 		}
 		catch (Exception e)
