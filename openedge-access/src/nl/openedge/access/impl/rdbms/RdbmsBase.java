@@ -1,12 +1,13 @@
 /*
  * Created on 4-apr-2003
  */
-package nl.openedge.access.impl.jdbc;
+package nl.openedge.access.impl.rdbms;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -14,10 +15,32 @@ import javax.sql.DataSource;
  * @author Hillenius
  * $Id$
  */
-public abstract class JDBCBase {
+public abstract class RdbmsBase {
 
 	/** datasource */
 	protected DataSource dataSource = null;
+	
+	protected static Properties queries = null;
+
+	/* init flag */
+	private static boolean initialised = false;
+
+	/** construct and read queries */
+	public RdbmsBase() {
+		
+		if(!initialised) {
+			
+			initialised = true;
+			try {
+				queries = new Properties();
+				queries.load(getClass().getResourceAsStream(
+						"RdbmsQueries.properties"));
+					
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * excecute query and return result

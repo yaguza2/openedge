@@ -39,6 +39,9 @@ public class AccessFactory {
 
 	/** concrete access manager */
 	protected AccessManager accessManager;
+	
+	/** concrete user manager */
+	protected UserManager userManager;
 			
 	/**
 	 * configuration document
@@ -52,14 +55,18 @@ public class AccessFactory {
 	 * construct and initialise with configDocument
 	 */
 	public AccessFactory(String configDocument) throws ConfigException {
-		this.configuration = loadConfigDocumentFromUrl(configDocument);	
+		
+		this.configuration = loadConfigDocumentFromUrl(configDocument);
+		internalInit();
 	}
 	
 	/**
 	 * construct and initialise with servletContext
 	 */
 	public AccessFactory(ServletContext servletContext) throws ConfigException {
+		
 		this.configuration = loadConfigDocumentInWebApp(servletContext);
+		internalInit();
 	}
 	
 	/* do 'real' initialisation */
@@ -67,14 +74,15 @@ public class AccessFactory {
 		
 		Element root = configuration.getRootElement();
 		this.accessManager = loadAccessManager(root.getChild("access-manager"));
-		
+		this.userManager = loadUserManager(root.getChild("user-manager"));
 	}
 	
 	/**
 	 * load and initialise access manager
 	 * @param config
 	 */
-	public AccessManager loadAccessManager(Element configNode) throws ConfigException {
+	protected AccessManager loadAccessManager(Element configNode) 
+				throws ConfigException {
 	
 		AccessManager manager = null;
 		String managerCls = XML.getValue(configNode, "class");
@@ -82,9 +90,11 @@ public class AccessFactory {
 			Class cls = Class.forName(managerCls);
 			manager = (AccessManager)cls.newInstance();
 			manager.init(configNode);
+			this.accessManager = manager;
+			log.info(cls + " acting as AccessManager");
 						
 		} catch(Exception e) {
-			throw new ConfigException(e.getMessage(), e.getCause());
+			throw new ConfigException(e);
 		}
 		Element providerNode = configNode.getChild("access-provider");
 		if(providerNode == null) throw new ConfigException(
@@ -96,9 +106,33 @@ public class AccessFactory {
 			AccessProvider provider = (AccessProvider)cls.newInstance();
 			provider.init(providerNode);
 			accessManager.setAccessProvider(provider);
+			
+			log.info(cls + " set as AccessProvider for AccessManager");
 						
 		} catch(Exception e) {
-			throw new ConfigException(e.getMessage(), e.getCause());
+			throw new ConfigException(e);
+		}
+		return manager;
+	}
+	
+	/**
+	 * load and initialise access manager
+	 * @param config
+	 */
+	protected UserManager loadUserManager(Element configNode) 
+				throws ConfigException {
+	
+		UserManager manager = null;
+		String managerCls = XML.getValue(configNode, "class");
+		try {
+			Class cls = Class.forName(managerCls);
+			manager = (UserManager)cls.newInstance();
+			manager.init(configNode);
+			
+			log.info(cls + " acting as UserManager");
+						
+		} catch(Exception e) {
+			throw new ConfigException(e);
 		}
 		return manager;
 	}
@@ -111,7 +145,9 @@ public class AccessFactory {
 					
 		try {
 			java.net.URL configURL = convertToURL(configDocument, null);
-			log.info("Loading config from " + configURL.toString());
+			if(configURL == null) throw new ConfigException(configDocument + 
+					" should be a document but is empty");
+			log.info("Loading config from " + configURL);
 			
 			return internalLoad(configURL);
 			
@@ -134,6 +170,8 @@ public class AccessFactory {
 				configFile = DEFAULT_CONFIG_FILE;
 
 			java.net.URL configURL = convertToURL(configFile, servletContext);
+			if(configURL == null) throw new ConfigException(configFile + 
+					" should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());
 
 			return internalLoad(configURL);

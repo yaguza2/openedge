@@ -1,17 +1,18 @@
 package nl.openedge.access.test;
 
 
-import junit.framework.TestCase;
+import nl.openedge.access.AccessFactory;
+
 
 /**
  * Testing storing of a file in the repository
  */
-public class LoadTest extends TestCase {
+public class LoadTest extends AbstractTestBase {
 
 	/**
 	 * @see junit.framework.TestCase#TestCase(String)
 	 */
-	public LoadTest(String name) {
+	public LoadTest(String name) throws Exception {
 		super(name);
 	}
 
@@ -19,7 +20,7 @@ public class LoadTest extends TestCase {
 	 * set up for testing
 	 */
 	protected void setUp() throws Exception {
-
+		
 	}
 
 	/**
@@ -27,6 +28,18 @@ public class LoadTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		
+	}
+	
+	/** test the creation of the access factory */
+	public void testAccessFactory() throws Exception {
+		
+		try {
+			AccessFactory factory = new AccessFactory("/oeaccess.xml");
+			assertNotNull(factory);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 

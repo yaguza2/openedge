@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  *
  */
-package nl.openedge.access.impl.jdbc;
+package nl.openedge.access.impl.rdbms;
 
 import java.sql.*;
 import java.util.*;

@@ -1,20 +1,21 @@
-package nl.openedge.access.impl.jdbc;
+package nl.openedge.access.impl.rdbms;
 
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
 import nl.openedge.access.AccessException;
 import nl.openedge.access.AccessProvider;
 import nl.openedge.access.ConfigException;
-import nl.openedge.access.Entity;
 import nl.openedge.access.Permission;
 import nl.openedge.access.PermissionSet;
 import nl.openedge.access.Resource;
@@ -25,28 +26,17 @@ import nl.openedge.access.util.XML;
  * @author Hillenius
  * $Id$
  */
-public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
+public class RdbmsAccessProvider extends RdbmsBase implements AccessProvider {
+	
+	/** logger */
+	private Log log = LogFactory.getLog(this.getClass());
 	
 	protected Map params = null;
 	
 	/** name of datasource to use */
 	public final static String KEY_DATASOURCE_NAME = "datasource";
 	
-	private String createResourceStmt;
-	private String updateResourceStmt;
-	private String deleteResourceStmt;
-	
-	private String createUserPermissionStmt;
-	private String updateUserPermissionStmt;
-	private String deleteUserPermissionStmt;
-	
-	private String createGroupPermissionStmt;
-	private String updateGroupPermissionStmt;
-	private String deleteGroupPermissionStmt;
 
-	private String getResourceStmt;
-	private String getUserPermissionsStmt;
-	private String getGroupPermissionsStmt;
 
 	/**
 	 * @see nl.openedge.access.Configurable#init(org.jdom.Element)
@@ -61,63 +51,23 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 			
 		try {
 			Context ctx = new InitialContext();
-			// relative to standard JNDI root for J2EE app
-			Context envCtx = (Context) ctx.lookup("java:comp/env");
-			setDataSource((DataSource)envCtx.lookup(datasourceName));
+			String environmentContext = (String)params.get("environmentContext");
+			Context envCtx = (Context) ctx.lookup(environmentContext);
+			setDataSource((DataSource)ctx.lookup(datasourceName));
 				
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new ConfigException(ex.getMessage(), ex.getCause());
+			throw new ConfigException(ex);
 		}
-		
-		try {
-			Properties props = new Properties();
-			props.load(getClass().getResourceAsStream(
-					"JDBCAccessProvider.properties"));
-			
-			this.createResourceStmt = 
-					props.getProperty("createResourceStmt");
-			this.updateResourceStmt = 
-					props.getProperty("updateResourceStmt");
-			this.deleteResourceStmt = 
-					props.getProperty("deleteResourceStmt");
-	
-			this.createUserPermissionStmt = 
-					props.getProperty("createUserPermissionStmt");
-			this.updateUserPermissionStmt = 
-					props.getProperty("updateUserPermissionStmt");
-			this.deleteUserPermissionStmt = 
-					props.getProperty("deleteUserPermissionStmt");
-	
-			this.createGroupPermissionStmt = 
-					props.getProperty("createGroupPermissionStmt");
-			this.updateGroupPermissionStmt = 
-					props.getProperty("updateGroupPermissionStmt");
-			this.deleteGroupPermissionStmt = 
-					props.getProperty("deleteGroupPermissionStmt");
+		log.info("initialised");
+	}
 
-			this.getResourceStmt = 
-					props.getProperty("getResourceStmt");
-			this.getUserPermissionsStmt = 
-					props.getProperty("getUserPermissionsStmt");
-			this.getGroupPermissionsStmt = 
-					props.getProperty("getGroupPermissionsStmt");
-					
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-			
-	}
-	
-	private void loadStatements() {
-		
-	}
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#createPermission(nl.openedge.access.Entity, nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessProvider#createPermission(nl.openedge.access.Principal, nl.openedge.access.Resource, nl.openedge.access.Permission)
 	 */
 	public void createPermission(
-			Entity entity,
+			Principal entity,
 			Resource resource,
 			Permission permission)
 			throws AccessException {
@@ -126,10 +76,10 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 	}
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#deletePermission(nl.openedge.access.Entity, nl.openedge.access.Resource, nl.openedge.access.Permission)
+	 * @see nl.openedge.access.AccessProvider#deletePermission(nl.openedge.access.Principal, nl.openedge.access.Resource, nl.openedge.access.Permission)
 	 */
 	public void deletePermission(
-			Entity entity,
+			Principal entity,
 			Resource resource,
 			Permission permission)
 			throws AccessException {
@@ -156,9 +106,9 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 	}
 
 	/**
-	 * @see nl.openedge.access.AccessProvider#getPermissions(nl.openedge.access.Entity, nl.openedge.access.Resource)
+	 * @see nl.openedge.access.AccessProvider#getPermissions(nl.openedge.access.Principal, nl.openedge.access.Resource)
 	 */
-	public PermissionSet getPermissions(Entity entity, Resource resource)
+	public PermissionSet getPermissions(Principal entity, Resource resource)
 			throws AccessException {
 		// TODO Auto-generated method stub
 		return null;
@@ -180,9 +130,13 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 		
 		Object[] params = new Object[]{resource.getResourceKey(), new Integer(0)};
 		try {
-			int result = excecuteUpdate(this.createResourceStmt, params);
+			int result = excecuteUpdate(
+				queries.getProperty("createResourceStmt"), params);
+			if(result != 1) {
+				throw new AccessException("query failed for an unknown reason");
+			}
 		} catch(SQLException e) {
-			throw new AccessException(e.getMessage(), e.getCause());
+			throw new AccessException(e);
 		}
 	}
 
@@ -194,7 +148,8 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 		DefaultResource resource = null;
 		Object[] params = new Object[]{resourceKey};
 		try {
-			QueryResult result = excecuteQuery(this.getResourceStmt, params);
+			QueryResult result = excecuteQuery(
+				queries.getProperty("getResourceStmt"), params);
 			if(result.getRowCount() == 1) {
 				Map row = result.getRows()[0];
 				resource = new DefaultResource((String)row.get("name"));
@@ -202,7 +157,7 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 					((Integer)row.get("permission")).intValue());
 			}
 		} catch(SQLException e) {
-			throw new AccessException(e.getMessage(), e.getCause());
+			throw new AccessException(e);
 		}
 		return resource;
 	}
@@ -214,9 +169,13 @@ public class JDBCAccessProvider extends JDBCBase implements AccessProvider {
 
 		Object[] params = new Object[]{resource.getResourceKey()};
 		try {
-			int result = excecuteUpdate(this.deleteResourceStmt, params);
+			int result = excecuteUpdate(
+				queries.getProperty("deleteResourceStmt"), params);
+			if(result != 1) {
+				throw new AccessException("query failed for an unknown reason");
+			}
 		} catch(SQLException e) {
-			throw new AccessException(e.getMessage(), e.getCause());
+			throw new AccessException(e);
 		}
 
 	}

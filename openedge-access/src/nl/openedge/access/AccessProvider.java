@@ -1,5 +1,6 @@
 package nl.openedge.access;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public interface AccessProvider extends Configurable {
 	 * @param permission
 	 */
 	public void createPermission(
-		Entity entity,
+		Principal entity,
 		Resource resource,
 		Permission permission) throws AccessException;
 
@@ -27,7 +28,7 @@ public interface AccessProvider extends Configurable {
 	 * @param permission
 	 */
 	public void deletePermission(
-		Entity entity,
+		Principal entity,
 		Resource resource,
 		Permission permission) throws AccessException;
 		
@@ -57,7 +58,7 @@ public interface AccessProvider extends Configurable {
 	 * @param resource
 	 * @return List
 	 */
-	public PermissionSet getPermissions(Entity entity, Resource resource) 
+	public PermissionSet getPermissions(Principal entity, Resource resource) 
 		throws AccessException;
 
 	/**

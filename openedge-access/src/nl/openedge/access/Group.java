@@ -4,19 +4,15 @@
  */
 package nl.openedge.access;
 
+import java.security.Principal;
+
 
 /**
- * @author vries
+ * @author vries, hillenius
  *
  * a group 
  */
-public interface Group extends Entity {
-	
-	/**
-	 * returns name
-	 * @return String
-	 */
-	public String getName();
+public interface Group extends Principal {
 	
 	/**
 	 * sets name
