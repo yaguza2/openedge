@@ -30,8 +30,8 @@
  */
 package nl.openedge.util.hibernate;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -71,7 +71,8 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 			String configUrl = filterConfig.getInitParameter("config");
 			if (configUrl != null)
 			{
-				super.setConfigURL(new URL(configUrl));
+				File mappingFile = new File(configUrl);
+				super.setConfigURL(mappingFile.toURL());
 			}
 			super.init();
 		}
