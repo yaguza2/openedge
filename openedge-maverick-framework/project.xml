@@ -110,80 +110,73 @@
 		<dependency>
 			<id>servletapi</id>
 			<version>2.3</version>
-			<properties>
-				<war.bundle.jar>false</war.bundle.jar>
-			</properties>
 		</dependency>
 
 		<dependency>
 			<id>commons-beanutils</id>
 			<version>1.7dev</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://jakarta.apache.org/commons/beanutils/</url>
 		</dependency>
 
 		<dependency>
 			<id>commons-collections</id>
 			<version>3.0-dev</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://jakarta.apache.org/commons/collections/</url>
 		</dependency>
 
 		<dependency>
 			<id>commons-logging</id>
 			<version>1.1-dev</version>
-			<properties>
-				<war.bundle.jar>false</war.bundle.jar>
-			</properties>
 			<url>http://jakarta.apache.org/commons/beanutils/</url>
 		</dependency>
 
 		<dependency>
 			<id>commons-lang</id>
 			<version>1.0.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://jakarta.apache.org/commons/lang/</url>
 		</dependency>
 
 		<dependency>
 			<id>jdom</id>
 			<version>b8</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://www.jdom.org/</url>
 		</dependency>
 
 		<dependency>
 			<id>maverick</id>
 			<version>2.2.0</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://mav.sourceforge.net/</url>
 		</dependency>
 
 		<dependency>
 			<id>velocity</id>
 			<version>1.4-dev</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://jakarta.apache.org/velocity/</url>
+		</dependency>
+		
+		<dependency>
+			<id>log4j</id>
+			<version>1.2.8</version>
+			<url>http://jakarta.apache.org/log4j/</url>
+		</dependency>
+		
+ 		<dependency>
+			<groupId>mockobjects</groupId>
+			<artifactId>mockobjects-core</artifactId>
+			<version>0.09</version>
+			<url>http://www.mockobjects.com/</url>
+		</dependency>
+		
+ 		<dependency>
+			<groupId>mockobjects</groupId>
+			<artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
+			<version>0.09</version>
+			<url>http://www.mockobjects.com/</url>
 		</dependency>
 
 		<dependency>
 			<id>openedge-util</id>
 			<version>1.1.1</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
 			<url>http://www.openedge.nl</url>
 		</dependency>
 
@@ -193,7 +186,7 @@
 		<nagEmailAddress>eelco.hillenius@openedge.nl</nagEmailAddress>
 
 		<sourceDirectory>src/java</sourceDirectory>
-		<!--
+
 		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
 		<unitTest>
 			<includes>
@@ -214,7 +207,6 @@
 				</resource>
 			</resources>
 		</unitTest>
-		-->
 		
 		<resources>
 			<resource>
