@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>oe-thumbs</id>
 	<name>OpenEdge Thumbnails and file resources</name>
-	<currentVersion>1.1</currentVersion>
+	<currentVersion>1.2</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -16,11 +16,12 @@
 	<description />
 	<url>http://maven.apache.org/</url>
 
-	<!-- <repository>
-		<connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
-		</repository> -->
-
 	<versions>
+		<version>
+			<id>1.2</id>
+			<name>1.2</name>
+			<tag>B1_2</tag>
+		</version>
 		<version>
 			<id>1.1</id>
 			<name>1.1</name>
@@ -54,12 +55,9 @@
 		</dependency>
 
 		<dependency>
-			<id>commons-beanutils</id>
-			<version>1.7dev</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
+			<id>ognl</id>
+			<version>2.6.4</version>
+			<url>http://www.ognl.org/</url>
 		</dependency>
 
 		<dependency>
@@ -90,20 +88,14 @@
 		</dependency>
 
 		<dependency>
-			<id>openedge-util</id>
-			<version>SNAPSHOT</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+			<id>openedge-modules</id>
+			<version>1.2</version>
 			<url>http://www.openedge.nl</url>
 		</dependency>
-
+		
 		<dependency>
-			<id>openedge-modules</id>
-			<version>SNAPSHOT</version>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+			<id>openedge-util</id>
+			<version>1.2</version>
 			<url>http://www.openedge.nl</url>
 		</dependency>
 

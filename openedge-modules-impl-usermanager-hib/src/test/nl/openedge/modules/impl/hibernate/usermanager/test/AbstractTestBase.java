@@ -35,11 +35,12 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import net.sf.hibernate.FlushMode;
 import nl.openedge.access.AccessHelper;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.ComponentRepository;
-import nl.openedge.util.config.URLHelper;
+import nl.openedge.modules.config.URLHelper;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 /**
@@ -65,6 +66,7 @@ public abstract class AbstractTestBase extends TestCase
 		if (!initialised)
 		{
 			HibernateHelper.init();
+			HibernateHelper.setFlushMode(FlushMode.COMMIT);
 			init();
 			initialised = true;
 		}

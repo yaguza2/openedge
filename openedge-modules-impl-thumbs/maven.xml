@@ -1,162 +1,47 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project
-	xmlns:j="jelly:core"
-	xmlns:ant="jelly:ant"
-	xmlns:license="license"
-	xmlns:maven="jelly:maven"
-	xmlns:deploy="deploy"
-	xmlns:resources="resources"
-	xmlns:util="jelly:util"
-	xmlns:doc="doc"
-	xmlns:m="maven">
 
-	<!--==================================================================-->
-	<!-- Generate Eclipse .project and .classpath files                   -->
-	<!--==================================================================-->
-	<goal
-		name="eclipse"
-		description="Generate Eclipse project files"
-		prereqs="eclipse:generate-project, eclipse:generate-classpath">
-		<ant:echo>Generating done; refresh your project in Eclipse</ant:echo>
-	</goal>
+<project 
+  xmlns:j="jelly:core"
+  xmlns:ant="jelly:ant"
+  xmlns:license="license"
+  xmlns:maven="jelly:maven"
+  xmlns:deploy="deploy"
+  xmlns:resources="resources"
+  xmlns:util="jelly:util"
+  xmlns:doc="doc"
+  xmlns:m="maven">
 
-	<goal name="eclipse:generate-project" description="Generate Eclipse .project file">
-
-		<ant:echo>Creating ${basedir}/.project ...</ant:echo>
-
-		<j:file name="${basedir}/.project" prettyPrint="true" xmlns="dummy">
-			<projectDescription>
-				<name>${pom.artifactId}</name>
-				<comment>${pom.description}</comment>
-				<projects>
-					<j:forEach var="lib" items="${pom.artifacts}">
-						<j:set
-							var="eclipseDependency"
-							value="${lib.dependency.getProperty(&apos;eclipse.dependency&apos;)}" />
-						<j:if test="${eclipseDependency == &apos;true&apos;}">
-							<project>${lib.dependency.artifactId}</project>
-						</j:if>
-					</j:forEach>
-				</projects>
-				<buildSpec>
-					<buildCommand>
-						<name>org.eclipse.jdt.core.javabuilder</name>
-						<arguments></arguments>
-					</buildCommand>
-				</buildSpec>
-				<natures>
-					<nature>org.eclipse.jdt.core.javanature</nature>
-				</natures>
-			</projectDescription>
-		</j:file>
-	</goal>
-
-	<goal name="eclipse:generate-classpath" description="Generate Eclipse .classpath file">
-
-		<ant:echo>Creating ${basedir}/.classpath ...</ant:echo>
-
-		<j:set var="outputDir" value="${maven.eclipse.output.dir}" />
-		<j:if test="${empty outputDir}">
-			<j:set var="outputDir" value="target/classes" />
-		</j:if>
-
-		<j:file name="${basedir}/.classpath" prettyPrint="true" xmlns="dummy">
-			<classpath>
-
-				<j:if test="${sourcesPresent}">
-					<classpathentry kind="src" path="${pom.build.sourceDirectory}" />
-				</j:if>
-
-				<j:if test="${unitTestSourcesPresent}">
-					<classpathentry kind="src" path="${pom.build.unitTestSourceDirectory}" />
-					<!-- Here are the rules:
-						If the project has maven.eclipse.junit property, add that ver of junit
-						If the project has maven.eclipse.junit property and it is empty, don't add junit
-						If the project has junit dep, use that.
-						Use the test plugin version
-					-->
-					<j:set var="verX" value="${maven.eclipse.junit}X" />
-
-					<j:set var="depVersion">
-						${pom.getPluginContext('maven-test-plugin').getVariable('plugin').getDependency('junit').getVersion()}
-					</j:set>
-
-					<j:if test="${pom.getDependency(&apos;junit&apos;) != null}">
-						<j:set var="depVersion" value="${pom.getDependency(&apos;junit&apos;).getVersion()}" />
-					</j:if>
-
-					<j:if test="${verX != &apos;X&apos;}">
-						<j:set var="depVersion">${maven.eclipse.junit}</j:set>
-					</j:if>
-
-					<j:if test="${verX == &apos;noneX&apos;}">
-						<j:set var="depVersion" value="none" />
-					</j:if>
-
-					<j:if test="${depVersion != &apos;none&apos;}">
-						<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-${depVersion}.jar" />
-					</j:if>
-				</j:if>
-
-				<!-- addition to original plugin is to include sources -->
-				<classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC" />
-				<j:forEach var="lib" items="${pom.artifacts}">
-					<j:set
-						var="eclipseDependency"
-						value="${lib.dependency.getProperty(&apos;eclipse.dependency&apos;)}" />
-					<j:choose>
-						<j:when test="${eclipseDependency == &apos;true&apos;}">
-							<classpathentry kind="src" path="/${lib.dependency.artifactId}" />
-						</j:when>
-						<j:when test="${lib.dependency.groupId == &apos;junit&apos;}">
-							<!-- ignoring junit dependency as we've already created it -->
-						</j:when>
-						<j:otherwise>
-							<classpathentry
-								kind="var"
-								path="MAVEN_REPO${lib.urlPath}"
-								sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/${lib.dependency.artifactId}-${lib.dependency.version}-src.jar" />
-						</j:otherwise>
-					</j:choose>
-				</j:forEach>
-
-				<!-- add the unit test build directory so that any files generated via Maven are available -->
-				<!-- *not for this project though* -->
-				<!-- <classpathentry kind="lib" path="target/test-classes"/> -->
-
-				<classpathentry kind="output" path="${outputDir}" />
-			</classpath>
-		</j:file>
-	</goal>
-
-	<!--==================================================================-->
-	<!-- Local FS deploy								                    -->
-	<!--==================================================================-->
-	<goal name="jar:fsdeploy" prereqs="jar:jar" description="Install the jar in the local repository">
-
-		<ant:property name="maven.jar.to.deploy" value="${maven.final.name}.jar" />
-
-		<ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars" />
-		<ant:mkdir dir="${jardir__}" />
-		<ant:echo>copy ${maven.jar.to.deploy} to ${jardir__}</ant:echo>
-		<ant:copy file="${maven.build.dir}/${maven.jar.to.deploy}" todir="${jardir__}" overwrite="true" />
-	</goal>
-
-	<goal name="jar:fsdeploy-snapshot" description="Install the snapshot jar in the local repository">
-
-		<maven:snapshot project="${pom}" />
-		<j:set var="maven.final.name" value="${snapshotSignature}" />
-		<j:set var="maven.jar.to.deploy" value="${maven.final.name}.jar" />
-		<ant:echo>Building snapshot JAR: ${maven.final.name}</ant:echo>
-		<attainGoal name="jar:jar" />
-
-		<ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars" />
-		<ant:mkdir dir="${jardir__}" />
-		<ant:echo>copy ${maven.jar.to.deploy} as ${pom.artifactId}-SNAPSHOT.jar to ${jardir__}</ant:echo>
-		<ant:copy
-			file="${maven.build.dir}/${maven.jar.to.deploy}"
-			tofile="${jardir__}/${pom.artifactId}-SNAPSHOT.jar"
-			overwrite="true" />
-	</goal>
+  <goal name="jar:fsdeploy" prereqs="jar:jar"
+    description="Install the jar in the remote repository">
+    
+    <ant:property name="maven.jar.to.deploy" value="${maven.final.name}.jar"/>
+    
+    <ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars"/>
+    <ant:mkdir dir="${jardir__}"/> 
+    <ant:echo>copy ${maven.jar.to.deploy} to ${jardir__}</ant:echo>   
+    <ant:copy 
+      file="${maven.build.dir}/${maven.jar.to.deploy}"
+      todir="${jardir__}"
+      overwrite="true"
+    />
+  </goal>
+  
+  <goal name="jar:fsdeploy-snapshot"
+    description="Install the snapshot jar in the local repository">
+   
+    <maven:snapshot project="${pom}"/> 
+    <j:set var="maven.final.name" value="${snapshotSignature}"/>
+    <j:set var="maven.jar.to.deploy" value="${maven.final.name}.jar"/>
+    <ant:echo>Building snapshot JAR: ${maven.final.name}</ant:echo>   
+    <attainGoal name="jar:jar"/>
+    
+    <ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars"/>
+    <ant:mkdir dir="${jardir__}"/>    
+    <ant:echo>copy ${maven.jar.to.deploy} as ${pom.artifactId}-SNAPSHOT.jar to ${jardir__}</ant:echo>
+    <ant:copy 
+      file="${maven.build.dir}/${maven.jar.to.deploy}"
+      tofile="${jardir__}/${pom.artifactId}-SNAPSHOT.jar"
+      overwrite="true"
+    />
+  </goal>
 
 </project>

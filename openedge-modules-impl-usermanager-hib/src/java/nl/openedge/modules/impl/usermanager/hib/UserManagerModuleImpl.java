@@ -42,6 +42,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import ognl.Ognl;
+import ognl.OgnlException;
+
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -51,8 +54,6 @@ import nl.openedge.access.UserManagerModule;
 import nl.openedge.access.util.PasswordHelper;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.util.hibernate.HibernateHelper;
-
-import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * @author Eelco Hillenius
@@ -110,17 +111,38 @@ public class UserManagerModuleImpl
 			String cryptedPassword = new String(
 				PasswordHelper.cryptPassword(password.toCharArray()));
 
-			BeanUtils.populate(user, attributes);
+			populate(user, attributes);
 			user.setPassword(cryptedPassword);
 			session.save(user);
 			tx.commit();
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return user;
+	}
+	
+	/**
+	 * populate bean.
+	 * @param componentInstance
+	 * @param properties
+	 * @return true if populate did not have any troubles, false otherwise
+	 */
+	protected void populate(Object bean, Map properties) 
+		throws OgnlException
+	{
+		if(properties != null)
+		{
+			for(Iterator i = properties.keySet().iterator(); i.hasNext(); )
+			{
+				String key = (String)i.next();
+				Object value = properties.get(key);
+				Ognl.setValue(key, bean, value);
+			}	
+		}
 	}
 
 	/*
