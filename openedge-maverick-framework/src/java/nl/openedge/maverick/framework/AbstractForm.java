@@ -418,29 +418,9 @@ public abstract class AbstractForm
 		if (name == null)
 			return null;
 
-		String value = null;
-		try
-		{
-			Object _value = PropertyUtils.getProperty(this, name);
-			if (_value != null)
-			{
-				Formatter formatter =
-					getFormatter(name, pattern, _value.getClass(), getCurrentLocale());
-				if (formatter != null)
-				{
-					value = formatter.format(_value, pattern);
-				}
-				else
-				{
-					value = ConvertUtils.convert(_value);
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
-
+		String displayString = null;
+		
+		// first, check if there is a registration in the override fields
 		Map _overrideFields = getOverrideFields();
 		boolean wasOverriden = false;
 		if (_overrideFields != null)
@@ -448,26 +428,44 @@ public abstract class AbstractForm
 			Object storedRawValue = _overrideFields.get(name);
 			String storedValue = null;
 			// first, try default
-			if (storedRawValue != null)
+			if (storedRawValue != null) // an entry is found
 			{
-				wasOverriden = true;
-				if (storedRawValue instanceof String)
+				wasOverriden = true; // set flag
+				if (storedRawValue instanceof String) // no conversion
 				{
 					storedValue = (String)storedRawValue;
 				}
-				else
+				else // this is probably a String[]; convert to a simple String
 				{
 					storedValue = ConvertUtils.convert(storedRawValue);
 				}
 
 				if (storedValue != null)
 				{
-					value = storedValue;
+					displayString = storedValue;
 				}
 			}
 		}
+		
+		if(!wasOverriden) // no override value found?
+		{
+			try
+			{
+				Object _value = PropertyUtils.getProperty(this, name); // get the property value
+				if (_value != null)
+				{
+					// format string
+					displayString = format(name, _value, pattern);
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}	
+		}
 
-		return value;
+		return displayString;
 	}
 
 	/**
@@ -494,14 +492,17 @@ public abstract class AbstractForm
 		try
 		{
 			// first look up on fieldname
-			formatter = reg.lookup(fieldname);
+			if(fieldname != null)
+			{
+				formatter = reg.lookup(fieldname);
+			}
 			
-			if(formatter == null) // not found, try pattern
+			if(formatter == null && (pattern != null)) // not found, try pattern
 			{
 				formatter = reg.lookup(pattern);
 			}
 
-			if (formatter == null) // not found, try converter
+			if (formatter == null && (clazz != null)) // not found, try converter
 			{
 				Converter converter = reg.lookup(clazz, getCurrentLocale());
 				if ((converter != null) && (converter instanceof Formatter))
@@ -541,6 +542,66 @@ public abstract class AbstractForm
 		{
 			return (value == null);
 		}
+	}
+	
+	/**
+	 * Format the given value, independent of the current form.
+	 * @param value value to format
+	 * @return String formatted value
+	 */
+	public String format(Object value)
+	{
+		return format(null, value, null);
+	}
+	
+	/**
+	 * Format the given value, independent of the current form.
+	 * @param value value to format
+	 * @param patttern pattern for format
+	 * @return String formatted value
+	 */
+	public String format(Object value, String pattern)
+	{
+		return format(null, value, pattern);
+	}
+	
+	/**
+	 * Format the given value, independent of the current form.
+	 * @param fieldname fieldname that can be used to get a formatter. This will not be used
+	 * 		to get the property value.
+	 * @param value value to format
+	 * @return String formatted value
+	 */
+	public String format(String fieldname, Object value)
+	{
+		return format(fieldname, value, null);
+	}
+	
+	/**
+	 * Format the given value, independent of the current form.
+	 * @param fieldname fieldname that can be used to get a formatter. This will not be used
+	 * 		to get the property value.
+	 * @param value value to format
+	 * @param pattern pattern for format
+	 * @return String formatted value
+	 */
+	public String format(String fieldname, Object value, String pattern)
+	{
+		if(value == null) return null;
+		
+		String formatted = null;
+		Formatter formatter =
+			getFormatter(fieldname, pattern, value.getClass(), getCurrentLocale());
+		
+		if (formatter != null)
+		{
+			formatted = formatter.format(value, null);
+		}
+		else
+		{
+			formatted = ConvertUtils.convert(value);
+		}
+		return formatted;
 	}
 
 }

@@ -1,0 +1,84 @@
+-------------------------------------------------
+1.2
+
+- Converters are now used with a registry nl.openedge.maverick.ConverterRegistry.
+	The converters that are registered with BeanUtils are only used as a fallthrough.
+	Form population can now be used in a localized environment, and is not dependent
+	on the current BeanUtils registration. Converters are looked up with the following
+	algoritm:
+	
+		1. if a locale is given the first search is for a converter that was
+			registered for the given type and locale. 
+		2. If it is not found, the second search is for any converter of the 
+			type LocaleConverter that was registered for the given type. If it 
+			is found, a new instance will be created for the given locale, the 
+			pattern will be copied if possible and the newly instantiated converter 
+			will be registered for the given type and locale (and thus will be 
+			found at the first search next time). 
+		3. If it is not found, the search is the same as when no locale was given 
+			(locale == null): the 'normal', not localized registry will be searched 
+			for an entry with the given type. 
+		4. If this is not found either, a lookup with ConvertUtils from Jakarta 
+			Commons BeanUtils will be done as a fallthrough.
+			
+- If a Converter implements nl.openedge.maverick.framework.converters.Formatter as well,
+	the converter will be used for displaying the property.
+	
+- Velocity tool nl.openedge.maverick.framework.velocity.tools.FieldTool is deprecated and
+	will be removed in the next release
+		
+	$!{fieldTool.getFormValueAsString($model, $displayfieldname)} should be replaced with:
+	$!{model.displayProperty($fieldname)}
+	
+	and
+	$!{fieldTool.getFormattedFormValueAsString($model, $fieldname, $pattern)} should be replaced with:
+	$!{model.displayProperty($fieldname, $pattern)}
+	
+	Furthermore, the format method in AbstractForm can be used to format values that do
+	not have to be looked up (or cannot looked up) in the form.
+
+- custom field populators can be registered on field level. Besides extra flexibility, this
+	has a special security releated purpose: you might want to 'block' the population
+	of certain properties like id's etc. The population is done like this:
+	
+		1. see if a custom field populator is registered for the current field name.
+		2. if so, use this, if not, use the default populator.
+	
+- the current locale is stored in AbstractForm. The current locale is found with 
+	the protected method getLocaleForRequest in AbstractCtrl and works as following:
+		
+		1. if a java.security.Principal was saved in the form (getUserPrincipal) AND
+			the principal is and instance of nl.openedge.access.UserPrincipal, it's locale
+			will be used. 
+		2. if a Locale was saved in the HttpSession object with key _currentLocale this value
+			will be used, overriding the former found Locale (if it was found).
+		3. if the two above actions did not result in a locale, the browser preferences
+			that are sent with the request are used (HttpServletRequest.getLocale()).
+			
+- The principal that is optionally saved in the form is now of type java.security.Principal
+	instead of (implementing class) nl.openedge.access.UserPrincipal. This gives you greater
+	flexibility with which authorization model to work. 
+
+- moved velocity tools from package 'nl.openedge.maverick.framework.util' to
+	'nl.openedge.maverick.framework.velocity.tools'. Users should at least update
+	their velocity tools configuration.
+	
+- minor performance enhancement with population.
+
+- fixed bug that prevented working with arrays correctly
+
+- various minor bugfixes.
+
+
+-------------------------------------------------
+1.1
+
+First (numbered) release
+
+- Validators on field and form level (validateForm is now deprecated and will be removed in 1.3).
+
+- Form population.
+
+- Error handling.
+
+- Etc.
