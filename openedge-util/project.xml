@@ -22,7 +22,8 @@
     <!-- http://bugs.topicus.nl/bug_view_page.php?bug_id= -->
     <issueTrackingUrl>http://bugs.topicus.nl/</issueTrackingUrl>
     <repository>
-        <connection/>
+        <connection> 
+            scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</connection>
         <developerConnection> 
             scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</developerConnection>
     </repository>
