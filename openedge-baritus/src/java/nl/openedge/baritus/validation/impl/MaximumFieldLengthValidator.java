@@ -1,7 +1,7 @@
 /*
- * $Id: MaximumFieldLengthValidator.java,v 1.3 2004-04-02 18:42:56 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-02 18:42:56 $
+ * $Id: MaximumFieldLengthValidator.java,v 1.4 2004-04-04 18:21:55 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-04 18:21:55 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
