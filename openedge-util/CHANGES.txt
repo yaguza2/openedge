@@ -1,4 +1,9 @@
 -------------------------------------------------
+1.2.1
+
+- Added Hibernate interceptor to HibernateHelper
+
+-------------------------------------------------
 1.2
 
 - Removed Commons BeanUtils/ Commons Collections dependency in favor of Ognl

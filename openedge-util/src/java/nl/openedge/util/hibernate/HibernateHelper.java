@@ -37,6 +37,7 @@ import org.apache.commons.logging.LogFactory;
 
 import net.sf.hibernate.FlushMode;
 import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Interceptor;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.SessionFactory;
 import net.sf.hibernate.cfg.Configuration;
@@ -83,6 +84,22 @@ public abstract class HibernateHelper
 	 * Hibernate session factory
 	 */
 	protected static SessionFactory factory;
+	
+	/**
+	 * factory level interceptor class
+	 */	
+	protected static Class interceptorClass;
+	protected static String interceptorClassName;
+	
+	/** 
+	 * If true, only one instance will be created of the interceptor for all
+	 * sessions, if false, a new - and thus thread safe - instance will be created
+	 * for session.
+	 */
+	protected static boolean singleInterceptor;
+	
+	/** if singleInterceptor == true, this will be the instance that is used for all sessions */
+	protected static Interceptor staticInterceptor;
 
 	private static boolean wasInitialised = false;
 
@@ -122,8 +139,30 @@ public abstract class HibernateHelper
 		Session sess = (Session)hibernateHolder.get();
 		if (sess == null && factory != null)
 		{
-
-			sess = factory.openSession();
+			if(interceptorClass != null)
+			{
+				Interceptor interceptor = null;
+				try
+				{
+					interceptor = getInterceptorInstance(interceptorClass);
+				}
+				catch (InstantiationException e)
+				{
+					log.error(e.getMessage(), e);
+					throw new HibernateException(e);
+				}
+				catch (IllegalAccessException e)
+				{
+					log.error(e.getMessage(), e);
+					throw new HibernateException(e);
+				}
+				sess = factory.openSession(interceptor);
+			}
+			else
+			{
+				sess = factory.openSession();
+			}
+			
 			hibernateHolder.set(sess);
 			sess.setFlushMode(flushMode);
 		}
@@ -269,6 +308,103 @@ public abstract class HibernateHelper
 	public static FlushMode getFlushMode()
 	{
 		return flushMode;
+	}
+
+	/**
+	 * get factory level interceptor class name
+	 * @return String factory level interceptor class name
+	 */
+	public static String getInterceptorClass()
+	{
+		return interceptorClassName;
+	}
+
+	/**
+	 * set factory level interceptor class name
+	 * @param interceptor factory level interceptor class name
+	 */
+	public static void setInterceptorClass(String className)
+	{
+		// reset
+		interceptorClassName = null;
+		interceptorClass = null;
+		staticInterceptor = null;
+		
+		// try first
+		Interceptor instance = null;
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if (classLoader == null)
+		{
+			classLoader = HibernateHelper.class.getClassLoader();
+		}
+		Class clazz = null;
+		try
+		{
+			clazz = classLoader.loadClass(className);
+			
+			instance = getInterceptorInstance(clazz);
+			
+			log.info("set hibernate interceptor to " + className + 
+				"; singleInterceptor == " + singleInterceptor);
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
+		
+		interceptorClassName = className;
+		interceptorClass = clazz;
+	}
+	
+	/**
+	 * create a new instance of the interceptor with the provided class or,
+	 * if singleInterceptor == true, the singleton instance (which will be created
+	 * if it did not yet exist).
+	 * @param clazz class of interceptor
+	 * @return Interceptor new or singleton instance of Interceptor
+	 */
+	protected static Interceptor getInterceptorInstance(Class clazz) 
+		throws InstantiationException, 
+		IllegalAccessException
+	{
+		if(singleInterceptor)
+		{
+			synchronized(HibernateHelper.class)
+			{
+				if(staticInterceptor == null)
+				{
+					staticInterceptor = (Interceptor)clazz.newInstance();		
+				}
+				return staticInterceptor;
+			}
+		}
+		else
+		{
+			return (Interceptor)clazz.newInstance();	
+		}
+	}
+
+	/**
+	 * If true, only one instance will be created of the interceptor for all
+	 * sessions, if false, a new - and thus thread safe - instance will be created
+	 * for session.
+	 * @return boolean
+	 */
+	public boolean isSingleInterceptor()
+	{
+		return singleInterceptor;
+	}
+
+	/**
+	 * If true, only one instance will be created of the interceptor for all
+	 * sessions, if false, a new - and thus thread safe - instance will be created
+	 * for session.
+	 * @param b
+	 */
+	public void setSingleInterceptor(boolean b)
+	{
+		singleInterceptor = b;
 	}
 
 }
