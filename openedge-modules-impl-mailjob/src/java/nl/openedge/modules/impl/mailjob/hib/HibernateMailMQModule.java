@@ -45,13 +45,13 @@ import nl.openedge.util.hibernate.HibernateHelper;
  * Hibernate based implementation of MailMQModule
  * @author Eelco Hillenius
  */
-public class HibernateMailMQModule implements SingletonType, MailMQModule {
+public class HibernateMailMQModule implements SingletonType, MailMQModule
+{
 
 	// object query to get new messages
-	private static final String listNewMessages = 
-		"from m in class " + MailMessage.class.getName() +
-		" where m.status = 'new'";
-	
+	private static final String listNewMessages =
+		"from m in class " + MailMessage.class.getName() + " where m.status = 'new'";
+
 	/* if true, delete messages from store, if not set flag to succeeded */
 	private boolean deleteOnRemove = true;
 
@@ -60,82 +60,98 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule {
 	 * @param msg message to add
 	 * @throws Exception
 	 */
-	public synchronized void addMessageToQueue(MailMessage msg) throws Exception {
-		
+	public synchronized void addMessageToQueue(MailMessage msg) throws Exception
+	{
+
 		Session session = HibernateHelper.getSessionFactory().openSession();
 		Transaction tx = null;
-		try {
+		try
+		{
 			tx = session.beginTransaction();
 
 			session.save(msg);
 
 			tx.commit();
-		
-		} catch (Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-			if (tx!=null) tx.rollback();
+			if (tx != null)
+				tx.rollback();
 			throw e;
 		}
 		finally
 		{
-			session.close();	
+			session.close();
 		}
-		
+
 	}
-	
+
 	/**
 	 * adds an array of messages to queue (status is 'new')
 	 * @param msgs messages to add
 	 * @throws Exception
 	 */
-	public synchronized void addMessageToQueue(MailMessage[] msgs) throws Exception {
-		
+	public synchronized void addMessageToQueue(MailMessage[] msgs) throws Exception
+	{
+
 		Session session = HibernateHelper.getSessionFactory().openSession();
 		Transaction tx = null;
-		try {
+		try
+		{
 			tx = session.beginTransaction();
 
 			int size = msgs.length;
-			for(int i = 0; i < size; i++) {
+			for (int i = 0; i < size; i++)
+			{
 				session.save(msgs[i]);
 			}
 
 			tx.commit();
-		
-		} catch (Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-			if (tx!=null) tx.rollback();
+			if (tx != null)
+				tx.rollback();
 			throw e;
 		}
 		finally
 		{
-			session.close();	
+			session.close();
 		}
-		
+
 	}
-	
+
 	/**
 	 * flag message as failed and set failure reason from exception
 	 * @param msg
 	 * @param e
 	 * @throws Exception
 	 */
-	public synchronized void flagFailedMessage(MailMessage msg, Throwable t) 
-			throws Exception {
+	public synchronized void flagFailedMessage(MailMessage msg, Throwable t) throws Exception
+	{
 
 		Session session = HibernateHelper.getSessionFactory().openSession();
 		Transaction tx = null;
-		try {
+		try
+		{
 			tx = session.beginTransaction();
 
 			msg = (MailMessage)session.load(MailMessage.class, msg.getId());
-			if(msg == null) {
-				throw new Exception("mail message with id " + msg.getId() + 
-								" was not found in the persistent store");
+			if (msg == null)
+			{
+				throw new Exception(
+					"mail message with id "
+						+ msg.getId()
+						+ " was not found in the persistent store");
 			}
 
 			String errorMsg;
-			try {
+			try
+			{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				PrintWriter pw = new PrintWriter(bos);
 				t.printStackTrace(pw);
@@ -144,44 +160,53 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule {
 				bos.flush();
 				bos.close();
 				errorMsg = bos.toString();
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				errorMsg = t.getMessage();
 			}
 			msg.setStatus(MailMessage.STATUS_FAILED);
 			msg.setStatusDetail(errorMsg);
 
 			tx.commit();
-		
-		} catch (Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-			if (tx!=null) tx.rollback();
+			if (tx != null)
+				tx.rollback();
 			throw e;
 		}
 		finally
 		{
-			session.close();	
+			session.close();
 		}
-		
+
 	}
 
 	/**
 	 * pop current messages from queue; sets status to 'read'
 	 * @param msg
 	 */
-	public synchronized List popQueue() throws Exception {
-		
+	public synchronized List popQueue() throws Exception
+	{
+
 		List messages = null;
-		
+
 		Session session = HibernateHelper.getSessionFactory().openSession();
 		Transaction tx = null;
-		try {
+		try
+		{
 			tx = session.beginTransaction();
 
 			messages = session.find(listNewMessages);
-			if(messages != null) {
-				for(Iterator i = messages.iterator(); i.hasNext(); ) {
-					
-					MailMessage	message = (MailMessage)i.next();
+			if (messages != null)
+			{
+				for (Iterator i = messages.iterator(); i.hasNext();)
+				{
+
+					MailMessage message = (MailMessage)i.next();
 					// set flag to 'read'
 					message.setStatus(MailMessage.STATUS_READ);
 					// persist change
@@ -190,66 +215,81 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule {
 			}
 
 			tx.commit();
-		
-		} catch (Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-			if (tx!=null) tx.rollback();
+			if (tx != null)
+				tx.rollback();
 			throw e;
 		}
 		finally
 		{
-			session.close();	
+			session.close();
 		}
-		
+
 		return messages;
 	}
-	
+
 	/**
 	 * remove given messages from queue;
 	 * depending on property 'deleteOnRemove' it will delete messages from store
 	 * or set flag to 'succeeded' 
 	 * @param msg
 	 */
-	public synchronized void removeFromQueue(List messagesToRemove) throws Exception {
+	public synchronized void removeFromQueue(List messagesToRemove) throws Exception
+	{
 
 		Session session = HibernateHelper.getSessionFactory().openSession();
 		Transaction tx = null;
-		try {
+		try
+		{
 			tx = session.beginTransaction();
 
-			if(deleteOnRemove) { // delete from store
-				
-				if(messagesToRemove != null) {
-					for(Iterator i = messagesToRemove.iterator(); i.hasNext(); ) {
-					
-						MailMessage	message = (MailMessage)i.next();
+			if (deleteOnRemove)
+			{ // delete from store
+
+				if (messagesToRemove != null)
+				{
+					for (Iterator i = messagesToRemove.iterator(); i.hasNext();)
+					{
+
+						MailMessage message = (MailMessage)i.next();
 						session.delete(message);
 					}
 				}
-				
-			} else { // set flag
-				
-				if(messagesToRemove != null) {
-					for(Iterator i = messagesToRemove.iterator(); i.hasNext(); ) {
-					
-						MailMessage	message = (MailMessage)i.next();
+
+			}
+			else
+			{ // set flag
+
+				if (messagesToRemove != null)
+				{
+					for (Iterator i = messagesToRemove.iterator(); i.hasNext();)
+					{
+
+						MailMessage message = (MailMessage)i.next();
 						// set flag to 'read'
 						message.setStatus(MailMessage.STATUS_SUCCEEDED);
 					}
 				}
-				
+
 			}
 
 			tx.commit();
-		
-		} catch (Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
-			if (tx!=null) tx.rollback();
+			if (tx != null)
+				tx.rollback();
 			throw e;
 		}
 		finally
 		{
-			session.close();	
+			session.close();
 		}
 
 	}
@@ -257,14 +297,16 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule {
 	/**
 	 * @return boolean
 	 */
-	public boolean isDeleteOnRemove() {
+	public boolean isDeleteOnRemove()
+	{
 		return deleteOnRemove;
 	}
-	
+
 	/**
 	 * @param deleteOnRemove
 	 */
-	public void setDeleteOnRemove(boolean deleteOnRemove) {
+	public void setDeleteOnRemove(boolean deleteOnRemove)
+	{
 		this.deleteOnRemove = deleteOnRemove;
 	}
 
