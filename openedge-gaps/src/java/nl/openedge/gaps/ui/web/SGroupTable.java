@@ -79,6 +79,10 @@ public final class SGroupTable extends Table
 	    {
 	        setVisible(false);
 	    }
+	    else
+	    {
+	        setVisible(true); // in case we set it to false before
+	    }
 	    if(invalidateModel)
 	    {
 	        invalidateModel();
