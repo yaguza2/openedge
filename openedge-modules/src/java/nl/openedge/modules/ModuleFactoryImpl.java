@@ -387,7 +387,9 @@ public class ModuleFactoryImpl implements ModuleFactory
 			{
 				throw new ConfigException(e);
 			}
-			trigger.setName(name);
+			//trigger.setName(name); postpone setting the name;
+			// the name will be a combination of:
+			// 'name_jobname', to keep them unique
 			trigger.setGroup(group);
 			List parameters = triggerNode.getChildren("parameter");
 			Map paramMap = new HashMap();
@@ -406,27 +408,6 @@ public class ModuleFactoryImpl implements ModuleFactory
 			{
 				throw new ConfigException(e);
 			}
-			if (trigger.getStartTime() == null)
-			{
-				log.info("\tstart time not set; trying to set to " + "immediate execution");
-				try
-				{
-					// a bit of a hack as the implementors of abstract class 
-					// org.quartz.Trigger have method setStartTime(Date), whereas 
-					// the base class itself lacks this method
-					// set startup to twenty seconds from now
-					Calendar start = new GregorianCalendar();
-					start.setLenient(true);
-					start.add(Calendar.SECOND, 20);
-					Method setMethod = clazz.getMethod("setStartTime", new Class[] { Date.class });
-					setMethod.invoke(trigger, new Object[] { start.getTime()});
-				}
-				catch (Exception e)
-				{ // too bad. Let's hope the trigger will fire anyway
-					log.error("\tcould not set start time, cause: " + e.getMessage());
-				}
-			}
-			log.info("found trigger " + trigger);
 			triggers.put(name, trigger);
 		}
 		return triggers;
@@ -467,8 +448,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 			jobDetail.setJobDataMap(job.getJobData());
 			try
 			{ //start schedule job/trigger combination
-				log.info("schedule " + jobDetail.getFullName() + " with trigger " + triggerName);
-				this.scheduler.scheduleJob(jobDetail, trigger);
+				sceduleJob(triggerName, trigger, jobDetail);
 			}
 			catch (SchedulerException ex)
 			{
@@ -478,7 +458,42 @@ public class ModuleFactoryImpl implements ModuleFactory
 		}
 	}
 
-//	public void sceduleJob()
+	public String sceduleJob(String triggerName, Trigger trigger, JobDetail jobDetail) 
+		throws SchedulerException
+	{
+		String sceduleName = triggerName + "_" + jobDetail.getName();
+		trigger.setName(sceduleName);
+		
+		if (trigger.getStartTime() == null)
+		{
+			log.info("start time not set for trigger " +
+				triggerName + "... trying to set to immediate execution");
+			try
+			{
+				// a bit of a hack as the implementors of abstract class 
+				// org.quartz.Trigger have method setStartTime(Date), whereas 
+				// the base class itself lacks this method
+				// set startup to twenty seconds from now
+				Class clazz = trigger.getClass();
+				Calendar start = new GregorianCalendar();
+				start.setLenient(true);
+				start.add(Calendar.SECOND, 20);
+				Method setMethod = clazz.getMethod(
+					"setStartTime", new Class[] { Date.class });
+				setMethod.invoke(trigger, new Object[] { start.getTime()});
+			}
+			catch (Exception e)
+			{ // too bad. Let's hope the trigger will fire anyway
+				log.error("\tcould not set start time, cause: " + e.getMessage());
+			}
+		}
+		
+		log.info("schedule " + jobDetail.getFullName() + 
+			" with trigger " + sceduleName);
+		
+		scheduler.scheduleJob(jobDetail, trigger);
+		return sceduleName;
+	}
 
 	/**
 	 * Initialize the custom beanutils converters here
