@@ -34,14 +34,9 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.Statement;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.cfg.Configuration;
-import net.sf.hibernate.dialect.HSQLDialect;
 import nl.openedge.util.hibernate.HibernateHelper;
 
 import org.apache.commons.logging.Log;
@@ -50,9 +45,11 @@ import org.mortbay.jetty.plus.Server;
 
 /**
  * Decorator voor opstarten lokale en remote Jetty instantie.
+ * 
  * @author Eelco Hillenius
  */
-public class JettyRemoteDecorator extends TestSetup {
+public class JettyRemoteDecorator extends TestSetup
+{
 
     /** aantal tests dat nu draait. */
     private static int aantalTests = 0;
@@ -65,7 +62,7 @@ public class JettyRemoteDecorator extends TestSetup {
 
     /** Remote proces. */
     private Process process = null;
-    
+
     /** commando poort. */
     private int _port = Integer.getInteger("STOP.PORT", 8079).intValue();
 
@@ -74,53 +71,66 @@ public class JettyRemoteDecorator extends TestSetup {
 
     /**
      * construct.
+     * 
      * @param test test case
      */
-    public JettyRemoteDecorator(final Test test) {
+    public JettyRemoteDecorator(final Test test)
+    {
         super(test);
     }
 
     /**
      * Start Jetty.
+     * 
      * @throws Exception
      * @see junit.extensions.TestSetup#setUp()
      */
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         aantalTests++;
-        try {
-            if (process == null) {
+        try
+        {
+            if(process == null)
+            {
 
                 JettyRemoteStartWorker worker = new JettyRemoteStartWorker();
                 worker.start(); // start workertrhead
                 worker.join(); // laat deze thread wachten op de worker
 
                 // gooi een exception indien Jetty niet is gestart
-                if(!worker.isJettyStarted()) {
+                if(!worker.isJettyStarted())
+                {
                     String msg = "Jetty kon niet (op tijd) worden opgestart";
                     throw new Exception(msg);
                 }
 
-                process = worker.getProcess(); // worker houdt instantie bij van remote proces
+                process = worker.getProcess(); // worker houdt instantie bij van
+                // remote proces
             }
-            if (jettyServer == null) {
+            if(jettyServer == null)
+            {
                 // start Jetty
                 URL jettyConfig = null;
                 URL url = JettyRemoteDecorator.class.getResource("/hibernate-hsql.cfg.xml");
                 HibernateHelper.setConfigURL(url);
                 jettyConfig = JettyRemoteDecorator.class.getResource("/jetty-test-local-config.xml");
-                try {
-                    setupDB();
+                try
+                {
                     log.info("Start Jetty op basis van configuratie " + jettyConfig);
                     jettyServer = new Server(jettyConfig);
                     log.info("Jetty geconfigureerd");
                     jettyServer.start();
                     log.info("Jetty opgestart");
-                } catch (Exception e) {
+                }
+                catch(Exception e)
+                {
                     e.printStackTrace();
                     throw e;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             e.printStackTrace();
             throw e;
         }
@@ -128,32 +138,41 @@ public class JettyRemoteDecorator extends TestSetup {
 
     /**
      * Stop Jetty.
+     * 
      * @throws Exception
      * @see junit.extensions.TestSetup#tearDown()
      */
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
         aantalTests--;
-        if (aantalTests != 0) { return; }
-        
+        if(aantalTests != 0) { return; }
+
         stopRemoteJetty();
         int exitval;
-        try {
+        try
+        {
             // even wachten om nog wat evt uitvoer te kunnen opvangen
             Thread.sleep(500);
             exitval = process.exitValue();
-        } catch (RuntimeException e) {
+        }
+        catch(RuntimeException e)
+        {
             log.error(e.getMessage(), e);
             log.error("proces is nog steeds bezig; wacht op einde proces...");
             exitval = process.waitFor();
         }
         log.info("proces klaar met exitcode " + exitval);
-        
-        if (jettyServer != null) {
-            try {
+
+        if(jettyServer != null)
+        {
+            try
+            {
                 log.info("Jetty afsluiten");
                 jettyServer.stop();
                 log.info("Jetty afgesloten");
-            } catch (Exception e) {
+            }
+            catch(Exception e)
+            {
                 e.printStackTrace();
                 throw e;
             }
@@ -163,57 +182,20 @@ public class JettyRemoteDecorator extends TestSetup {
     /**
      * Stop Jetty remote dmv socket aanroep.
      */
-    private void stopRemoteJetty() {
-        try {
+    private void stopRemoteJetty()
+    {
+        try
+        {
             Socket s = new Socket(InetAddress.getByName("127.0.0.1"), _port);
             OutputStream out = s.getOutputStream();
             out.write((_key + "\r\nstop\r\n").getBytes());
             out.flush();
             s.shutdownOutput();
             s.close();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Creer DB
-     */
-    private void setupDB() throws Exception {
-        log.info("creeer DB");
-        HibernateHelper.init();
-        Configuration hibConfig = HibernateHelper.getConfiguration();
-        String[] drops = hibConfig.generateDropSchemaScript(new HSQLDialect());
-        String[] creates = hibConfig.generateSchemaCreationScript(new HSQLDialect());
-        executeScripts(drops);
-        executeScripts(creates);
-    }
-
-    /**
-     * Voer scripts uit.
-     * @param scripts de scripts
-     */
-    private void executeScripts(String[] scripts) throws Exception {
-
-        Session session = null;
-        try {
-            session = HibernateHelper.getSession();
-            Connection conn = session.connection();
-            for (int i = 0; i < scripts.length; i++) {
-                String script = scripts[i];
-                log.info("executeer " + script);
-                try {
-                    Statement stmt = conn.createStatement();
-                    stmt.execute(script);
-                    conn.commit();
-                } catch (Exception e) {
-                    log.error("\n\t\texecution failed: " + e.getMessage() + "\n");
-                }
-            }
-        } catch (Exception e) {
+        catch(Exception e)
+        {
             log.error(e.getMessage(), e);
-        } finally {
-            HibernateHelper.closeSession();
         }
     }
 
