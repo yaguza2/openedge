@@ -48,6 +48,7 @@ public class HtmlTool
 		htmlEncoding.put(new Character('"'), "&#034;");
 		htmlEncoding.put(new Character('\''), "&#039;");
 		htmlEncoding.put(new Character('ë'), "&euml;");
+		htmlEncoding.put(new Character('\n'),"<br>");
 		
 		javascriptEncoding = new HashMap();
 		javascriptEncoding.put(new Character('\''), "\\'");

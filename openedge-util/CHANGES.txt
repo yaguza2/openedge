@@ -1,4 +1,9 @@
 -------------------------------------------------
+1.2.4
+
+-added '\n' replacement <br> to parseText()
+
+-------------------------------------------------
 1.2.1
 
 - Added Hibernate interceptor to HibernateHelper
