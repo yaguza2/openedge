@@ -10,6 +10,20 @@
 		<section name="Changelog">
 			<p>A short description of changes is given for each release</p>
 
+            <subsection name="1.0.11">
+                <ul>
+                	<li>
+                        When populating with request parameters and other parameters like request
+                        attributes, the latter override the first. However, prior to this fix, both
+                        levels of population for a given parameter were allways executed. Now, only
+                        the last known value will be used. Thus, if you have request parameter 'myparam'
+                        and request attribute 'myparam' AND the includeRequestAttributes property
+                        of ExecutionParams is set to true, only the request attribute 'myparam' will
+                        be matched against a property on the form bean.
+                	</li>
+                </ul>
+            </subsection>
+
             <subsection name="1.0.10">
                 <ul>
                 	<li>
