@@ -26,7 +26,7 @@
 			Type conversion and property navigation is done automatically, so there's is no need
 			for configuration. Just provide a bean to populate and Baritus will do the rest. Population
 			and is flexible and pluggable on several levels of abstraction. The default population
-			delegate uses <ulink url="http://www.ognl.org">Ognl</unlink> to resolve properties and set values.
+			delegate uses <ulink url="http://www.ognl.org">Ognl</ulink> to resolve properties and set values.
 		</para>
 		
 		<para>
