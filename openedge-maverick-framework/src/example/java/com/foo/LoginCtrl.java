@@ -52,6 +52,7 @@ import nl.openedge.access.SessionLoginContext;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.maverick.framework.AbstractCtrl;
 import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.validation.RequiredFieldValidator;
 
 /**
  * @author Hillenius
@@ -158,26 +159,6 @@ public class LoginCtrl extends AbstractCtrl
 		// return redirect view (which in this case is SUCCESS)
 		return SUCCESS;
 	}
-	
-	/**
-	 * validate the form
-	 * @param ctx current maverick context
-	 * @param formBean form
-	 * @return true if validation succeeded, false otherwise
-	 */
-	protected boolean validateForm(ControllerContext ctx, AbstractForm formBean)
-	{
-		LoginForm form = (LoginForm)formBean;
-		if (form.getUsername() == null || 
-			form.getUsername().trim().equals(""))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
 
 	/** initialise */
 	public void init(Element controllerNode) throws ConfigException
@@ -188,6 +169,8 @@ public class LoginCtrl extends AbstractCtrl
 		if (logonModuleAlias == null)
 			throw new ConfigException(
 				"loginModule is a mandatory parameter of this control");
+				
+		addValidator("username", new RequiredFieldValidator());
 	}
 
 	/** create formBean */
