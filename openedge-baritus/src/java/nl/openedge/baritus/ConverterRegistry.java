@@ -1,7 +1,7 @@
 /*
- * $Id: ConverterRegistry.java,v 1.3 2004-03-29 15:26:52 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:52 $
+ * $Id: ConverterRegistry.java,v 1.4 2004-04-04 18:23:19 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-04 18:23:19 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -35,13 +35,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import nl.openedge.baritus.converters.BaseLocaleConverter;
+import nl.openedge.baritus.converters.Converter;
 import nl.openedge.baritus.converters.DateLocaleConverter;
 import nl.openedge.baritus.converters.Formatter;
+import nl.openedge.baritus.converters.LocaleConverter;
 import nl.openedge.baritus.converters.LocaleFormatter;
 import nl.openedge.baritus.converters.NoopConverter;
 import nl.openedge.baritus.converters.BooleanConverter;
@@ -58,10 +62,6 @@ import nl.openedge.baritus.converters.LongLocaleConverter;
 import nl.openedge.baritus.converters.ShortConverter;
 import nl.openedge.baritus.converters.ShortLocaleConverter;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.Converter;
-import org.apache.commons.beanutils.locale.LocaleConverter;
-import org.apache.commons.collections.FastHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -85,13 +85,13 @@ public final class ConverterRegistry
 	 * The set of {@link Converter}s that can be used to convert Strings
 	 * into objects of a specified Class, keyed by the destination Class.
 	 */
-	private FastHashMap converters = new FastHashMap();
+	private Map converters = new HashMap();
 
 	/**
 	 * The set of {@link Converter}s that can be used to convert Strings
 	 * into objects of a specified Class, keyed by the destination Class and locale.
 	 */
-	private FastHashMap localizedConverters = new FastHashMap();
+	private Map localizedConverters = new HashMap();
 
 	/**
 	 * singleton instance
@@ -103,6 +103,12 @@ public final class ConverterRegistry
 	 */
 	private static NoopConverter noopConverter = new NoopConverter();
 	
+	/**
+	 * when true, a noopConverter is returned as a fallback. When
+	 * false, null is returned
+	 */
+	private static boolean returnNoopConverterWhenNotFound = true;
+	
 	private static Log log = LogFactory.getLog(ConverterRegistry.class);
 
 	/*
@@ -110,8 +116,7 @@ public final class ConverterRegistry
 	 */
 	private ConverterRegistry()
 	{
-		converters.setFast(true);
-		localizedConverters.setFast(true);
+		// no nada
 	}
 
 	/**
@@ -383,11 +388,31 @@ public final class ConverterRegistry
 		key = getLocKey(key);
 		return (Formatter)converters.get(key);
 	}
+	
+	/**
+	 * Look up and return any registered {@link Converter} for the specified
+	 * destination class. If there is no registered Converter, return an
+	 * instance of NoopConverter if returnNoopConverterWhenNotFound == true or
+	 * else <code>null</code>.
+	 * 
+	 * @param clazz Class for which to return a registered Converter
+	 * @return Converter converter
+	 */
+	public Converter lookup(Class clazz)
+		throws NoSuchMethodException, 
+		IllegalArgumentException, 
+		InstantiationException, 
+		IllegalAccessException, 
+		InvocationTargetException
+	{
+		return lookup(clazz, null);
+	}
 
 	/**
 	 * Look up and return any registered {@link Converter} for the specified
-	 * destination class and locale; if there is no registered Converter, return
-	 * <code>null</code>.
+	 * destination class and locale. If there is no registered Converter, return an
+	 * instance of NoopConverter if returnNoopConverterWhenNotFound == true or
+	 * else <code>null</code>.
 	 * 
 	 * Precedence: if a locale is given the first search is for a converter that was
 	 * 		registered for the given type and locale. If it is not found, the second
@@ -398,13 +423,14 @@ public final class ConverterRegistry
 	 * 		(and thus will be found at the first search next time). If it is not found,
 	 * 		the search is the same as when no locale was given (locale == null):
 	 * 		the 'normal', not localized registry will be searched for an entry with
-	 * 		the given type. If this is not found either, a lookup with ConvertUtils
-	 * 		from Jakarta Commons BeanUtils will be done as a fallthrough. If still
-	 * 		no Converter is found after this, an instance of NoopConverter is returned,
-	 * 		so that clients allways get a valid converter.
+	 * 		the given type. If still no Converter is found after this, and
+	 * 		returnNoopConverterWhenNotFound is true an instance of NoopConverter is returned,
+	 * 		so that clients allways get a valid converter. If returnNoopConverterWhenNotFound
+	 * 		is false, null will be returned.
 	 * 
 	 * @param clazz Class for which to return a registered Converter
 	 * @param locale The Locale
+	 * @return Converter converter
 	 */
 	public Converter lookup(Class clazz, Locale locale) 
 		throws NoSuchMethodException, 
@@ -454,13 +480,8 @@ public final class ConverterRegistry
 		{
 			converter = (Converter)converters.get(clazz);
 		}
-		if(converter == null) 
-			// still not found, finally try generic non-localized registration with ConvertUtils
-		{
-			converter = ConvertUtils.lookup(clazz);
-		}
 		
-		if(converter == null) // STILL not found; return no-op 
+		if(converter == null && returnNoopConverterWhenNotFound) // STILL not found; return no-op 
 		{
 			converter = noopConverter;
 		}
@@ -563,6 +584,27 @@ public final class ConverterRegistry
 	private String getLocKey(String key)
 	{
 		return "_fmt" + key;
+	}
+
+	/**
+	 * Whether to return a noopConverter as a fallback.
+	 * @return boolean when true, a noopConverter is returned as a fallback. When
+	 * false, null is returned
+	 */
+	public static boolean isReturnNoopConverterWhenNotFound()
+	{
+		return returnNoopConverterWhenNotFound;
+	}
+
+	/**
+	 * Whether to return a noopConverter as a fallback.
+	 * false, null is returned
+	 * @param b when true, a noopConverter is returned as a fallback. When
+	 * false, null is returned
+	 */
+	public static void setReturnNoopConverterWhenNotFound(boolean b)
+	{
+		returnNoopConverterWhenNotFound = b;
 	}
 
 }

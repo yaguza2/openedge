@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.7 2004-04-02 09:52:24 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-04-02 09:52:24 $
+ * $Id: FormBeanContext.java,v 1.8 2004-04-04 18:23:19 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-04-04 18:23:19 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,11 +39,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import nl.openedge.baritus.converters.Converter;
 import nl.openedge.baritus.converters.Formatter;
+import nl.openedge.baritus.util.ValueUtils;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.Converter;
-import org.apache.commons.beanutils.PropertyUtils;
+import ognl.Ognl;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -55,7 +56,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Eelco Hillenius
  * @author Maurice Marrink
  */
-public final class FormBeanContext
+public final class FormBeanContext implements Map
 {
 
 	/* the current locale */
@@ -481,7 +482,7 @@ public final class FormBeanContext
 				else if(storedRawValue instanceof String[]) 
 					// this is a  String[]; convert to a simple String
 				{
-					storedValue = ConvertUtils.convert(storedRawValue);
+					storedValue = ValueUtils.convertToString(storedRawValue);
 				}
 				else // another type, try to format 
 				{
@@ -491,7 +492,7 @@ public final class FormBeanContext
 					}
 					catch(Exception e)
 					{
-						storedValue = ConvertUtils.convert(storedRawValue);
+						storedValue = ValueUtils.convertToString(storedRawValue);
 					}
 				}
 				if (storedValue != null)
@@ -511,7 +512,7 @@ public final class FormBeanContext
 		{
 			try
 			{
-				Object _value = PropertyUtils.getProperty(bean, name); // get the property value
+				Object _value = Ognl.getValue(name, bean); // get the property value
 				if (_value != null)
 				{
 					// format string
@@ -663,7 +664,7 @@ public final class FormBeanContext
 				formattingLog.debug(
 					"using default convertUtils formatter for property " + formatterName);
 			}
-			formatted = ConvertUtils.convert(value);
+			formatted = ValueUtils.convertToString(value);
 		}
 		return formatted;
 	}
@@ -691,10 +692,10 @@ public final class FormBeanContext
 	 * @param value value to be associated with the specified key.
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	public void put(Object key, Object value)
+	public Object put(Object key, Object value)
 	{
 		if(attributes == null) attributes = new HashMap();
-		attributes.put(key, value);
+		return attributes.put(key, value);
 	}
 
 	/**

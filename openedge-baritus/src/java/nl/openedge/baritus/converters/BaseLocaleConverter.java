@@ -1,7 +1,7 @@
 /*
- * $Id: BaseLocaleConverter.java,v 1.2 2004-03-29 15:26:52 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:52 $
+ * $Id: BaseLocaleConverter.java,v 1.3 2004-04-04 18:27:44 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:27:44 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,8 +30,6 @@
  */
 
 package nl.openedge.baritus.converters;
-
-import org.apache.commons.beanutils.locale.LocaleConverter;
 
 import java.text.ParseException;
 import java.util.Locale;

@@ -1,7 +1,7 @@
 /*
- * $Id: FieldPopulator.java,v 1.2 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: FieldPopulator.java,v 1.3 2004-04-04 18:26:59 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:26:59 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,8 +30,6 @@
  */
 package nl.openedge.baritus.population;
 
-import java.util.Locale;
-
 import nl.openedge.baritus.FormBeanContext;
 
 import org.infohazard.maverick.flow.ControllerContext;
@@ -50,19 +48,15 @@ public interface FieldPopulator
 	 * @param cctx maverick context
 	 * @param formBeanContext context with instance of the form to set the property on
 	 * @param name name of the property
-	 * @param requestValue the value from the request. This is either a String or a String array (String[])
-	 * @param targetPropertyMeta an extra wrapper for the target
-	 * @param locale
+	 * @param value unconverted value to set
 	 * @return boolean true if the property was set successfully, false otherwise
 	 * @throws Exception
 	 */
-	public abstract boolean setProperty(
+	public boolean setProperty(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String name,
-		Object requestValue,
-		TargetPropertyMeta targetPropertyMeta,
-		Locale locale)
+		Object value)
 		throws Exception;
 		
 }

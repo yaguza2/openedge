@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.3 2004-04-02 09:50:22 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-02 09:50:22 $
+ * $Id: TestBean.java,v 1.4 2004-04-04 18:24:08 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-04 18:24:08 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -86,6 +86,30 @@ public class TestBean
 	private List multiDimensionalList = new ArrayList();
 	
 	private Map multiDimensionalMap = new HashMap();
+
+
+	/**
+	 * construct
+	 */
+	public TestBean()
+	{
+		multiDimensionalMap.put("one", new HashMap());
+		multiDimensionalMap.put("two", new HashMap());
+		
+		List lOne0 = new ArrayList();
+		List lOne1 = new ArrayList();
+		List lOne2 = new ArrayList();
+		List lOne = new ArrayList();
+		lOne.add(lOne0);
+		lOne.add(lOne1);
+		lOne.add(lOne2);
+		multiDimensionalList.add(lOne);
+		
+		List lTwo0 = new ArrayList();
+		List lTwo = new ArrayList();
+		lTwo.add(lTwo);
+		multiDimensionalList.add(lTwo);
+	}
 
 
 	/**
@@ -399,29 +423,6 @@ public class TestBean
 	{
 		multiDimensionalList = list;
 	}
-	
-	/**
-	 * 
-	 * @param keys
-	 * @param value
-	 */
-	public void setMultiDimensionalList(Object[] keys, Object value)
-	{
-		List attribute = null;
-		int index1 = ((Integer)keys[0]).intValue();
-//		int index2 = ((Integer)keys[1]).intValue();
-		
-		try
-		{
-			attribute = (List)multiDimensionalList.get(index1);
-		}
-		catch (Exception e)
-		{
-			attribute = new ArrayList();
-			multiDimensionalList.add(attribute);
-		}
-		attribute.add(value);
-	}
 
 	/**
 	 * @return
@@ -437,27 +438,6 @@ public class TestBean
 	public void setMultiDimensionalMap(Map map)
 	{
 		multiDimensionalMap = map;
-	}
-	
-	/**
-	 * 
-	 * @param keys
-	 * @param value
-	 */
-	public void setMultiDimensionalMap(Object[] keys, Object value)
-	{
-		Map attribute = null;
-		if (multiDimensionalMap.containsKey(keys[0]))
-		{
-			attribute = (Map)multiDimensionalMap.get(keys[0]);
-		}
-		else
-		{
-			attribute = new HashMap();
-		}
-		
-		attribute.put(keys[1], value);
-		multiDimensionalMap.put(keys[0], attribute);
 	}
 
 }

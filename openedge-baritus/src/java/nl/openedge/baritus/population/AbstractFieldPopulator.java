@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldPopulator.java,v 1.4 2004-04-02 09:50:22 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-02 09:50:22 $
+ * $Id: AbstractFieldPopulator.java,v 1.5 2004-04-04 18:26:59 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-04 18:26:59 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,14 +30,6 @@
  */
 package nl.openedge.baritus.population;
 
-import java.beans.IndexedPropertyDescriptor;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.apache.commons.beanutils.MappedPropertyDescriptor;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.StringUtils;
 
 import nl.openedge.baritus.FormBeanCtrlBase;
 
@@ -51,7 +43,7 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 {
 	
 	/** reference to the controller */
-	private FormBeanCtrlBase ctrl = null;
+	protected FormBeanCtrlBase ctrl = null;
 
 	/**
 	 * default constructor
@@ -87,112 +79,5 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 		this.ctrl = ctrl;
 	}
 	
-	/**
-	 * get the target type from this property descriptor
-	 * @param propertyDescriptor
-	 * @return Class the type of the target
-	 */
-	protected Class getTargetType(PropertyDescriptor propertyDescriptor)
-	{
-		Class targetType;
-		if (propertyDescriptor instanceof MappedPropertyDescriptor) 
-		{
-			MappedPropertyDescriptor pd = (MappedPropertyDescriptor)propertyDescriptor;
-			targetType = pd.getMappedPropertyType();
-		}
-		else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
-		{
-			IndexedPropertyDescriptor pd = (IndexedPropertyDescriptor)propertyDescriptor;
-			targetType = pd.getIndexedPropertyType();
-		}
-		else 
-		{
-			targetType = propertyDescriptor.getPropertyType();
-		}
-		return targetType;
-	}
-	
-	/**
-	 * get the write method for this property
-	 * @param propertyDescriptor property descriptor
-	 * @return Method write method
-	 */
-	protected Method getWriteMethod(PropertyDescriptor propertyDescriptor)
-	{
-		Method method = null;
-		
-		if (propertyDescriptor instanceof MappedPropertyDescriptor) 
-		{
-			MappedPropertyDescriptor pd = (MappedPropertyDescriptor)propertyDescriptor;
-			method = pd.getMappedWriteMethod();
-		}
-		else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
-		{
-			IndexedPropertyDescriptor pd = (IndexedPropertyDescriptor)propertyDescriptor;
-			method = pd.getIndexedWriteMethod();
-		}
-		else 
-		{
-			method = propertyDescriptor.getWriteMethod();
-		}
-		
-		return method;
-	}
-	
-	/**
-	 * set property on target
-	 * 
-	 * There is one special case, for multidimensional Maps and lists
-	 * a method signature public void setProperty(Object[], Object) can
-	 * be used to set the values.
-	 * @param targetPropertyMeta
-	 * @param targetObject object to set property on
-	 * @param value value of property to set
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 */
-	protected void setTargetProperty(
-		TargetPropertyMeta targetPropertyMeta,
-		Object targetObject,
-		Object value) 
-		throws IllegalAccessException, 
-		InvocationTargetException, 
-		NoSuchMethodException
-	{
-		if (targetPropertyMeta.getIndexesAndKeys().length == 0)
-		{
-			PropertyUtils.setProperty(
-				targetObject, targetPropertyMeta.getPropName(), value);
-		}
-		else if (targetPropertyMeta.getIndexesAndKeys().length == 1) 
-		{
-			Object indexOrKey = targetPropertyMeta.getIndexesAndKeys()[0]; 
-			
-			if (indexOrKey instanceof Integer)
-			{
-				int index = ((Integer)indexOrKey).intValue();
-				PropertyUtils.setIndexedProperty(
-					targetObject, targetPropertyMeta.getPropName(),
-					index, value);
-			}
-			else
-			{
-				PropertyUtils.setMappedProperty(
-					targetObject, targetPropertyMeta.getPropName(),
-					(String)indexOrKey, value);
-			}
-		} 
-		else 
-		{
-			String setterMethod = "set"
-				+ StringUtils.capitalise(targetPropertyMeta.getPropertyDescriptor().getName());
-			Class[] paramTypes = {Object[].class, Object.class};
-			Method setter = targetObject.getClass().getMethod(setterMethod, paramTypes);
-			
-			Object[] params = {targetPropertyMeta.getIndexesAndKeys(), value};
-			setter.invoke(targetObject, params);
-		}
-	}
 
 }

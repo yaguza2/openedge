@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.4 2004-04-02 09:52:24 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-02 09:52:24 $
+ * $Id: FormBeanCtrlBase.java,v 1.5 2004-04-04 18:23:19 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-04 18:23:19 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,9 +30,6 @@
  */
 package nl.openedge.baritus;
 
-import java.beans.IndexedPropertyDescriptor;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -52,18 +49,13 @@ import javax.servlet.http.HttpSession;
 import nl.openedge.baritus.interceptors.Interceptor;
 import nl.openedge.baritus.interceptors.flow.FlowInterceptorContext;
 import nl.openedge.baritus.population.FieldPopulator;
-import nl.openedge.baritus.population.PropertyUtil;
-import nl.openedge.baritus.population.TargetPropertyMeta;
 import nl.openedge.baritus.util.MessageUtils;
+import nl.openedge.baritus.util.MultiHashMap;
 import nl.openedge.baritus.util.ValueUtils;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.MappedPropertyDescriptor;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.MultiMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.Controller;
@@ -492,7 +484,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			{
 				Object key = i.next();
 				Object value = parameters.get(key);
-				msg.append(key + " = " + ConvertUtils.convert(value));
+				msg.append(key + " = " + ValueUtils.convertToString(value));
 				if(i.hasNext()) msg.append(", ");
 			}	
 		}
@@ -548,8 +540,6 @@ public abstract class FormBeanCtrlBase implements Controller
 		
 		boolean succeeded = true;
 		Object bean = formBeanContext.getBean();
-		PropertyDescriptor propertyDescriptor = null;
-		TargetPropertyMeta targetPropertyMeta = null;
 		
 		Map regexFieldPopulators = populatorRegistry.getRegexFieldPopulators();
 		// first, see if there are matches with registered regex populators
@@ -575,32 +565,12 @@ public abstract class FormBeanCtrlBase implements Controller
 							
 							keysToBeRemoved.add(name);
 	
-							try 
-							{
-								// get the descriptor
-								propertyDescriptor = getPropertyDescriptor(bean, name);
-	
-								if (propertyDescriptor == null) 
-								{
-									continue; // Skip this property setter
-								}
-							}
-							catch (NoSuchMethodException e) 
-							{
-								continue; // Skip this property setter
-							}
-							
-							// resolve and get some more info we need for the target
-							targetPropertyMeta = PropertyUtil.calculate(
-								bean, name, propertyDescriptor);
-	
 							boolean success;
 							try
 							{
 								// execute population on form
 								success = fieldPopulator.setProperty(
-									cctx, formBeanContext, name, value, 
-									targetPropertyMeta, locale);
+									cctx, formBeanContext, name, value);
 							}
 							catch (Exception e)
 							{
@@ -671,30 +641,20 @@ public abstract class FormBeanCtrlBase implements Controller
 			Object value = parameters.get(name);
 	
 			try
-			{	
-				// get the descriptor
-				PropertyDescriptor propertyDescriptor = getPropertyDescriptor(bean, name);
-				
-				if(propertyDescriptor != null)
+			{
+				// See if we have a custom populator registered for the given field
+				FieldPopulator fieldPopulator = 
+					populatorRegistry.getFieldPopulator(name);
+			
+				if(fieldPopulator == null) // if no custom populator was found, we use the default
 				{
-					// resolve and get some more info we need for the target
-					TargetPropertyMeta targetPropertyMeta = PropertyUtil.calculate(
-						bean, name, propertyDescriptor);
-
-					// See if we have a custom populator registered for the given field
-					FieldPopulator fieldPopulator = 
-						populatorRegistry.getFieldPopulator(name);
-				
-					if(fieldPopulator == null) // if no custom populator was found, we use the default
-					{
-						fieldPopulator = populatorRegistry.getDefaultFieldPopulator();
-					}
-				
-					// execute population on form
-					success = fieldPopulator.setProperty(
-						cctx, formBeanContext, name, value, targetPropertyMeta, locale);
-							
+					fieldPopulator = populatorRegistry.getDefaultFieldPopulator();
 				}
+			
+				// execute population on form
+				success = fieldPopulator.setProperty(
+					cctx, formBeanContext, name, value);
+
 			}
 			catch (Exception e)
 			{
@@ -712,43 +672,6 @@ public abstract class FormBeanCtrlBase implements Controller
 		}
 		return succeeded;
 	}
-	
-	/*
-	 * get the property descriptor
-	 * @param bean the bean
-	 * @param name property name
-	 * @return PropertyDescriptor descriptor if found AND if has writeable method 
-	 */
-	private PropertyDescriptor getPropertyDescriptor(
-		Object bean, 
-		String name) 
-		throws IllegalAccessException, 
-		InvocationTargetException, 
-		NoSuchMethodException
-	{
-		PropertyDescriptor propertyDescriptor = 
-			PropertyUtils.getPropertyDescriptor(bean, name);
-
-		if(propertyDescriptor == null) return null;
-
-		if (propertyDescriptor instanceof MappedPropertyDescriptor) 
-		{
-			MappedPropertyDescriptor pd = (MappedPropertyDescriptor)propertyDescriptor;
-			if(pd.getMappedWriteMethod() == null) propertyDescriptor = null;
-		}
-		else if (propertyDescriptor instanceof IndexedPropertyDescriptor) 
-		{
-			IndexedPropertyDescriptor pd = (IndexedPropertyDescriptor)propertyDescriptor;
-			if(pd.getIndexedWriteMethod() == null) propertyDescriptor = null;
-		}
-		else 
-		{
-			if(propertyDescriptor.getWriteMethod() == null) propertyDescriptor = null;
-		}
-		
-		return propertyDescriptor;
-	}
-
 	
 	/*
 	 * Called when populating the form failed.
@@ -801,7 +724,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			{
 				Object key = i.next();
 				Object value = errors.get(key);
-				populationLog.debug("\t " + key + " == " + ConvertUtils.convert(value));
+				populationLog.debug("\t " + key + " == " + ValueUtils.convertToString(value));
 			}
 			populationLog.debug("----------------------------------------------------------");	
 		}
@@ -1126,7 +1049,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @param fieldName name of the field
 	 * @return MultiMap the fieldValidators that were registered with the given fieldName
 	 */
-	protected MultiMap getValidators(String fieldName)
+	protected MultiHashMap getValidators(String fieldName)
 	{
 		return validatorRegistry.getValidators(fieldName);
 	}

@@ -80,27 +80,15 @@
 		</dependency>
 
 		<dependency>
-			<id>commons-beanutils</id>
-			<version>1.6.1</version>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
-		</dependency>
-
-		<dependency>
-			<id>commons-collections</id>
-			<version>3.0</version>
-			<url>http://jakarta.apache.org/commons/collections/</url>
-		</dependency>
-
-		<dependency>
 			<id>commons-logging</id>
 			<version>1.1-dev</version>
 			<url>http://jakarta.apache.org/commons/beanutils/</url>
 		</dependency>
 
 		<dependency>
-			<id>commons-lang</id>
-			<version>1.0.1</version>
-			<url>http://jakarta.apache.org/commons/lang/</url>
+			<id>ognl</id>
+			<version>2.6.4</version>
+			<url>http://www.ognl.org/</url>
 		</dependency>
 
 		<dependency>
@@ -113,12 +101,6 @@
 			<id>maverick</id>
 			<version>2.2.0</version>
 			<url>http://mav.sourceforge.net/</url>
-		</dependency>
-
-		<dependency>
-			<id>velocity</id>
-			<version>1.4-dev</version>
-			<url>http://jakarta.apache.org/velocity/</url>
 		</dependency>
 		
 		<dependency>

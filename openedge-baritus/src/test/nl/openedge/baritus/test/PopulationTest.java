@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.3 2004-04-02 09:50:21 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-02 09:50:21 $
+ * $Id: PopulationTest.java,v 1.4 2004-04-04 18:24:07 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-04 18:24:07 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,7 +30,6 @@
  */
  
 package nl.openedge.baritus.test;
-
 
 import java.util.Calendar;
 import java.util.Date;
@@ -298,8 +297,8 @@ public class PopulationTest extends TestCase
 	{
 		TestCtrl ctrl = new TestCtrl();
 		Map requestParams = new HashMap();
-		requestParams.put("testMap(key1)", "val1");
-		requestParams.put("testMap(key2)", "val2");
+		requestParams.put("testMap['key1']", "val1");
+		requestParams.put("testMap['key2']", "val2");
 		request.setupGetParameterMap(requestParams);
 		MaverickContext mockMavCtx = new MaverickContext(
 			null, request, response);
@@ -411,10 +410,10 @@ public class PopulationTest extends TestCase
 	{
 		TestCtrl ctrl = new TestCtrl();
 		Map requestParams = new HashMap();
-		requestParams.put("multiDimensionalMap(one)(one)", "newval0");
-		requestParams.put("multiDimensionalMap(one)(two)", "newval1");
-		requestParams.put("multiDimensionalMap(one)(three)", "newval2");
-		requestParams.put("multiDimensionalMap(two)(one)", "newval3");
+		requestParams.put("multiDimensionalMap['one']['one']", "newval0");
+		requestParams.put("multiDimensionalMap['one']['two']", "newval1");
+		requestParams.put("multiDimensionalMap['one']['three']", "newval2");
+		requestParams.put("multiDimensionalMap['two']['one']", "newval3");
 		request.setupGetParameterMap(requestParams);
 		MaverickContext mockMavCtx = new MaverickContext(
 			null, request, response);
@@ -451,7 +450,7 @@ public class PopulationTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Test the population of multidimensional List properties. 
 	 *
@@ -498,5 +497,55 @@ public class PopulationTest extends TestCase
 		}
 	}
 
+	public void testError1()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("testDouble1", "wrong"); // test simple string
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
+			assertNull(bean.getTestDouble1());
 
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	
+//	public void testGetMultiDimProperty()
+//	{
+//		TestBean bean = new TestBean();
+//		Map map1 = new HashMap();
+//		Map map2a = new HashMap();
+//		map2a.put("key2a-1", "value2a-1");
+//		map2a.put("key2a-2", "value2a-2");
+//		Map map2b = new HashMap();
+//		map2b.put("key2b-1", "value2b-1");
+//		map1.put("map2a", map2a);
+//		map1.put("map2b", map2b);
+//		bean.setMultiDimensionalMap(map1);
+//		try
+//		{
+//			Object result = Ognl.getValue("multiDimensionalMap[\"map2a\"][\"key2a-2\"]", bean);
+//			assertEquals("value2a-2", result);
+//			bean.setTestDate1(new Date());
+//			result = Ognl.getValue("testDate1", bean);
+//		}
+//		catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
+	
+	
 }

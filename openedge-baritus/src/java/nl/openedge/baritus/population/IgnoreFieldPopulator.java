@@ -1,7 +1,7 @@
 /*
- * $Id: IgnoreFieldPopulator.java,v 1.2 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: IgnoreFieldPopulator.java,v 1.3 2004-04-04 18:26:59 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:26:59 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -29,8 +29,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.baritus.population;
-
-import java.util.Locale;
 
 import nl.openedge.baritus.FormBeanContext;
 
@@ -71,27 +69,12 @@ public final class IgnoreFieldPopulator implements FieldPopulator
 	 * Does nothing at all.
 	 * Register IgnoreFieldPopulators if you want to ignore the population of certain properties,
  	 * for instance id's of persistent objects.
-	 * 
-	 * @param cctx maverick context
-	 * @param form instance of the form to set the property on
-	 * @param name name of the property
-	 * @param requestValue the value from the request. This is either a String or a String array (String[])
-	 * @param targetPropertyMeta an extra wrapper for the target
-	 * @param locale
-	 * @return boolean value of property fail. By default fail == false, which means that this method
-	 * 		allways returns true. If you set fail to true, this method will allways return false,
-	 * 		and thus the population process is flagged as failed.
-	 * @throws Exception never
-	 * 
-	 * @see nl.openedge.baritus.population.FieldPopulator#setProperty(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object, nl.openedge.baritus.population.TargetPropertyMeta, java.util.Locale)
 	 */
 	public boolean setProperty(
 		ControllerContext cctx,
 		FormBeanContext form,
 		String name,
-		Object requestValue,
-		TargetPropertyMeta targetPropertyMeta,
-		Locale locale)
+		Object value)
 		throws Exception
 	{
 		return (!fail);

@@ -1,7 +1,7 @@
 /*
- * $Id: PopulatorRegistry.java,v 1.2 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: PopulatorRegistry.java,v 1.3 2004-04-04 18:23:19 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:23:19 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -35,8 +35,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import nl.openedge.baritus.population.DefaultFieldPopulator;
 import nl.openedge.baritus.population.FieldPopulator;
+import nl.openedge.baritus.population.OgnlFieldPopulator;
 
 /**
  * Registry for populators. Each instance of FormBeanBase has its own instance.
@@ -58,7 +58,7 @@ final class PopulatorRegistry
 	 */
 	public PopulatorRegistry(FormBeanCtrlBase formBeanCtrl)
 	{
-		defaultFieldPopulator = new DefaultFieldPopulator(formBeanCtrl);
+		defaultFieldPopulator = new OgnlFieldPopulator(formBeanCtrl);
 	}
 	
 	/**

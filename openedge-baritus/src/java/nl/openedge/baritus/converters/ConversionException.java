@@ -1,7 +1,7 @@
 /*
- * $Id: ConversionException.java,v 1.2 2004-03-29 15:26:52 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:52 $
+ * $Id: ConversionException.java,v 1.3 2004-04-04 18:27:45 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-04 18:27:45 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,8 +34,7 @@ package nl.openedge.baritus.converters;
  * Modified ConversionException that saves the desired pattern as an extra field
  * @author Eelco Hillenius
  */
-public final class ConversionException
-	extends org.apache.commons.beanutils.ConversionException
+public final class ConversionException extends RuntimeException
 {
 
 	private String desiredPattern;

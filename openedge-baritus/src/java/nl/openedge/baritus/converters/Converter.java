@@ -1,6 +1,6 @@
 /*
- * $Id: ByteConverter.java,v 1.2 2004-04-04 18:27:45 eelco12 Exp $
- * $Revision: 1.2 $
+ * $Id: Converter.java,v 1.1 2004-04-04 18:27:45 eelco12 Exp $
+ * $Revision: 1.1 $
  * $Date: 2004-04-04 18:27:45 $
  *
  * ====================================================================
@@ -30,27 +30,15 @@
  */
 package nl.openedge.baritus.converters;
 
-
 /**
- * <p>{@link Converter} implementation that converts an incoming
- * String into a <code>java.lang.Byte</code> object, 
- * throwing a {@link ConversionException} if a conversion
- * error occurs.</p>
- *
+ * General purpose data type converter.
+ * For this interface has the same signature of the BeanUtils package,
+ * so it's easy to convert/ re-use converters.
+ * 
  * @author Eelco Hillenius
  */
+public interface Converter {
 
-public final class ByteConverter implements Converter 
-{
-
-    /**
-     * Create a {@link Converter} that will throw a {@link ConversionException}
-     * if a conversion error occurs.
-     */
-    public ByteConverter() 
-    {
-
-    }
 
     /**
      * Convert the specified input object into an output object of the
@@ -62,33 +50,7 @@ public final class ByteConverter implements Converter
      * @exception ConversionException if conversion cannot be performed
      *  successfully
      */
-    public Object convert(Class type, Object value) 
-    {
-
-        if (value == null) 
-        {
-	    	return null;
-        }
-
-        if (value instanceof Byte) 
-        {
-            return (value);
-        } 
-        else if (value instanceof Number) 
-        {
-            return new Byte(((Number)value).byteValue());
-        }
-
-        try 
-        {
-            return (new Byte(value.toString()));
-        } 
-        catch (Exception e) 
-        {
-        	throw new ConversionException(e);
-        }
-
-    }
+    public Object convert(Class type, Object value);
 
 
 }

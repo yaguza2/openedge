@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.5 2004-04-02 09:51:16 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-02 09:51:16 $
+ * $Id: DefaultValidatorDelegate.java,v 1.6 2004-04-04 18:23:19 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-04 18:23:19 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,14 +39,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import nl.openedge.baritus.util.MessageUtils;
+import nl.openedge.baritus.util.MultiHashMap;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
 import nl.openedge.baritus.validation.ValidationRuleDependend;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.MultiMap;
-import org.apache.commons.lang.exception.NestableException;
+import ognl.Ognl;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
@@ -54,7 +54,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 /**
  * @author Eelco Hillenius
  */
-final class DefaultValidatorDelegate implements ValidatorDelegate
+public final class DefaultValidatorDelegate implements ValidatorDelegate
 {
 	// validator registry
 	private ValidatorRegistry validatorRegistry = null;
@@ -64,6 +64,8 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 	
 	/* population log */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
+	
+	private static char[] BREAKSYMBOLS = new char[]{'[','('};
 	
 	/**
 	 * construct with validator registry and instance of ctrl
@@ -92,7 +94,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 		
 		if(parameters == null) return succeeded;
 		
-		MultiMap fieldValidators = validatorRegistry.getFieldValidators();
+		MultiHashMap fieldValidators = validatorRegistry.getFieldValidators();
 		List formValidators = validatorRegistry.getFormValidators();
 		List globalValidatorActivationRules = 
 			validatorRegistry.getGlobalValidatorActivationRules();
@@ -179,7 +181,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 	
 	/* execute validation for one field */
 	private boolean doValidationForOneField(
-		MultiMap fieldValidators,
+		MultiHashMap fieldValidators,
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		Locale locale,
@@ -220,7 +222,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 	
 	/* Get the validators for a field, possibly null. */
 	private List getFieldValidatorsForField(
-		String name, MultiMap fieldValidators)
+		String name, MultiHashMap fieldValidators)
 	{
 		List propertyValidators = null;
 		propertyValidators = getFieldValidatorsForFieldRecursively(
@@ -231,16 +233,16 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 	/* 
 	 * Get the validators for a field, null if none found.
 	 * work our way back to simple property name
-	 * e.g., take complex (bogus) case 'myproperty(key1)[1](key2)[2]',
+	 * e.g., take complex (bogus) case 'myproperty('key1')[1]('key2')[2]',
 	 * we should be able to look for registered validators with:
-	 * 	- myproperty(key1)[1](key2)[2]
-	 * 	- myproperty(key1)[1](key2)
-	 * 	- myproperty(key1)[1]
-	 * 	- myproperty(key1)
+	 * 	- myproperty['key1'][1]['key2'][2]
+	 * 	- myproperty['key1'][1]['key2']
+	 * 	- myproperty['key1'][1]
+	 * 	- myproperty['key1']
 	 * 	- myproperty 
 	 */
 	private List getFieldValidatorsForFieldRecursively(
-		String currentName, MultiMap fieldValidators, List propertyValidators)
+		String currentName, MultiHashMap fieldValidators, List propertyValidators)
 	{
 		List validators = (List)fieldValidators.get(currentName);
 		if(validators != null)
@@ -249,16 +251,16 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 			propertyValidators.addAll(validators);
 		}
 		
-		int indexedDelim = currentName.lastIndexOf(PropertyUtils.INDEXED_DELIM);
-		int mappedDelim = currentName.lastIndexOf(PropertyUtils.MAPPED_DELIM);
 		int delim = 0;
-		if(indexedDelim > 0 && mappedDelim > 0)
-		{ // just take one of the delimiters
-			if(indexedDelim > mappedDelim) delim = indexedDelim;
-			else delim = mappedDelim;
+		for(int i = 0; i < BREAKSYMBOLS.length; i++)
+		{
+			int ix = currentName.lastIndexOf(BREAKSYMBOLS[i]);
+			if(ix > -1)
+			{
+				delim = ix;
+				break;
+			}	
 		}
-		else if(indexedDelim > 0) delim = indexedDelim;
-		else if(mappedDelim > 0) delim = mappedDelim;
 		
 		if(delim > 0)
 		{
@@ -288,7 +290,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 		// populators less straightforward, and by getting the property
 		// from the bean instead of using the converted value, we are
 		// sure that we get the property the proper (java beans) way.
-		Object value = PropertyUtils.getProperty(formBeanContext.getBean(), name);
+		Object value = Ognl.getValue(name, formBeanContext.getBean());
 		
 		// for all validators for this field
 		for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
@@ -327,7 +329,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 					String msg = "validator " + validator + " threw exception: " +
 						e.getMessage() + " on property " + name + " with value " +
 						value;
-					throw new NestableException(msg, e);
+					throw new Exception(msg, e);
 				}
 				
 				if(populationLog.isDebugEnabled())
@@ -373,4 +375,21 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 		}
 		return succeeded;	
 	}
+	
+	/**
+	 * @return char[]
+	 */
+	public static char[] getBREAKSYMBOLS()
+	{
+		return BREAKSYMBOLS;
+	}
+
+	/**
+	 * @param cs
+	 */
+	public static void setBREAKSYMBOLS(char[] cs)
+	{
+		BREAKSYMBOLS = cs;
+	}
+
 }

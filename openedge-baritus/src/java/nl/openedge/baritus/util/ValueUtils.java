@@ -1,7 +1,7 @@
 /*
- * $Id: ValueUtils.java,v 1.1.1.1 2004-02-24 20:34:12 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:12 $
+ * $Id: ValueUtils.java,v 1.2 2004-04-04 18:25:58 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-04 18:25:58 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,8 +30,13 @@
  */
 package nl.openedge.baritus.util;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
+
+import nl.openedge.baritus.ConverterRegistry;
+import nl.openedge.baritus.converters.ConversionException;
+import nl.openedge.baritus.converters.Converter;
 
 /**
  * Misc utility methods for handling values
@@ -49,21 +54,21 @@ public final class ValueUtils
 	 */
 	public static boolean isNullOrEmpty(Object value)
 	{
-		if(value instanceof String)
+		if (value instanceof String)
 		{
 			return (value == null || (((String)value).trim().equals("")));
 		}
-		if(value instanceof Object[])
+		if (value instanceof Object[])
 		{
-			if(value == null)
+			if (value == null)
 			{
 				return true;
 			}
-			else if(((Object[])value).length == 0)
+			else if (((Object[])value).length == 0)
 			{
 				return true;
 			}
-			else if(((Object[])value).length == 1)
+			else if (((Object[])value).length == 1)
 			{
 				return isNullOrEmpty(((Object[])value)[0]);
 			}
@@ -72,11 +77,11 @@ public final class ValueUtils
 				return false;
 			}
 		}
-		else if(value instanceof Collection)
+		else if (value instanceof Collection)
 		{
 			return (value == null || (((Collection)value).isEmpty()));
 		}
-		else if(value instanceof Map)
+		else if (value instanceof Map)
 		{
 			return (value == null || (((Map)value).isEmpty()));
 		}
@@ -84,6 +89,68 @@ public final class ValueUtils
 		{
 			return (value == null);
 		}
+	}
+
+	/**
+	 * Convert the specified value into a String.  If the specified value
+	 * is an array, the first element (converted to a String) will be
+	 * returned.  The registered {@link Converter} for the
+	 * <code>java.lang.String</code> class will be used, which allows
+	 * applications to customize Object->String conversions (the default
+	 * implementation simply uses toString()).
+	 *
+	 * @param value Value to be converted (may be null)
+	 */
+	public static String convertToString(Object value)
+	{
+
+		if (value == null)
+		{
+			return ((String) null);
+		}
+		else if (value.getClass().isArray())
+		{
+			if (Array.getLength(value) < 1)
+			{
+				return (null);
+			}
+			value = Array.get(value, 0);
+			if (value == null)
+			{
+				return ((String) null);
+			}
+			else
+			{
+				try
+				{
+					Converter converter = ConverterRegistry.getInstance().lookup(String.class);
+					Object converted = converter.convert(String.class, value);
+					return (converted instanceof String) ? 
+						(String)converted : String.valueOf(converted);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					throw new ConversionException(e);
+				}
+			}
+		}
+		else
+		{
+			try
+			{
+				Converter converter = ConverterRegistry.getInstance().lookup(String.class);
+				Object converted = converter.convert(String.class, value);
+				return (converted instanceof String) ? 
+					(String)converted : String.valueOf(converted);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				throw new ConversionException(e);
+			}
+		}
+
 	}
 
 }

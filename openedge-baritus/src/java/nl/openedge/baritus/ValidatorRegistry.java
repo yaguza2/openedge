@@ -1,7 +1,7 @@
 /*
- * $Id: ValidatorRegistry.java,v 1.3 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: ValidatorRegistry.java,v 1.4 2004-04-04 18:23:19 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-04 18:23:19 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,12 +34,10 @@ package nl.openedge.baritus;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.openedge.baritus.util.MultiHashMap;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
-
-import org.apache.commons.collections.MultiHashMap;
-import org.apache.commons.collections.MultiMap;
 
 /**
  * Registry for populators. Each instance of FormBeanBase has its own instance.
@@ -50,7 +48,7 @@ final class ValidatorRegistry
 {
 
 
-	private MultiMap fieldValidators = null;
+	private MultiHashMap fieldValidators = null;
 	
 	private List formValidators = null;
 	
@@ -154,10 +152,10 @@ final class ValidatorRegistry
 	 * @return FieldValidator the instance of FieldValidator that was registered with the given 
 	 * 		fieldName or null if none was registered with that name
 	 */
-	public MultiMap getValidators(String fieldName)
+	public MultiHashMap getValidators(String fieldName)
 	{
 		return (fieldValidators != null) ? 
-			(MultiMap)fieldValidators.get(fieldName) : null;
+			(MultiHashMap)fieldValidators.get(fieldName) : null;
 	}
 
 	/**
@@ -182,7 +180,7 @@ final class ValidatorRegistry
 	 * get all field validators
 	 * @return get all field validators
 	 */
-	public MultiMap getFieldValidators()
+	public MultiHashMap getFieldValidators()
 	{
 		return fieldValidators;
 	}

@@ -1,7 +1,7 @@
 /*
- * $Id: ToUpperCasePopulator.java,v 1.1.1.1 2004-02-24 20:34:19 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:19 $
+ * $Id: ToUpperCasePopulator.java,v 1.2 2004-04-04 18:24:08 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-04 18:24:08 $
  *
  * ====================================================================
  * Copyright (c) 2003
@@ -9,13 +9,12 @@
  */
 package nl.openedge.baritus.test;
 
-import java.util.Locale;
-
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.population.AbstractFieldPopulator;
-import nl.openedge.baritus.population.TargetPropertyMeta;
+import nl.openedge.baritus.util.ValueUtils;
 
-import org.apache.commons.beanutils.ConvertUtils;
+import ognl.Ognl;
+
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -33,18 +32,16 @@ public class ToUpperCasePopulator extends AbstractFieldPopulator
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String name,
-		Object requestValue,
-		TargetPropertyMeta targetPropertyMeta,
-		Locale locale)
+		Object value)
 		throws Exception
 	{
 
-		if(requestValue != null)
+		if(value != null)
 		{
-			String val = ConvertUtils.convert(requestValue);
+			String val = ValueUtils.convertToString(value);
 			val = val.toUpperCase();
 			
-			setTargetProperty(targetPropertyMeta, formBeanContext.getBean(), val);
+			Ognl.setValue(name, formBeanContext.getBean(), val);
 		}
 
 		return true;

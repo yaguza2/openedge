@@ -1,7 +1,7 @@
 /*
- * $Id: LongConverter.java,v 1.1.1.1 2004-02-24 20:34:02 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:02 $
+ * $Id: LongConverter.java,v 1.2 2004-04-04 18:27:45 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-04 18:27:45 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -29,10 +29,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.baritus.converters;
-
-
-import org.apache.commons.beanutils.Converter;
-
 
 /**
  * <p>Standard {@link Converter} implementation that converts an incoming
