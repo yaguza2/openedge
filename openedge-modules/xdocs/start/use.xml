@@ -13,7 +13,7 @@
 		To successfully use OpenEdge Modules, you should know about three things:
 		<ul>
 			<li>
-				how to use types and (init)commands
+				how to use types and init-commands
 			</li>
 			<li>
 				how to use Quartz (if you want to use the sceduler)
@@ -25,13 +25,13 @@
 		</ul>
       </p>
 	  
-      <subsection name="How to use types and (init)commands">
+      <subsection name="How to use types and init-commands">
 		<p>
 			The default implementation of OpenEdge Modules works with interfaces
 			to determine the handling of components. In the framework registered
 			interfaces are called types. A component is of a type when it 
 			implements its interface. There are two kinds of types, namely 
-			'base types' and '(init)commands'.
+			'base types' and 'init-commands'.
 		</p>
 		<p>
 			A component will be handled differently by the container (or actually
@@ -357,29 +357,57 @@ public class OtherComponent
 				
 				Take class:
 		      <source><![CDATA[
-public class BeanComponentImpl implements BeanType
-{
-  private String myString;
-  private Integer myInteger;
-
-  public Integer getMyInteger() { return myInteger; }
-  public String getMyString() {	return myString; }
-  public void setMyInteger(Integer integer) { myInteger = integer; }
-  public void setMyString(String string) { myString = string; }
-}	
+public class SchedulerObserverImpl implements SchedulerObserver
+{	
+  private SchedulerStartedEvent evt;
+	
+  public void schedulerStarted(SchedulerStartedEvent evt)
+  {
+    this.evt = evt;
+	System.out.println("scheduler was started!");
+  }
+}
 		      ]]></source><br/>
 				With configuration snippet:
 		      <source><![CDATA[
-<component name="BeanTest" class="BeanComponentImpl">
-
-  <property name="myString" value="test"/>
-  <property name="myInteger" value="12"/>
-
-</component>
+<component name="SchedulerObserverTest" class="SchedulerObserverImpl"/>
 		      ]]></source><br/>
-				When you query <code>ComponentFactory</code> for 'BeanTest', you will get
-				an instance where the property myInteger has value 12, and
-				property myString has value test.
+				When the Sceduler has been started, the componentFactory fires the
+				SchedulerStartedEvent to all registered observers. As SchedulerObserverImpl
+				implements the SchedulerObserver, it will be automatically registrated and
+				thus recieves the event.
+			<br/>
+			
+			<li>
+				ComponentFactoryObserver<br/>
+				A <code>ComponentObserver</code>will be registered as an observer for 
+				certain ComponentFactory related events. ComponentObserver itself is a toplevel
+				interface. Currently the following concrete observers are available:
+				
+				Take class:
+		      <source><![CDATA[
+public class SchedulerObserverImpl implements SchedulerObserver
+{	
+  private SchedulerStartedEvent evt;
+	
+  public void schedulerStarted(SchedulerStartedEvent evt)
+  {
+    this.evt = evt;
+	System.out.println("scheduler was started!");
+  }
+}
+		      ]]></source><br/>
+				With configuration snippet:
+		      <source><![CDATA[
+<component name="SchedulerObserverTest" class="SchedulerObserverImpl"/>
+		      ]]></source><br/>
+				When the Sceduler has been started, the componentFactory fires the
+				SchedulerStartedEvent to all registered observers. As SchedulerObserverImpl
+				implements the SchedulerObserver, it will be automatically registrated and
+				thus recieves the event.
+			<br/>				
+			</li>
+			
 			</li>
 		<br/>
 
@@ -387,7 +415,8 @@ public class BeanComponentImpl implements BeanType
 		
 	  </subsection>
 	  
-	  <!-- //TODO: vergeet niet te vertellen dat tijdens opstarten alle components een keer worden gecreeerd -->
+	  <!-- //TODO: vergeet niet te vertellen dat tijdens opstarten alle components 
+		bij wijze van test een keer worden gecreeerd -->
 	  
    </section>
  </body>
