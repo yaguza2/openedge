@@ -1,7 +1,7 @@
 /*
- * $Id: TestCtrl.java,v 1.3 2004-03-04 08:21:39 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-04 08:21:39 $
+ * $Id: TestCtrl.java,v 1.4 2004-04-01 09:20:35 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-01 09:20:35 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -86,6 +86,10 @@ public class TestCtrl extends FormBeanCtrlBase
 			Pattern.compile("(.)*ByRegex$"),
 			new IgnoreFieldPopulator());
 		// block property by regex pattern
+		
+		addValidator("toValidate1", new TestFieldValidator());
+		addValidator("toValidate2", new TestFieldValidator()); // test form toValidate2[..]
+		addValidator("toValidate3[0]", new TestFieldValidator()); // test form toValidate3[..]
 	}
 
 	/**
@@ -127,5 +131,21 @@ public class TestCtrl extends FormBeanCtrlBase
 	{
 		return formBeanContext;
 	}
+	
+	/**
+	 * Get error view. This is 'error' by default.
+	 * 
+	 * @param cctx controller context
+	 * @param formBeanContext context
+	 * @return String logical name of view
+	 */
+	protected String getErrorView(
+		ControllerContext cctx, 
+		FormBeanContext formBeanContext)
+	{
+		this.view = ERROR;
+		return ERROR;
+	}
+
 
 }

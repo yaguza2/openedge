@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.1.1.1 2004-02-24 20:34:17 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:17 $
+ * $Id: TestBean.java,v 1.2 2004-04-01 09:20:35 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-01 09:20:35 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -65,6 +65,17 @@ public class TestBean
 	private String uppercaseTest = null;
 	private String ignore = "unchanged";
 	private String ignoreByRegex = "unchanged (regex)";
+	
+	private String toValidate1;
+	private String[] toValidate2 = new String[] 
+	{
+		"", ""
+	};
+	private String[] toValidate3 = new String[] 
+	{
+		"", ""
+	};
+
 
 	/**
 	 * @return
@@ -288,6 +299,54 @@ public class TestBean
 	public void setIgnoreByRegex(String string)
 	{
 		ignoreByRegex = string;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getToValidate1()
+	{
+		return toValidate1;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setToValidate1(String string)
+	{
+		toValidate1 = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public String[] getToValidate2()
+	{
+		return toValidate2;
+	}
+
+	/**
+	 * @param strings
+	 */
+	public void setToValidate2(String[] strings)
+	{
+		toValidate2 = strings;
+	}
+
+	/**
+	 * @return
+	 */
+	public String[] getToValidate3()
+	{
+		return toValidate3;
+	}
+
+	/**
+	 * @param strings
+	 */
+	public void setToValidate3(String[] strings)
+	{
+		toValidate3 = strings;
 	}
 
 }
