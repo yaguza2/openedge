@@ -31,6 +31,8 @@
 package nl.openedge.maverick.framework.velocity.tools;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -141,5 +143,42 @@ public class ArrayTool
 	public static Object getLast(Object[] array)
 	{
 		return elementAt(array, array.length - 1);
+	}
+	
+	/**
+	 * pretty print the contents of an array
+	 * @param array array
+	 * @return String
+	 */
+	public static String printArray(Object[] array)
+	{
+		if(array == null) return "null";
+		StringBuffer b = new StringBuffer("{");
+		int length = array.length;
+		for(int i = 0; i < length; i++)
+		{
+			b.append(array[i]);
+			if((i+1) < length) b.append(", ");
+		}
+		b.append("}");
+		return b.toString();
+	}
+	
+	/**
+	 * pretty print the contents of a Collection
+	 * @param c collection
+	 * @return String
+	 */
+	public static String printCollection(Collection c)
+	{
+		if(c == null) return "null";
+		StringBuffer b = new StringBuffer("{");
+		for(Iterator i = c.iterator(); i.hasNext(); )
+		{
+			b.append(i.next());
+			if(i.hasNext()) b.append(", ");
+		}
+		b.append("}");
+		return b.toString();
 	}
 }

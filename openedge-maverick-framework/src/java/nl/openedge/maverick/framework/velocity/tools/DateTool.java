@@ -464,5 +464,29 @@ public final class DateTool
 	{
 		return DateFormatHelper.format(date);
 	}
+	
+	/**
+	 * Format with DateFormatHelper.
+	 * @param date date
+	 * @param style format style
+	 * @param locale locale
+	 * @return String formatted date
+	 */
+	public static String format(Date date, int style, Locale locale)
+	{
+		DateFormat df = DateFormat.getDateInstance(style, locale);
+		return df.format(date);
+	}
+	
+	/**
+	 * Format with DateFormatHelper, using long format style
+	 * @param date date
+	 * @param locale locale
+	 * @return String formatted date
+	 */
+	public static String format(Date date, Locale locale)
+	{
+		return format(date, DateFormat.LONG, locale);
+	}
 
 }

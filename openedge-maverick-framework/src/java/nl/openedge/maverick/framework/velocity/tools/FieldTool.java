@@ -35,8 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,8 +47,11 @@ import org.apache.velocity.tools.view.context.ViewContext;
 import org.apache.velocity.tools.view.tools.ViewTool;
 
 import nl.openedge.maverick.framework.AbstractForm;
+import nl.openedge.maverick.framework.ConverterRegistry;
+import nl.openedge.maverick.framework.converters.Formatter;
 
 /**
+ * Velocity tool with utility methods for form handling
  * @author Eelco Hillenius
  */
 public class FieldTool implements ViewTool
@@ -130,110 +133,152 @@ public class FieldTool implements ViewTool
 	{
 		return replaceVelocityCount(name);
 	}
+	
+	/**
+	 * 
+	 * @param form
+	 * @param name
+	 * @param normalClass
+	 * @param errorClass
+	 * @return
+	 */
+	public String textfield(
+		AbstractForm form, 
+		String name, 
+		String normalClass, 
+		String errorClass)
+	{
+		StringBuffer b = new StringBuffer();
+		
+		String formName = getFormName(name);
+		b.append("<input type=\"text\" name=\"")
+		 .append(formName)
+		 .append("\" class=\"")
+		 .append( (form.getError(name) == null) ? normalClass : errorClass )
+		 .append("\" value=\"");
+		 
+		String value = getFormValueAsString(form, name);
+		b.append(value)
+		 .append("\">");
+		
+		return b.toString();
+	}
 
 	/**
 	 * get value from form as a String
-	 * @param bean bean with field
+	 * @param form bean with field
 	 * @param name name of field
 	 * @return String
 	 */	
-	public String getFormValueAsString(Object bean, String name)
+	public String getFormValueAsString(AbstractForm form, String name)
 	{
-		if( (bean == null) || (name == null)) return null;
+		if( (form == null) || (name == null)) return null;
 		
 		name = replaceVelocityCount(name);
 		
 		String value = null;
-		AbstractForm model = null;
-		
-		if(bean instanceof AbstractForm)
-		{
-			model = (AbstractForm)bean;
-		}
 		try
 		{
-			value = BeanUtils.getProperty(bean, name);
+			Object _value = PropertyUtils.getProperty(form, name);
+			if(_value != null)
+			{
+				Converter converter = ConverterRegistry.getInstance().lookup(
+					_value.getClass(), form.getCurrentLocale());
+				if((converter != null) && (converter instanceof Formatter))
+				{
+					value = ((Formatter)converter).format(_value, null);
+				}
+				else
+				{
+					value = ConvertUtils.convert(_value);
+				}	
+			}
+//			value = BeanUtils.getProperty(form, name);
 		}
 		catch (Exception e)
 		{
 			if(log.isDebugEnabled())
 			{
 				log.error(
-					"error while handling property " + name + " with object " + bean );
+					"error while handling property " + name + " with object " + form );
 				log.error(e.getMessage(), e);			
 			}
 
 			return null;
 		}
-		if(model != null)
+
+		Map overrideFields = form.getOverrideFields();
+		boolean wasOverriden = false;
+		if( overrideFields != null ) 
 		{
-			Map overrideFields = model.getOverrideFields();
-			if( overrideFields != null ) 
+			Object storedRawValue = overrideFields.get(name);
+			String storedValue = null;
+			// first, try default
+			if(storedRawValue != null)
 			{
-		
-				Object storedRawValue = overrideFields.get(name);
-				String storedValue = null;
-				// first, try default
-				if(storedRawValue != null)
+				wasOverriden = true;
+				if(storedRawValue instanceof String)
+				{
+					storedValue = (String)storedRawValue;
+				}
+				else
 				{
 					storedValue = ConvertUtils.convert(storedRawValue);
-					if(storedValue != null) 
-					{
-						value = storedValue;
-					}	
 				}
-				else // try without model prefix (if it has one)
+				
+				if(storedValue != null) 
 				{
-					if(name.startsWith(modelPrefix))
+					value = storedValue;
+				}	
+			}
+			else // try without model prefix (if it has one)
+			{
+				if(name.startsWith(modelPrefix))
+				{
+					name = name.substring(modelPrefix.length());
+				
+					storedRawValue = overrideFields.get(name);
+					if(storedRawValue != null)
 					{
-						name = name.substring(modelPrefix.length());
-					
-						storedRawValue = overrideFields.get(name);
-						if(storedRawValue != null)
+						wasOverriden = true;
+						storedValue = ConvertUtils.convert(storedRawValue);
+						if(storedValue != null) 
 						{
-							storedValue = ConvertUtils.convert(storedRawValue);
-							if(storedValue != null) 
-							{
-								value = storedValue;
-							}	
-						}
+							value = storedValue;
+						}	
 					}
 				}
-			}	
+			}
 		}
+
 		return value;
 	}
 	
 	/**
 	 * get value from form as a String formatted as pattern
-	 * @param bean bean with field
+	 * @param form bean with field
 	 * @param name name of field
 	 * @param pattern for format or key under which a formatter is stored
 	 * @return String
 	 */	
-	public String getFormattedFormValueAsString(Object bean, String name, String pattern)
+	public String getFormattedFormValueAsString(AbstractForm form, String name, String pattern)
 	{
-		if((bean == null) || (name == null) || (pattern == null)) return null;
+		if((form == null) || (name == null) || (pattern == null)) return null;
 		
 		name = replaceVelocityCount(name);
 		
 		Object value = null;
 		String converted = null;
-		AbstractForm model = null;
-		if(bean instanceof AbstractForm)
-		{
-			model = (AbstractForm)bean;
-		}
 		try
 		{
-			value = PropertyUtils.getProperty(bean, name);
+			value = PropertyUtils.getProperty(form, name);
 		}
 		catch (Exception e)
 		{
 			if(log.isDebugEnabled())
 			{
 				log.error(
-					"error while handling property " + name + " with object " + bean );
+					"error while handling property " + name + " with object " + form );
 				log.error(e.getMessage(), e);			
 			}
 
@@ -242,31 +287,37 @@ public class FieldTool implements ViewTool
 		
 		// only format fields that are not overriden
 		boolean overridden = false;
-		if(model != null)
+
+		Map overrideFields = form.getOverrideFields();
+		if( overrideFields != null ) 
 		{
-			
-			Map overrideFields = model.getOverrideFields();
-			if( overrideFields != null ) 
+	
+			Object storedRawValue = overrideFields.get(name);
+			// first, try default
+			if(storedRawValue == null)
 			{
-		
-				Object storedRawValue = overrideFields.get(name);
-				// first, try default
-				if(storedRawValue == null)
+				if(name.startsWith(modelPrefix))
 				{
-					if(name.startsWith(modelPrefix))
-					{
-						name = name.substring(modelPrefix.length());
-						storedRawValue = overrideFields.get(name);
-					}
+					name = name.substring(modelPrefix.length());
+					storedRawValue = overrideFields.get(name);
 				}
-				if(storedRawValue != null)
+			}
+			if(storedRawValue != null)
+			{
+				value = storedRawValue;
+				
+				if(storedRawValue instanceof String)
 				{
-					value = storedRawValue;
+					converted = (String)storedRawValue;
+				}
+				else
+				{
 					converted = ConvertUtils.convert(storedRawValue);
-					overridden = true;
 				}
-			}	
-		}
+				overridden = true;
+			}
+		}	
+
 		if(value != null && (!overridden))
 		{
 			Formatter formatter = (Formatter)keyedFormatters.get(pattern);
@@ -290,7 +341,7 @@ public class FieldTool implements ViewTool
 				{
 					converted = ConvertUtils.convert(value);
 					System.err.println("unable to apply pattern to field " + name + " of object " +
-						bean + ": type " + value.getClass().getName() + 
+						form + ": type " + value.getClass().getName() + 
 						" cannot be used with a pattern. default conversion: " +
 						value + "->" + converted);
 				}				
