@@ -391,7 +391,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			if (name == null) continue;
 			
 			Object value = properties.get(name);
-			String stringValue = null;
 			
 			if(value != null)
 			{
@@ -687,7 +686,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			stringValue = ConvertUtils.convert(value);
 			if(stringValue != null && (!stringValue.trim().equals("")))
 			{
-				Object o = PropertyUtils.getProperty(formBean, name);
 				// Perform the assignment for this property
 				BeanUtils.setProperty(formBean, name, value);
 			}
@@ -1174,7 +1172,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	{
 		ResourceBundle res = getBundle(locale);
 		String msg = res.getString(key);
-		MessageFormat fmt = new MessageFormat(msg);
 		String formattedMessage = 
 			MessageFormat.format(msg, parameters);
 		return formattedMessage;
