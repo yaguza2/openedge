@@ -79,7 +79,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 {
 
 	/** logger */
-	private Log log = LogFactory.getLog(this.getClass());
+	private static Log log = LogFactory.getLog(AbstractComponentRepository.class);
 
 	/** holder for component builders */
 	protected Map components = new HashMap();
@@ -95,6 +95,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 
 	/** observers for component factory events */
 	protected List observers = new ArrayList();
+	
+	/** servlet context if provided */
+	protected ServletContext servletContext = null;
 	
 	/**
 	 * construct
@@ -135,7 +138,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			ServletContext servletContext) 
 			throws ConfigException
 	{
-		
+		this.servletContext = servletContext;
 		internalInit(rootNode, servletContext);
 	}
 
@@ -611,6 +614,14 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	public Scheduler getScheduler()
 	{
 		return scheduler;
+	}
+	
+	/**
+	 * @see nl.openedge.modules.ComponentRepository#getServletContext()
+	 */
+	public ServletContext getServletContext()
+	{
+		return servletContext;
 	}
 	
 	/**

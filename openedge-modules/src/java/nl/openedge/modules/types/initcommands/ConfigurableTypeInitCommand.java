@@ -54,7 +54,7 @@ public class ConfigurableTypeInitCommand implements InitCommand
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentRepository moduleFactory)
+		ComponentRepository componentRepository)
 		throws ConfigException
 	{
 		this.componentNode = componentNode;

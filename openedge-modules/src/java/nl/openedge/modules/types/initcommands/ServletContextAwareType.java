@@ -30,57 +30,17 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import org.jdom.Element;
-
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.config.ConfigException;
-import nl.openedge.modules.observers.ComponentObserver;
+import javax.servlet.ServletContext;
 
 /**
- * Command that populates instances using BeanUtils
+ * Component that wants to know about the current
+ * servlet context. Note that this can be null
+ * (and allways is outside a servlet container)
+ * 
  * @author Eelco Hillenius
  */
-public class ComponentObserverInitCommand implements InitCommand
+public interface ServletContextAwareType 
 {
-	
-	private ComponentRepository componentRepository = null;
-	
-	/**
-	 * initialize
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.components.ComponentRepository)
-	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ComponentRepository componentRepository)
-		throws ConfigException
-	{
-		this.componentRepository = componentRepository;
-	}
 
-	/**
-	 * populate the component instance
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
-	{
-
-		if(componentInstance instanceof ComponentObserver)
-		{
-			componentRepository.addObserver(
-				(ComponentObserver)componentInstance);
-		}
-		else
-		{
-			ComponentObserverDecorator deco = 
-				new ComponentObserverDecorator();
-			
-			deco.setDecorated(componentInstance);
-			
-			componentRepository.addObserver(deco);		
-		}
-
-	}
-
+	public void setServletContext(ServletContext servletContext);
 }

@@ -109,11 +109,11 @@ public class ThreadSingletonTypeFactory extends AbstractComponentFactory
 
 	/**
 	 * set component factory
-	 * @param factory component factory
+	 * @param componentRepository component repository
 	 */
-	public void setComponentRepository(ComponentRepository factory)
+	public void setComponentRepository(ComponentRepository componentRepository)
 	{
-		componentRepository = factory;
+		this.componentRepository = componentRepository;
 		componentRepository.addObserver(this);
 	}
 	

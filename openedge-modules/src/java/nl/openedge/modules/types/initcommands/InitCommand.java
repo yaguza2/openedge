@@ -47,13 +47,13 @@ public interface InitCommand
 	 * initialize the command
 	 * @param componentName name of component
 	 * @param componentNode xml config node of component
-	 * @param instance of module factory
+	 * @param componentRepository instance of componentRepository
 	 * @throws ConfigException
 	 */
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentRepository moduleFactory)
+		ComponentRepository componentRepository)
 		throws ConfigException; 
 	
 	/**

@@ -31,14 +31,14 @@
 package nl.openedge.modules.types.initcommands;
 
 /**
- * Module that implement this interface will be populated (using BeanUtils).
+ * A component that implement this interface will be populated (using BeanUtils).
  * E.g: take module mypackage.Foo with property Integer bar, the following
  * configuration fragment will have setBar(Integer val) called with value 12.
  * <p><pre>
- *		&lt;module name="FooModule" 
+ *		&lt;component name="FooModule" 
  *				class="mypackage.Foo"&gt;
  *			&lt;property name="bar" value="12"/&gt;		
- *		&lt;/module&gt;
+ *		&lt;/component&gt;
  * </pre>
  * 
  * @author Eelco Hillenius

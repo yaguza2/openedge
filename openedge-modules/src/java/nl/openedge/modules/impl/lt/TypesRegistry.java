@@ -49,6 +49,7 @@ import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.SchedulerObserverInitCommand;
+import nl.openedge.modules.types.initcommands.ServletContextAwareTypeInitCommand;
 
 /**
  * Registry for types and init commands that can be used with
@@ -79,7 +80,7 @@ public class TypesRegistry
 	/**
 	 * map of init commands
 	 */
-	private static Map initCommandClasses = new HashMap(8);
+	private static Map initCommandClasses = new HashMap(9);
 	
 	// initialize defaults
 	static
@@ -105,6 +106,10 @@ public class TypesRegistry
 		initCommandClasses.put(
 			"bean", 
 			BeanTypeInitCommand.class);
+			
+		initCommandClasses.put(
+			"servletContextAware",
+			ServletContextAwareTypeInitCommand.class);
 			
 		initCommandClasses.put(
 			"configurable", 

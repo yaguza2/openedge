@@ -117,4 +117,13 @@ public interface ComponentRepository
 	 * @return Scheduler
 	 */
 	public Scheduler getScheduler();
+	
+	/**
+	 * get the servlet context this component repository was
+	 * possibly started with
+	 * @return ServletContext the servlet context this repository
+	 * 		was started with, or null if this repository was not started
+	 * 		within a servlet environment (or does not know about it)
+	 */
+	public ServletContext getServletContext();
 }

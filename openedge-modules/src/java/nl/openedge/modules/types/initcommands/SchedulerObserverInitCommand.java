@@ -43,7 +43,7 @@ import nl.openedge.modules.observers.SchedulerObserver;
 public class SchedulerObserverInitCommand implements InitCommand
 {
 	
-	private ComponentRepository moduleFactory = null;
+	private ComponentRepository componentRepository = null;
 	
 	/**
 	 * initialize
@@ -52,10 +52,10 @@ public class SchedulerObserverInitCommand implements InitCommand
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentRepository moduleFactory)
+		ComponentRepository componentRepository)
 		throws ConfigException
 	{
-		this.moduleFactory = moduleFactory;
+		this.componentRepository = componentRepository;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class SchedulerObserverInitCommand implements InitCommand
 
 		if(componentInstance instanceof SchedulerObserver)
 		{
-			moduleFactory.addObserver(
+			componentRepository.addObserver(
 				(SchedulerObserver)componentInstance);
 		}
 		else
@@ -78,7 +78,7 @@ public class SchedulerObserverInitCommand implements InitCommand
 			
 			deco.setDecorated(componentInstance);
 			
-			moduleFactory.addObserver(deco);		
+			componentRepository.addObserver(deco);		
 		}
 
 	}

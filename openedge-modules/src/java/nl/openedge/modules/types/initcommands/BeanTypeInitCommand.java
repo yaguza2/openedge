@@ -57,7 +57,7 @@ public class BeanTypeInitCommand implements InitCommand
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentRepository moduleFactory)
+		ComponentRepository componentRepository)
 		throws ConfigException
 	{
 		this.properties = new HashMap();

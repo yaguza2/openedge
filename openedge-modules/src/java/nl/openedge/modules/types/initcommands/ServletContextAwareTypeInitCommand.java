@@ -30,9 +30,10 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.servlet.ServletContext;
 
 import org.jdom.Element;
 
@@ -40,18 +41,13 @@ import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
 
 /**
- * Command that populates instances using BeanUtils
+ * Command for components that want to be aware of the servlet context
  * @author Eelco Hillenius
  */
-public class DependentTypeInitCommand implements InitCommand
+public class ServletContextAwareTypeInitCommand implements InitCommand
 {
-	
+
 	private ComponentRepository componentRepository = null;
-	
-	private List namedDependencies = null;
-	
-	private String componentName;
-	
 
 	/**
 	 * initialize
@@ -63,51 +59,57 @@ public class DependentTypeInitCommand implements InitCommand
 		ComponentRepository componentRepository)
 		throws ConfigException
 	{
-		
 		this.componentRepository = componentRepository;
-		this.componentName = componentName;
-		loadDependencies(componentNode);
-	}
-	
-	/**
-	 * load dependencies
-	 * @param componentNode configuration node
-	 */
-	protected void loadDependencies(Element componentNode)
-	{
-		List namedDeps = componentNode.getChildren("dependency");
-		namedDependencies = new ArrayList(namedDeps.size());
-		
-		for(Iterator i = namedDeps.iterator(); i.hasNext(); )
-		{
-			
-			Element node = (Element)i.next();
-			String moduleName = node.getAttributeValue("componentName");
-			String propertyName = node.getAttributeValue("propertyName");
-			
-			namedDependencies.add(
-				new NamedDependency(moduleName, propertyName));
-		}
-			
 	}
 
 	/**
-	 * create decorator that tries to solve the dependencies when all components
-	 * are loaded
+	 * call init on the component instance
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
 	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException, CyclicDependencyException
+		throws InitCommandException, ConfigException
 	{
-
-		DependentTypeWrapper solver = new DependentTypeWrapper();
-		solver.setComponentName(this.componentName);
-		solver.setComponentInstance(componentInstance);
-		solver.setNamedDependencies(this.namedDependencies);
-		solver.setModuleFactory(this.componentRepository);
-
-		solver.execute(componentInstance);
 		
+		ServletContext servletContext = componentRepository.getServletContext();
+		
+		if(componentInstance instanceof ServletContextAwareType)
+		{
+			((ServletContextAwareType)componentInstance).setServletContext(
+				servletContext);
+		}
+		else
+		{
+			
+			Class clazz = componentInstance.getClass();
+			try
+			{
+				Method initMethod = clazz.getMethod(
+					"setServletContext",new Class[]{ServletContext.class});
+				initMethod.invoke(componentInstance, 
+					new Object[]{servletContext});
+			}
+			catch (SecurityException e)
+			{
+				throw new ConfigException(e);
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new ConfigException(e);
+			}
+			catch (NoSuchMethodException e)
+			{
+				throw new ConfigException(e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new ConfigException(e);
+			}
+			catch (InvocationTargetException e)
+			{
+				throw new ConfigException(e);
+			}
+	
+		}
 	}
 
 }

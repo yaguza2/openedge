@@ -47,7 +47,7 @@ import nl.openedge.modules.observers.ChainedEventObserver;
 public class ChainedEventCasterInitCommand implements InitCommand
 {
 	
-	private ComponentRepository moduleFactory = null;
+	private ComponentRepository componentRepository = null;
 
 	/**
 	 * initialize
@@ -56,10 +56,10 @@ public class ChainedEventCasterInitCommand implements InitCommand
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentRepository moduleFactory)
+		ComponentRepository componentRepository)
 		throws ConfigException
 	{
-		this.moduleFactory = moduleFactory;
+		this.componentRepository = componentRepository;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class ChainedEventCasterInitCommand implements InitCommand
 		if(componentInstance instanceof ChainedEventCaster)
 		{
 			((ChainedEventCaster)componentInstance)
-				.addObserver(this.moduleFactory);
+				.addObserver(this.componentRepository);
 		}
 		else
 		{
@@ -84,7 +84,7 @@ public class ChainedEventCasterInitCommand implements InitCommand
 				Method initMethod = clazz.getMethod(
 					"addObserver",new Class[]{ChainedEventObserver.class});
 				initMethod.invoke(componentInstance, 
-					new Object[]{this.moduleFactory});
+					new Object[]{this.componentRepository});
 			}
 			catch (SecurityException e)
 			{

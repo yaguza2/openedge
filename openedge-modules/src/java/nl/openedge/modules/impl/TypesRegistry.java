@@ -60,6 +60,8 @@ import nl.openedge.modules.types.initcommands.DependentType;
 import nl.openedge.modules.types.initcommands.DependentTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ComponentFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
+import nl.openedge.modules.types.initcommands.ServletContextAwareType;
+import nl.openedge.modules.types.initcommands.ServletContextAwareTypeInitCommand;
 
 /**
  * Registry for types and init commands.
@@ -88,7 +90,7 @@ public class TypesRegistry
 	 * Map of init commands. Keyed on types, the values
 	 * are classes of commands for the types
 	 */
-	private static Map initCommandClasses = new HashMap(5);
+	private static Map initCommandClasses = new HashMap(6);
 	
 	/*
 	 * the default component factory class will be used when the 
@@ -124,6 +126,7 @@ public class TypesRegistry
 		// add the default enhancer types
 		// we use this to have ordering in the commands		
 		initCommandTypes.add(BeanType.class);
+		initCommandTypes.add(ServletContextAwareType.class);
 		initCommandTypes.add(ConfigurableType.class);
 		initCommandTypes.add(ChainedEventCaster.class);
 		initCommandTypes.add(ComponentRepositoryObserver.class);
@@ -133,6 +136,10 @@ public class TypesRegistry
 		initCommandClasses.put(
 			BeanType.class, 
 			BeanTypeInitCommand.class);
+			
+		initCommandClasses.put(
+			ServletContextAwareType.class,
+			ServletContextAwareTypeInitCommand.class);
 			
 		initCommandClasses.put(
 			ConfigurableType.class, 

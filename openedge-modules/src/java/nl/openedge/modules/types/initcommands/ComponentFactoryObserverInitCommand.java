@@ -43,7 +43,7 @@ import nl.openedge.modules.observers.ComponentRepositoryObserver;
 public class ComponentFactoryObserverInitCommand implements InitCommand
 {
 	
-	protected ComponentRepository moduleFactory = null;
+	protected ComponentRepository componentRepository = null;
 	
 
 	/**
@@ -53,10 +53,10 @@ public class ComponentFactoryObserverInitCommand implements InitCommand
 	public void init(
 		String componentName, 
 		Element componentNode,
-		ComponentRepository moduleFactory)
+		ComponentRepository componentRepository)
 		throws ConfigException
 	{
-		this.moduleFactory = moduleFactory;
+		this.componentRepository = componentRepository;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ComponentFactoryObserverInitCommand implements InitCommand
 
 		if(componentInstance instanceof ComponentRepositoryObserver)
 		{
-			moduleFactory.addObserver(
+			componentRepository.addObserver(
 				(ComponentRepositoryObserver)componentInstance);
 		}
 		else
@@ -79,7 +79,7 @@ public class ComponentFactoryObserverInitCommand implements InitCommand
 			
 			deco.setDecorated(componentInstance);
 			
-			moduleFactory.addObserver(deco);
+			componentRepository.addObserver(deco);
 				
 		}
 
