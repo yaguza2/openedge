@@ -36,6 +36,7 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
 
 import java.security.Policy;
 import java.util.Properties;
@@ -235,19 +236,30 @@ public final class AccessHelper
 		if(applicationname != null)
 		{
 			String key = "oeaccess.codesource." + applicationname;
-			String check = System.getProperty(applicationname);
-		
+			String check = System.getProperty(applicationname);	
 			if(check != null)
 			{
 				throw new ConfigException(
 					"application " + key + " was allready defined in VM");
 			}
-			CodeSource cs = AccessHelper.class.getProtectionDomain().getCodeSource();
-			URL csurl = cs.getLocation();
-			log.info("setting applicationname to " + applicationname +
-				"; " + key + " will be expanded to " + csurl.toString());
-				
-			System.setProperty(key, csurl.toString());	
+			ProtectionDomain pd = AccessHelper.class.getProtectionDomain();
+			CodeSource cs = pd.getCodeSource();
+			
+			System.out.println("**************** cls: " + cs.getClass() + " == " + cs);
+			
+			if(cs != null && (cs.getLocation() != null))
+			{
+				URL csurl = cs.getLocation();
+				System.setProperty(key, csurl.toString());
+				log.info("setting applicationname to " + applicationname +
+					"; " + key + " will be expanded to " + csurl);	
+			}
+			else
+			{
+				log.warn("CodeSource could not be appointed. This makes " +
+					"substitution in the policy file impossible, and thus it is not safe " +
+					"to use openedge-access for more than one webapp in this server/ VM!");
+			}	
 		}
 	}
 
