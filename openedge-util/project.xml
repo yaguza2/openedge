@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>openedge-util</id>
   <name>OpenEdge Util</name>
-  <currentVersion>1.1.4</currentVersion>
+  <currentVersion>1.1.5</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -23,6 +23,11 @@
   
  	<versions>
  		<version>
+ 			<version>
+			<id>1.1.5</id>
+			<name>1.1.5</name>
+			<tag>B1_1_5</tag>
+			</version>
 			<id>1.1.3</id>
 			<name>1.1.3</name>
 			<tag>B1_1_3</tag>
