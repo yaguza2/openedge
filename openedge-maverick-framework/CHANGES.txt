@@ -1,9 +1,14 @@
 -------------------------------------------------
+1.4.5
+
+- bugfix: pattern was not passed in Formatter.format method.
+
+-------------------------------------------------
 1.4.4
 
 - fixed bug that ignored empty request parameters (empty strings) in the 
 	population process. They are now interpreted as a null or an empty
-	string, depending on the property setNullForEmptyString in FormBeanCtrl
+	string, depending on the property setNullForEmptyString in FormBeanCtrl.
 
 -------------------------------------------------
 1.4.3
