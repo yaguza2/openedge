@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import nl.openedge.maverick.framework.FormBeanContext;
+import nl.openedge.util.DateComparator;
 import nl.openedge.util.DateFormatHelper;
 
 import org.apache.commons.logging.Log;
@@ -173,13 +174,14 @@ public class AfterValidator extends AbstractFieldValidator
 			throw new IllegalArgumentException("Null cannot be validated.");
 		}
 		boolean after = false;
+		DateComparator comp = new DateComparator();
 		if (value instanceof Date)
 		{
-			after = ((Date)value).after(before);
+			after = comp.compare((Date)value, before) >= 0;
 		}
 		else if (value instanceof Calendar)
 		{
-			after = ((Calendar)value).getTime().after(before);
+			after = comp.compare(((Calendar)value).getTime(), before) >= 0;
 		}
 		else
 		{
