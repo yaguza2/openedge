@@ -4,17 +4,17 @@
     <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
     <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.6.1.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.7dev.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-cli/jars/commons-cli-1.0-beta-2-dev.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-3.0-dev.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.1.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.1-dev.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/commons-pool/jars/commons-pool-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-pool/jars/commons-pool-1.1.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/commons-lang/jars/commons-lang-1.0.1.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-b9.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4-dev-8.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/mm.mysql/jars/mm.mysql-2.0.14-bin.jar"/>
-    <classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.2.1.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/hibernate/jars/hibernate-2.0.2.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/odmg/jars/odmg-3.0.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/bcel/jars/bcel-5.1.jar"/>
@@ -23,10 +23,10 @@
     <classpathentry kind="var" path="MAVEN_REPO/jaf/jars/activation-1.0.2.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-utils/jars/openedge-utils-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
+        path="MAVEN_REPO/openedge-util/jars/openedge-util-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-modules/src/java"/>
+        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-modules/src/java"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-access/jars/openedge-access-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-access/src/java"/>
+        path="MAVEN_REPO/openedge-access/jars/openedge-access-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-access/src/java"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
