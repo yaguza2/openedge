@@ -30,6 +30,7 @@
  */
 package nl.openedge.modules.impl.menumodule;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 
@@ -37,7 +38,7 @@ import java.util.List;
  * Een item in een menu 
  * @author Eelco Hillenius
  */
-public final class MenuItem
+public final class MenuItem implements Serializable
 {
 	private String tag;
 	private String link;
