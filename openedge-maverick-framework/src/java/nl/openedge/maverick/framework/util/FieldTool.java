@@ -204,7 +204,7 @@ public class FieldTool
 		}
 		if(value != null)
 		{
-			if( (value instanceof java.util.Date) || (value instanceof java.sql.Date) )
+			if(value instanceof java.util.Date)
 			{
 				SimpleDateFormat df = new SimpleDateFormat(pattern);
 				converted = df.format((java.util.Date)value);
