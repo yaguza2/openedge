@@ -176,6 +176,7 @@
           	<include>**/*.dtd</include>
           	<include>**/*.vm</include>
           	<include>**/*.config</include>
+			<include>**/*.cfg</include>
           	<include>**/*.policy</include>
           </includes>
         </resource>
