@@ -51,6 +51,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class SerializeAndZipHelper
 {
+	/** a percentage factor. */
+	private static final int PERC_FACTOR = 100;
 
 	/**
 	 * Logger.
@@ -71,13 +73,13 @@ public final class SerializeAndZipHelper
 	 * @param serializedAndZipped
 	 *            struct with serialized and zipped data
 	 * @return root object that was serialized and zipped
-	 * @throws IOException
-	 * @throws DataFormatException
+	 * @throws IOException see exception
+	 * @throws DataFormatException  see exception
+	 * @throws ClassNotFoundException see exception
 	 */
 	public static Object unzipAndDeserialize(SerializedAndZipped serializedAndZipped)
 			throws IOException, DataFormatException, ClassNotFoundException
 	{
-
 		long begin = System.currentTimeMillis();
 
 		byte[] objectData = unzip(serializedAndZipped);
@@ -99,7 +101,7 @@ public final class SerializeAndZipHelper
 	 *            the root object to serialize and zip; if you need to process more than one object,
 	 *            try packing them in a list or a composite object
 	 * @return struct that holds the serialized and zipped data
-	 * @throws IOException
+	 * @throws IOException see exception
 	 */
 	public static SerializedAndZipped serializeAndZip(Object root) throws IOException
 	{
@@ -117,10 +119,10 @@ public final class SerializeAndZipHelper
 		if (log.isDebugEnabled())
 		{
 			log.debug("zipped and serialized in " + (end - begin) + " milis");
-			final int PERC_FACTOR = 100;
 			int compressedDataLength = serializedAndZipped.getCompressedData().length;
 			int uncompressedDataLength = serializedAndZipped.getUncompressedDataLength();
-			double zipRatio = ((double) compressedDataLength / (double) uncompressedDataLength) * 100;
+			double zipRatio = ((double)
+					compressedDataLength / (double) uncompressedDataLength) * PERC_FACTOR;
 			zipRatio = Rekenhulp.rondAf(zipRatio, 2);
 			log.debug("zip ratio = "
 					+ zipRatio + "%" + " (compr: " + compressedDataLength + " - uncompr: "
@@ -136,7 +138,7 @@ public final class SerializeAndZipHelper
 	 * @param root
 	 *            root object to serialize
 	 * @return serialized data
-	 * @throws IOException
+	 * @throws IOException see exception
 	 */
 	public static byte[] serialize(Object root) throws IOException
 	{
@@ -157,8 +159,8 @@ public final class SerializeAndZipHelper
 	 * @param objectData
 	 *            object data
 	 * @return Object de-serialized object
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws IOException see exception
+	 * @throws ClassNotFoundException see exception
 	 */
 	public static Object deserialize(byte[] objectData) throws IOException, ClassNotFoundException
 	{
@@ -197,7 +199,7 @@ public final class SerializeAndZipHelper
 	 * @param serializedAndZipped
 	 *            struct with zipped object data
 	 * @return object data
-	 * @throws DataFormatException
+	 * @throws DataFormatException see exception
 	 */
 	public static byte[] unzip(SerializedAndZipped serializedAndZipped) throws DataFormatException
 	{
@@ -205,6 +207,10 @@ public final class SerializeAndZipHelper
 		decompresser.setInput(serializedAndZipped.getCompressedData());
 		byte[] objectData = new byte[serializedAndZipped.getUncompressedDataLength()];
 		int resultLength = decompresser.inflate(objectData);
+		if (log.isDebugEnabled())
+		{
+			log.debug("result length: " + resultLength);
+		}
 		decompresser.end();
 		return objectData;
 	}
