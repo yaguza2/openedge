@@ -229,7 +229,13 @@ public class ParameterGroup extends Group
 		if (parent != null)
 		{
 			parentPath = parent.getPath();
-		}
+		} else if (this.getParentId() != null) {
+		    /*
+		     * Komt voor indien de versie van de parametergroep
+		     * niet overeenkomt met de versie van de parent.
+		     */
+		    parentPath = this.getParentId();
+		}		
 		return parentPath;
 	}
 
