@@ -1,4 +1,10 @@
 -----------------------------------------------
+1.0.5
+
+- Negatieve indexen mogelijk gemaakt voor
+  geneste parameters
+  
+-----------------------------------------------
 1.0.4
 
 - Bugfixes
