@@ -363,6 +363,13 @@ public final class ParameterDAO
 			{
 				TransactionUtil.commit();
 			}
+			if(isUseCache())
+			{
+				String cacheKey;
+				cacheKey = getCacheKeyForParameters(param.getId(), param.getVersion());
+				CacheUtil.removeObjectFromCache(cacheKey, PARAMETERS_CACHE_NAME);
+				CacheUtil.removeObjectFromCache(cacheKey, PARAMETER_WRAPPERS_CACHE_NAME);
+			}
 		}
 		catch (HibernateException e)
 		{
