@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<maverick version="2.0" default-view-type="document" default-transform-type="document">
+
+	<!-- Standaard instellingen Maverick -->
+	<modules>
+		<view-factory type="document" provider="org.infohazard.maverick.view.DocumentViewFactory">
+			<default-bean-name value="model" />
+		</view-factory>
+
+		<controller-factory provider="nl.openedge.util.maverick.AllwaysReloadControllerFactory">
+		    <allways-reload value="false"/>
+		</controller-factory>
+
+	</modules>
+
+	<views>
+
+		
+	</views>
+
+	<commands>
+
+		<!-- ***************************** Command definities ***************************** -->
+
+		<command name="home">
+			<controller class="nl.openedge.gaps.web.ctrl.HomeCtrl" />
+			<view path="/home.vm">
+				<transform path="/mlayout/mainlayout.vm" />
+			</view>
+		</command>
+		
+		<command name="onderhoudgroepen">
+			<controller class="nl.openedge.gaps.web.ctrl.OnderhoudGroepenCtrl" />
+			<view path="/onderhoudgroepen.vm">
+				<transform path="/mlayout/mainlayout.vm" />
+			</view>
+		</command>
+
+
+		<!-- *********************** Einde command definities ********************************** -->
+
+	</commands>
+
+</maverick>

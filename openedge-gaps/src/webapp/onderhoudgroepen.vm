@@ -1,0 +1,38 @@
+$request.setAttribute("_pagetitle", "OnderhoudGroepen" )
+<H1 >G.A.P.S.> Parametergroepen.</H1>
+<table>
+	<tr>
+  		<th><label>Naam</label></th>
+  		<th><label>Omschrijving</label></th>			
+		<th>&nbsp;</th>	
+	</tr>
+	#foreach ($groep in $model.bean.groepen)
+	<tr onMouseOver="this.className='selectrowover'" onMouseOut="this.className='selectrow'">
+	#set($link="zet.actieve.groep.m?groep.id=$groep.id")
+	<a href="$linkTool.setRelative($link)" id="groep-$groep.omschrijving">
+		<td>$groep.naam</td>
+		<td>$groep.omschrijving</td>
+		
+	</a>
+	</tr>
+	#end
+</table>
+
+<table>
+	<tr>
+  		<th><label>Naam</label></th>
+  		<th><label>Omschrijving></label></th>				<tr>
+	</tr>		
+	<form method="GET" name="selectForm" action="$linkTool.setRelative('selecteergroep.m')">
+	<tr>
+		<td class="nogrid">#forminput("naam" "text" 10)</td>
+		<td class="nogrid">#forminput("omschrijving" "text" 30)</td>
+	</tr>
+	<tr>
+		<td class="nogrid" colspan="3"><input class="button" type="submit" name="select" id="select" value="nieuwe groep"/></td>									
+		<td class="nogrid">&nbsp;</td>
+	</tr>
+	</form>
+</table>
+		
+	
