@@ -38,7 +38,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nl.openedge.access.AccessFactory;
+import nl.openedge.access.AccessHelper;
 import nl.openedge.maverick.framework.converters.BooleanConverter;
 import nl.openedge.maverick.framework.converters.ByteConverter;
 import nl.openedge.maverick.framework.converters.CharacterConverter;
@@ -142,8 +142,7 @@ public class ApplicationServlet extends VelocityViewServlet
 	 */
 	protected void initOEAccess(ServletConfig config) throws Exception
 	{
-
-		AccessFactory.reload(config.getServletContext());
+		AccessHelper.reload(config.getServletContext());
 	}
 
 	/**
@@ -153,7 +152,6 @@ public class ApplicationServlet extends VelocityViewServlet
 	 */
 	protected void initOEModules(ServletConfig config) throws Exception
 	{
-
 		new JDOMConfigurator(config.getServletContext());
 	}
 	
