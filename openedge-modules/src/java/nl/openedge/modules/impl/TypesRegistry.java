@@ -68,7 +68,7 @@ import nl.openedge.modules.types.initcommands.ServletContextAwareTypeInitCommand
  * Couples on classes
  * @author Eelco Hillenius
  */
-public class TypesRegistry
+public final class TypesRegistry
 {
 	/*
 	 * Map of component factories. Keyed on types, the values

@@ -52,7 +52,7 @@ import nl.openedge.modules.config.ConfigException;
  * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class BeanTypeInitCommand implements InitCommand
+public final class BeanTypeInitCommand implements InitCommand
 {
 	
 	private Map properties = null;

@@ -40,7 +40,7 @@ import nl.openedge.modules.observers.ChainedEventObserver;
  * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ChainedEventObserverInitCommand implements InitCommand
+public final class ChainedEventObserverInitCommand implements InitCommand
 {
 	
 	protected ComponentRepository componentRepository = null;

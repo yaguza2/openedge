@@ -42,7 +42,7 @@ import javax.naming.CompositeName;
  *
  * @author Eelco Hillenius
  */
-public class DefaultNameParser implements NameParser {
+public final class DefaultNameParser implements NameParser {
 
     /**
      * Parses a name into its components.

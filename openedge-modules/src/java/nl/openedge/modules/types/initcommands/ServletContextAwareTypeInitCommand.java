@@ -44,7 +44,7 @@ import nl.openedge.modules.config.ConfigException;
  * Command for components that want to be aware of the servlet context
  * @author Eelco Hillenius
  */
-public class ServletContextAwareTypeInitCommand implements InitCommand
+public final class ServletContextAwareTypeInitCommand implements InitCommand
 {
 
 	private ComponentRepository componentRepository = null;

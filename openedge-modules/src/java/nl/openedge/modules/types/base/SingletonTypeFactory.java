@@ -42,7 +42,7 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
  * wrapper for singleton components
  * @author Eelco Hillenius
  */
-public class SingletonTypeFactory extends AbstractComponentFactory
+public final class SingletonTypeFactory extends AbstractComponentFactory
 	implements ComponentObserver
 {
 

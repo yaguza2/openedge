@@ -60,7 +60,7 @@ import org.jdom.Element;
  *  
  * @author Eelco Hillenius
  */
-public class RepositoryFactory implements  ObjectFactory
+public final class RepositoryFactory implements ObjectFactory
 {
 
 	/** class of the default implementation */

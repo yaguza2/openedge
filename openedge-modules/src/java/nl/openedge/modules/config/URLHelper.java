@@ -39,7 +39,7 @@ import javax.servlet.ServletContext;
  * Helper class for interpreting url locations
  * @author Eelco Hillenius
  */
-public class URLHelper
+public final class URLHelper
 {
 
 	/**

@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  * Helper for JNDI namings
  * @author Eelco Hillenius, based on NamingHelper from Hibernate
  */
-public class NamingHelper {
+public final class NamingHelper {
 	
 	/** JNDI initial context class, <tt>Context.INITIAL_CONTEXT_FACTORY</tt>*/
 	protected static String JNDI_CLASS ="jndi.class";

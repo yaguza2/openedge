@@ -42,7 +42,7 @@ import nl.openedge.modules.config.ConfigException;
  * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public final class ConfigurableTypeInitCommand implements InitCommand
 {
 	
 	private Element componentNode = null;

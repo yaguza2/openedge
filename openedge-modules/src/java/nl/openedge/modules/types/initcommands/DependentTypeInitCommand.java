@@ -43,7 +43,7 @@ import nl.openedge.modules.config.ConfigException;
  * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class DependentTypeInitCommand implements InitCommand
+public final class DependentTypeInitCommand implements InitCommand
 {
 	
 	private ComponentRepository componentRepository = null;

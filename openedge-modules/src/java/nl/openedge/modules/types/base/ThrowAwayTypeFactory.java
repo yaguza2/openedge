@@ -39,7 +39,7 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
  * wrapper for throw away components
  * @author Eelco Hillenius
  */
-public class ThrowAwayTypeFactory extends AbstractComponentFactory
+public final class ThrowAwayTypeFactory extends AbstractComponentFactory
 {
 	/**
 	 * get instance of module

@@ -76,7 +76,7 @@ import org.jdom.Element;
  * 
  * @author Eelco Hillenius
  */
-public class JDOMConfigurator
+public final class JDOMConfigurator
 {
 
 	/**

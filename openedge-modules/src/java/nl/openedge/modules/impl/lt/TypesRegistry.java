@@ -57,7 +57,7 @@ import nl.openedge.modules.types.initcommands.ServletContextAwareTypeInitCommand
  * Couples on strings
  * @author Eelco Hillenius
  */
-public class TypesRegistry
+public final class TypesRegistry
 {
 
 	/** default class */

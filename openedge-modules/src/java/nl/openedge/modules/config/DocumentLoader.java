@@ -44,7 +44,7 @@ import org.jdom.input.SAXBuilder;
  * Helper class for loading jdom documents
  * @author Eelco Hillenius
  */
-public class DocumentLoader
+public final class DocumentLoader
 {
 
 	/* logger */

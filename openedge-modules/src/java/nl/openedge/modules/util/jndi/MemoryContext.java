@@ -78,7 +78,7 @@ import javax.naming.spi.NamingManager;
  * @author Eelco Hillenius
  * @see MemoryContextFactory
  */
-public class MemoryContext implements Context {
+public final class MemoryContext implements Context {
 
     /** The default name separator for this context is '/' */
     public static final String NAME_SEPARATOR = "/";

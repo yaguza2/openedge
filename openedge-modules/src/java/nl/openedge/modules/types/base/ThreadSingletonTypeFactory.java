@@ -42,7 +42,7 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
  * wrapper for singleton components per Thread
  * @author Eelco Hillenius
  */
-public class ThreadSingletonTypeFactory extends AbstractComponentFactory
+public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 	implements ComponentObserver
 {
 	

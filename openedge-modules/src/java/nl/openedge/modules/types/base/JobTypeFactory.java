@@ -48,7 +48,7 @@ import org.quartz.JobDataMap;
  * Jobs cannot 
  * @author Eelco Hillenius
  */
-public class JobTypeFactory extends AbstractComponentFactory
+public final class JobTypeFactory extends AbstractComponentFactory
 {
 
 	private JobDataMap jobData = null;

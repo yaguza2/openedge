@@ -40,7 +40,7 @@ import nl.openedge.modules.observers.ComponentRepositoryObserver;
  * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ComponentFactoryObserverInitCommand implements InitCommand
+public final class ComponentFactoryObserverInitCommand implements InitCommand
 {
 	
 	protected ComponentRepository componentRepository = null;
