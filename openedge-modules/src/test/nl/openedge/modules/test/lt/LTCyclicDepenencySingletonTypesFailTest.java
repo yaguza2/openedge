@@ -41,20 +41,21 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.impl.lt.LooselyTypedComponentRepository;
 import nl.openedge.modules.types.initcommands.CyclicDependencyException;
+import nl.openedge.modules.types.initcommands.DependentTypeWrapper;
 
 /**
  * components related tests
  * 
  * @author E.F. Hillenius
  */
-public class LTCyclicDepenencySingletonTypesTest extends TestCase
+public class LTCyclicDepenencySingletonTypesFailTest extends TestCase
 {
 
 	/**
 	 * construct with name
 	 * @param name
 	 */
-	public LTCyclicDepenencySingletonTypesTest(String name) throws Exception
+	public LTCyclicDepenencySingletonTypesFailTest(String name) throws Exception
 	{
 		super(name);
 	}
@@ -65,6 +66,7 @@ public class LTCyclicDepenencySingletonTypesTest extends TestCase
 		try
 		{
 
+			DependentTypeWrapper.setFailOnCycle(true);
 			URL url =					
 				URLHelper.convertToURL("/cyclic-singleton-oeltmodules.xml",
 					AbstractTestBase.class,
@@ -72,9 +74,7 @@ public class LTCyclicDepenencySingletonTypesTest extends TestCase
 					
 			RepositoryFactory.setImplementingClass(
 				LooselyTypedComponentRepository.class.getName());
-
 			JDOMConfigurator c = new JDOMConfigurator(url);
-			
 			ComponentRepository cRepo = RepositoryFactory.getRepository();
 
 			// if we get here, the cycle was not detected

@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test.lt;
+package nl.openedge.modules.test;
 
 import java.net.URL;
 
@@ -39,22 +39,22 @@ import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
-import nl.openedge.modules.impl.lt.LooselyTypedComponentRepository;
 import nl.openedge.modules.types.initcommands.CyclicDependencyException;
+import nl.openedge.modules.types.initcommands.DependentTypeWrapper;
 
 /**
  * components related tests
  * 
  * @author E.F. Hillenius
  */
-public class LTCyclicDepenencyThrowWayTypesTest extends TestCase
+public class CyclicDepenencyThrowWayTypesFailTest extends TestCase
 {
 
 	/**
 	 * construct with name
 	 * @param name
 	 */
-	public LTCyclicDepenencyThrowWayTypesTest(String name) throws Exception
+	public CyclicDepenencyThrowWayTypesFailTest(String name) throws Exception
 	{
 		super(name);
 	}
@@ -64,19 +64,14 @@ public class LTCyclicDepenencyThrowWayTypesTest extends TestCase
 
 		try
 		{
-
+			DependentTypeWrapper.setFailOnCycle(true);
 			URL url =
-				URLHelper.convertToURL("/cyclic-throwaway-oeltmodules.xml",
+				URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml",
 					AbstractTestBase.class,
 					null);
 
-			RepositoryFactory.setImplementingClass(
-				LooselyTypedComponentRepository.class.getName());
-
 			JDOMConfigurator c = new JDOMConfigurator(url);
-			
-			ComponentRepository cRepo = RepositoryFactory.getRepository();
-
+			ComponentRepository moduleFactory = RepositoryFactory.getRepository();
 
 			// if we get here, the cycle was not detected
 			fail("cycle was not detected!");

@@ -39,31 +39,30 @@ import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
-import nl.openedge.modules.types.initcommands.CyclicDependencyException;
+import nl.openedge.modules.types.initcommands.DependentTypeWrapper;
 
 /**
  * components related tests
  * 
  * @author E.F. Hillenius
  */
-public class CyclicDepenencyThrowWayTypesTest extends TestCase
+public class CyclicDepenencyThrowWayTypesNoFailTest extends TestCase
 {
 
 	/**
 	 * construct with name
 	 * @param name
 	 */
-	public CyclicDepenencyThrowWayTypesTest(String name) throws Exception
+	public CyclicDepenencyThrowWayTypesNoFailTest(String name) throws Exception
 	{
 		super(name);
 	}
 
 	public void testLoadCyclicComponentFactory() throws Exception
 	{
-
 		try
 		{
-
+			DependentTypeWrapper.setFailOnCycle(false);
 			URL url =
 				URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml",
 					AbstractTestBase.class,
@@ -71,24 +70,11 @@ public class CyclicDepenencyThrowWayTypesTest extends TestCase
 
 			JDOMConfigurator c = new JDOMConfigurator(url);
 			ComponentRepository moduleFactory = RepositoryFactory.getRepository();
-
-			// if we get here, the cycle was not detected
-			fail("cycle was not detected!");
-
 		}
 		catch (ConfigException e)
 		{
-			if(e.getCause() instanceof CyclicDependencyException)
-			{
-				System.err.println(
-					"successfully detected cycle during startup\n" 
-					+ e.getMessage());	
-			}
-			else
-			{
-				e.printStackTrace();
-				fail(e.getMessage());	
-			}
+			e.printStackTrace();
+			fail(e.getMessage());	
 		}
 	}
 

@@ -30,8 +30,10 @@
  */
 package nl.openedge.modules.types.initcommands;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -50,6 +52,8 @@ import nl.openedge.modules.observers.ComponentObserver;
 public class DependentTypeWrapper
 {
 	
+	private static boolean failOnCycle = false;
+	
 	/** the decorated instance */
 	protected Object componentInstance;
 	
@@ -66,7 +70,10 @@ public class DependentTypeWrapper
 	protected String componentName = null;
 	
 	/** used for cycle check */
-	protected static ThreadLocal referenceHolder = new ThreadLocal(); 
+	protected static ThreadLocal referenceHolder = new ThreadLocal();
+	
+	/** used for temporary storing of resolved dependencies */
+	protected static ThreadLocal resolvedComponentsHolder = new ThreadLocal(); 
 	
 	/**
 	 * construct
@@ -94,7 +101,6 @@ public class DependentTypeWrapper
 		{
 	
 			Set references = (Set)referenceHolder.get();
-			
 			if(references == null)
 			{
 				references = new TreeSet();
@@ -102,30 +108,45 @@ public class DependentTypeWrapper
 				referenceHolder.set(references);
 			}
 			
+			Map resolved = (Map)resolvedComponentsHolder.get();
+			if(resolved == null)
+			{
+				resolved = new HashMap();
+				resolved.put(componentName, componentInstance);
+				resolvedComponentsHolder.set(resolved);
+			}
+			
 			for(Iterator i = namedDependencies.iterator(); i.hasNext(); )
 			{
 				NamedDependency dep = (NamedDependency)i.next();
-				
+				Object gotYa = null;
 				if(references.contains(dep.getModuleName()))
 				{
 					// got a cycle!
-					String name = dep.getModuleName();
-					String message = "\n\ncomponent with name " +
-						this.componentName + " has a cyclic dependency:" +
-						" component with name " + name + 
-						" was allready referenced. \nHere's a list of" +
-						" references where the cycle was detected:\n" +
-						references.toString() + " -> " + name + "\n";
-					
-					throw new CyclicDependencyException(message);
+					if(failOnCycle)
+					{
+						String name = dep.getModuleName();
+						String message = "\ncomponent with name " +
+							this.componentName + " has a cyclic dependency:" +
+							" component with name " + name + 
+							" was allready referenced. \nHere's a list of" +
+							" references where the cycle was detected:\n" +
+							references.toString() + " -> " + name + "\n";
+						throw new CyclicDependencyException(message);	
+					}
+					else
+					{
+						gotYa = resolved.get(dep.getModuleName());	
+					}
 				}
 				else
 				{
 					references.add(dep.getModuleName());
+					// get module from repo
+					gotYa = moduleFactory.getComponent(dep.getModuleName());
 				}
 				
-				// get module
-				Object gotYa = moduleFactory.getComponent(dep.getModuleName());
+				resolved.put(dep.getModuleName(), gotYa);
 				
 				try
 				{
@@ -141,6 +162,7 @@ public class DependentTypeWrapper
 			}
 			
 			referenceHolder.set(null);
+			resolvedComponentsHolder.set(null);
 		}
 	}
 	
@@ -240,6 +262,22 @@ public class DependentTypeWrapper
 			// test it
 			setDependencies(componentInstance);
 		}	
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public static boolean isFailOnCycle()
+	{
+		return failOnCycle;
+	}
+
+	/**
+	 * @param b
+	 */
+	public static void setFailOnCycle(boolean b)
+	{
+		failOnCycle = b;
 	}
 
 }
