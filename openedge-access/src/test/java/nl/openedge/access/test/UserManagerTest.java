@@ -14,9 +14,9 @@ import nl.openedge.access.UserManager;
  */
 public class UserManagerTest extends AbstractTestBase {
 
-	protected String username = "eelco";
-	protected String rolename1 = "testrole1";
-	protected String rolename2 = "testrole2";
+	protected String username = "_testuser";
+	protected String rolename1 = "_testrole1";
+	protected String rolename2 = "_testrole2";
 
 	/**
 	 * @param name
@@ -143,14 +143,18 @@ public class UserManagerTest extends AbstractTestBase {
 		}
 	}
 	
-	/* get a user */
-	public void testGetUser() {
+	/* get a user and change password */
+	public void testGetUserAndResetPassword() {
 		
 		UserManager userManager = accessFactory.getUserManager();
 		UserPrincipal user = null;
 		try {
 			user = userManager.getUser(username);
 			assertNotNull(user);
+			
+			String anotherPassword = "anotherPassword";
+			userManager.resetPassword(user, anotherPassword);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

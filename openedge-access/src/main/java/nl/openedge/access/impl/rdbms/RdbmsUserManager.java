@@ -169,7 +169,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 			HashMap fields = new HashMap(1);
 			fields.put("password", cryptedPassword);
 			
-			int result = update("oeaccess", keyFields, fields);
+			int result = update("oeaccess_user", keyFields, fields);
 			if(result != 1) {
 				throw new AccessException("query failed for an unknown reason");
 			}

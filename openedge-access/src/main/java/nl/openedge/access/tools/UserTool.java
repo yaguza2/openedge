@@ -54,13 +54,17 @@ public final class UserTool {
 		}
 		
 		if(System.getProperty("configfile") != null) {
+			String config = System.getProperty("configfile");
+			System.out.println("loading " + config + " for configuration");
 			try {
-				loadAccessFactory(System.getProperty("configfile"));
+				loadAccessFactory(config);
 			} catch(Exception e) {				
 				System.err.println(e.getMessage());
 				return;	
 			}
 		} else {
+			System.out.println("env var 'configfile' not set... loading " +
+				"oeaccess.xml from this package for configuration");
 			// try to load from class path, current package:
 			String config = "oeaccess.xml";
 			try {

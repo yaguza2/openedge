@@ -145,7 +145,8 @@ public abstract class RdbmsBase {
 		int paramCounter = 0;
 		// create the sql statement
 		StringBuffer b = new StringBuffer("update ")
-			.append(table);
+			.append(table)
+			.append(" set ");
 		// field part
 		more = false;
 		for(Iterator i = nonKeyFields.keySet().iterator(); i.hasNext(); ) {
