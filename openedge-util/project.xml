@@ -118,6 +118,12 @@
       <version>b8</version>
       <url>http://www.jdom.org/</url>
     </dependency>
+	
+    <dependency>
+      <id>dom4j</id>
+      <version>1.4-dev-8</version>
+      <url>http://www.dom4j.org/</url>
+    </dependency>
     
     <dependency>
       <id>jstl</id>

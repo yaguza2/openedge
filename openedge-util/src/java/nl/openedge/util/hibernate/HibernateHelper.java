@@ -30,6 +30,8 @@
  */
 package nl.openedge.util.hibernate;
 
+import java.net.URL;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,6 +49,7 @@ public abstract class HibernateHelper
 {
 
 	private static Log log = LogFactory.getLog(HibernateHelper.class);
+	private static URL configURL = null;
 
 	/**
 	 * Holds the current hibernate session, if one has been created.
@@ -71,7 +74,15 @@ public abstract class HibernateHelper
 			wasInitialised = true;
 			// Initialize hibernate
 			// configure; load mappings
-			Configuration ds = new Configuration().configure();
+			Configuration ds = new Configuration();
+			if(configURL != null)
+			{
+				ds.configure(configURL);	
+			}
+			else
+			{
+				ds.configure();	
+			}
 			// build a SessionFactory		
 			factory = ds.buildSessionFactory();
 		}
@@ -110,6 +121,22 @@ public abstract class HibernateHelper
 	public static void setSessionFactory(SessionFactory factory)
 	{
 		HibernateHelper.factory = factory;
+	}
+
+	/**
+	 * @return URL
+	 */
+	public static URL getConfigURL()
+	{
+		return configURL;
+	}
+
+	/**
+	 * @param url
+	 */
+	public static void setConfigURL(URL url)
+	{
+		configURL = url;
 	}
 
 }

@@ -18,5 +18,6 @@
     <classpathentry kind="var" path="MAVEN_REPO/velocity-tools/jars/velocity-tools-0.9.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/velocity/jars/velocity-1.4-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/velocity-1.4-dev-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.4-dev-8.jar"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
