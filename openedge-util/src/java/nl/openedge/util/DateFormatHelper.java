@@ -47,6 +47,9 @@ public final class DateFormatHelper
 	private static LinkedHashMap formatters = new LinkedHashMap();
 	private static SimpleDateFormat defaultFormatter = null;
 	private static String defaultFormatterString = null;
+	
+	/* test for unwanted characters ? */
+	private static boolean checkForCharacters = true;
 
 	static {
 		loadFormatters();
@@ -312,11 +315,23 @@ public final class DateFormatHelper
 		throws CheckException, ParseException
 	{
 		Date date = df.parse(stringDate);
-		String check = df.format(date);		
-		if(!stringDate.equals(check))
+		
+		if(checkForCharacters)
 		{
-			throw new CheckException(stringDate + " is not a valid date");	
+			int length = stringDate.length();
+			for(int j = 0; j < length; j++)
+			{
+				char c = stringDate.charAt(j);
+				if ((c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'))
+				{
+					throw new CheckException(stringDate + " is not a valid date");
+				}
+			}	
 		}
+		
+		System.out.println("used " + ((SimpleDateFormat)df).toPattern()
+			+ " for " + stringDate);
+
 		return date;	
 	}
 	
@@ -339,6 +354,22 @@ public final class DateFormatHelper
 	public static String getDefaultFormatString()
 	{
 		return defaultFormatterString;
+	}
+
+	/**
+	 * @return boolean check for unwanted characters?
+	 */
+	public static boolean isCheckForCharacters()
+	{
+		return checkForCharacters;
+	}
+
+	/**
+	 * @param b
+	 */
+	public static void setCheckForCharacters(boolean b)
+	{
+		checkForCharacters = b;
 	}
 
 }
