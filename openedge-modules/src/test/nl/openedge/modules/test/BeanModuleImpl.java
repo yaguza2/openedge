@@ -41,6 +41,8 @@ public class BeanModuleImpl implements BeanType, SingletonType
 
 	private String myString;
 	private Integer myInteger;
+	
+	private BeanModuleImplNested nested = new BeanModuleImplNested();
 
 	public BeanModuleImpl()
 	{
@@ -77,6 +79,22 @@ public class BeanModuleImpl implements BeanType, SingletonType
 	public void setMyString(String string)
 	{
 		myString = string;
+	}
+
+	/**
+	 * @return
+	 */
+	public BeanModuleImplNested getNested()
+	{
+		return nested;
+	}
+
+	/**
+	 * @param nested
+	 */
+	public void setNested(BeanModuleImplNested nested)
+	{
+		this.nested = nested;
 	}
 
 }

@@ -135,6 +135,8 @@ public class ModulesTest extends AbstractTestBase
 
 			assertEquals(module.getMyString(), "test");
 			assertEquals(module.getMyInteger(), new Integer(12));
+			
+			assertEquals(module.getNested().getAnotherString(), "anotherTest");
 
 		}
 		catch (Exception e)

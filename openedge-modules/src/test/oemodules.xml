@@ -42,6 +42,8 @@
 				
 			<property name="myString" value="test"/>
 			<property name="myInteger" value="12"/>
+			
+			<property name="nested.anotherString" value="anotherTest"/>
 		
 		</module>
 		
