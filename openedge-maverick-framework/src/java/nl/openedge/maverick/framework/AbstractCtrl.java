@@ -134,7 +134,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					// nope, we can't
 					formBean.setError("global.message", 
 						"user was not found in session");
-					return ERROR;
+					return getErrorView(cctx, formBean);
 				}	
 			}
 
@@ -148,7 +148,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				// prepare for error command and execute it
 				internalPerformError(cctx, formBean);	
 				
-				return ERROR;
+				return getErrorView(cctx, formBean);
 			}
 			// else the form was populated succesfully
 
@@ -174,7 +174,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				// did not pass validation, so prepare for error command 
 				// and execute it
 				internalPerformError(cctx, formBean);
-				return ERROR;
+				return getErrorView(cctx, formBean);
 			}
 
 		} 
@@ -198,8 +198,19 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			// prepare for error command and execute it
 			internalPerformError(cctx, formBean);
 			
-			return ERROR;
+			return getErrorView(cctx, formBean);
 		}
+	}
+	
+	/**
+	 * get error view. 'error' by default
+	 * @param cctx controller context
+	 * @param form current form
+	 * @return String logical name of view
+	 */
+	protected String getErrorView(ControllerContext cctx, AbstractForm form)
+	{
+		return ERROR;
 	}
 	
 	/**
