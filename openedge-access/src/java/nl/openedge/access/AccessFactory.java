@@ -40,7 +40,6 @@ import java.security.Policy;
 import javax.servlet.ServletContext;
 
 import nl.openedge.access.util.*;
-import nl.openedge.util.config.ConfigException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

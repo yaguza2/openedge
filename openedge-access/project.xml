@@ -127,12 +127,6 @@
       <id>servletapi</id>
       <version>2.3</version>
     </dependency>
-
-    <dependency>
-      <id>openedge-utils</id>
-      <version>SNAPSHOT</version>
-      <url>http://www.openedge.nl</url>
-    </dependency>
     
     <dependency>
       <id>openedge-modules</id>
