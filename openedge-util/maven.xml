@@ -10,7 +10,7 @@
   xmlns:doc="doc"
   xmlns:m="maven">
 
-  <goal name="jar:deployfs" prereqs="jar:jar"
+  <goal name="jar:fsdeploy" prereqs="jar:jar"
     description="Install the jar in the local repository">
     
     <ant:echo>
@@ -27,14 +27,5 @@
       overwrite="true"
     />
   </goal>
-
-  <!-- <goal name="werkflow:example.resources">
-    <copy toDir="${werkflow.examples.dest.dir}">
-      <fileset dir="${werkflow.examples.src.dir}">
-        <include name="**/*.xml"/>
-        <include name="**/*.properties"/>
-      </fileset>
-    </copy>
-  </goal> -->
 
 </project>
