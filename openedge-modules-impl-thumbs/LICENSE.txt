@@ -1,0 +1,9 @@
+/*
+ * $Header$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ * Copyright (c) 2003, Eelco Hillenius & Burgerweeshuis
+ * All rights reserved.
+ */
