@@ -562,7 +562,7 @@ public final class FormBeanContext
 					"using formatter " + formatter +
 					" for property " + fieldname);
 			}
-			formatted = formatter.format(value, null);
+			formatted = formatter.format(value, pattern);
 		}
 		else
 		{
