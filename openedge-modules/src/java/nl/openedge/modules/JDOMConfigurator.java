@@ -37,8 +37,6 @@ import javax.servlet.ServletContext;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.DocumentLoader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -70,38 +68,36 @@ public final class JDOMConfigurator
 	/**
 	 * Default location of the xml configuration file.
 	 */
-	public static String DEFAULT_CONFIG_FILE = "/WEB-INF/oemodules.xml";
+	public static final String DEFAULT_CONFIG_FILE = "/WEB-INF/oemodules.xml";
 
 	/**
 	 * If a value is set in the application attribute context with this key, the value is used to
 	 * override the setting of the configFile.
 	 */
-	public static String KEY_CONFIG_FILE = "oemodules.configFile";
+	public static final String KEY_CONFIG_FILE = "oemodules.configFile";
 
 	/**
 	 * Name of the servlet init parameter which defines the path to the OpenEdge Modules
 	 * configuration file. Defaults to DEFAULT_CONFIG_FILE.
 	 */
-	public static String INITPARAM_CONFIG_FILE = "oemodules.configFile";
-
-	/* logger */
-	private Log log = LogFactory.getLog(JDOMConfigurator.class);
+	public static final String INITPARAM_CONFIG_FILE = "oemodules.configFile";
 
 	// only one of the following three is set at a time
-	/** pointer to url */
-	protected URL configURL = null;
+	/** pointer to url .*/
+	private URL configURL = null;
 
-	/** pointer to servlet context */
-	protected ServletContext servletContext = null;
+	/** pointer to servlet context. */
+	private ServletContext servletContext = null;
 
-	/** pointer to document location as a string */
-	protected String configDocument = null;
+	/** pointer to document location as a string. */
+	private String configDocument = null;
 
 	/**
-	 * construct and initialise with configDocument
+	 * construct and initialise with configDocument.
 	 * 
 	 * @param configDocument
 	 *            location of document as a string
+	 * @throws ConfigException on config errors
 	 */
 	public JDOMConfigurator(String configDocument) throws ConfigException
 	{
@@ -110,10 +106,12 @@ public final class JDOMConfigurator
 	}
 
 	/**
-	 * construct and initialise with URL to configDocument
+	 * construct and initialise with URL to configDocument.
 	 * 
 	 * @param configURL
 	 *            location of document as an URL
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	public JDOMConfigurator(URL configURL) throws ConfigException
 	{
@@ -123,10 +121,12 @@ public final class JDOMConfigurator
 	}
 
 	/**
-	 * construct and initialise with servletContext
+	 * construct and initialise with servletContext.
 	 * 
 	 * @param servletContext
 	 *            servlet context of webapplication
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	public JDOMConfigurator(ServletContext servletContext) throws ConfigException
 	{
@@ -136,22 +136,22 @@ public final class JDOMConfigurator
 	}
 
 	/**
-	 * create and register the component repository
-	 * 
-	 * @param configuration
+	 * create and register the component repository.
+	 * @param configuration configuration document
+	 * @param theServletContext servlet context
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 */
-	protected void createRepository(Document configuration, ServletContext servletContext)
+	protected void createRepository(Document configuration, ServletContext theServletContext)
 			throws ConfigException
 	{
 
 		Element rootNode = configuration.getRootElement();
-		RepositoryFactory.initialize(rootNode, servletContext);
+		RepositoryFactory.initialize(rootNode, theServletContext);
 	}
 
 	/**
-	 * reload the configuration this is known by this configurator
+	 * reload the configuration this is known by this configurator.
 	 * 
 	 * @throws ConfigException
 	 *             when an configuration error occurs
@@ -174,45 +174,48 @@ public final class JDOMConfigurator
 	}
 
 	/**
-	 * construct and initialise with configDocument
+	 * construct and initialise with configDocument.
 	 * 
-	 * @param configDocument
-	 * @return Document
+	 * @param theConfigDocument configuration document
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void reload(String configDocument) throws ConfigException
+	protected void reload(String theConfigDocument) throws ConfigException
 	{
-		Document configuration = DocumentLoader.loadDocument(configDocument);
+		Document configuration = DocumentLoader.loadDocument(theConfigDocument);
 		createRepository(configuration, null);
 	}
 
 	/**
-	 * load config document with URL to configDocument
+	 * load config document with URL to configDocument.
 	 * 
-	 * @param configURL
-	 * @return Document
+	 * @param theConfigURL the configuration url
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void reload(URL configURL) throws ConfigException
+	protected void reload(URL theConfigURL) throws ConfigException
 	{
-		Document configuration = DocumentLoader.loadDocument(configURL);
+		Document configuration = DocumentLoader.loadDocument(theConfigURL);
 		createRepository(configuration, null);
 	}
 
 	/**
-	 * initialise with servletContext
+	 * initialise with servletContext.
 	 * 
-	 * @param servletContext
-	 * @return Document
+	 * @param theServletContext servlet context
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void reload(ServletContext servletContext) throws ConfigException
+	protected void reload(ServletContext theServletContext) throws ConfigException
 	{
 
-		String configFile = (String) servletContext.getAttribute(KEY_CONFIG_FILE);
+		String configFile = (String) theServletContext.getAttribute(KEY_CONFIG_FILE);
 		if (configFile == null)
-			configFile = servletContext.getInitParameter(INITPARAM_CONFIG_FILE);
+			configFile = theServletContext.getInitParameter(INITPARAM_CONFIG_FILE);
 		if (configFile == null)
 			configFile = DEFAULT_CONFIG_FILE;
-		Document configuration = DocumentLoader.loadDocument(configFile, servletContext);
-		createRepository(configuration, servletContext);
+		Document configuration = DocumentLoader.loadDocument(configFile, theServletContext);
+		createRepository(configuration, theServletContext);
 	}
 
 }
