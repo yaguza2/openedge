@@ -63,13 +63,13 @@ public class SerializeAndZipHelperTest extends TestCase {
     }
 
     /**
-     * Test serializing and deserializing.
+     * Test serializing, zipping and deserializing, unzipping.
      *
      * @throws IOException
      * @throws DataFormatException
      * @throws ClassNotFoundException
      */
-    public void testSerialisatieEnDeserialisatie() throws 
+    public void testSerZipAndDeSerUnzipZip() throws 
     		IOException,
     		DataFormatException,
     		ClassNotFoundException {
