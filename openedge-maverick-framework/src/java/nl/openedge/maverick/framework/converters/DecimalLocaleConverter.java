@@ -50,7 +50,8 @@ import java.util.regex.Pattern;
 public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 {
 
-	protected Pattern nonDigitPattern = Pattern.compile(".*[^0-9&&[^\\,]&&[^\\.]].*");
+	protected Pattern nonDigitPattern = 
+		Pattern.compile(".*[^0-9&&[^\\,]&&[^\\.]&&[^\\-]].*");
 
 	// ----------------------------------------------------- Instance Variables
 
