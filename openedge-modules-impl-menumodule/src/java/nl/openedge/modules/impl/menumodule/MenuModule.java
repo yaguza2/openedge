@@ -785,7 +785,7 @@ public final class MenuModule
 						childItem.setShortCutKey(tempItem.getShortCutKey());
 						childItem.setParameters(tempItem.getParameters());
 						childItem.setAttributes(tempItem.getAttributes());
-						
+						childItem.setChildren(tempItem.getChildren());
 						if(i < (depth - 1))
 						{
 							DefaultMutableTreeNode temp =
