@@ -165,7 +165,8 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					}
 					catch (Exception e) 
 					{
-						e.printStackTrace();
+						populationLog.error(e.getMessage(), e);
+						
 						String nameWithIndex = name + '[' + index + "]";
 						ctrl.setConversionErrorForField(
 							cctx, formBeanContext, targetType, nameWithIndex, values[index], e);
@@ -217,7 +218,8 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					populationLog.error(e.getMessage(), e);
+					
 					ctrl.setConversionErrorForField(
 						cctx, formBeanContext, targetType, name, stringValue, e);
 						
@@ -268,7 +270,8 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				populationLog.error(e.getMessage(), e);
+				
 				ctrl.setConversionErrorForField(
 					cctx, formBeanContext, targetType, name, stringValue, e);
 					

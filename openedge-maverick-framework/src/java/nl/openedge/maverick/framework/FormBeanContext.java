@@ -441,8 +441,7 @@ public final class FormBeanContext
 			{
 				if(log.isDebugEnabled())
 				{
-					log.error(e);
-					e.printStackTrace();	
+					log.error(e.getMessage(), e);	
 				}
 				return null;
 			}	
@@ -496,7 +495,11 @@ public final class FormBeanContext
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.error(e);
+			if(log.isDebugEnabled())
+			{
+				log.error(e.getMessage(), e);
+			}
 			// ignore
 		}
 

@@ -70,6 +70,7 @@ import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
+import org.apache.commons.lang.exception.NestableException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ConfigException;
@@ -240,6 +241,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * option list of interceptors. An interceptor can add behaviour to an action command.
 	 */
 	private List interceptors = null;
+	
+	/**
+	 * If true, reuse the context for multiple invocations within the same request.
+	 * Default is true.
+	 */
+	private boolean reuseFormBeanContext = true;
 
 	
 	/**
@@ -262,7 +269,22 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			doSetNoCache(cctx);
 		}
 
-		FormBeanContext formBeanContext = new FormBeanContext();
+		FormBeanContext formBeanContext = null;
+		if(reuseFormBeanContext) // if true, see if an instance was save earlier req
+		{
+			formBeanContext = (FormBeanContext)
+				cctx.getRequest().getAttribute("__formBeanContext");
+			if(formBeanContext == null) 
+			{
+				formBeanContext = new FormBeanContext();
+				cctx.getRequest().setAttribute("__formBeanContext", formBeanContext);
+			}
+		}
+		else
+		{
+			formBeanContext = new FormBeanContext();	
+		}
+		
 		Object bean = null;
 		try 
 		{	
@@ -323,7 +345,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		} 
 		catch (Exception e) 
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
+			
 			if(formBeanContext != null) 
 			{
 				// save the exception so it can be displayed in the view
@@ -571,7 +594,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 								populationLog.error(e);
 								if(populationLog.isDebugEnabled())
 								{
-									e.printStackTrace();
+									populationLog.error(e.getMessage(), e);
 								}
 								continue;
 							}
@@ -586,7 +609,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 						log.error(e);
 						if(log.isDebugEnabled())
 						{
-							e.printStackTrace();
+							log.error(e.getMessage(), e); // print stacktrace
 						}
 						continue;
 					}
@@ -668,7 +691,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				populationLog.error(e);
 				if(populationLog.isDebugEnabled())
 				{
-					e.printStackTrace();
+					populationLog.error(e.getMessage(), e);
 				}
 				continue;
 			}
@@ -771,8 +794,10 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 								{
 									if(populationLog.isDebugEnabled())
 									{
-										populationLog.debug(e.getMessage());
+										// when in debug mode, print the stacktrace
+										populationLog.error(e.getMessage(), e);
 									}
+									populationLog.error(e.getMessage());
 									// ignore
 								}
 							}	
@@ -878,7 +903,18 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			if(validateField)
 			{
 				// execute validation method
-				boolean success = validator.isValid(cctx, formBeanContext, name, value);
+				boolean success;
+				try
+				{
+					success = validator.isValid(cctx, formBeanContext, name, value);
+				}
+				catch (Exception e)
+				{
+					String msg = "validator " + validator + " threw exception: " +
+						e.getMessage() + " on property " + name + " with value " +
+						value;
+					throw new NestableException(msg, e);
+				}
 				
 				if(populationLog.isDebugEnabled())
 				{
@@ -905,11 +941,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					{
 						if(populationLog.isDebugEnabled())
 						{
-							e.printStackTrace();	
+							// print with stacktrace if debug enabled
+							populationLog.error(e.getMessage(), e);
 						}
 						else
 						{
-							populationLog.warn(e.getMessage(), e);
+							populationLog.error(e.getMessage());
 						}
 						formBeanContext.setError(name, e.getMessage());
 					}
@@ -1484,7 +1521,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		{
 			if(log.isDebugEnabled())
 			{
-				e.printStackTrace();
+				populationLog.error(e.getMessage(), e);
 			}
 		}
 		return msg;
@@ -1525,7 +1562,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		{
 			if(log.isDebugEnabled())
 			{
-				e.printStackTrace();
+				populationLog.error(e.getMessage(), e);
 			}
 		}
 		return msg;
@@ -1830,6 +1867,26 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	protected void setDoPerformIfFieldValidationFailed(boolean b)
 	{
 		doPerformIfFieldValidationFailed = b;
+	}
+
+	/**
+	 * Whether to reuse the context for multiple invocations within the same request.
+	 * Default is true.
+	 * @return reuse the context for multiple invocations within the same request
+	 */
+	public boolean isReuseFormBeanContext()
+	{
+		return reuseFormBeanContext;
+	}
+
+	/**
+	 * Set whether to reuse the context for multiple invocations within the same request.
+	 * Default is true.
+	 * @param b reuse the context for multiple invocations within the same request
+	 */
+	public void setReuseFormBeanContext(boolean b)
+	{
+		reuseFormBeanContext = b;
 	}
 
 }

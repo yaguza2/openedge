@@ -7,6 +7,13 @@
 
 - some minor doc/ variable name changes
 
+- ability to reuse the instance of FormBeanContext in one request. This is convenient
+	when linking (dispatching) controlls within one request. Default is true.
+	
+- better error reporting for field validation
+
+- converted most throwable.printStackTrace to Logger.log(String, throwable)
+
 -------------------------------------------------
 1.4.5
 

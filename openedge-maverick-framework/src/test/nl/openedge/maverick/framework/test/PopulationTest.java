@@ -67,7 +67,7 @@ public class PopulationTest extends TestCase
 	private MockRequestDispatcher requestDispatcher = null;
 	private MockServletContext servletContext = null;
 	private MockServletConfig servletConfig = null;
-	private MockHttpSession httpSession = null;
+	private MockHttpSession session = null;
 	private MockHttpServletResponse response = null;		
 	private MockHttpServletRequest request = null;
 
@@ -90,14 +90,15 @@ public class PopulationTest extends TestCase
 		this.servletContext.setupGetRequestDispatcher(requestDispatcher);
 		this.servletConfig = new MockServletConfig();
 		this.servletConfig.setServletContext(servletContext);
-		this.httpSession = new MockHttpSession();
-		this.httpSession.setupGetAttribute(
+		this.session = new MockHttpSession();
+		this.session.setupGetAttribute(
 			FormBeanCtrl.SESSION_KEY_CURRENT_LOCALE, dutch);
 			
-		this.httpSession.setupServletContext(servletContext);
+		this.session.setupServletContext(servletContext);
 		this.response = new MockHttpServletResponse();
 		this.request = new MockHttpServletRequest();
-		this.request.setSession(httpSession);
+		this.request.setupGetAttribute("__formBeanContext");
+		this.request.setSession(session);
 		this.request.setupGetRequestDispatcher(requestDispatcher);
 	}
 	

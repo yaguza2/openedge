@@ -32,8 +32,6 @@
 package nl.openedge.maverick.framework.converters;
 
 import org.apache.commons.beanutils.locale.LocaleConverter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.text.ParseException;
 import java.util.Locale;
@@ -46,9 +44,6 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 {
 
 	// ----------------------------------------------------- Instance Variables
-
-	/** All logging goes through this logger */
-	private static Log log = LogFactory.getLog(BaseLocaleConverter.class);
 
 	/** The default value specified to our Constructor, if any. */
 	private Object defaultValue = null;

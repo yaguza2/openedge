@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 
 import nl.openedge.maverick.framework.FormBeanContext;
 import nl.openedge.maverick.framework.FormBeanCtrl;
-import nl.openedge.maverick.framework.interceptors.ToUpperCasePopulator;
 import nl.openedge.maverick.framework.population.IgnoreFieldPopulator;
 
 import org.infohazard.maverick.flow.ConfigException;

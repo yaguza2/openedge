@@ -31,13 +31,19 @@
  
 package nl.openedge.maverick.framework.test.mock;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Eelco Hillenius
  */
 public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServletRequest
 {
+	
+	private Map attributes = new HashMap();
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
@@ -55,4 +61,56 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 		return null;
 	}
 
+	/**
+	 * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
+	 */
+	public Object getAttribute(String anAttributeName)
+	{
+		return attributes.get(anAttributeName);
+	}
+
+	/**
+	 * @see javax.servlet.ServletRequest#getAttributeNames()
+	 */
+	public Enumeration getAttributeNames()
+	{
+		return new ItEnum(attributes.keySet().iterator()); 
+	}
+
+	/**
+	 * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
+	 */
+	public void removeAttribute(String anAttributeToRemove)
+	{
+		attributes.remove(anAttributeToRemove);
+	}
+
+	/**
+	 * @see javax.servlet.ServletRequest#setAttribute(java.lang.String, java.lang.Object)
+	 */
+	public void setAttribute(String attributeName, Object attributeValue)
+	{
+		attributes.put(attributeName, attributeValue);
+	}
+	
+}
+
+class ItEnum implements Enumeration
+{
+	Iterator i = null;
+		
+	public ItEnum(Iterator i)
+	{
+		this.i = i;
+	}
+		
+	public boolean hasMoreElements()
+	{
+		return i.hasNext();
+	}
+
+	public Object nextElement()
+	{
+		return i.next();
+	}
 }

@@ -31,9 +31,6 @@
 
 package nl.openedge.maverick.framework.converters;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -52,11 +49,6 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 
 	protected Pattern nonDigitPattern = 
 		Pattern.compile(".*[^0-9&&[^\\,]&&[^\\.]&&[^\\-]].*");
-
-	// ----------------------------------------------------- Instance Variables
-
-	/** All logging goes through this logger */
-	private static Log log = LogFactory.getLog(DecimalLocaleConverter.class);
 
 	// ----------------------------------------------------------- Constructors
 

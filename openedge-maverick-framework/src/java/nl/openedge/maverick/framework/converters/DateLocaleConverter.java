@@ -31,9 +31,6 @@
 
 package nl.openedge.maverick.framework.converters;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,11 +54,6 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	
 	private boolean lenient = false;
 	private int dateStyle = DateFormat.SHORT;
-
-	// ----------------------------------------------------- Instance Variables
-
-	/** All logging goes through this logger */
-	private static Log log = LogFactory.getLog(DateLocaleConverter.class);
 
 	// ----------------------------------------------------------- Constructors
 

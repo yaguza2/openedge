@@ -7,7 +7,7 @@
  * Copyright (c) 2003
  * All rights reserved.
  */
-package nl.openedge.maverick.framework.interceptors;
+package nl.openedge.maverick.framework.test;
 
 import java.util.Locale;
 

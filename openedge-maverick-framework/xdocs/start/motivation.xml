@@ -10,12 +10,54 @@
 	
     <section name="Goals/ Why this project was conceived">
       <p>
-		There's no shortage of OSS webframeworks. Most of them are of good quality and ready for use in
-		real-world applications. The aims of webframeworks like these are in non-technical terms: getting a
+		There's no shortage of OSS web frameworks. Most of them are of good quality and ready for use in
+		real-world applications. The aims of web frameworks like these are: getting a
 		better productivity when building applications, and achieving that these webapplications are 
 		more flexible and better maintainable than those that are build without similar frameworks.
 	  </p>
-
+	  <p>
+		I was charmed by the flexible, lightweight MVC framework Maverick. Page composition using 
+		transforms works very well, and the ability to use pluggable view types gave me the option
+		of handling things like multi-channelling elegantly. Moreover, in Maverick you can use forms/ controls
+		that can be populated automatically from the request without having to configure them in XML first,
+		and without having to use JSP taglibs etc.
+	  </p>
+	  <p>
+		When using Maverick however, (for site <a href="http://www.burgerweeshuis.nl">burgerweeshuis</a>)
+		I found that Maverick, just like some other frameworks, lacks the ability to do fine grained automatic 
+		type conversion AND error reporting. Furthermore, I did not like the available validation methods that
+		should be used with other frameworks. For validation you have to either do all validation in one method,
+		register errors yourself and re-use by inheritance, or use a validation framework where you have to
+		configure your validation in an XML file instead of just programming it. Call me old-fashioned, but I just
+		like strong typing.
+	  </p>
+	  <p>
+		In short, the initial goals of this framework were:
+		<li>
+			Having a sufficient but extensible mechanism for the population of beans from http-request parameters
+			including type conversion and error reporting. Sufficient as in: you as a programmer don't have
+			to do anything else other than to give the framework a bean that should be populated.
+		</li>
+		<li>
+			Having an easy to use, extend and re-use validation mechanism.
+		</li>
+		<li>
+			Be able to use the above mechanisms with programmatic configuration rather than using
+			XML files.
+		</li>
+		<li>
+			Not to depend on JSP tag libraries. At this moment, we are using Velocity for our views. There's no reason
+			however why this framework could not be used with JSP's or XML/XSL.
+		</li>
+		<p>
+			A goal that was added later is to be able to populate an arbitrary Java bean from the http-request parameters. This is to try to 
+			put a stop to the code duplication you see often in web application. After all, if you are using a
+			domain based application model, you probably have defined your data model in an other layer
+			allready. I allways disliked the fact that, allthough I allready defined a data model, I still
+			had to create forms and for some frameworks even redefine the properties in XML configuration files.
+		</p>
+	  </p>
+	  
 	  <p>
 		<source>
 <![CDATA[
