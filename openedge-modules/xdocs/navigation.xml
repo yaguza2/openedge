@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="openedge-util" repository="openedge-util" href="http://oetuil.openedge.nl/">
+<project name="openedge-modules" repository="openedge-modules" href="http://www.openedge.nl/">
 
-  <title>OpenEdge Utils: set of utility classes and components</title>
+  <title>OpenEdge Modules framework provides a component factory and a wrapper for the Quartz sceduler</title>
 
   <body>
     <links>

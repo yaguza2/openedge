@@ -13,8 +13,8 @@
   <inceptionYear>2003</inceptionYear>
   <package>nl.openedge.modules</package>
   <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
-  <shortDescription>OpenEdge module framework provides a component factory and a wrapper for the Quartz sceduler</shortDescription>
-  <description>The OpenEdge module framework provides for an easy to use object factory that can build and configure instances of objects (Modules) from a configuration xml document. Clients can then ask the ModuleFactory for instances.</description>
+  <shortDescription>The OpenEdge Module framework provides a component factory and a wrapper for the Quartz sceduler</shortDescription>
+  <description>The OpenEdge Module framework provides for an easy to use object factory that can build and configure instances of objects (Modules) from a configuration xml document. Clients can then ask the ModuleFactory for instances.</description>
   <url>http://maven.apache.org/</url>
 
   <!-- <repository>
@@ -155,13 +155,25 @@
         <resource>
           <directory>${basedir}/src/test/java</directory>
           <includes>
-            <include>*.xml</include>
           	<include>**/*.properties</include>
           	<include>**/*.xml</include>
           	<include>**/*.xsd</include>
           	<include>**/*.dtd</include>
           	<include>**/*.vm</include>
           	<include>**/*.config</include>
+          	<include>**/*.policy</include>
+          </includes>
+        </resource>
+        <resource>
+          <directory>${basedir}/src/main/java</directory>
+          <includes>
+          	<include>**/*.properties</include>
+          	<include>**/*.xml</include>
+          	<include>**/*.xsd</include>
+          	<include>**/*.dtd</include>
+          	<include>**/*.vm</include>
+          	<include>**/*.config</include>
+          	<include>**/*.policy</include>
           </includes>
         </resource>
       </resources>

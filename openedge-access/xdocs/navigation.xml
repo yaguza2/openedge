@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="openedge-util" repository="openedge-util" href="http://www.openedge.nl/">
+<project name="openedge-access" repository="openedge-access" href="http://www.openedge.nl/">
 
-  <title>OpenEdge Utils: set of utility classes and components</title>
+  <title>OpenEdge Access: Security framework bases on JAAS</title>
 
   <body>
     <links>
       <item name="OpenEdge" href="http://www.openedge.nl/"/>
     </links>
-    <menu name="OpenEdge Utils">
+    <menu name="OpenEdge Access">
       <item name="Overview" href="/index.html"/> 
     </menu>
   </body>

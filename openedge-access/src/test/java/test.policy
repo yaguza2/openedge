@@ -4,7 +4,7 @@ grant	principal nl.openedge.access.RolePrincipal "tableadmin" {
   permission nl.openedge.access.NamedPermission "/forgroup";
 };
 
-grant	principal nl.openedge.access.UserPrincipal "Eelco" {
+grant	principal nl.openedge.access.UserPrincipal "eelco" {
   
   permission nl.openedge.access.NamedPermission "/foreelco";
 };

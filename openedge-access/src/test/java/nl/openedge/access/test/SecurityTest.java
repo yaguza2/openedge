@@ -39,6 +39,9 @@ import javax.security.auth.login.LoginContext;
 
 import nl.openedge.access.NamedPermission;
 import nl.openedge.access.PassiveCallbackHandler;
+import nl.openedge.access.RolePrincipal;
+import nl.openedge.access.UserManager;
+import nl.openedge.access.UserPrincipal;
 
 
 /**
@@ -49,10 +52,10 @@ import nl.openedge.access.PassiveCallbackHandler;
 public class SecurityTest extends AbstractTestBase {
 
 	/** username to use with tests */
-	protected static String username = "Eelco";
+	protected static String username = "eelco";
 	
 	/** password to use with tests */
-	protected static String password = "illy";
+	protected static String password = "hillenius";
 	
 	/** login module name to use with tests */
 	protected static String moduleAlias = "TestLoginModule";
@@ -66,6 +69,30 @@ public class SecurityTest extends AbstractTestBase {
 	 */
 	public SecurityTest(String name) throws Exception {
 		super(name);
+	}
+	
+	/**
+	 * prepare db
+	 */
+	protected void setUp() throws Exception {
+	
+		UserManager userManager = accessFactory.getUserManager();
+		UserPrincipal user = userManager.createUser(username, password);
+		RolePrincipal role = userManager.createRole("tableadmin");
+		userManager.addUserToRole(user, role);
+	}
+	
+	/**
+	 * clean db
+	 */
+	protected void tearDown() throws Exception {
+	
+		UserManager userManager = accessFactory.getUserManager();
+		UserPrincipal user = null;
+		user = userManager.getUser(username);
+		userManager.deleteUser(user);
+		RolePrincipal role = userManager.getRole("tableadmin");
+		userManager.deleteRole(role);
 	}
 
 	/** test a user login */

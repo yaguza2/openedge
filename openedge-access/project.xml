@@ -2,8 +2,8 @@
 
 <project>
   <pomVersion>3</pomVersion>
-  <id>openedge-utils</id>
-  <name>OpenEdge Utils</name>
+  <id>openedge-access</id>
+  <name>OpenEdge Access</name>
   <currentVersion>1.0</currentVersion>
   <organization>
     <name>Open Edge</name>
@@ -11,10 +11,10 @@
     <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
-  <package>nl.openedge.util</package>
+  <package>nl.openedge.access</package>
   <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
-  <shortDescription>OpenEdge Util: set of reusable classes and components</shortDescription>
-  <description>OpenEdge Utils is a project for reusable classes and components that are useful enough to share among projects, but are too small to have their own project</description>
+  <shortDescription>OpenEdge Access: Security framework bases on JAAS</shortDescription>
+  <description>The OpenEdge security framework gives you the option of using a near black box security implementation that is based on Java Authentication and Authorization Service (JAAS).</description>
   <url>http://maven.apache.org/</url>
 
   <!-- <repository>
@@ -80,35 +80,58 @@
       <version>1.5</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
     </dependency>
+    
+    <dependency>
+      <id>commons-cli</id>
+      <version>1.0-beta-2-dev</version>
+      <url>http://jakarta.apache.org/commons/cli/</url>
+    </dependency>
+
+    <dependency>
+      <id>commons-collections</id>
+      <version>2.0</version>
+      <url>http://jakarta.apache.org/commons/collections/</url>
+    </dependency>
 
     <dependency>
       <id>commons-dbcp</id>
       <version>1.0</version>
       <url>http://jakarta.apache.org/commons/dbcp/</url>
     </dependency>
-
-    <dependency>
-      <id>commons-lang</id>
-      <version>1.0.1</version>
-      <url>http://jakarta.apache.org/commons/lang/</url>
-    </dependency>
     
     <dependency>
-      <id>jstl</id>
+      <id>commons-logging</id>
+      <version>02032003</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+    </dependency>
+
+    <dependency>
+      <id>commons-pool</id>
       <version>1.0</version>
-      <url>http://java.sun.com/products/jsp/jstl/</url>
+      <url>http://jakarta.apache.org/commons/pool/</url>
     </dependency>
     
     <dependency>
-      <id>jakarta-taglibs-standard</id>
-      <version>1.0.3</version>
-      <url>http://jakarta.apache.org/taglibs/</url>
+      <id>jdom</id>
+      <version>cvs-24012003</version>
+      <url>http://www.jdom.org/</url>
+    </dependency>
+    
+    <dependency>
+      <id>mm.mysql</id>
+      <version>2.0.14-bin</version>
+      <url>http://sourceforge.net/projects/mmmysql/</url>
+    </dependency>
+    
+    <dependency>
+      <id>servletapi</id>
+      <version>2.3</version>
     </dependency>
 
     <dependency>
-      <id>ojb</id>
-      <version>1.0pre-cvs</version>
-      <url>http://db.apache.org/ojb/</url>
+      <id>openedge-utils</id>
+      <version>1.0</version>
+      <url>http://www.openedge.nl</url>
     </dependency>
 
   </dependencies>
@@ -120,7 +143,7 @@
     <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/*Test.java</include>
+        <include>**/AccessTestSuite.java</include>
       </includes>
       <resources>
         <resource>
@@ -160,6 +183,7 @@
           <include>**/*.dtd</include>
           <include>**/*.vm</include>
           <include>**/*.config</include>
+          <include>**/*.policy</include>
         </includes>
       </resource>
     </resources>
