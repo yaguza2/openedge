@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>oe-mailjob</id>
   <name>OpenEdge e-mail Quartz job and module implementation(s)</name>
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.2</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -23,9 +23,9 @@
   
   <versions>
     <version>
-      <id>1.1</id>
-      <name>1.1</name>
-      <tag>B1</tag>
+      <id>1.2</id>
+      <name>1.2</name>
+      <tag>B2</tag>
     </version>
   </versions>
   <branches></branches>
