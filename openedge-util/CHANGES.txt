@@ -1,3 +1,6 @@
+1.2.14
+- added DeleteObjectsCommand to hibernate utilities.
+
 1.2.12
 
 - Fixed bug that prevented patterns like yyyy-MM-dd'T'HH:mm:ss to be parsed correctly
