@@ -82,7 +82,7 @@ public class AbstractHibernateModule {
 		if(newSession) {
 			
 			SessionFactory sessionFactory = HibernateHelper.getSessionFactory();
-			Session currentSession = HibernateFilter.getSession();
+			Session currentSession = HibernateHelper.getSession();
 			currentSession.disconnect();
 			return sessionFactory.openSession();
 		
