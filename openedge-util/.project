@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <projectDescription>
-  <name>oeutils</name>
-  <comment>OpenEdge Utils is a project for utility classes/ helpers that are usefull enough to share amongst projects, but are too small to have their own project</comment>
+  <name>openedge-utils</name>
+  <comment>OpenEdge Utils is a project for reusable classes and components that are useful enough to share among projects, but are too small to have their own project</comment>
   <projects>
   </projects>
   <buildSpec>
