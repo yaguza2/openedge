@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>openedge-util</id>
 	<name>OpenEdge Util</name>
-	<currentVersion>1.1.6</currentVersion>
+	<currentVersion>1.2</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -19,11 +19,12 @@
 	</description>
 	<url>http://maven.apache.org/</url>
 
-	<!-- <repository>
-		<connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
-		</repository> -->
-
 	<versions>
+		<version>
+			<id>1.2</id>
+			<name>1.2</name>
+			<tag>B1_2</tag>
+		</version>
 		<version>
 			<id>1.1.6</id>
 			<name>1.1.6</name>
@@ -86,46 +87,11 @@
 		</developer>
 	</developers>
 
-	<!-- <licenses>
-		<license>
-		<name>The Apache Software License, Version 1.1</name>
-		<url>http://cvs.apache.org/viewcvs.cgi/*checkout*/maven/LICENSE.txt</url>
-		<distribution>repo</distribution>
-		</license>
-		</licenses> -->
-
 	<dependencies>
 
 		<dependency>
 			<id>servletapi</id>
 			<version>2.3</version>
-		</dependency>
-
-		<dependency>
-			<id>commons-beanutils</id>
-			<version>1.6.1</version>
-			<url>http://jakarta.apache.org/commons/beanutils/</url>
-		</dependency>
-
-		<dependency>
-			<id>commons-dbcp</id>
-			<version>1.0</version>
-			<url>http://jakarta.apache.org/commons/dbcp/</url>
-		</dependency>
-
-		<dependency>
-			<id>commons-lang</id>
-			<version>1.0.1</version>
-			<url>http://jakarta.apache.org/commons/lang/</url>
-		</dependency>
-
-		<dependency>
-			<id>commons-collections</id>
-			<version>3.0-dev</version>
-			<properties>
-				<war.bundle.jar>true</war.bundle.jar>
-			</properties>
-			<url>http://jakarta.apache.org/commons/collections/</url>
 		</dependency>
 
 		<dependency>
@@ -135,44 +101,8 @@
 		</dependency>
 
 		<dependency>
-			<id>jdom</id>
-			<version>b8</version>
-			<url>http://www.jdom.org/</url>
-		</dependency>
-
-		<dependency>
-			<id>dom4j</id>
-			<version>1.4-dev-8</version>
-			<url>http://www.dom4j.org/</url>
-		</dependency>
-
-		<dependency>
-			<id>jstl</id>
-			<version>1.0</version>
-			<url>http://java.sun.com/products/jsp/jstl/</url>
-		</dependency>
-
-		<dependency>
-			<id>jakarta-taglibs-standard</id>
-			<version>1.0.3</version>
-			<url>http://jakarta.apache.org/taglibs/</url>
-		</dependency>
-
-		<dependency>
-			<id>hibernate</id>
-			<version>2.0.2</version>
-			<url>http://hibernate.bluemars.net/</url>
-		</dependency>
-
-		<dependency>
-			<id>velocity</id>
-			<version>1.4-dev</version>
-			<url>http://jakarta.apache.org/velocity/</url>
-		</dependency>
-
-		<dependency>
 			<id>velocity-tools</id>
-			<version>0.9</version>
+			<version>1.0</version>
 			<url>http://jakarta.apache.org/velocity/toolsubproject.html</url>
 		</dependency>
 
@@ -188,6 +118,15 @@
 			<id>maverick</id>
 			<version>2.2.0</version>
 			<url>http://mav.sourceforge.net/</url>
+		</dependency>
+
+		<dependency>
+			<id>hibernate</id>
+			<version>2.1.2</version>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+			<url>http://www.hibernate.org/</url>
 		</dependency>
 
 	</dependencies>

@@ -34,10 +34,9 @@ import java.text.ParseException;
 import java.util.Date;
 
 import nl.openedge.baritus.converters.ConversionException;
+import nl.openedge.baritus.converters.Converter;
 import nl.openedge.baritus.converters.Formatter;
 import nl.openedge.util.DateFormatHelper;
-
-import org.apache.commons.beanutils.Converter;
 
 /**
  * converts a given value to a date, trying multiple options using DateFormatHelper.
