@@ -461,58 +461,58 @@ public abstract class AbstractParameterTest extends TestCase
 	 */
 	public void testUpload() throws Exception
 	{
-		StructuralGroup sg;
-		ParameterGroup pg;
 		Object result = null;
-		ParameterBuilder pb = new ParameterBuilder();
-		sg = pb.createStructuralGroup("SterfteTafels",
-				"StarefteTafels voor berekening van koopsommen/lijfrentes");
-		pb.navigate("/SterfteTafels");
-		pg = pb.createParameterGroup("Tafels", "Tafels met levenden");
-		pg.setParent(sg);
-		pg.setParentId(sg.getParentId());
-		pg.setParentLocalId(sg.getParentLocalId());
-		pg.setVersion(sg.getVersion());
-		pb.navigate("/SterfteTafels:Tafels");
-		InputStream is = AbstractParameterTest.class.getResourceAsStream("LGBM61.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBM71.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBM76.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBM80.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBM85.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBM90.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBV71.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBV76.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBV80.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBV85.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		is = AbstractParameterTest.class.getResourceAsStream("LGBV90.txt");
-		pb.createNumericData(is, 0, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
-		Group current = null;
 		NestedParameter np = null;
+		InputStream is = null;
 		ParameterBrowser browser = new ParameterBrowser();
-		current = (Group) browser.navigate("/SterfteTafels");
-		assertEquals(sg.getId(), current.getId());
-		current = (Group) browser.navigate("/SterfteTafels:Tafels");
-		assertEquals(pg.getId(), current.getId());
-		np = (NestedParameter) browser.navigate("/SterfteTafels:Tafels/L_GBM61");
+		ParameterBuilder pb = new ParameterBuilder();
+		pb.createStructuralGroup("datatest", "test voor uploadfunctie", true);
+		pb.createParameterGroup("tabellen", "tabellen", true);
+
+		is = AbstractParameterTest.class.getResourceAsStream("dat1.txt");
+		pb.createNumericData(null, is, 0, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_1");
 		assertNotNull(np);
-		result = browser.navigate("/SterfteTafels:Tafels/L_GBM61['0']@value");
-		assertEquals(new Double(10000000), result);
-		result = browser.navigate("/SterfteTafels:Tafels/L_GBM61['10']@value");
-		assertEquals(new Double(9962191), result);
-		result = browser.navigate("/SterfteTafels:Tafels/L_GBM71['0']@value");
-		assertEquals(new Double(10000000), result);
-		result = browser.navigate("/SterfteTafels:Tafels/L_GBM71['8']@value");
-		assertEquals(new Double(9952112), result);
+		result = browser.navigate("/datatest:tabellen/DAT_1['0']@value");
+		assertEquals(new Double(1), result);
+		result = browser.navigate("/datatest:tabellen/DAT_1['5']@value");
+		assertEquals(new Double(6), result);
+		result = browser.navigate("/datatest:tabellen/DAT_1['9']@value");
+		assertEquals(new Double(10), result);
+
+		is = AbstractParameterTest.class.getResourceAsStream("dat2.txt");
+		pb.createNumericData("DAT_2", is, 0, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_2");
+		assertNotNull(np);
+		result = browser.navigate("/datatest:tabellen/DAT_2['0']@value");
+		assertEquals(new Double(11), result);
+		result = browser.navigate("/datatest:tabellen/DAT_2['5']@value");
+		assertEquals(new Double(16), result);
+		result = browser.navigate("/datatest:tabellen/DAT_2['9']@value");
+		assertEquals(new Double(20), result);
+
+		is = AbstractParameterTest.class.getResourceAsStream("dat3.txt");
+		pb.createNumericData(null, is, 2, true, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_3");
+		assertNotNull(np);
+		result = browser.navigate("/datatest:tabellen/DAT_3['0']@value");
+		assertEquals(new Double(21), result);
+		result = browser.navigate("/datatest:tabellen/DAT_3['5']@value");
+		assertEquals(new Double(26), result);
+		result = browser.navigate("/datatest:tabellen/DAT_3['9']@value");
+		assertEquals(new Double(30), result);
+
+		is = AbstractParameterTest.class.getResourceAsStream("dat4.txt");
+		pb.createNumericData("DAT_4", is, 2, false, ParameterBuilder.TAB_EN_SPACE_CHARS);
+		np = (NestedParameter) browser.navigate("/datatest:tabellen/DAT_4");
+		assertNotNull(np);
+		result = browser.navigate("/datatest:tabellen/DAT_4['0']@value");
+		assertEquals(new Double(31), result);
+		result = browser.navigate("/datatest:tabellen/DAT_4['5']@value");
+		assertEquals(new Double(36), result);
+		result = browser.navigate("/datatest:tabellen/DAT_4['9']@value");
+		assertEquals(new Double(40), result);
+
 	}
 
 	/**

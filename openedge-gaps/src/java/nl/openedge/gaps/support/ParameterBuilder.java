@@ -229,6 +229,7 @@ public class ParameterBuilder
 	/**
 	 * Leest bestand in van inputstream en converteer naar een array van nested data en
 	 * registreert deze parameters.
+	 * @param localId het lokale id van deze parameter
 	 * @param inputStream inputstream
 	 * @return array van nested parameters
 	 * @throws RegistryException bij onverwachte fouten
@@ -238,19 +239,20 @@ public class ParameterBuilder
 	 *             parameter(s) te construeren
 	 */
 	public NestedParameter[] createNumericData(
-			InputStream inputStream) throws RegistryException,
+			String localId, InputStream inputStream) throws RegistryException,
 			SaveException, InputException, ParameterBuilderException
 	{
 
-		return createNumericData(inputStream, 0, 0, false, TAB_EN_SPACE_CHARS);
+		return createNumericData(localId, inputStream, 0, false, TAB_EN_SPACE_CHARS);
 	}
 
 	/**
 	 * Leest bestand in van inputstream en converteer naar een array van nested data en
 	 * registreert deze parameters.
+	 * @param localId het lokale id van deze parameter; wordt genegeerd indien
+	 *   parameter 'rowIdInFirstColumn' true is
 	 * @param inputStream inputstream
 	 * @param startcolumn eerste kolom waar de parameters beginnen
-	 * @param startRow eerste rij waar de parameterrij begint
 	 * @param rowIdInFirstColumn het rij-id staat in de eerste kolom (== startrij!!).
 	 * @param tokens de tokens die gebruikt dienen te worden als scheidingsteken(s)
 	 * @return array van nested parameters
@@ -261,8 +263,8 @@ public class ParameterBuilder
 	 *             parameter(s) te construeren
 	 */
 	public NestedParameter[] createNumericData(
-			InputStream inputStream, int startcolumn,
-			int startRow, boolean rowIdInFirstColumn, String tokens)
+			String localId, InputStream inputStream,
+			int startcolumn, boolean rowIdInFirstColumn, String tokens)
 			throws RegistryException, SaveException,
 			InputException, ParameterBuilderException
 	{
@@ -278,8 +280,8 @@ public class ParameterBuilder
 				line = line.trim();
 				if ((!line.startsWith("#")) && (!"".equals(line)))
 				{
-					NestedParameter parameter =
-						createRowFromLine(line, tokens, startcolumn, rowIdInFirstColumn, row);
+					NestedParameter parameter = createRowFromLine(
+							localId, line, tokens, startcolumn, rowIdInFirstColumn, row);
 					parameters.add(parameter);
 					row++;
 				}
@@ -294,6 +296,7 @@ public class ParameterBuilder
 			try
 			{
 				reader.close();
+				inputStream.close();
 			}
 			catch (IOException e)
 			{
@@ -308,6 +311,8 @@ public class ParameterBuilder
 	/**
 	 * Leest een rij in vanuit de gegeven regel en creeert een
 	 * {@link NestedParameter} met de ingelezen informatie.
+	 * @param localId het lokale id van deze parameter; wordt genegeerd indien
+	 *   parameter 'rowIdInFirstColumn' true is
 	 * @param line een regel
 	 * @param tokens tokens te gebruiken als scheidingsteken(s)
 	 * @param startColumn eerste kolom waar de parameters beginnen
@@ -320,8 +325,8 @@ public class ParameterBuilder
 	 *             parameter(s) te construeren
 	 */
 	protected NestedParameter createRowFromLine(
-			String line, String tokens, int startColumn,
-			boolean rowIdInFirstColumn, int row)
+			String localId, String line, String tokens,
+			int startColumn, boolean rowIdInFirstColumn, int row)
 			throws SaveException, InputException, ParameterBuilderException
 	{
 
@@ -344,9 +349,9 @@ public class ParameterBuilder
 		}
 		while (tk.hasMoreTokens())
 		{
+			String token = tk.nextToken().trim();
 			if (kol >= startColumn)
 			{
-				String token = tk.nextToken().trim();
 				if ((kol == startColumn) && rowIdInFirstColumn)
 				{
 					parameterName = token;
@@ -359,6 +364,10 @@ public class ParameterBuilder
 				}
 			}
 			kol++;
+		}
+		if(!rowIdInFirstColumn)
+		{
+			parameterName = localId;
 		}
 		NestedParameter parameter = createNumericRow(parameterName, ids, values);
 		return parameter;

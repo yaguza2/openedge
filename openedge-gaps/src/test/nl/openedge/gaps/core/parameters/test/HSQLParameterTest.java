@@ -60,7 +60,7 @@ public class HSQLParameterTest extends AbstractParameterTest
 //		suite.addTest(new HSQLParameterTest("testBuildBoolean"));
 //		suite.addTest(new HSQLParameterTest("testBuildDate"));
 //		suite.addTest(new HSQLParameterTest("testBuildFixedSet"));
-		suite.addTest(new HSQLParameterTest("testParameterInExpressie"));
+//		suite.addTest(new HSQLParameterTest("testParameterInExpressie"));
 //		suite.addTest(new HSQLParameterTest("testNavigatie"));
 //		suite.addTest(new HSQLParameterTest("testParameterGroepOvererving"));
 //		suite.addTest(new HSQLParameterTest("testRelatiefBrowsen"));
