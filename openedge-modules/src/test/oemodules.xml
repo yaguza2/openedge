@@ -1,11 +1,5 @@
 <?xml version="1.0"?>
 <modules-config>
-	
-  <globalProperties>
-  	<property name="test" value="test"/>
-  </globalProperties>
-	
-  <factory name="/openedge/ModuleFactory">
 
 	<scheduler properties="/quartz.properties">
 
@@ -58,7 +52,5 @@
 		</module>
 		
 	</modules>
-	
-  </factory>
 	
 </modules-config>

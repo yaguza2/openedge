@@ -40,7 +40,8 @@ import org.jdom.Element;
  * 
  * @author E.F. Hillenius
  */
-public interface Configurable {
+public interface Configurable 
+{
 
 	/**
 	 * initialise with xml element

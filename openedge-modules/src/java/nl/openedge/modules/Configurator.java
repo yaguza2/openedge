@@ -31,13 +31,9 @@
 package nl.openedge.modules;
 
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.util.UUIDHexGenerator;
 import nl.openedge.util.config.*;
 
 import org.apache.commons.logging.Log;
@@ -65,7 +61,8 @@ import org.jdom.Element;
  * 
  * @author Eelco Hillenius
  */
-public class Configurator {
+public class Configurator
+{
 
 	/**
 	 * Default location of the xml configuration file.
@@ -83,10 +80,10 @@ public class Configurator {
 	 * OpenEdge Modules configuration file.  Defaults to DEFAULT_CONFIG_FILE.
 	 */
 	public static String INITPARAM_CONFIG_FILE = "oemodules.configFile";
-	
+
 	/* logger */
 	private Log log = LogFactory.getLog(Configurator.class);
-	
+
 	// only one of the following three is set at a time
 	/** pointer to url */
 	protected URL configURL = null;
@@ -94,142 +91,110 @@ public class Configurator {
 	protected ServletContext servletContext = null;
 	/** pointer to document location as a string */
 	protected String configDocument = null;
-	/** uuid generator */
-	private UUIDHexGenerator uuidgenerator = new UUIDHexGenerator();
 
 	/**
 	 * construct and initialise with configDocument
 	 * @param configDocument location of document as a string
 	 */
-	public Configurator(String configDocument) throws ConfigException {
-		
+	public Configurator(String configDocument) throws ConfigException
+	{
 		this.configDocument = configDocument;
 		reload(configDocument);
 	}
-	
+
 	/**
 	 * construct and initialise with URL to configDocument
 	 * @param configURL location of document as an URL
 	 */
-	public Configurator(URL configURL) throws ConfigException {
-		
+	public Configurator(URL configURL) throws ConfigException
+	{
+
 		this.configURL = configURL;
 		reload(configURL);
 	}
-	
+
 	/**
 	 * construct and initialise with servletContext
 	 * @param servletContext servlet context of webapplication
 	 */
-	public Configurator(ServletContext servletContext) throws ConfigException {
+	public Configurator(ServletContext servletContext) throws ConfigException
+	{
 
 		this.servletContext = servletContext;
 		reload(servletContext);
 	}
-	
+
 	/**
-	 * create and register the factories
+	 * create and register the factory
 	 * @param configuration
 	 * @throws ConfigException
 	 */
-	protected void createFactories(
-						Document configuration, 
-						ServletContext servletContext) 
-						throws ConfigException {
-		
-		Element root = configuration.getRootElement();
-		Properties properties = getGlobalProperties(root);
-		List factories = root.getChildren("factory");
-		
-		for(Iterator i = factories.iterator(); i.hasNext(); ) {
-			
-			Element factoryNode = (Element)i.next();
-			String name = factoryNode.getAttributeValue("name");
-			if(name == null) {
-				throw new ConfigException("factory must have a name");
-			}
-			log.info("instantiating factory '" + name + "'");
-			ModuleFactory moduleFactory = new ModuleFactoryImpl(
-					name, properties, factoryNode, servletContext);
-		}
+	protected void createFactory(Document configuration, 
+			ServletContext servletContext) throws ConfigException
+	{
+
+		Element factoryNode = configuration.getRootElement();
+		ModuleFactoryFactory.initialize(factoryNode, servletContext);
 	}
-	
-	/**
-	 * read the properties from the root element
-	 * @param root root element of config document
-	 * @return Properties filled properties, possibly empty
-	 */
-	protected Properties getGlobalProperties(Element root) {
-		
-		Properties properties = new Properties();
-		Element globalPropertiesNode = root.getChild("globalProperties");
-		if(globalPropertiesNode != null) {
-		
-			List pList = globalPropertiesNode.getChildren("property");
-			if(pList != null) for(Iterator j = pList.iterator(); j.hasNext(); ) {
-					
-				Element pElement = (Element)j.next();
-				properties.put(pElement.getAttributeValue("name"),
-							   pElement.getAttributeValue("value"));
-			}
-		}
-		return properties;
-	}
-	
+
 	/**
 	 * reload the configuration this is known by this configurator
 	 * @throws ConfigException
 	 */
-	public void reload() throws ConfigException {
-		
+	public void reload() throws ConfigException
+	{
 		Document configuration = null;
-		if(configURL != null) {
-			reload(configURL);	
-		} else if(servletContext != null) {
-			reload(servletContext);	
-		} else if(configDocument != null) {
-			reload(configDocument);	
+		if (configURL != null)
+		{
+			reload(configURL);
+		}
+		else if (servletContext != null)
+		{
+			reload(servletContext);
+		}
+		else if (configDocument != null)
+		{
+			reload(configDocument);
 		}
 	}
-	
+
 	/** construct and initialise with configDocument
 	 * @param configDocument
 	 * @return Document
 	 */
-	protected void reload(String configDocument) throws ConfigException {
-		
-		Document configuration = 
-			DocumentLoader.loadDocumentFromUrl(configDocument);
-		createFactories(configuration, null);
+	protected void reload(String configDocument) throws ConfigException
+	{
+		Document configuration = DocumentLoader.loadDocumentFromUrl(configDocument);
+		createFactory(configuration, null);
 	}
-	
+
 	/**
 	 * load config document with URL to configDocument
 	 * @param configURL
 	 * @return Document
 	 */
-	protected void reload(URL configURL) throws ConfigException {
-		
-		Document configuration = 
-			DocumentLoader.loadDocumentFromUrl(configURL);
-		createFactories(configuration, null);
+	protected void reload(URL configURL) throws ConfigException
+	{
+		Document configuration = DocumentLoader.loadDocumentFromUrl(configURL);
+		createFactory(configuration, null);
 	}
-	
+
 	/**
 	 * initialise with servletContext
 	 * @param servletContext
 	 * @return Document
 	 */
-	protected void reload(ServletContext servletContext) throws ConfigException {
+	protected void reload(ServletContext servletContext) throws ConfigException
+	{
 
 		String configFile = (String)servletContext.getAttribute(KEY_CONFIG_FILE);
 		if (configFile == null)
 			configFile = servletContext.getInitParameter(INITPARAM_CONFIG_FILE);
 		if (configFile == null)
 			configFile = DEFAULT_CONFIG_FILE;
-		Document configuration = 
-			DocumentLoader.loadDocumentInWebApp(configFile, servletContext);
-		createFactories(configuration, servletContext);
+		Document configuration = DocumentLoader.loadDocumentInWebApp(
+										configFile, servletContext);
+		createFactory(configuration, servletContext);
 	}
 
 }

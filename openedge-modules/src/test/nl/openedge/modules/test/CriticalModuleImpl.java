@@ -42,39 +42,45 @@ import nl.openedge.modules.SingletonModule;
 /**
  * @author Eelco Hillenius
  */
-public class CriticalModuleImpl implements SingletonModule, CriticalEventCaster {
-	
+public class CriticalModuleImpl implements SingletonModule, CriticalEventCaster
+{
+
 	// observers
 	private List observers = new ArrayList();
 
 	/**
 	 * construct
 	 */
-	public CriticalModuleImpl() {
+	public CriticalModuleImpl()
+	{
 		System.out.println(getClass().getName() + ": created");
 	}
-	
+
 	/**
 	 * @see nl.openedge.modules.CriticalEventCaster#addObserver(nl.openedge.modules.CriticalEventObserver)
 	 */
-	public void addObserver(CriticalEventObserver observer) {
+	public void addObserver(CriticalEventObserver observer)
+	{
 		observers.add(observer);
 	}
-	
+
 	/**
 	 * test method; this method will fire a critical event
 	 */
-	public void doFoo() {
+	public void doFoo()
+	{
 		fireCriticalEvent();
 	}
-	
+
 	/**
 	 * fire event
 	 */
-	protected void fireCriticalEvent() {
+	protected void fireCriticalEvent()
+	{
 		Exception e = new Exception("I am a critical event!");
-		for(Iterator i = observers.iterator(); i.hasNext(); ) {
-			
+		for (Iterator i = observers.iterator(); i.hasNext();)
+		{
+
 			CriticalEventObserver observer = (CriticalEventObserver)i.next();
 			observer.criticalEventOccured(new CriticalExceptionEvent(this, e));
 		}

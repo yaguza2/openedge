@@ -41,10 +41,11 @@ import java.util.Set;
  * @author A.J. de Vries
  * @author E.F. Hillenius
  */
-public interface UserManagerModule {
-	
+public interface UserManagerModule
+{
+
 	//--------------------------- USERS ----------------------------------//
-	
+
 	/**
 	 * creates a new Principal object
 	 * @param id
@@ -54,38 +55,38 @@ public interface UserManagerModule {
 	 * @return Principal
 	 */
 	public Principal createUser(String name, String password, Map attributes) 
-				throws AccessException;
-	
+			throws AccessException;
+
 	/**
 	 * returns a user with this name
 	 * @param name
 	 * @return Principal
 	 */
 	public Principal getUser(String name) throws AccessException;
-	
+
 	/**
 	 * list all current users
 	 * @return List
 	 */
 	public List listUsers() throws AccessException;
-	
+
 	/**
 	 * set password to newPassword
 	 * @param user
 	 * @param newPassword
 	 * @throws AccessException
 	 */
-	public void resetPassword(Principal user, String newPassword) throws AccessException;
-	
+	public void resetPassword(Principal user, String newPassword) 
+			throws AccessException;
+
 	/**
 	 * remove user from users
 	 * @param user
 	 */
 	public void deleteUser(Principal user) throws AccessException;
-	
-	
+
 	//	--------------------------- ROLES ----------------------------------//
-	
+
 	/**
 	 * creates a new Principal object
 	 * @param id
@@ -93,54 +94,56 @@ public interface UserManagerModule {
 	 * @return Principal
 	 */
 	public Principal createRole(String name) throws AccessException;
-	
+
 	/**
 	 * returns a role with this id
 	 * @param id
 	 * @return Principal
-	 */	
+	 */
 	public Principal getRole(String name) throws AccessException;
-	
+
 	/**
 	 * list all current roles
 	 * @return List
 	 */
 	public List listRoles() throws AccessException;
-	
+
 	/**
 	 * list users from this role
 	 * @param role
 	 * @return List
 	 */
 	public List listUsersInRole(Principal role) throws AccessException;
-	
+
 	/**
 	 * list all roles this user belongs to
 	 * @param user
 	 * @return List
 	 */
 	public Set listRolesForUser(Principal user) throws AccessException;
-		
+
 	/**
 	 * adds user to role
 	 * @param user
 	 * @param role
-	 */	
-	public void addUserToRole(Principal user, Principal role) throws AccessException;
-	
+	 */
+	public void addUserToRole(Principal user, Principal role) 
+			throws AccessException;
+
 	/**
 	 * removes user from role
 	 * @param user
 	 * @param role
 	 */
-	public void removeUserFromRole(Principal user, Principal role) throws AccessException;
-	
+	public void removeUserFromRole(Principal user, Principal role) 
+			throws AccessException;
+
 	/**
 	 * remove role from roles
 	 * @param role
 	 */
 	public void deleteRole(Principal role) throws AccessException;
-	
+
 	//	--------------------------- GROUPS ----------------------------------//
 
 	/**
@@ -150,48 +153,50 @@ public interface UserManagerModule {
 	 * @return Principal
 	 */
 	public Principal createGroup(String name) throws AccessException;
-	
+
 	/**
 	 * returns a group with this id
 	 * @param id
 	 * @return Principal
-	 */	
+	 */
 	public Principal getGroup(String name) throws AccessException;
-	
+
 	/**
 	 * list all current groups
 	 * @return List
 	 */
 	public List listGroups() throws AccessException;
-	
+
 	/**
 	 * list users from this group
 	 * @param group
 	 * @return List
 	 */
 	public List listUsersInGroup(Principal group) throws AccessException;
-	
+
 	/**
 	 * list all groups this user belongs to
 	 * @param user
 	 * @return List
 	 */
 	public Set listGroupsForUser(Principal user) throws AccessException;
-		
+
 	/**
 	 * adds user to group
 	 * @param user
 	 * @param group
-	 */	
-	public void addUserToGroup(Principal user, Principal group) throws AccessException;
-	
+	 */
+	public void addUserToGroup(Principal user, Principal group) 
+			throws AccessException;
+
 	/**
 	 * removes user from group
 	 * @param user
 	 * @param group
 	 */
-	public void removeUserFromGroup(Principal user, Principal group) throws AccessException;
-	
+	public void removeUserFromGroup(Principal user, Principal group) 
+			throws AccessException;
+
 	/**
 	 * remove group from groups
 	 * @param group

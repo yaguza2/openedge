@@ -43,15 +43,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
 import javax.servlet.ServletContext;
 
 import nl.openedge.util.DateConverter;
-import nl.openedge.util.UUIDHexGenerator;
 import nl.openedge.util.config.ConfigException;
-import nl.openedge.util.config.JNDIObjectFactory;
 import nl.openedge.util.config.URLHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -71,7 +66,8 @@ import org.quartz.Trigger;
  * 
  * @author Eelco Hillenius
  */
-public class ModuleFactoryImpl implements ModuleFactory {
+public class ModuleFactoryImpl implements ModuleFactory
+{
 
 	/**
 	 * Default location of the xml configuration file.
@@ -92,96 +88,81 @@ public class ModuleFactoryImpl implements ModuleFactory {
 
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
-	
+
 	/** holder for module adapters */
 	protected Map modules = null;
-	
+
 	/** holder for module adapters that implement job interface */
 	protected Map jobs = null;
-	
+	/** counter for jobs with the same name */
+	protected Map jobCount = new HashMap();
+
 	/** holder for triggers */
 	protected Map triggers = null;
-	
+	/** counter for triggers with the same name */
+	protected Map triggerCount = new HashMap();
+
 	/** quartz scheduler */
 	protected Scheduler scheduler;
 
 	/** observers for module factory events */
 	protected List observers = new ArrayList();
 	
-	/* uuid of instance */
-	private final String uuid;
-	/* uuid generator */
-	private static final UUIDHexGenerator uuidgen = new UUIDHexGenerator();
-	
 	/**
-	 * construct with configuration node
-	 * @param name name of implementation
-	 * @param props extra (JNDI) properties
-	 * @param factoryNode  configuration node for this factory
-	 * @throws ConfigException
+	 * construct
 	 */
-	public ModuleFactoryImpl(String name, 
-							 Properties props, 
-							 Element factoryNode) 
-							 throws ConfigException {
-		
-		this(name, props, factoryNode, null);
+	protected ModuleFactoryImpl() 
+	{
+		// nothing here
 	}
-	
-	/**
-	 * construct with configuration node
-	 * @param name name of implementation
-	 * @param props extra (JNDI) properties
-	 * @param factoryNode  configuration node for this factory
-	 * @param servletContext servlet context when working in a webapp environment
-	 * @throws ConfigException
-	 */
-	public ModuleFactoryImpl(String name, 
-							 Properties props,
-							 Element factoryNode, 
-							 ServletContext servletContext)
-				 			 throws ConfigException {
-		
-		try { // generate the uuid
-			uuid = (String)uuidgen.generate();
-		}
-		catch (Exception e) {
-			throw new ConfigException("Could not generate UUID");
-		}
-		internalInit(name, props, factoryNode, servletContext);
-	}
-	
+
 	/**
 	 * add observer of module factory events
 	 * @param observer
 	 */
-	public void addObserver(ModuleFactoryObserver observer) {
-		if(observer != null) this.observers.add(observer);
+	public void addObserver(ModuleFactoryObserver observer)
+	{
+		if (observer != null)
+			this.observers.add(observer);
 	}
-	
+
 	/**
 	 * remove observer of module factory events
 	 * @param observer
 	 */
-	public void removeObserver(ModuleFactoryObserver observer) {
-		if(observer != null) this.observers.remove(observer);
+	public void removeObserver(ModuleFactoryObserver observer)
+	{
+		if (observer != null)
+			this.observers.remove(observer);
 	}
 	
-//-------------------------------------- INIT METHODS -------------------------//
-	
-	/* do 'real' initialisation */
-	private void internalInit(String name, 
-							  Properties props, 
-							  Element factoryNode, 
-							  ServletContext servletContext) 
-							  throws ConfigException {
+	/**
+	 * initialize the module factory
+	 * @param factoryNode
+	 * @param servletContext
+	 * @throws ConfigException
+	 */
+	public void init(Element factoryNode, ServletContext servletContext) 
+					throws ConfigException
+	{
 		
+		internalInit(factoryNode, servletContext);
+	}
+
+	//-------------------------------------- INIT METHODS -------------------------//
+
+	/* do 'real' initialisation */
+	private void internalInit(
+			Element factoryNode, ServletContext servletContext)
+			throws ConfigException
+	{
+
 		// initialise BeanUtils converters
 		initConverters();
 		// get node for quartz scheduler
-		ClassLoader classLoader =
-			Thread.currentThread().getContextClassLoader();
-		if (classLoader == null) {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if (classLoader == null)
+		{
 			classLoader = ModuleFactory.class.getClassLoader();
 		}
 		// get node for modules
@@ -190,59 +171,72 @@ public class ModuleFactoryImpl implements ModuleFactory {
 		Map[] mods = getModules(modulesNode, classLoader);
 		this.modules = mods[0];
 		this.jobs = mods[1];
-		
+
 		Element schedulerNode = factoryNode.getChild("scheduler");
-		if(schedulerNode != null) {
-			
+		if (schedulerNode != null)
+		{
+
 			// load triggers into trigger map
 			this.triggers = getTriggers(schedulerNode, classLoader);
-			if(!jobs.isEmpty() && !triggers.isEmpty()) {
+			if (!jobs.isEmpty() && !triggers.isEmpty())
+			{
 				log.info("schedule jobs & triggers");
-				try { // initialise quartz
+				try
+				{ // initialise quartz
 					initQuartz(schedulerNode, servletContext);
 					// notify observers
 					fireSchedulerStartedEvent(scheduler);
 					// finally, schedule the jobs/ triggers
 					scheduleJobs(schedulerNode, classLoader);
-				} catch(SchedulerException e) {
-					throw new ConfigException(e);	
 				}
-			} else {
-				log.warn("allthough a scheduler node was found in the " +
-						 "configuration, there is nothing to schedule!");
+				catch (SchedulerException e)
+				{
+					throw new ConfigException(e);
+				}
 			}
-		} else {
+			else
+			{
+				log.warn(
+					"allthough a scheduler node was found in the " + "configuration, there is nothing to schedule!");
+			}
+		}
+		else
+		{
 			log.info("scheduler node was not found; scheduler will not be started");
 		}
-		// JNDI add
-		JNDIObjectFactory.addInstance(uuid, name, this, props);
-		
+
 	}
-	
+
 	/**
 	 * initialise the quartz scheduler
 	 * @throws Exception
 	 */
-	private void initQuartz(Element node, ServletContext context) 
-					throws ConfigException, SchedulerException {
-		
+	private void initQuartz(Element node, ServletContext context) throws ConfigException, SchedulerException
+	{
+
 		Properties properties = null;
-		if(node != null) {
+		if (node != null)
+		{
 			properties = new Properties();
 			String proploc = node.getAttributeValue("properties");
-			try {
-				URL urlproploc = URLHelper.convertToURL(
-						proploc, ModuleFactoryImpl.class, context);
+			try
+			{
+				URL urlproploc = URLHelper.convertToURL(proploc, ModuleFactoryImpl.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
-			} catch(IOException ioe) {
-				throw new ConfigException(ioe);		
 			}
-		}	
+			catch (IOException ioe)
+			{
+				throw new ConfigException(ioe);
+			}
+		}
 		SchedulerFactory schedFact = null;
-		if(properties != null) {
+		if (properties != null)
+		{
 			schedFact = new org.quartz.impl.StdSchedulerFactory(properties);
-		} else {
+		}
+		else
+		{
 			schedFact = new org.quartz.impl.StdSchedulerFactory();
 		}
 		scheduler = schedFact.getScheduler();
@@ -250,143 +244,173 @@ public class ModuleFactoryImpl implements ModuleFactory {
 		// start it
 		scheduler.start();
 		// and... register shutdownhook to stop it as well
-		Runtime.getRuntime().addShutdownHook( new Thread() {
-			public void run() {
-				try {
+		Runtime.getRuntime().addShutdownHook(new Thread()
+		{
+			public void run()
+			{
+				try
+				{
 					scheduler.shutdown(true);
-				} catch(Exception e) {
+				}
+				catch (Exception e)
+				{
 					e.printStackTrace();
 				}
 			}
-		} );
+		});
 		log.info("Quartz started");
 	}
-	
+
 	/* get modules from config 
 	 * @return array of maps; first has all modules, second has subset of
 	 * modules that are jobs
 	 */
 	private Map[] getModules(Element modulesNode, ClassLoader classLoader) 
-					throws ConfigException {
+						throws ConfigException
+	{
 
 		Map modules = new HashMap();
 		Map jobs = new HashMap();
 		// iterate modules
 		List moduleNodes = modulesNode.getChildren("module");
-		for(Iterator i = moduleNodes.iterator(); i.hasNext(); ) {
-			
+		for (Iterator i = moduleNodes.iterator(); i.hasNext();)
+		{
+
 			Element node = (Element)i.next();
 			String name = node.getAttributeValue("name");
-			if(modules.get(name) != null) {
-				throw new ConfigException(
-					"names of modules have to be unique!" +
-					name + " is used more than once");
+			if (modules.get(name) != null)
+			{
+				throw new ConfigException("names of modules have to be unique!" + name + " is used more than once");
 			}
 			String className = node.getAttributeValue("class");
 			ModuleAdapter adapter = null;
 			Class clazz = null;
-			try {
+			try
+			{
 				clazz = classLoader.loadClass(className);
-			} catch(ClassNotFoundException cnfe) {
+			}
+			catch (ClassNotFoundException cnfe)
+			{
 				throw new ConfigException(cnfe);
-			}	
+			}
 			// check singleton or throwaway
-			if(SingletonModule.class.isAssignableFrom(clazz)) {
-				
+			if (SingletonModule.class.isAssignableFrom(clazz))
+			{
+
 				adapter = new SingletonAdapter();
 
-			} else if(ThrowAwayModule.class.isAssignableFrom(clazz)) {
-				
+			}
+			else if (ThrowAwayModule.class.isAssignableFrom(clazz))
+			{
+
 				adapter = new ThrowAwayAdapter();
-				
-			} else if(Job.class.isAssignableFrom(clazz)) {
-				
+
+			}
+			else if (Job.class.isAssignableFrom(clazz))
+			{
+
 				adapter = new JobAdapter();
 				((JobAdapter)adapter).initJobData(node);
 				jobs.put(name, adapter);
-				
-			} else {
-				throw new ConfigException(
-					"Modules must implement " +
-					SingletonModule.class.getName() +
-					", " + ThrowAwayModule.class.getName() + 
-					" or " + Job.class.getName());
+
 			}
-			
+			else
+			{
+				throw new ConfigException(
+					"Modules must implement "
+						+ SingletonModule.class.getName()
+						+ ", "
+						+ ThrowAwayModule.class.getName()
+						+ " or "
+						+ Job.class.getName());
+			}
+
 			// is this class a bean?
-			if(BeanModule.class.isAssignableFrom(clazz)) {
+			if (BeanModule.class.isAssignableFrom(clazz))
+			{
 				Map properties = new HashMap();
 				List pList = node.getChildren("property");
-				if(pList != null) for(Iterator j = pList.iterator(); j.hasNext(); ) {
-					
-					Element pElement = (Element)j.next();
-					properties.put(pElement.getAttributeValue("name"),
-								   pElement.getAttributeValue("value"));
-				}
+				if (pList != null)
+					for (Iterator j = pList.iterator(); j.hasNext();)
+					{
+
+						Element pElement = (Element)j.next();
+						properties.put(pElement.getAttributeValue("name"), pElement.getAttributeValue("value"));
+					}
 				adapter.setProperties(properties);
 			}
-			
+
 			// does this class want to configure?
 			// set this BEFORE setModuleClass as a singleton may want to 
 			// configure right away
-			if(Configurable.class.isAssignableFrom(clazz)) {
+			if (Configurable.class.isAssignableFrom(clazz))
+			{
 				adapter.setConfigNode(node);
 			}
-			
+
 			adapter.setModuleFactory(this);
-			adapter.setModuleClass(clazz); 
+			adapter.setModuleClass(clazz);
 			adapter.setName(name);
-			
+
 			modules.put(name, adapter);
 			log.info("stored " + className + " with name: " + name);
-				
+
 		}
 		log.info("loading modules done");
-		return new Map[]{modules, jobs};
+		return new Map[] { modules, jobs };
 	}
-	
+
 	/*
 	 * get triggers from config
 	 * @return map of jobs
 	 */
-	private Map getTriggers(Element schedulerNode, ClassLoader classLoader) 
-					throws ConfigException {
-		
+	private Map getTriggers(Element schedulerNode, ClassLoader classLoader) throws ConfigException
+	{
+
 		Map triggers = new HashMap();
 		List trigs = schedulerNode.getChildren("trigger");
-		for(Iterator i = trigs.iterator(); i.hasNext(); ) {
-			
+		for (Iterator i = trigs.iterator(); i.hasNext();)
+		{
+
 			Trigger trigger = null;
 			Element triggerNode = (Element)i.next();
 			String name = triggerNode.getAttributeValue("name");
 			String group = triggerNode.getAttributeValue("group");
 			String className = triggerNode.getAttributeValue("class");
 			Class clazz = null;
-			try {
+			try
+			{
 				clazz = classLoader.loadClass(className);
 				trigger = (Trigger)clazz.newInstance();
-			} catch(Exception e) {
+			}
+			catch (Exception e)
+			{
 				throw new ConfigException(e);
 			}
 			trigger.setName(name);
 			trigger.setGroup(group);
 			List parameters = triggerNode.getChildren("parameter");
 			Map paramMap = new HashMap();
-			if(parameters != null) for(Iterator j = parameters.iterator(); j.hasNext(); ) {		
-				
-				Element pNode = (Element)j.next();
-				paramMap.put(pNode.getAttributeValue("name"), 
-							 pNode.getAttributeValue("value"));
-			}
-			try { // set parameters as properties of trigger
+			if (parameters != null)
+				for (Iterator j = parameters.iterator(); j.hasNext();)
+				{
+
+					Element pNode = (Element)j.next();
+					paramMap.put(pNode.getAttributeValue("name"), pNode.getAttributeValue("value"));
+				}
+			try
+			{ // set parameters as properties of trigger
 				BeanUtils.populate(trigger, paramMap);
-			} catch(Exception e) {
-				throw new ConfigException(e);	
 			}
-			if(trigger.getStartTime() == null) {
-				log.info("\tstart time not set; trying to set to " +
-						 "immediate execution");
-				try {
+			catch (Exception e)
+			{
+				throw new ConfigException(e);
+			}
+			if (trigger.getStartTime() == null)
+			{
+				log.info("\tstart time not set; trying to set to " + "immediate execution");
+				try
+				{
 					// a bit of a hack as the implementors of abstract class 
 					// org.quartz.Trigger have method setStartTime(Date), whereas 
 					// the base class itself lacks this method
@@ -394,148 +418,146 @@ public class ModuleFactoryImpl implements ModuleFactory {
 					Calendar start = new GregorianCalendar();
 					start.setLenient(true);
 					start.add(Calendar.SECOND, 20);
-					Method setMethod = clazz.getMethod("setStartTime", 
-							new Class[]{Date.class});
-					setMethod.invoke(trigger, new Object[]{start.getTime()});	
-				} catch(Exception e) { // too bad. Let's hope the trigger will fire anyway
-					log.error("\tcould not set start time, cause: " 
-								+ e.getMessage());
+					Method setMethod = clazz.getMethod("setStartTime", new Class[] { Date.class });
+					setMethod.invoke(trigger, new Object[] { start.getTime()});
+				}
+				catch (Exception e)
+				{ // too bad. Let's hope the trigger will fire anyway
+					log.error("\tcould not set start time, cause: " + e.getMessage());
 				}
 			}
 			log.info("found trigger " + trigger);
 			triggers.put(name, trigger);
-		}		
+		}
 		return triggers;
 	}
-	
+
 	/*
 	 * schedule jobs
 	 */
-	private void scheduleJobs(Element schedulerNode, ClassLoader classLoader) 
-					throws ConfigException {
-		
+	private void scheduleJobs(Element schedulerNode, ClassLoader classLoader) throws ConfigException
+	{
+
 		//get job excecution map from config
 		Element execNode = schedulerNode.getChild("jobExecutionMap");
 		List execs = execNode.getChildren("job");
-		for(Iterator i = execs.iterator(); i.hasNext(); ) {
-			
+		for (Iterator i = execs.iterator(); i.hasNext();)
+		{
+
 			Element e = (Element)i.next();
 			String triggerName = e.getAttributeValue("trigger");
 			String moduleName = e.getAttributeValue("module");
 			// look up trigger and (job)module
-			Trigger trigger = (Trigger)triggers.get(triggerName);
-			if(trigger == null) {
-				throw new ConfigException(triggerName + 
-								" is not a registered trigger");
+			Trigger trigger = (Trigger) ((Trigger)triggers.get(triggerName)).clone();
+			if (trigger == null)
+			{
+				throw new ConfigException(triggerName + " is not a registered trigger");
 			}
 			JobAdapter job = (JobAdapter)jobs.get(moduleName);
-			if(job == null) {
-				throw new ConfigException(moduleName + 
-								" is not a module");
+			if (job == null)
+			{
+				throw new ConfigException(moduleName + " is not a module");
 			}
-			if(!Job.class.isAssignableFrom(job.getModuleClass())) {
-				throw new ConfigException("module " + moduleName + 
-								" is not a job (does not implement " +
-								Job.class.getName() + ")");				
+			if (!Job.class.isAssignableFrom(job.getModuleClass()))
+			{
+				throw new ConfigException(
+					"module " + moduleName + " is not a job (does not implement " + Job.class.getName() + ")");
 			}
-			JobDetail jobDetail = new JobDetail(job.getName(),
-						job.getGroup(), job.getModuleClass());
+			JobDetail jobDetail = new JobDetail(job.getName(), job.getGroup(), job.getModuleClass());
 			jobDetail.setJobDataMap(job.getJobData());
-			try { //start schedule job/trigger combination
-				log.info("schedule " + jobDetail.getFullName() +
-						 " with trigger " + triggerName);
+			try
+			{ //start schedule job/trigger combination
+				log.info("schedule " + jobDetail.getFullName() + " with trigger " + triggerName);
 				this.scheduler.scheduleJob(jobDetail, trigger);
-			} catch(SchedulerException ex) {
+			}
+			catch (SchedulerException ex)
+			{
+				ex.printStackTrace();
 				throw new ConfigException(ex);
 			}
 		}
-		
 	}
-	
+
+//	public void sceduleJob()
+
 	/**
 	 * Initialize the custom beanutils converters here
 	 */
-	public void initConverters() {
+	public void initConverters()
+	{
 		// TODO: make this configurable
 		DateConverter dc = new DateConverter();
-		ConvertUtils.register( dc, java.util.Date.class);
+		ConvertUtils.register(dc, java.util.Date.class);
 	}
-	
-	
-//--------------------------- NON-INIT METHODS -----------------------------//
-	
+
+	//--------------------------- NON-INIT METHODS -----------------------------//
+
 	/**
 	 * notify observers that scheduler was started
 	 * @param scheduler
 	 */
-	protected void fireSchedulerStartedEvent(Scheduler scheduler) {
-		
+	protected void fireSchedulerStartedEvent(Scheduler scheduler)
+	{
+
 		SchedulerStartedEvent evt = new SchedulerStartedEvent(this, scheduler);
-		for(Iterator i = observers.iterator(); i.hasNext(); ) {
-			
+		for (Iterator i = observers.iterator(); i.hasNext();)
+		{
+
 			ModuleFactoryObserver mo = (ModuleFactoryObserver)i.next();
-			if(mo instanceof SchedulerObserver) {
-				((SchedulerObserver)mo).schedulerStarted(evt);	 
+			if (mo instanceof SchedulerObserver)
+			{
+				((SchedulerObserver)mo).schedulerStarted(evt);
 			}
 		}
 	}
-	
+
 	/**
 	 * fired when (according to the implementing module) a critical event occured
 	 * @param evt the critical event
 	 */
-	public void criticalEventOccured(CriticalEvent evt) {
-		fireCriticalEvent(evt);	
+	public void criticalEventOccured(CriticalEvent evt)
+	{
+		fireCriticalEvent(evt);
 	}
-	
+
 	/**
 	 * notify observers that a critical event occured
 	 * @param scheduler
 	 */
-	protected void fireCriticalEvent(CriticalEvent evt) {
-		
-		for(Iterator i = observers.iterator(); i.hasNext(); ) {
-			
+	protected void fireCriticalEvent(CriticalEvent evt)
+	{
+
+		for (Iterator i = observers.iterator(); i.hasNext();)
+		{
+
 			ModuleFactoryObserver mo = (CriticalEventObserver)i.next();
-			if(mo instanceof SchedulerObserver) {
-				((CriticalEventObserver)mo).criticalEventOccured(evt);	 
+			if (mo instanceof SchedulerObserver)
+			{
+				((CriticalEventObserver)mo).criticalEventOccured(evt);
 			}
 		}
 	}
-	
+
 	/**
 	 * @see nl.openedge.modules.ModuleFactory#getModule(java.lang.String)
 	 */
-	public Object getModule(String name) throws ModuleException {
-		
+	public Object getModule(String name)
+	{
+
 		ModuleAdapter moduleAdapter = (ModuleAdapter)modules.get(name);
-		if(moduleAdapter == null) {
+		if (moduleAdapter == null)
+		{
 			throw new ModuleException("unable to find module with name: " + name);
 		}
 		return moduleAdapter.getModule();
 	}
-	
+
 	/*
 	 * @see nl.openedge.modules.ModuleFactory#getScheduler()
 	 */
-	public Scheduler getScheduler() {
+	public Scheduler getScheduler()
+	{
 		return scheduler;
-	}
-	
-	/**
-	 * @see javax.naming.Referenceable#getReference()
-	 */
-	public Reference getReference() throws NamingException {
-		
-		if(log.isDebugEnabled()) {
-			log.debug("Returning a Reference to the SessionFactory");
-		} 
-		return new Reference(
-			ModuleFactoryImpl.class.getName(),
-			new StringRefAddr("uuid", uuid),
-			JNDIObjectFactory.class.getName(),
-			null
-		);
 	}
 
 }

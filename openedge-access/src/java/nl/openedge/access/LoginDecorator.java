@@ -32,7 +32,6 @@ package nl.openedge.access;
 
 import java.security.Principal;
 
-
 /**
  * 
  * Logon decorators can decorate principals.
@@ -55,7 +54,8 @@ import java.security.Principal;
  * 
  * @author Eelco Hillenius
  */
-public interface LoginDecorator {
+public interface LoginDecorator
+{
 
 	/**
 	 * get extra principals for this subject

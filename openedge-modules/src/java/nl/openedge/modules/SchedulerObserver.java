@@ -37,7 +37,8 @@ package nl.openedge.modules;
  * 
  * @author Eelco Hillenius
  */
-public interface SchedulerObserver extends ModuleFactoryObserver {
+public interface SchedulerObserver extends ModuleFactoryObserver
+{
 
 	/**
 	 * fired after initialisation and startup of the Quartz scheduler, 

@@ -36,7 +36,8 @@ package nl.openedge.modules;
  * 
  * @author Eelco Hillenius
  */
-public interface CriticalEventObserver extends ModuleFactoryObserver {
+public interface CriticalEventObserver extends ModuleFactoryObserver 
+{
 
 	/**
 	 * fired when (according to the implementing module) a critical event occured

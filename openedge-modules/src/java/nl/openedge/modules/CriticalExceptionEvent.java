@@ -38,35 +38,41 @@ import java.io.PrintWriter;
  * reference to a critical exception
  * @author Eelco Hillenius
  */
-public class CriticalExceptionEvent extends CriticalEvent {
+public class CriticalExceptionEvent extends CriticalEvent
+{
 
 	private Throwable exception = null;
 
 	/**
 	 * @param source	sender of event
 	 */
-	public CriticalExceptionEvent(Object source, Throwable exception) {
+	public CriticalExceptionEvent(Object source, Throwable exception)
+	{
 		super(source);
 		this.exception = exception;
 	}
-	
+
 	/**
 	 * get the embedded exception
 	 * @return Throwable
 	 */
-	public Throwable getException() {
+	public Throwable getException()
+	{
 		return exception;
 	}
-	
+
 	/**
 	 * return stacktrace as a string
 	 * @return String stacktrace as string
 	 */
-	public String getStackTraceAsString() {
-		
+	public String getStackTraceAsString()
+	{
+
 		String errorMsg = "";
-		if(exception != null) {
-			try {
+		if (exception != null)
+		{
+			try
+			{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				PrintWriter pw = new PrintWriter(bos);
 				exception.printStackTrace(pw);
@@ -75,7 +81,9 @@ public class CriticalExceptionEvent extends CriticalEvent {
 				bos.flush();
 				bos.close();
 				errorMsg = bos.toString();
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				errorMsg = exception.getMessage();
 			}
 		}

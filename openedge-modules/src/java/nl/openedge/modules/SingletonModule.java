@@ -36,6 +36,7 @@ package nl.openedge.modules;
  * Modules that implement SingletonModuleImpl will be instantiated 
  * exactly once for each configuration entry (name).
  */
-public interface SingletonModule {
+public interface SingletonModule
+{
 
 }

@@ -37,108 +37,134 @@ import org.quartz.Scheduler;
  * 
  * @author E.F. Hillenius
  */
-public class ModulesTest extends AbstractTestBase {
+public class ModulesTest extends AbstractTestBase
+{
 
 	/**
 	 * construct with name
 	 * @param name
 	 */
-	public ModulesTest(String name) throws Exception {
+	public ModulesTest(String name) throws Exception
+	{
 		super(name);
 	}
 
-	public void testThrowAwayModule() {
-		
-		try {
+	public void testThrowAwayModule()
+	{
+
+		try
+		{
 
 			ThrowAwayModuleImpl module = (ThrowAwayModuleImpl)
 					moduleFactory.getModule("ThrowAwayTest");
 			assertNotNull(module);
-			
-		} catch(Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
 
-	public void testSingletonModule() {
-		
-		try {
+	public void testSingletonModule()
+	{
+
+		try
+		{
 
 			SingletonModuleImpl module = (SingletonModuleImpl)
 					moduleFactory.getModule("SingletonTest");
 			assertNotNull(module);
-			
-		} catch(Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-	
-	public void testConfigurableModule() {
-		
-		try {
+
+	public void testConfigurableModule()
+	{
+
+		try
+		{
 
 			ConfigurableModuleImpl module = (ConfigurableModuleImpl)
 					moduleFactory.getModule("ConfigurableTest");
 			assertNotNull(module);
-			
-		} catch(Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-	
-	public void testBeanModule() {
-		
-		try {
+
+	public void testBeanModule()
+	{
+
+		try
+		{
 
 			BeanModuleImpl module = (BeanModuleImpl)
 					moduleFactory.getModule("BeanTest");
 			assertNotNull(module);
-			
+
 			assertEquals(module.getMyString(), "test");
 			assertEquals(module.getMyInteger(), new Integer(12));
-			
-		} catch(Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-	
-	public void testCriticalModule() {
-		
-		try {
+
+	public void testCriticalModule()
+	{
+
+		try
+		{
 
 			CriticalModuleImpl module = (CriticalModuleImpl)
 					moduleFactory.getModule("CriticalTest");
 			assertNotNull(module);
-			
+
 			// create and add observer
 			CriticalEventObserverImpl observer = new CriticalEventObserverImpl();
 			module.addObserver(observer);
 			// call method that fires critical event
 			module.doFoo();
 			// the observer should now have received a critical event
-			assertNotNull(observer.getCriticalEvent());			
-			
-		} catch(Exception e) {
+			assertNotNull(observer.getCriticalEvent());
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 	}
-	
-	public void testJobModule() {
-		
-		try {
+
+	public void testJobModule()
+	{
+
+		try
+		{
 
 			Scheduler scheduler = moduleFactory.getScheduler();
-			
+
 			System.out.print("sleep for 1/2 minute...");
 			Thread.sleep(30000);
 			System.out.println("done");
-			
-		} catch(Exception e) {
+
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail(e.getMessage());
 		}

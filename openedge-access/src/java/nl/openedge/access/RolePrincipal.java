@@ -47,7 +47,8 @@ import java.security.Principal;
  * @see java.security.Principal
  * @see javax.security.auth.Subject
  */
-public class RolePrincipal implements Principal, java.io.Serializable {
+public class RolePrincipal implements Principal, java.io.Serializable
+{
 
 	/** name */
 	protected String name;
@@ -55,10 +56,11 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	/**
 	 * Default constructor.
 	 */
-	public RolePrincipal() {
+	public RolePrincipal()
+	{
 		// do nothing here
 	}
-	
+
 	/**
 	 * Create a RolePrincipal with a group name.
 	 *
@@ -69,14 +71,16 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	 * @exception NullPointerException if the <code>name</code>
 	 *			is <code>null</code>.
 	 */
-	public RolePrincipal(String name) {
-		
-		if (name == null) {
+	public RolePrincipal(String name)
+	{
+
+		if (name == null)
+		{
 			throw new NullPointerException("name is not allowed to be null");
 		}
 		this.name = name;
 	}
-	
+
 	/**
 	 * Return the name for this <code>RolePrincipal</code>.
 	 *
@@ -84,17 +88,19 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	 *
 	 * @return the name for this <code>RolePrincipal</code>
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
 	/**
 	 * @param name
 	 */
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-	
+
 	/**
 	 * Return a string representation of this <code>RolePrincipal</code>.
 	 *
@@ -102,10 +108,11 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	 *
 	 * @return a string representation of this <code>RolePrincipal</code>.
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return "RolePrincipal: " + name;
 	}
-	
+
 	/**
 	 * Compares the specified Object with this <code>RolePrincipal</code>
 	 * for equality.  Returns true if the given object is also a
@@ -120,22 +127,23 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	 * @return true if the specified Object is equal equal to this
 	 *		<code>RolePrincipal</code>.
 	 */
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (o == null)
 			return false;
-		
-			if (this == o)
-				return true;
-		 
-			if (!(o instanceof RolePrincipal))
-				return false;
-			RolePrincipal that = (RolePrincipal)o;
-		
+
+		if (this == o)
+			return true;
+
+		if (!(o instanceof RolePrincipal))
+			return false;
+		RolePrincipal that = (RolePrincipal)o;
+
 		if (this.getName().equals(that.getName()))
 			return true;
 		return false;
 	}
-	 
+
 	/**
 	 * Return a hash code for this <code>RolePrincipal</code>.
 	 *
@@ -143,7 +151,8 @@ public class RolePrincipal implements Principal, java.io.Serializable {
 	 *
 	 * @return a hash code for this <code>RolePrincipal</code>.
 	 */
-	public int hashCode() {
+	public int hashCode()
+	{
 		return name.hashCode();
 	}
 

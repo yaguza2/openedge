@@ -36,6 +36,7 @@ package nl.openedge.modules;
  * Modules that implement ThrowAwayModule will be instantiated for each
  * request on the ModuleFactory  
  */
-public interface ThrowAwayModule {
+public interface ThrowAwayModule
+{
 
 }

@@ -35,9 +35,11 @@ import nl.openedge.modules.SingletonModule;
 /**
  * @author Eelco Hillenius
  */
-public class SingletonModuleImpl implements SingletonModule {
+public class SingletonModuleImpl implements SingletonModule
+{
 
-	public SingletonModuleImpl() {
+	public SingletonModuleImpl()
+	{
 		System.out.println(getClass().getName() + ": created");
 	}
 

@@ -56,8 +56,7 @@ import java.util.Hashtable;
  *
  * @author E.F. Hillenius
  */
-public class NamedPermission  extends Permission
-implements java.io.Serializable
+public class NamedPermission extends Permission implements java.io.Serializable
 {
 
 	// does this permission have a wildcard at the end?
@@ -73,23 +72,30 @@ implements java.io.Serializable
 
 	private void init(String name)
 	{
-	if (name == null)
-		throw new NullPointerException("name can't be null");
+		if (name == null)
+			throw new NullPointerException("name can't be null");
 
-	if (name.equals("")) {
-		throw new IllegalArgumentException("name can't be empty");
-	}
-
-	if (name.endsWith("/*") || name.equals("*")) {
-		wildcard = true;
-		if (name.length() == 1) {
-		path = "";
-		} else {
-		path = name.substring(0, name.length()-1);
+		if (name.equals(""))
+		{
+			throw new IllegalArgumentException("name can't be empty");
 		}
-	} else {
-		path = name;
-	}
+
+		if (name.endsWith("/*") || name.equals("*"))
+		{
+			wildcard = true;
+			if (name.length() == 1)
+			{
+				path = "";
+			}
+			else
+			{
+				path = name.substring(0, name.length() - 1);
+			}
+		}
+		else
+		{
+			path = name;
+		}
 	}
 
 	/**
@@ -106,10 +112,9 @@ implements java.io.Serializable
 
 	public NamedPermission(String name)
 	{
-	super(name);
-	init(name);
+		super(name);
+		init(name);
 	}
-
 
 	/**
 	 * Creates a new NamedPermission object with the specified name.
@@ -124,8 +129,8 @@ implements java.io.Serializable
 	 */
 	public NamedPermission(String name, String actions)
 	{
-	super(name);
-	init(name);
+		super(name);
+		init(name);
 	}
 
 	/**
@@ -145,29 +150,35 @@ implements java.io.Serializable
 	 * @return true if the passed permission is equal to or
 	 * implied by this permission, false otherwise.
 	 */
-	public boolean implies(Permission p) {
-	if ((p == null) || (p.getClass() != getClass()))
-		return false;
+	public boolean implies(Permission p)
+	{
+		if ((p == null) || (p.getClass() != getClass()))
+			return false;
 
-	NamedPermission that = (NamedPermission) p;
+		NamedPermission that = (NamedPermission)p;
 
-	if (this.wildcard) {
-		if (that.wildcard)
-		// one wildcard can imply another
-		return that.path.startsWith(path);
+		if (this.wildcard)
+		{
+			if (that.wildcard)
+				// one wildcard can imply another
+				return that.path.startsWith(path);
+			else
+				// make sure ap.path is longer so a/b/* doesn't imply a/b
+				return (that.path.length() > this.path.length()) 
+						&& that.path.startsWith(this.path);
+		}
 		else
-		// make sure ap.path is longer so a/b/* doesn't imply a/b
-		return (that.path.length() > this.path.length()) &&
-			that.path.startsWith(this.path);
-	} else {
-		if (that.wildcard) {
-		// a non-wildcard can't imply a wildcard
-		return false;
+		{
+			if (that.wildcard)
+			{
+				// a non-wildcard can't imply a wildcard
+				return false;
+			}
+			else
+			{
+				return this.path.equals(that.path);
+			}
 		}
-		else {
-		return this.path.equals(that.path);
-		}
-	}
 	}
 
 	/**
@@ -179,18 +190,18 @@ implements java.io.Serializable
 	 * @return true if <i>obj</i> is a NamedPermission, and has the same name
 	 *  as this NamedPermission object, false otherwise.
 	 */
-	public boolean equals(Object obj) {
-	if (obj == this)
-		return true;
+	public boolean equals(Object obj)
+	{
+		if (obj == this)
+			return true;
 
-	if ((obj == null) || (obj.getClass() != getClass()))
-		return false;
+		if ((obj == null) || (obj.getClass() != getClass()))
+			return false;
 
-	NamedPermission bp = (NamedPermission) obj;
+		NamedPermission bp = (NamedPermission)obj;
 
-	return getName().equals(bp.getName());
+		return getName().equals(bp.getName());
 	}
-
 
 	/**
 	 * Returns the hash code value for this object.
@@ -201,8 +212,9 @@ implements java.io.Serializable
 	 * @return a hash code value for this object.
 	 */
 
-	public int hashCode() {
-	return this.getName().hashCode();
+	public int hashCode()
+	{
+		return this.getName().hashCode();
 	}
 
 	/**
@@ -214,7 +226,7 @@ implements java.io.Serializable
 	 */
 	public String getActions()
 	{
-	return "";
+		return "";
 	}
 
 	/**
@@ -233,20 +245,21 @@ implements java.io.Serializable
 	 * storing NamedPermissions.
 	 */
 
-	public PermissionCollection newPermissionCollection() {
-	return new NamedPermissionCollection();
+	public PermissionCollection newPermissionCollection()
+	{
+		return new NamedPermissionCollection();
 	}
 
 	/**
 	 * readObject is called to restore the state of the NamedPermission from
 	 * a stream. 
 	 */
-	private synchronized void readObject(java.io.ObjectInputStream s)
-		 throws IOException, ClassNotFoundException
+	private synchronized void readObject(java.io.ObjectInputStream s) 
+				throws IOException, ClassNotFoundException
 	{
-	s.defaultReadObject();
-	// init is called to initialize the rest of the values.
-	init(getName());
+		s.defaultReadObject();
+		// init is called to initialize the rest of the values.
+		init(getName());
 	}
 }
 
@@ -267,9 +280,8 @@ implements java.io.Serializable
  * @serial include
  */
 
-final class NamedPermissionCollection
-extends PermissionCollection
-implements java.io.Serializable
+final class NamedPermissionCollection extends PermissionCollection 
+		implements java.io.Serializable
 {
 
 	/**
@@ -286,7 +298,7 @@ implements java.io.Serializable
 	 *
 	 * @serial
 	 */
-	private boolean all_allowed; 
+	private boolean all_allowed;
 
 	/**
 	 * The class to which all NamedPermissions in this
@@ -301,9 +313,10 @@ implements java.io.Serializable
 	 *
 	 */
 
-	public NamedPermissionCollection() {
-	permissions = new Hashtable(11);
-	all_allowed = false;
+	public NamedPermissionCollection()
+	{
+		permissions = new Hashtable(11);
+		all_allowed = false;
 	}
 
 	/**
@@ -324,29 +337,33 @@ implements java.io.Serializable
 
 	public void add(Permission permission)
 	{
-	if (! (permission instanceof NamedPermission))
-		throw new IllegalArgumentException("invalid permission: "+
-						   permission);
-	if (isReadOnly())
-		throw new SecurityException("attempt to add a Permission to a readonly PermissionCollection");
+		if (!(permission instanceof NamedPermission))
+			throw new IllegalArgumentException("invalid permission: " + permission);
+		if (isReadOnly())
+			throw new SecurityException(
+				"attempt to add a Permission to a readonly PermissionCollection");
 
-	NamedPermission bp = (NamedPermission) permission;
+		NamedPermission bp = (NamedPermission)permission;
 
-	if (permissions.size() == 0) {
-		// adding first permission
-		permClass = bp.getClass();
-	} else {
-		// make sure we only add new NamedPermissions of the same class
-		if (bp.getClass() != permClass)
-		throw new IllegalArgumentException("invalid permission: " +
-						permission);
-	}
+		if (permissions.size() == 0)
+		{
+			// adding first permission
+			permClass = bp.getClass();
+		}
+		else
+		{
+			// make sure we only add new NamedPermissions of the same class
+			if (bp.getClass() != permClass)
+				throw new IllegalArgumentException(
+					"invalid permission: " + permission);
+		}
 
-	permissions.put(bp.getName(), permission);
-		if (!all_allowed) {
-		if (bp.getName().equals("*"))
-		all_allowed = true;
-	}
+		permissions.put(bp.getName(), permission);
+		if (!all_allowed)
+		{
+			if (bp.getName().equals("*"))
+				all_allowed = true;
+		}
 	}
 
 	/**
@@ -361,53 +378,56 @@ implements java.io.Serializable
 
 	public boolean implies(Permission permission)
 	{
-	if (! (permission instanceof NamedPermission))
-		return false;
+		if (!(permission instanceof NamedPermission))
+			return false;
 
-	NamedPermission bp = (NamedPermission) permission;
+		NamedPermission bp = (NamedPermission)permission;
 
-	// random subclasses of NamedPermission do not imply each other
-	if (bp.getClass() != permClass)
-		return false;
+		// random subclasses of NamedPermission do not imply each other
+		if (bp.getClass() != permClass)
+			return false;
 
-	// short circuit if the "*" Permission was added
-	if (all_allowed)
-		return true;
+		// short circuit if the "*" Permission was added
+		if (all_allowed)
+			return true;
 
-	// strategy:
-	// Check for full match first. Then work our way up the
-	// path looking for matches on a/b//*
+		// strategy:
+		// Check for full match first. Then work our way up the
+		// path looking for matches on a/b//*
 
-	String path = bp.getName();
-	//System.out.println("check "+path);
-
-	Permission x = (Permission) permissions.get(path);
-
-	if (x != null) {
-		// we have a direct hit!
-		return x.implies(permission);
-	}
-
-	// work our way up the tree...
-	int last, offset;
-
-	offset = path.length()-1;
-
-	while ((last = path.lastIndexOf("/", offset)) != -1) {
-
-		path = path.substring(0, last+1) + "*";
+		String path = bp.getName();
 		//System.out.println("check "+path);
-		x = (Permission) permissions.get(path);
 
-		if (x != null) {
-		return x.implies(permission);
+		Permission x = (Permission)permissions.get(path);
+
+		if (x != null)
+		{
+			// we have a direct hit!
+			return x.implies(permission);
 		}
-		offset = last -1;
-	}
 
-	// we don't have to check for "*" as it was already checked
-	// at the top (all_allowed), so we just return false
-	return false;
+		// work our way up the tree...
+		int last, offset;
+
+		offset = path.length() - 1;
+
+		while ((last = path.lastIndexOf("/", offset)) != -1)
+		{
+
+			path = path.substring(0, last + 1) + "*";
+			//System.out.println("check "+path);
+			x = (Permission)permissions.get(path);
+
+			if (x != null)
+			{
+				return x.implies(permission);
+			}
+			offset = last - 1;
+		}
+
+		// we don't have to check for "*" as it was already checked
+		// at the top (all_allowed), so we just return false
+		return false;
 	}
 
 	/**
@@ -419,25 +439,27 @@ implements java.io.Serializable
 
 	public Enumeration elements()
 	{
-	return permissions.elements();
+		return permissions.elements();
 	}
 
 	/**
 	 * readObject is called to restore the state of the
 	 * NamedPermissionCollection from a stream.
 	 */
-	private synchronized void readObject(java.io.ObjectInputStream s)
-	 throws IOException, ClassNotFoundException
+	private synchronized void readObject(java.io.ObjectInputStream s) 
+				throws IOException, ClassNotFoundException
 	{
-	s.defaultReadObject();
+		s.defaultReadObject();
 
-	if (permClass == null) {
-		// set permClass
-		Enumeration e = permissions.elements();
-		if (e.hasMoreElements()) {
-		Permission p = (Permission)e.nextElement();
-		permClass = p.getClass();
+		if (permClass == null)
+		{
+			// set permClass
+			Enumeration e = permissions.elements();
+			if (e.hasMoreElements())
+			{
+				Permission p = (Permission)e.nextElement();
+				permClass = p.getClass();
+			}
 		}
-	}
 	}
 }

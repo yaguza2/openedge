@@ -35,19 +35,22 @@ package nl.openedge.access;
  * 
  * @author Eelco Hillenius
  */
-public class AccessException extends Exception {
+public class AccessException extends Exception
+{
 
 	/**
 	 * 
 	 */
-	public AccessException() {
+	public AccessException()
+	{
 		super();
 	}
 
 	/**
 	 * @param message
 	 */
-	public AccessException(String message) {
+	public AccessException(String message)
+	{
 		super(message);
 	}
 
@@ -55,14 +58,16 @@ public class AccessException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public AccessException(String message, Throwable cause) {
+	public AccessException(String message, Throwable cause)
+	{
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public AccessException(Throwable cause) {
+	public AccessException(Throwable cause)
+	{
 		super(cause);
 	}
 

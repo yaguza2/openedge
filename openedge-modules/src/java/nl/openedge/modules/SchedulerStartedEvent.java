@@ -38,7 +38,8 @@ import org.quartz.Scheduler;
  * fired when scheduler was started
  * @author Eelco Hillenius
  */
-public class SchedulerStartedEvent extends EventObject {
+public class SchedulerStartedEvent extends EventObject
+{
 
 	protected Scheduler scheduler = null;
 
@@ -46,11 +47,10 @@ public class SchedulerStartedEvent extends EventObject {
 	 * @param source	sender of event
 	 * @param scheduler	subject of event
 	 */
-	public SchedulerStartedEvent(Object source, Scheduler scheduler) {
+	public SchedulerStartedEvent(Object source, Scheduler scheduler)
+	{
 		super(source);
 		this.scheduler = scheduler;
 	}
-	
-	
 
 }

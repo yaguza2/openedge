@@ -38,7 +38,8 @@ package nl.openedge.modules;
  * 
  * @author Eelco Hillenius
  */
-public interface CriticalEventCaster {
+public interface CriticalEventCaster 
+{
 
 	/**
 	 * adds an observer for CriticalEvents

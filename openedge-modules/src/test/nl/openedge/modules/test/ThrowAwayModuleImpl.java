@@ -35,9 +35,11 @@ import nl.openedge.modules.ThrowAwayModule;
 /**
  * @author Eelco Hillenius
  */
-public class ThrowAwayModuleImpl implements ThrowAwayModule {
+public class ThrowAwayModuleImpl implements ThrowAwayModule
+{
 
-	public ThrowAwayModuleImpl() {
+	public ThrowAwayModuleImpl()
+	{
 		System.out.println(getClass().getName() + ": created");
 	}
 

@@ -35,34 +35,42 @@ package nl.openedge.modules;
  * 
  * @author Eelco Hillenius
  */
-public class ModuleException extends Exception {
+public class ModuleException extends RuntimeException
+{
 
 	/**
-	 * 
+	 * construct exception
 	 */
-	public ModuleException() {
+	public ModuleException()
+	{
 		super();
 	}
 
 	/**
+	 * construct exception with message
 	 * @param message
 	 */
-	public ModuleException(String message) {
+	public ModuleException(String message)
+	{
 		super(message);
 	}
 
 	/**
+	 * construct exception with message and cause
 	 * @param message
 	 * @param cause
 	 */
-	public ModuleException(String message, Throwable cause) {
+	public ModuleException(String message, Throwable cause)
+	{
 		super(message, cause);
 	}
 
 	/**
+	 * construct exception with cause
 	 * @param cause
 	 */
-	public ModuleException(Throwable cause) {
+	public ModuleException(Throwable cause)
+	{
 		super(cause);
 	}
 

@@ -38,7 +38,8 @@ import org.apache.commons.beanutils.BeanUtils;
  * wrapper for singleton modules
  * @author Eelco Hillenius
  */
-class SingletonAdapter extends ModuleAdapter {
+class SingletonAdapter extends ModuleAdapter
+{
 
 	protected Object singletonInstance;
 
@@ -47,31 +48,43 @@ class SingletonAdapter extends ModuleAdapter {
 	 * @param moduleClass	class of module
 	 * @see nl.openedge.modules.ModuleAdapter#setModuleClass(java.lang.Class) 
 	 */
-	protected void setModuleClass(Class moduleClass) throws ConfigException {
+	protected void setModuleClass(Class moduleClass) throws ConfigException
+	{
 		// set instance
-		try {	
+		try
+		{
 			this.singletonInstance = moduleClass.newInstance();
-		} catch (InstantiationException ex) {		
+		}
+		catch (InstantiationException ex)
+		{
 			throw new ConfigException(ex);
-		} catch (IllegalAccessException ex) {	
+		}
+		catch (IllegalAccessException ex)
+		{
 			throw new ConfigException(ex);
 		}
 		this.moduleClass = moduleClass;
 		// is this a bean?
-		if(singletonInstance instanceof BeanModule) {
+		if (singletonInstance instanceof BeanModule)
+		{
 			// try to set its properties
-			try {
+			try
+			{
 				BeanUtils.populate(singletonInstance, this.properties);
-			} catch(Exception e) {
-				throw new ConfigException(e);	
+			}
+			catch (Exception e)
+			{
+				throw new ConfigException(e);
 			}
 		}
 		// do we have to configure?
-		if(singletonInstance instanceof Configurable) {
-			((Configurable)singletonInstance).init(this.configNode);		
+		if (singletonInstance instanceof Configurable)
+		{
+			((Configurable)singletonInstance).init(this.configNode);
 		}
 		// register as CriticalEventCaster?
-		if(singletonInstance instanceof CriticalEventCaster) {
+		if (singletonInstance instanceof CriticalEventCaster)
+		{
 			((CriticalEventCaster)singletonInstance).addObserver(this.moduleFactory);
 		}
 	}
@@ -81,7 +94,8 @@ class SingletonAdapter extends ModuleAdapter {
 	 * @return new instance for each request
 	 * @see nl.openedge.modules.ModuleAdapter#getModule()
 	 */
-	public Object getModule() throws ModuleException {
+	public Object getModule() throws ModuleException
+	{
 		return singletonInstance;
 	}
 

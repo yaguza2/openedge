@@ -43,6 +43,7 @@ package nl.openedge.modules;
  * 
  * @author Eelco Hillenius
  */
-public interface BeanModule {
+public interface BeanModule 
+{
 
 }

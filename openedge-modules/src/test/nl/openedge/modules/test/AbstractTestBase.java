@@ -32,13 +32,11 @@ package nl.openedge.modules.test;
 
 import java.net.URL;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
 import junit.framework.TestCase;
 
 import nl.openedge.modules.Configurator;
 import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.ModuleFactoryFactory;
 import nl.openedge.util.config.URLHelper;
 
 /**
@@ -47,14 +45,16 @@ import nl.openedge.util.config.URLHelper;
  * 
  * @author E.F. Hillenius
  */
-public abstract class AbstractTestBase extends TestCase {
+public abstract class AbstractTestBase extends TestCase
+{
 
 	/** access factory */
 	protected static ModuleFactory moduleFactory;
 	private static boolean initialised = false;
 
 	/** construct */
-	public AbstractTestBase(String name) throws Exception {
+	public AbstractTestBase(String name) throws Exception
+	{
 		super(name);
 		init();
 	}
@@ -62,35 +62,40 @@ public abstract class AbstractTestBase extends TestCase {
 	/** 
 	 * initialise
 	 */
-	protected void init() throws Exception {
+	protected void init() throws Exception
+	{
 
 		loadModuleFactory();
 	}
-	
+
 	/**
 	 * load the module factory
 	 * @throws Exception
 	 */
-	protected void loadModuleFactory() throws Exception {
-		
-		if(!initialised) {
-			try {
-				
-				URL url = URLHelper.convertToURL(
-					System.getProperty("configfile", "/oemodules.xml"), 
-					AbstractTestBase.class, null);
-				String mfRef = System.getProperty("factoryRef", 
-						"/openedge/ModuleFactory");
-				
-				Configurator c = new Configurator(url);
-				Context ctx = new InitialContext();
-				moduleFactory = (ModuleFactory)ctx.lookup(mfRef);	
+	protected void loadModuleFactory() throws Exception
+	{
 
-			} catch(Exception e) {
+		if (!initialised)
+		{
+			initialised = true;
+			try
+			{
+
+				URL url =
+					URLHelper.convertToURL(
+						System.getProperty("configfile", "/oemodules.xml"),
+						AbstractTestBase.class,
+						null);
+
+				Configurator c = new Configurator(url);
+				moduleFactory = ModuleFactoryFactory.getInstance();
+
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 				throw e;
 			}
-			initialised = true;
 		}
 	}
 }

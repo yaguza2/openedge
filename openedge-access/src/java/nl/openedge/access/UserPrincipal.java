@@ -49,27 +49,29 @@ import java.util.Set;
  * @see java.security.Principal
  * @see javax.security.auth.Subject
  */
-public class UserPrincipal implements Principal, java.io.Serializable {
+public class UserPrincipal implements Principal, java.io.Serializable
+{
 
 	/** name */
 	protected String name;
-	
+
 	/** encrypted password... carefull with this */
 	protected String password;
-	
+
 	/** roles that user is member of */
 	protected Set roles;
-	
+
 	/** roles that user is member of */
 	protected Set groups;
-	
+
 	/**
 	 * Default constructor.
 	 */
-	public UserPrincipal() {
+	public UserPrincipal()
+	{
 		// do nothing here
 	}
-	
+
 	/**
 	 * Create a UserPrincipal with a username.
 	 *
@@ -80,14 +82,16 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 * @exception NullPointerException if the <code>name</code>
 	 *			is <code>null</code>.
 	 */
-	public UserPrincipal(String name) {
-		
-		if (name == null) {
+	public UserPrincipal(String name)
+	{
+
+		if (name == null)
+		{
 			throw new NullPointerException("name is not allowed to be null");
 		}
 		this.name = name;
 	}
-	
+
 	/**
 	 * Return the username for this <code>UserPrincipal</code>.
 	 *
@@ -95,35 +99,40 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 *
 	 * @return the username for this <code>UserPrincipal</code>
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
-	
+
 	/**
 	 * @param name
 	 */
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return String
 	 */
-	public String getPassword() {
+	public String getPassword()
+	{
 		return password;
 	}
-	
+
 	/**
 	 * @param password
 	 */
-	public void setPassword(String password) {
+	public void setPassword(String password)
+	{
 		this.password = password;
 	}
 
 	/**
 	 * @return List
 	 */
-	public Set getRoles() {
+	public Set getRoles()
+	{
 		return roles;
 	}
 
@@ -131,7 +140,8 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 * Sets the roles.
 	 * @param roles The roles to set
 	 */
-	public void setRoles(Set roles) {
+	public void setRoles(Set roles)
+	{
 		this.roles = roles;
 	}
 
@@ -139,33 +149,42 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 * add role
 	 * @param role
 	 */
-	public void addRole(Principal role) {
-		if(role instanceof RolePrincipal) {
-			if(this.roles == null) {
+	public void addRole(Principal role)
+	{
+		if (role instanceof RolePrincipal)
+		{
+			if (this.roles == null)
+			{
 				this.roles = new HashSet();
 			}
 			this.roles.add(role);
 		}
 	}
-	
+
 	/**
 	 * remove role
 	 * @param role
 	 */
-	public void removeRole(Principal role) {
-		if(this.roles != null && (role instanceof RolePrincipal)) {
+	public void removeRole(Principal role)
+	{
+		if (this.roles != null && (role instanceof RolePrincipal))
+		{
 			this.roles.remove(role);
 		}
 	}
-	
+
 	/**
 	 * does this user has given role?
 	 * @param role
 	 */
-	public boolean containsRole(Principal role) {
-		if(this.roles != null && (role instanceof RolePrincipal)) {
+	public boolean containsRole(Principal role)
+	{
+		if (this.roles != null && (role instanceof RolePrincipal))
+		{
 			return this.roles.contains(role);
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -173,52 +192,63 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	/**
 	 * @return Set
 	 */
-	public Set getGroups() {
+	public Set getGroups()
+	{
 		return groups;
 	}
 
 	/**
 	 * @param groups
 	 */
-	public void setGroups(Set groups) {
+	public void setGroups(Set groups)
+	{
 		this.groups = groups;
 	}
-	
+
 	/**
 	 * add group
 	 * @param group
 	 */
-	public void addGroup(Principal group) {
-		if(group instanceof GroupPrincipal) {
-			if(this.groups == null) {
+	public void addGroup(Principal group)
+	{
+		if (group instanceof GroupPrincipal)
+		{
+			if (this.groups == null)
+			{
 				this.groups = new HashSet();
 			}
 			this.groups.add(group);
 		}
 	}
-	
+
 	/**
 	 * remove group
 	 * @param group
 	 */
-	public void removeGroup(Principal group) {
-		if(this.groups != null &&(group instanceof GroupPrincipal)) {
+	public void removeGroup(Principal group)
+	{
+		if (this.groups != null && (group instanceof GroupPrincipal))
+		{
 			this.groups.remove(group);
 		}
 	}
-	
+
 	/**
 	 * does this user has given role?
 	 * @param group
 	 */
-	public boolean containsGroup(GroupPrincipal group) {
-		if(this.groups != null && (group instanceof GroupPrincipal)) {
+	public boolean containsGroup(GroupPrincipal group)
+	{
+		if (this.groups != null && (group instanceof GroupPrincipal))
+		{
 			return this.groups.contains(group);
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Return a string representation of this <code>UserPrincipal</code>.
 	 *
@@ -226,10 +256,11 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 *
 	 * @return a string representation of this <code>UserPrincipal</code>.
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return "UserPrincipal: " + name;
 	}
-	
+
 	/**
 	 * Compares the specified Object with this <code>UserPrincipal</code>
 	 * for equality.  Returns true if the given object is also a
@@ -244,22 +275,23 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 * @return true if the specified Object is equal equal to this
 	 *		<code>UserPrincipal</code>.
 	 */
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (o == null)
 			return false;
-		
-			if (this == o)
-				return true;
-		 
-			if (!(o instanceof UserPrincipal))
-				return false;
-			UserPrincipal that = (UserPrincipal)o;
-		
+
+		if (this == o)
+			return true;
+
+		if (!(o instanceof UserPrincipal))
+			return false;
+		UserPrincipal that = (UserPrincipal)o;
+
 		if (this.getName().equals(that.getName()))
 			return true;
 		return false;
 	}
-	 
+
 	/**
 	 * Return a hash code for this <code>UserPrincipal</code>.
 	 *
@@ -267,7 +299,8 @@ public class UserPrincipal implements Principal, java.io.Serializable {
 	 *
 	 * @return a hash code for this <code>UserPrincipal</code>.
 	 */
-	public int hashCode() {
+	public int hashCode()
+	{
 		return name.hashCode();
 	}
 

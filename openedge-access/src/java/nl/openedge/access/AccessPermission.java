@@ -70,7 +70,8 @@ import java.util.Hashtable;
  * @author E.F. Hillenius
  */
 
-public final class AccessPermission extends BasicPermission {
+public final class AccessPermission extends BasicPermission
+{
 
 	/**
 	 * Execute action.
@@ -79,24 +80,24 @@ public final class AccessPermission extends BasicPermission {
 	/**
 	 * Write action.
 	 */
-	private final static int WRITE   = 0x2;
+	private final static int WRITE = 0x2;
 	/**
 	 * Read action.
 	 */
-	private final static int READ    = 0x4;
+	private final static int READ = 0x4;
 	/**
 	 * Delete action.
 	 */
-	private final static int DELETE  = 0x8;
+	private final static int DELETE = 0x8;
 
 	/**
 	 * All actions (read,write,execute,delete)
 	 */
-	private final static int ALL     = READ|WRITE|EXECUTE|DELETE;
+	private final static int ALL = READ | WRITE | EXECUTE | DELETE;
 	/**
 	 * No actions.
 	 */
-	private final static int NONE    = 0x0;
+	private final static int NONE = 0x0;
 
 	/**
 	 * The actions mask.
@@ -110,7 +111,7 @@ public final class AccessPermission extends BasicPermission {
 	 * @serial 
 	 */
 	private String actions; // Left null as long as possible, then
-							// created and re-used in the getAction function.
+	// created and re-used in the getAction function.
 
 	/**
 	 * initialize a AccessPermission object. Common to all constructors.
@@ -123,16 +124,16 @@ public final class AccessPermission extends BasicPermission {
 	private void init(int mask)
 	{
 
-	if ((mask & ALL) != mask)
-		throw new IllegalArgumentException("invalid actions mask");
+		if ((mask & ALL) != mask)
+			throw new IllegalArgumentException("invalid actions mask");
 
-	if (mask == NONE)
-		throw new IllegalArgumentException("invalid actions mask");
+		if (mask == NONE)
+			throw new IllegalArgumentException("invalid actions mask");
 
-	if (getName() == null)
-		throw new NullPointerException("name can't be null");
+		if (getName() == null)
+			throw new NullPointerException("name can't be null");
 
-	this.mask = mask;
+		this.mask = mask;
 	}
 
 	/**
@@ -148,8 +149,8 @@ public final class AccessPermission extends BasicPermission {
 
 	public AccessPermission(String name, String actions)
 	{
-	super(name,actions);
-	init(getMask(actions));
+		super(name, actions);
+		init(getMask(actions));
 	}
 
 	/**
@@ -169,18 +170,18 @@ public final class AccessPermission extends BasicPermission {
 	 * @return true if the specified permission is implied by this object,
 	 * false if not.
 	 */
-	public boolean implies(Permission p) {
-	if (!(p instanceof AccessPermission))
-		return false;
+	public boolean implies(Permission p)
+	{
+		if (!(p instanceof AccessPermission))
+			return false;
 
-	AccessPermission that = (AccessPermission) p;
+		AccessPermission that = (AccessPermission)p;
 
-	// we get the effective mask. i.e., the "and" of this and that.
-	// They must be equal to that.mask for implies to return true.
+		// we get the effective mask. i.e., the "and" of this and that.
+		// They must be equal to that.mask for implies to return true.
 
-	return ((this.mask & that.mask) == that.mask) && super.implies(that);
+		return ((this.mask & that.mask) == that.mask) && super.implies(that);
 	}
-
 
 	/**
 	 * Checks two AccessPermission objects for equality. Checks that <i>obj</i> is
@@ -190,17 +191,17 @@ public final class AccessPermission extends BasicPermission {
 	 * @return true if obj is a AccessPermission, and has the same name and
 	 * actions as this AccessPermission object.
 	 */
-	public boolean equals(Object obj) {
-	if (obj == this)
-		return true;
+	public boolean equals(Object obj)
+	{
+		if (obj == this)
+			return true;
 
-	if (! (obj instanceof AccessPermission))
-		return false;
+		if (!(obj instanceof AccessPermission))
+			return false;
 
-	AccessPermission that = (AccessPermission) obj;
+		AccessPermission that = (AccessPermission)obj;
 
-	return (this.mask == that.mask) &&
-		(this.getName().equals(that.getName()));
+		return (this.mask == that.mask) && (this.getName().equals(that.getName()));
 	}
 
 	/**
@@ -212,10 +213,10 @@ public final class AccessPermission extends BasicPermission {
 	 * @return a hash code value for this object.
 	 */
 
-	public int hashCode() {
-	return this.getName().hashCode();
+	public int hashCode()
+	{
+		return this.getName().hashCode();
 	}
-
 
 	/**
 	 * Converts an actions String to an actions mask.
@@ -223,11 +224,13 @@ public final class AccessPermission extends BasicPermission {
 	 * @param action the action string.
 	 * @return the actions mask.
 	 */
-	private static int getMask(String actions) {
+	private static int getMask(String actions)
+	{
 
 		int mask = NONE;
 
-		if (actions == null) {
+		if (actions == null)
+		{
 			return mask;
 		}
 
@@ -237,89 +240,100 @@ public final class AccessPermission extends BasicPermission {
 		if (i < 0)
 			return mask;
 
-		while (i != -1) {
+		while (i != -1)
+		{
 			char c;
 
 			// skip whitespace
-			while ((i!=-1) && ((c = a[i]) == ' ' ||
-					   c == '\r' ||
-					   c == '\n' ||
-					   c == '\f' ||
-					   c == '\t'))
-			i--;
+			while ((i != -1) && ((c = a[i]) == ' ' || c == '\r' || c == '\n' || c == '\f' || c == '\t'))
+				i--;
 
 			// check for the known strings
 			int matchlen;
 
-			if (i >= 3 && (a[i-3] == 'r' || a[i-3] == 'R') &&
-				  (a[i-2] == 'e' || a[i-2] == 'E') &&
-				  (a[i-1] == 'a' || a[i-1] == 'A') &&
-				  (a[i] == 'd' || a[i] == 'D'))
+			if (i >= 3
+				&& (a[i - 3] == 'r' || a[i - 3] == 'R')
+				&& (a[i - 2] == 'e' || a[i - 2] == 'E')
+				&& (a[i - 1] == 'a' || a[i - 1] == 'A')
+				&& (a[i] == 'd' || a[i] == 'D'))
 			{
-			matchlen = 4;
-			mask |= READ;
+				matchlen = 4;
+				mask |= READ;
 
-			} else if (i >= 4 && (a[i-4] == 'w' || a[i-4] == 'W') &&
-					 (a[i-3] == 'r' || a[i-3] == 'R') &&
-					 (a[i-2] == 'i' || a[i-2] == 'I') &&
-					 (a[i-1] == 't' || a[i-1] == 'T') &&
-					 (a[i] == 'e' || a[i] == 'E'))
+			}
+			else if (
+				i >= 4
+					&& (a[i - 4] == 'w' || a[i - 4] == 'W')
+					&& (a[i - 3] == 'r' || a[i - 3] == 'R')
+					&& (a[i - 2] == 'i' || a[i - 2] == 'I')
+					&& (a[i - 1] == 't' || a[i - 1] == 'T')
+					&& (a[i] == 'e' || a[i] == 'E'))
 			{
-			matchlen = 5;
-			mask |= WRITE;
+				matchlen = 5;
+				mask |= WRITE;
 
-			} else if (i >= 6 && (a[i-6] == 'e' || a[i-6] == 'E') &&
-							 (a[i-5] == 'x' || a[i-5] == 'X') &&
-					 (a[i-4] == 'e' || a[i-4] == 'E') &&
-					 (a[i-3] == 'c' || a[i-3] == 'C') &&
-					 (a[i-2] == 'u' || a[i-2] == 'U') &&
-					 (a[i-1] == 't' || a[i-1] == 'T') &&
-					 (a[i] == 'e' || a[i] == 'E'))
+			}
+			else if (
+				i >= 6
+					&& (a[i - 6] == 'e' || a[i - 6] == 'E')
+					&& (a[i - 5] == 'x' || a[i - 5] == 'X')
+					&& (a[i - 4] == 'e' || a[i - 4] == 'E')
+					&& (a[i - 3] == 'c' || a[i - 3] == 'C')
+					&& (a[i - 2] == 'u' || a[i - 2] == 'U')
+					&& (a[i - 1] == 't' || a[i - 1] == 'T')
+					&& (a[i] == 'e' || a[i] == 'E'))
 			{
-			matchlen = 7;
-			mask |= EXECUTE;
+				matchlen = 7;
+				mask |= EXECUTE;
 
-			} else if (i >= 5 && (a[i-5] == 'd' || a[i-5] == 'D') &&
-					 (a[i-4] == 'e' || a[i-4] == 'E') &&
-					 (a[i-3] == 'l' || a[i-3] == 'L') &&
-					 (a[i-2] == 'e' || a[i-2] == 'E') &&
-					 (a[i-1] == 't' || a[i-1] == 'T') &&
-					 (a[i] == 'e' || a[i] == 'E'))
+			}
+			else if (
+				i >= 5
+					&& (a[i - 5] == 'd' || a[i - 5] == 'D')
+					&& (a[i - 4] == 'e' || a[i - 4] == 'E')
+					&& (a[i - 3] == 'l' || a[i - 3] == 'L')
+					&& (a[i - 2] == 'e' || a[i - 2] == 'E')
+					&& (a[i - 1] == 't' || a[i - 1] == 'T')
+					&& (a[i] == 'e' || a[i] == 'E'))
 			{
-			matchlen = 6;
-			mask |= DELETE;
+				matchlen = 6;
+				mask |= DELETE;
 
-			} else {
-			// parse error
-			throw new IllegalArgumentException(
-				"invalid permission: " + actions);
+			}
+			else
+			{
+				// parse error
+				throw new IllegalArgumentException("invalid permission: " + actions);
 			}
 
 			// make sure we didn't just match the tail of a word
 			// like "ackbarfaccept".  Also, skip to the comma.
 			boolean seencomma = false;
-			while (i >= matchlen && !seencomma) {
-			switch(a[i-matchlen]) {
-			case ',':
-				seencomma = true;
-				/*FALLTHROUGH*/
-			case ' ': case '\r': case '\n':
-			case '\f': case '\t':
-				break;
-			default:
-				throw new IllegalArgumentException(
-					"invalid permission: " + actions);
-			}
-			i--;
+			while (i >= matchlen && !seencomma)
+			{
+				switch (a[i - matchlen])
+				{
+					case ',' :
+						seencomma = true;
+						/*FALLTHROUGH*/
+					case ' ' :
+					case '\r' :
+					case '\n' :
+					case '\f' :
+					case '\t' :
+						break;
+					default :
+						throw new IllegalArgumentException("invalid permission: " + actions);
+				}
+				i--;
 			}
 
 			// point i at the location of the comma minus one (or -1).
 			i -= matchlen;
-	}
+		}
 
-	return mask;
+		return mask;
 	}
-
 
 	/**
 	 * Return the canonical string representation of the actions.
@@ -331,28 +345,38 @@ public final class AccessPermission extends BasicPermission {
 	static String getActions(int mask)
 	{
 		StringBuffer sb = new StringBuffer();
-			boolean comma = false;
+		boolean comma = false;
 
-		if ((mask & READ) == READ) {
+		if ((mask & READ) == READ)
+		{
 			comma = true;
 			sb.append("read");
 		}
 
-		if ((mask & WRITE) == WRITE) {
-			if (comma) sb.append(',');
-				else comma = true;
+		if ((mask & WRITE) == WRITE)
+		{
+			if (comma)
+				sb.append(',');
+			else
+				comma = true;
 			sb.append("write");
 		}
 
-		if ((mask & EXECUTE) == EXECUTE) {
-			if (comma) sb.append(',');
-				else comma = true;
+		if ((mask & EXECUTE) == EXECUTE)
+		{
+			if (comma)
+				sb.append(',');
+			else
+				comma = true;
 			sb.append("execute");
 		}
 
-		if ((mask & DELETE) == DELETE) {
-			if (comma) sb.append(',');
-				else comma = true;
+		if ((mask & DELETE) == DELETE)
+		{
+			if (comma)
+				sb.append(',');
+			else
+				comma = true;
 			sb.append("delete");
 		}
 
@@ -370,10 +394,10 @@ public final class AccessPermission extends BasicPermission {
 	 */
 	public String getActions()
 	{
-	if (actions == null)
-		actions = getActions(this.mask);
+		if (actions == null)
+			actions = getActions(this.mask);
 
-	return actions;
+		return actions;
 	}
 
 	/**
@@ -383,8 +407,9 @@ public final class AccessPermission extends BasicPermission {
 	 * @return the actions mask.
 	 */
 
-	int getMask() {
-	return mask;
+	int getMask()
+	{
+		return mask;
 	}
 
 	/**
@@ -396,8 +421,9 @@ public final class AccessPermission extends BasicPermission {
 	 * AccessPermissions.
 	 */
 
-	public PermissionCollection newPermissionCollection() {
-	return new AccessPermissionCollection();
+	public PermissionCollection newPermissionCollection()
+	{
+		return new AccessPermissionCollection();
 	}
 
 	/**
@@ -406,26 +432,24 @@ public final class AccessPermission extends BasicPermission {
 	 * takes care of the name.
 	 */
 
-	private synchronized void writeObject(java.io.ObjectOutputStream s)
-		throws IOException
+	private synchronized void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
-	// Write out the actions. The superclass takes care of the name
-	// call getActions to make sure actions field is initialized
-	if (actions == null)
-		getActions();
-	s.defaultWriteObject();
+		// Write out the actions. The superclass takes care of the name
+		// call getActions to make sure actions field is initialized
+		if (actions == null)
+			getActions();
+		s.defaultWriteObject();
 	}
 
 	/**
 	 * readObject is called to restore the state of the AccessPermission from
 	 * a stream.
 	 */
-	private synchronized void readObject(java.io.ObjectInputStream s)
-		 throws IOException, ClassNotFoundException
+	private synchronized void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
-	// Read in the action, then initialize the rest
-	s.defaultReadObject();
-	init(getMask(actions));
+		// Read in the action, then initialize the rest
+		s.defaultReadObject();
+		init(getMask(actions));
 	}
 }
 
@@ -439,8 +463,7 @@ public final class AccessPermission extends BasicPermission {
  *
  * @serial include
  */
-final class AccessPermissionCollection extends PermissionCollection
-implements Serializable
+final class AccessPermissionCollection extends PermissionCollection implements Serializable
 {
 
 	/**
@@ -462,9 +485,10 @@ implements Serializable
 	 *
 	 */
 
-	public AccessPermissionCollection() {
-	permissions = new Hashtable(32);     // Capacity for default policy
-	all_allowed = false;
+	public AccessPermissionCollection()
+	{
+		permissions = new Hashtable(32); // Capacity for default policy
+		all_allowed = false;
 	}
 
 	/**
@@ -482,35 +506,37 @@ implements Serializable
 
 	public void add(Permission permission)
 	{
-	if (! (permission instanceof AccessPermission))
-		throw new IllegalArgumentException("invalid permission: "+
-						   permission);
-	if (isReadOnly())
-		throw new SecurityException("attempt to add a Permission to a readonly PermissionCollection");
+		if (!(permission instanceof AccessPermission))
+			throw new IllegalArgumentException("invalid permission: " + permission);
+		if (isReadOnly())
+			throw new SecurityException("attempt to add a Permission to a readonly PermissionCollection");
 
-	AccessPermission pp = (AccessPermission) permission;
+		AccessPermission pp = (AccessPermission)permission;
 
-	AccessPermission existing =
-		(AccessPermission) permissions.get(pp.getName());
+		AccessPermission existing = (AccessPermission)permissions.get(pp.getName());
 
-	if (existing != null) {
-		int oldMask = existing.getMask();
-		int newMask = pp.getMask();
-		if (oldMask != newMask) {
-		int effective = oldMask | newMask;
-		String actions = AccessPermission.getActions(effective);
-		permissions.put(pp.getName(),
-			new AccessPermission(pp.getName(), actions));
+		if (existing != null)
+		{
+			int oldMask = existing.getMask();
+			int newMask = pp.getMask();
+			if (oldMask != newMask)
+			{
+				int effective = oldMask | newMask;
+				String actions = AccessPermission.getActions(effective);
+				permissions.put(pp.getName(), new AccessPermission(pp.getName(), actions));
 
+			}
 		}
-	} else {
-		permissions.put(pp.getName(), permission);
-	}
+		else
+		{
+			permissions.put(pp.getName(), permission);
+		}
 
-		if (!all_allowed) {
-		if (pp.getName().equals("*"))
-		all_allowed = true;
-	}
+		if (!all_allowed)
+		{
+			if (pp.getName().equals("*"))
+				all_allowed = true;
+		}
 	}
 
 	/**
@@ -525,63 +551,68 @@ implements Serializable
 
 	public boolean implies(Permission permission)
 	{
-	if (! (permission instanceof AccessPermission))
-		return false;
+		if (!(permission instanceof AccessPermission))
+			return false;
 
-	AccessPermission pp = (AccessPermission) permission;
-	AccessPermission x;
+		AccessPermission pp = (AccessPermission)permission;
+		AccessPermission x;
 
-	int desired = pp.getMask();
-	int effective = 0;
+		int desired = pp.getMask();
+		int effective = 0;
 
-	// short circuit if the "*" Permission was added
-	if (all_allowed) {
-		x = (AccessPermission) permissions.get("*");
-		if (x != null) {
-		effective |= x.getMask();
-		if ((effective & desired) == desired)
-			return true;
+		// short circuit if the "*" Permission was added
+		if (all_allowed)
+		{
+			x = (AccessPermission)permissions.get("*");
+			if (x != null)
+			{
+				effective |= x.getMask();
+				if ((effective & desired) == desired)
+					return true;
+			}
 		}
-	}
 
-	// strategy:
-	// Check for full match first. Then work our way up the
-	// name looking for matches on a.b.*
+		// strategy:
+		// Check for full match first. Then work our way up the
+		// name looking for matches on a.b.*
 
-	String name = pp.getName();
-	//System.out.println("check "+name);
-
-	x = (AccessPermission) permissions.get(name);
-
-	if (x != null) {
-		// we have a direct hit!
-		effective |= x.getMask();
-		if ((effective & desired) == desired)
-		return true;
-	}
-
-	// work our way up the tree...
-	int last, offset;
-
-	offset = name.length()-1;
-
-	while ((last = name.lastIndexOf(".", offset)) != -1) {
-
-		name = name.substring(0, last+1) + "*";
+		String name = pp.getName();
 		//System.out.println("check "+name);
-		x = (AccessPermission) permissions.get(name);
 
-		if (x != null) {
-		effective |= x.getMask();
-		if ((effective & desired) == desired)
-			return true;
+		x = (AccessPermission)permissions.get(name);
+
+		if (x != null)
+		{
+			// we have a direct hit!
+			effective |= x.getMask();
+			if ((effective & desired) == desired)
+				return true;
 		}
-		offset = last -1;
-	}
 
-	// we don't have to check for "*" as it was already checked
-	// at the top (all_allowed), so we just return false
-	return false;
+		// work our way up the tree...
+		int last, offset;
+
+		offset = name.length() - 1;
+
+		while ((last = name.lastIndexOf(".", offset)) != -1)
+		{
+
+			name = name.substring(0, last + 1) + "*";
+			//System.out.println("check "+name);
+			x = (AccessPermission)permissions.get(name);
+
+			if (x != null)
+			{
+				effective |= x.getMask();
+				if ((effective & desired) == desired)
+					return true;
+			}
+			offset = last - 1;
+		}
+
+		// we don't have to check for "*" as it was already checked
+		// at the top (all_allowed), so we just return false
+		return false;
 	}
 
 	/**
@@ -593,6 +624,6 @@ implements Serializable
 
 	public Enumeration elements()
 	{
-	return permissions.elements();
+		return permissions.elements();
 	}
 }

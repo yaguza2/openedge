@@ -33,8 +33,6 @@ package nl.openedge.access.impl;
 import java.security.Principal;
 import java.util.*;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.security.auth.spi.LoginModule;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.Subject;
@@ -44,6 +42,7 @@ import nl.openedge.access.*;
 import nl.openedge.access.RolePrincipal;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.util.PasswordHelper;
+import nl.openedge.modules.ModuleFactoryFactory;
 import nl.openedge.modules.ModuleFactory;
 
 import org.apache.commons.logging.Log;
@@ -101,109 +100,114 @@ import org.apache.commons.logging.LogFactory;
  * @author  Eelco Hillenius
  */
 
-public class LoginModuleImpl implements LoginModule {
+public class LoginModuleImpl implements LoginModule
+{
 
-    // initial state
+	// initial state
 	protected CallbackHandler callbackHandler;
 	protected Subject subject;
 	protected Map sharedState;
 	protected Map options;
-    
+
 	protected boolean useFirstPass = false;
 	protected boolean tryFirstPass = false;
 	protected boolean storePass = false;
 	protected boolean clearPass = false;
-	
+
 	protected String username;
 	protected char[] password;
-	
+
 	// the authentication status
 	protected boolean succeeded = false;
 	protected boolean commitSucceeded = false;
-	
+
 	public static final String NAME = "javax.security.auth.login.name";
 	public static final String PWD = "javax.security.auth.login.password";
 
-    // temporary state
-    protected Vector tempCredentials;
-    protected Vector tempPrincipals;
-    
-    /** decorator if provided */
-    protected LoginDecorator decorator = null;
-   
-    /** user manager, MUST be provided */
-    protected UserManagerModule userManager = null;
-    
-    /** module alias for user manager: userManagerAlias */
-    public final static String USER_MANAGER_ALIAS = "userManagerAlias";
-    
-    /** jndi reference for module factory: factoryRef */
-    public final static String FACTORY_REF = "factoryRef";
+	// temporary state
+	protected Vector tempCredentials;
+	protected Vector tempPrincipals;
+
+	/** decorator if provided */
+	protected LoginDecorator decorator = null;
+
+	/** user manager, MUST be provided */
+	protected UserManagerModule userManager = null;
+
+	/** module alias for user manager: userManagerAlias */
+	public final static String USER_MANAGER_ALIAS = "userManagerAlias";
+
+	/** jndi reference for module factory: factoryRef */
+	public final static String FACTORY_REF = "factoryRef";
 
 	/* logger */
 	protected Log log = LogFactory.getLog(this.getClass());
 
-    /**
-     * <p>Creates a login module.
-     */
-    public LoginModuleImpl() {
-        
-        tempCredentials = new Vector();
-        tempPrincipals  = new Vector();
-    }
+	/**
+	 * <p>Creates a login module.
+	 */
+	public LoginModuleImpl()
+	{
+
+		tempCredentials = new Vector();
+		tempPrincipals = new Vector();
+	}
 
 	/**
 	 * @see javax.security.auth.spi.LoginModule#initialize(javax.security.auth.Subject, javax.security.auth.callback.CallbackHandler, java.util.Map, java.util.Map)
 	 */
-    public void initialize(Subject subject, CallbackHandler callbackHandler,
-            Map sharedState, Map options) {
+	public void initialize(Subject subject, CallbackHandler callbackHandler, 
+					Map sharedState, Map options)
+	{
 
-        // save the initial state
-        this.callbackHandler = callbackHandler;
-        this.subject = subject;
-        this.sharedState = sharedState;
-        this.options = options;
-        
+		// save the initial state
+		this.callbackHandler = callbackHandler;
+		this.subject = subject;
+		this.sharedState = sharedState;
+		this.options = options;
+
 		String userManagerAlias = (String)options.get(USER_MANAGER_ALIAS);
 		String moduleFactoryRef = (String)options.get(FACTORY_REF);
 
-		try {
-			Context ctx = new InitialContext();
-			ModuleFactory mf = (ModuleFactory)ctx.lookup(moduleFactoryRef);
+		try
+		{
+			ModuleFactory mf = ModuleFactoryFactory.getInstance();
 			userManager = (UserManagerModule)mf.getModule(userManagerAlias);
-		} catch(Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			return;
 		}
-        
-        // read options
-		tryFirstPass =
-			"true".equalsIgnoreCase((String)options.get("tryFirstPass"));
-		useFirstPass =
-			"true".equalsIgnoreCase((String)options.get("useFirstPass"));
-		storePass =
-			"true".equalsIgnoreCase((String)options.get("storePass"));
-		clearPass =
-			"true".equalsIgnoreCase((String)options.get("clearPass"));
-		
-		ClassLoader classLoader =
-			Thread.currentThread().getContextClassLoader();
-		if (classLoader == null) {
+
+		// read options
+		tryFirstPass = "true".equalsIgnoreCase((String)options.get("tryFirstPass"));
+		useFirstPass = "true".equalsIgnoreCase((String)options.get("useFirstPass"));
+		storePass = "true".equalsIgnoreCase((String)options.get("storePass"));
+		clearPass = "true".equalsIgnoreCase((String)options.get("clearPass"));
+
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if (classLoader == null)
+		{
 			classLoader = LoginModuleImpl.class.getClassLoader();
-		}		
+		}
 		// see if there's a LoginDecorater configured
 		String decoClass = (String)options.get("decorator");
-		if(decoClass != null) {
+		if (decoClass != null)
+		{
 			// got one, try to instantiate
-			try {	
+			try
+			{
 				Class cls = classLoader.loadClass(decoClass);
 				this.decorator = (LoginDecorator)cls.newInstance();
-			} catch(Exception e) {
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
-			}	
+			}
 		}
 
-    }
+	}
 
 	/**
 	 * <p> Prompt for username and password.
@@ -219,57 +223,75 @@ public class LoginModuleImpl implements LoginModule {
 	 * @exception LoginException if this <code>LoginModule</code>
 	 *		is unable to perform the authentication.
 	 */
-	public boolean login() throws LoginException {
-	
+	public boolean login() throws LoginException
+	{
+
 		// attempt the authentication
-		if(tryFirstPass) {
-	
-			try {
+		if (tryFirstPass)
+		{
+
+			try
+			{
 				// attempt the authentication by getting the
 				// username and password from shared state
 				attemptAuthentication(true);
-		
+
 				// authentication succeeded
 				succeeded = true;
-				if(log.isDebugEnabled())log.debug("tryFirstPass succeeded");
+				if (log.isDebugEnabled())
+					log.debug("tryFirstPass succeeded");
 				return true;
-			} catch(LoginException le) {
+			}
+			catch (LoginException le)
+			{
 				// authentication failed -- try again below by prompting
 				cleanState();
-				if(log.isDebugEnabled()) log.debug("tryFirstPass failed with:" +
-						le.toString());
+				if (log.isDebugEnabled())
+					log.debug("tryFirstPass failed with:" + le.toString());
 			}
-	
-		} else if(useFirstPass) {
-	
-			try {
+
+		}
+		else if (useFirstPass)
+		{
+
+			try
+			{
 				// attempt the authentication by getting the
 				// username and password from shared state
 				attemptAuthentication(true);
-		
+
 				// authentication succeeded
 				succeeded = true;
-				if(log.isDebugEnabled()) log.debug("useFirstPass succeeded");
+				if (log.isDebugEnabled())
+					log.debug("useFirstPass succeeded");
 				return true;
-			} catch(LoginException le) {
+			}
+			catch (LoginException le)
+			{
 				// authentication failed
 				cleanState();
-				if(log.isDebugEnabled()) log.debug("useFirstPass failed");
+				if (log.isDebugEnabled())
+					log.debug("useFirstPass failed");
 				throw le;
 			}
 		}
-	
+
 		// attempt the authentication by prompting for the username and pwd
-		try {
+		try
+		{
 			attemptAuthentication(false);
-	
+
 			// authentication succeeded
-		   	succeeded = true;
-			if(log.isDebugEnabled()) log.debug("regular authentication succeeded");
+			succeeded = true;
+			if (log.isDebugEnabled())
+				log.debug("regular authentication succeeded");
 			return true;
-		} catch(LoginException le) {
+		}
+		catch (LoginException le)
+		{
 			cleanState();
-			if(log.isDebugEnabled()) log.debug("regular authentication failed");
+			if (log.isDebugEnabled())
+				log.debug("regular authentication failed");
 			throw le;
 		}
 	}
@@ -282,55 +304,65 @@ public class LoginModuleImpl implements LoginModule {
 	 * @param getPasswdFromSharedState boolean that tells this method whether
 	 *		to retrieve the password from the sharedState.
 	 */
-    public void attemptAuthentication(boolean getPasswdFromSharedState) throws LoginException {
+	public void attemptAuthentication(boolean getPasswdFromSharedState) 
+					throws LoginException
+	{
 
-		if(log.isDebugEnabled()) log.debug("login for " + subject);
+		if (log.isDebugEnabled())
+			log.debug("login for " + subject);
 
-        if(callbackHandler == null)
-            throw new LoginException("Error: no CallbackHandler available " +
-                    "to gather authentication information from the user");
+		if (callbackHandler == null)
+			throw new LoginException(
+				"Error: no CallbackHandler available " + 
+				"to gather authentication information from the user");
 
-        try {
-            // Setup default callback handlers.
-            Callback[] callbacks = new Callback[] {
-                new NameCallback("Username: "),
-                new PasswordCallback("Password: ", false)
-            };
+		try
+		{
+			// Setup default callback handlers.
+			Callback[] callbacks =
+				new Callback[] { new NameCallback("Username: "), 
+								 new PasswordCallback("Password: ", 
+								 false)};
 
-            callbackHandler.handle(callbacks);
+			callbackHandler.handle(callbacks);
 
-            username = ((NameCallback)callbacks[0]).getName();
-            password = ((PasswordCallback)callbacks[1]).getPassword();
+			username = ((NameCallback)callbacks[0]).getName();
+			password = ((PasswordCallback)callbacks[1]).getPassword();
 
-            ((PasswordCallback)callbacks[1]).clearPassword();
+			((PasswordCallback)callbacks[1]).clearPassword();
 
-            succeeded = validate(username, password);
+			succeeded = validate(username, password);
 
-            callbacks[0] = null;
-            callbacks[1] = null;
+			callbacks[0] = null;
+			callbacks[1] = null;
 
-            if(!succeeded)
-                throw new LoginException("Authentication failed: Invallid combination of username and password");
+			if (!succeeded)
+				throw new LoginException(
+					"Authentication failed: Invallid combination of username and password");
 
 			// save input as shared state only if
 			// authentication succeeded
-			if(storePass &&
-				!sharedState.containsKey(NAME) &&
-				!sharedState.containsKey(PWD)) {
+			if (storePass && !sharedState.containsKey(NAME) 
+				&& !sharedState.containsKey(PWD))
+			{
 				sharedState.put(NAME, username);
 				sharedState.put(PWD, password);
 			}
 
 			succeeded = true;
-        } catch (LoginException ex) {
-            throw ex;
-        } catch (Exception ex) {
+		}
+		catch (LoginException ex)
+		{
+			throw ex;
+		}
+		catch (Exception ex)
+		{
 			succeeded = false;
 			ex.printStackTrace();
-            throw new LoginException(ex.getMessage());
-        }
-    }
-    
+			throw new LoginException(ex.getMessage());
+		}
+	}
+
 	/**
 	 * Validate the given user and password.
 	 * <p>
@@ -339,35 +371,41 @@ public class LoginModuleImpl implements LoginModule {
 	 * @param pass the password to be authenticated. <p>
 	 * @exception Exception if the validation fails.
 	 */
-	protected boolean validate(String username, char[] password) throws Exception {
-        
+	protected boolean validate(String username, char[] password) throws Exception
+	{
+
 		boolean passwordMatch = false;
 		String dbPassword = null;
 		String dbName = null;
 		boolean isEqual = false;
 
 		UserPrincipal user = (UserPrincipal)userManager.getUser(username);
-		
-		if(user == null) {
+
+		if (user == null)
+		{
 			throw new LoginException("User " + username + " not found");
 		}
 
-		String cryptedPassword = new String(
-					PasswordHelper.cryptPassword(password));
+		String cryptedPassword = new String(PasswordHelper.cryptPassword(password));
 
 		passwordMatch = new String(cryptedPassword).equals(user.getPassword());
-		if(passwordMatch) {
+		if (passwordMatch)
+		{
 
 			this.tempPrincipals.add(user);
 			Set roles = userManager.listRolesForUser(user);
-			if(roles != null) {
-				this.tempPrincipals.addAll(roles);	
+			if (roles != null)
+			{
+				this.tempPrincipals.addAll(roles);
 			}
 			Set groups = userManager.listGroupsForUser(user);
-			if(groups != null) {
-				this.tempPrincipals.addAll(groups); 
+			if (groups != null)
+			{
+				this.tempPrincipals.addAll(groups);
 			}
-		} else {
+		}
+		else
+		{
 			//passwords do NOT match!
 		}
 
@@ -377,118 +415,140 @@ public class LoginModuleImpl implements LoginModule {
 	/**
 	 * @see javax.security.auth.spi.LoginModule#commit()
 	 */
-    public boolean commit() throws LoginException {
+	public boolean commit() throws LoginException
+	{
 
-		if(log.isDebugEnabled()) log.debug("commit for " + subject + 
-				" (succeeded == " + succeeded + ")");
+		if (log.isDebugEnabled())
+			log.debug("commit for " + subject + " (succeeded == " + succeeded + ")");
 
-        if(succeeded) {
+		if (succeeded)
+		{
 
-            if(subject.isReadOnly()) throw new LoginException("Subject is Readonly");
-            
-            try {
-            	
+			if (subject.isReadOnly())
+				throw new LoginException("Subject is Readonly");
+
+			try
+			{
+
 				Set principals = subject.getPrincipals();
-                if(decorator != null) { // decorate if a decorator was set 
+				if (decorator != null)
+				{ // decorate if a decorator was set 
 					// this gives use the chance to overload principals
 					// or maybe even add totally new ones
-	                Principal[] originals = (Principal[])tempPrincipals.toArray(
-	                		new Principal[tempPrincipals.size()]);
-	                
-	                Principal[] decorated = decorator.decorate(originals);
-	                if(decorated != null) {
-	                	for(int i = 0; i < decorated.length; i++) {
-	                		principals.add(decorated[i]);
-	                	}
-	                }
-	                // we now add all the prev loaded principals
-	                // if a principal was overloaded in the last block,
-	                // the Set.add(object) operation will leave the overloaded
-	                // principal in place (will not add the prev loaded principal)             
-	                Iterator it = tempPrincipals.iterator();
-	                while(it.hasNext()) {			
+					Principal[] originals = (Principal[])
+						tempPrincipals.toArray(new Principal[tempPrincipals.size()]);
+
+					Principal[] decorated = decorator.decorate(originals);
+					if (decorated != null)
+					{
+						for (int i = 0; i < decorated.length; i++)
+						{
+							principals.add(decorated[i]);
+						}
+					}
+					// we now add all the prev loaded principals
+					// if a principal was overloaded in the last block,
+					// the Set.add(object) operation will leave the overloaded
+					// principal in place (will not add the prev loaded principal)             
+					Iterator it = tempPrincipals.iterator();
+					while (it.hasNext())
+					{
 						Principal p = (Principal)it.next();
 						principals.add(p);
-	                }
-                } else {
-                	// just add all the principals undecorated
-					principals.addAll(tempPrincipals);	
-                }
+					}
+				}
+				else
+				{
+					// just add all the principals undecorated
+					principals.addAll(tempPrincipals);
+				}
 
-                // add the credentials to the subject
-                subject.getPublicCredentials().addAll(tempCredentials);
+				// add the credentials to the subject
+				subject.getPublicCredentials().addAll(tempCredentials);
 
-                tempPrincipals.clear();
-                tempCredentials.clear();
+				tempPrincipals.clear();
+				tempCredentials.clear();
 
-                if(callbackHandler instanceof AccessCallbackHandler)
-                    ((AccessCallbackHandler)callbackHandler).clearPassword();
+				if (callbackHandler instanceof AccessCallbackHandler)
+					 ((AccessCallbackHandler)callbackHandler).clearPassword();
 
 				// in any case, clean out state
 				cleanState();
 				commitSucceeded = true;
 
-                return true;
-            } catch (Exception ex) {
-                ex.printStackTrace(System.out);
-                throw new LoginException(ex.getMessage());
-            }
-        } else {
-            return false;
-        }
-    }
+				return true;
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace(System.out);
+				throw new LoginException(ex.getMessage());
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	/**
 	 * @see javax.security.auth.spi.LoginModule#abort()
 	 */
-    public boolean abort() throws javax.security.auth.login.LoginException {
+	public boolean abort() throws javax.security.auth.login.LoginException
+	{
 
-		if(log.isDebugEnabled()) log.debug("abort for " + subject);
+		if (log.isDebugEnabled())
+			log.debug("abort for " + subject);
 
-        // Clean out state
+		// Clean out state
 		succeeded = false;
 
-        tempPrincipals.clear();
-        tempCredentials.clear();
+		tempPrincipals.clear();
+		tempCredentials.clear();
 
-        if (callbackHandler instanceof AccessCallbackHandler)
-            ((AccessCallbackHandler)callbackHandler).clearPassword();
+		if (callbackHandler instanceof AccessCallbackHandler)
+			 ((AccessCallbackHandler)callbackHandler).clearPassword();
 
-        logout();
+		logout();
 
-        return(true);
-    }
+		return (true);
+	}
 
 	/**
 	 * @see javax.security.auth.spi.LoginModule#logout()
 	 */
-    public boolean logout() throws javax.security.auth.login.LoginException {
+	public boolean logout() throws javax.security.auth.login.LoginException
+	{
 
-		if(log.isDebugEnabled()) log.debug("logout for " + subject);
+		if (log.isDebugEnabled())
+			log.debug("logout for " + subject);
 
-        tempPrincipals.clear();
-        tempCredentials.clear();
+		tempPrincipals.clear();
+		tempCredentials.clear();
 
-        if (callbackHandler instanceof AccessCallbackHandler)
-            ((AccessCallbackHandler)callbackHandler).clearPassword();
+		if (callbackHandler instanceof AccessCallbackHandler)
+			 ((AccessCallbackHandler)callbackHandler).clearPassword();
 
-        // remove the principals the login module added
-        Iterator it = subject.getPrincipals(UserPrincipal.class).iterator();
-        while (it.hasNext()) {
+		// remove the principals the login module added
+		Iterator it = subject.getPrincipals(UserPrincipal.class).iterator();
+		while (it.hasNext())
+		{
 			UserPrincipal p = (UserPrincipal)it.next();
-            if(log.isDebugEnabled()) log.debug("removing UserPrincipal " + p);
-            subject.getPrincipals().remove(p);
-        }
+			if (log.isDebugEnabled())
+				log.debug("removing UserPrincipal " + p);
+			subject.getPrincipals().remove(p);
+		}
 		it = subject.getPrincipals(RolePrincipal.class).iterator();
-		while (it.hasNext()) {
+		while (it.hasNext())
+		{
 			RolePrincipal p = (RolePrincipal)it.next();
-			if(log.isDebugEnabled()) log.debug("removing RolePrincipal " + p);
+			if (log.isDebugEnabled())
+				log.debug("removing RolePrincipal " + p);
 			subject.getPrincipals().remove(p);
 		}
 
-        return(true);
-    }
-    
+		return (true);
+	}
+
 	/**
 	 * Get the username and password.
 	 * This method does not return any value.
@@ -503,33 +563,37 @@ public class LoginModuleImpl implements LoginModule {
 	 * @param getPasswdFromSharedState boolean that tells this method whether
 	 *		to retrieve the password from the sharedState.
 	 */
-	protected void getUsernamePassword(boolean getPasswdFromSharedState)
-				throws LoginException {
+	protected void getUsernamePassword(boolean getPasswdFromSharedState) 
+						throws LoginException
+	{
 
-		if (getPasswdFromSharedState) {
+		if (getPasswdFromSharedState)
+		{
 			// use the password saved by the first module in the stack
 			username = (String)sharedState.get(NAME);
 			password = (char[])sharedState.get(PWD);
 			return;
 		}
 	}
-    
+
 	/**
 	 * Clean out state because of a failed authentication attempt
 	 */
-	protected void cleanState() {
+	protected void cleanState()
+	{
 		username = null;
-		if (password != null) {
+		if (password != null)
+		{
 			for (int i = 0; i < password.length; i++)
-			password[i] = ' ';
+				password[i] = ' ';
 			password = null;
 		}
-	
-		if (clearPass) {
+
+		if (clearPass)
+		{
 			sharedState.remove(NAME);
 			sharedState.remove(PWD);
 		}
 	}
-	
-}
 
+}
