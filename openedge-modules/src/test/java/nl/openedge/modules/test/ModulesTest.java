@@ -134,8 +134,8 @@ public class ModulesTest extends AbstractTestBase {
 
 			Scheduler scheduler = moduleFactory.getScheduler();
 			
-			System.out.print("sleep for 1 minute...");
-			Thread.sleep(60000);
+			System.out.print("sleep for 1/2 minute...");
+			Thread.sleep(30000);
 			System.out.println("done");
 			
 		} catch(Exception e) {

@@ -2,8 +2,8 @@
 
 <project>
   <pomVersion>3</pomVersion>
-  <id>openedge-utils</id>
-  <name>OpenEdge Utils</name>
+  <id>openedge-modules</id>
+  <name>OpenEdge Modules</name>
   <currentVersion>1.0</currentVersion>
   <organization>
     <name>Open Edge</name>
@@ -11,10 +11,10 @@
     <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
-  <package>nl.openedge.util</package>
+  <package>nl.openedge.modules</package>
   <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
-  <shortDescription>OpenEdge Util: set of reusable classes and components</shortDescription>
-  <description>OpenEdge Utils is a project for reusable classes and components that are useful enough to share among projects, but are too small to have their own project</description>
+  <shortDescription>OpenEdge module framework provides a component factory and a wrapper for the Quartz sceduler</shortDescription>
+  <description>The OpenEdge module framework provides for an easy to use object factory that can build and configure instances of objects (Modules) from a configuration xml document. Clients can then ask the ModuleFactory for instances.</description>
   <url>http://maven.apache.org/</url>
 
   <!-- <repository>
@@ -80,35 +80,64 @@
       <version>1.5</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
     </dependency>
+    
+    <dependency>
+      <id>commons-cli</id>
+      <version>1.0-beta-2-dev</version>
+      <url>http://jakarta.apache.org/commons/cli/</url>
+    </dependency>
+
+    <dependency>
+      <id>commons-collections</id>
+      <version>2.0</version>
+      <url>http://jakarta.apache.org/commons/collections/</url>
+    </dependency>
 
     <dependency>
       <id>commons-dbcp</id>
       <version>1.0</version>
       <url>http://jakarta.apache.org/commons/dbcp/</url>
     </dependency>
-
-    <dependency>
-      <id>commons-lang</id>
-      <version>1.0.1</version>
-      <url>http://jakarta.apache.org/commons/lang/</url>
-    </dependency>
     
     <dependency>
-      <id>jstl</id>
+      <id>commons-logging</id>
+      <version>02032003</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+    </dependency>
+
+    <dependency>
+      <id>commons-pool</id>
       <version>1.0</version>
-      <url>http://java.sun.com/products/jsp/jstl/</url>
+      <url>http://jakarta.apache.org/commons/pool/</url>
     </dependency>
     
     <dependency>
-      <id>jakarta-taglibs-standard</id>
-      <version>1.0.3</version>
-      <url>http://jakarta.apache.org/taglibs/</url>
+      <id>jdom</id>
+      <version>cvs-24012003</version>
+      <url>http://www.jdom.org/</url>
+    </dependency>
+    
+    <dependency>
+      <id>mm.mysql</id>
+      <version>2.0.14-bin</version>
+      <url>http://sourceforge.net/projects/mmmysql/</url>
     </dependency>
 
     <dependency>
-      <id>ojb</id>
-      <version>1.0pre-cvs</version>
-      <url>http://db.apache.org/ojb/</url>
+      <id>quartz</id>
+      <version>1.1.2</version>
+      <url>http://www.part.net/quartz.html</url>
+    </dependency>
+    
+    <dependency>
+      <id>servletapi</id>
+      <version>2.3</version>
+    </dependency>
+
+    <dependency>
+      <id>openedge-utils</id>
+      <version>1.0</version>
+      <url>http://www.openedge.nl</url>
     </dependency>
 
   </dependencies>

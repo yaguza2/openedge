@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Modules</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Overview">
+    <p>
+    The <code>OpenEdge module framework</code> provides for an easy to use 
+    object factory that can build and configure instances of objects 
+    (Modules) from a configuration xml document. Clients can then ask 
+    the ModuleFactory for instances.
+    </p>
+
+  </section>
+
+</body>
+</document>
+

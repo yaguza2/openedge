@@ -1,1 +1,4 @@
 build
+target
+maven.log
+velocity.log
