@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,15 +28,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.observers;
+
+import nl.openedge.modules.config.ModuleFactoryObserver;
 
 /**
- * @author Eelco Hillenius
+ * a critical even observer listenes for events that are cast by modules that 
+ * are <code>CriticalEventCaster</code>s or the <code>ModuleFactory</code>.
  * 
- * Modules that implement ThrowAwayModule will be instantiated for each
- * request on the ModuleFactory  
+ * @author Eelco Hillenius
  */
-public interface ThrowAwayModule
+public interface CriticalEventObserver extends ModuleFactoryObserver 
 {
+
+	/**
+	 * fired when (according to the implementing module) a critical event occured
+	 * @param evt the critical event
+	 */
+	public void criticalEventOccured(CriticalEvent evt);
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,50 +28,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.initcommands;
+
+import org.jdom.Element;
+
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.config.ConfigException;
 
 /**
- * ModuleExceptions can be thrown when query-ing the ModuleFactory for modules. 
- * 
+ * Command for configurable types
  * @author Eelco Hillenius
  */
-public class ModuleException extends RuntimeException
+public class ConfigurableTypeInitCommand implements InitCommand
 {
+	
+	private Element componentNode = null;
 
 	/**
-	 * construct exception
+	 * initialize
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
 	 */
-	public ModuleException()
+	public void init(
+		String componentName, 
+		Element componentNode,
+		ModuleFactory moduleFactory)
+		throws ConfigException
 	{
-		super();
+		this.componentNode = componentNode;
 	}
 
 	/**
-	 * construct exception with message
-	 * @param message
+	 * call init on the component instance
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
 	 */
-	public ModuleException(String message)
+	public void execute(Object componentInstance) 
+		throws InitCommandException, ConfigException
 	{
-		super(message);
-	}
-
-	/**
-	 * construct exception with message and cause
-	 * @param message
-	 * @param cause
-	 */
-	public ModuleException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
-
-	/**
-	 * construct exception with cause
-	 * @param cause
-	 */
-	public ModuleException(Throwable cause)
-	{
-		super(cause);
+		if(componentInstance instanceof ConfigurableType)
+		{
+			((ConfigurableType)componentInstance).init(this.componentNode);	
+		}
+		else
+		{
+			throw new InitCommandException(
+			"component is not of type ConfigurableType");	
+		}
 	}
 
 }

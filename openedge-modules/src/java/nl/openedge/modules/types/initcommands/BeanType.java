@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,66 +28,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
+package nl.openedge.modules.types.initcommands;
 
 /**
- * event that can be fired by implementors of CriticalEventCaster and that hold a
- * reference to a critical exception
+ * Module that implement this interface will be populated (using BeanUtils).
+ * E.g: take module mypackage.Foo with property Integer bar, the following
+ * configuration fragment will have setBar(Integer val) called with value 12.
+ * <p><pre>
+ *		&lt;module name="FooModule" 
+ *				class="mypackage.Foo"&gt;
+ *			&lt;property name="bar" value="12"/&gt;		
+ *		&lt;/module&gt;
+ * </pre>
+ * 
  * @author Eelco Hillenius
  */
-public class CriticalExceptionEvent extends CriticalEvent
+public interface BeanType 
 {
-
-	private Throwable exception = null;
-
-	/**
-	 * @param source	sender of event
-	 */
-	public CriticalExceptionEvent(Object source, Throwable exception)
-	{
-		super(source);
-		this.exception = exception;
-	}
-
-	/**
-	 * get the embedded exception
-	 * @return Throwable
-	 */
-	public Throwable getException()
-	{
-		return exception;
-	}
-
-	/**
-	 * return stacktrace as a string
-	 * @return String stacktrace as string
-	 */
-	public String getStackTraceAsString()
-	{
-
-		String errorMsg = "";
-		if (exception != null)
-		{
-			try
-			{
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				PrintWriter pw = new PrintWriter(bos);
-				exception.printStackTrace(pw);
-				pw.flush();
-				pw.close();
-				bos.flush();
-				bos.close();
-				errorMsg = bos.toString();
-			}
-			catch (Exception ex)
-			{
-				errorMsg = exception.getMessage();
-			}
-		}
-		return errorMsg;
-	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -30,12 +30,12 @@
  */
 package nl.openedge.modules.test;
 
-import nl.openedge.modules.SingletonModule;
+import nl.openedge.modules.types.base.SingletonType;
 
 /**
  * @author Eelco Hillenius
  */
-public class SingletonModuleImpl implements SingletonModule
+public class SingletonModuleImpl implements SingletonType
 {
 
 	public SingletonModuleImpl()

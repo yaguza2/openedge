@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,15 +28,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types;
+
+import org.jdom.Element;
+
+import nl.openedge.modules.config.ConfigException;
 
 /**
+ * Can construct adapters for a certain type
  * @author Eelco Hillenius
- * 
- * Modules that implement SingletonModuleImpl will be instantiated 
- * exactly once for each configuration entry (name).
  */
-public interface SingletonModule
+public interface AdapterFactory
 {
-
+	/**
+	 * constructs an adapter for a component
+	 * @param componentName name of component
+	 * @param componentNode xml config node of component
+	 * @return ModuleAdapter
+	 * @throws ConfigException
+	 */
+	public ModuleAdapter constructAdapter(
+		String componentName, Element componentNode)
+		throws ConfigException; 
 }

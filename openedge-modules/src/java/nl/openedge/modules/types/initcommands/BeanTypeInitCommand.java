@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,75 +28,73 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.initcommands;
 
-import nl.openedge.util.config.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.jdom.Element;
+
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.config.ConfigException;
 
 /**
- * wrapper for singleton modules
+ * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-class SingletonAdapter extends ModuleAdapter
+public class BeanTypeInitCommand implements InitCommand
 {
-
-	protected Object singletonInstance;
+	
+	private Map properties = null;
 
 	/**
-	 * construct with class and create and store singleton instance
-	 * @param moduleClass	class of module
-	 * @see nl.openedge.modules.ModuleAdapter#setModuleClass(java.lang.Class) 
+	 * initialize
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
 	 */
-	protected void setModuleClass(Class moduleClass) throws ConfigException
+	public void init(
+		String componentName, 
+		Element componentNode,
+		ModuleFactory moduleFactory)
+		throws ConfigException
 	{
-		// set instance
-		try
+		this.properties = new HashMap();
+		List pList = componentNode.getChildren("property");
+		if (pList != null)
 		{
-			this.singletonInstance = moduleClass.newInstance();
-		}
-		catch (InstantiationException ex)
-		{
-			throw new ConfigException(ex);
-		}
-		catch (IllegalAccessException ex)
-		{
-			throw new ConfigException(ex);
-		}
-		this.moduleClass = moduleClass;
-		// is this a bean?
-		if (singletonInstance instanceof BeanModule)
-		{
-			// try to set its properties
-			try
+			for (Iterator j = pList.iterator(); j.hasNext();)
 			{
-				BeanUtils.populate(singletonInstance, this.properties);
+
+				Element pElement = (Element)j.next();
+				properties.put(pElement.getAttributeValue("name"), 
+							pElement.getAttributeValue("value"));
 			}
-			catch (Exception e)
-			{
-				throw new ConfigException(e);
-			}
-		}
-		// do we have to configure?
-		if (singletonInstance instanceof Configurable)
-		{
-			((Configurable)singletonInstance).init(this.configNode);
-		}
-		// register as CriticalEventCaster?
-		if (singletonInstance instanceof CriticalEventCaster)
-		{
-			((CriticalEventCaster)singletonInstance).addObserver(this.moduleFactory);
+				
 		}
 	}
 
 	/**
-	 * get instance of module
-	 * @return new instance for each request
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
+	 * populate the component instance
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
 	 */
-	public Object getModule() throws ModuleException
+	public void execute(Object componentInstance) 
+		throws InitCommandException, ConfigException
 	{
-		return singletonInstance;
+
+		if(properties != null)
+		{
+			// try to set its properties
+			try
+			{
+				BeanUtils.populate(componentInstance, this.properties);
+			}
+			catch (Exception e)
+			{
+				throw new ConfigException(e);
+			}	
+		}
 	}
 
 }

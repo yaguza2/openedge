@@ -28,74 +28,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
-
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import nl.openedge.modules.Configurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
-import nl.openedge.modules.config.URLHelper;
+package nl.openedge.modules;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
+ * ModuleExceptions can be thrown when query-ing the ModuleFactory for modules. 
  * 
- * @author E.F. Hillenius
+ * @author Eelco Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public class ModuleLookpupException extends RuntimeException
 {
 
-	/** access factory */
-	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
-
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
-
-	/** 
-	 * initialise
+	/**
+	 * construct exception
 	 */
-	protected void init() throws Exception
+	public ModuleLookpupException()
 	{
-
-		loadModuleFactory();
+		super();
 	}
 
 	/**
-	 * load the module factory
-	 * @throws Exception
+	 * construct exception with message
+	 * @param message
 	 */
-	protected void loadModuleFactory() throws Exception
+	public ModuleLookpupException(String message)
 	{
-
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				Configurator c = new Configurator(url);
-				moduleFactory = ModuleFactoryFactory.getInstance();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
+		super(message);
 	}
+
+	/**
+	 * construct exception with message and cause
+	 * @param message
+	 * @param cause
+	 */
+	public ModuleLookpupException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * construct exception with cause
+	 * @param cause
+	 */
+	public ModuleLookpupException(Throwable cause)
+	{
+		super(cause);
+	}
+
 }

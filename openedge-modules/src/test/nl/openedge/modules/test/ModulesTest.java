@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -94,6 +94,8 @@ public class ModulesTest extends AbstractTestBase
 			ConfigurableModuleImpl module = (ConfigurableModuleImpl)
 					moduleFactory.getModule("ConfigurableTest");
 			assertNotNull(module);
+			
+			assertNotNull(module.getMessage());
 
 		}
 		catch (Exception e)

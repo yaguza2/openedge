@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,21 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.base;
+
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.AdapterFactory;
+import nl.openedge.modules.types.ModuleAdapter;
+
+import org.jdom.Element;
 
 /**
- * a critical even observer listenes for events that are cast by modules that 
- * are <code>CriticalEventCaster</code>s or the <code>ModuleFactory</code>.
- * 
+ * Factory for singleton types
  * @author Eelco Hillenius
  */
-public interface CriticalEventObserver extends ModuleFactoryObserver 
+public class SingletonTypeAdapterFactory implements AdapterFactory
 {
 
 	/**
-	 * fired when (according to the implementing module) a critical event occured
-	 * @param evt the critical event
+	 * Just construct a new singleton adapter
+	 * @see nl.openedge.modules.types.AdapterFactory#constructAdapter(java.lang.String, org.jdom.Element)
 	 */
-	public void criticalEventOccured(CriticalEvent evt);
+	public ModuleAdapter constructAdapter(String componentName, Element componentNode)
+		throws ConfigException
+	{
+		return new SingletonTypeAdapter();
+	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,70 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.observers;
 
-import nl.openedge.util.config.*;
+import java.util.EventObject;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.quartz.Scheduler;
 
 /**
- * wrapper for throw away modules
+ * fired when scheduler was started
  * @author Eelco Hillenius
  */
-class ThrowAwayAdapter extends ModuleAdapter
+public class SchedulerStartedEvent extends EventObject
 {
 
+	protected Scheduler scheduler = null;
+
 	/**
-	 * get instance of module
-	 * @return new instance for each request
-	 * @see nl.openedge.modules.ModuleAdapter#getModule()
+	 * @param source	sender of event
+	 * @param scheduler	subject of event
 	 */
-	public Object getModule() throws ModuleException
+	public SchedulerStartedEvent(Object source, Scheduler scheduler)
 	{
-
-		Object instance = null;
-		try
-		{
-			instance = moduleClass.newInstance();
-		}
-		catch (InstantiationException ex)
-		{
-			throw new ModuleException(ex);
-		}
-		catch (IllegalAccessException ex)
-		{
-			throw new ModuleException(ex);
-		}
-		if (instance instanceof BeanModule)
-		{
-			// try to set its properties
-			try
-			{
-				BeanUtils.populate(instance, this.properties);
-			}
-			catch (Exception e)
-			{
-				throw new ModuleException(e);
-			}
-		}
-		// do we have to configure?
-		if (instance instanceof Configurable)
-		{
-			try
-			{
-				((Configurable)instance).init(configNode);
-			}
-			catch (ConfigException e)
-			{
-				throw new ModuleException(e);
-			}
-		}
-		// register as CriticalEventCaster?
-		if (instance instanceof CriticalEventCaster)
-		{
-			((CriticalEventCaster)instance).addObserver(this.moduleFactory);
-		}
-
-		return instance;
+		super(source);
+		this.scheduler = scheduler;
 	}
+
 }

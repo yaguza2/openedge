@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -34,7 +34,8 @@ import java.net.URL;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.util.config.*;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.config.DocumentLoader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -143,6 +144,7 @@ public class Configurator
 	 */
 	public void reload() throws ConfigException
 	{
+		ModuleFactoryFactory.reset();
 		Document configuration = null;
 		if (configURL != null)
 		{

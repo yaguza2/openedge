@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,13 +28,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.initcommands;
+
+import org.jdom.Element;
+
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.config.ConfigException;
 
 /**
- * Generic interface for observers of module factory events
+ * do some additional processing (like configurating) with types at 
+ * initialization time
  * @author Eelco Hillenius
  */
-public interface ModuleFactoryObserver
+public interface InitCommand
 {
-
+	
+	/**
+	 * initialize the command
+	 * @param componentName name of component
+	 * @param componentNode xml config node of component
+	 * @param instance of module factory
+	 * @throws ConfigException
+	 */
+	public void init(
+		String componentName, 
+		Element componentNode,
+		ModuleFactory moduleFactory)
+		throws ConfigException; 
+	
+	/**
+	 * execute the command
+	 * @param componentInstance instance of the component
+	 * @throws InitCommandException
+	 * @throws ConfigException
+	 */
+	public void execute(Object componentInstance)
+		throws InitCommandException, ConfigException;
 }

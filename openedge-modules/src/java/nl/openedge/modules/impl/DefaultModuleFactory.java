@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.impl;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -45,12 +45,17 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.util.DateConverter;
-import nl.openedge.util.config.ConfigException;
-import nl.openedge.util.config.URLHelper;
+import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.config.*;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.config.URLHelper;
+import nl.openedge.modules.observers.*;
+import nl.openedge.modules.types.*;
+import nl.openedge.modules.types.base.*;
+import nl.openedge.modules.types.initcommands.InitCommand;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
@@ -66,7 +71,7 @@ import org.quartz.Trigger;
  * 
  * @author Eelco Hillenius
  */
-public class ModuleFactoryImpl implements ModuleFactory
+public class DefaultModuleFactory implements ModuleFactory
 {
 
 	/**
@@ -95,12 +100,9 @@ public class ModuleFactoryImpl implements ModuleFactory
 	/** holder for module adapters that implement job interface */
 	protected Map jobs = null;
 	/** counter for jobs with the same name */
-	protected Map jobCount = new HashMap();
 
 	/** holder for triggers */
 	protected Map triggers = null;
-	/** counter for triggers with the same name */
-	protected Map triggerCount = new HashMap();
 
 	/** quartz scheduler */
 	protected Scheduler scheduler;
@@ -111,7 +113,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 	/**
 	 * construct
 	 */
-	protected ModuleFactoryImpl() 
+	public DefaultModuleFactory() 
 	{
 		// nothing here
 	}
@@ -142,8 +144,10 @@ public class ModuleFactoryImpl implements ModuleFactory
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
-	public void init(Element factoryNode, ServletContext servletContext) 
-					throws ConfigException
+	public void init(
+			Element factoryNode, 
+			ServletContext servletContext) 
+			throws ConfigException
 	{
 		
 		internalInit(factoryNode, servletContext);
@@ -153,13 +157,11 @@ public class ModuleFactoryImpl implements ModuleFactory
 
 	/* do 'real' initialisation */
 	private void internalInit(
-			Element factoryNode, ServletContext servletContext)
+			Element factoryNode, 
+			ServletContext servletContext) 
 			throws ConfigException
 	{
 
-		// initialise BeanUtils converters
-		initConverters();
-		// get node for quartz scheduler
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
 		{
@@ -172,6 +174,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 		this.modules = mods[0];
 		this.jobs = mods[1];
 
+		//	get node for quartz scheduler
 		Element schedulerNode = factoryNode.getChild("scheduler");
 		if (schedulerNode != null)
 		{
@@ -197,7 +200,8 @@ public class ModuleFactoryImpl implements ModuleFactory
 			else
 			{
 				log.warn(
-					"allthough a scheduler node was found in the " + "configuration, there is nothing to schedule!");
+					"allthough a scheduler node was found in the " + 
+					"configuration, there is nothing to schedule!");
 			}
 		}
 		else
@@ -221,7 +225,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 			String proploc = node.getAttributeValue("properties");
 			try
 			{
-				URL urlproploc = URLHelper.convertToURL(proploc, ModuleFactoryImpl.class, context);
+				URL urlproploc = URLHelper.convertToURL(proploc, DefaultModuleFactory.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			}
@@ -265,8 +269,10 @@ public class ModuleFactoryImpl implements ModuleFactory
 	 * @return array of maps; first has all modules, second has subset of
 	 * modules that are jobs
 	 */
-	private Map[] getModules(Element modulesNode, ClassLoader classLoader) 
-						throws ConfigException
+	private Map[] getModules(			
+			Element modulesNode, 
+			ClassLoader classLoader) 
+			throws ConfigException
 	{
 
 		Map modules = new HashMap();
@@ -280,7 +286,9 @@ public class ModuleFactoryImpl implements ModuleFactory
 			String name = node.getAttributeValue("name");
 			if (modules.get(name) != null)
 			{
-				throw new ConfigException("names of modules have to be unique!" + name + " is used more than once");
+				throw new ConfigException(
+						"names of modules have to be unique!" 
+						+ name + " is used more than once");
 			}
 			String className = node.getAttributeValue("class");
 			ModuleAdapter adapter = null;
@@ -293,65 +301,74 @@ public class ModuleFactoryImpl implements ModuleFactory
 			{
 				throw new ConfigException(cnfe);
 			}
-			// check singleton or throwaway
-			if (SingletonModule.class.isAssignableFrom(clazz))
-			{
-
-				adapter = new SingletonAdapter();
-
-			}
-			else if (ThrowAwayModule.class.isAssignableFrom(clazz))
-			{
-
-				adapter = new ThrowAwayAdapter();
-
-			}
-			else if (Job.class.isAssignableFrom(clazz))
-			{
-
-				adapter = new JobAdapter();
-				((JobAdapter)adapter).initJobData(node);
-				jobs.put(name, adapter);
-
-			}
-			else
+			
+			List baseTypes = TypesRegistry.getBaseTypes();
+			if(baseTypes == null)
 			{
 				throw new ConfigException(
-					"Modules must implement "
-						+ SingletonModule.class.getName()
-						+ ", "
-						+ ThrowAwayModule.class.getName()
-						+ " or "
-						+ Job.class.getName());
+					"there are no base types registered!");
 			}
-
-			// is this class a bean?
-			if (BeanModule.class.isAssignableFrom(clazz))
+			
+			boolean wasFoundOnce = false;
+			for(Iterator j = baseTypes.iterator(); j.hasNext(); )
 			{
-				Map properties = new HashMap();
-				List pList = node.getChildren("property");
-				if (pList != null)
-					for (Iterator j = pList.iterator(); j.hasNext();)
+				Class baseType = (Class)j.next();
+				if(baseType.isAssignableFrom(clazz))
+				{
+					if(wasFoundOnce) // more than one base type!
 					{
-
-						Element pElement = (Element)j.next();
-						properties.put(pElement.getAttributeValue("name"), pElement.getAttributeValue("value"));
+						throw new ConfigException(
+							"component " + name + 
+							" is of more than one registered base type!");
 					}
-				adapter.setProperties(properties);
+					wasFoundOnce = true;
+					
+					AdapterFactory adapterFactory =
+						TypesRegistry.getAdapterFactory(baseType);
+					
+					adapter = adapterFactory.constructAdapter(name, node);
+				}
 			}
-
-			// does this class want to configure?
-			// set this BEFORE setModuleClass as a singleton may want to 
-			// configure right away
-			if (Configurable.class.isAssignableFrom(clazz))
+			if(adapter == null)
 			{
-				adapter.setConfigNode(node);
+				throw new ConfigException(
+					"no adapter could be created for " + name + 
+					", class " + clazz);
 			}
-
-			adapter.setModuleFactory(this);
-			adapter.setModuleClass(clazz);
 			adapter.setName(name);
+			adapter.setModuleFactory(this);
+			
+			List initCommands = TypesRegistry.getInitCommandTypes();
 
+			if(initCommands != null)
+			{
+				List commands = new ArrayList();
+				for(Iterator j = initCommands.iterator(); j.hasNext(); )
+				{
+					Class type = (Class)j.next();
+					if(type.isAssignableFrom(clazz))
+					{
+						// get command for this class
+						InitCommand initCommand = 
+							TypesRegistry.getInitCommand(type);
+						// initialize the command
+						initCommand.init(name, node, this);
+						// add command to the list
+						commands.add(initCommand);
+					}
+				}
+				
+				InitCommand[] cmds = (InitCommand[])
+					commands.toArray(new InitCommand[commands.size()]);
+				
+				if(cmds.length > 0)
+				{
+					adapter.setInitCommands(cmds);	
+				}
+			}
+			
+			adapter.setModuleClass(clazz);
+			// store component
 			modules.put(name, adapter);
 			log.info("stored " + className + " with name: " + name);
 
@@ -364,7 +381,8 @@ public class ModuleFactoryImpl implements ModuleFactory
 	 * get triggers from config
 	 * @return map of jobs
 	 */
-	private Map getTriggers(Element schedulerNode, ClassLoader classLoader) throws ConfigException
+	protected Map getTriggers(Element schedulerNode, ClassLoader classLoader) 
+		throws ConfigException
 	{
 
 		Map triggers = new HashMap();
@@ -416,7 +434,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 	/*
 	 * schedule jobs
 	 */
-	private void scheduleJobs(Element schedulerNode, ClassLoader classLoader) throws ConfigException
+	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader) throws ConfigException
 	{
 
 		//get job excecution map from config
@@ -434,7 +452,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 			{
 				throw new ConfigException(triggerName + " is not a registered trigger");
 			}
-			JobAdapter job = (JobAdapter)jobs.get(moduleName);
+			JobTypeAdapter job = (JobTypeAdapter)jobs.get(moduleName);
 			if (job == null)
 			{
 				throw new ConfigException(moduleName + " is not a module");
@@ -442,9 +460,11 @@ public class ModuleFactoryImpl implements ModuleFactory
 			if (!Job.class.isAssignableFrom(job.getModuleClass()))
 			{
 				throw new ConfigException(
-					"module " + moduleName + " is not a job (does not implement " + Job.class.getName() + ")");
+					"module " + moduleName + " is not a job (does not implement " 
+					+ Job.class.getName() + ")");
 			}
-			JobDetail jobDetail = new JobDetail(job.getName(), job.getGroup(), job.getModuleClass());
+			JobDetail jobDetail = new JobDetail(
+				job.getName(), job.getGroup(), job.getModuleClass());
 			jobDetail.setJobDataMap(job.getJobData());
 			try
 			{ //start schedule job/trigger combination
@@ -493,16 +513,6 @@ public class ModuleFactoryImpl implements ModuleFactory
 		
 		scheduler.scheduleJob(jobDetail, trigger);
 		return sceduleName;
-	}
-
-	/**
-	 * Initialize the custom beanutils converters here
-	 */
-	public void initConverters()
-	{
-		// TODO: make this configurable
-		DateConverter dc = new DateConverter();
-		ConvertUtils.register(dc, java.util.Date.class);
 	}
 
 	//--------------------------- NON-INIT METHODS -----------------------------//
@@ -562,7 +572,7 @@ public class ModuleFactoryImpl implements ModuleFactory
 		ModuleAdapter moduleAdapter = (ModuleAdapter)modules.get(name);
 		if (moduleAdapter == null)
 		{
-			throw new ModuleException("unable to find module with name: " + name);
+			throw new ModuleLookpupException("unable to find module with name: " + name);
 		}
 		return moduleAdapter.getModule();
 	}

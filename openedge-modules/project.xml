@@ -35,11 +35,11 @@
   <developers>
     <developer>
       <name>Eelco Hillenius</name>
-      <id>eelco</id>
+      <id>eelco12</id>
       <email>eelco.hillenius@openedge.nl</email>
       <organization>Open Edge</organization>
       <roles>
-        <role>Java Developer</role>
+        <role>Developer/ Maintainer</role>
       </roles>
       <timezone>+1</timezone>
     </developer>
@@ -49,7 +49,7 @@
       <email>sander.hofstee@openedge.nl</email>
       <organization>Open Edge</organization>
       <roles>
-        <role>Java Developer</role>
+        <role>Contributor</role>
       </roles>
       <timezone>+1</timezone>
     </developer>
@@ -59,7 +59,17 @@
       <email>klaasjan.brand@openedge.nl</email>
       <organization>Open Edge</organization>
       <roles>
-        <role>Java Developer</role>
+        <role>Contributor</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <name>Johan Compagner</name>
+      <id>candyman</id>
+      <email>jcompagner@j-com.nl</email>
+      <organization>JCom</organization>
+      <roles>
+        <role>Contributor</role>
       </roles>
       <timezone>+1</timezone>
     </developer>
@@ -77,26 +87,14 @@
 
     <dependency>
       <id>commons-beanutils</id>
-      <version>1.5</version>
+      <version>1.6.1</version>
       <url>http://jakarta.apache.org/commons/beanutils/</url>
-    </dependency>
-    
-    <dependency>
-      <id>commons-cli</id>
-      <version>1.0-beta-2-dev</version>
-      <url>http://jakarta.apache.org/commons/cli/</url>
     </dependency>
 
     <dependency>
       <id>commons-collections</id>
-      <version>2.0</version>
+      <version>3.0-dev</version>
       <url>http://jakarta.apache.org/commons/collections/</url>
-    </dependency>
-
-    <dependency>
-      <id>commons-dbcp</id>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/dbcp/</url>
     </dependency>
     
     <dependency>
@@ -104,23 +102,11 @@
       <version>1.1-dev</version>
       <url>http://jakarta.apache.org/commons/logging/</url>
     </dependency>
-
-    <dependency>
-      <id>commons-pool</id>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/pool/</url>
-    </dependency>
     
     <dependency>
       <id>jdom</id>
-      <version>b8</version>
+      <version>b9</version>
       <url>http://www.jdom.org/</url>
-    </dependency>
-    
-    <dependency>
-      <id>mm.mysql</id>
-      <version>2.0.14-bin</version>
-      <url>http://sourceforge.net/projects/mmmysql/</url>
     </dependency>
 
     <dependency>
@@ -134,16 +120,10 @@
       <version>2.3</version>
     </dependency>
 
-    <dependency>
-      <id>openedge-utils</id>
-      <version>SNAPSHOT</version>
-      <url>http://www.openedge.nl</url>
-    </dependency>
-
   </dependencies>
 
   <build>
-    <nagEmailAddress>info@openedge.nl</nagEmailAddress>
+    <nagEmailAddress>eelco.hillenius@openedge.nl</nagEmailAddress>
     
     <sourceDirectory>src/java</sourceDirectory>
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>

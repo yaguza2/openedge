@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,22 +28,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.config;
 
 /**
- * Module that implement this interface will be populated (using BeanUtils).
- * E.g: take module mypackage.Foo with property Integer bar, the following
- * configuration fragment will have setBar(Integer val) called with value 12.
- * <p><pre>
- *		&lt;module name="FooModule" 
- *				class="mypackage.Foo"&gt;
- *			&lt;property name="bar" value="12"/&gt;		
- *		&lt;/module&gt;
- * </pre>
- * 
+ * Generic interface for observers of module factory events
  * @author Eelco Hillenius
  */
-public interface BeanModule 
+public interface ModuleFactoryObserver
 {
 
 }

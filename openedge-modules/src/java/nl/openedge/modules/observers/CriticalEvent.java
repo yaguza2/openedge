@@ -28,74 +28,25 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules.observers;
 
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import nl.openedge.modules.Configurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
-import nl.openedge.modules.config.URLHelper;
+import java.util.EventObject;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
- * 
- * @author E.F. Hillenius
+ * high-level event that can be fired by implementors of CriticalEventCaster
+ * @author Eelco Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public class CriticalEvent extends EventObject 
 {
 
-	/** access factory */
-	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
-
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
-
-	/** 
-	 * initialise
-	 */
-	protected void init() throws Exception
-	{
-
-		loadModuleFactory();
-	}
-
 	/**
-	 * load the module factory
-	 * @throws Exception
+	 * @param source	sender of event
 	 */
-	protected void loadModuleFactory() throws Exception
+	public CriticalEvent(Object source) 
 	{
-
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				Configurator c = new Configurator(url);
-				moduleFactory = ModuleFactoryFactory.getInstance();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
+		super(source);
 	}
+	
+	
+
 }

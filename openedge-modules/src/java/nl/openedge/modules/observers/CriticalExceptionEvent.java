@@ -28,74 +28,66 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules.observers;
 
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import nl.openedge.modules.Configurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
-import nl.openedge.modules.config.URLHelper;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
- * 
- * @author E.F. Hillenius
+ * event that can be fired by implementors of CriticalEventCaster and that hold a
+ * reference to a critical exception
+ * @author Eelco Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public class CriticalExceptionEvent extends CriticalEvent
 {
 
-	/** access factory */
-	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
+	private Throwable exception = null;
 
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
-
-	/** 
-	 * initialise
+	/**
+	 * @param source	sender of event
 	 */
-	protected void init() throws Exception
+	public CriticalExceptionEvent(Object source, Throwable exception)
 	{
-
-		loadModuleFactory();
+		super(source);
+		this.exception = exception;
 	}
 
 	/**
-	 * load the module factory
-	 * @throws Exception
+	 * get the embedded exception
+	 * @return Throwable
 	 */
-	protected void loadModuleFactory() throws Exception
+	public Throwable getException()
+	{
+		return exception;
+	}
+
+	/**
+	 * return stacktrace as a string
+	 * @return String stacktrace as string
+	 */
+	public String getStackTraceAsString()
 	{
 
-		if (!initialised)
+		String errorMsg = "";
+		if (exception != null)
 		{
-			initialised = true;
 			try
 			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				Configurator c = new Configurator(url);
-				moduleFactory = ModuleFactoryFactory.getInstance();
-
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				PrintWriter pw = new PrintWriter(bos);
+				exception.printStackTrace(pw);
+				pw.flush();
+				pw.close();
+				bos.flush();
+				bos.close();
+				errorMsg = bos.toString();
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				e.printStackTrace();
-				throw e;
+				errorMsg = exception.getMessage();
 			}
 		}
+		return errorMsg;
 	}
+
 }

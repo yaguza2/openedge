@@ -28,74 +28,62 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules.types.base;
 
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import nl.openedge.modules.Configurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
-import nl.openedge.modules.config.URLHelper;
+import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.ModuleAdapter;
+import nl.openedge.modules.types.initcommands.InitCommandException;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
- * 
- * @author E.F. Hillenius
+ * wrapper for singleton modules
+ * @author Eelco Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public class SingletonTypeAdapter extends ModuleAdapter
 {
 
-	/** access factory */
-	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
+	protected Object singletonInstance;
 
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
-
-	/** 
-	 * initialise
+	/**
+	 * construct with class and create and store singleton instance
+	 * @param moduleClass	class of module
+	 * @see nl.openedge.modules.ModuleAdapter#setModuleClass(java.lang.Class) 
 	 */
-	protected void init() throws Exception
+	public void setModuleClass(Class moduleClass) throws ConfigException
 	{
-
-		loadModuleFactory();
+		// set instance
+		try
+		{
+			this.singletonInstance = moduleClass.newInstance();
+		}
+		catch (InstantiationException ex)
+		{
+			throw new ConfigException(ex);
+		}
+		catch (IllegalAccessException ex)
+		{
+			throw new ConfigException(ex);
+		}
+		this.moduleClass = moduleClass;
+		
+		try
+		{
+			executeInitCommands(singletonInstance);
+		}
+		catch (InitCommandException e)
+		{
+			throw new ConfigException(e);
+		}
 	}
 
 	/**
-	 * load the module factory
-	 * @throws Exception
+	 * get instance of module
+	 * @return new instance for each request
+	 * @see nl.openedge.modules.ModuleAdapter#getModule()
 	 */
-	protected void loadModuleFactory() throws Exception
+	public Object getModule() throws ModuleLookpupException
 	{
-
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				Configurator c = new Configurator(url);
-				moduleFactory = ModuleFactoryFactory.getInstance();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
+		return singletonInstance;
 	}
+
 }

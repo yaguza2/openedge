@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,56 +28,37 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types;
 
-import java.util.Map;
-
-import nl.openedge.util.config.*;
-
-import org.jdom.Element;
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.initcommands.*;
 
 /**
  * common base for module wrappers
  * @author Eelco Hillenius
  */
-abstract class ModuleAdapter
+public abstract class ModuleAdapter
 {
-
-	/** modulefactory for two way navigation */
-	protected ModuleFactory moduleFactory = null;
 
 	/** class of module */
 	protected Class moduleClass = null;
 
 	/** name (alias) of module */
 	protected String name = null;
+	
+	/** module factory for two way navigation */
+	protected ModuleFactory moduleFactory = null;
 
-	/** 
-	 * if the module wants to have the possiblity to configure from the
-	 * configuration file, this is it's node
-	 */
-	protected Element configNode = null;
-
-	/**
-	 * if the module is a bean, store a map of (string) properties
-	 * for later use
-	 */
-	protected Map properties = null;
-
-	/**
-	 * set instance of moduleFactory
-	 * @param moduleFactory
-	 */
-	public void setModuleFactory(ModuleFactory moduleFactory)
-	{
-		this.moduleFactory = moduleFactory;
-	}
+	/** init commands */
+	private InitCommand[] initCommands = null;
 
 	/**
 	 * construct with class
 	 * @param moduleClass	class of module
 	 */
-	protected void setModuleClass(Class moduleClass) throws ConfigException
+	public void setModuleClass(Class moduleClass) throws ConfigException
 	{
 		// test first
 		Object instance = null;
@@ -93,23 +74,26 @@ abstract class ModuleAdapter
 		{
 			throw new ConfigException(ex);
 		}
-		// class is ok so far
-		// test configuration as well
-		if (instance instanceof Configurable)
-		{
-			((Configurable)instance).init(configNode);
-		}
-		// all's ok
 		this.moduleClass = moduleClass;
 	}
 
 	/**
-	 * sets the name from config
-	 * @param name	alias for this instance
+	 * execute the commands
+	 * @param componentInstance instance to execute commands on
+	 * @throws InitCommandException
+	 * @throws ConfigException
 	 */
-	protected void setName(String name)
+	protected void executeInitCommands(Object componentInstance)
+		throws InitCommandException, ConfigException 
 	{
-		this.name = name;
+		
+		if(initCommands != null && (initCommands.length > 0))
+		{
+			for(int i = 0; i < initCommands.length; i++)
+			{
+				initCommands[i].execute(componentInstance);
+			}
+		}
 	}
 
 	/**
@@ -122,16 +106,13 @@ abstract class ModuleAdapter
 	}
 
 	/**
-	 * set configuration node of this module instance
-	 * @param configNode XML (JDOM) node
+	 * sets the name from config
+	 * @param name	alias for this instance
 	 */
-	public final void setConfigNode(Element configNode)
+	public void setName(String name)
 	{
-		this.configNode = configNode;
+		this.name = name;
 	}
-
-	/** get instantiated module */
-	public abstract Object getModule() throws ModuleException;
 
 	/**
 	 * @return Class of module
@@ -141,21 +122,42 @@ abstract class ModuleAdapter
 	{
 		return moduleClass;
 	}
-
+	
 	/**
-	 * @return Map
+	 * get module factory
+	 * @return ModuleFactory
 	 */
-	public Map getProperties()
+	public ModuleFactory getModuleFactory()
 	{
-		return properties;
+		return moduleFactory;
 	}
 
 	/**
-	 * @param properties
+	 * set module factory
+	 * @param factory module factory
 	 */
-	public void setProperties(Map properties)
+	public void setModuleFactory(ModuleFactory factory)
 	{
-		this.properties = properties;
+		moduleFactory = factory;
 	}
+
+	/**
+	 * @return
+	 */
+	public InitCommand[] getInitCommands()
+	{
+		return initCommands;
+	}
+
+	/**
+	 * @param commands
+	 */
+	public void setInitCommands(InitCommand[] commands)
+	{
+		this.initCommands = commands;
+	}
+	
+	/** get instantiated module */
+	public abstract Object getModule() throws ModuleLookpupException;
 
 }

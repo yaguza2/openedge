@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,26 +28,49 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.base;
 
-import nl.openedge.util.config.*;
-
-import org.jdom.Element;
+import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.types.ModuleAdapter;
 
 /**
- * A class that is Configurable can be initialised with an XML node of
- * the main configuration file
- * 
- * @author E.F. Hillenius
+ * wrapper for throw away modules
+ * @author Eelco Hillenius
  */
-public interface Configurable 
+public class ThrowAwayTypeAdapter extends ModuleAdapter
 {
 
 	/**
-	 * initialise with xml element
-	 * @param configNode
-	 * @exception ConfigException
+	 * get instance of module
+	 * @return new instance for each request
+	 * @see nl.openedge.modules.ModuleAdapter#getModule()
 	 */
-	public void init(Element configNode) throws ConfigException;
+	public Object getModule() throws ModuleLookpupException
+	{
 
+		Object instance = null;
+		try
+		{
+			instance = moduleClass.newInstance();
+		}
+		catch (InstantiationException ex)
+		{
+			throw new ModuleLookpupException(ex);
+		}
+		catch (IllegalAccessException ex)
+		{
+			throw new ModuleLookpupException(ex);
+		}
+		
+		try
+		{
+			executeInitCommands(instance);
+		}
+		catch (Exception e)
+		{
+			throw new ModuleLookpupException(e);
+		}
+
+		return instance;
+	}
 }

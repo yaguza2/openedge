@@ -28,74 +28,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
+package nl.openedge.modules.types.initcommands;
 
-import java.net.URL;
+import nl.openedge.modules.config.ConfigException;
 
-import junit.framework.TestCase;
-
-import nl.openedge.modules.Configurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
-import nl.openedge.modules.config.URLHelper;
+import org.jdom.Element;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
+ * A class that is ConfigurableType can be initialised with an XML node of
+ * the main configuration file
  * 
  * @author E.F. Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public interface ConfigurableType 
 {
 
-	/** access factory */
-	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
-
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
-
-	/** 
-	 * initialise
-	 */
-	protected void init() throws Exception
-	{
-
-		loadModuleFactory();
-	}
-
 	/**
-	 * load the module factory
-	 * @throws Exception
+	 * initialise with xml element
+	 * @param configNode
+	 * @exception ConfigException
 	 */
-	protected void loadModuleFactory() throws Exception
-	{
+	public void init(Element configNode) throws ConfigException;
 
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				Configurator c = new Configurator(url);
-				moduleFactory = ModuleFactoryFactory.getInstance();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
-	}
 }

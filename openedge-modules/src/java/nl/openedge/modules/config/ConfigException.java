@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,25 +28,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
-
-import java.util.EventObject;
+package nl.openedge.modules.config;
 
 /**
- * high-level event that can be fired by implementors of CriticalEventCaster
+ * ConfigExceptions are exceptions that are related to 
+ * 
  * @author Eelco Hillenius
  */
-public class CriticalEvent extends EventObject 
+public class ConfigException extends Exception
 {
 
 	/**
-	 * @param source	sender of event
+	 * construct 
 	 */
-	public CriticalEvent(Object source) 
+	public ConfigException()
 	{
-		super(source);
+		super();
 	}
-	
-	
+
+	/**
+	 * @param message
+	 */
+	public ConfigException(String message)
+	{
+		super(message);
+	}
+
+	/**
+	 * @param message
+	 * @param cause
+	 */
+	public ConfigException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * @param cause
+	 */
+	public ConfigException(Throwable cause)
+	{
+		super(cause);
+	}
 
 }

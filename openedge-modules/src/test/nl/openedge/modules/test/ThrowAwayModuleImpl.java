@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -30,12 +30,12 @@
  */
 package nl.openedge.modules.test;
 
-import nl.openedge.modules.ThrowAwayModule;
+import nl.openedge.modules.types.base.ThrowAwayType;
 
 /**
  * @author Eelco Hillenius
  */
-public class ThrowAwayModuleImpl implements ThrowAwayModule
+public class ThrowAwayModuleImpl implements ThrowAwayType
 {
 
 	public ThrowAwayModuleImpl()

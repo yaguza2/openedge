@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -34,15 +34,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.openedge.modules.CriticalEventObserver;
-import nl.openedge.modules.CriticalExceptionEvent;
-import nl.openedge.modules.CriticalEventCaster;
-import nl.openedge.modules.SingletonModule;
+import nl.openedge.modules.observers.CriticalEventCaster;
+import nl.openedge.modules.observers.CriticalEventObserver;
+import nl.openedge.modules.observers.CriticalExceptionEvent;
+import nl.openedge.modules.types.base.SingletonType;
 
 /**
  * @author Eelco Hillenius
  */
-public class CriticalModuleImpl implements SingletonModule, CriticalEventCaster
+public class CriticalModuleImpl implements SingletonType, CriticalEventCaster
 {
 
 	// observers

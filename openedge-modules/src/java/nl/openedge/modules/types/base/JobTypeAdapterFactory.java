@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,23 +28,32 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.base;
+
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.AdapterFactory;
+import nl.openedge.modules.types.ModuleAdapter;
+
+import org.jdom.Element;
 
 /**
- * A critical module can fire critical events. Critical modules have a central 
- * role in the whole system and want to be able to send events 
- * (e.g. 'emergency events') to other parts of the system 
- * (e.g. a controller servlet)
- * 
+ * Factory for Quartz job adapters
  * @author Eelco Hillenius
  */
-public interface CriticalEventCaster 
+public class JobTypeAdapterFactory implements AdapterFactory
 {
 
 	/**
-	 * adds an observer for CriticalEvents
-	 * @param observer
+	 * construct a new job adapter
+	 * @see nl.openedge.modules.types.AdapterFactory#constructAdapter(java.lang.String, org.jdom.Element)
 	 */
-	public void addObserver(CriticalEventObserver observer); 
+	public ModuleAdapter constructAdapter(String componentName, Element componentNode)
+		throws ConfigException
+	{
+		JobTypeAdapter adapter = new JobTypeAdapter();
+		((JobTypeAdapter)adapter).initJobData(componentNode);
+		
+		return adapter;
+	}
 
 }

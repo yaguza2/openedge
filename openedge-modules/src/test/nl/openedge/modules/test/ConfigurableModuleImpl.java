@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -32,15 +32,17 @@ package nl.openedge.modules.test;
 
 import org.jdom.Element;
 
-import nl.openedge.modules.Configurable;
-import nl.openedge.modules.SingletonModule;
-import nl.openedge.util.config.ConfigException;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.base.SingletonType;
+import nl.openedge.modules.types.initcommands.ConfigurableType;
 
 /**
  * @author Eelco Hillenius
  */
-public class ConfigurableModuleImpl implements SingletonModule, Configurable
+public class ConfigurableModuleImpl implements SingletonType, ConfigurableType
 {
+
+	private String message = null;
 
 	public ConfigurableModuleImpl()
 	{
@@ -49,7 +51,8 @@ public class ConfigurableModuleImpl implements SingletonModule, Configurable
 
 	public void init(Element configNode) throws ConfigException
 	{
-		System.out.println(getClass().getName() + ": initialised with " + configNode);
+		System.out.println(getClass().getName() 
+			+ ": initialised with " + configNode);
 		Element p1 = configNode.getChild("param1");
 		if (p1 == null)
 			throw new ConfigException("where's param1?");
@@ -62,6 +65,16 @@ public class ConfigurableModuleImpl implements SingletonModule, Configurable
 		String val = p2.getTextNormalize();
 		if (val == null || (!val.equals("Bar")))
 			throw new ConfigException("value of param2 should be Bar!");
+			
+		this.message = "HELLO!";
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getMessage()
+	{
+		return message;
 	}
 
 }

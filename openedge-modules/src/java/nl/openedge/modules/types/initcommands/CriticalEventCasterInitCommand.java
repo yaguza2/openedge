@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,29 +28,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.initcommands;
 
-import java.util.EventObject;
+import org.jdom.Element;
 
-import org.quartz.Scheduler;
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.CriticalEventCaster;
 
 /**
- * fired when scheduler was started
+ * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class SchedulerStartedEvent extends EventObject
+public class CriticalEventCasterInitCommand implements InitCommand
 {
-
-	protected Scheduler scheduler = null;
+	
+	private ModuleFactory moduleFactory = null;
+	
 
 	/**
-	 * @param source	sender of event
-	 * @param scheduler	subject of event
+	 * initialize
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
 	 */
-	public SchedulerStartedEvent(Object source, Scheduler scheduler)
+	public void init(
+		String componentName, 
+		Element componentNode,
+		ModuleFactory moduleFactory)
+		throws ConfigException
 	{
-		super(source);
-		this.scheduler = scheduler;
+		this.moduleFactory = moduleFactory;
+	}
+
+	/**
+	 * populate the component instance
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
+	 */
+	public void execute(Object componentInstance) 
+		throws InitCommandException, ConfigException
+	{
+
+		if(componentInstance instanceof CriticalEventCaster)
+		{
+			((CriticalEventCaster)componentInstance)
+				.addObserver(this.moduleFactory);
+		}
+		else
+		{
+			throw new InitCommandException(
+			"component is not of type ConfigurableType");	
+		}
+
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -28,23 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.base;
+
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.types.AdapterFactory;
+import nl.openedge.modules.types.ModuleAdapter;
+
+import org.jdom.Element;
 
 /**
- * a scheduler observer gets the chance to do extra configuration 
- * (like adding quartz calendars and global listeners etc. BEFORE
- *  jobs and triggers are actually scheduled by the module factory.
- * 
+ * Factory for throwaway types
  * @author Eelco Hillenius
  */
-public interface SchedulerObserver extends ModuleFactoryObserver
+public class ThrowAwayTypeAdapterFactory implements AdapterFactory
 {
 
 	/**
-	 * fired after initialisation and startup of the Quartz scheduler, 
-	 * before the actual scheduling of jobs and triggers
-	 * @param evt holds instance of scheduler
+	 * Just construct a new throwaway adapter
+	 * @see nl.openedge.modules.types.AdapterFactory#constructAdapter(java.lang.String, org.jdom.Element)
 	 */
-	public void schedulerStarted(SchedulerStartedEvent evt);
+	public ModuleAdapter constructAdapter(String componentName, Element componentNode)
+		throws ConfigException
+	{
+		return new ThrowAwayTypeAdapter();
+	}
 
 }

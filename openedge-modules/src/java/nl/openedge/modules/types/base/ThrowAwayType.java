@@ -28,74 +28,15 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
-
-import java.net.URL;
-
-import junit.framework.TestCase;
-
-import nl.openedge.modules.Configurator;
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleFactoryFactory;
-import nl.openedge.modules.config.URLHelper;
+package nl.openedge.modules.types.base;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
+ * @author Eelco Hillenius
  * 
- * @author E.F. Hillenius
+ * Modules that implement ThrowAwayType will be instantiated for each
+ * request on the ModuleFactory  
  */
-public abstract class AbstractTestBase extends TestCase
+public interface ThrowAwayType
 {
 
-	/** access factory */
-	protected static ModuleFactory moduleFactory;
-	private static boolean initialised = false;
-
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
-
-	/** 
-	 * initialise
-	 */
-	protected void init() throws Exception
-	{
-
-		loadModuleFactory();
-	}
-
-	/**
-	 * load the module factory
-	 * @throws Exception
-	 */
-	protected void loadModuleFactory() throws Exception
-	{
-
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				Configurator c = new Configurator(url);
-				moduleFactory = ModuleFactoryFactory.getInstance();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
-	}
 }

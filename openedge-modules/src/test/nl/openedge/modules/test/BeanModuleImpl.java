@@ -1,5 +1,5 @@
 /*
- * $Header$
+ * $Id$
  * $Revision$
  * $Date$
  *
@@ -30,13 +30,13 @@
  */
 package nl.openedge.modules.test;
 
-import nl.openedge.modules.BeanModule;
-import nl.openedge.modules.SingletonModule;
+import nl.openedge.modules.types.base.SingletonType;
+import nl.openedge.modules.types.initcommands.BeanType;
 
 /**
  * @author Eelco Hillenius
  */
-public class BeanModuleImpl implements BeanModule, SingletonModule
+public class BeanModuleImpl implements BeanType, SingletonType
 {
 
 	private String myString;
