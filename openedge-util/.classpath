@@ -22,5 +22,10 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty.plus.dep.jotm_jrmp_stubs-4.2.19.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty.plus.dep.jts1_0-4.2.19.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty.plus.dep.jonas_timer-4.2.19.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jasper/jars/jasper-compiler-x.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jasper/jars/jasper-runtime-x.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-httpclient-2.0-src.jar" kind="var" path="MAVEN_REPO/commons-httpclient/jars/commons-httpclient-2.0.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/log4j-1.2.8-src.jar" kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.8.jar"/>
+	<classpathentry kind="var" path="JAVA_HOME/lib/tools.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -30,53 +30,32 @@
  */
 package nl.openedge.util.jetty;
 
-import junit.framework.Test;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 
 /**
- * JUnit decorator for starting and stopping a local instance
- * Jetty for usage with test cases.
+ * Base class for Jetty test cases. Classes that override this test case will
+ * have a local Jetty server started and stopped automatically for each test case.
+ * the methods setUp and tearDown are finalized in this class, please use one
+ * of the methods 'beforeSetup', 'afterSetup', 'beforeTearDown' and 'afterTearDown'.
  * <p>
- * It uses property 'jettyConfig' to
- * load the - mandatory - Jetty configuration document.
- * Eg '/jetty-test-config.xml' is loaded from the classpath root
- * (so providing the configuration document in the root of the test classes
- * folder will suffice) but 'file://c:/mydir/myconfig.xml' should work as well.
- * If property 'jettyConfig' is not provided (default == null),
- * the properties 'port', 'webappContextRoot' and 'contextPath' are used to start a
- * Jetty instance.
+ * Method 'beforeSetup' is particularly usefull, as it can be used to configure the
+ * Jetty server that is to be created and run. An example of how to do is:<br/>
  * </p>
  * <p>
- * Property useJettyPlus (default == false) is used to decide whether JettyPlus
- * should be used, or just the basic version of Jetty. JettyPlus provides support
- * for JNDI, datasources, transactions etc.
- * </p>
- * <p>
- * 	Usage:
  * <pre>
- * ...
- *   public static Test suite() 
- *   {
- *	    TestSuite suite = new TestSuite();
- *	    suite.addTest(new JettyDecoratorWithArgsTest("testPing"));
- *	    JettyDecorator deco = new JettyDecorator(suite);
- *	    deco.setPort(8098);
- *	    deco.setWebappContextRoot("src/webapp");
- *	    deco.setContextPath("/test");
- *	    deco.setUseJettyPlus(false);
- *	    return deco;
- *   }
- * ...
+ * public void beforeSetUp()
+ * {
+ *   setPort(8098);
+ *   setWebappContextRoot("src/webapp");
+ *   setContextPath("/test");
+ * }
  * </pre>
- * Jetty will be started before the tests are actually run, and will be stopped
- * afterwards.
  * </p>
  * @author Eelco Hillenius
  */
-public class JettyDecorator extends AbstractJettyDecorator
+public abstract class JettyTestCase extends AbstractJettyTestCase
 {
     /** instance of jetty server. */
     private static Server jettyServer = null;
@@ -85,22 +64,33 @@ public class JettyDecorator extends AbstractJettyDecorator
     private static Log log = LogFactory.getLog(JettyDecorator.class);
 
     /**
-     * construct with test.
-     * @param test test case
+     * Construct.
      */
-    public JettyDecorator(final Test test)
+    public JettyTestCase()
     {
-        super(test);
+        super();
+    }
+    /**
+     * Construct with test case name.
+     * @param name test case name
+     */
+    public JettyTestCase(String name)
+    {
+        super(name);
     }
 
     /**
-     * Start Jetty.
+     * Start Jetty; inhereting classes can override methods
+     * beforeSetUp and afterSetUp for test case specific behaviour.
      * @throws Exception
      * @see junit.extensions.TestSetup#setUp()
      */
-    public void setUp() throws Exception
+    public final void setUp() throws Exception
     {
+        // first let current test case set up fixture
+        beforeSetUp();
         // start Jetty
+        long begin = System.currentTimeMillis();
         try
         {
             if(getJettyConfig() != null)
@@ -125,15 +115,22 @@ public class JettyDecorator extends AbstractJettyDecorator
             log.error(e.getMessage(), e);
             throw new Exception(e); // wrap and rethrow
         }
+        long end = System.currentTimeMillis();
+        log.info("Jetty Started (in " + (end - begin) + " milis)");
+        // call for further set up
+        afterSetUp();
     }
 
     /**
-     * Stop Jetty.
+     * Stop Jetty; inhereting classes can override methods
+     * beforeTearDown and afterTearDown for test case specific behaviour.
      * @throws Exception
      * @see junit.extensions.TestSetup#tearDown()
      */
-    public void tearDown() throws Exception
+    public final void tearDown() throws Exception
     {
+        // first let current test case tear down fixture
+        beforeTearDown();
         try 
         {
             log.info("Stopping Jetty");
@@ -143,17 +140,14 @@ public class JettyDecorator extends AbstractJettyDecorator
         catch (Exception e)
         {
             log.error(e.getMessage(), e);
-            //throw e;
+            throw e;           
         } 
-    }
-
-    /**
-     * Get jettyServer; unit tests might actually get the current instance of the server
-     * to work with though this is generally bad practice.
-     * @return Server Returns the jettyServer.
-     */
-    public static Server getJettyServer()
-    {
-        return jettyServer;
+        catch (Throwable e) 
+        {
+            log.error(e.getMessage(), e);
+            throw new Exception(e);
+        }
+        // call for further tear down
+        afterTearDown();
     }
 }
