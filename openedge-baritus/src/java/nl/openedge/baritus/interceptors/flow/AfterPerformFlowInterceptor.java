@@ -1,7 +1,7 @@
 /*
- * $Id: AfterPerformFlowInterceptor.java,v 1.1.1.1 2004-02-24 20:34:09 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:09 $
+ * $Id: AfterPerformFlowInterceptor.java,v 1.2 2004-04-25 10:02:49 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:02:49 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,14 +31,36 @@
  
 package nl.openedge.baritus.interceptors.flow;
 
+import javax.servlet.ServletException;
+
 import nl.openedge.baritus.interceptors.Interceptor;
 
 /**
+ * Registered instances will have their command method executed after the
+ * normal action execution took place. That means that makeFormBean was called,
+ * the form was populated and - if that population was succesfull - the 
+ * command method was called prior to this execution. Hence, this interceptor
+ * will allways be executed, regardless population/ validation and regardless
+ * whether the perform method actually was executed.
+ * 
  * @author Eelco Hillenius
  */
 public interface AfterPerformFlowInterceptor extends Interceptor
 {
 
-	public FlowInterceptorResult doAfterPerform(FlowInterceptorContext ctx);
+	/**
+	 * Executed after the normal action execution took place. That means that 
+	 * makeFormBean was called, the form was populated and - if that population 
+	 * was succesfull - the command method was called prior to this execution.
+	 * Hence, this interceptor will allways be executed, regardless 
+	 * population/ validation and regardless whether the perform method 
+	 * actually was executed.
+	 *  
+	 * @param ctx flow interceptor context
+	 * @return FlowInterceptorResult interception result that can have effect on flow
+	 * @throws ServletException
+	 */
+	public FlowInterceptorResult doAfterPerform(FlowInterceptorContext ctx)
+		throws ServletException;
 
 }

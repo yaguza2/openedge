@@ -1,7 +1,7 @@
 /*
- * $Id: MinimumFieldLengthValidator.java,v 1.6 2004-04-09 18:44:53 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-09 18:44:53 $
+ * $Id: MinimumFieldLengthValidator.java,v 1.7 2004-04-25 10:02:36 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-25 10:02:36 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,7 +39,10 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Use this validator for fields that have a minimum length.
+ * This validator checks on minimum length. If the type of the value is a String,
+ * the string length is checked. If the type of the value is a Number, the actual
+ * number is used. E.g. if property minLength is 4, "hello" will pass, but "hi" 
+ * will fail, and number 5 will pass, but 2 will fail.
  * 
  * @author Eelco Hillenius
  */

@@ -160,7 +160,6 @@ public class FormWithMap
 		</para>
 		<para>
 
-			
 			But in case the validator should be executed for all keys (or indexes), the 'flat name'
 			(name without markup for map/ index navigation) as well like:
 
@@ -173,6 +172,121 @@ public class FormWithMap
 	    </para>
 		
 	</sect1>
+
+	<sect1 id="validation-s4">
+		<title>ValidationActivationRules</title>		
+		
+		<para>
+			Whether validators are actually used a given situation can be directed through the use of
+			ValidationActivationRules (<literal>nl.openedge.baritus.validation.ValidationActivationRule</literal>).
+		</para>
+		
+		<para>
+			For example:
+		</para>
+		
+		<programlisting><![CDATA[
+public class MyValidationRule implements ValidationActivationRule
+{
+	public boolean allowValidation(
+		ControllerContext cctx,
+		FormBeanContext formBeanContext)
+	{
+		return "true".equals(cctx.getRequest().getParameter("validate"));
+	}
+}
+]]></programlisting>
+		
+		<programlisting><![CDATA[
+FieldValidator validator = new RequiredFieldValidator();
+validator.setValidationRule(new MyValidationRule());
+addValidator("myField", validator);
+]]></programlisting>
+		
+		<para>
+			In the above example the validator will only be called when request parameter 'validate' is
+			provided and has value 'true'.
+		</para>
+		
+		<para>
+			You can register only one validation activation rule with a validator at a time. 
+			It is not difficult though, to stack validator activation rules, for example by using 
+			<literal>nl.openedge.baritus.validation.impl.NestedValidationActivationRule</literal>.
+		</para>
+		
+	</sect1>
 	
+	<sect1 id="validation-s5">
+        <title>Validator implementations</title>
+
+		<para>
+			Package <literal>nl.openedge.baritus.validation.impl</literal> is reserved for implementations
+			of Validators.
+			
+			<itemizedlist spacing="compact">
+	            <listitem>
+	                <para>
+						<literal>MaximumFieldLengthValidator</literal>.
+							This validator checks on maximum length. If the type of the value is a String,
+							the string length is checked. If the type of the value is a Number, the actual
+							number is used. E.g. if property maxLength is 4, "hello" will fail, but "hi" 
+							will pass, and number 5 will fail, but 2 will pass.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>MinimumFieldLengthValidator</literal>.
+							This validator checks on minimum length. If the type of the value is a String,
+							the string length is checked. If the type of the value is a Number, the actual
+							number is used. E.g. if property maxLength is 4, "hello" will pass, but "hi" 
+							will fail, and number 5 will pass, but 2 will fail.
+					</para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>PropertyNotNullFormValidator</literal>.
+							Checks whether the form contains a non null property with the name of property 
+							propertyName.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>RegexValidator</literal>.
+							Tests for a match against a regex pattern.
+							if property 'mode' is MODE_VALID_IF_MATCHES (which is the default), isValid returns
+							true if the input matches the pattern. If property mode is MODE_INVALID_IF_MATCHES
+							(i.e. else), isValid returns false if the input matches the pattern.
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>RequiredFieldValidator</literal>.
+						Checks for a non-EMPTY input.
+						Use this for fields that should have a not null (empty string) input.
+						Note that as this validator is a field validator, and thus is registered
+						for a single field, it is only fired if a field (e.g. a request parameter)
+						is actually provided. In other words: if an instance of a required field
+						validator was registered for field name 'myprop', but 'myprop' is not part
+						of the request parameters, this validator never fires. Hence, if you want
+						to be REALLY sure that a property of the form is not null, use a form validator
+						(PropertyNotNullValidator). RequiredFieldValidator works fine for most cases
+						where you have a HTML form with a field that should have a non empty value, but
+						that - if a user fools around - does not seriousely break anything when a value
+						is not provided (e.g. you probably have not null constraint in you database as well).
+	                </para>
+	            </listitem>
+	            <listitem>
+	                <para>
+	                   <literal>RequiredSessionAttributeValidator</literal>.
+						Checks whether a session attribute exists with the key
+						that was set for property sessionAttributeKey.
+	                </para>
+	            </listitem>
+
+			</itemizedlist>
+			
+		</para>
+
+	</sect1>
 </chapter>
 

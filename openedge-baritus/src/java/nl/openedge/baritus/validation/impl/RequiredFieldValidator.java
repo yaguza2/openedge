@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredFieldValidator.java,v 1.5 2004-04-07 14:05:02 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-07 14:05:02 $
+ * $Id: RequiredFieldValidator.java,v 1.6 2004-04-25 10:02:35 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-25 10:02:35 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,6 +37,7 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
+ * Checks for a non-EMPTY input.
  * Use this for fields that should have a not null (empty string) input.
  * Note that as this validator is a field validator, and thus is registered
  * for a single field, it is only fired if a field (e.g. a request parameter)

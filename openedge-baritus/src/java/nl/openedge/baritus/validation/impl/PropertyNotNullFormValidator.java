@@ -1,7 +1,7 @@
 /*
- * $Id: PropertyNotNullFormValidator.java,v 1.4 2004-04-07 14:05:04 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-07 14:05:04 $
+ * $Id: PropertyNotNullFormValidator.java,v 1.5 2004-04-25 10:02:36 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-25 10:02:36 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,8 +41,9 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * check whether the form contains a not null property with the name of property 
- * propertyName
+ * Checks whether the form contains a non null property with the name of property 
+ * propertyName.
+ * 
  * @author Eelco Hillenius
  */
 public class PropertyNotNullFormValidator extends AbstractFormValidator

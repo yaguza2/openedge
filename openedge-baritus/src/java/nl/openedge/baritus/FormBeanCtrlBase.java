@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.10 2004-04-09 18:44:53 eelco12 Exp $
- * $Revision: 1.10 $
- * $Date: 2004-04-09 18:44:53 $
+ * $Id: FormBeanCtrlBase.java,v 1.11 2004-04-25 10:03:21 eelco12 Exp $
+ * $Revision: 1.11 $
+ * $Date: 2004-04-25 10:03:21 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -185,8 +185,9 @@ public abstract class FormBeanCtrlBase implements Controller
 		locale = getLocaleForRequest(cctx, formBeanContext); // get the locale
 		formBeanContext.setCurrentLocale(locale); // and set in context
 		
-		// flow intercept before make form bean
+		// intercept before make form bean
 		intercDlg.doInterceptBeforeMakeFormBean(cctx, formBeanContext);
+		// flow intercept before make form bean
 		flowInterceptView = intercDlg.doFlowInterceptBeforeMakeFormBean(flowInterceptorContext);
 		if(flowInterceptView != null)
 		{
@@ -231,58 +232,58 @@ public abstract class FormBeanCtrlBase implements Controller
 				return flowInterceptView;
 			}		
 		}
-		
-		try
-		{	
-			// was the bean population successful or should we execute perform
-			// regardless of the population/ validation outcome?
-			if(populated || execParams.isDoPerformIfPopulationFailed()) 
-			{
-				// flow intercept after population
-				intercDlg.doInterceptAfterPopulation(cctx, formBeanContext);
-				flowInterceptView = intercDlg.doFlowInterceptAfterPopulation(flowInterceptorContext);
-				if(flowInterceptView != null)
-				{
-					return flowInterceptView;
-				}
-				
-				// execute command en get the view
-				viewName = this.perform(formBeanContext, cctx);	
-
-			}
-			else // bean population was not successful 
-				 // this is the normal place of handling a failed (by either populators
-				 // or validators) population attempt.
-			{	
-				internalPerformError(cctx, execParams, formBeanContext, null);
-				viewName = getErrorView(cctx, formBeanContext);
-				
-				// intercept on population error
-				intercDlg.doInterceptPopulationError(cctx, formBeanContext);
-				flowInterceptView = intercDlg.doFlowInterceptPopulationError(flowInterceptorContext);
-				if(flowInterceptView != null)
-				{
-					return flowInterceptView;
-				}
-			}
-		} 
-		catch (Exception e) 
-		{
-			log.error(e.getMessage(), e);
 			
-			// prepare for error command and execute it
-			internalPerformError(cctx, execParams, formBeanContext, e);
-
-			// flow intercept on perform error
-			intercDlg.doInterceptPerformException(cctx, formBeanContext);
-			flowInterceptorContext.setException(e);
-			flowInterceptView = intercDlg.doFlowInterceptPerformException(flowInterceptorContext);
+		// was the bean population successful or should we execute perform
+		// regardless of the population/ validation outcome?
+		if(populated || execParams.isDoPerformIfPopulationFailed()) 
+		{
+			// flow intercept after population
+			intercDlg.doInterceptAfterPopulation(cctx, formBeanContext);
+			flowInterceptView = intercDlg.doFlowInterceptAfterPopulation(flowInterceptorContext);
 			if(flowInterceptView != null)
 			{
 				return flowInterceptView;
 			}
 			
+			try
+			{
+				// execute command en get the view
+				viewName = this.perform(formBeanContext, cctx);
+			}
+			catch (Exception e) 
+			{
+				log.error(e.getMessage(), e);
+	
+				// prepare for error command and execute it
+				internalPerformError(cctx, execParams, formBeanContext, e);
+
+				// flow intercept on perform error
+				intercDlg.doInterceptPerformException(cctx, formBeanContext);
+				flowInterceptorContext.setException(e);
+				flowInterceptView = intercDlg.doFlowInterceptPerformException(flowInterceptorContext);
+				if(flowInterceptView != null)
+				{
+					return flowInterceptView;
+				}
+	
+				viewName = getErrorView(cctx, formBeanContext);
+			}
+
+		}
+		else // bean population was not successful 
+			 // this is the normal place of handling a failed (by either populators
+			 // or validators) population attempt.
+		{	
+			internalPerformError(cctx, execParams, formBeanContext, null);
 			viewName = getErrorView(cctx, formBeanContext);
+			
+			// intercept on population error
+			intercDlg.doInterceptPopulationError(cctx, formBeanContext);
+			flowInterceptView = intercDlg.doFlowInterceptPopulationError(flowInterceptorContext);
+			if(flowInterceptView != null)
+			{
+				return flowInterceptView;
+			}
 		}
 
 		// intercept after perform

@@ -1,7 +1,7 @@
 /*
- * $Id: FlowInterceptorResult.java,v 1.1.1.1 2004-02-24 20:34:09 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:09 $
+ * $Id: FlowInterceptorResult.java,v 1.2 2004-04-25 10:02:49 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:02:49 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -32,20 +32,61 @@
 package nl.openedge.baritus.interceptors.flow;
 
 /**
+ * Used by flowinterceptors to indicate the action that should be taken
+ * by the framework after the interceptor executed.
+ * 
  * @author Eelco Hillenius
  */
 public final class FlowInterceptorResult
 {
+	/** 
+	 * Constant that indicates that normal processing should be done.
+	 */
+	public final static int ACTION_GO_ON = 0;
 	
-	public final static int ACTION_IGNORE = 0;
+	/** 
+	 * Constant that indicates that the framework should display the
+	 * logical view represented by property 'view'.
+	 */
 	public final static int ACTION_SHOW_VIEW = 1;
+	
+	/** 
+	 * Constant that indicates that the framework should display the 
+	 * absolute view represented by property 'view' (by using the dispatcher).
+	 */
 	public final static int ACTION_DISPATCH = 2;
 	
+	/**
+	 * Whether, in case of the action being ACTION_SHOW_VIEW or ACTION_DISPATCH, the registered
+	 * 'normal' interceptors should be exected before displaying the view.
+	 * The default is true.
+	 * If true, and the current stage of intercepting is 'beforeMakeFormBean',
+	 * the BeforePopulationInterceptors will be executed. If true, for all
+	 * other stages except 'afterPerform' the AfterPerformInterceptors will
+	 * be executed.
+	 */
+	private boolean executeOtherNonFlowInterceptors = true;
+	
+	/**
+	 * The view that should be displayed. If the action == ACTION_SHOW_VIEW,
+	 * this property should refer to a logical view as defined in the Maverick
+	 * configuration file, eg 'success'. If the action == ACTION_DISPATH, this property
+	 * refers to the absolute (but possible relative to the webapp) path
+	 * of the view, eg 'mydir/mypage.jsp'.
+	 */
 	private String view;
+	
+	/**
+	 * The action that should be taken by the framework after execution of this interceptor,
+	 * 	refering to one of the public ACTION_... constants of this class.
+	 */
 	private int action;
 	
 	/**
-	 * @return int
+	 * Get the action that should be taken by the framework after execution of this interceptor,
+	 * 	refering to one of the public ACTION_... constants of this class.
+	 * @return int action that should be taken by the framework after execution of this interceptor,
+	 * 	refering to one of the public ACTION_... constants of this class.
 	 */
 	public int getAction()
 	{
@@ -53,7 +94,24 @@ public final class FlowInterceptorResult
 	}
 
 	/**
-	 * @return String
+	 * Set the action that should be taken by the framework after execution of this interceptor,
+	 * 	refering to one of the public ACTION_... constants of this class.
+	 * @param action the action that should be taken by the framework after execution of this interceptor,
+	 * 	refering to one of the public ACTION_... constants of this class.
+	 */
+	public void setAction(int action)
+	{
+		this.action = action;
+	}
+
+	/**
+	 * Get the view that should be displayed. If the action == ACTION_SHOW_VIEW,
+	 * this property should refer to a logical view as defined in the Maverick
+	 * configuration file, eg 'success'. If the action == ACTION_DISPATH, this property
+	 * refers to the absolute (but possible relative to the webapp) path
+	 * of the view, eg 'mydir/mypage.jsp'.
+	 * 
+	 * @return String the view that should be displayed.
 	 */
 	public String getView()
 	{
@@ -61,19 +119,48 @@ public final class FlowInterceptorResult
 	}
 
 	/**
-	 * @param i
+	 * Set the view that should be displayed. If the action == ACTION_SHOW_VIEW,
+	 * this property should refer to a logical view as defined in the Maverick
+	 * configuration file, eg 'success'. If the action == ACTION_DISPATH, this property
+	 * refers to the absolute (but possible relative to the webapp) path
+	 * of the view, eg 'mydir/mypage.jsp'.
+	 * @param view the view that should be displayed.
 	 */
-	public void setAction(int i)
+	public void setView(String view)
 	{
-		action = i;
+		this.view = view;
 	}
 
 	/**
-	 * @param string
+	 * get whether, in case of the action being ACTION_SHOW_VIEW or ACTION_DISPATCH, the registered
+	 * 'normal' interceptors should be exected before displaying the view.
+	 * The default is true.
+	 * If true, and the current stage of intercepting is 'beforeMakeFormBean',
+	 * the BeforePopulationInterceptors will be executed. If true, for all
+	 * other stages except 'afterPerform' the AfterPerformInterceptors will
+	 * be executed.
+	 * @return boolean whether, in case of the action being ACTION_SHOW_VIEW or ACTION_DISPATCH, the registered
+	 * 'normal' interceptors should be exected before displaying the view.
 	 */
-	public void setView(String string)
+	public boolean isExecuteOtherNonFlowInterceptors()
 	{
-		view = string;
+		return executeOtherNonFlowInterceptors;
+	}
+
+	/**
+	 * Set whether, in case of the action being ACTION_SHOW_VIEW or ACTION_DISPATCH, the registered
+	 * 'normal' interceptors should be exected before displaying the view.
+	 * The default is true.
+	 * If true, and the current stage of intercepting is 'beforeMakeFormBean',
+	 * the BeforePopulationInterceptors will be executed. If true, for all
+	 * other stages except 'afterPerform' the AfterPerformInterceptors will
+	 * be executed.
+	 * @param executeOtherNonFlowInterceptors whether, in case of the action being ACTION_SHOW_VIEW or ACTION_DISPATCH, the registered
+	 * 'normal' interceptors should be exected before displaying the view.
+	 */
+	public void setExecuteOtherNonFlowInterceptors(boolean executeOtherNonFlowInterceptors)
+	{
+		this.executeOtherNonFlowInterceptors = executeOtherNonFlowInterceptors;
 	}
 
 }

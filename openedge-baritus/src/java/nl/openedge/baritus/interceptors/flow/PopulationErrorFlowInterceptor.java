@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationErrorFlowInterceptor.java,v 1.1.1.1 2004-02-24 20:34:09 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:09 $
+ * $Id: PopulationErrorFlowInterceptor.java,v 1.2 2004-04-25 10:02:49 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:02:49 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,12 +31,26 @@
  
 package nl.openedge.baritus.interceptors.flow;
 
+import javax.servlet.ServletException;
+
 import nl.openedge.baritus.interceptors.Interceptor;
 
 /**
+ * Registered instances will have their command method executed if 
+ * the model failed to populate, or did not pass validation.
+ * 
  * @author Eelco Hillenius
  */
 public interface PopulationErrorFlowInterceptor extends Interceptor
 {
-	public FlowInterceptorResult doOnPopulationException(FlowInterceptorContext ctx);
+
+	/**
+	 * Executed if the model failed to populate, or did not pass validation.
+	 *  
+	 * @param ctx flow interceptor context
+	 * @return FlowInterceptorResult interception result that can have effect on flow
+	 * @throws ServletException
+	 */
+	public FlowInterceptorResult doOnPopulationException(FlowInterceptorContext ctx)
+		throws ServletException;
 }

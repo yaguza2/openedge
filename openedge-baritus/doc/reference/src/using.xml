@@ -53,7 +53,7 @@
 		
         <programlisting><![CDATA[
 <command name="example">
-	<controller class="nl.topicus.examples.baritus.ExampleCtrl" />
+	<controller class="nl.openedge.examples.baritus.ExampleCtrl" />
 	<view name="success" path="/example1.vm"/>
 	<view name="error" path="/example1.vm"/>
 </command>
@@ -65,7 +65,7 @@
 		</para>
 
         <programlisting><![CDATA[
-package nl.topicus.examples.baritus;
+package nl.openedge.examples.baritus;
 
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.FormBeanCtrl;
@@ -98,7 +98,7 @@ public class ExampleCtrl extends FormBeanCtrl
 ]]></programlisting>
 		
         <programlisting><![CDATA[
-package nl.topicus.examples.baritus;
+package nl.openedge.examples.baritus;
 
 public class ExampleBean
 {

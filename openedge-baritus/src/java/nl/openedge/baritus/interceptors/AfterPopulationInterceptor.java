@@ -1,7 +1,7 @@
 /*
- * $Id: AfterPopulationInterceptor.java,v 1.1.1.1 2004-02-24 20:34:07 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:07 $
+ * $Id: AfterPopulationInterceptor.java,v 1.2 2004-04-25 10:03:05 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:03:05 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -47,7 +47,7 @@ public interface AfterPopulationInterceptor extends Interceptor
 
 	/**
 	 * Executed before the normal action execution takes place, but after
-	 * the form bean was populated
+	 * the form bean was populated.
 	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext the context with the not-yet populated formBean

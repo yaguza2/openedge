@@ -1,7 +1,7 @@
 /*
- * $Id: RegexValidator.java,v 1.6 2004-04-09 18:44:53 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-09 18:44:53 $
+ * $Id: RegexValidator.java,v 1.7 2004-04-25 10:02:36 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-25 10:02:36 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -41,7 +41,7 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * A validator that tests for a match against a regex pattern.
+ * Tests for a match against a regex pattern.
  * if property 'mode' is MODE_VALID_IF_MATCHES (which is the default), isValid returns
  * true if the input matches the pattern. If property mode is MODE_INVALID_IF_MATCHES
  * (i.e. else), isValid returns false if the input matches the pattern.

@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationErrorInterceptor.java,v 1.1.1.1 2004-02-24 20:34:08 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:08 $
+ * $Id: PopulationErrorInterceptor.java,v 1.2 2004-04-25 10:03:05 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:03:05 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,7 +38,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Registered instances will have their command method executed if 
- * the model failed to populate, or did not pass validation
+ * the model failed to populate, or did not pass validation.
  * 
  * @author Eelco Hillenius
  */
@@ -46,12 +46,11 @@ public interface PopulationErrorInterceptor extends Interceptor
 {
 
 	/**
-	 * prepare error model for view.
-	 * This method will be called if the model failed to populate,
-	 * or did not pass validation
-	 * override this method to 'enrich' the error model
+	 * Executed if the model failed to populate, or did not pass validation.
+	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext context with form bean that failed to populate
+	 * @throws ServletException
 	 */
 	public void doOnPopulationError(
 		ControllerContext cctx, 

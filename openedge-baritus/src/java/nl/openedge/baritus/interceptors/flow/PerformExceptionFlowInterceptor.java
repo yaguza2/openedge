@@ -1,7 +1,7 @@
 /*
- * $Id: PerformExceptionFlowInterceptor.java,v 1.1.1.1 2004-02-24 20:34:09 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:09 $
+ * $Id: PerformExceptionFlowInterceptor.java,v 1.2 2004-04-25 10:02:50 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:02:50 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,13 +31,26 @@
  
 package nl.openedge.baritus.interceptors.flow;
 
+import javax.servlet.ServletException;
+
 import nl.openedge.baritus.interceptors.Interceptor;
 
 /**
+ * Registered instances will have their command method executed if 
+ * an unhandeld exception occured while executing the perform method.
+ * 
  * @author Eelco Hillenius
  */
 public interface PerformExceptionFlowInterceptor extends Interceptor
 {
 
-	public FlowInterceptorResult doOnPerformException(FlowInterceptorContext ctx);
+	/**
+	 * Executed if an unhandeld exception occured while executing the perform method.
+	 *  
+	 * @param ctx flow interceptor context
+	 * @return FlowInterceptorResult interception result that can have effect on flow
+	 * @throws ServletException
+	 */
+	public FlowInterceptorResult doOnPerformException(FlowInterceptorContext ctx)
+		throws ServletException;
 }

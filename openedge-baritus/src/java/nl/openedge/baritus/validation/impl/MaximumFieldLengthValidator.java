@@ -1,7 +1,7 @@
 /*
- * $Id: MaximumFieldLengthValidator.java,v 1.6 2004-04-07 14:05:04 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-07 14:05:04 $
+ * $Id: MaximumFieldLengthValidator.java,v 1.7 2004-04-25 10:02:37 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-25 10:02:37 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -39,8 +39,11 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Use this validator for fields that have a maximum length.
- * 
+ * This validator checks on maximum length. If the type of the value is a String,
+ * the string length is checked. If the type of the value is a Number, the actual
+ * number is used. E.g. if property maxLength is 4, "hello" will fail, but "hi" 
+ * will pass, and number 5 will fail, but 2 will pass.
+ *  
  * @author Eelco Hillenius
  */
 public final class MaximumFieldLengthValidator extends AbstractFieldValidator

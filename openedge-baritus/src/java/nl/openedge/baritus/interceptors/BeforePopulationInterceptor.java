@@ -1,7 +1,7 @@
 /*
- * $Id: BeforePopulationInterceptor.java,v 1.1.1.1 2004-02-24 20:34:07 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:07 $
+ * $Id: BeforePopulationInterceptor.java,v 1.2 2004-04-25 10:03:05 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:03:05 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -37,9 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed before the
- * normal action execution took place. Method makeFormBean is called prior 
- * to this execution, but the population of the form still has to be done.
+ * Registered instances will have their command method executed before
+ * population and validation is done.
  * 
  * @author Eelco Hillenius
  */
@@ -47,9 +46,8 @@ public interface BeforePopulationInterceptor extends Interceptor
 {
 
 	/**
-	 * Executed before the normal action execution takes place. Method makeFormBean 
-	 * is called prior to this execution, but the population of the form still has 
-	 * to be done.
+	 * Registered instances will have their command method executed before
+	 * population and validation is done.
 	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext the context with the not-yet populated formBean

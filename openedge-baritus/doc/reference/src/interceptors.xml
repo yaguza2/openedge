@@ -41,6 +41,64 @@
 			This type of interceptors are used to add behaviour without having an influence on the
 			flow of execution.
         </para>
+		
+			<itemizedlist spacing="compact">
+
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+						Registered instances will have their command method executed before the
+						method makeFormBean is called.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>BeforePopulationInterceptor</literal>.
+						 Registered instances will have their command method executed before
+						 population and validation is done.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>PopulationErrorInterceptor</literal>.
+						 Registered instances will have their command method executed if 
+						 the model failed to populate, or did not pass validation.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>AfterPopulationInterceptor</literal>.
+						 Registered instances will have their command method executed before the
+						 normal action execution took place, but after the form bean was populated.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>PerformExceptionInterceptor</literal>.
+						 Registered instances will have their command method executed if 
+						 an unhandeld exception occured while executing the perform method.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>AfterPerformInterceptor</literal>.
+						 Registered instances will have their command method executed after the
+						 normal action execution took place. That means that makeFormBean was called,
+						 the form was populated and - if that population was succesfull - the 
+						 command method was called prior to this execution.
+	                </para>
+					<para>
+						You cannot be sure that the form was populated successfully. Therefore
+						it's dangerous and generally bad practice to rely on form properties that are 
+						populated from the http request. A good usage example: a lot of views need
+						data to fill their dropdown lists etc. In this method, you could load that data and
+						save it in the form (or as a request attribute if that's your style). As this method
+						is allways executed, you have a guaranteed data delivery to your view, regardless
+						the normal execution outcome of the control. 
+					</para>
+	            </listitem>
+
+			</itemizedlist>
 
 	</sect1>
 
@@ -50,7 +108,42 @@
         <para>
 			Flow interceptors can influence the flow of execution.
         </para>
+		
+			<itemizedlist spacing="compact">
 
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+	                </para>
+	            </listitem>
+				<listitem>
+	                <para>
+						<literal>BeforeMakeFormBeanInterceptor</literal>.
+	                </para>
+	            </listitem>
+				
+			</itemizedlist>
+				
 	</sect1>
 
 	

@@ -1,7 +1,7 @@
 /*
- * $Id: BeforeMakeFormBeanInterceptor.java,v 1.1.1.1 2004-02-24 20:34:07 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:07 $
+ * $Id: BeforeMakeFormBeanInterceptor.java,v 1.2 2004-04-25 10:03:05 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:03:05 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -38,7 +38,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Registered instances will have their command method executed before the
- * method makeFormBean is called
+ * method makeFormBean is called.
  * 
  * @author Eelco Hillenius
  */
@@ -46,7 +46,7 @@ public interface BeforeMakeFormBeanInterceptor extends Interceptor
 {
 
 	/**
-	 * Executed before the method makeFormBean is called
+	 * Executed before the method makeFormBean is called.
 	 * 
 	 * @param cctx maverick context
 	 * @param formBeanContext the context with the not-yet populated formBean

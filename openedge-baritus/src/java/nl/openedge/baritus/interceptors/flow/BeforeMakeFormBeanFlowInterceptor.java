@@ -1,7 +1,7 @@
 /*
- * $Id: BeforeMakeFormBeanFlowInterceptor.java,v 1.1.1.1 2004-02-24 20:34:09 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:09 $
+ * $Id: BeforeMakeFormBeanFlowInterceptor.java,v 1.2 2004-04-25 10:02:51 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-25 10:02:51 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -31,14 +31,27 @@
  
 package nl.openedge.baritus.interceptors.flow;
 
+import javax.servlet.ServletException;
+
 import nl.openedge.baritus.interceptors.Interceptor;
 
 /**
+ * Registered instances will have their command method executed before the
+ * method makeFormBean is called.
+ * 
  * @author Eelco Hillenius
  */
 public interface BeforeMakeFormBeanFlowInterceptor extends Interceptor
 {
 
-	public FlowInterceptorResult doBeforeMakeFormBean(FlowInterceptorContext ctx);
+	/**
+	 * Executed before the method makeFormBean is called.
+	 *  
+	 * @param ctx flow interceptor context
+	 * @return FlowInterceptorResult interception result that can have effect on flow
+	 * @throws ServletException
+	 */
+	public FlowInterceptorResult doBeforeMakeFormBean(FlowInterceptorContext ctx)
+		throws ServletException;
 
 }

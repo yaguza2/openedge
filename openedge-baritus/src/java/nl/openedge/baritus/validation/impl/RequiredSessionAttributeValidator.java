@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredSessionAttributeValidator.java,v 1.3 2004-04-07 14:05:04 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-07 14:05:04 $
+ * $Id: RequiredSessionAttributeValidator.java,v 1.4 2004-04-25 10:02:36 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-25 10:02:36 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -40,7 +40,8 @@ import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Checks whether a session attribute exists with the key
- * that was set for property sessionAttributeKey 
+ * that was set for property sessionAttributeKey.
+ * 
  * @author Eelco Hillenius
  */
 public class RequiredSessionAttributeValidator extends AbstractFormValidator
