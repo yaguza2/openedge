@@ -41,7 +41,7 @@ public class ComponentsLoadedEvent extends EventObject
 
 	/**
 	 * @param source	sender of event
-	 * @param moduleFactory	instance of module factory
+	 * @param componentFactory	instance of module factory
 	 */
 	public ComponentsLoadedEvent(Object source)
 	{

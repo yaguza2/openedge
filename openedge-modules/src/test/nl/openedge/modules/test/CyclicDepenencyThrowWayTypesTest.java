@@ -58,7 +58,7 @@ public class CyclicDepenencyThrowWayTypesTest extends TestCase
 		super(name);
 	}
 
-	public void testLoadCyclicModuleFactory() throws Exception
+	public void testLoadCyclicComponentFactory() throws Exception
 	{
 
 		try

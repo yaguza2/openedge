@@ -41,7 +41,7 @@ import org.jdom.Element;
 
 /**
  * Factory for the module factory.
- * provides singleton access to moduleFactory and stores the available
+ * provides singleton access to componentFactory and stores the available
  * module types
  * @author Eelco Hillenius
  */

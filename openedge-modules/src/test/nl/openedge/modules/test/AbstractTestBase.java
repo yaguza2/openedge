@@ -49,7 +49,7 @@ public abstract class AbstractTestBase extends TestCase
 {
 
 	/** access factory */
-	protected static ComponentFactory moduleFactory;
+	protected static ComponentFactory componentFactory;
 	protected static boolean initialised = false;
 
 	/** construct */
@@ -65,14 +65,14 @@ public abstract class AbstractTestBase extends TestCase
 	protected void init() throws Exception
 	{
 
-		loadModuleFactory();
+		loadComponentFactory();
 	}
 
 	/**
 	 * load the module factory
 	 * @throws Exception
 	 */
-	protected void loadModuleFactory() throws Exception
+	protected void loadComponentFactory() throws Exception
 	{
 
 		if (!initialised)
@@ -88,7 +88,7 @@ public abstract class AbstractTestBase extends TestCase
 						null);
 
 				JDOMConfigurator c = new JDOMConfigurator(url);
-				moduleFactory = ComponentFactoryFactory.getInstance();
+				componentFactory = ComponentFactoryFactory.getInstance();
 
 			}
 			catch (Exception e)
