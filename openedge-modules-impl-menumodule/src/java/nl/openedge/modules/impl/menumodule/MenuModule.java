@@ -458,7 +458,7 @@ public final class MenuModule
 			// workrootnode is nu root van tree speciaal voor subject;
 			// zet model op met deze node
 			model = new DefaultTreeModel(workNode); // model voor session
-//			userModelCache.put(subject, model);
+			userModelCache.put(subject, model);
 		}
 		
 		// opbouw voor request
@@ -478,7 +478,7 @@ public final class MenuModule
 		DefaultMutableTreeNode workNode,
 		Map filterContext)
 	{
-		addFilteredChilds(subject, currentNode, workNode, filterContext, sessionScopedFilters);
+		addFilteredChildsForSession(subject, currentNode, workNode, filterContext, sessionScopedFilters);
 	}
 	
 	/* voeg childs to aan worknode voor request */
@@ -491,7 +491,7 @@ public final class MenuModule
 		
 		long tsBegin = System.currentTimeMillis();
 		
-		addFilteredChilds(subject, currentNode, workNode, filterContext, requestScopedFilters);
+		addFilteredChildsForRequest(subject, currentNode, workNode, filterContext, requestScopedFilters);
 		
 		if(performanceLog.isDebugEnabled())
 		{
@@ -501,8 +501,8 @@ public final class MenuModule
 		}
 	}
 	
-	/* voeg childs to aan worknode voor filter */
-	private void addFilteredChilds(
+	/* voeg childs to aan worknode voor filter voor sessie */
+	private void addFilteredChildsForSession(
 		Subject subject, 
 		DefaultMutableTreeNode currentNode,
 		DefaultMutableTreeNode workNode,
@@ -538,10 +538,14 @@ public final class MenuModule
 					for(Iterator k = nodeFilters.iterator(); k.hasNext(); )
 					{
 						MenuFilter filter = (MenuFilter)k.next();
-						accepted = filter.accept(menuItem, filterContext);
-						if(!accepted)
+						if(filter instanceof ApplicationScopeMenuFilter ||
+							filter instanceof SessionScopeMenuFilter)
 						{
-							break;			
+							accepted = filter.accept(menuItem, filterContext);
+							if(!accepted)
+							{
+								break;			
+							}	
 						}
 					}	
 				}	
@@ -555,10 +559,71 @@ public final class MenuModule
 				// voeg child toe
 				workNode.add(newWorkNode);
 				// recurse
-				addFilteredChilds(subject, childNode, newWorkNode, filterContext, filters);	
+				addFilteredChildsForSession(subject, childNode, newWorkNode, filterContext, filters);	
 			}
-		}		
+		}
+	}
+	
+	/* voeg childs to aan worknode voor filter voor request */
+	private void addFilteredChildsForRequest(
+		Subject subject, 
+		DefaultMutableTreeNode currentNode,
+		DefaultMutableTreeNode workNode,
+		Map filterContext,
+		List filters)
+	{
 		
+		Enumeration children = currentNode.children();
+		while(children.hasMoreElements())
+		{
+			DefaultMutableTreeNode childNode = 
+				(DefaultMutableTreeNode)children.nextElement();
+			MenuItem menuItem = (MenuItem)childNode.getUserObject();
+			
+			// filter globaal
+			boolean accepted = true;
+			for(Iterator j = filters.iterator(); j.hasNext(); )
+			{
+				MenuFilter filter = (MenuFilter)j.next();
+				accepted = filter.accept(menuItem, filterContext);
+				if(!accepted)
+				{
+					break;			
+				}
+			}
+
+			// filter per node indien aanwezig en voorgaande filtering is geslaagd
+			if(accepted) // filtering is gelukt
+			{
+				List nodeFilters = menuItem.getFilters();
+				if(nodeFilters != null)
+				{
+					for(Iterator k = nodeFilters.iterator(); k.hasNext(); )
+					{
+						MenuFilter filter = (MenuFilter)k.next();
+						if(filter instanceof RequestScopeMenuFilter)
+						{
+							accepted = filter.accept(menuItem, filterContext);
+							if(!accepted)
+							{
+								break;			
+							}	
+						}
+					}	
+				}	
+			}
+			
+			if(accepted) // filtering is gelukt
+			{
+				DefaultMutableTreeNode newWorkNode = 
+					new DefaultMutableTreeNode();
+				newWorkNode.setUserObject(menuItem);
+				// voeg child toe
+				workNode.add(newWorkNode);
+				// recurse
+				addFilteredChildsForRequest(subject, childNode, newWorkNode, filterContext, filters);	
+			}
+		}
 	}
 
 	/**
