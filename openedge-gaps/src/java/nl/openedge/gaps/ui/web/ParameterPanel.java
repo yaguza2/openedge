@@ -26,6 +26,7 @@ import nl.openedge.gaps.core.parameters.impl.PercentageParameter;
 import nl.openedge.gaps.core.parameters.impl.StringParameter;
 import nl.openedge.gaps.support.ParameterBuilder;
 
+import com.voicetribe.wicket.Page;
 import com.voicetribe.wicket.RequestCycle;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
@@ -35,6 +36,8 @@ import com.voicetribe.wicket.markup.html.form.Form;
 import com.voicetribe.wicket.markup.html.form.IOnChangeListener;
 import com.voicetribe.wicket.markup.html.form.TextField;
 import com.voicetribe.wicket.markup.html.form.validation.IValidationErrorHandler;
+import com.voicetribe.wicket.markup.html.link.IPageLink;
+import com.voicetribe.wicket.markup.html.link.PageLink;
 import com.voicetribe.wicket.markup.html.panel.Panel;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
@@ -125,12 +128,12 @@ public class ParameterPanel extends Panel
         HtmlContainer plainParamsPanel = new HtmlContainer("plainParamsPanel");
         PlainParameterForm paramForm = new PlainParameterForm("paramForm", null);
         PlainParameterTable plainParametersTable =
-            new PlainParameterTable("plainParams", grouped.plainParams);
+            new PlainParameterTable("plainParams", grouped.getPlainParams());
         paramForm.add(plainParametersTable);
         plainParamsPanel.add(paramForm);
         NewParameterForm newParamForm = new NewParameterForm("newParamForm", null);
         outerPanel.add(newParamForm);
-        if(grouped.plainParams.isEmpty())
+        if(grouped.getPlainParams().isEmpty())
         {
             plainParamsPanel.setVisible(false);
         }
@@ -324,9 +327,9 @@ public class ParameterPanel extends Panel
         HtmlContainer nestedParamsPanel = new HtmlContainer("nestedParamsPanel");
         NestedParametersOuterTable nestedParametersTable =
             new NestedParametersOuterTable("nestedParams",
-                    new ArrayList(grouped.nestedParams.values()));
+                    new ArrayList(grouped.getNestedParams().values()));
         nestedParamsPanel.add(nestedParametersTable);
-        if(grouped.nestedParams.isEmpty())
+        if(grouped.getNestedParams().isEmpty())
         {
             nestedParametersTable.setVisible(false);
         }
@@ -353,8 +356,8 @@ public class ParameterPanel extends Panel
          */
         protected void populateCell(Cell cell)
         {
-            GroupedParameters.NestedParametersWrapper wrapper =
-                (GroupedParameters.NestedParametersWrapper)cell.getModelObject();
+            NestedParametersWrapper wrapper =
+                (NestedParametersWrapper)cell.getModelObject();
             NestedParameterTable table =
                 new NestedParameterTable("nested", wrapper);
             cell.add(table);
@@ -370,9 +373,9 @@ public class ParameterPanel extends Panel
              * @param componentName componentnaam
              * @param model list met parametergroepen
              */
-            public NestedParameterTable(String componentName, List model)
+            public NestedParameterTable(String componentName, NestedParametersWrapper model)
             {
-                super(componentName, model);
+                super(componentName, (List)model);
             }
 
             /**
@@ -380,101 +383,22 @@ public class ParameterPanel extends Panel
              */
             protected void populateCell(Cell cell)
             {
-                NestedParameter parameter = (NestedParameter)cell.getModelObject();
+                final NestedParameter parameter = (NestedParameter)cell.getModelObject();
                 cell.add(new Label("name", parameter.getLocalId()));
-            }
-        }
-    }
-
-    //-------------------------------------------------------------------------------
-    //--------------------- utilities -----------------------------------------------
-    //-------------------------------------------------------------------------------
-
-    /**
-     * Groepeert de parameters in geneste/ niet geneste paramers, waarbij
-     * de geneste parameter weer worden gegroepeerd naar het aantal kolommen
-     * van de nesting.
-     */
-    private static class GroupedParameters
-    {
-        /** de niet-geneste parameters. */
-        private List plainParams = new ArrayList();
-
-        /** de geneste parameters. */
-        private Map nestedParams = new HashMap();
-
-        /**
-         * Construct en groepeer.
-         * @param parameters de te groeperen parameters
-         */
-        public GroupedParameters(Parameter[] parameters)
-        {
-            int len = parameters.length;
-            for(int i = 0; i < len; i++)
-            {
-                add(parameters[i]);
-            }
-        }
-
-        /**
-         * Geeft of er helemaal geen parameters zijn gezet.
-         * @return true indien er helemaal geen parameters zijn gezet, anders false
-         */
-        public boolean isEmpty()
-        {
-            return plainParams.isEmpty() && nestedParams.isEmpty();
-        }
-
-        /**
-         * Voeg een parameter toe.
-         * @param parameter de toe te voegen parameter
-         */
-        public void add(Parameter parameter)
-        {
-            if(!(parameter instanceof NestedParameter))
-            {
-                plainParams.add(parameter);
-            }
-            else
-            {
-                NestedParameter nested = (NestedParameter)parameter;
-                int size = nested.getChildIds().size();
-                NestedParametersWrapper wrapper =
-                    (NestedParametersWrapper)nestedParams.get(String.valueOf(size));
-                if(wrapper == null)
+                // Link to BookDetails page
+                cell.add(new PageLink("nestedLink", new IPageLink()
                 {
-                    wrapper = new NestedParametersWrapper(size);
-                    nestedParams.put(String.valueOf(size), wrapper);
-                }
-                wrapper.addParameter(nested);
-            }
-        }
+                    public Page getPage()
+                    {
+                        return new NestedParameterPopupPage(
+                                (NestedParametersWrapper)getModelObject());
+                    }
 
-        /**
-         * Wrapper klasse voor geneste parameters. De wrapper groepeert
-         * de geneste parameters met hetzelfde aantal kolommen.
-         */
-        private static class NestedParametersWrapper extends ArrayList
-        {
-            /** het aantal kolommen. */
-            private int cols;
-
-            /**
-             * Construct.
-             * @param cols het aantal kolommen
-             */
-            public NestedParametersWrapper(int cols)
-            {
-                this.cols = cols;
-            }
-
-            /**
-             * voeg een geneste parameter toe.
-             * @param param de toe te voegen geneste parameter
-             */
-            public void addParameter(NestedParameter param)
-            {
-                add(param);
+                    public Class getPageClass()
+                    {
+                        return NestedParameterPopupPage.class;
+                    }
+                }));
             }
         }
     }

@@ -1,5 +1,4 @@
-body  { 	
-	background-image:url("images/background.gif");
+body  {
 	background-position:top left;
 	background-repeat:no-repeat;
 	font-family: 'Trebuchet MS', 'Lucida Grande',
@@ -89,31 +88,6 @@ input, select, label  {
 	font-size:12px;
 	margin-right:10px 
 }
-#linedrow tr {
-  border: 1px solid #339900;
-}
-#linedrow td {
-  background-color: #CECECE;
-}
-#tabs {
- text-align: left;
- padding:2px;
- width:660px;
- border: 1px solid;
-}
-#tabs ul {
- margin-left: 0;
- padding-left: 0;
- display: inline;
-}
-#tabs ul li {
- background-color: #CECECE;
- margin-left: 0;
- margin-bottom: 0;
- padding: 2px 15px 5px;
- list-style: none;
- display: inline;
-}
 #plainParamsPanel {
  width: 600px;
 }	
@@ -121,19 +95,8 @@ input, select, label  {
  height: 200px;
  overflow: auto;
 }
-#nestedParamScrollPane {
- height: 80px;
- overflow: auto;
-}
-#paramGroupScrollPane {
- height: 120px;
- overflow: auto;
-}
-#newParameterPanel {
-}
-#structGroupScrollPane {
- height: 120px;
- overflow: auto;
+#nestedParamPane {
+
 }
 #nestedvalue {
  font-size: 8pt;

@@ -35,24 +35,22 @@ public class ParameterModel extends PropertyModel
 
     /**
      * Construct.
-     * @param propertyModel
-     * @param expression
+     * @param Parameter parameter
      */
-    public ParameterModel(Serializable propertyModel, String expression)
+    public ParameterModel(Parameter parameter)
     {
-        super(propertyModel, expression);
+        super(parameter, null);
     }
 
     /**
      * Construct.
-     * @param propertyModel
-     * @param expression
-     * @param applyFormatting
+     * @param Parameter parameter
+     * @param applyFormatting whether to apply formatting
      */
-    public ParameterModel(Serializable propertyModel, String expression,
+    public ParameterModel(Parameter parameter, String expression,
             boolean applyFormatting)
     {
-        super(propertyModel, expression, applyFormatting);
+        super(parameter, null, applyFormatting);
     }
 
     /**
