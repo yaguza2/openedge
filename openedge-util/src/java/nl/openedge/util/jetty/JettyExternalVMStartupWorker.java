@@ -115,22 +115,16 @@ class JettyExternalVMStartupWorker extends Thread
 			log.error(e.getMessage(), e);
 		}
 
-		try
-		{
-			// ping the remote monitor for startup of Jetty
-			jettyStarted = JettyHelper.pingMonitorForServerStarted(commKey, "127.0.0.1",
-					monitorPort, maxTries, sleepBetweenTries);
-			// if we get here, jetty started up successfully
-			log.info("monitor acknowledged Jetty startup");
-		}
-		catch (Exception e)
-		{
-			log.info("unable to get monitor acknowledgement of Jetty startup:", e);
-		}
+		// ping the remote monitor for startup of Jetty
+		jettyStarted = JettyHelper.pingMonitorForServerStarted(commKey, "127.0.0.1",
+				monitorPort, maxTries, sleepBetweenTries);
+		// if we get here, jetty started up successfully
+		log.info("monitor acknowledged Jetty startup");
 	}
 
 	/**
 	 * Start Jetty with OS call.
+	 * @throws IOException see exception
 	 */
 	private void startExternalJettyInstance() throws IOException
 	{
@@ -148,6 +142,7 @@ class JettyExternalVMStartupWorker extends Thread
 	 * 
 	 * @param command
 	 *            the command
+	 * @return String to command as a plain string
 	 */
 	private String printCommand(String[] command)
 	{
@@ -162,16 +157,16 @@ class JettyExternalVMStartupWorker extends Thread
 	/**
 	 * Connect output of process.
 	 * 
-	 * @param process
+	 * @param processToConnect
 	 *            the process
 	 */
-	private void connectOutput(Process process)
+	private void connectOutput(Process processToConnect)
 	{
-		InputStream errInput = process.getErrorStream();
+		InputStream errInput = processToConnect.getErrorStream();
 		LogConnector errConn = new LogConnector();
 		errConn.setInputStream(errInput);
 		errConn.start();
-		InputStream outInput = process.getInputStream();
+		InputStream outInput = processToConnect.getInputStream();
 		LogConnector outConn = new LogConnector();
 		outConn.setInputStream(outInput);
 		outConn.start();

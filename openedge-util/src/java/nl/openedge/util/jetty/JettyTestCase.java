@@ -98,29 +98,16 @@ public abstract class JettyTestCase extends AbstractJettyTestCase
 		beforeSetUp();
 		// start Jetty
 		long begin = System.currentTimeMillis();
-		try
+		if (getJettyConfig() != null)
 		{
-			if (getJettyConfig() != null)
-			{
-				// start Jetty with config document
-				jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
-			}
-			else
-			{
-				// start Jetty with arguments (port etc.)
-				jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
-						getContextPath(), isUseJettyPlus());
-			}
+			// start Jetty with config document
+			jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
 		}
-		catch (Exception e)
+		else
 		{
-			log.error(e.getMessage(), e);
-			throw e;
-		}
-		catch (Throwable e) // catch runtime excepions like cnf exceptions etc.
-		{
-			log.error(e.getMessage(), e);
-			throw new Exception(e); // wrap and rethrow
+			// start Jetty with arguments (port etc.)
+			jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
+					getContextPath(), isUseJettyPlus());
 		}
 		long end = System.currentTimeMillis();
 		log.info("Jetty Started (in " + (end - begin) + " milis)");
@@ -139,22 +126,9 @@ public abstract class JettyTestCase extends AbstractJettyTestCase
 	{
 		// first let current test case tear down fixture
 		beforeTearDown();
-		try
-		{
-			log.info("Stopping Jetty");
-			jettyServer.stop();
-			log.info("Jetty stopped");
-		}
-		catch (Exception e)
-		{
-			log.error(e.getMessage(), e);
-			throw e;
-		}
-		catch (Throwable e)
-		{
-			log.error(e.getMessage(), e);
-			throw new Exception(e);
-		}
+		log.info("Stopping Jetty");
+		jettyServer.stop();
+		log.info("Jetty stopped");
 		// call for further tear down
 		afterTearDown();
 	}

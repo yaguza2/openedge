@@ -30,6 +30,7 @@
  */
 package nl.openedge.util.jetty;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
@@ -42,6 +43,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LogConnector extends Thread
 {
+	/** constant for empty string. */
+	private static final String EMPTY_STRING = "";
+
+	/** default interval for reading from stream. */
+	private static final int DEFAULT_READ_INTERVAL = 100;
 
 	/** the inputstream to connect. */
 	private InputStream inputStream;
@@ -58,11 +64,8 @@ public class LogConnector extends Thread
 	/** postfix all output to the log with this. */
 	private String linePostfix = EMPTY_STRING;
 
-	/** constant for empty string. */
-	private final static String EMPTY_STRING = "";
-
 	/** interval for reading from the stream. */
-	private long readInterval = 100;
+	private long readInterval = DEFAULT_READ_INTERVAL;
 
 	/**
 	 * @see java.lang.Runnable#run()
@@ -94,7 +97,7 @@ public class LogConnector extends Thread
 				//Thread.sleep(100);
 				Thread.yield();
 			}
-			catch (Exception e)
+			catch (IOException e)
 			{
 				log.error(e.getMessage());
 				if (buffer.length() > 0) // flush buffer if it is not empty
@@ -161,16 +164,19 @@ public class LogConnector extends Thread
 	/**
 	 * Set linePrefix; prefix all output to the log with this.
 	 * 
-	 * @param linePrefix
+	 * @param theLinePrefix
 	 *            linePrefix to set.
 	 */
-	public void setLinePrefix(String linePrefix)
+	public void setLinePrefix(String theLinePrefix)
 	{
-		if (linePrefix == null)
+		if (theLinePrefix == null)
 		{
-			linePrefix = EMPTY_STRING;
+			this.linePrefix = EMPTY_STRING;
 		}
-		this.linePrefix = linePrefix;
+		else
+		{
+			this.linePrefix = theLinePrefix;	
+		}
 	}
 
 	/**

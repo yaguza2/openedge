@@ -59,7 +59,8 @@ import org.apache.commons.logging.LogFactory;
  * 	deco.setUseJettyPlus(false);
  * 	// by uncommenting the next line, on Windows a new dos box will be opened where
  * 	// the VM is started and where all output will be shown.
- * 	// deco.setStartCommand(new String[]{&quot;cmd&quot;, &quot;/C&quot;, &quot;start&quot;, &quot;java&quot;});
+ * 	// deco.setStartCommand(new String[]
+ * 	//	{&quot;cmd&quot;, &quot;/C&quot;, &quot;start&quot;, &quot;java&quot;});
  * 	return deco;
  * }
  * </pre>
@@ -70,6 +71,18 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JettyExternalVMDecorator extends AbstractJettyDecorator
 {
+	/** const for default stop port. */
+	private static final int DEFAULT_STOP_PORT = 8079;
+
+	/** const for default stop port. */
+	private static final String DEFAULT_STOP_KEY = "mortbay";
+
+	/** const for default maximum ping times. */
+	private static final int DEFAULT_MAX_TIMES = 60;
+
+	/** const for default sleep time between tries. */
+	private static final int DEFAULT_SLEEP_BETWEEN_TRIES = 1000;
+
 	/** logger. */
 	private static Log log = LogFactory.getLog(JettyExternalVMDecorator.class);
 
@@ -86,23 +99,23 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	private Process process = null;
 
 	/** command port. */
-	private int monitorPort = Integer.getInteger("STOP.PORT", 8079).intValue();
+	private int monitorPort = Integer.getInteger("STOP.PORT", DEFAULT_STOP_PORT).intValue();
 
 	/** auth key. */
-	private String commKey = System.getProperty("STOP.KEY", "mortbay");
+	private String commKey = System.getProperty("STOP.KEY", DEFAULT_STOP_KEY);
 
-	/** adress of Jetty instance */
+	/** adress of Jetty instance. */
 	private String host = "127.0.0.1";
 
 	/**
 	 * Maximum number of ping tries.
 	 */
-	private int maxTries = 60;
+	private int maxTries = DEFAULT_MAX_TIMES;
 
 	/**
 	 * Miliseconds to wait between ping tries.
 	 */
-	private long sleepBetweenTries = 1000;
+	private long sleepBetweenTries = DEFAULT_SLEEP_BETWEEN_TRIES;
 
 	/**
 	 * Construct.
@@ -123,32 +136,24 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	 */
 	public void setUp() throws Exception
 	{
-		try
+		if (process == null)
 		{
-			if (process == null)
+			String[] startCommandWithArgs = Util.addCommandArguments(startCommand,
+					getJettyConfig(), getPort(), getWebappContextRoot(), getContextPath(),
+					isUseJettyPlus());
+
+			JettyExternalVMStartupWorker worker = new JettyExternalVMStartupWorker(
+					startCommandWithArgs, monitorPort, commKey, maxTries, sleepBetweenTries);
+			worker.start(); // start worker trhead
+			worker.join(); // wait for worker to finish
+
+			// throw exception if the worker was not able to start Jetty in time
+			if (!worker.isJettyStarted())
 			{
-				String[] startCommandWithArgs = Util.addCommandArguments(startCommand,
-						getJettyConfig(), getPort(), getWebappContextRoot(), getContextPath(),
-						isUseJettyPlus());
-
-				JettyExternalVMStartupWorker worker = new JettyExternalVMStartupWorker(
-						startCommandWithArgs, monitorPort, commKey, maxTries, sleepBetweenTries);
-				worker.start(); // start worker trhead
-				worker.join(); // wait for worker to finish
-
-				// throw exception if the worker was not able to start Jetty in time
-				if (!worker.isJettyStarted())
-				{
-					String msg = "Starting Jetty in a seperate VM failed";
-					throw new Exception(msg);
-				}
-				process = worker.getProcess(); // keep reference to external process
+				String msg = "Starting Jetty in a seperate VM failed";
+				throw new Exception(msg);
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			throw e;
+			process = worker.getProcess(); // keep reference to external process
 		}
 	}
 

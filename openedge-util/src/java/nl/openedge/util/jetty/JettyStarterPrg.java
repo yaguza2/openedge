@@ -30,6 +30,7 @@
  */
 package nl.openedge.util.jetty;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -38,6 +39,7 @@ import nl.openedge.util.URLHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
+import org.mortbay.util.MultiException;
 
 /**
  * Program that starts Jetty and an admin monitor.
@@ -46,35 +48,38 @@ import org.mortbay.jetty.Server;
  */
 public class JettyStarterPrg
 {
-	/** Logger. */
-	private static Log log = LogFactory.getLog(JettyStarterPrg.class);
-
 	/** command line argument for the xml configuration document, value == '-xml'. */
-	public final static String CMDARG_XML_CONFIG = "-xml";
+	public static final String CMDARG_XML_CONFIG = "-xml";
 
 	/** command line argument for the http listen port, value == '-port'. */
-	public final static String CMDARG_PORT = "-port";
+	public static final String CMDARG_PORT = "-port";
 
 	/**
 	 * default port for http listen request; used when no port is provided and no xml doc is used,
 	 * value == 8080.
 	 */
-	public final static String DEFAULT_HTTP_LISTEN_PORT = "8080";
+	public static final String DEFAULT_HTTP_LISTEN_PORT = "8080";
 
 	/** command line argument for the webapp context root folder, value == '-webappContextRoot'. */
-	public final static String CMDARG_WEBAPP_CONTEXT_ROOT = "-webappContextRoot";
+	public static final String CMDARG_WEBAPP_CONTEXT_ROOT = "-webappContextRoot";
 
 	/** command line argument for the context path (webapp name), value == '-contextPath'. */
-	public final static String CMDARG_CONTEXT_PATH = "-contextPath";
+	public static final String CMDARG_CONTEXT_PATH = "-contextPath";
 
 	/** command line argument whether to use JettyPlus, value == '-useJettyPlus'. */
-	public final static String CMDARG_USE_JETTY_PLUS = "-useJettyPlus";
+	public static final String CMDARG_USE_JETTY_PLUS = "-useJettyPlus";
 
 	/** command line argument for auth key to use, value == '-monitorCommKey'. */
-	public final static String CMDARG__MONITOR_COMM_KEY = "-monitorCommKey";
+	public static final String CMDARG_MONITOR_COMM_KEY = "-monitorCommKey";
 
 	/** command line argument for monitor port to use, value == '-monitorPort'. */
-	public final static String CMDARG_MONITOR_PORT = "-monitorPort";
+	public static final String CMDARG_MONITOR_PORT = "-monitorPort";
+
+	/** default stop port. */
+	private static final int DEFAULT_STOP_PORT = 8079;
+
+	/** Logger. */
+	private static Log log = LogFactory.getLog(JettyStarterPrg.class);
 
 	/**
 	 * Starts Jetty.
@@ -84,9 +89,6 @@ public class JettyStarterPrg
 	 */
 	public static void main(String[] args)
 	{
-
-		String portString = null;
-		String contextString = null;
 		Properties cmdArguments = new Properties();
 		for (int i = 0; i < args.length; i += 2) // put arguments (if any) in cmdArguments
 		{
@@ -107,7 +109,7 @@ public class JettyStarterPrg
 				.parseInt(cmdArguments.getProperty(CMDARG_PORT, DEFAULT_HTTP_LISTEN_PORT));
 		String webappContextRoot = cmdArguments.getProperty(CMDARG_WEBAPP_CONTEXT_ROOT, "./");
 		String contextPath = cmdArguments.getProperty(CMDARG_CONTEXT_PATH, "/");
-		String monitorCommKey = cmdArguments.getProperty(CMDARG__MONITOR_COMM_KEY);
+		String monitorCommKey = cmdArguments.getProperty(CMDARG_MONITOR_COMM_KEY);
 		if (monitorCommKey == null)
 		{
 			monitorCommKey = System.getProperty("STOP.KEY", "mortbay");
@@ -120,12 +122,27 @@ public class JettyStarterPrg
 		}
 		else
 		{
-			monitorPort = Integer.getInteger("STOP.PORT", 8079).intValue();
+			monitorPort = Integer.getInteger("STOP.PORT", DEFAULT_STOP_PORT).intValue();
 		}
 
-		// start Jetty
-		startServer(jettyConfig, port, webappContextRoot, contextPath, useJettyPlus,
-				monitorCommKey, monitorPort);
+		try
+		{
+			// start Jetty
+			startServer(jettyConfig, port, webappContextRoot, contextPath, useJettyPlus,
+					monitorCommKey, monitorPort);
+		}
+		catch (MalformedURLException e)
+		{
+			log.error(e.getMessage(), e);
+		}
+		catch (MultiException e)
+		{
+			log.error(e.getMessage(), e);
+		}
+		catch (JettyHelperException e)
+		{
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -145,41 +162,38 @@ public class JettyStarterPrg
 	 *            auth key
 	 * @param monitorPort
 	 *            listen port for admin monitor
+	 * @throws MalformedURLException when the url is not valid
+	 * @throws MultiException when Jetty is unable to startup
+	 * @throws JettyHelperException when the server could not be created
 	 */
 	private static void startServer(String jettyConfig, int port, String webappContextRoot,
 			String contextPath, boolean useJettyPlus, String monitorCommKey, int monitorPort)
+			throws MalformedURLException, MultiException, JettyHelperException
 	{
 		Server jettyServer = null;
-		try
+		// get instance of proper Jetty server
+		if (jettyConfig != null) // either start with xml configuration document
 		{
-			// get instance of proper Jetty server
-			if (jettyConfig != null) // either start with xml configuration document
-			{
-				URL jettyConfigURL = null;
-				jettyConfigURL = URLHelper.convertToURL(jettyConfig, JettyStarterPrg.class);
-				log.info("Creating Jetty with configuration " + jettyConfigURL);
-				jettyServer = JettyHelper.getJettyServerInstance(jettyConfigURL, useJettyPlus);
-			}
-			else
-			// or some basic arguments
-			{
-				jettyServer = JettyHelper.getJettyServerInstance(port, webappContextRoot,
-						contextPath, useJettyPlus);
-			}
-
-			// now, before starting the server, first create the monitor
-			JettyMonitor monitor = JettyMonitor.startMonitor(jettyServer, monitorCommKey,
-					monitorPort); // start admin monitor
-			log.info("Started " + monitor);
-
-			// finally, start the server
-			jettyServer.start();
-			log.info("Started " + jettyServer);
+			URL jettyConfigURL = null;
+			jettyConfigURL = URLHelper.convertToURL(jettyConfig, JettyStarterPrg.class);
+			log.info("Creating Jetty with configuration " + jettyConfigURL);
+			jettyServer = JettyHelper.getJettyServerInstance(jettyConfigURL, useJettyPlus);
 		}
-		catch (Throwable e)
+		else
+		// or some basic arguments
 		{
-			log.error(e.getMessage(), e);
+			jettyServer = JettyHelper.getJettyServerInstance(port, webappContextRoot,
+					contextPath, useJettyPlus);
 		}
+
+		// now, before starting the server, first create the monitor
+		JettyMonitor monitor = JettyMonitor.startMonitor(jettyServer, monitorCommKey,
+				monitorPort); // start admin monitor
+		log.info("Started " + monitor);
+
+		// finally, start the server
+		jettyServer.start();
+		log.info("Started " + jettyServer);
 	}
 
 }

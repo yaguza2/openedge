@@ -104,29 +104,16 @@ public class JettyDecorator extends AbstractJettyDecorator
 	public void setUp() throws Exception
 	{
 		// start Jetty
-		try
+		if (getJettyConfig() != null)
 		{
-			if (getJettyConfig() != null)
-			{
-				// start Jetty with config document
-				jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
-			}
-			else
-			{
-				// start Jetty with arguments (port etc.)
-				jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
-						getContextPath(), isUseJettyPlus());
-			}
+			// start Jetty with config document
+			jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
 		}
-		catch (Exception e)
+		else
 		{
-			log.error(e.getMessage(), e);
-			throw e;
-		}
-		catch (Throwable e) // catch runtime excepions like cnf exceptions etc.
-		{
-			log.error(e.getMessage(), e);
-			throw new Exception(e); // wrap and rethrow
+			// start Jetty with arguments (port etc.)
+			jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
+					getContextPath(), isUseJettyPlus());
 		}
 	}
 
@@ -136,18 +123,17 @@ public class JettyDecorator extends AbstractJettyDecorator
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#tearDown()
 	 */
-	public void tearDown() throws Exception
+	public void tearDown()
 	{
+		log.info("Stopping Jetty");
 		try
 		{
-			log.info("Stopping Jetty");
 			jettyServer.stop();
 			log.info("Jetty stopped");
 		}
-		catch (Exception e)
+		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
-			//throw e;
 		}
 	}
 

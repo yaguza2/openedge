@@ -16,6 +16,11 @@ package nl.openedge.util.jetty;
  */
 final class Util
 {
+	/** internal const. */
+	private static final int NEW_CMD_LENGTH_ARGS = 11;
+	/** internal const. */
+	private static final int NEW_CMD_LENGTH_NO_ARGS = 7;
+
 	/**
 	 * Hidden utility constructor.
 	 */
@@ -27,8 +32,12 @@ final class Util
 	/**
 	 * Add arguments for command call.
 	 * 
-	 * @param cmd
-	 *            commands and args to add arguments to
+	 * @param cmd commands and args to add arguments to
+	 * @param jettyConfig jetty configuration location
+	 * @param port the port for listening
+	 * @param webappContextRoot context root
+	 * @param contextPath context path
+	 * @param useJettyPlus whether to use JettyPlus
 	 * @return String[] new command with arguments
 	 */
 	public static String[] addCommandArguments(String[] cmd, String jettyConfig, int port,
@@ -40,7 +49,7 @@ final class Util
 		String classPath = System.getProperty("java.class.path");
 		if (jettyConfig != null) // append xml arg
 		{
-			newCmd = new String[length + 7];
+			newCmd = new String[length + NEW_CMD_LENGTH_NO_ARGS];
 			currentArg = length;
 			System.arraycopy(cmd, 0, newCmd, 0, cmd.length);
 			newCmd[currentArg++] = "-classpath";
@@ -52,7 +61,7 @@ final class Util
 		else
 		// append basic args
 		{
-			newCmd = new String[length + 11];
+			newCmd = new String[length + NEW_CMD_LENGTH_ARGS];
 			currentArg = length;
 			System.arraycopy(cmd, 0, newCmd, 0, cmd.length);
 			newCmd[currentArg++] = "-classpath";

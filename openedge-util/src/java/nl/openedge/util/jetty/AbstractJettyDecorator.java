@@ -40,6 +40,9 @@ import junit.framework.Test;
  */
 public abstract class AbstractJettyDecorator extends TestSetup
 {
+	/** default http listen port. */
+	private static final int DEFAULT_PORT = 8080;
+
 	/** calling class for getting config resource. */
 	private static Class callee = JettyDecorator.class;
 
@@ -49,14 +52,14 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 */
 	private boolean useJettyPlus = false;
 
-	/** URL of jetty configuration document */
+	/** URL of jetty configuration document. */
 	private String jettyConfig;
 
 	/** root folder of web application. */
 	private String webappContextRoot = "/.";
 
 	/** port for http requests. */
-	private int port = 8080;
+	private int port = DEFAULT_PORT;
 
 	/** context path (webapp name). */
 	private String contextPath = "/";
@@ -114,9 +117,9 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param useJettyPlus
 	 *            whether to use JettyPlus.
 	 */
-	public void setUseJettyPlus(boolean doUseJettyPlus)
+	public void setUseJettyPlus(boolean useJettyPlus)
 	{
-		useJettyPlus = doUseJettyPlus;
+		this.useJettyPlus = useJettyPlus;
 	}
 
 	/**
@@ -135,9 +138,9 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param port
 	 *            port for http requests.
 	 */
-	public void setPort(int newPort)
+	public void setPort(int port)
 	{
-		port = newPort;
+		this.port = port;
 	}
 
 	/**
@@ -156,9 +159,9 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param webappContextRoot
 	 *            webappContextRoot to set.
 	 */
-	public void setWebappContextRoot(String newWebappContextRoot)
+	public void setWebappContextRoot(String webappContextRoot)
 	{
-		webappContextRoot = newWebappContextRoot;
+		this.webappContextRoot = webappContextRoot;
 	}
 
 	/**
@@ -177,8 +180,8 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param contextPath
 	 *            context path (webapp name).
 	 */
-	public void setContextPath(String newContextPath)
+	public void setContextPath(String contextPath)
 	{
-		contextPath = newContextPath;
+		this.contextPath = contextPath;
 	}
 }

@@ -9,10 +9,13 @@
  */
 package nl.openedge.util.jetty;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 
@@ -22,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.util.Log;
+import org.mortbay.util.MultiException;
 import org.mortbay.util.OutputStreamLogSink;
 
 /**
@@ -31,6 +35,14 @@ import org.mortbay.util.OutputStreamLogSink;
  */
 public final class JettyHelper
 {
+	/** confidential port. */
+	private static final int CONFIDENTIALPORT = 8443;
+	/** low resource persist time. */
+	private static final int LOW_RESOURCE_PERSIST_TIME = 2000;
+	/** maximum idle time. */
+	private static final int MAX_IDLE_TIME = 30000;
+	/** maximum threads. */
+	private static final int MAX_THREADS = 10;
 	/** Log. */
 	private static org.apache.commons.logging.Log log = LogFactory.getLog(JettyHelper.class);
 
@@ -51,23 +63,57 @@ public final class JettyHelper
 	 *            Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be
 	 *            instantiated, if false, org.mortbay.jetty.Server will be instantiated
 	 * @return an instance of Jetty (not started)
-	 * @throws Exception
+	 * @throws JettyHelperException when the instance could not be created
 	 */
-	public static Server getJettyServerInstance(URL config, boolean useJettyPlus) throws Exception
+	public static Server getJettyServerInstance(URL config, boolean useJettyPlus)
+		throws JettyHelperException
 	{
 		Server server = null;
-		if (useJettyPlus)
+		try
 		{
-			// dynamically load the class to avoid dependency loading problems
-			Class clazz = Class.forName("org.mortbay.jetty.plus.Server");
-			Constructor constructor = clazz.getConstructor(new Class[]
-				{URL.class});
-			server = (Server) constructor.newInstance(new Object[]
-				{config});
+			if (useJettyPlus)
+			{
+				// dynamically load the class to avoid dependency loading problems
+				Class clazz = Class.forName("org.mortbay.jetty.plus.Server");
+				Constructor constructor = clazz.getConstructor(new Class[]
+					{URL.class});
+				server = (Server) constructor.newInstance(new Object[]
+					{config});
+			}
+			else
+			{
+				server = new Server(config);
+			}
 		}
-		else
+		catch (ClassNotFoundException e)
 		{
-			server = new Server(config);
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (NoSuchMethodException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (InstantiationException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (IllegalAccessException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (InvocationTargetException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (IOException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
 		}
 		return server;
 	}
@@ -83,35 +129,67 @@ public final class JettyHelper
 	 *            webapp context path
 	 * @param useJettyPlus
 	 *            whether to use JettyPlus
-	 * @throws Exception
+	 * @return jetty server instance
+	 * @throws JettyHelperException when the instance could not be created
 	 */
 	public static Server getJettyServerInstance(int port, String webappContextRoot,
-			String contextPath, boolean useJettyPlus) throws Exception
+			String contextPath, boolean useJettyPlus) throws JettyHelperException
 	{
 		Server server = null;
 		if (useJettyPlus)
 		{
 			// dynamically load the class to avoid dependency loading problem with the runner
-			Class clazz = Class.forName("org.mortbay.jetty.plus.Server");
-			server = (Server) clazz.newInstance();
+			try
+			{
+				Class clazz = Class.forName("org.mortbay.jetty.plus.Server");
+				server = (Server) clazz.newInstance();
+			}
+			catch (ClassNotFoundException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new JettyHelperException(e);
+			}
+			catch (InstantiationException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new JettyHelperException(e);
+			}
+			catch (IllegalAccessException e)
+			{
+				log.error(e.getMessage(), e);
+				throw new JettyHelperException(e);
+			}
 		}
 		else
 		{
 			server = new Server();
 		}
 
-		Log log = Log.instance();
-		OutputStreamLogSink sink = new OutputStreamLogSink();
-		sink.start();
-		log.add(sink);
-		SocketListener listener = new SocketListener();
-		listener.setPort(port);
-		listener.setMaxThreads(10);
-		listener.setMaxIdleTimeMs(30000);
-		listener.setLowResourcePersistTimeMs(2000);
-		listener.setConfidentialPort(8443);
-		server.addListener(listener);
-		server.addWebApplication(contextPath, webappContextRoot);
+		try
+		{
+			Log logInstance = Log.instance();
+			OutputStreamLogSink sink = new OutputStreamLogSink();
+			sink.start();
+			logInstance.add(sink);
+			SocketListener listener = new SocketListener();
+			listener.setPort(port);
+			listener.setMaxThreads(MAX_THREADS);
+			listener.setMaxIdleTimeMs(MAX_IDLE_TIME);
+			listener.setLowResourcePersistTimeMs(LOW_RESOURCE_PERSIST_TIME);
+			listener.setConfidentialPort(CONFIDENTIALPORT);
+			server.addListener(listener);
+			server.addWebApplication(contextPath, webappContextRoot);
+		}
+		catch (IllegalArgumentException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (IOException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
 
 		return server;
 	}
@@ -128,17 +206,25 @@ public final class JettyHelper
 	 * @param useJettyPlus
 	 *            whether to use JettyPlus
 	 * @return Server started instance of Jetty server
-	 * @throws Exception
+	 * @throws JettyHelperException when the instance could not be created
 	 */
 	public static Server startJetty(int port, String webappContextRoot, String contextPath,
-			boolean useJettyPlus) throws Exception
+			boolean useJettyPlus) throws JettyHelperException
 	{
 		log.info("Starting Jetty with arguments {port == "
 				+ port + ", webappContextRoot == " + webappContextRoot + ", contextPath == "
 				+ contextPath + "}");
 		Server server = getJettyServerInstance(port, webappContextRoot, contextPath, useJettyPlus);
 		log.info(server + " created");
-		server.start();
+		try
+		{
+			server.start();
+		}
+		catch (MultiException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
 		log.info("Jetty started");
 		return server;
 	}
@@ -150,17 +236,38 @@ public final class JettyHelper
 	 *            the url to the configuration file (can be a classpath location)
 	 * @param useJettyPlus
 	 *            whether to use JettyPlus
-	 * @throws Exception
+	 * @return Server instance of Jetty server
+	 * @throws JettyHelperException when the instance could not be created
 	 */
-	public static Server startJetty(String jettyConfig, boolean useJettyPlus) throws Exception
+	public static Server startJetty(String jettyConfig, boolean useJettyPlus)
+			throws JettyHelperException
 	{
 		URL jettyConfigURL = null;
-		jettyConfigURL = URLHelper.convertToURL(jettyConfig, JettyStarterPrg.class);
-		log.info("Starting Jetty with configuration " + jettyConfigURL);
-		Server server = getJettyServerInstance(jettyConfigURL, useJettyPlus);
-		log.info(server + " created");
-		server.start();
-		log.info("Jetty started");
+		Server server;
+		try
+		{
+			jettyConfigURL = URLHelper.convertToURL(jettyConfig, JettyStarterPrg.class);
+			log.info("Starting Jetty with configuration " + jettyConfigURL);
+			server = getJettyServerInstance(jettyConfigURL, useJettyPlus);
+			log.info(server + " created");
+			server.start();
+			log.info("Jetty started");
+		}
+		catch (MalformedURLException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (JettyHelperException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (MultiException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
 		return server;
 	}
 
@@ -181,7 +288,7 @@ public final class JettyHelper
 	 * @throws Exception
 	 */
 	public static boolean pingMonitorForServerStarted(String commKey, String host, int monitorPort,
-			int maxTries, long sleepBetweenTries) throws Exception
+			int maxTries, long sleepBetweenTries)
 	{
 		boolean jettyStarted = false;
 		int tries = 0;
@@ -192,7 +299,7 @@ public final class JettyHelper
 			{
 				jettyStarted = pingMonitorForServerStarted(commKey, host, monitorPort);
 			}
-			catch (Exception e)
+			catch (IOException e)
 			{
 				if (log.isDebugEnabled())
 				{
@@ -203,6 +310,7 @@ public final class JettyHelper
 					log.error(e.getMessage());
 				}
 			}
+
 			try
 			{
 				Thread.sleep(sleepBetweenTries);
@@ -225,10 +333,10 @@ public final class JettyHelper
 	 * @param monitorPort
 	 *            port admin monitor
 	 * @return boolean true if started succesfully, false otherwise
-	 * @throws Exception
+	 * @throws IOException when the socket could not be created
 	 */
-	public static boolean pingMonitorForServerStarted(String commKey, String host, int monitorPort)
-			throws Exception
+	public static boolean pingMonitorForServerStarted(
+			String commKey, String host, int monitorPort) throws IOException
 	{
 		boolean jettyStarted = false;
 		Socket socket = null;
@@ -256,7 +364,7 @@ public final class JettyHelper
 				return false;
 			}
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			throw e;
 		}
@@ -280,11 +388,12 @@ public final class JettyHelper
 	 *            host of monitor
 	 * @param monitorPort
 	 *            port of monitor
-	 * @throws Exception
-	 *             when issue of command failed
+	 * @throws IOException when the socket could not be created
+	 * @throws JettyMonitorException when the Jetty Monitor threw an exception 
 	 */
-	public static void issueStopCommandToMonitor(String commKey, String host, int monitorPort)
-			throws Exception
+	public static void issueStopCommandToMonitor(
+			String commKey, String host, int monitorPort)
+			throws IOException, JettyMonitorException
 	{
 		Socket socket = null;
 		try
@@ -301,15 +410,15 @@ public final class JettyHelper
 			}
 			else if ("".equalsIgnoreCase(response))
 			{
-				throw new Exception("monitor did not respond with a valid ack");
+				throw new JettyMonitorException("monitor did not respond with a valid ack");
 			}
 			else
 			{
-				throw new Exception("unknown response from monitor: " + response);
+				throw new JettyMonitorException("unknown response from monitor: " + response);
 			}
 
 		}
-		catch (Exception e)
+		catch (JettyMonitorException e)
 		{
 			log.error(e.getMessage(), e);
 			throw e;
@@ -330,9 +439,9 @@ public final class JettyHelper
 	 * @param inputStream
 	 *            inputstream
 	 * @return String string from inputstream
-	 * @throws Exception
+	 * @throws IOException see except doc
 	 */
-	private static String readFromInputStream(InputStream inputStream) throws Exception
+	private static String readFromInputStream(InputStream inputStream) throws IOException
 	{
 		StringBuffer b = new StringBuffer("");
 		int i;

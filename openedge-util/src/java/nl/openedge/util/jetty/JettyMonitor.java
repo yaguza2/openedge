@@ -69,7 +69,7 @@ public class JettyMonitor extends Thread
 	/** socket chanel for commands. */
 	private ServerSocketChannel serverSocketChanel = null;
 
-	/** JettyServer instantie, zodat we (nog) schoner kunnen afsluiten */
+	/** JettyServer instantie, zodat we (nog) schoner kunnen afsluiten. */
 	private Server server = null;
 
 	/**
