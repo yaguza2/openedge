@@ -6,6 +6,8 @@
 - added package nl.openedge.util.rekenen
 - added Jetty utilities
 - added package nl.openedge.util.mock
+- added package nl.openedge.util.baritus
+- added package nl.openedge.util.maverick
 
 -------------------------------------------------
 1.2.7
