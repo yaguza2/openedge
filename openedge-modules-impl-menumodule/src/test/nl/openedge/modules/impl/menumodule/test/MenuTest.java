@@ -375,7 +375,6 @@ public class MenuTest extends TestCase
 	
 	public void testRequestScopeFilter()
 	{
-		System.out.println("");
 		Subject subject = new Subject();
 		Set principals = new HashSet();
 		principals.add(new UserPrincipal("admin"));
@@ -390,7 +389,6 @@ public class MenuTest extends TestCase
 			List[] items = menuModule.getMenuItems(subject);
 			List linkChecks = new ArrayList();
 			linkChecks.add("/medischdossier.m");
-			System.out.println("level 1 ***********************************");
 			int i = 0;
 			assertEquals(1, items.length);
 			int size = items[0].size();
@@ -398,7 +396,6 @@ public class MenuTest extends TestCase
 			for( ; i < size; i++ )
 			{
 				MenuItem item = (MenuItem)items[0].get(i);
-				System.out.println("menuitem: " + item);
 				assertEquals(linkChecks.get(i), item.getLink());
 			}
 	
@@ -407,7 +404,34 @@ public class MenuTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}		
+		}
+
+		try
+		{
+			// verwijder indicator variable
+			menuModule.resetContextForCurrentThread();
+			
+			List[] items = menuModule.getMenuItems(subject);
+			List linkChecks = new ArrayList();
+			linkChecks.add("/medischdossier.m");
+			linkChecks.add("/zoeken.m");
+			int i = 0;
+			assertEquals(1, items.length);
+			int size = items[0].size();
+			assertEquals(2, size);
+			for( ; i < size; i++ )
+			{
+				MenuItem item = (MenuItem)items[0].get(i);
+				assertEquals(linkChecks.get(i), item.getLink());
+			}
+	
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+			
 	}
 	
 	public void testNodeScopeFilter()
