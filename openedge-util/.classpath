@@ -6,5 +6,8 @@
     <classpathentry kind="lib" path="lib/commons-beanutils-1.5.jar" sourcepath="/openedge-util/libsrc/commons-beanutils-1.5-src.jar"/>
     <classpathentry kind="lib" path="lib/jakarta-ojb-1.0pre-cvs.jar"/>
     <classpathentry kind="lib" path="lib/commons-lang-1.0.1.jar" sourcepath="/openedge-util/libsrc/commons-lang-1.0.1-src.jar"/>
+    <classpathentry kind="lib" path="lib/standard.jar" sourcepath="/openedge-util/libsrc/jstl-standard-src.jar"/>
+    <classpathentry kind="lib" path="lib/jstl.jar" sourcepath="/openedge-util/libsrc/jstl-standard-src.jar"/>
+    <classpathentry kind="lib" path="lib/commons-dbcp-1.0.jar" sourcepath="/openedge-util/libsrc/commons-dbcp-1.0-src.jar"/>
     <classpathentry kind="output" path="build"/>
 </classpath>
