@@ -527,71 +527,68 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				{
 					String name = (String)j.next();
 					Object value = parameters.get(name);
-					
-					if(value != null)
-					{
-						try
-						{						
-							Matcher matcher = pattern.matcher(name);
-							if(matcher.matches())
+
+					try
+					{						
+						Matcher matcher = pattern.matcher(name);
+						if(matcher.matches())
+						{
+							FieldPopulator fieldPopulator = (FieldPopulator)
+								regexFieldPopulators.get(pattern);
+							
+							keysToBeRemoved.add(name);
+	
+							TargetPropertyMeta propInfo = null;
+							try 
 							{
-								FieldPopulator fieldPopulator = (FieldPopulator)
-									regexFieldPopulators.get(pattern);
-								
-								keysToBeRemoved.add(name);
-		
-								TargetPropertyMeta propInfo = null;
-								try 
-								{
-									// get the descriptor
-									propertyDescriptor = getPropertyDescriptor(bean, name);
-		
-									if (propertyDescriptor == null) 
-									{
-										continue; // Skip this property setter
-									}
-								}
-								catch (NoSuchMethodException e) 
+								// get the descriptor
+								propertyDescriptor = getPropertyDescriptor(bean, name);
+	
+								if (propertyDescriptor == null) 
 								{
 									continue; // Skip this property setter
 								}
-								
-								// resolve and get some more info we need for the target
-								targetPropertyMeta = PropertyUtil.calculate(
-									bean, name, propertyDescriptor);
-		
-								boolean success;
-								try
-								{
-									// execute population on form
-									success = fieldPopulator.setProperty(
-										cctx, formBeanContext, name, value, 
-										targetPropertyMeta, locale);
-								}
-								catch (Exception e)
-								{
-									populationLog.error(e);
-									if(populationLog.isDebugEnabled())
-									{
-										e.printStackTrace();
-									}
-									continue;
-								}
-								if(!success)
-								{
-									succeeded = false;
-								}
 							}
-						}
-						catch (Exception e)
-						{
-							log.error(e);
-							if(log.isDebugEnabled())
+							catch (NoSuchMethodException e) 
 							{
-								e.printStackTrace();
+								continue; // Skip this property setter
 							}
-							continue;
+							
+							// resolve and get some more info we need for the target
+							targetPropertyMeta = PropertyUtil.calculate(
+								bean, name, propertyDescriptor);
+	
+							boolean success;
+							try
+							{
+								// execute population on form
+								success = fieldPopulator.setProperty(
+									cctx, formBeanContext, name, value, 
+									targetPropertyMeta, locale);
+							}
+							catch (Exception e)
+							{
+								populationLog.error(e);
+								if(populationLog.isDebugEnabled())
+								{
+									e.printStackTrace();
+								}
+								continue;
+							}
+							if(!success)
+							{
+								succeeded = false;
+							}
 						}
+					}
+					catch (Exception e)
+					{
+						log.error(e);
+						if(log.isDebugEnabled())
+						{
+							e.printStackTrace();
+						}
+						continue;
 					}
 				}
 			}
@@ -636,51 +633,48 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			if (name == null) continue;
 			
 			Object value = parameters.get(name);
-			
-			if(!isNullOrEmpty(value))
+	
+			try
 			{	
-				try
-				{	
-					// get the descriptor
-					PropertyDescriptor propertyDescriptor = getPropertyDescriptor(bean, name);
-					
-					if(propertyDescriptor != null)
-					{
-						// resolve and get some more info we need for the target
-						TargetPropertyMeta targetPropertyMeta = PropertyUtil.calculate(
-							bean, name, propertyDescriptor);
+				// get the descriptor
+				PropertyDescriptor propertyDescriptor = getPropertyDescriptor(bean, name);
+				
+				if(propertyDescriptor != null)
+				{
+					// resolve and get some more info we need for the target
+					TargetPropertyMeta targetPropertyMeta = PropertyUtil.calculate(
+						bean, name, propertyDescriptor);
 
-						// See if we have a custom populator registered for the given field
-						FieldPopulator fieldPopulator = null;
-						if(fieldPopulators != null)
-						{
-							fieldPopulator = (FieldPopulator)fieldPopulators.get(name);
-						}
-					
-						if(fieldPopulator == null) // if no custom populator was found, we use the default
-						{
-							fieldPopulator = defaultFieldPopulator;
-						}
-					
-						// execute population on form
-						success = fieldPopulator.setProperty(
-							cctx, formBeanContext, name, value, targetPropertyMeta, locale);
-								
-					}
-				}
-				catch (Exception e)
-				{
-					populationLog.error(e);
-					if(populationLog.isDebugEnabled())
+					// See if we have a custom populator registered for the given field
+					FieldPopulator fieldPopulator = null;
+					if(fieldPopulators != null)
 					{
-						e.printStackTrace();
+						fieldPopulator = (FieldPopulator)fieldPopulators.get(name);
 					}
-					continue;
+				
+					if(fieldPopulator == null) // if no custom populator was found, we use the default
+					{
+						fieldPopulator = defaultFieldPopulator;
+					}
+				
+					// execute population on form
+					success = fieldPopulator.setProperty(
+						cctx, formBeanContext, name, value, targetPropertyMeta, locale);
+							
 				}
-				if(!success)
+			}
+			catch (Exception e)
+			{
+				populationLog.error(e);
+				if(populationLog.isDebugEnabled())
 				{
-					succeeded = false;
+					e.printStackTrace();
 				}
+				continue;
+			}
+			if(!success)
+			{
+				succeeded = false;
 			}
 		}
 		return succeeded;
