@@ -2,5 +2,10 @@
 
     <title>Interceptors</title>
  
+	<para>
+		The subject of this chapter, Interceptors, allow you to override/ extend the default behaviour
+		of Baritus.
+	</para>
+	
 </chapter>
 

@@ -2,8 +2,12 @@
 
     <title>Validation</title>
     
+	<para>
+		This chapter explains validation.
+	</para>
+	
 	<sect1 id="validation-s1">
-        <title>Population process</title>
+        <title>After population</title>
 		
 	    <para>
 			The first pass in the population process is the conversion of request parameters etc. to
@@ -15,7 +19,8 @@
 		<para>
 			Next, you might want to check if, for instance, a provided parameter not only is a
 			valid integer, but is also greater than say 10. Or that a parameter not only is
-			a valid date, but that this date also is after today.
+			a valid date, but that this date also is after today. If we talk about validation, we mean
+			this kind of checks.
 		</para>
 		
 		<para>
@@ -37,8 +42,9 @@
 		
 		<para>
 			Let us start with an example that displays some usages of the validation mechanism
-			of Baritus.
-			
+			of Baritus. In the following example, we want to validate that not only myInteger is
+			a valid integer, but also that the integer allways has a value that is greater than ten.
+		
 		<programlisting><![CDATA[
 public class FooForm
 {
@@ -81,8 +87,6 @@ public class MyCtrl
 	...
 }
 ]]></programlisting>
-			
-			TODO
 			
 		</para>
 		

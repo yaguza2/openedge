@@ -136,12 +136,6 @@
 			<url>http://www.mockobjects.com/</url>
 		</dependency>
 
-		<dependency>
-			<id>openedge-util</id>
-			<version>1.1.1</version>
-			<url>http://www.openedge.nl</url>
-		</dependency>
-
 	</dependencies>
 
 	<build>
