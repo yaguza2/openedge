@@ -1,7 +1,12 @@
 -------------------------------------------------
+1.1.2
+
+SubjectSessionListener now implements java.io.Serializable
+
+-------------------------------------------------
 1.1.1
 
-SessionLoginContext implements java.io.Serializable
+SessionLoginContext now implements java.io.Serializable
 
 -------------------------------------------------
 1.1
