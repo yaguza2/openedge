@@ -108,6 +108,10 @@ public final class TypesRegistry
 			BeanTypeInitCommand.class);
 			
 		initCommandClasses.put(
+			"dependent", 
+			DependentTypeInitCommand.class);
+			
+		initCommandClasses.put(
 			"servletContextAware",
 			ServletContextAwareTypeInitCommand.class);
 			
@@ -134,10 +138,6 @@ public final class TypesRegistry
 		initCommandClasses.put(
 			"componentObserver",
 			ComponentObserverInitCommand.class);
-			
-		initCommandClasses.put(
-			"dependent", 
-			DependentTypeInitCommand.class);
 	}
 	
 	/**

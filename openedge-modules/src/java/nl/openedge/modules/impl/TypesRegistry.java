@@ -132,16 +132,20 @@ public final class TypesRegistry
 		// add the default enhancer types
 		// we use this to have ordering in the commands		
 		initCommandTypes.add(BeanType.class);
+		initCommandTypes.add(DependentType.class);
 		initCommandTypes.add(ServletContextAwareType.class);
 		initCommandTypes.add(ConfigurableType.class);
 		initCommandTypes.add(ChainedEventCaster.class);
 		initCommandTypes.add(ComponentRepositoryObserver.class);
-		initCommandTypes.add(DependentType.class);
 
 		// and the commands for them
 		initCommandClasses.put(
 			BeanType.class, 
 			BeanTypeInitCommand.class);
+			
+		initCommandClasses.put(
+			DependentType.class, 
+			DependentTypeInitCommand.class);
 			
 		initCommandClasses.put(
 			ServletContextAwareType.class,
@@ -158,10 +162,6 @@ public final class TypesRegistry
 		initCommandClasses.put(
 			ComponentRepositoryObserver.class, 
 			ComponentFactoryObserverInitCommand.class);
-			
-		initCommandClasses.put(
-			DependentType.class, 
-			DependentTypeInitCommand.class);
 	}
 
 	/**
