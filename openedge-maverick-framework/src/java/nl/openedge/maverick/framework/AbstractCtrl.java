@@ -36,6 +36,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +47,7 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -103,7 +106,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * sub classes can override this value. If it is true and a valid user
 	 * was not found in the session, an error will be returned to the client
 	 */
-	protected boolean needsValidUser = false;
+	private boolean needsValidUser = false;
 	
 	/**
 	 * Should the command NOT be executed if the form population fails?
@@ -111,13 +114,22 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * even if the populate failed. Also, if this is false, no field
 	 * overrides will be set for the fields that failed 
 	 */
-	protected boolean failOnPopulateError = false;
+	private boolean failOnPopulateError = false;
 	
 	/**
 	 * If we get an empty string it should be translated to a null (true) or to
 	 * an empty String false. This property is true by default
 	 */
-	protected boolean setNullForEmptyString = true;
+	private boolean setNullForEmptyString = true;
+	
+	/**
+	 * Indicates whether we should use the request attributes for the population process
+	 * as well. This property is false by default.
+	 * This can be very handy when linking action together, as usually, the request paramters
+	 * are read only. 
+	 * NOTE: request attributes OVERRIDE request parameters
+	 */	
+	private boolean includeRequestAttributes = false;
 	
 	/**
 	 * subclasses can register fieldValidators for custom validation on field level
@@ -135,7 +147,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * custom fieldValidators should be performed in this request
 	 * @author Eelco Hillenius
 	 */
-	protected List globalValidatorActivationRules = null;
+	private List globalValidatorActivationRules = null;
 	
 	/**
 	 * is called before any handling like form population etc.
@@ -176,7 +188,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		long tsBegin = System.currentTimeMillis();
 		
 		String viewName = SUCCESS;
-		if(noCache)
+		if(isNoCache())
 		{
 			setNoCache(cctx);
 		}
@@ -208,14 +220,14 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					(tsEndBefore - tsBeginBefore) + " milis");
 			}
 
-			if(needsValidUser)
+			if(isNeedsValidUser())
 			{
 				// see if the user was saved in the session, and if so, store in form
 				boolean foundUser = checkUser(cctx, formBean);
 				cctx.setModel(formBean);
 
 				// can we go on?
-				if ((!foundUser) && needsValidUser)
+				if ((!foundUser) && isNeedsValidUser())
 				{
 					// nope, we can't
 					formBean.setError("global.message", 
@@ -245,7 +257,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			// populate form
 			boolean populated = populateForm(cctx, formBean, locale);
 			// go on?
-			if(!populated && failOnPopulateError) // an error occured
+			if(!populated && isFailOnPopulateError()) // an error occured
 			{
 				// prepare for error command and execute it
 				internalPerformError(cctx, formBean);
@@ -460,7 +472,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		boolean succeeded = true;
 		// Loop through the property name/value pairs to be set
 		Iterator names = properties.keySet().iterator();
-		while (names.hasNext()) 
+		while(names.hasNext()) 
 		{
 			boolean success = true;
 			// Identify the property name and value(s) to be assigned
@@ -718,7 +730,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 					}
 					else
 					{
-						if(setNullForEmptyString)
+						if(isSetNullForEmptyString())
 						{
 							Array.set(array, i, null);		
 						}
@@ -778,7 +790,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			}
 			else
 			{
-				if(setNullForEmptyString)
+				if(isSetNullForEmptyString())
 				{
 					BeanUtils.setProperty(formBean, name, null);	
 				}
@@ -974,7 +986,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		{
 			// if fail on populate, set the override field so that the input
 			// value can be displayed
-			if(failOnPopulateError)
+			if(isFailOnPopulateError())
 			{
 				formBean.setOverrideField(name, triedValue);	
 			}	
@@ -998,8 +1010,19 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		long tsBegin = System.currentTimeMillis();
 		// default behavoir
 		boolean retval = true;
-		retval = populateWithErrorReport(cctx, formBean, 
-						cctx.getRequest().getParameterMap(), locale);
+		Map parameters = new HashMap();
+		parameters.putAll(cctx.getRequest().getParameterMap());
+		if(isIncludeRequestAttributes())
+		{
+			HttpServletRequest request = cctx.getRequest();
+			Enumeration enum = request.getAttributeNames();
+			while(enum.hasMoreElements())
+			{
+				String attrName = (String)enum.nextElement();
+				parameters.put(attrName, request.getAttribute(attrName));	
+			}
+		}
+		retval = populateWithErrorReport(cctx, formBean, parameters, locale);
 						
 		if(retval == false) 
 		{
@@ -1067,7 +1090,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * should the command NOT be executed if the form population fails?
+	 * Should the command NOT be executed if the form population fails?
+	 * the default (false) has the effect that perform() will be executed
+	 * even if the populate failed. Also, if this is false, no field
+	 * overrides will be set for the fields that failed 
 	 * @return if true, the command will not be executed
 	 */
 	protected boolean isFailOnPopulateError()
@@ -1076,7 +1102,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
-	 * should the command NOT be executed if the form population fails?
+	 * Should the command NOT be executed if the form population fails?
+	 * the default (false) has the effect that perform() will be executed
+	 * even if the populate failed. Also, if this is false, no field
+	 * overrides will be set for the fields that failed 
 	 * @param failOnPopulateError if true, the command will not be executed
 	 */
 	protected void setFailOnPopulateError(boolean failOnPopulateError)
@@ -1085,6 +1114,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
+	 * sub classes can override this value. If it is true and a valid user
+	 * was not found in the session, an error will be returned to the client
 	 * @return boolean
 	 */
 	public boolean isNeedsValidUser()
@@ -1093,6 +1124,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
+	 * sub classes can override this value. If it is true and a valid user
+	 * was not found in the session, an error will be returned to the client
 	 * @param needsValidUser does the control need a valid user before
 	 * execution is tried?
 	 */
@@ -1366,6 +1399,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
+	 * if true, the no cache headers will be set
 	 * @return boolean
 	 */
 	public boolean isNoCache()
@@ -1374,6 +1408,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
+	 * if true, the no cache headers will be set
 	 * @param noCache
 	 */
 	public void setNoCache(boolean noCache)
@@ -1382,6 +1417,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
+	 * If we get an empty string it should be translated to a null (true) or to
+	 * an empty String false. This property is true by default
 	 * @return boolean
 	 */
 	public boolean isSetNullForEmptyString()
@@ -1390,11 +1427,39 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 
 	/**
+	 * If we get an empty string it should be translated to a null (true) or to
+	 * an empty String false. This property is true by default
 	 * @param b
 	 */
 	public void setSetNullForEmptyString(boolean b)
 	{
 		setNullForEmptyString = b;
+	}
+
+	/**
+	 * Indicates whether we should use the request attributes for the population process
+	 * as well. This property is false by default.
+	 * This can be very handy when linking action together, as usually, the request paramters
+	 * are read only. 
+	 * NOTE: request attributes OVERRIDE request parameters
+	 * @return boolean
+	 */
+	public boolean isIncludeRequestAttributes()
+	{
+		return includeRequestAttributes;
+	}
+
+	/**
+	 * Indicates whether we should use the request attributes for the population process
+	 * as well. This property is false by default.
+	 * This can be very handy when linking action together, as usually, the request paramters
+	 * are read only. 
+	 * NOTE: request attributes OVERRIDE request parameters
+	 * @param b
+	 */
+	public void setIncludeRequestAttributes(boolean b)
+	{
+		includeRequestAttributes = b;
 	}
 
 }

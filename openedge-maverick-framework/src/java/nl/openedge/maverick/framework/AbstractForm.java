@@ -47,19 +47,19 @@ public abstract class AbstractForm
 {
 	
 	/** last request */
-	protected String lastreq;
+	private String lastreq;
 
 	/** should we redirect? */
-	protected boolean redirect = false;
+	private boolean redirect = false;
 
 	/** validated user */
-	protected UserPrincipal user = null;
+	private UserPrincipal user = null;
 	
 	/** errors */
-	protected Map errors = null;
+	private Map errors = null;
 	
 	/** overriden values as strings */
-	protected Map overrideFields = null;
+	private Map overrideFields = null;
 	
 	/** error key for stacktrace if any */
 	public final static String ERROR_KEY_STACKTRACE = "stacktrace";
