@@ -38,15 +38,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @author	Eelco Hillenius, Sander Hofstee
- * @version	$Id$
+ * @author	Sander Hofstee
+ * @author	Eelco Hillenius
  * 
- * Helper for using SimpleDateFormat. Use for example with Velocity templates
- * 
+ * Helper for parsing dates in multiple formats, currently for non localized.
+ * Loads formats defined in 'dateformathelper.cfg' in classpath root, or from
+ * 'dateformathelper.default.cfg' in this package as a fallthrough.
  */
 public final class DateFormatHelper
 {
-	private static Log log = LogFactory.getLog(DateFormatHelper.class);
 	private static LinkedHashMap formatters = new LinkedHashMap();
 	private static SimpleDateFormat defaultFormatter = null;
 	private static String defaultFormatterString = null;
@@ -55,18 +55,14 @@ public final class DateFormatHelper
 	private static boolean checkForCharacters = true;
 	/* test for unwanted length of dd, MM, yyyy */
 	private static boolean checkForSize = true;
+	
+	private static Log log = LogFactory.getLog(DateFormatHelper.class);
 
 	static 
 	{
 		loadFormatters();
 	}
 
-	/**
-	 * constructor
-	 */
-	public DateFormatHelper()
-	{
-	}
 
 	/*
 	 * load formatters from config file
@@ -80,14 +76,16 @@ public final class DateFormatHelper
 		}
 		catch (Exception e)
 		{
+			System.err.println(
+				"unable to load /dateformathelper.cfg from the classpath root \n(" +
+				e.getMessage() + "); using defaults");
 			try
 			{
 				loadFromFile("dateformathelper.default.cfg");
 			}
 			catch (Exception e2)
 			{
-				log.error(e.getMessage(), e);
-				log.error(e2.getMessage(), e2);
+				e2.printStackTrace();
 			}
 		}
 
@@ -147,8 +145,8 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * get all formatters
-	 * @return all registerd formatters
+	 * Get all formatters.
+	 * @return Map all registerd formatters
 	 */
 	public static Map getFormatters()
 	{
@@ -156,10 +154,10 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * formats a string according to the given format
-	 * @param format		format like you would use with SimpleDateFormat
-	 * @param date			the date to format
-	 * @return formatted date
+	 * Formats a string according to the given format.
+	 * @param format format like you would use with SimpleDateFormat
+	 * @param date the date to format
+	 * @return String formatted date
 	 * @see SimpleDateFormat
 	 */
 	public static String format(String format, Date date)
@@ -169,10 +167,10 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * formats a string according to the given format
-	 * @param format		format like you would use with SimpleDateFormat
-	 * @param date			the date to format
-	 * @return formatted date
+	 * Formats a string according to the given format.
+	 * @param format format like you would use with SimpleDateFormat
+	 * @param time the long date to format
+	 * @return String formatted date
 	 * @see SimpleDateFormat
 	 */
 	public static String format(String format, long time)
@@ -181,9 +179,9 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * formats a string according to the default format
-	 * @param date			date to format
-	 * @return formatted date
+	 * Formats a string according to the default format.
+	 * @param date date to format
+	 * @return String formatted date
 	 * @see SimpleDateFormat
 	 */
 	public static String format(Date date)
@@ -193,9 +191,9 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * formats a string according to the default format
-	 * @param date			date to format
-	 * @return formatted date
+	 * Formats a string according to the default format.
+	 * @param time the long date to format
+	 * @return String formatted date
 	 * @see SimpleDateFormat
 	 */
 	public static String format(long time)
@@ -204,10 +202,9 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * parse date with fallback option
-	 * @param stringDate		date as a string
-	 * @param fallback			use all formatters before fail
-	 * @return parsed date or null if input was null or empty string
+	 * Parse date with fallback option.
+	 * @param stringDate date as a string
+	 * @return Date parsed date or null if input was null or empty string
 	 */
 	public static Date fallbackParse(String stringDate) throws ParseException
 	{
@@ -239,6 +236,11 @@ public final class DateFormatHelper
 			catch (ParseException e)
 			{ 
 				// do nothing... try next if available
+				if(log.isDebugEnabled())
+				{
+					log.debug("parsing " + stringDate + " failed for " + 
+						sdf.toLocalizedPattern() + " (" + e.getMessage() + ")");
+				}
 			}
 		}
 		if(date == null)
@@ -252,9 +254,9 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * parse date using default formatter
-	 * @param stringDate		date as a string
-	 * @return parsed date
+	 * Parse date using default formatter.
+	 * @param stringDate date as a string
+	 * @return Date parsed date
 	 */
 	public static Date parse(String stringDate) throws ParseException
 	{
@@ -269,11 +271,11 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * parse date using default formatter
-	 * @param stringDate		date as a string
-	 * @param fallback			use fallback
+	 * Parse date using default formatter.
+	 * @param stringDate date as a string
+	 * @param fallback use fallback
 	 * @deprecated	use fallbackParse
-	 * @return parsed date
+	 * @return Date parsed date
 	 */
 	public static Date parse(String stringDate, boolean fallback) 
 		throws ParseException
@@ -282,11 +284,11 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * parse date using the given format
-	 * @param stringDate		date as a string
-	 * @param format			format
-	 * @see SimpleDateFormat
-	 * @return parsed date
+	 * Parse date using the given format.
+	 * @param stringDate date as a string
+	 * @param format format
+	 * @see java.text.SimpleDateFormat
+	 * @return Date parsed date
 	 */
 	public static Date parse(String stringDate, String format) 
 		throws ParseException
@@ -311,10 +313,10 @@ public final class DateFormatHelper
 	}
 	
 	/**
-	 * parse given stringDate with DateFormat df
-	 * @param stringDate
-	 * @param df
-	 * @return Date
+	 * Parse given stringDate with DateFormat df
+	 * @param stringDate string rep of date
+	 * @param df date formatter
+	 * @return Date parsed date
 	 * @throws ParseException
 	 */
 	protected static synchronized Date parse(String stringDate, DateFormat df)
@@ -345,17 +347,14 @@ public final class DateFormatHelper
 				throw new CheckException(stringDate + " has an invalid year, use YY or YYYY");
 			}
 		}
-		
-		log.info("used " + ((SimpleDateFormat)df).toPattern()
-			+ " for " + stringDate);
 
 		return date;	
 	}
 	
 	/**
-	 * create new instance of SimpleDateFormat
-	 * @param pattern
-	 * @return SimpleDateFormat
+	 * Create new instance of SimpleDateFormat.
+	 * @param pattern pattern to use for creation
+	 * @return SimpleDateFormat date format
 	 */
 	protected static SimpleDateFormat createSimpleDateFormat(String pattern)
 	{
@@ -365,8 +364,8 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * gets the default format string
-	 * @return String
+	 * Gets the default format string.
+	 * @return String default format string
 	 */
 	public static String getDefaultFormatString()
 	{
@@ -374,7 +373,8 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * @return boolean check for unwanted characters?
+	 * Whether to check for unwanted characters.
+	 * @return boolean whether to check for unwanted characters
 	 */
 	public static boolean isCheckForCharacters()
 	{
@@ -407,6 +407,7 @@ public final class DateFormatHelper
 
 }
 
+/* tagged exception */
 class CheckException extends Exception
 {
 	public CheckException(String message)
