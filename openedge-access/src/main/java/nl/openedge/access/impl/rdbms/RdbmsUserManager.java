@@ -55,7 +55,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#createUser(java.lang.String)
+	 * @see nl.openedge.access.UserManager#createUser(java.lang.String, java.lang.String)
 	 */
 	public UserPrincipal createUser(String name, String password) throws AccessException {
 
@@ -81,7 +81,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#getUser(java.lang.Integer)
+	 * @see nl.openedge.access.UserManager#getUser(java.lang.String)
 	 * loads user, user attributes and roles that user is member of
 	 */
 	public UserPrincipal getUser(String name) throws AccessException {
@@ -133,7 +133,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#removeUser(nl.openedge.access.UserPrincipal)
+	 * @see nl.openedge.access.UserManager#deleteUser(nl.openedge.access.UserPrincipal)
 	 */
 	public void deleteUser(UserPrincipal user) throws AccessException {
 		
@@ -329,7 +329,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#getRole(java.lang.Integer)
+	 * @see nl.openedge.access.UserManager#getRole(java.lang.String)
 	 */
 	public RolePrincipal getRole(String name) throws AccessException {
 		
@@ -350,7 +350,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 	
 	/**
-	 * @see nl.openedge.access.UserManager#removeRole(nl.openedge.access.RolePrincipal)
+	 * @see nl.openedge.access.UserManager#deleteRole(nl.openedge.access.RolePrincipal)
 	 */
 	public void deleteRole(RolePrincipal role) throws AccessException {
 
@@ -432,7 +432,7 @@ public class RdbmsUserManager extends RdbmsBase implements UserManager {
 	}
 
 	/**
-	 * @see nl.openedge.access.UserManager#listRolesForUsers(nl.openedge.access.UserPrincipal)
+	 * @see nl.openedge.access.UserManager#listRolesForUser(nl.openedge.access.UserPrincipal)
 	 */
 	public List listRolesForUser(UserPrincipal user) throws AccessException {
 		

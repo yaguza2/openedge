@@ -47,7 +47,11 @@ Targets:
 
 <target name="doc">
 	<mkdir dir="${dist}/doc"/>
-	<javadoc destdir="${dist}/doc" link="file:///usr/java/j2sdk1.4.1_01/docs/api/" packagenames="nl.topicus.*" sourcepath="${src}" windowtitle="Thema2 online documentation"/>
+	<javadoc destdir="${dist}/doc"
+		classpathref="compile.classpath"
+		packagenames="nl.openedge.access.*" 
+		sourcepath="${src}" 
+		windowtitle="Open Edge Access online documentation"/>
 </target>
 
 <target name="clean">

@@ -1,3 +1,63 @@
+/*
+ * $Header$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ *
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
+ *
+ * 4. The names "The Jakarta Project", "Commons", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ */
 package nl.openedge.access.tools;
 
 import java.net.URL;
@@ -13,10 +73,13 @@ import nl.openedge.access.UserPrincipal;
 import org.apache.commons.cli.*;
 
 /** 
- * Tool for user maintenance from command line
+ * Tool for user maintenance from command line.
  * 
- * @author Hillenius
- * $Id$
+ * This tool uses 'oeaccess.xml' in this package as the default configuration 
+ * document. You can overide this location by setting the environment variable 
+ * 'oeaccess.configFile' to the correct url.
+ * 
+ * @author Eelco Hillenius
  */
 public final class UserTool {
 
@@ -64,8 +127,8 @@ public final class UserTool {
 			return;
 		}
 		
-		if(System.getProperty("configfile") != null) {
-			String config = System.getProperty("configfile");
+		if(System.getProperty("oeaccess.configFile") != null) {
+			String config = System.getProperty("oeaccess.configFile");
 			System.out.println("loading " + config + " for configuration");
 			try {
 				loadAccessFactory(config);
@@ -74,7 +137,7 @@ public final class UserTool {
 				return;	
 			}
 		} else {
-			System.out.println("env var 'configfile' not set... loading " +
+			System.out.println("env var 'oeaccess.configFile' not set... loading " +
 				"oeaccess.xml from this package for configuration");
 			// try to load from class path, current package:
 			String config = "oeaccess.xml";
@@ -99,14 +162,14 @@ public final class UserTool {
 		else printHelp();
 	}
 	
-	/** print usage */
+	/** prints usage */
 	protected void printHelp() {
 		
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp( "usertool", options );
 	}
 	
-	/** add a user */
+	/** adds a user */
 	protected void addUser(CommandLine line) {
 		
 		String username = line.getOptionValue('u');
@@ -128,7 +191,7 @@ public final class UserTool {
 		}	
 	}
 	
-	/** delete a user */
+	/** deletes a user */
 	protected void delUser(CommandLine line) {
 	
 		String username = line.getOptionValue('u');
@@ -149,7 +212,7 @@ public final class UserTool {
 		}		
 	}
 	
-	/** reset password */
+	/** resets a password for a user */
 	protected void setPwd(CommandLine line) {
 		
 		String username = line.getOptionValue('u');
@@ -172,7 +235,7 @@ public final class UserTool {
 		}		
 	}
 	
-	/** list users. If option r (role) is available list users for that role */
+	/** lists users. If option r (role) is available list users for that role */
 	protected void listUsers(CommandLine line) {
 		
 		String rolename = line.getOptionValue('r');
@@ -218,7 +281,7 @@ public final class UserTool {
 		}
 	}
 	
-	/** list roles. If option u (user) is available list roles for that user */
+	/** lists roles. If option u (user) is available list roles for that user */
 	protected void listRoles(CommandLine line) {
 		
 		String username = line.getOptionValue('u');
@@ -265,7 +328,7 @@ public final class UserTool {
 	}
 	
 	/** 
-	 * add a role. 
+	 * adds a role. 
 	 * If option u (user) is available add a role for that user; in this
 	 * case if the role does not exist yet, create the role itself as well. 
 	 */
@@ -323,7 +386,7 @@ public final class UserTool {
 	}
 	
 	/** 
-	 * delete a role. This command deletes the user-role map for this role as well
+	 * deletes a role. This command deletes the user-role map for this role as well
 	 */
 	protected void delRole(CommandLine line) {
 
@@ -391,7 +454,7 @@ public final class UserTool {
 	}
 	
 	/**
-	 * load the access factory
+	 * loads the access factory
 	 * @throws Exception
 	 */
 	protected void loadAccessFactory(URL config) throws Exception {

@@ -1,3 +1,63 @@
+/*
+ * $Header$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ *
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
+ *
+ * 4. The names "The Jakarta Project", "Commons", and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ */
 package nl.openedge.access;
 
 import java.io.IOException;
@@ -22,8 +82,30 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
 /**
- * @author Hillenius
- * $Id$
+ * The AccessFactory constructs and initialises objects that are used within
+ * the autorisation framework. 
+ * 
+ * <p>The AccessFactory can be initialised in several environments; in effect 
+ * a web application environment and a standalone environment.
+ * 
+ * <p>Clients of the AccessFactory should either construct the factory with an
+ * instance of <code>javax.servlet.ServletContext</code> or with an instance
+ * of <code>java.lang.String</code>. The first is for usage in a web application
+ * environment and tries to read the location of the configuration document from
+ * <code>javax.servlet.ServletContext.getInitParameter("oeaccess.configFile")</code> 
+ * Moreover, all other references to documents (e.g. jaas.config) in the
+ * configuration file will be looked up relative to the context path of the web
+ * application. The second case tries to load all files from the classpath. To
+ * overide this behaviour you can specify url's in the configuration document,
+ * e.g: file://c:/mywinboxdrive/mydir/jaas.config. A third option is to load 
+ * the configuration document from a custom location. This is done by 
+ * constructing the URL yourself and constructing the AccessFactory
+ * with this URL.
+ * <p>In a web application environment, the constructed instance of this 
+ * <code>AccessFactory</code> will be saved in the <code>ServletContext</code>
+ * under key 'oeaccess.configFile'. 
+ * 
+ * @author Eelco Hillenius
  */
 public class AccessFactory {
 
@@ -194,7 +276,7 @@ public class AccessFactory {
 			String configKey = ("login.config.url."+n);
 			java.security.Security.setProperty(configKey, convertedJaasConfig);
 			log.info("added " + configKey + "=" +
-							convertedJaasConfig + "to java.security.Security properties");
+							convertedJaasConfig + " to java.security.Security properties");
 		}
 				
 	}
@@ -222,15 +304,13 @@ public class AccessFactory {
 			String configKey = ("auth.policy.url."+n);
 			java.security.Security.setProperty(configKey, convertedPolicyURL);
 			log.info("added " + configKey + "=" +
-					convertedPolicyURL + "to java.security.Security properties");
+					convertedPolicyURL + " to java.security.Security properties");
 		}
 		// reload the policy configuration to add our policies	
 		try {
 			Policy policy = Policy.getPolicy();
 			policy.refresh();
 
-			log.info(policy);
-			
 		} catch (AccessControlException e) {
 			e.printStackTrace();
 		}

@@ -63,6 +63,8 @@ import java.util.*;
  * It's represented as a <tt>Result</tt> implementation, capable of 
  * returing an array of <tt>Row</tt> objects containing a <tt>Column</tt> 
  * instance for each column in the row.</p>
+ * <p>
+ * Copied from org.apache.taglibs.standard.tag.common.sql.ResultImpl
  *
  * @author Hans Bergsten
  * @author Justyna Horwat
