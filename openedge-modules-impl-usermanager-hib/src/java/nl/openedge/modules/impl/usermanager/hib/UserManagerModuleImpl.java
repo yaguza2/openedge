@@ -43,7 +43,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import net.sf.hibernate.Hibernate;
+import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
+import net.sf.hibernate.Transaction;
 import nl.openedge.access.AccessException;
 import nl.openedge.access.UserManagerModule;
 import nl.openedge.access.util.PasswordHelper;
@@ -99,9 +101,11 @@ public class UserManagerModuleImpl
 
 		UserPrincipal user = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			user = new UserPrincipal(name);
 			String cryptedPassword = new String(
 				PasswordHelper.cryptPassword(password.toCharArray()));
@@ -109,10 +113,11 @@ public class UserManagerModuleImpl
 			BeanUtils.populate(user, attributes);
 			user.setPassword(cryptedPassword);
 			session.save(user);
-			session.flush();
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return user;
@@ -126,13 +131,17 @@ public class UserManagerModuleImpl
 
 		UserPrincipal user = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			user = getUser(session, name);
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return user;
@@ -146,14 +155,17 @@ public class UserManagerModuleImpl
 
 		List users = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			users = session.find("from u in class " + UserPrincipal.class.getName());
-
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return users;
@@ -167,17 +179,19 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			if (u != null)
 			{
 				String cryptedPassword = new String(
 					PasswordHelper.cryptPassword(newPassword.toCharArray()));
 				u.setPassword(cryptedPassword);
-				session.flush();
-
+				
+				tx.commit();
 			}
 			else
 			{
@@ -186,6 +200,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -197,14 +212,16 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			if (u != null)
 			{
 				session.delete(u);
-				session.flush();
+				tx.commit();
 			}
 			else
 			{
@@ -213,6 +230,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -225,16 +243,19 @@ public class UserManagerModuleImpl
 
 		RolePrincipal role = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			role = new RolePrincipal(name);
 			session.save(role);
-			session.flush();
-
+			
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return role;
@@ -248,9 +269,11 @@ public class UserManagerModuleImpl
 
 		RolePrincipal role = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			List l =
 				session.find(
 					"from r in class " + RolePrincipal.class.getName() 
@@ -261,9 +284,11 @@ public class UserManagerModuleImpl
 			{
 				role = (RolePrincipal)l.get(0);
 			}
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return role;
@@ -277,15 +302,18 @@ public class UserManagerModuleImpl
 
 		List roles = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			roles = session.find("from user in class " + 
 				RolePrincipal.class.getName());
-
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return roles;
@@ -303,9 +331,11 @@ public class UserManagerModuleImpl
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		Session session;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			String q = properties.getProperty("selectUserIdsInRoleStmt");
 
 			Connection conn = session.connection();
@@ -324,10 +354,11 @@ public class UserManagerModuleImpl
 					users.add(session.load(UserPrincipal.class, (Long)i.next()));
 				}
 			}
-
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		finally
@@ -361,13 +392,15 @@ public class UserManagerModuleImpl
 
 		Set roles = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			if (u != null)
 			{
-				session.flush();
+				tx.commit();
 				roles = u.getRoles();
 			}
 			else
@@ -377,6 +410,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return roles;
@@ -389,17 +423,18 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			RolePrincipal r = (RolePrincipal)session.load(
 				RolePrincipal.class, role.getName());
 			if (u != null && r != null)
 			{
-
 				u.addRole(r);
-				session.flush();
+				tx.commit();
 			}
 			else
 			{
@@ -409,6 +444,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -420,9 +456,11 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			if (u != null)
 			{
@@ -431,10 +469,11 @@ public class UserManagerModuleImpl
 				if (u.containsRole(r))
 				{
 					u.removeRole(role);
-					session.flush();
+					tx.commit();
 				}
 				else
 				{
+					try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 					throw new AccessException(
 						"user " + user + " did not have role " + role);
 				}
@@ -446,6 +485,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -457,15 +497,17 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			RolePrincipal r = (RolePrincipal)
 				session.load(RolePrincipal.class, role.getName());
 			if (r != null)
 			{
 				session.delete(r);
-				session.flush();
+				tx.commit();
 			}
 			else
 			{
@@ -474,6 +516,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -486,15 +529,18 @@ public class UserManagerModuleImpl
 
 		GroupPrincipal group = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			group = new GroupPrincipal(name);
 			session.save(group);
-
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return group;
@@ -508,9 +554,11 @@ public class UserManagerModuleImpl
 
 		GroupPrincipal group = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			List l =
 				session.find(
 					"from g in class " + GroupPrincipal.class.getName() 
@@ -521,9 +569,11 @@ public class UserManagerModuleImpl
 			{
 				group = (GroupPrincipal)l.get(0);
 			}
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return group;
@@ -537,15 +587,18 @@ public class UserManagerModuleImpl
 
 		List groups = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			groups = session.find("from u in class " + 
 				GroupPrincipal.class.getName());
-
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return groups;
@@ -563,9 +616,11 @@ public class UserManagerModuleImpl
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		Session session;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			String q = properties.getProperty("selectUserIdsInGroupStmt");
 
 			Connection conn = session.connection();
@@ -584,10 +639,11 @@ public class UserManagerModuleImpl
 					users.add(session.load(UserPrincipal.class, (Long)i.next()));
 				}
 			}
-
+			tx.commit();
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		finally
@@ -620,13 +676,15 @@ public class UserManagerModuleImpl
 
 		Set groups = null;
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			if (u != null)
 			{
-				session.flush();
+				tx.commit();
 				groups = u.getGroups();
 			}
 			else
@@ -636,6 +694,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 		return groups;
@@ -648,9 +707,11 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			GroupPrincipal g = (GroupPrincipal)
 				session.load(GroupPrincipal.class, group.getName());
@@ -658,7 +719,7 @@ public class UserManagerModuleImpl
 			{
 
 				u.addGroup(g);
-				session.flush();
+				tx.commit();
 			}
 			else
 			{
@@ -668,6 +729,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -680,9 +742,11 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			UserPrincipal u = getUser(session, user.getName());
 			if (u != null)
 			{
@@ -691,7 +755,7 @@ public class UserManagerModuleImpl
 				if (u.containsGroup(g))
 				{
 					u.removeGroup(group);
-					session.flush();
+					tx.commit();
 				}
 				else
 				{
@@ -706,6 +770,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
@@ -717,15 +782,17 @@ public class UserManagerModuleImpl
 	{
 
 		Session session = null;
+		Transaction tx = null;
 		try
 		{
 			session = HibernateHelper.getSession();
+			tx = session.beginTransaction();
 			GroupPrincipal g = (GroupPrincipal)
 				session.load(GroupPrincipal.class, group.getName());
 			if (g != null)
 			{
 				session.delete(g);
-				session.flush();
+				tx.commit();
 			}
 			else
 			{
@@ -734,6 +801,7 @@ public class UserManagerModuleImpl
 		}
 		catch (Exception e)
 		{
+			try	{ tx.rollback(); } catch (HibernateException e1) { e1.printStackTrace(); }
 			throw new AccessException(e);
 		}
 	}
