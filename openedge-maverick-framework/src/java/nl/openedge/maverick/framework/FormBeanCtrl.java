@@ -374,7 +374,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		throws Exception 
 	{
 		long tsBegin = System.currentTimeMillis();
-		boolean retval = true;
+		boolean success = true;
 		
 		Map parameters = new HashMap();
 
@@ -424,7 +424,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		}
 		
 		// populate using the paramters map		
-		retval = populateWithErrorReport(cctx, formBeanContext, parameters, locale);
+		success = populateWithErrorReport(cctx, formBeanContext, parameters, locale);
+
+		if(success) // if successful, do custom validation
+		{
+			doCustomValidation(cctx, formBeanContext, parameters, locale, success);
+		}
 
 		if(performanceLog.isDebugEnabled())
 		{
@@ -433,7 +438,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				(tsEnd - tsBegin) + " milis");
 		}
 		
-		return retval;
+		return success;
 	}
 	
 	/* extra debug info */
@@ -716,7 +721,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	private boolean doCustomValidation(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
-		Map properties,
+		Map parameters,
 		Locale locale,
 		boolean succeeded)
 	{
@@ -744,7 +749,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				// if fieldValidators were registered
 				if(fieldValidators != null && (!fieldValidators.isEmpty()))
 				{
-					Iterator names = properties.keySet().iterator(); // loop through the properties
+					Iterator names = parameters.keySet().iterator(); // loop through the properties
 					while(names.hasNext())
 					{
 						String name = (String)names.next();
