@@ -42,7 +42,7 @@ import javax.swing.tree.VariableHeightLayoutCache;
  * Holder and handler for tree state
  * @author Eelco Hillenius
  */
-public class TreeStateCache extends VariableHeightLayoutCache
+public final class TreeStateCache extends VariableHeightLayoutCache
 {
 
 	/* currently selected path */

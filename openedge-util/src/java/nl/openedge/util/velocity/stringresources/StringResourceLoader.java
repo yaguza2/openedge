@@ -91,7 +91,7 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
  */
-public class StringResourceLoader extends ResourceLoader
+public final class StringResourceLoader extends ResourceLoader
 {
 
 	/*

@@ -59,7 +59,7 @@ package nl.openedge.util.velocity.stringresources;
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
  */
-class StringResource
+final class StringResource
 {
 	/* template body */
 	private String body;

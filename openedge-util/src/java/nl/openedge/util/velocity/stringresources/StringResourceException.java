@@ -61,7 +61,7 @@ import org.apache.velocity.exception.VelocityException;
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
  */
-public class StringResourceException extends VelocityException
+public final class StringResourceException extends VelocityException
 {
 	/**
 	 * @param exceptionMessage the message

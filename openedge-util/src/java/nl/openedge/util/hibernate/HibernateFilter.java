@@ -51,7 +51,7 @@ import net.sf.hibernate.Session;
  *
  * @author Jeff Schnitzer, Eelco Hillenius
  */
-public class HibernateFilter extends HibernateHelper implements Filter
+public final class HibernateFilter extends HibernateHelper implements Filter
 {
 
 	private Log log = LogFactory.getLog(HibernateFilter.class);

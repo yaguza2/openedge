@@ -64,7 +64,7 @@ package nl.openedge.util.velocity.stringresources;
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
  */
-public class StringResourceRepositoryFactory
+public final class StringResourceRepositoryFactory
 {
 	/*
 	 * is the factory initialised properly?

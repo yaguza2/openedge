@@ -67,7 +67,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author <a href="mailto:eelco.hillenius@openedge.nl">Eelco Hillenius</a>
  */
-public class StringResourceRepositoryImpl implements StringResourceRepository
+public final class StringResourceRepositoryImpl implements StringResourceRepository
 {
 	
 	Log log = LogFactory.getLog(StringResourceRepositoryImpl.class);
