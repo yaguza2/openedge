@@ -254,6 +254,29 @@ public final class CacheUtil
 		}
 	}
 
+	/** Reset alle caches. */
+	public static void resetCache()
+	{
+	    CacheManager cacheManager = null;
+        try
+        {
+            cacheManager = CacheManager.getInstance();
+        }
+        catch (CacheException e)
+        {
+            throw new RuntimeException(e);
+        }
+        String[] names = cacheManager.getCacheNames();
+	    if(names != null)
+	    {
+	        int len = names.length;
+	        for(int i = 0; i < len; i++)
+	        {
+	            resetEHCache(names[i]);
+	        }
+	    }
+	}
+
 	/**
 	 * Reset cache manager cache.
 	 * @param cacheName naam cache
