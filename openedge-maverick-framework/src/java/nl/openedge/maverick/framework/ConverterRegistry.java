@@ -226,7 +226,9 @@ public final class ConverterRegistry
 	 * 		the search is the same as when no locale was given (locale == null):
 	 * 		the 'normal', not localized registry will be searched for an entry with
 	 * 		the given type. If this is not found either, a lookup with ConvertUtils
-	 * 		from Jakarta Commons BeanUtils will be done as a fallthrough.
+	 * 		from Jakarta Commons BeanUtils will be done as a fallthrough. If still
+	 * 		no Converter is found after this, an instance of NoopConverter is returned,
+	 * 		so that clients allways get a valid converter.
 	 * 
 	 * @param clazz Class for which to return a registered Converter
 	 * @param locale The Locale
