@@ -34,6 +34,16 @@ package nl.openedge.modules.impl.mailjob;
  * Holder for email message
  * @author Eelco Hillenius
  * @hibernate.class		table="email_queue"
+ * <br><br>
+ * To attach files to the message, the 'Attachments' string must be set. 
+ * The format of the string is as follow:<br>
+ * <br>
+ * file&lt;filename&gt;:file&lt;filename&gt;: . . .
+ * <br>
+ * (Note: the ':' is the system's path seperator. Windows: ';', Unix: ':')<br>
+ * <br>
+ * 'file' is the string that describes the File. 'filename' is the string that describes the name of the file.<br>
+ * 'filename' may be empty or missing, the name of the file will be the name that can be deduced from the file.
  */
 public final class MailMessage
 {
@@ -52,7 +62,8 @@ public final class MailMessage
 	private String contentType = "text/plain";
 	private String status = STATUS_NEW;
 	private String statusDetail;
-
+	private String attachments;
+	
 	public MailMessage()
 	{
 		this.created = new Long(System.currentTimeMillis());
@@ -129,7 +140,7 @@ public final class MailMessage
 	{
 		return subject;
 	}
-
+	
 	/**
 	 * @param contentType
 	 */
@@ -200,6 +211,22 @@ public final class MailMessage
 	public void setSubject(String subject)
 	{
 		this.subject = subject;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getAttachments()
+	{
+		return attachments;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setAttachments(String string)
+	{
+		attachments = string;
 	}
 
 }

@@ -30,19 +30,24 @@
  */
 package nl.openedge.modules.impl.mailjob;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -51,8 +56,8 @@ import javax.mail.internet.MimeMultipart;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.ComponentRepository;
+import nl.openedge.modules.RepositoryFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -270,7 +275,7 @@ public final class MailJob implements StatefulJob
 	 * construct mail message from data object
 	 */
 	private MimeMessage constructMessage(MailMessage msg, Session session) 
-		throws MessagingException, AddressException 
+		throws MessagingException, AddressException, FileNotFoundException 
 	{	
 		MimeMessage mailMsg = new MimeMessage(session);
 		mailMsg.setFrom(new InternetAddress(msg.getSender()));
@@ -285,11 +290,100 @@ public final class MailJob implements StatefulJob
 		mbp1.setContent(msg.getMessage(), msg.getContentType());
 		Multipart mp = new MimeMultipart();
 		mp.addBodyPart(mbp1);
+		
+		// attach the attachments to the mailmessage
+		if(msg.getAttachments() != null)
+		{
+			HashMap files = getAttachments(msg.getAttachments());
+			Set keySet = files.keySet();
+			Iterator keySetIterator = keySet.iterator();
+			while(keySetIterator.hasNext())
+			{
+				String filename = (String)keySetIterator.next();
+				MimeBodyPart attachment = new MimeBodyPart();
+				attachment.setDataHandler(new DataHandler((FileDataSource)files.get(filename)));
+				attachment.setFileName(filename);
+				mp.addBodyPart(attachment);
+			}
+		}
+		
 		// add the Multipart to the message
 		mailMsg.setContent(mp);
 		
 		return mailMsg;
 			
+	}
+	
+	/**
+	 * Returns a hashmap with FileDataSources to attach to the mailmessage. The key of the FileDataSources is the filename.<br> 
+ 	 * The format of the string is as follow:<br>
+ 	 * <br>
+ 	 * file&lt;filename&gt;:file&lt;filename&gt;: . . .
+ 	 * <br>
+ 	 * (Note: the ':' is the system's path seperator. Windows: ';', Unix: ':')<br>
+	 * <br>
+	 * 'file' is the string that describes the File. 'filename' is the string that describes the name of the file.<br>
+	 * 'filename' may be empty or missing, the name of the file will be the name that can be deduced from the file.
+	 * @param attachments
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public HashMap getAttachments(String attachments)
+		throws FileNotFoundException
+	{
+		HashMap files = new HashMap();
+		
+		StringTokenizer tk = new StringTokenizer(attachments, System.getProperty("path.separator"));
+		while(tk.hasMoreTokens())
+		{
+			String file = null;
+			String filename = null;
+	
+			String fileDefinition = (String)tk.nextToken();
+			int firstToken = fileDefinition.indexOf('<');
+			int lastToken = fileDefinition.indexOf('>');
+			if(firstToken <= 0 && lastToken <= 0)
+			{
+				file = fileDefinition;
+			}
+			else if(firstToken > 0)
+			{
+				file = fileDefinition.substring(0, firstToken);
+			}
+	
+			if(firstToken > 0 && lastToken > 0)
+			{
+				filename = fileDefinition.substring(firstToken + 1, lastToken);
+			}
+					
+			if(file != null)
+			{
+				FileDataSource fds = new FileDataSource(file);
+				if(fds.getFile().exists())
+				{
+					if(filename != null)
+					{
+						files.put(filename, fds);
+					}
+					else
+					{
+						files.put(fds.getName(), fds);
+					}
+				}
+				else
+				{
+					log.error("The file " + file + " on disk not found.");
+					throw new FileNotFoundException("File: " + file + ", is not on disk.");
+				}
+			}
+			else
+			{
+				log.error("Name of the file could not be found");
+				throw new FileNotFoundException("Name of the file could not be found.");
+			}
+		}
+
+		return files;
 	}
 
 }

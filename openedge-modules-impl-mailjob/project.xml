@@ -3,7 +3,7 @@
 	<pomVersion>3</pomVersion>
 	<id>oe-mailjob</id>
 	<name>OpenEdge e-mail Quartz job and module implementation(s)</name>
-	<currentVersion>1.4</currentVersion>
+	<currentVersion>1.5</currentVersion>
 	<organization>
 		<name>Open Edge</name>
 		<url>http://www.openedge.nl/</url>
@@ -17,6 +17,11 @@
 	<url>http://maven.apache.org/</url>
 
 	<versions>
+		<version>
+			<id>1.5</id>
+			<name>1.5</name>
+			<tag>B1_5</tag>
+		</version>
 		<version>
 			<id>1.4</id>
 			<name>1.4</name>
@@ -53,7 +58,19 @@
 			<timezone>+1</timezone>
 		</developer>
 	</developers>
-
+	
+	<developers>
+		<developer>
+			<name>Ronald Buit</name>
+			<id>buit</id>
+			<email>ronald.buit@topicus.nl</email>
+			<organization>Topicus</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 	<dependencies>
 
 		<dependency>
