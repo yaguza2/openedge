@@ -205,6 +205,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			}
 			catch (SchedulerException e)
 			{
+				e.printStackTrace();
 				throw new ConfigException(e);
 			}
 		}
