@@ -1,36 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
-  <classpathentry kind="src" path="src/main/java">
-  </classpathentry>
-  <classpathentry kind="src" path="src/test/java">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
-  </classpathentry>
-  <classpathentry kind="var" rootpath="JRE_SRCROOT" path="JRE_LIB" sourcepath="JRE_SRC">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.5.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-cli/jars/commons-cli-1.0-beta-2-dev.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.0.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.0.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-02032003.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-pool/jars/commons-pool-1.0.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-cvs-24012003.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/mm.mysql/jars/mm.mysql-2.0.14-bin.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.1.2.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/openedge-utils/jars/openedge-utils-1.0.jar">
-  </classpathentry>
-  <classpathentry kind="output" path="target/classes">
-  </classpathentry>
+    <classpathentry kind="src" path="src/main/java"/>
+    <classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+    <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.5.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-cli/jars/commons-cli-1.0-beta-2-dev.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-dbcp/jars/commons-dbcp-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-02032003.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/commons-pool/jars/commons-pool-1.0.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/jdom/jars/jdom-cvs-24012003.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/mm.mysql/jars/mm.mysql-2.0.14-bin.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/quartz/jars/quartz-1.1.2.jar"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar" sourcepath="MAVEN_REPO/servletapi/jars/servletapi-2.3-src.jar"/>
+    <classpathentry kind="var" path="MAVEN_REPO/openedge-utils/jars/openedge-utils-1.0.jar"/>
+    <classpathentry kind="output" path="target/classes"/>
 </classpath>
