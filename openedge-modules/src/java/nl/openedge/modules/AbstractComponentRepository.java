@@ -408,7 +408,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			// the name will be a combination of:
 			// 'name_jobname', to keep them unique
 			trigger.setGroup(group);
-			List parameters = triggerNode.getChildren("parameter");
+			List parameters = triggerNode.getChildren("property");
 			Map paramMap = new HashMap();
 			if (parameters != null)
 				for (Iterator j = parameters.iterator(); j.hasNext();)

@@ -232,8 +232,8 @@ public class QuartzJobComponentImpl implements Job
 <scheduler properties="/quartz.properties">
 
   <trigger name="testTrigger" group="DEFAULT" class="org.quartz.SimpleTrigger">
-    <parameter name="repeatInterval" value="2000"/>
-    <parameter name="repeatCount" value="-1"/>
+    <property name="repeatInterval" value="2000"/>
+    <property name="repeatCount" value="-1"/>
   </trigger>
 	
   <jobExecutionMap>
