@@ -115,6 +115,7 @@ public class GroupPanel extends Panel
        {
            throw new RuntimeException(result + " is geen structuurgroep");
        }
+       //invalidateModel();
        StructuralGroup group = (StructuralGroup)result;
 
        removeAll();
@@ -237,7 +238,6 @@ public class GroupPanel extends Panel
     	            selectStructuralGroup(group.getId());
     	            cycle.setRedirect(true);
     	        }
-    		    
     		};
             String labelText;
             if(group instanceof StructuralRootGroup)

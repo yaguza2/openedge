@@ -101,10 +101,47 @@ input, select, label  {
 #linedrow td {
   background-color: #CECECE;
 }
-
-#resultstable {
- caption-side:bottom;
+#structGroupPanelHeader {
+ background-color: #CECECE;
+ text-align: left;
+ border: 1px solid #339900;
+ padding:2px;
  width:660px;
+}
+#tabs {
+ text-align: left;
+ padding:2px;
+ width:660px;
+ border: 1px solid;
+}
+#tabs ul {
+ margin-left: 0;
+ padding-left: 0;
+ display: inline;
+} 
+
+#tabs ul li {
+ background-color: #CECECE;
+ margin-left: 0;
+ margin-bottom: 0;
+ padding: 2px 15px 5px;
+ 
+ list-style: none;
+ display: inline;
+}		
+
+#paramGroupPanelBody {
+ height: 100px;
+ overflow: auto;
+}
+#structGroupPanelBody {
+ height: 100px;
+ overflow: auto;
+}
+#resultstable {
+ caption-side:top;
+ width:660px;
+ padding:6px;
 }
 #resultstable thead {
 
@@ -116,6 +153,10 @@ input, select, label  {
  padding:2px;
  width:330px;
 }
+#resultstable thead td {
+ text-align: center;
+ padding:2px;
+}
 #resultstable tbody {
 
 }
@@ -125,6 +166,7 @@ input, select, label  {
 #resultstable tbody td {
  padding:2px;
  background-color: #E9E9E9;
+ width:330px;
 }
 #resultstable tfoot td {
  padding:8px;

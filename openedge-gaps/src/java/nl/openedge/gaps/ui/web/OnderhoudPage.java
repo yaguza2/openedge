@@ -19,6 +19,9 @@ import com.voicetribe.wicket.PageParameters;
  */
 public final class OnderhoudPage extends SimpleBorderedPage
 {
+    /** browser. */
+    private ParameterBrowser browser = new ParameterBrowser();
+
 	/**
 	 * Constructor.
 	 * @param parameters pagina parameters
@@ -31,7 +34,20 @@ public final class OnderhoudPage extends SimpleBorderedPage
 	    {
 	        expr = "/";
 	    }
-	    ParameterBrowser browser = new ParameterBrowser();
+	    setGroup(expr);
+	}
+
+	public OnderhoudPage(final String expr)
+	{
+	    setGroup(expr);
+	}
+
+	/**
+	 * Set huidige groep.
+	 * @param expr gaps expression
+	 */
+	private void setGroup(String expr)
+	{
 	    Object pos = browser.navigate(expr);
 	    if(!(pos instanceof StructuralGroup))
 	    {
@@ -43,5 +59,4 @@ public final class OnderhoudPage extends SimpleBorderedPage
 	            "structuralGroupPanel", group);
 	    add(panel);
 	}
-
 }
