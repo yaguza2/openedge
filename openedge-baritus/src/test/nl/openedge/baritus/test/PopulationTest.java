@@ -1,7 +1,7 @@
 /*
- * $Id: PopulationTest.java,v 1.4 2004-04-04 18:24:07 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-04 18:24:07 $
+ * $Id: PopulationTest.java,v 1.5 2004-04-06 07:41:00 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-06 07:41:00 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -536,7 +536,7 @@ public class PopulationTest extends TestCase
 //		bean.setMultiDimensionalMap(map1);
 //		try
 //		{
-//			Object result = Ognl.getValue("multiDimensionalMap[\"map2a\"][\"key2a-2\"]", bean);
+//			Object result = Ognl.getValue("multiDimensionalMap['map2a']['key2a-2']", bean);
 //			assertEquals("value2a-2", result);
 //			bean.setTestDate1(new Date());
 //			result = Ognl.getValue("testDate1", bean);
@@ -546,6 +546,34 @@ public class PopulationTest extends TestCase
 //			e.printStackTrace();
 //		}
 //	}
+
+	public void testObjectFromRequestAttributesPopulation()
+	{
+		TestCtrl ctrl = new TestCtrl();
+
+		Map requestParams = new HashMap();
+		TestObject testObject = new TestObject();
+		testObject.setTestString("a test");
+		request.setAttribute("testObject", testObject);
+		request.setupGetParameterMap(requestParams);
+
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+			assertNotNull(bean.getTestObject());
+			assertEquals("a test", bean.getTestObject().getTestString());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
 	
 	
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: TestFieldValidator.java,v 1.2 2004-04-06 07:41:42 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-06 07:41:42 $
+ * $Id: TestObject.java,v 1.1 2004-04-06 07:43:59 eelco12 Exp $
+ * $Revision: 1.1 $
+ * $Date: 2004-04-06 07:43:59 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -28,41 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package nl.openedge.baritus.test;
-
-import nl.openedge.baritus.FormBeanContext;
-import nl.openedge.baritus.validation.AbstractFieldValidator;
-
-import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * @author hillenius
  */
-public class TestFieldValidator extends AbstractFieldValidator
+public class TestObject
 {
+	private String testString;
 
 	/**
-	 * @param cctx
-	 * @param formBeanContext
-	 * @param fieldName
-	 * @param value
-	 * @return boolean
-	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 * @return
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
+	public String getTestString()
 	{
-		boolean valid = false;
-		
-		String testVal = (String)value;
-		valid = "validValue".equals(testVal);
-		
-		return valid;
+		return testString;
+	}
 
+	/**
+	 * @param string
+	 */
+	public void setTestString(String string)
+	{
+		testString = string;
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: TestCtrl.java,v 1.4 2004-04-01 09:20:35 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-01 09:20:35 $
+ * $Id: TestCtrl.java,v 1.5 2004-04-06 07:41:26 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-06 07:41:26 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -34,6 +34,7 @@ package nl.openedge.baritus.test;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import nl.openedge.baritus.ExecutionParams;
 import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.population.IgnoreFieldPopulator;
@@ -79,6 +80,10 @@ public class TestCtrl extends FormBeanCtrlBase
 	 */
 	public void init(Element controllerNode) throws ConfigException
 	{
+		ExecutionParams params = getExecutionParams();
+		params.setIncludeSessionAttributes(true);
+		params.setIncludeRequestAttributes(true);
+		
 		addPopulator("uppercaseTest", new ToUpperCasePopulator());
 		addPopulator("ignore", new IgnoreFieldPopulator());
 		// block property by field name

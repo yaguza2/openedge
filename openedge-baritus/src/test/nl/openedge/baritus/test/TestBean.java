@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.4 2004-04-04 18:24:08 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-04 18:24:08 $
+ * $Id: TestBean.java,v 1.5 2004-04-06 07:41:11 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-06 07:41:11 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -28,7 +28,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
 package nl.openedge.baritus.test;
 
 import java.util.ArrayList;
@@ -86,6 +85,8 @@ public class TestBean
 	private List multiDimensionalList = new ArrayList();
 	
 	private Map multiDimensionalMap = new HashMap();
+	
+	private TestObject testObject = null;
 
 
 	/**
@@ -438,6 +439,22 @@ public class TestBean
 	public void setMultiDimensionalMap(Map map)
 	{
 		multiDimensionalMap = map;
+	}
+
+	/**
+	 * @return
+	 */
+	public TestObject getTestObject()
+	{
+		return testObject;
+	}
+
+	/**
+	 * @param object
+	 */
+	public void setTestObject(TestObject object)
+	{
+		testObject = object;
 	}
 
 }
