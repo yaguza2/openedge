@@ -179,19 +179,6 @@ public class ApplicationServlet extends VelocityViewServlet
 			Template template = handleRequest(request, response, context);
 			
 			Object model = request.getAttribute("model");
-			if(model != null) 
-			{
-				
-//				if(model instanceof AbstractForm) 
-//				{
-//					EventCartridge ec = new EventCartridge();
-//					ReferenceInsertionEventHandler evtHandler = 
-//						new RIEventHandler(
-//						(AbstractForm)model, context);
-//					ec.addEventHandler(evtHandler);
-//					ec.attachToContext(context);
-//				}
-			}
 
 			// bail if we can't find the template
 			if (template == null)

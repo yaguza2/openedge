@@ -184,9 +184,7 @@ public class FieldTool
 			return null;
 		}
 		
-		/*
-		 * Als een value overridden is, NIET FORMATTEN!!!
-		 */
+		// only format fields that are not overriden
 		boolean overridden = false;
 		if(model != null)
 		{
@@ -212,7 +210,7 @@ public class FieldTool
 				}
 			}	
 		}
-		if(value != null && !overridden)
+		if(value != null && (!overridden))
 		{
 			Formatter formatter = (Formatter)keyedFormatters.get(pattern);
 			if(formatter != null)
