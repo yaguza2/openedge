@@ -109,6 +109,15 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	private boolean needsValidUser = false;
 	
 	/**
+	 * if population/ validation did not succeed, should we copy ALL request
+	 * parameters to the override values map (and thus giving you the option
+	 * of re-displaying the user input), or should we just fill the override fields
+	 * with the fields that failed?
+	 * the default is true (copy the whole request) 
+	 */
+	private boolean copyRequestToOverride = true;
+	
+	/**
 	 * If we get an empty string, should it be translated to a null (true) or should
 	 * the empty String be kept (false). This property is true by default
 	 */
@@ -830,6 +839,13 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		if(formBean == null) return;
 		// set the current model
 		cctx.setModel(formBean);
+		
+		if(copyRequestToOverride)
+		{
+			// first, set overrides for the current request parameters
+			formBean.setOverrideField(cctx.getRequest().getParameterMap());	
+		}
+		
 		// do further (possibly user specific) error handling and/ or
 		// view preparing
 		performError(cctx, formBean);	
@@ -1438,6 +1454,32 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected void setIncludeRequestAttributes(boolean b)
 	{
 		includeRequestAttributes = b;
+	}
+
+	/**
+	 * if population/ validation did not succeed, should we copy ALL request
+	 * parameters to the override values map (and thus giving you the option
+	 * of re-displaying the user input), or should we just fill the override fields
+	 * with the fields that failed?
+	 * @return boolean whether to copy the whole request to the override fields or just the
+	 * 	fields that failed
+	 */
+	protected boolean isCopyRequestToOverride()
+	{
+		return copyRequestToOverride;
+	}
+
+	/**
+	 * if population/ validation did not succeed, should we copy ALL request
+	 * parameters to the override values map (and thus giving you the option
+	 * of re-displaying the user input), or should we just fill the override fields
+	 * with the fields that failed?
+	 * @param b whether to copy the whole request to the override fields or just the
+	 * 	fields that failed
+	 */
+	protected void setCopyRequestToOverride(boolean b)
+	{
+		copyRequestToOverride = b;
 	}
 
 }
