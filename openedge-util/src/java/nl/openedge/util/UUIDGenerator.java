@@ -31,7 +31,6 @@
 package nl.openedge.util;
 
 import java.net.InetAddress;
-import net.sf.hibernate.util.BytesHelper;
 
 /**
  * The base class for ID generators that use a UUID algorithm. This
