@@ -1,8 +1,13 @@
-1.1.1
 -------------------------------------------------
+1.1.1
+
+- Moved Velocity tools from project OpenEdge maverick framework to this project.
+	(was package nl.openedge.maverick.framework.velocity.tools, is now
+	 package nl.openedge.util.velocity.tools)
 
 - StringResourceRepositoryFactory defaults to using StringResourceRepositoryImpl
 	for the repository instead of throwing an exception.
+
 
 -------------------------------------------------
 1.1
