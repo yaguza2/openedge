@@ -1,3 +1,9 @@
+1.0.6
+-------------------------------------------------
+- Small fix concerning PerformException(Flow)Interceptors
+- A lot of javadoc fixes
+- Added property executeOtherNonFlowInterceptors to FlowInterceptorResult
+	
 1.0.5
 -------------------------------------------------
 - Added execution parameter trimStringInputValues (true by default)
