@@ -38,10 +38,12 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import nl.openedge.util.DateFormatHelper;
+
 /**
  * @author Eelco Hillenius
  */
-public class DateTool
+public final class DateTool
 {
 
 	// ------------------------- system date access ------------------
@@ -451,6 +453,16 @@ public class DateTool
 			date = new Date(timeStamp.longValue());
 		}
 		return date;
+	}
+
+	/**
+	 * Format with DateFormatHelper.
+	 * @param date
+	 * @return String formatted date
+	 */
+	public static String format(Date date)
+	{
+		return DateFormatHelper.format(date);
 	}
 
 }
