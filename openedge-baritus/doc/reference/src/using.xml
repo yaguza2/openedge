@@ -74,7 +74,9 @@ import org.infohazard.maverick.flow.ControllerContext;
 public class ExampleCtrl extends FormBeanCtrl
 {
 
-	protected String perform(FormBeanContext formBeanContext, ControllerContext cctx)
+	protected String perform(
+		FormBeanContext formBeanContext, 
+		ControllerContext cctx)
 		throws Exception
 	{
 
@@ -85,7 +87,9 @@ public class ExampleCtrl extends FormBeanCtrl
 		return "success";
 	}
 
-	protected Object makeFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
+	protected Object makeFormBean(
+		FormBeanContext formBeanContext, 
+		ControllerContext cctx)
 	{
 		// create a new instance of the bean we want to populate
 		return new ExampleBean();

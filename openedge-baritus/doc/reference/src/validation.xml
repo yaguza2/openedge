@@ -55,30 +55,93 @@ public class FooForm
 }
 ]]></programlisting>
 			
+		</para>
+		<para>
+			
 			The validator:
 			
 		<programlisting><![CDATA[
 public class BarValidator extends AbstractFieldValidator
 {
-	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext, String fieldName, Object value)
+	public boolean isValid(
+		ControllerContext cctx, 
+		FormBeanContext formBeanContext, 
+		String fieldName, 
+		Object value)
 	{
-		Integer val = (Integer)value; // note that type conversion is allready done by the population process
-		return(val != null && val.intValue() > 10); // the value can still be null though
+		// note that type conversion is allready done by the population process
+		Integer val = (Integer)value; 
+		// the value can still be null though
+		return(val != null && val.intValue() > 10); 
 	}
 	
-	public String getErrorMessage(ControllerContext cctx, FormBeanContext formBeanContext, String fieldName,
-		Object value, Locale locale)
+	public String getErrorMessage(
+		ControllerContext cctx, 
+		FormBeanContext formBeanContext, 
+		String fieldName,
+		Object value, 
+		Locale locale)
 	{
 		// this method will be called in case isValid returned false
-		return "input " + value + " is not valid; please provide a number larger than 10";
+		return "input " + value + 
+			" is not valid; please provide a number larger than 10";
 	}
 }
 ]]></programlisting>
+
+		</para>
+		<para>
 			
-			Register it with your control:
+			If getErrorMessage returns null, no error will be saved by Baritus. 
+			This can be convenient when there is more than one possible
+			error message. You should set errors directly in the 
+			formBeanContext during execution of isValid instead. A
+			re-write of a validator that saves the error directly in the
+			formBeanContext looks like this:
 			
 		<programlisting><![CDATA[
-public class MyCtrl
+public class BarValidator extends AbstractFieldValidator
+{
+	public boolean isValid(
+		ControllerContext cctx, 
+		FormBeanContext formBeanContext, 
+		String fieldName, 
+		Object value)
+	{
+		// note that type conversion is allready done by the population process
+		Integer val = (Integer)value; 
+		// the value can still be null though
+		boolean valid = (val != null && val.intValue() > 10); 
+		
+		if(!valid)
+		{
+			String errorMessage = "input " + value + 
+				" is not valid; please provide a number larger than 10";
+			formBeanContext.setError(fieldName, errorMessage);
+		}
+		
+		return valid;
+	}
+	
+	public String getErrorMessage(
+		ControllerContext cctx, 
+		FormBeanContext formBeanContext, 
+		String fieldName,
+		Object value, 
+		Locale locale)
+	{
+		return null; // will be ignored by Baritus
+	}
+}
+]]></programlisting>
+
+		</para>
+		<para>
+			
+			Now, register it with your control:
+			
+		<programlisting><![CDATA[
+public class MyCtrl extends FormBeanCtrl
 {
 	...
 	
@@ -91,23 +154,71 @@ public class MyCtrl
 	...
 }
 ]]></programlisting>
+
+		</para>
+		<para>
 			
 			And a crude example of how you can use it with a velocity template:
 			
 		<programlisting><![CDATA[
+<input type="text" name="myInteger"
+	#if( $model.errors.get('myInteger') ) class="fielderror" #else class="field" #end
+	value="$!{model.displayProperty('myInteger')}">
 
-		<input type="text" name="myInteger"
-			#if( $model.errors.get('myInteger') ) class="fielderror" #else class="field" #end
-			value="$!{model.displayProperty('myInteger')}">
-		
-		<br>
-		#if( $model.errors.get('myInteger')  )  
-			<span class="error"> ${model.errors.get('myInteger') } </span>
-		#end
-		
+<br>
+#if( $model.errors.get('myInteger')  )  
+	<span class="error"> ${model.errors.get('myInteger') } </span>
+#end
 ]]></programlisting>
 						
 		</para>
+		
+	</sect1>
+	
+	<sect1 id="validation-s3">
+        <title>Mapped and indexed properties</title>
+		
+	    <para>
+			When using mapped or indexed properties, you have two options of registering field validators,
+			on target name and/ or on flat name. Let's illustratie this by example:
+			
+		<programlisting><![CDATA[
+public class FormWithMap
+{
+	private Map foo = new HashMap();
+	
+	public Integer getfoo() { return foo; }
+	public void setfoo(Map m) { foo = m; }
+}
+]]></programlisting>
+
+		</para>
+		<para>
+
+			Not only can we register validators with the whole target name, including the keys
+			or indexes like this:
+
+		<programlisting><![CDATA[
+...
+	addValidator("foo(bar)", myValidator);
+	addValidator("foo(someOtherKey", myOtherValidator);
+...
+]]></programlisting>
+
+		</para>
+		<para>
+
+			
+			But in case the validator should be executed for all keys (or indexes), the 'flat name'
+			(name without markup for map/ index navigation) as well like:
+
+		<programlisting><![CDATA[
+...
+	addValidator("foo", myValidatorForAllKeys);
+...
+]]></programlisting>
+			
+	    </para>
 		
 	</sect1>
 	
