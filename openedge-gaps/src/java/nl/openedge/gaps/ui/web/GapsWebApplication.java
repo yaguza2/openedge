@@ -36,7 +36,7 @@ public final class GapsWebApplication extends WebApplication
     {
 		Code.addListenerFactory(new Log4JCodeListenerFactory());
 		ApplicationSettings settings = getSettings();
-		settings.setHomePage(Home.class);
+		settings.setHomePage(HomePage.class);
 		//settings.setComponentUseCheck(false);
 		if (!Boolean.getBoolean("cache-templates"))
 		{

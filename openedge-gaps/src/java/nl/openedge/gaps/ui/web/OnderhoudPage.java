@@ -9,26 +9,21 @@
  */
 package nl.openedge.gaps.ui.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.support.ParameterBrowser;
-import nl.openedge.gaps.ui.web.util.ResultList;
 
 import com.voicetribe.wicket.PageParameters;
 
 /**
- * De GAPS Home page.
+ * De GAPS onderhoud pagina.
  */
-public final class Onderhoud extends SimpleBorderedPage
+public final class OnderhoudPage extends SimpleBorderedPage
 {
 	/**
 	 * Constructor.
 	 * @param parameters pagina parameters
 	 */
-	public Onderhoud(final PageParameters parameters)
+	public OnderhoudPage(final PageParameters parameters)
 	{
 	    super();
 	    String expr = parameters.getString("browseexpr");
@@ -44,12 +39,9 @@ public final class Onderhoud extends SimpleBorderedPage
 	        // TODO los op met msg panel ofzo
 	    }
 	    StructuralGroup group = (StructuralGroup)pos;
-	    StructuralGroup[] childs = group.getStructuralChilds();
-	    ResultList wrapper = new ResultList();
-	    List list = (childs != null) ? Arrays.asList(childs) :  new ArrayList();
-	    wrapper.setResults(list);
-	    StructuralGroupTable sGroupTable = new StructuralGroupTable(
-	            "structuralGroupChilds", wrapper);
+	    StructuralGroupPanel panel = new StructuralGroupPanel(
+	            "structuralGroupPanel", group);
+	    add(panel);
 	}
 
 }

@@ -10,8 +10,8 @@
 package nl.openedge.gaps.ui.web;
 
 import nl.openedge.gaps.core.groups.StructuralGroup;
-import nl.openedge.gaps.ui.web.util.ResultList;
 
+import com.voicetribe.util.collections.MicroMap;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.table.Cell;
 import com.voicetribe.wicket.markup.html.table.Table;
@@ -22,14 +22,14 @@ import com.voicetribe.wicket.markup.html.table.Table;
 public final class StructuralGroupTable extends Table
 {
     /** table model. */
-    private final ResultList model;
+    private final MicroMap model;
 
     /**
      * Construct.
      * @param componentName
      * @param model
      */
-    public StructuralGroupTable(String componentName, ResultList model)
+    public StructuralGroupTable(String componentName, MicroMap model)
     {
         super(componentName, model);
         this.model = model;
@@ -41,7 +41,7 @@ public final class StructuralGroupTable extends Table
      * @param model
      * @param pageSizeInCells
      */
-    public StructuralGroupTable(String componentName, ResultList model, int pageSizeInCells)
+    public StructuralGroupTable(String componentName, MicroMap model, int pageSizeInCells)
     {
         super(componentName, model, pageSizeInCells);
         this.model = model;

@@ -15,13 +15,13 @@ import com.voicetribe.wicket.PageParameters;
 /**
  * De GAPS Home page.
  */
-public final class Home extends SimpleBorderedPage
+public final class HomePage extends SimpleBorderedPage
 {
 	/**
 	 * Constructor.
 	 * @param parameters pagina parameters
 	 */
-	public Home(final PageParameters parameters)
+	public HomePage(final PageParameters parameters)
 	{
 	    super();
 	}
