@@ -125,7 +125,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * custom validators should be performed in this request
 	 * @author Eelco Hillenius
 	 */
-	protected List validatorsActivationRules = null;
+	protected List globalValidatorActivationRules = null;
 	
 	/**
 	 * is called before any handling like form population etc.
@@ -338,8 +338,10 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param properties
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
-	protected boolean populateWithErrorReport(ControllerContext cctx, 
-								AbstractForm formBean, Map properties)
+	protected boolean populateWithErrorReport(
+		ControllerContext cctx, 
+		AbstractForm formBean, 
+		Map properties)
 	{
 		
 		// Do nothing unless both arguments have been specified
@@ -406,64 +408,109 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		// do custom validation
 		if(validators != null && (!validators.isEmpty()))
 		{
-			boolean doCustomValidation = true;
-			if(validatorsActivationRules != null && (!validatorsActivationRules.isEmpty()))
-			{
-				for(Iterator i = validatorsActivationRules.iterator(); i.hasNext(); )
-				{
-					ValidatorsActivationRule rule = (ValidatorsActivationRule)i.next();
-					doCustomValidation = rule.allowValidation(cctx, formBean);
-					if(!doCustomValidation) break;
-				}
-				if(doCustomValidation)
-				{
-					names = properties.keySet().iterator();
-					while(names.hasNext())
-					{
-						String name = (String)names.next();
-						if (name == null) continue;
-						if(formBean.getError(name) == null) 
-						{
-							Collection propertyValidators = (Collection)validators.get(name);
-							// these are the validators for one property
-							if(propertyValidators != null)
-							{
-								try
-								{
-									Object value = PropertyUtils.getProperty(formBean, name);
-									for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
-									{
-										Validator validator = (Validator)j.next();
-										boolean success = validator.isValid(
-											cctx, formBean, name, value);
-										if(!success)
-										{
-											succeeded = false;
-											String msg = validator.getErrorMessage(
-												cctx, formBean, name, value, null);
-											formBean.setError(name, msg);
-											// if fail on populate, set the override field so that the input
-											// value can be displayed
-											if(failOnPopulateError)
-											{
-												formBean.setOverrideField(name, value);	
-											}
-											break;
-										}
-									}	
-								}
-								catch (Exception e)
-								{
-									// ignore
-								}
-							}	
-						} // else an error allready occured; do not validate
-					}
-				}
-			}
+			succeeded = doCustomValidation(cctx, formBean, properties, succeeded);
 		}
 		
 		return succeeded;
+	}
+	
+	/* handle custom validation for all fields */
+	private boolean doCustomValidation(
+		ControllerContext cctx, 
+		AbstractForm formBean, 
+		Map properties,
+		boolean succeeded)
+	{
+
+		boolean doCustomValidation = true;
+		// see if there's any globally (form level) defined rules
+		if(globalValidatorActivationRules != null && (!globalValidatorActivationRules.isEmpty()))
+		{
+			for(Iterator i = globalValidatorActivationRules.iterator(); i.hasNext(); )
+			{
+				ValidatorActivationRule rule = (ValidatorActivationRule)i.next();
+				doCustomValidation = rule.allowValidation(cctx, formBean); // fire rule
+				if(!doCustomValidation) break;
+			}
+		}
+		
+		if(doCustomValidation)
+		{
+			Iterator names = properties.keySet().iterator();
+			while(names.hasNext())
+			{
+				String name = (String)names.next();
+				if (name == null) continue;
+				if(formBean.getError(name) == null) 
+				{
+					Collection propertyValidators = (Collection)validators.get(name);
+					// these are the validators for one property
+					if(propertyValidators != null)
+					{
+						try
+						{
+							doCustomValidationForOneField(
+								cctx, formBean, succeeded, name, propertyValidators);
+						}
+						catch (Exception e)
+						{
+							if(log.isDebugEnabled())
+							{
+								log.debug(e.getMessage());
+							}
+							// ignore
+						}
+					}	
+				} // else an error allready occured; do not validate
+			}
+		}
+		return succeeded;
+	}
+	
+	/* handle the custom validation for one field */
+	private boolean doCustomValidationForOneField(
+		ControllerContext cctx,
+		AbstractForm formBean,
+		boolean succeeded,
+		String name,
+		Collection propertyValidators)
+		throws Exception
+	{
+		Object value = PropertyUtils.getProperty(formBean, name);
+		for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
+		{
+			FieldValidator validator = (FieldValidator)j.next();
+			boolean validateField = true;
+								
+			if(validator instanceof ValidationRuleDependend)
+			{
+				ValidatorActivationRule rule = 
+					((ValidationRuleDependend)validator)
+						.getValidationActivationRule();
+				validateField = rule.allowValidation(cctx, formBean);
+			}
+								
+			if(validateField)
+			{
+				boolean success = validator.isValid(
+					cctx, formBean, name, value);
+				if(!success)
+				{
+					succeeded = false;
+					String msg = validator.getErrorMessage(
+						cctx, formBean, name, value, null);
+					formBean.setError(name, msg);
+					// if fail on populate, set the override field so that the input
+					// value can be displayed
+					if(failOnPopulateError)
+					{
+						formBean.setOverrideField(name, value);	
+					}
+					break;
+				}	
+			}
+		}
+		return succeeded;	
 	}
 	
 	/**
@@ -827,7 +874,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
-	public void addValidator(String fieldName, Validator validator)
+	public void addValidator(String fieldName, FieldValidator validator)
 	{
 		if(validators == null)
 		{
@@ -852,7 +899,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 * de-register the given validator that was registered with the given fieldName
 	 * @param fieldName
 	 */
-	public void removeValidator(String fieldName, Validator validator)
+	public void removeValidator(String fieldName, FieldValidator validator)
 	{
 		if(validators != null)
 		{
@@ -861,35 +908,35 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	}
 	
 	/**
-	 * register the rule 
+	 * register the rule for the whole form
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
-	public void addValidatorsActivationRule(ValidatorsActivationRule rule)
+	public void addGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
-		if(validatorsActivationRules == null)
+		if(globalValidatorActivationRules == null)
 		{
-			validatorsActivationRules = new ArrayList();
+			globalValidatorActivationRules = new ArrayList();
 		}
-		validatorsActivationRules.add(rule);
+		globalValidatorActivationRules.add(rule);
 	}
 	
 	/**
-	 * de-register the given rule
+	 * de-register the given rule for the whole form
 	 * @param fieldName
 	 */
-	public void removeValidatorsActivationRule(ValidatorsActivationRule rule)
+	public void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
-		if(validatorsActivationRules != null)
+		if(globalValidatorActivationRules != null)
 		{
-			validatorsActivationRules.remove(rule);
+			globalValidatorActivationRules.remove(rule);
 		}
 	}
 	
 	/**
 	 * get the validators that were registered with the given fieldName
 	 * @param fieldName name of the field
-	 * @return Validator the instance of Validator that was registered with the given 
+	 * @return FieldValidator the instance of FieldValidator that was registered with the given 
 	 * 		fieldName or null if none was registered with that name
 	 */
 	protected Collection getValidators(String fieldName)

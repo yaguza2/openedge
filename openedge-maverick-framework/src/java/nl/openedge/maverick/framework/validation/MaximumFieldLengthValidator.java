@@ -40,7 +40,7 @@ import org.infohazard.maverick.flow.ControllerContext;
  * use this for fields that have a max length
  * @author Eelco Hillenius
  */
-public final class MaximumFieldLengthValidator extends AbstractValidator
+public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 {
 	/** special value that indicates there's no maximum value to check on */
 	public final static int NO_MAXIMUM = -1;
@@ -85,7 +85,7 @@ public final class MaximumFieldLengthValidator extends AbstractValidator
 	}
 
 	/**
-	 * @see nl.openedge.maverick.framework.Validator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
@@ -125,7 +125,7 @@ public final class MaximumFieldLengthValidator extends AbstractValidator
 	}
 	
 	/**
-	 * @see nl.openedge.maverick.framework.Validator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,

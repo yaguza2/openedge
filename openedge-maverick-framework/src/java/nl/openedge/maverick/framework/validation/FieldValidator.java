@@ -40,7 +40,7 @@ import org.infohazard.maverick.flow.ControllerContext;
  * Use this for custom validation
  * @author Eelco Hillenius
  */
-public interface Validator
+public interface FieldValidator
 {
 	/**
 	 * checks if value is valid

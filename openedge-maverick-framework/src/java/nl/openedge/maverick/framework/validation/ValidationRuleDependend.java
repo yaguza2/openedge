@@ -30,77 +30,29 @@
  */
 package nl.openedge.maverick.framework.validation;
 
-import java.util.Locale;
-
-import nl.openedge.maverick.framework.AbstractForm;
-
-import org.infohazard.maverick.flow.ControllerContext;
-
 /**
- * use this for fields that should have their lenghts checked
- * by default, the messagePrefix itself (or 'input.field.required' if you use the
- * default constructor) will be used to get the error message
+ * FieldValidators that implement this interface can have their validation done optionaly.
+ * Whether or not the actual validation will be done, depends on the outcome of the
+ * registered rule
  * @author Eelco Hillenius
  */
-public class RequiredFieldValidator extends AbstractFieldValidator
+public interface ValidationRuleDependend
 {
-
 	/**
-	 * construct
+	 * set the validation rule
+	 * @param rule the rule
 	 */
-	public RequiredFieldValidator()
-	{
-		super("input.field.required");
-	}
-
+	public void setValidationRule(ValidatorActivationRule rule);
+	
 	/**
-	 * construct with message prefix for error message keys
-	 * @param messagePrefix
+	 * remove the validation rule
+	 *
 	 */
-	public RequiredFieldValidator(String messagePrefix)
-	{
-		super(messagePrefix);
-	}
-
+	public void removeValidationActivationRule();
+	
 	/**
-	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
+	 * get the registered validation rule
+	 * @return the registered validation rule or null if none was registered
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		AbstractForm form,
-		String fieldName,
-		Object value)
-	{
-		boolean isValid = true;
-		if(value == null)
-		{
-			isValid = false;
-		}
-		else
-		{
-			if(value instanceof String)
-			{
-				if("".equals(((String)value).trim()))
-				{
-					isValid = false;
-				}
-			}
-		}
-		return isValid;
-	}
-
-	/**
-	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
-	 */
-	public String getErrorMessage(
-		ControllerContext cctx,
-		AbstractForm form,
-		String fieldName,
-		Object value,
-		Locale locale)
-	{
-
-		return getLocalizedMessage(getMessagePrefix(), locale, new Object[]{value, fieldName});
-	}
-
+	public ValidatorActivationRule getValidationActivationRule();
 }

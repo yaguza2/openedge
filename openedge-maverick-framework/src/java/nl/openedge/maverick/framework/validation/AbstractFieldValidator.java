@@ -42,15 +42,18 @@ import org.infohazard.maverick.flow.ControllerContext;
  * convenience class with default error message handling
  * @author Eelco Hillenius
  */
-public abstract class AbstractValidator implements Validator
+public abstract class AbstractFieldValidator 
+	implements FieldValidator, ValidationRuleDependend
 {
+
+	private ValidatorActivationRule validatorActivationRule = null;
 
 	private String messagePrefix = "input.field.";
 	
 	/**
 	 * construct
 	 */
-	public AbstractValidator()
+	public AbstractFieldValidator()
 	{
 		// noop
 	}
@@ -59,13 +62,13 @@ public abstract class AbstractValidator implements Validator
 	 * construct with message prefix for error message keys
 	 * @param messagePrefix
 	 */
-	public AbstractValidator(String messagePrefix)
+	public AbstractFieldValidator(String messagePrefix)
 	{
 		setMessagePrefix(messagePrefix);
 	}
 
 	/**
-	 * @see nl.openedge.maverick.framework.Validator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
@@ -176,6 +179,30 @@ public abstract class AbstractValidator implements Validator
 	public void setMessagePrefix(String string)
 	{
 		messagePrefix = string;
+	}
+
+	/**
+	 * @see nl.openedge.maverick.framework.validation.ValidationRuleDependend#getValidationActivationRule()
+	 */
+	public ValidatorActivationRule getValidationActivationRule()
+	{
+		return this.validatorActivationRule;
+	}
+
+	/**
+	 * @see nl.openedge.maverick.framework.validation.ValidationRuleDependend#removeValidationActivationRule()
+	 */
+	public void removeValidationActivationRule()
+	{
+		this.validatorActivationRule = null;
+	}
+
+	/**
+	 * @see nl.openedge.maverick.framework.validation.ValidationRuleDependend#setValidationRule(nl.openedge.maverick.framework.validation.ValidatorActivationRule)
+	 */
+	public void setValidationRule(ValidatorActivationRule rule)
+	{
+		this.validatorActivationRule = rule;
 	}
 
 }

@@ -35,11 +35,11 @@ import nl.openedge.maverick.framework.AbstractForm;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Optional, toplevel interface that can be used to switch whether validation with
+ * interface that can be used to switch whether validation with
  * custom validators should be performed in this request
  * @author Eelco Hillenius
  */
-public interface ValidatorsActivationRule
+public interface ValidatorActivationRule
 {
 	/**
 	 * returns whether validation with custom validators should be performed in this request

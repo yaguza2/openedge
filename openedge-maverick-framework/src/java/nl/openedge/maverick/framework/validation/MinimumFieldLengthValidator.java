@@ -40,7 +40,7 @@ import org.infohazard.maverick.flow.ControllerContext;
  * use this for fields that have a min length
  * @author Eelco Hillenius
  */
-public final class MinimumFieldLengthValidator extends AbstractValidator
+public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 {
 	/** special value that indicates there's no min value to check on */
 	public final static int NO_MINIMUM = -1;
@@ -85,7 +85,7 @@ public final class MinimumFieldLengthValidator extends AbstractValidator
 	}
 
 	/**
-	 * @see nl.openedge.maverick.framework.Validator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
+	 * @see nl.openedge.maverick.framework.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object)
 	 */
 	public boolean isValid(
 		ControllerContext cctx,
@@ -125,7 +125,7 @@ public final class MinimumFieldLengthValidator extends AbstractValidator
 	}
 	
 	/**
-	 * @see nl.openedge.maverick.framework.Validator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
+	 * @see nl.openedge.maverick.framework.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.maverick.framework.AbstractForm, java.lang.String, java.lang.Object, java.util.Locale)
 	 */
 	public String getErrorMessage(
 		ControllerContext cctx,
