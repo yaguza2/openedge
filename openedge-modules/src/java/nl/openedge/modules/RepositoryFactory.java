@@ -30,10 +30,24 @@
  */
 package nl.openedge.modules;
 
+import java.util.Hashtable;
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.event.EventContext;
+import javax.naming.event.NamespaceChangeListener;
+import javax.naming.event.NamingEvent;
+import javax.naming.event.NamingExceptionEvent;
+import javax.naming.event.NamingListener;
+import javax.naming.spi.ObjectFactory;
 import javax.servlet.ServletContext;
 
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.impl.DefaultComponentRepository;
+import nl.openedge.util.jndi.NamingHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,24 +59,23 @@ import org.jdom.Element;
  * module types
  * @author Eelco Hillenius
  */
-public class RepositoryFactory
+public class RepositoryFactory implements  ObjectFactory
 {
 
 	/** class of the default implementation */
 	protected static String _implementingClass = 
 		DefaultComponentRepository.class.getName();
 	
-	/** instance of module factory */
-	protected static ComponentRepository moduleFactory = null;
+	/** instance of component repository */
+	protected static ComponentRepository _componentRepository = null;
 
-	/** is the factory factory wasAdded yet? */
 	private static boolean initialized = false;
 	
 	/* logger */
 	private static Log log = LogFactory.getLog(RepositoryFactory.class);
 
 	/**
-	 * get the instance of the module factory
+	 * get the instance of the component repository
 	 * @return ComponentRepository
 	 */
 	public static ComponentRepository getInstance()
@@ -70,10 +83,10 @@ public class RepositoryFactory
 		
 		if(!initialized)
 		{
-			throw new RuntimeException("factory is not yet wasAdded");
+			throw new RuntimeException("factory is not yet initialized");
 		}
 		
-		return moduleFactory;
+		return _componentRepository;
 	}
 
 	/**
@@ -93,7 +106,7 @@ public class RepositoryFactory
 		}
 		else
 		{
-			log.warn("module factory initialization allready done... skipping");
+			log.warn("component repository initialization allready done... skipping");
 		}
 	}
 	
@@ -118,8 +131,42 @@ public class RepositoryFactory
 		try
 		{
 			Class clazz = classLoader.loadClass(_implementingClass);
-			moduleFactory = (ComponentRepository)clazz.newInstance();
-			moduleFactory.start(factoryNode, servletContext);
+			_componentRepository = (ComponentRepository)clazz.newInstance();
+			_componentRepository.start(factoryNode, servletContext);
+			
+			// if a name was defined, register with JNDI
+			Element jndiNode = factoryNode.getChild("jndi");
+			String name = null;
+			if(jndiNode != null)
+			{
+				name = jndiNode.getAttributeValue("name");	
+			}
+
+			if(name != null)
+			{
+				try
+				{
+					Context ctx = NamingHelper.getInitialContext(new Properties());
+					NamingHelper.bind(ctx, name, _componentRepository);
+					log.info("bound " + _componentRepository + " to JNDI name: " + name 
+						+ " to context " + ctx);
+					((EventContext)ctx).addNamingListener(
+						name, EventContext.OBJECT_SCOPE, listener);
+				}
+				catch (InvalidNameException ine)
+				{
+					log.info("invalid JNDI name: " + name + "... " + ine);
+				}
+				catch (NamingException ne)
+				{
+					log.info("could not bind factory to JNDI" + "... " + ne);
+				}
+				catch (ClassCastException cce)
+				{
+					log.info("initialContext did not implement EventContext");
+				}	
+			}
+			
 		}
 		catch(Exception e)
 		{
@@ -144,17 +191,89 @@ public class RepositoryFactory
 	{
 		if(initialized)
 		{
-			throw new RuntimeException("factory allready wasAdded");
+			throw new RuntimeException("factory allready initialized");
 		}
 		_implementingClass = implementingClass;
 	}
 
 	/**
-	 * reset the wasAdded flag
+	 * reset the initialized flag
 	 */
 	protected static void reset()
 	{
 		initialized = false;
 	}
+	
+	/**
+	 * @see ObjectFactory#getObjectInstance(Object, Name, Context, Hashtable) throws Exception
+	 */
+	public Object getObjectInstance(
+		Object reference, 
+		Name name, 
+		Context ctx, 
+		Hashtable env) 
+		throws Exception
+	{
+		
+		log.info("ref: " + reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
+		
+		log.debug("JNDI lookup: " + name);
+		return _componentRepository;
+	}
+
+//	/**
+//	 * @see javax.naming.Referenceable#getReference()
+//	 */
+//	public Reference getReference() throws NamingException 
+//	{
+//		return new Reference(
+//			RepositoryFactory.class.getName(),
+//			new StringRefAddr("ComponentRepository Factory", null),
+//			RepositoryFactoryObjectFactory.class.getName(),
+//			null
+//		);
+//	}
+//	
+//	// TODO: remove debug info
+//	public final void readObject(ObjectInputStream in) 
+//			throws IOException, ClassNotFoundException 
+//	{
+//		log.info("deserializing");
+//		in.defaultReadObject();
+//		log.info("deserialized: " + _componentRepository);
+//	}
+//	
+//	public final void writeObject(ObjectOutputStream out) 
+//			throws IOException 
+//	{
+//		log.info("serializing: " + _componentRepository);
+//		out.defaultWriteObject();
+//		log.info("serialized");
+//	}
+
+	private static final NamingListener listener = new NamespaceChangeListener()
+	{
+
+		public void objectAdded(NamingEvent evt)
+		{
+			log.info("a object was successfully bound to name: " + 
+				evt.getNewBinding().getName());
+		}
+		public void objectRemoved(NamingEvent evt)
+		{
+			String name = evt.getOldBinding().getName();
+			log.info("a object was unbound from name: " + name);
+		}
+		public void objectRenamed(NamingEvent evt)
+		{
+			String name = evt.getOldBinding().getName();
+			log.info("a object was renamed from name: " + name);
+		}
+		public void namingExceptionThrown(NamingExceptionEvent evt)
+		{
+			log.info("naming exception occurred accessing object: " + 
+				evt.getException());
+		}
+	};
 
 }

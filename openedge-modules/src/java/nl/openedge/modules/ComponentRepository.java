@@ -30,6 +30,7 @@
  */
 package nl.openedge.modules;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -47,7 +48,9 @@ import org.quartz.Scheduler;
  * 
  * @author Eelco Hillenius
  */
-public interface ComponentRepository extends ChainedEventObserver
+public interface ComponentRepository 
+	extends ChainedEventObserver, 
+			Serializable
 {
 	
 	/**

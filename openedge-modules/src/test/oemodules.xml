@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <components-config>
+	
+	<jndi name="componentsRepository"/>
 
 	<scheduler properties="/quartz.properties">
 

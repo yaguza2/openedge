@@ -10,7 +10,7 @@
 	
     <section name="Using OpenEdge Modules">
       <p>
-		To successfully use OpenEdge Modules, you should know about three things:
+		To use OpenEdge Modules, you should know about three things:
 		<ul>
 			<li>
 				how to use types and init-commands
@@ -28,26 +28,31 @@
       <subsection name="How to use types and init-commands">
 		<p>
 			The default implementation of OpenEdge Modules works with interfaces
-			to determine the handling of components. In the framework registered
-			interfaces are called types. A component is of a type when it 
-			implements its interface. There are two kinds of types, namely 
-			'base types' and 'init-commands'.
+			to determine the handling of components. Interfacea registered
+			with the repository are called types. A component is of a type when it 
+			implements its interface. A type is coupled with a factory. This factory
+			will be used to get instances when clients query the repository
+			for components. Besides a component being a type, components
+			can be associated with commands that are executed after component
+			instantiation (depending on it type factory).
 		</p>
 		<p>
 			A component will be handled differently by the container (or actually
-			a creator delegate) according its type.
-			A component allways is-a base type. If a component does not yet have
-			a base type assigned, it will be handled as the default type. Also, a 
-			component can never be of more than one base type. For example, a
-			component never is both a singleton and a throwaway component.
+			its factory delegate) according to its type. A component allways is-a type. 
+			If a component does not yet have a base type assigned, it will be 
+			handled as the registered default type. Also, a component can never 
+			be of more than one base type. For example, a component never is 
+			both a singleton and a throwaway component.
 		</p>
 		<p>
-			The other types, InitCommands, are used for different purposes. A 
-			component does not have to have to be of a command type, but
-			can be of many, depending on the command implementations.
+			InitCommands are used for different purposes. A component can be
+			associated with zero of more commands for extra initialization (hence
+			the name InitCommands). Using the default implementation, 
+			components that want to be associated with a command should
+			implement	the appropriate inteface.
 		</p>
 		<p>
-			You use commands to be able to decorate components. Eg, a component
+			You use InitCommands to be able to decorate components. Eg, a component
 			that implements <code>BeanType</code> will have its properties 
 			populated from configuration and a component that implements
 			<code>DependentType</code> will have its dependencies automatically
@@ -55,12 +60,12 @@
 		</p>
 	  </subsection>
 	  
-	  <subsection name="Default Types">
+	  <subsection name="Standard Types">
         <p>
 			When you want to use OpenEdge Modules your components don't have to 
-			implement any interface... by default.
-			Classes that do not implement one of the registered interfaces will be handled as the
-			default type. The types and the way they are handled are pluggable, but currently the
+			implement any interface... by default. Classes that do not implement one 
+			of the registered interfaces will be handled as the default type. 
+			The types and the way they are handled are pluggable, but currently the
 			following types are available:<br/>
 		<ul>
 			<li>
@@ -70,13 +75,13 @@
 			</li>
 			<li>
 				SingletonType (default)<br/>
-				A singleton component will be created once and only once. 
-				All ComponentFactory users share the same instance.
+				A singleton component will be created once at startup and users 
+				share the same instance.
 				<br/>
 			</li>
 			<li>
 				ThreadSingletonType<br/>
-				A thread singleton component will be created once and only once for each Thread.
+				A thread singleton component will be created once for each Thread.
 				The same instance will be shared in one Thread, but a different 
 				instance will be used for each seperate Thread.
 				<br/>
@@ -87,7 +92,7 @@
 				framework:
 				<ul>
 					<li>
-						you have a standard way of configuring Triggers
+						you have a standard way available of configuring Triggers
 						on Jobs and passing parameters from configuration as JobDataMaps
 					</li>
 					<li>
@@ -95,22 +100,22 @@
 						Modules configuration
 					</li>
 				</ul>
-				One important thing to remember when using Jobs is that you never get use Jobs
-				directly from the ComponentFactory. As we wanted to stay as close as possible to 
+				One important thing to remember when using Jobs is that you never use Jobs
+				directly from the ComponentRepository. As we wanted to stay as close as possible to 
 				the default Quartz behaviour, we decided to let the Jobs keep their original
 				interface and let them be managed completely by the Quartz sceduler. 
 				The good news is that the Sceduler (of which the instance you can get
-				from the ComponentFactory) has all the functionality you need when working 
+				from the ComponentRepository) has all the functionality you need when working 
 				with Jobs and Triggers.
 				<br/>
-				You still can use Quartz directly instead of through the ComponentFactory. You can even decide
+				You still can use Quartz directly instead of through the ComponentRepository. You can even decide
 				whether Quartz will be started from the framework.
 			</li>
 		</ul>
         </p>
       </subsection>
 	  
-	  <subsection name="Default Commands">
+	  <subsection name="Standard Commands">
         <p>
 			What follows is a list of currently available commands that can be implemented to
 			decorate components.
@@ -142,7 +147,7 @@ public class BeanComponentImpl implements BeanType
 
 </component>
 		      ]]></source><br/>
-				When you query <code>ComponentFactory</code> for 'BeanTest', you will get
+				When you query <code>ComponentRepository</code> for 'BeanTest', you will get
 				an instance where the property myInteger has value 12, and
 				property myString has value test.
 			</li>
@@ -257,7 +262,7 @@ public class QuartzJobComponentImpl implements Job
 						properties repeatInterval=2000 and repeatCount=-1.
 					</li>
 					<li>
-						After the ComponentFactory has loaded the components, the Quartz sceduler 
+						After the ComponentRepository has loaded the components, the Quartz sceduler 
 						will be started using quartz.properties (from the classpath root in this case)
 						for configuration.
 					</li>
@@ -275,7 +280,7 @@ public class QuartzJobComponentImpl implements Job
 						and as the repeatCount is -1, the Job will run indefinately.
 						<br/>
 						An important thing to remember when working with Jobs is that you never
-						access Jobs directely from <code>ComponentFactory</code>. Use the
+						access Jobs directely from <code>ComponentRepository</code>. Use the
 						<code>Quartz Sceduler</code> instead. The following code snippet
 						shows how to get the sceduled Job and Trigger from the 
 						<code>Sceduler</code>:
@@ -296,7 +301,7 @@ Trigger t = scheduler.getTrigger("testTrigger_QuartzTest", "DEFAULT");
 				DependentType<br/>
 				A component that implements <code>DependentType</code> can have
 				dependencies on other components. The dependencies are declared in the 
-				configuration file, and will be resolved and check during startup.
+				configuration file, and will be resolved and checked during startup.
 		      <source><![CDATA[
 public class ComponentUser implements DependentType, ThrowAwayType
 {
@@ -335,15 +340,16 @@ public class OtherComponent
 		<br/>
 		
 			<li>
-				ComponentFactoryObserver<br/>
-				A <code>ComponentObserver</code>will be registered as an observer for 
-				certain ComponentFactory related events. ComponentObserver itself is a toplevel
-				interface. Currently the following concrete observers are available:
+				ComponentRepositoryObserver<br/>
+				A <code>ComponentRepositoryObserver</code> will be registered as an observer for 
+				certain ComponentRepository related events. ComponentObserver itself is a toplevel
+				interface. Currently the following concrete observers are packeged with the
+				distribution:
 				
 				<ul>
 					<li>
-						<code>ComponentsObserver</code> Observers of this type
-						will be notified when interesting things happen with components.
+						<code>ComponentObserver</code>s will be notified when 
+						interesting things happen with components.
 					</li>
 					<li>
 						<code>ScedulerObserver</code>s will be notified when
@@ -376,37 +382,26 @@ public class SchedulerObserverImpl implements SchedulerObserver
 				SchedulerStartedEvent to all registered observers. As SchedulerObserverImpl
 				implements the SchedulerObserver, it will be automatically registrated and
 				thus recieves the event.
-			<br/>
+			</li>
+		<br/>
 			
 			<li>
-				ComponentFactoryObserver<br/>
-				A <code>ComponentObserver</code>will be registered as an observer for 
-				certain ComponentFactory related events. ComponentObserver itself is a toplevel
-				interface. Currently the following concrete observers are available:
-				
-				Take class:
-		      <source><![CDATA[
-public class SchedulerObserverImpl implements SchedulerObserver
-{	
-  private SchedulerStartedEvent evt;
-	
-  public void schedulerStarted(SchedulerStartedEvent evt)
-  {
-    this.evt = evt;
-	System.out.println("scheduler was started!");
-  }
-}
-		      ]]></source><br/>
-				With configuration snippet:
-		      <source><![CDATA[
-<component name="SchedulerObserverTest" class="SchedulerObserverImpl"/>
-		      ]]></source><br/>
-				When the Sceduler has been started, the componentFactory fires the
-				SchedulerStartedEvent to all registered observers. As SchedulerObserverImpl
-				implements the SchedulerObserver, it will be automatically registrated and
-				thus recieves the event.
-			<br/>				
-			</li>
+				ChainedEventCaster<br/>
+				A <code>ChainedEventCaster</code> will have the component
+				repository registred as a ChainedEventObserver. Combine this with
+				other observers for chained event, en whenever a chained event 
+				caster fires an event, all chained event observers will have the
+				event delivered. This makes it easy to implement complex 
+				synchronious messaging in your systems without the usual 
+				hassle of (programmatic) configuration. 
+				<br/>
+				For example, if you have a critical module in your web application that
+				should to notify the controller servlet when something is dead-wrong
+				(like when database connections fail), it could notify the controller
+				component, that could in turn display a 'temporarily unavailable' page
+				until the critical component is up for service again. In this example,
+				the critical module implements interface ChainedEventCaster and the 
+				controller component implements ChainedEventObserver.
 			
 			</li>
 		<br/>
@@ -414,10 +409,7 @@ public class SchedulerObserverImpl implements SchedulerObserver
 		</ul><br/>
 		
 	  </subsection>
-	  
-	  <!-- //TODO: vergeet niet te vertellen dat tijdens opstarten alle components 
-		bij wijze van test een keer worden gecreeerd -->
-	  
+	
    </section>
  </body>
 </document>

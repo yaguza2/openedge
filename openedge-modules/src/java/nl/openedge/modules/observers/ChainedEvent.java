@@ -37,8 +37,7 @@ import java.util.EventObject;
  * @author Eelco Hillenius
  */
 public class ChainedEvent extends EventObject 
-{
-
+{	
 	/**
 	 * @param source sender of event
 	 */
@@ -46,7 +45,5 @@ public class ChainedEvent extends EventObject
 	{
 		super(source);
 	}
-	
-	
 
 }

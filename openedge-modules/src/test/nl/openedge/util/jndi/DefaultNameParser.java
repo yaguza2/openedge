@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Header$
  * $Revision$
  * $Date$
  *
@@ -28,73 +28,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.test;
 
-import java.net.URL;
 
-import junit.framework.TestCase;
+package nl.openedge.util.jndi;
 
-import nl.openedge.modules.JDOMConfigurator;
-import nl.openedge.modules.ComponentRepository;
-import nl.openedge.modules.RepositoryFactory;
-import nl.openedge.modules.config.URLHelper;
+import javax.naming.NameParser;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.CompositeName;
 
 /**
- * This is the baseclass for testcases.
- * It does some initialisation and provides additional test methods
- * 
- * @author E.F. Hillenius
+ * Default name parser.
+ *
+ * @author Eelco Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
-{
-	
-	protected static ComponentRepository componentFactory;
-	protected static boolean initialised = false;
+public class DefaultNameParser implements NameParser {
 
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
-	{
-		super(name);
-		init();
-	}
+    /**
+     * Parses a name into its components.
+     * 
+     * @param name The non-null string name to parse
+     * @return A non-null parsed form of the name using the naming convention 
+     * of this parser.
+     */
+    public Name parse(String name) throws NamingException {
+        
+        return new CompositeName(name);
+    }
 
-	/** 
-	 * initialise
-	 */
-	protected void init() throws Exception
-	{
-
-		loadComponentFactory();
-	}
-
-	/**
-	 * load the module factory
-	 * @throws Exception
-	 */
-	protected void loadComponentFactory() throws Exception
-	{
-
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url =
-					URLHelper.convertToURL(
-						System.getProperty("configfile", "/oemodules.xml"),
-						AbstractTestBase.class,
-						null);
-
-				JDOMConfigurator c = new JDOMConfigurator(url);
-				componentFactory = RepositoryFactory.getInstance();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
-	}
 }
+

@@ -32,6 +32,10 @@ package nl.openedge.modules.test;
 
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import nl.openedge.modules.types.base.SingletonType;
 
 import org.quartz.JobDetail;
@@ -282,6 +286,24 @@ public class ComponentsTest extends AbstractTestBase
 
 		}
 		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
+	
+	public void testJndiRef()
+	{
+		try 
+		{
+			String name = "componentsRepository";
+			Context ctx = new InitialContext();
+			Object o = ctx.lookup(name);
+			
+			assertNotNull(o);
+			System.out.println("found " + o + " with name " + name);
+		} 
+		catch (NamingException e) 
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
