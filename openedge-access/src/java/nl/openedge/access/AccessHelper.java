@@ -245,8 +245,6 @@ public final class AccessHelper
 			ProtectionDomain pd = AccessHelper.class.getProtectionDomain();
 			CodeSource cs = pd.getCodeSource();
 			
-			System.out.println("**************** cls: " + cs.getClass() + " == " + cs);
-			
 			if(cs != null && (cs.getLocation() != null))
 			{
 				URL csurl = cs.getLocation();
