@@ -214,14 +214,17 @@ public final class DateFormatHelper
 		}
 
 		Iterator i = formatters.values().iterator();
-		DateFormat df = null;
+		SimpleDateFormat sdf = null;
 
 		while (i.hasNext())
 		{
 			try
 			{
-				df = (DateFormat)i.next();
-				return df.parse(stringDate);
+				sdf = (SimpleDateFormat)i.next();
+				if (stringDate.length() == sdf.toPattern().length())
+				{
+					return sdf.parse(stringDate);					
+				}
 			}
 			catch (ParseException e)
 			{
