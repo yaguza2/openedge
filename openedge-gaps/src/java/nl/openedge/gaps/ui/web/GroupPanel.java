@@ -31,23 +31,9 @@ import com.voicetribe.wicket.markup.html.table.Table;
  */
 public class GroupPanel extends Panel
 {
-    /** panel voor structuurgroepen. */
-    private final HtmlContainer sGroupPanel;
-
-    /** panel voor parametergroepen. */
-    private final HtmlContainer pGroupPanel;
-
-    /** structuurgroep tabel. */
-    private final SGroupTable sGroupTable;
-
-    /** structuurgroep navigatie tabel. */
-    private final SGroupPathNavigationTable sGroupPathNavTable;
-
-    /** parametergroep tabel. */
-    private final PGroupTable pGroupTable;
 
     /** parameter browser. */
-    private final ParameterBrowser browser = new ParameterBrowser();
+    private ParameterBrowser browser = new ParameterBrowser();
 
     /**
      * Construct.
@@ -56,18 +42,65 @@ public class GroupPanel extends Panel
     public GroupPanel(String componentName, StructuralGroup group)
     {
         super(componentName);
+	    addComponents(group);
+    }
 
-	    sGroupPathNavTable = new SGroupPathNavigationTable("structuralGroupPathNav", group);
+    /**
+     * Voeg componenten toe op basis van de gegeven groep.
+     * @param group de huidige structuurgroep
+     */
+    private void addComponents(StructuralGroup group)
+    {
+        addStructGroupNavigation(group);
+	    addStructGroupComponents(group);
+	    addParamGroupComponents(group);
+    }
+
+    /**
+     * Voeg navigatiecomponenten voor navigatie structuurgroepen toe.
+     * @param group de huidige structuurgroep
+     */
+    private void addStructGroupNavigation(StructuralGroup group)
+    {
+        StructuralGroup[] path = group.getPathToRoot();
+        SGroupPathNavigationTable sGroupPathNavTable =
+            new SGroupPathNavigationTable("structuralGroupPathNav", Arrays.asList(path));
 	    add(sGroupPathNavTable);
+    }
 
-	    sGroupPanel = new HtmlContainer("structGroupPanel");
-	    sGroupTable = new SGroupTable("structuralGroupChilds", group);
+    /**
+     * Voeg componenten voor structuurgroepen toe.
+     * @param group de huidige structuurgroep
+     */
+    private void addStructGroupComponents(StructuralGroup group)
+    {
+        HtmlContainer sGroupPanel = new HtmlContainer("structGroupPanel");
+	    StructuralGroup[] childs = group.getStructuralChilds();
+	    List list = Arrays.asList(childs);
+	    SGroupTable sGroupTable = new SGroupTable("structuralGroupChilds", list);
+	    if(list.isEmpty())
+	    {
+	        sGroupPanel.setVisible(false);
+	    }
 	    sGroupPanel.add(sGroupTable);
 	    add(sGroupPanel);
+    }
 
-	    pGroupPanel = new HtmlContainer("paramGroupPanel");
-	    pGroupTable = new PGroupTable("parameterGroupChilds", group);
-	    pGroupPanel.add(pGroupTable);
+    /**
+     * Voeg componenten voor parametergroepen toe.
+     * @param group de huidige structuurgroep
+     */
+    private void addParamGroupComponents(StructuralGroup group)
+    {
+        HtmlContainer pGroupPanel = new HtmlContainer("paramGroupPanel");
+	    ParameterGroup[] childs = group.getParameterChilds();
+	    List list = Arrays.asList(childs);
+	    PGroupTable sGroupTable = new PGroupTable("parameterGroupChilds", list);
+	    if(list.isEmpty())
+	    {
+	        pGroupPanel.setVisible(false);
+	    }
+	    pGroupPanel.add(sGroupTable);
 	    add(pGroupPanel);
     }
 
@@ -83,9 +116,9 @@ public class GroupPanel extends Panel
            throw new RuntimeException(result + " is geen structuurgroep");
        }
        StructuralGroup group = (StructuralGroup)result;
-       sGroupTable.setCurrentGroup(group);
-       sGroupPathNavTable.setCurrentGroup(group);
-       pGroupTable.setCurrentGroup(group);
+
+       removeAll();
+       addComponents(group);
     }
 
     /**
@@ -110,13 +143,12 @@ public class GroupPanel extends Panel
     {
         /**
          * Construct.
-         * @param componentName
-         * @param group
+         * @param componentName componentnaam
+         * @param model list met structuurgroepen
          */
-        public SGroupTable(String componentName, StructuralGroup group)
+        public SGroupTable(String componentName, List model)
         {
-            super(componentName, null);
-            setCurrentGroup(group);
+            super(componentName, new MicroMap(componentName, model));
         }
 
         /**
@@ -131,31 +163,12 @@ public class GroupPanel extends Panel
     	        public void linkClicked(RequestCycle cycle)
     	        {
     	            selectStructuralGroup(group.getId());
+    	            cycle.setRedirect(true);
     	        }
     		    
     		};
             actionLinkLocalId.add(new Label("localId", group.getLocalId()));
             cell.add(actionLinkLocalId);
-        }
-
-        /**
-         * Zet de huidige structuurgroep.
-         * @param group de huidige structuurgroep
-         */
-        public void setCurrentGroup(StructuralGroup group)
-        {
-    	    StructuralGroup[] childs = group.getStructuralChilds();
-    	    List list = Arrays.asList(childs);
-    	    setModel(new MicroMap(getName(), list));
-    	    removeAll();
-    	    if(list.isEmpty())
-    	    {
-    	        setVisible(false);
-    	    }
-    	    else
-    	    {
-    	        setVisible(true); // in case we set it to false before
-    	    }
         }
     }
 
@@ -164,16 +177,14 @@ public class GroupPanel extends Panel
      */
     class PGroupTable extends Table
     {
-
         /**
          * Construct.
-         * @param componentName
-         * @param group
+         * @param componentName componentnaam
+         * @param model list met parametergroepen
          */
-        public PGroupTable(String componentName, StructuralGroup group)
+        public PGroupTable(String componentName, List model)
         {
-            super(componentName, null);
-            setCurrentGroup(group);
+            super(componentName, new MicroMap(componentName, model));
         }
 
         /**
@@ -188,31 +199,12 @@ public class GroupPanel extends Panel
     	        public void linkClicked(RequestCycle cycle)
     	        {
     	            selectStructuralGroup(group.getId());
+    	            cycle.setRedirect(true);
     	        }
     		    
     		};
             actionLinkLocalId.add(new Label("localId", group.getLocalId()));
             cell.add(actionLinkLocalId);
-        }
-
-        /**
-         * Zet de huidige structuurgroep.
-         * @param group de huidige structuurgroep
-         */
-        public void setCurrentGroup(StructuralGroup group)
-        {
-    	    ParameterGroup[] childs = group.getParameterChilds();
-    	    List list = Arrays.asList(childs);
-    	    setModel(new MicroMap(getName(), list));
-    	    removeAll();
-    	    if(list.isEmpty())
-    	    {
-    	        setVisible(false);
-    	    }
-    	    else
-    	    {
-    	        setVisible(true); // in case we set it to false before
-    	    }
         }
     }
 
@@ -227,10 +219,9 @@ public class GroupPanel extends Panel
          * @param group
          * @param command
          */
-        public SGroupPathNavigationTable(String componentName, StructuralGroup group)
+        public SGroupPathNavigationTable(String componentName, List model)
         {
-            super(componentName, null);
-            setCurrentGroup(group);
+            super(componentName, new MicroMap(componentName, model));
         }
 
         /**
@@ -244,6 +235,7 @@ public class GroupPanel extends Panel
     	        public void linkClicked(RequestCycle cycle)
     	        {
     	            selectStructuralGroup(group.getId());
+    	            cycle.setRedirect(true);
     	        }
     		    
     		};
@@ -258,17 +250,6 @@ public class GroupPanel extends Panel
             }
             actionLinkLocalId.add(new Label("localId", labelText));
             cell.add(actionLinkLocalId);
-        }
-
-        /**
-         * Zet de huidige structuurgroep.
-         * @param group de huidige structuurgroep
-         */
-        public void setCurrentGroup(StructuralGroup group)
-        {
-            StructuralGroup[] path = group.getPathToRoot();
-    	    setModel(new MicroMap(getName(), Arrays.asList(path)));
-    	    removeAll();
         }
     }
 }
