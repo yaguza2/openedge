@@ -10,6 +10,7 @@
 package nl.openedge.gaps.ui.web;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.parameters.InputException;
@@ -21,13 +22,23 @@ import nl.openedge.gaps.core.parameters.SaveException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.voicetribe.wicket.PropertyModel;
+import com.voicetribe.util.convert.ConverterRegistry;
+import com.voicetribe.util.convert.FormattingUtils;
+import com.voicetribe.wicket.ApplicationSettings;
+import com.voicetribe.wicket.DetachableModel;
+import com.voicetribe.wicket.RequestCycle;
 
 /**
  * Model voor parameters.
  */
-public class ParameterModel extends PropertyModel
+public class ParameterModel extends DetachableModel
 {
+    /** huidige locale. */
+    private Locale locale;
+
+    /** the current instance of converterRegistry. */
+    private ConverterRegistry converterRegistry;
+
     /**
      * Logger.
      */
@@ -39,18 +50,7 @@ public class ParameterModel extends PropertyModel
      */
     public ParameterModel(Parameter parameter)
     {
-        super(parameter, null);
-    }
-
-    /**
-     * Construct.
-     * @param Parameter parameter
-     * @param applyFormatting whether to apply formatting
-     */
-    public ParameterModel(Parameter parameter, String expression,
-            boolean applyFormatting)
-    {
-        super(parameter, null, applyFormatting);
+        super(parameter);
     }
 
     /**
@@ -58,9 +58,10 @@ public class ParameterModel extends PropertyModel
      */
     public Object getObject()
     {
-        Parameter parameter = (Parameter)getPropertyModel();
+        Parameter parameter = (Parameter)getObject();
         ParameterValue value = parameter.getValue();
-        return value.getFormattedValue(getLocale());
+        FormattingUtils util = converterRegistry.getFormattingUtils();
+        return util.getObjectFormatted(value, locale);
     }
     /**
      * @see com.voicetribe.wicket.PropertyModel#setObject(java.io.Serializable)
@@ -73,7 +74,7 @@ public class ParameterModel extends PropertyModel
         }
         try
         {
-            Parameter parameter = (Parameter)getPropertyModel();
+            Parameter parameter = (Parameter)getObject();
             ParameterValue newValue = parameter.createValue(
                     null, String.valueOf(propertyValue));
             parameter.setValue(newValue);
@@ -95,4 +96,24 @@ public class ParameterModel extends PropertyModel
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * @see com.voicetribe.wicket.DetachableModel#doAttach(com.voicetribe.wicket.RequestCycle)
+     */
+    protected void doAttach(RequestCycle cycle)
+    {
+        this.locale = cycle.getSession().getLocale();
+		ApplicationSettings settings = cycle.getApplication().getSettings();
+		this.converterRegistry = settings.getConverterRegistry();
+    }
+
+    /**
+     * @see com.voicetribe.wicket.DetachableModel#doDetach(com.voicetribe.wicket.RequestCycle)
+     */
+    protected void doDetach(RequestCycle cycle)
+    {
+        this.locale = null;
+        this.converterRegistry = null;
+    }
+
 }

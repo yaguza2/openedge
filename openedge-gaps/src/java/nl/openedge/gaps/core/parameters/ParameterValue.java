@@ -8,10 +8,7 @@ package nl.openedge.gaps.core.parameters;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-
-import com.voicetribe.util.convert.ConvertUtils;
 
 /**
  * Een ParameterValue houdt de werkelijke waarde van een parameter vast, en kan tevens een
@@ -114,24 +111,6 @@ public class ParameterValue implements Cloneable, Serializable
 	public void setAttributes(Map attributes)
 	{
 		this.attributes = attributes;
-	}
-
-	/**
-	 * Geeft de geformatteerde waarde.
-	 * @param locale locale
-	 * @return de geformatteerde waarde
-	 */
-	public String getFormattedValue(Locale locale)
-	{
-	    Object value = getValue();
-	    if(value != null)
-	    {
-	        return ConvertUtils.getObjectFormatted(value, locale);
-	    }
-	    else
-	    {
-	        return null;
-	    }
 	}
 
 	/**

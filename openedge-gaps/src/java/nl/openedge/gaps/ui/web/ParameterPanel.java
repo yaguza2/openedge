@@ -307,8 +307,7 @@ public class ParameterPanel extends Panel
         {
             Parameter parameter = (Parameter)cell.getModelObject();
     		cell.add(new Label("name", parameter.getLocalId()));
-    		cell.add(new TextField("value",
-    		        new ParameterModel(parameter, "value.value", true)));
+    		cell.add(new TextField("value", new ParameterModel(parameter)));
         }
     }
 
