@@ -97,6 +97,23 @@ public class BeforeValidator extends AbstractFieldValidator
 	}
 	
 	/**
+	 * @param rule
+	 */
+	public BeforeValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public BeforeValidator(String messagePrefix, ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * Creates a BeforeValidator with the error key DEFAULT_PREFIX and the 
 	 * date to check against after.
 	 * @param prefix
@@ -122,7 +139,7 @@ public class BeforeValidator extends AbstractFieldValidator
 	{
 		if (after == null)
 		{
-			throw new IllegalArgumentException("Kan niet validaten als after == null");
+			throw new IllegalArgumentException("unable to validate null value");
 		}
 		this.after = after;
 	}
@@ -166,7 +183,7 @@ public class BeforeValidator extends AbstractFieldValidator
 			}
 			catch(ParseException e)
 			{
-				//blijkbaar is value niet naar een datum te parsen. Geen probleem.
+				// value is not a valid date; ignore
 			}
 		}
 		else if (value instanceof Date)

@@ -59,6 +59,25 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	}
 	
 	/**
+	 * @param rule
+	 */
+	public AbstractFormValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public AbstractFormValidator(
+		String messagePrefix,
+		ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * construct with message prefix
 	 * @param messagePrefix message prefix
 	 */

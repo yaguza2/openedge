@@ -64,6 +64,25 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 	}
 	
 	/**
+	 * @param rule
+	 */
+	public RequiredSessionAttributeValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public RequiredSessionAttributeValidator(
+		String messagePrefix,
+		ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * construct with message prefix and session attribute key to check for
 	 * @param messagePrefix
 	 */

@@ -63,6 +63,25 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 	}
 	
 	/**
+	 * @param rule
+	 */
+	public PropertyNotNullFormValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public PropertyNotNullFormValidator(
+		String messagePrefix,
+		ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * construct with property name and message prefix
 	 * @param propertyName
 	 * @param messagePrefix

@@ -41,6 +41,26 @@ public abstract class AbstractValidator
 		setMessagePrefix(messagePrefix);
 	}
 	
+	/**
+	 * construct with validator activation rule
+	 * @param rule validator activation rule
+	 */
+	public AbstractValidator(ValidatorActivationRule rule)
+	{
+		setValidationRule(rule);
+	}
+
+	/**
+	 * construct with validator activation rule and message prefix
+	 * @param messagePrefix message prefix
+	 * @param rule validator activation rule
+	 */
+	public AbstractValidator(String messagePrefix, ValidatorActivationRule rule)
+	{
+		setValidationRule(rule);
+		setMessagePrefix(messagePrefix);
+	}
+	
 	/* get resource bundle */
 	protected ResourceBundle getBundle(Locale locale)
 	{

@@ -54,6 +54,25 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
+	 * @param rule
+	 */
+	public RequiredFieldValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public RequiredFieldValidator(
+		String messagePrefix,
+		ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * construct with message prefix for error message keys
 	 * @param messagePrefix
 	 */

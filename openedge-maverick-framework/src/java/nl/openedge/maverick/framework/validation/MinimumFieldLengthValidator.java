@@ -76,6 +76,25 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 	
 	/**
+	 * @param rule
+	 */
+	public MinimumFieldLengthValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public MinimumFieldLengthValidator(
+		String messagePrefix,
+		ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * set checking on maximum length with given length of fields only
 	 * @param minLength maximum length allowed for values; use -1 for no maximum
 	 */

@@ -30,7 +30,7 @@ public class AfterValidator extends AbstractFieldValidator
 {
 	private Log log = LogFactory.getLog(AfterValidator.class);
 	
-	private final static String DEFAULT_PREFIX = "invalid.field.input.before";
+	private final static String DEFAULT_PREFIX = "invalid.field.input.after";
 	
 	/**
 	 * The date check against.
@@ -97,6 +97,23 @@ public class AfterValidator extends AbstractFieldValidator
 	}
 	
 	/**
+	 * @param rule
+	 */
+	public AfterValidator(ValidatorActivationRule rule)
+	{
+		super(rule);
+	}
+
+	/**
+	 * @param messagePrefix
+	 * @param rule
+	 */
+	public AfterValidator(String messagePrefix, ValidatorActivationRule rule)
+	{
+		super(messagePrefix, rule);
+	}
+
+	/**
 	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the 
 	 * date to check against before.
 	 * @param prefix
@@ -122,7 +139,7 @@ public class AfterValidator extends AbstractFieldValidator
 	{
 		if (after == null)
 		{
-			throw new IllegalArgumentException("Kan niet validaten als before == null");
+			throw new IllegalArgumentException("unable to validate null value");
 		}
 		this.before = after;
 	}
@@ -167,7 +184,7 @@ public class AfterValidator extends AbstractFieldValidator
 			}
 			catch(ParseException e)
 			{
-				//blijkbaar is value niet naar een datum te parsen. Geen probleem.
+				// value is not a valid date; ignore
 			}
 		}
 		else if (value instanceof Date)
