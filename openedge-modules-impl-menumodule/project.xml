@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <id>oe-menu</id>
   <name>OpenEdge Menu Module</name>
-  <currentVersion>1.4.2</currentVersion>
+  <currentVersion>1.4.3</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -18,6 +18,11 @@
   <url>http://maven.apache.org/</url>
 
   <versions>
+	<version>
+      <id>1.4.3</id>
+      <name>1.4.3</name>
+      <tag>B1_4_3</tag>
+    </version>
 	<version>
       <id>1.4.2</id>
       <name>1.4.2</name>

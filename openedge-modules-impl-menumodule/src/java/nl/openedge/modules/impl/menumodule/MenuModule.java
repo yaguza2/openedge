@@ -129,7 +129,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 * 
 	 * @param rootElement
 	 *            root element of menu xml document
-	 * @throws ConfigException when the configuration is broken
+	 * @throws ConfigException
+	 *             when the configuration is broken
 	 */
 	private void addFilters(Element rootElement) throws ConfigException
 	{
@@ -203,7 +204,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 * @param rebuild
 	 *            whether the model should be rebuilt
 	 * @return TreeModel the tree model
-	 * @throws ConfigException when the configuration is broken
+	 * @throws ConfigException
+	 *             when the configuration is broken
 	 */
 	private synchronized TreeModel buildTreeModel(boolean rebuild) throws ConfigException
 	{
@@ -245,7 +247,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 * @param classLoader
 	 *            the class loader to use
 	 * @return TreeModel the tree model
-	 * @throws ConfigException when the configuration is broken
+	 * @throws ConfigException
+	 *             when the configuration is broken
 	 */
 	private TreeModel buildTreeModel(Element rootElement, ClassLoader classLoader)
 			throws ConfigException
@@ -308,7 +311,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 *            the classloader to use
 	 * @param filterContext
 	 *            the current filter context
-	 * @throws ConfigException when the configuration is broken
+	 * @throws ConfigException
+	 *             when the configuration is broken
 	 */
 	private void addChilds(Element currentElement, DefaultMutableTreeNode currentNode,
 			ClassLoader classLoader, Map filterContext) throws ConfigException
@@ -391,11 +395,12 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 *            the classloader to use
 	 * @param filterContext
 	 *            the current filter context
-	 * @throws ConfigException when the configuration is broken
+	 * @throws ConfigException
+	 *             when the configuration is broken
 	 */
 	private void addNodeLevelFilters(MenuItem childItem, Element currentElement,
 			DefaultMutableTreeNode currentNode, ClassLoader classLoader, Map filterContext)
-		throws ConfigException
+			throws ConfigException
 	{
 		List filters = currentElement.getChildren("filter");
 		if (!filters.isEmpty())
@@ -606,7 +611,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 *            the current tree node
 	 * @param workNode
 	 *            the worknode to add childs to
-	 * @param filterContext context for filters
+	 * @param filterContext
+	 *            context for filters
 	 */
 	private void addChildsForRequest(Subject subject, DefaultMutableTreeNode currentNode,
 			DefaultMutableTreeNode workNode, Map filterContext)
@@ -677,8 +683,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 				// add child
 				workNode.add(newWorkNode);
 				// recurse
-				addFilteredChildsForSession(
-						subject, childNode, newWorkNode, filterContext, filters);
+				addFilteredChildsForSession(subject, childNode, newWorkNode, filterContext, filters);
 			}
 		}
 	}
@@ -744,8 +749,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 				// add child
 				workNode.add(newWorkNode);
 				// recurse
-				addFilteredChildsForRequest(
-						subject, childNode, newWorkNode, filterContext, filters);
+				addFilteredChildsForRequest(subject, childNode, newWorkNode, filterContext, filters);
 			}
 		}
 	}
@@ -817,16 +821,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 					{
 						DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) children
 								.nextElement();
-						MenuItem tempItem = (MenuItem) childNode.getUserObject();
-						MenuItem childItem = new MenuItem();
-						childItem.setLink(tempItem.getLink());
-						childItem.setTag(tempItem.getTag());
-						childItem.setEnabled(tempItem.isEnabled());
-						childItem.setShortCutKey(tempItem.getShortCutKey());
-						childItem.setParameters(tempItem.getParameters());
-						childItem.setAttributes(tempItem.getAttributes());
-						childItem.setChildren(tempItem.getChildren());
-
+						MenuItem menu = (MenuItem) childNode.getUserObject();
+						MenuItem childItem = clone(menu);
 						if (i < (depth - 1))
 						{
 							DefaultMutableTreeNode temp = (DefaultMutableTreeNode) selection
@@ -847,6 +843,34 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			items = new List[0];
 		}
 		return items;
+	}
+
+	/**
+	 * Clones a MenuItem.
+	 * 
+	 * @param menu
+	 * @return a clone of the MenuItem
+	 */
+	public MenuItem clone(MenuItem menu)
+	{
+		MenuItem clone = new MenuItem();
+		clone.setLink(menu.getLink());
+		clone.setTag(menu.getTag());
+		clone.setEnabled(menu.isEnabled());
+		clone.setShortCutKey(menu.getShortCutKey());
+		clone.setParameters(menu.getParameters());
+		clone.setAttributes(menu.getAttributes());
+		clone.setActive(menu.getActive());
+		clone.setAliases(menu.getAliases());
+		clone.setFilters(menu.getFilters());
+		if (menu.getChildren() != null && !menu.getChildren().isEmpty())
+		{
+			Iterator it = menu.getChildren().iterator();
+			//could be an inifinite loop if a child has its parent as a child
+			while (it.hasNext())
+				clone.addChild(clone((MenuItem) it.next()));
+		}
+		return clone;
 	}
 
 	/**

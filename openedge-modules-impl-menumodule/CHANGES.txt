@@ -1,5 +1,11 @@
 -------------------------------------------------
+1.4.3
+
+-Fixed bug that would apply the filter for children on the original tree instead of the copy for the request.
+
+-------------------------------------------------
 1.4.2
+
 - Fix for bug that prevented proper usage of more than one concurrent instance of the module
 	(reference to cache was static).
 - Refactored JUnit test to use a decorator for initialization.
