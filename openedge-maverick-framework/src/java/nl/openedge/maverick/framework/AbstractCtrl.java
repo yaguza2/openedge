@@ -984,7 +984,7 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		if(validator != null)
 		{
 			Object value = validator.getOverrideValue(triedValue);
-			formBean.setOverrideField(name, triedValue);
+			formBean.setOverrideField(name, value);
 		}
 		else
 		{
