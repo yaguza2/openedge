@@ -1,7 +1,7 @@
 /*
- * $Id: FieldValidator.java,v 1.4 2004-04-07 10:43:24 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-07 10:43:24 $
+ * $Id: FieldValidator.java,v 1.5 2004-11-21 13:20:22 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-11-21 13:20:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -43,17 +43,7 @@ public interface FieldValidator
 	/**
 	 * Checks if value is valid. 
 	 * This method should return true if validation succeeded or false otherwise.
-	 * For error handling you have two options:
-	 * <ul>
-	 * 	<li>
-	 * 	Use the callback method getErrorMessage. You should use this if the error 
-	 * 	message is allways the same (except for maybe some parameters in the message).
-	 * 	</li>
-	 * 	<li>
-	 * 	For more flexibility, like if you have more stages of validation that each generates
-	 * 	its own message(s), you can register errors directly with the formBeanContext
-	 * 	</li>
-	 * </ul>
+	 * You should register errors directly with the formBeanContext.
 	 * @param cctx maverick context
 	 * @param formBeanContext context with bean for this currentRequest
 	 * @param fieldName field name of parameter
