@@ -33,8 +33,11 @@ package nl.openedge.maverick.framework;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -49,6 +52,7 @@ import javax.servlet.http.HttpSession;
 import nl.openedge.access.AccessFilter;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.maverick.framework.util.UrlTool;
+import nl.openedge.maverick.framework.validation.*;
 
 import org.jdom.Element;
 
@@ -57,6 +61,8 @@ import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.MultiHashMap;
+import org.apache.commons.collections.MultiMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -65,7 +71,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 import org.infohazard.maverick.flow.ControllerSingleton;
 
 /**
- * baseclass for controlls
+ * baseclass for controls
  * @author Eelco Hillenius
  */
 public abstract class AbstractCtrl implements ControllerSingleton 
@@ -104,10 +110,22 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected boolean failOnPopulateError = false;
 	
 	/**
-	 * Indien we een lege string binnenkrijgen vatten we dat op als een null-waarde
-	 * (true) of gebruiken we de lege string (false). Standaard == true
+	 * If we get an empty string it should be translated to a null (true) or to
+	 * an empty String false. This property is true by default
 	 */
 	protected boolean setNullForEmptyString = true;
+	
+	/**
+	 * subclasses can register validators for custom validation
+	 */
+	protected MultiMap validators = null;
+	
+	/**
+	 * Optional objects that can be used to switch whether validation with
+	 * custom validators should be performed in this request
+	 * @author Eelco Hillenius
+	 */
+	protected List validatorsActivationRules = null;
 	
 	/**
 	 * is called before any handling like form population etc.
@@ -338,10 +356,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 			boolean success = true;
 			// Identify the property name and value(s) to be assigned
 			String name = (String)names.next();
-			if (name == null) 
-			{
-				continue;
-			}
+			if (name == null) continue;
+			
 			Object value = properties.get(name);
 			String stringValue = null;
 			
@@ -386,6 +402,67 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				}
 			}
 		}
+		
+		// do custom validation
+		if(validators != null && (!validators.isEmpty()))
+		{
+			boolean doCustomValidation = true;
+			if(validatorsActivationRules != null && (!validatorsActivationRules.isEmpty()))
+			{
+				for(Iterator i = validatorsActivationRules.iterator(); i.hasNext(); )
+				{
+					ValidatorsActivationRule rule = (ValidatorsActivationRule)i.next();
+					doCustomValidation = rule.allowValidation(cctx, formBean);
+					if(!doCustomValidation) break;
+				}
+				if(doCustomValidation)
+				{
+					names = properties.keySet().iterator();
+					while(names.hasNext())
+					{
+						String name = (String)names.next();
+						if (name == null) continue;
+						if(formBean.getError(name) == null) 
+						{
+							Collection propertyValidators = (Collection)validators.get(name);
+							// these are the validators for one property
+							if(propertyValidators != null)
+							{
+								try
+								{
+									Object value = PropertyUtils.getProperty(formBean, name);
+									for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
+									{
+										Validator validator = (Validator)j.next();
+										boolean success = validator.isValid(
+											cctx, formBean, name, value);
+										if(!success)
+										{
+											succeeded = false;
+											String msg = validator.getErrorMessage(
+												cctx, formBean, name, value, null);
+											formBean.setError(name, msg);
+											// if fail on populate, set the override field so that the input
+											// value can be displayed
+											if(failOnPopulateError)
+											{
+												formBean.setOverrideField(name, value);	
+											}
+											break;
+										}
+									}	
+								}
+								catch (Exception e)
+								{
+									// ignore
+								}
+							}	
+						} // else an error allready occured; do not validate
+					}
+				}
+			}
+		}
+		
 		return succeeded;
 	}
 	
@@ -600,7 +677,6 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	protected boolean populateForm(ControllerContext cctx, AbstractForm formBean) 
 				throws Exception 
 	{
-
 		// default behavoir
 		boolean retval = true;
 		retval = populateWithErrorReport(cctx, formBean, 
@@ -741,9 +817,84 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	 */
 	public String getLocalizedMessage(
 			String key, Object[] parameters)
-	{
-		
+	{	
 		return getLocalizedMessage(key, null, parameters);
+	}
+	
+	/**
+	 * register a validator for the given fieldName. 
+	 * multiple validators for one key are allowed 
+	 * @param fieldName name of field
+	 * @param validator validator instance
+	 */
+	public void addValidator(String fieldName, Validator validator)
+	{
+		if(validators == null)
+		{
+			validators = new MultiHashMap();
+		}
+		validators.put(fieldName, validator);
+	}
+	
+	/**
+	 * de-register the validators that were registered with the given fieldName
+	 * @param fieldName
+	 */
+	public void removeValidators(String fieldName)
+	{
+		if(validators != null)
+		{
+			validators.remove(fieldName);
+		}
+	}
+	
+	/**
+	 * de-register the given validator that was registered with the given fieldName
+	 * @param fieldName
+	 */
+	public void removeValidator(String fieldName, Validator validator)
+	{
+		if(validators != null)
+		{
+			validators.remove(fieldName, validator);
+		}
+	}
+	
+	/**
+	 * register the rule 
+	 * @param fieldName name of field
+	 * @param validator validator instance
+	 */
+	public void addValidatorsActivationRule(ValidatorsActivationRule rule)
+	{
+		if(validatorsActivationRules == null)
+		{
+			validatorsActivationRules = new ArrayList();
+		}
+		validatorsActivationRules.add(rule);
+	}
+	
+	/**
+	 * de-register the given rule
+	 * @param fieldName
+	 */
+	public void removeValidatorsActivationRule(ValidatorsActivationRule rule)
+	{
+		if(validatorsActivationRules != null)
+		{
+			validatorsActivationRules.remove(rule);
+		}
+	}
+	
+	/**
+	 * get the validators that were registered with the given fieldName
+	 * @param fieldName name of the field
+	 * @return Validator the instance of Validator that was registered with the given 
+	 * 		fieldName or null if none was registered with that name
+	 */
+	protected Collection getValidators(String fieldName)
+	{
+		return (validators != null) ? (Collection)validators.get(fieldName) : null;
 	}
 	
 	/**
@@ -758,14 +909,11 @@ public abstract class AbstractCtrl implements ControllerSingleton
 	public String getLocalizedMessage(
 			String key, Locale locale, Object[] parameters)
 	{
-		
 		ResourceBundle res = getBundle(locale);
 		String msg = res.getString(key);
 		MessageFormat fmt = new MessageFormat(msg);
-
 		String formattedMessage = 
 			MessageFormat.format(msg, parameters);
-		
 		return formattedMessage;
 	}
 	
