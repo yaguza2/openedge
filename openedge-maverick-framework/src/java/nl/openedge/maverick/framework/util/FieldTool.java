@@ -95,7 +95,7 @@ public class FieldTool
 		AbstractForm model = null;
 		if(bean instanceof AbstractForm)
 		{
-			model = (AbstractForm)model;
+			model = (AbstractForm)bean;
 		}
 		try
 		{
@@ -206,6 +206,7 @@ public class FieldTool
 				if(storedRawValue != null)
 				{
 					value = storedRawValue;
+					converted = ConvertUtils.convert(storedRawValue);
 					overridden = true;
 				}
 			}	
@@ -239,10 +240,7 @@ public class FieldTool
 				}				
 			}
 		}
-		else
-		{
-			converted = (value != null) ? value.toString() : null;
-		}
+
 		return converted;
 	}
 
