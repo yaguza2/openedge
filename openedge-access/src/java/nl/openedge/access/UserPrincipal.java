@@ -32,6 +32,7 @@ package nl.openedge.access;
 
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -63,6 +64,9 @@ public class UserPrincipal implements Principal, java.io.Serializable
 
 	/** roles that user is member of */
 	protected Set groups;
+	
+	/** the prefered locale setting */
+	protected Locale preferedLocale = null;
 
 	/**
 	 * Default constructor.
@@ -302,6 +306,24 @@ public class UserPrincipal implements Principal, java.io.Serializable
 	public int hashCode()
 	{
 		return name.hashCode();
+	}
+
+	/**
+	 * get the prefered locale
+	 * @return Locale the prefered locale
+	 */
+	public Locale getPreferedLocale()
+	{
+		return preferedLocale;
+	}
+
+	/**
+	 * set the prefered locale
+	 * @param locale the prefered locale
+	 */
+	public void setPreferedLocale(Locale locale)
+	{
+		preferedLocale = locale;
 	}
 
 }
