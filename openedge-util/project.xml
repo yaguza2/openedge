@@ -14,13 +14,13 @@
   <package>nl.openedge.util</package>
   <logo>/images/maven.jpg</logo>
   
-  <description>OpenEdge Utils is a project for utility classes/ helpers that are usefull enough to share amongst projects, but are too small to have their own project</description>
+  <description>OpenEdge Utils is a project for utility classes / helpers that are useful enough to share among projects, but are too small to have their own project</description>
   <shortDescription>Reusable Utilities</shortDescription>
   <url>http://maven.apache.org/</url>
 
- <repository>
-    <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-access</connection>
-  </repository>
+<!-- <repository>
+    <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
+  </repository>-->
   
   <!-- <versions>
     <version>
