@@ -1,0 +1,9 @@
+grant {
+  permission nl.openedge.access.NamedPermission "/";
+  permission nl.openedge.access.NamedPermission "/index.m";
+  permission nl.openedge.access.NamedPermission "/login.m";
+};
+
+grant Principal nl.openedge.access.RolePrincipal "tableadmin" {
+  permission nl.openedge.access.NamedPermission "/*";
+};

@@ -17,11 +17,6 @@
 		<param name="dbpassword" value=""/>
 	</datasource>
 	
-	<access-manager class="nl.openedge.access.impl.DefaultAccesManager">
-		<access-provider class="nl.openedge.access.impl.rdbms.RdbmsAccessProvider">
-		</access-provider>
-	</access-manager>
-	
 	<user-manager class="nl.openedge.access.impl.rdbms.RdbmsUserManager">
 	</user-manager>
 	

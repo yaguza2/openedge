@@ -7,14 +7,12 @@ import javax.servlet.http.*;
 
 /**
  * The SessionLoginContext extends the JAAS LoginContext, so that,
- * when bound to an HttpSession, it will execute login(), and when
- * the session times out, it will execute logout(). One can bind
- * the SessionLoginContext to the session, by calling<br><pre>
+ * when bound to an HttpSession, it will execute logout() when the
+ * session times out. One can bind the SessionLoginContext to the 
+ * session, by calling<br><pre>
  *      session.setAttribute("loginContext", myLoginContext);
  * </pre>
  *
- * @author Paul Feuer and John Musser
- * @version 1.0
  */
 
 public class SessionLoginContext extends LoginContext 
@@ -59,11 +57,11 @@ public class SessionLoginContext extends LoginContext
      * @param event the event that identifies the session
      */
     public void valueBound(HttpSessionBindingEvent event) {
-        try {
+        /*try {
             login();
         } catch (LoginException ex) {
             throw new java.lang.RuntimeException(ex.getMessage());
-        }
+        }*/
     }
 
     /**

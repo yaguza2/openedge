@@ -3,6 +3,8 @@ package nl.openedge.access;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.AccessControlException;
+import java.security.Policy;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -42,8 +44,8 @@ public class AccessFactory {
 	 */
 	protected static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
-	/** concrete access manager */
-	protected AccessManager accessManager;
+	/** save the reference if it is available */
+	protected ServletContext servletContext = null;
 	
 	/** concrete user manager */
 	protected UserManager userManager;
@@ -79,6 +81,8 @@ public class AccessFactory {
 	 */
 	public AccessFactory(ServletContext servletContext) throws ConfigException {
 		
+		// save reference for (possible) later use
+		this.servletContext = servletContext;
 		this.configuration = loadConfigDocumentInWebApp(servletContext);
 		internalInit();
 	}
@@ -86,8 +90,11 @@ public class AccessFactory {
 	/* do 'real' initialisation */
 	private void internalInit() throws ConfigException {
 		
-		Element root = configuration.getRootElement();
+		Element root = configuration.getRootElement();	
 		
+		// allthough using a datasource dependends on the implementation,
+		// it is probably that common that we'll try to load it is in the
+		// configuration
 		Element dsNode = root.getChild("datasource");
 		if(dsNode != null) {
 			String dataSourceRef = dsNode.getAttributeValue("reference");
@@ -124,48 +131,104 @@ public class AccessFactory {
 				}				
 			}
 					
-		}
-		
-		this.accessManager = loadAccessManager(root.getChild("access-manager"));
+		}	
 		this.userManager = loadUserManager(root.getChild("user-manager"));
+		
+		// a client of this library does not have to configure the security
+		// element. For instance, it could be configured in the JDK settings
+		// directely instead
+		Element securityNode = root.getChild("security");
+		if(securityNode != null) {
+			
+			// add jaas config file (with LoginModule(s)) if attribute exists
+			String jaasConfig = XML.getValue(securityNode, "jaas-config");
+			if(jaasConfig != null) {
+				try {
+					URL jaasConfigURL = convertToURL(jaasConfig, servletContext);
+					if(jaasConfigURL == null) throw new ConfigException(jaasConfig + " is not a valid url");
+					String convertedJaasConfig = jaasConfigURL.toString();
+					setLoginModule(convertedJaasConfig);
+				} catch(Exception e) {
+					throw new ConfigException(e);
+				}
+			}
+			
+			//	add policy file (with policies) if attribute exists
+			String policyFile = XML.getValue(securityNode, "policies");
+			if(jaasConfig != null) {
+				try {
+					URL policyURL = convertToURL(policyFile, servletContext);
+					if(policyURL == null) throw new ConfigException(policyFile + " is not a valid url");
+					String convertedPolicyURL = policyURL.toString();
+					addPolicies(convertedPolicyURL);
+				} catch(Exception e) {
+					throw new ConfigException(e);
+				}
+			}
+				
+		}
 	}
 	
 	/**
-	 * load and initialise access manager
-	 * @param config
+	 * add the configured LoginModule implementation to the list of LoginModules
+	 * known by the security environment
+	 * @param convertedJaasConfig
 	 */
-	protected AccessManager loadAccessManager(Element configNode) 
-				throws ConfigException {
-	
-		AccessManager manager = null;
-		String managerCls = XML.getValue(configNode, "class");
-		try {
-			Class cls = Class.forName(managerCls);
-			manager = (AccessManager)cls.newInstance();
-			manager.init(configNode);
-			this.accessManager = manager;
-			log.info(cls + " acting as AccessManager");
-						
-		} catch(Exception e) {
-			throw new ConfigException(e);
-		}
-		Element providerNode = configNode.getChild("access-provider");
-		if(providerNode == null) throw new ConfigException(
-				"acces-provider is a mandatory element of access-manager");
-		
-		String providerCls = XML.getValue(providerNode, "class");	
-		try {
-			Class cls = Class.forName(providerCls);
-			AccessProvider provider = (AccessProvider)cls.newInstance();
-			provider.init(providerNode);
-			accessManager.setAccessProvider(provider);
+	protected void setLoginModule(String convertedJaasConfig) {
+
+		boolean exists = false;
+		int n = 1;
+		String config_url;
+		while ((config_url = java.security.Security.getProperty
+						("login.config.url."+n)) != null) {		
 			
-			log.info(cls + " set as AccessProvider for AccessManager");
-						
-		} catch(Exception e) {
-			throw new ConfigException(e);
+			if(config_url.equalsIgnoreCase(convertedJaasConfig)) {
+				exists = true;
+				break;
+			} 
+			n++;
 		}
-		return manager;
+		if(!exists) {
+			String configKey = ("login.config.url."+n);
+			java.security.Security.setProperty(configKey, convertedJaasConfig);
+			log.info("added " + configKey + "=" +
+							convertedJaasConfig + "to java.security.Security properties");
+		}
+				
+	}
+	
+	/**
+	 * add our own policy file to the security environment
+	 * @param convertedPolicyURL
+	 */
+	protected void addPolicies(String convertedPolicyURL) {
+
+		// handle the loading of Policies
+		boolean exists = false;
+		int n = 1;
+		String policy_url;
+		while ((policy_url = java.security.Security.getProperty
+						("auth.policy.url."+n)) != null) {		
+
+			if(policy_url.equalsIgnoreCase(convertedPolicyURL)) {
+				exists = true;
+				break;
+			} 
+			n++;
+		}
+		if(!exists) {
+			String configKey = ("auth.policy.url."+n);
+			java.security.Security.setProperty(configKey, convertedPolicyURL);
+			log.info("added " + configKey + "=" +
+					convertedPolicyURL + "to java.security.Security properties");
+		}
+		// reload the policy configuration to add our policies	
+		try {
+			Policy policy = Policy.getPolicy();
+			policy.refresh();
+		} catch (AccessControlException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -289,13 +352,6 @@ public class AccessFactory {
 		} else {
 			return getClass().getResource(path);			
 		}
-	}
-
-	/**
-	 * @return AccessManager
-	 */
-	public AccessManager getAccessManager() {
-		return accessManager;
 	}
 
 	/**

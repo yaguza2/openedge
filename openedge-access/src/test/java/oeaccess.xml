@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <access-config>
 	
+	<!-- read security config from classpath here -->
+	<security 	jaas-config="/jaas.config"
+				policies="/test.policy" />
+	
 	<!-- element datasource should have attribute 'reference' that points to 
 		 a datasource OR attribute 'delegate' with a delegate class that confirms
 		 to the interface nl.openedge.access.impl.rdbms.DataSourceDelegate. As
@@ -16,11 +20,6 @@
 		<param name="dbuser" value="root"/>
 		<param name="dbpassword" value=""/>
 	</datasource>
-	
-	<access-manager class="nl.openedge.access.impl.DefaultAccesManager">
-		<access-provider class="nl.openedge.access.impl.rdbms.RdbmsAccessProvider">
-		</access-provider>
-	</access-manager>
 	
 	<user-manager class="nl.openedge.access.impl.rdbms.RdbmsUserManager">
 	</user-manager>

@@ -16,7 +16,6 @@ public class AccessTestSuite extends TestSuite {
 	public static Test suite() {
 		AccessTestSuite suite = new AccessTestSuite();		
 		suite.addTestSuite(UserManagerTest.class);
-		suite.addTestSuite(AccessManagerTest.class);
 		return suite;
 	}
 }

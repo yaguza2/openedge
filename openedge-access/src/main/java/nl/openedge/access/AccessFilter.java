@@ -69,15 +69,19 @@ public class AccessFilter implements Filter {
 								AUTHENTICATED_SUBJECT_KEY);
 		boolean needsAuthentication = false;
 		String uri = ((HttpServletRequest)req).getRequestURI();
+		// strip contextpath
+		uri = uri.substring(request.getContextPath().length());
+		
 		try {
 			
 			Permission p = new NamedPermission(uri);
 			AccessController.checkPermission(p);
 			// if we get here, the user was authorised
 			chain.doFilter(req, res);
+			return;
 			
 		} catch(AccessControlException e) {
-			if(log.isDebugEnabled()) log.debug("for subject '" + subject + 
+			log.info("for subject '" + subject + 
 					"', uri '" + uri + "': " + e.getMessage());
 			if(subject == null) needsAuthentication = true;
 		}
@@ -91,11 +95,13 @@ public class AccessFilter implements Filter {
 					request.getContextPath() + loginRedirect));
 			} else {				
 				// the subject was not authorised; send error
-				((HttpServletResponse)res).sendError(
-						HttpServletResponse.SC_FORBIDDEN);
+				((HttpServletResponse)res).sendError(HttpServletResponse.SC_FORBIDDEN,
+						"you do not have sufficient rights for this resource");	
 			}
 		} else {
-				
+			// the subject was not authorised; send error
+			((HttpServletResponse)res).sendError(HttpServletResponse.SC_FORBIDDEN,
+					"you do not have sufficient rights for this resource");				
 		}
 	}
 
