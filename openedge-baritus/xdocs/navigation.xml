@@ -20,6 +20,14 @@
 			<item name="Alternatives" href="/alternatives.html" />
 		</menu>
 		
+	   <!-- footer will be placed above the (c) -->
+	   <footer>
+		  	<a href="http://sourceforge.net/projects/baritus">
+				<img src="http://sourceforge.net/sflogo.php?group_id=102886" 
+					width="125" height="37" border="0" alt="SourceForge.net Logo" />
+			</a>
+	   </footer>
+		
 	</body>
 
 </project>
