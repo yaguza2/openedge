@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.7 2004-04-07 10:43:39 eelco12 Exp $
- * $Revision: 1.7 $
- * $Date: 2004-04-07 10:43:39 $
+ * $Id: DefaultValidatorDelegate.java,v 1.8 2004-04-09 09:47:42 eelco12 Exp $
+ * $Revision: 1.8 $
+ * $Date: 2004-04-09 09:47:42 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import nl.openedge.baritus.util.MultiHashMap;
@@ -87,7 +86,6 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 		FormBeanContext formBeanContext, 
 		ExecutionParams execParams,
 		Map parameters,
-		Locale locale,
 		boolean succeeded)
 	{
 		
@@ -125,11 +123,10 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 						String name = (String)names.next();
 						if (name == null) continue;
 						if(formBeanContext.getOverrideField(name) == null) 
-							// see if there allready was an error registered
+							// see if there allready was an override registered
 						{
 							succeeded = doValidationForOneField(
-								fieldValidators, cctx, formBeanContext, 
-								locale, succeeded, name);	
+								fieldValidators, cctx, formBeanContext, succeeded, name);	
 						} // else an error allready occured; do not validate
 					}	
 				}
@@ -142,31 +139,66 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 					for(Iterator i = formValidators.iterator(); i.hasNext(); )
 					{
 						FormValidator fValidator = (FormValidator)i.next();
-						boolean fireValidator = true;
-						if(fValidator instanceof ValidationRuleDependend)
-						{
-							ValidationActivationRule fRule = 
-								((ValidationRuleDependend)fValidator).getValidationActivationRule();
-							if(fRule != null)
-							{
-								if(!fRule.allowValidation(cctx, formBeanContext))
-								{
-									fireValidator = false;
-								}	
-							}
-						}
-						if(fireValidator)
-						{
-							if(!fValidator.isValid(cctx, formBeanContext))
-							{
-								succeeded = false;
-							}	
-						}
-						// else ignore
+						succeeded = doFormValidationForOneValidator(
+							cctx, formBeanContext, fValidator, succeeded);
 					}
 				}
 			}
 		}
+		
+		return succeeded;
+	}
+	
+	/* execute validation for one form validator */
+	private boolean doFormValidationForOneValidator(
+		ControllerContext cctx,
+		FormBeanContext formBeanContext,
+		FormValidator fValidator,
+		boolean succeeded)
+	{
+		
+		boolean success = true;
+		try
+		{
+			boolean validateForm = true;
+			if(fValidator instanceof ValidationRuleDependend)
+			{
+				ValidationActivationRule fRule = 
+					((ValidationRuleDependend)fValidator).getValidationActivationRule();
+				if(fRule != null)
+				{
+					if(!fRule.allowValidation(cctx, formBeanContext))
+					{
+						validateForm = false;
+					}
+					
+					if(populationLog.isDebugEnabled())
+					{
+						populationLog.debug("rule " + fRule + 
+							((validateForm) ? " ALLOWS" : " DISALLOWS") +
+							" validation with " + fValidator);
+					}	
+				}
+			}
+			if(validateForm)
+			{
+				success = fValidator.isValid(cctx, formBeanContext);
+				
+				if(populationLog.isDebugEnabled())
+				{
+					populationLog.debug( "validation" +
+						((success) ? " PASSED" : " FAILED") +
+						" using validator " + fValidator);
+				}	
+			}
+		} 
+		catch (Exception e)
+		{
+			success = false;
+			populationLog.error(e.getMessage(), e);	
+		}
+		
+		if(!success) succeeded = false;
 		
 		return succeeded;
 	}
@@ -176,38 +208,28 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 		MultiHashMap fieldValidators,
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
-		Locale locale,
 		boolean succeeded,
 		String name)
 	{
-		if(formBeanContext.getOverrideField(name) == null) 
-			// see if there allready was an error registered
+
+		Collection propertyValidators = 
+			getFieldValidatorsForField(name, fieldValidators);
+		// these are the fieldValidators for one property
+		
+		if(propertyValidators != null)
 		{
-			Collection propertyValidators = 
-				getFieldValidatorsForField(name, fieldValidators);
-			// these are the fieldValidators for one property
-			
-			if(propertyValidators != null)
+			try
 			{
-				try
-				{
-					succeeded = doValidationForOneField(
-						cctx, formBeanContext, locale, succeeded, 
-						name, propertyValidators);
-				}
-				catch (Exception e)
-				{
-					if(populationLog.isDebugEnabled())
-					{
-						// when in debug mode, print the stacktrace
-						populationLog.error(e.getMessage(), e);
-					}
-					populationLog.error(e.getMessage());
-					// ignore
-				}
+				succeeded = doValidationForOneField(
+					cctx, formBeanContext, succeeded, 
+					name, propertyValidators);
 			}
-										
-		} // else an error allready occured; do not validate
+			catch (Exception e)
+			{
+				succeeded = false;
+				populationLog.error(e.getMessage(), e);
+			}
+		}
 		
 		return succeeded;
 	}
@@ -269,7 +291,6 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 	private boolean doValidationForOneField(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
-		Locale locale,
 		boolean succeeded,
 		String name,
 		Collection propertyValidators)
@@ -321,7 +342,7 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 					String msg = "validator " + validator + " threw exception: " +
 						e.getMessage() + " on property " + name + " with value " +
 						value;
-					throw new Exception(msg, e);
+					throw new Exception(e);
 				}
 				
 				if(populationLog.isDebugEnabled())

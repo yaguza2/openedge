@@ -1,7 +1,7 @@
 /*
- * $Id: TestFieldValidator.java,v 1.3 2004-04-07 10:43:55 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-07 10:43:55 $
+ * $Id: TestFieldValidator.java,v 1.4 2004-04-09 09:47:35 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-09 09:47:35 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -61,6 +61,13 @@ public class TestFieldValidator extends AbstractFieldValidator
 		boolean valid = false;
 		
 		String testVal = (String)value;
+		
+		// test runtime exception
+		if("kill".equals(testVal))
+		{
+			throw new RuntimeException("big mistake");
+		}
+		
 		valid = "validValue".equals(testVal);
 		
 		if(!valid)

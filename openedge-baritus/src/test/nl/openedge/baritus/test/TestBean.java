@@ -1,7 +1,7 @@
 /*
- * $Id: TestBean.java,v 1.5 2004-04-06 07:41:11 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-06 07:41:11 $
+ * $Id: TestBean.java,v 1.6 2004-04-09 09:47:37 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-09 09:47:37 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -79,6 +79,7 @@ public class TestBean
 	{
 		"", ""
 	};
+	private String toValidate4 = "validValue";
 	
 	private List listProperty = new ArrayList();
 	
@@ -455,6 +456,22 @@ public class TestBean
 	public void setTestObject(TestObject object)
 	{
 		testObject = object;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getToValidate4()
+	{
+		return toValidate4;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setToValidate4(String string)
+	{
+		toValidate4 = string;
 	}
 
 }

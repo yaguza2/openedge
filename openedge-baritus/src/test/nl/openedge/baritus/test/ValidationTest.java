@@ -1,7 +1,7 @@
 /*
- * $Id: ValidationTest.java,v 1.2 2004-04-07 10:43:54 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-07 10:43:54 $
+ * $Id: ValidationTest.java,v 1.3 2004-04-09 09:47:30 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-09 09:47:30 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -121,11 +121,33 @@ public class ValidationTest extends TestCase
 		}	
 	}
 
-	public void testNonValidFieldValidation()
+	public void testNonValidFieldValidation1()
 	{
 		TestCtrl ctrl = new TestCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("toValidate1", "nonValidValue");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}	
+	}
+	
+	public void testNonValidFieldValidation2()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("toValidate1", "kill");
 		request.setupGetParameterMap(requestParams);
 		MaverickContext mockMavCtx = new MaverickContext(
 			null, request, response);
@@ -210,6 +232,72 @@ public class ValidationTest extends TestCase
 			e.printStackTrace();
 			fail(e.getMessage());
 		}	
+	}
+	
+	public void testFormValidation1()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("toValidate4", "validValue");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}		
+	}
+	
+	public void testFormValidation2()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("toValidate4", "nonValidValue");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}		
+	}
+	
+	public void testFormValidation3()
+	{
+		TestCtrl ctrl = new TestCtrl();
+		Map requestParams = new HashMap();
+		requestParams.put("toValidate4", "kill");
+		request.setupGetParameterMap(requestParams);
+		MaverickContext mockMavCtx = new MaverickContext(
+			null, request, response);
+		try
+		{
+			ctrl.init(null);
+			ctrl.go(mockMavCtx);
+			TestBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
+		}
+		catch (ServletException e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}		
 	}
 
 }

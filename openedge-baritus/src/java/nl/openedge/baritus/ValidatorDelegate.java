@@ -1,7 +1,7 @@
 /*
- * $Id: ValidatorDelegate.java,v 1.1 2004-02-25 21:53:28 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-02-25 21:53:28 $
+ * $Id: ValidatorDelegate.java,v 1.2 2004-04-09 09:47:37 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-09 09:47:37 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,7 +30,6 @@
  */
 package nl.openedge.baritus;
 
-import java.util.Locale;
 import java.util.Map;
 
 import org.infohazard.maverick.flow.ControllerContext;
@@ -67,7 +66,6 @@ interface ValidatorDelegate
 	 * 		map has at least the request parameters stored and depending on the
 	 * 		execution parameters the maverick configuration parameters, session
 	 * 		attributes and request attributes.
-	 * @param locale current locale
 	 * @param succeeded whether population/ validation succeeded so far (did not
 	 * 		generate any errors).
 	 * @return whether validation passed
@@ -86,6 +84,5 @@ interface ValidatorDelegate
 		FormBeanContext formBeanContext,
 		ExecutionParams execParams,
 		Map parameters,
-		Locale locale,
 		boolean succeeded);
 }

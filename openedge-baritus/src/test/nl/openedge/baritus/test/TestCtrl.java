@@ -1,7 +1,7 @@
 /*
- * $Id: TestCtrl.java,v 1.5 2004-04-06 07:41:26 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-06 07:41:26 $
+ * $Id: TestCtrl.java,v 1.6 2004-04-09 09:47:35 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-09 09:47:35 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -95,6 +95,8 @@ public class TestCtrl extends FormBeanCtrlBase
 		addValidator("toValidate1", new TestFieldValidator());
 		addValidator("toValidate2", new TestFieldValidator()); // test form toValidate2[..]
 		addValidator("toValidate3[0]", new TestFieldValidator()); // test form toValidate3[..]
+	
+		addValidator(new TestFormValidator1());
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.8 2004-04-07 10:43:39 eelco12 Exp $
- * $Revision: 1.8 $
- * $Date: 2004-04-07 10:43:39 $
+ * $Id: FormBeanCtrlBase.java,v 1.9 2004-04-09 09:47:37 eelco12 Exp $
+ * $Revision: 1.9 $
+ * $Date: 2004-04-09 09:47:37 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -211,7 +211,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			// (as it is by default)
 			if(formBeanContext.isPopulateAndValidate())
 			{
-				populated = populateFormBean(cctx, formBeanContext, locale, execParams);	
+				populated = populateFormBean(cctx, formBeanContext, execParams);	
 			}
 			
 		} 
@@ -332,14 +332,12 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * populate the form
 	 * @param cctx controller context
 	 * @param formBeanContext context with bean to populate
-	 * @param locale
 	 * @throws Exception
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
 	private boolean populateFormBean(
 		ControllerContext cctx, 
-		FormBeanContext formBeanContext, 
-		Locale locale,
+		FormBeanContext formBeanContext,
 		ExecutionParams _execParams) 
 		throws Exception 
 	{
@@ -377,7 +375,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			traceParameters(parameters, traceMsg, "maverick controller params");
 						
 			popSuccessCtrlParams = populateWithErrorReport(
-				cctx, formBeanContext, parameters, locale);
+				cctx, formBeanContext, parameters);
 		}		
 
 		// session attributes
@@ -396,7 +394,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			traceParameters(parameters, traceMsg, "session attributes");
 			
 			popSuccessSessionAttribs = populateWithErrorReport(
-				cctx, formBeanContext, parameters, locale);
+				cctx, formBeanContext, parameters);
 		}
 
 		// request parameters
@@ -408,7 +406,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		traceParameters(reqParameters, traceMsg, "request parameters");
 		
 		popSuccessRequestParams = populateWithErrorReport(
-			cctx, formBeanContext, reqParameters, locale);
+			cctx, formBeanContext, reqParameters);
 
 		// request attributes
 		if(_execParams.isIncludeRequestAttributes())
@@ -434,7 +432,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			traceParameters(parameters, traceMsg, "request attributes");
 			
 			popSuccessRequestAttribs = populateWithErrorReport(
-				cctx, formBeanContext, parameters, locale);
+				cctx, formBeanContext, parameters);
 		}
 		
 		if(populationLog.isDebugEnabled())
@@ -449,7 +447,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		
 		// do custom validation
 		succeeded = defaultValidatorDelegate.doValidation(
-			cctx, formBeanContext, _execParams, allParameters, locale, succeeded);
+			cctx, formBeanContext, _execParams, allParameters, succeeded);
 			
 		List additionalValidators = getValidatorDelegates();
 		if(additionalValidators != null) // if there are any delegates registered
@@ -461,7 +459,7 @@ public abstract class FormBeanCtrlBase implements Controller
 				ValidatorDelegate valDel = (ValidatorDelegate)i.next();
 				_succeeded = valDel.doValidation(
 					cctx, formBeanContext, executionParams,
-					allParameters, locale, _succeeded);
+					allParameters, _succeeded);
 				
 				if(!_succeeded) succeeded = false;
 			}
@@ -501,8 +499,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	private boolean populateWithErrorReport(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
-		Map parameters,
-		Locale locale)
+		Map parameters)
 	{
 		
 		// Do nothing unless both arguments have been specified or parameters is empty
@@ -514,10 +511,10 @@ public abstract class FormBeanCtrlBase implements Controller
 		boolean succeeded = true;
 		
 		// try regex population
-		succeeded = regexPopulateWithErrorReport(cctx, formBeanContext, parameters, locale);
+		succeeded = regexPopulateWithErrorReport(cctx, formBeanContext, parameters);
 		
 		// populate remainder
-		succeeded = fieldPopulateWithErrorReport(cctx, formBeanContext, parameters, locale, succeeded);
+		succeeded = fieldPopulateWithErrorReport(cctx, formBeanContext, parameters, succeeded);
 		
 		return succeeded;
 	}
@@ -528,14 +525,12 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @param formBeanContext context with current form bean
 	 * @param parameters map with name/ values. parameters that are found within this method
 	 * 		will be removed, and are thus skipped in the remaining population process
-	 * @param locale the prefered locale
 	 * @return true if populate did not have any troubles, false otherwise
 	 */
 	private boolean regexPopulateWithErrorReport(
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
-		Map parameters,
-		Locale locale)
+		Map parameters)
 	{
 		
 		boolean succeeded = true;
@@ -630,7 +625,6 @@ public abstract class FormBeanCtrlBase implements Controller
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
 		Map parameters,
-		Locale locale,
 		boolean succeeded)
 	{
 
