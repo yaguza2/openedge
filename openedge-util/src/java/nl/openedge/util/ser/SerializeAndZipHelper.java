@@ -39,6 +39,8 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import nl.openedge.util.rekenen.Rekenhulp;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -113,6 +115,14 @@ public final class SerializeAndZipHelper
         if(log.isDebugEnabled()) 
         {
             log.debug("zipped and serialized in " + (end - begin) + " milis");
+            final int PERC_FACTOR = 100;
+            int compressedDataLength = serializedAndZipped.getCompressedData().length;
+            int uncompressedDataLength = serializedAndZipped.getUncompressedDataLength();
+            double zipRatio =
+                ((double) compressedDataLength /(double) uncompressedDataLength) * 100;
+            zipRatio = Rekenhulp.rondAf(zipRatio, 2);
+            log.debug("zip ratio = " + zipRatio + "%" + " (compr: " + compressedDataLength
+                    + " - uncompr: " + uncompressedDataLength + ")");
         }
 
         return serializedAndZipped;

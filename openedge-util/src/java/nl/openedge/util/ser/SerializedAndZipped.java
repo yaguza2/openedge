@@ -41,15 +41,32 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 {
 
     /**
+     * Member compressed data data, value = 'compressedData'.
+     */
+    public static final String COMPRESSED_DATA = "compressedData";
+
+    /**
      * zipped object data array.
      */
     private byte[] compressedData;
+
+    /**
+     * Member uncompressed data length, value = 'uncompressedDataLength'.
+     */
+    public static final String UNCOMPRESSED_DATA_LENGTH = "uncompressedDataLength";
 
     /**
      * de original length of object data array.
      */
     private int uncompressedDataLength;
 
+    /**
+     * Construct.
+     */
+    public SerializedAndZipped()
+    {
+        // nothing here
+    }
     /**
      * Construct with original length and compressed data.
      * 
@@ -100,6 +117,16 @@ public final class SerializedAndZipped implements Serializable, Cloneable
     public void setUncompressedDataLength(int originalLength)
     {
         this.uncompressedDataLength = originalLength;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        return "SerializedAndZipped {uncompressedDataLength = "
+            + uncompressedDataLength + ", compressedData = "
+            + compressedData + "}";
     }
 
     /**
