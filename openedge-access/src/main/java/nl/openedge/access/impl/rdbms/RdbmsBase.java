@@ -101,8 +101,8 @@ public abstract class RdbmsBase {
 			initialised = true;
 			try {
 				queries = new Properties();
-				queries.load(getClass().getResourceAsStream(
-						"/RdbmsQueries.properties"));
+				queries.load(RdbmsBase.class.getClass().getResourceAsStream(
+						"RdbmsQueries.properties"));
 					
 			} catch(Exception e) {
 				e.printStackTrace();
