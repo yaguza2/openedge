@@ -1,7 +1,7 @@
 /*
- * $Id: DecimalLocaleConverter.java,v 1.1.1.1 2004-02-24 20:34:06 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:06 $
+ * $Id: DecimalLocaleConverter.java,v 1.2 2004-03-02 13:22:49 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-02 13:22:49 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -174,6 +174,8 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 	 */
 	protected Number getNumber(Object value, String pattern) throws ConversionException
 	{
+		if(value instanceof Number) return (Number)value;
+		
 		Number temp = null;
 		try
 		{

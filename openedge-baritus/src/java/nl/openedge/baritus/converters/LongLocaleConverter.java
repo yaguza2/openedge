@@ -1,7 +1,7 @@
 /*
- * $Id: LongLocaleConverter.java,v 1.1.1.1 2004-02-24 20:34:03 eelco12 Exp $
- * $Revision: 1.1.1.1 $
- * $Date: 2004-02-24 20:34:03 $
+ * $Id: LongLocaleConverter.java,v 1.2 2004-03-02 13:22:49 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-03-02 13:22:49 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -32,7 +32,6 @@
 package nl.openedge.baritus.converters;
 
 import java.util.Locale;
-import java.util.regex.Matcher;
 
 /**
  * localized long converter
@@ -116,34 +115,7 @@ public class LongLocaleConverter extends DecimalLocaleConverter
 			return null;
 		}
 		
-		Number temp = null;
-		try
-		{
-			if (pattern != null)
-			{
-				temp = (Number)parse(value, pattern);
-			}
-			else
-			{
-				String stringval = null;
-				if(value instanceof String) stringval = (String)value;
-				else if(value instanceof String[]) stringval = ((String[])value)[0];
-				else stringval = String.valueOf(value);
-				
-				int length = stringval.length();
-				Matcher nonDigitMatcher = nonDigitPattern.matcher(stringval);
-				if(nonDigitMatcher.matches())
-				{
-					throw new ConversionException(stringval + " is not a valid long");
-				}	
-				
-				temp = (Number)parse(value, this.pattern);
-			}
-		}
-		catch (Exception e)
-		{
-			throw new ConversionException(e);
-		}
+		Number temp = getNumber(value, pattern);
 		
 		return (temp instanceof Long) ? (Long)temp : new Long(temp.longValue());
 	}
