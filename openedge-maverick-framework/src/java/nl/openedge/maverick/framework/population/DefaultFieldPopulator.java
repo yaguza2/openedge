@@ -110,9 +110,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 				//	this case and the actual property to navigate is an array element 
 				//	instead of the whole array).
 			{
-				String[] values = null;
-				if(requestValue instanceof String[])values = (String[])requestValue;
-				else values = new String[]{ String.valueOf(requestValue) };
+				Object[] values = (Object[])requestValue;
 				
 				Object[] array = null;
 				if((originalArray == null) || (originalArray.length < values.length)) 
@@ -135,7 +133,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					try 
 					{
 					
-						if( (values[index] == null || (values[index].trim().equals(""))) 
+						if( (values[index] instanceof String) &&
+							(values[index] == null || 
+							(((String)values[index]).trim().equals(""))) 
 							&& executionParams.isSetNullForEmptyString())
 						{
 							converted = null;
@@ -178,16 +178,19 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 			}
 			else // the target is one specific element in the array
 			{
-				String stringValue = null;
-				if(requestValue instanceof String[]) stringValue = ((String[])requestValue)[0];
-				else stringValue = String.valueOf(requestValue);
+				if(requestValue instanceof String[]) // convert to plain string 
+				{
+					requestValue = ((String[])requestValue)[0];
+				}  
+				// else keep original
 				int index = targetPropertyMeta.getIndex();
 				Object converted = null;
 
 				try
 				{
 					
-					if( (stringValue == null || (stringValue.trim().equals(""))) 
+					if( (requestValue instanceof String) &&
+						(requestValue == null || (((String)requestValue).trim().equals(""))) 
 						&& executionParams.isSetNullForEmptyString())
 					{
 						converted = null;
@@ -203,7 +206,7 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 						}
 						
 						converted = converter.convert(
-							targetType, stringValue);
+							targetType, requestValue);
 					}
 
 					// replace value in array
@@ -212,9 +215,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 				catch (ConversionException e)
 				{
 					ctrl.setConversionErrorForField(
-						cctx, formBeanContext, targetType, name, stringValue, e);
+						cctx, formBeanContext, targetType, name, requestValue, e);
 						
-					ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
+					ctrl.setOverrideField(cctx, formBeanContext, name, requestValue, e, null);
 					success = false;	
 				}
 				catch (Exception e)
@@ -222,9 +225,9 @@ public final class DefaultFieldPopulator extends AbstractFieldPopulator
 					populationLog.error(e.getMessage(), e);
 					
 					ctrl.setConversionErrorForField(
-						cctx, formBeanContext, targetType, name, stringValue, e);
+						cctx, formBeanContext, targetType, name, requestValue, e);
 						
-					ctrl.setOverrideField(cctx, formBeanContext, name, stringValue, e, null);
+					ctrl.setOverrideField(cctx, formBeanContext, name, requestValue, e, null);
 					success = false;	
 				}			
 			}
