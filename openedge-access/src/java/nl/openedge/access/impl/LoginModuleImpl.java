@@ -137,9 +137,6 @@ public class LoginModuleImpl implements LoginModule
 	/** module alias for user manager: userManagerAlias */
 	public final static String USER_MANAGER_ALIAS = "userManagerAlias";
 
-	/** jndi reference for module factory: factoryRef */
-	public final static String FACTORY_REF = "factoryRef";
-
 	/* logger */
 	protected Log log = LogFactory.getLog(this.getClass());
 
@@ -167,7 +164,6 @@ public class LoginModuleImpl implements LoginModule
 		this.options = options;
 
 		String userManagerAlias = (String)options.get(USER_MANAGER_ALIAS);
-		String moduleFactoryRef = (String)options.get(FACTORY_REF);
 
 		try
 		{
