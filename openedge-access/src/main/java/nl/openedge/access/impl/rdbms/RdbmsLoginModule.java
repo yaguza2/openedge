@@ -162,9 +162,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
     
     // decorator if provided
     protected LoginDecorator decorator = null;
-    // if there are extra principal (given by above decorator) we need to save
-    // them so that we can remove them when logging out
-    protected Principal[] extraPrincipals = null;
+
     
 	/** logger */
 	private Log log = LogFactory.getLog(this.getClass());
@@ -235,7 +233,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 	public boolean login() throws LoginException {
 	
 		// attempt the authentication
-		if (tryFirstPass) {
+		if(tryFirstPass) {
 	
 			try {
 				// attempt the authentication by getting the
@@ -246,14 +244,14 @@ public class RdbmsLoginModule extends RdbmsUserManager
 				succeeded = true;
 				if(log.isDebugEnabled())log.debug("tryFirstPass succeeded");
 				return true;
-			} catch (LoginException le) {
+			} catch(LoginException le) {
 				// authentication failed -- try again below by prompting
 				cleanState();
 				if(log.isDebugEnabled()) log.debug("tryFirstPass failed with:" +
 						le.toString());
 			}
 	
-		} else if (useFirstPass) {
+		} else if(useFirstPass) {
 	
 			try {
 				// attempt the authentication by getting the
@@ -264,7 +262,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 				succeeded = true;
 				if(log.isDebugEnabled()) log.debug("useFirstPass succeeded");
 				return true;
-			} catch (LoginException le) {
+			} catch(LoginException le) {
 				// authentication failed
 				cleanState();
 				if(log.isDebugEnabled()) log.debug("useFirstPass failed");
@@ -280,7 +278,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 		   	succeeded = true;
 			if(log.isDebugEnabled()) log.debug("regular authentication succeeded");
 			return true;
-		} catch (LoginException le) {
+		} catch(LoginException le) {
 			cleanState();
 			if(log.isDebugEnabled()) log.debug("regular authentication failed");
 			throw le;
@@ -299,7 +297,7 @@ public class RdbmsLoginModule extends RdbmsUserManager
 
 		if(log.isDebugEnabled()) log.debug("login for " + subject);
 
-        if (callbackHandler == null)
+        if(callbackHandler == null)
             throw new LoginException("Error: no CallbackHandler available " +
                     "to gather authentication information from the user");
 
@@ -322,12 +320,12 @@ public class RdbmsLoginModule extends RdbmsUserManager
             callbacks[0] = null;
             callbacks[1] = null;
 
-            if (!succeeded)
+            if(!succeeded)
                 throw new LoginException("Authentication failed: Invallid combination of username and password");
 
 			// save input as shared state only if
 			// authentication succeeded
-			if (storePass &&
+			if(storePass &&
 				!sharedState.containsKey(NAME) &&
 				!sharedState.containsKey(PWD)) {
 				sharedState.put(NAME, username);
@@ -373,14 +371,14 @@ public class RdbmsLoginModule extends RdbmsUserManager
 		dbName = (String)row.get("name");
 		dbPassword = (String)row.get("password");
 
-		if (dbPassword == null)
+		if(dbPassword == null)
 			throw new LoginException("UserPrincipal " + username + " not found");
 
 		String cryptedPassword = new String(
 					PasswordHelper.cryptPassword(password));
 
 		passwordMatch = new String(cryptedPassword).equals(dbPassword);
-		if (passwordMatch) {
+		if(passwordMatch) {
             
 			RdbmsCredential rdbmsCredential = new RdbmsCredential();
 			this.tempCredentials.add(rdbmsCredential);
@@ -408,33 +406,40 @@ public class RdbmsLoginModule extends RdbmsUserManager
 	 */
     public boolean commit() throws LoginException {
 
-		if(log.isDebugEnabled()) log.debug("commit for " + subject);
+		if(log.isDebugEnabled()) log.debug("commit for " + subject + 
+				" (succeeded == " + succeeded + ")");
 
-        if (succeeded) {
+        if(succeeded) {
 
-            if (subject.isReadOnly()) {
-                throw new LoginException ("Subject is Readonly");
-            }
-
+            if(subject.isReadOnly()) throw new LoginException("Subject is Readonly");
+            
             try {
-                Iterator it = tempPrincipals.iterator();
-                
-                if(log.isDebugEnabled()) {
-                    while (it.hasNext())
-                        log.debug("Principal: " + it.next().toString());
+            	
+				Set principals = subject.getPrincipals();
+                if(decorator != null) { // decorate if a decorator was set 
+	                Iterator it = tempPrincipals.iterator();
+	                while(it.hasNext()) {
+						
+						Principal original = (Principal)it.next();
+						Principal decorated = decorator.decorate(original);
+						
+						if(decorated != null) { 
+							// store the decorated principal instead of the original
+							principals.add(decorated);
+							if(log.isDebugEnabled()) 
+									log.debug("replaced principal " + original +
+											  " with " + decorated);
+						} else { // store the original principal
+							principals.add(original);
+						}
+	                }
+                } else {
+                	// just add all the principals undecorated
+					principals.addAll(tempPrincipals);	
                 }
 
-                subject.getPrincipals().addAll(tempPrincipals);
+                // add the credentials to the subject
                 subject.getPublicCredentials().addAll(tempCredentials);
-
-				// decorate if a decorator was set
-				if(decorator != null) {
-					extraPrincipals = decorator.getPrincipals(subject);
-					if(extraPrincipals != null) {
-						subject.getPrincipals().add(
-							Arrays.asList(extraPrincipals));
-					}
-				}
 
                 tempPrincipals.clear();
                 tempCredentials.clear();
@@ -510,15 +515,6 @@ public class RdbmsLoginModule extends RdbmsUserManager
             RdbmsCredential c = (RdbmsCredential)it.next();
             if(log.isDebugEnabled()) log.debug("removing Credential " + c);
             subject.getPrincipals().remove(c);
-        }
-        // remove the decorated or extra principals
-        if(extraPrincipals != null) {
-        	for(int i = 0; i < extraPrincipals.length; i++) {
-				if(log.isDebugEnabled()) 
-						log.debug("removing decorated Principal " + 
-									extraPrincipals[i]);
-        		subject.getPrincipals().remove(extraPrincipals[i]);
-        	}
         }
 
         return(true);

@@ -62,20 +62,26 @@ package nl.openedge.access;
 
 import java.security.Principal;
 
-import javax.security.auth.Subject;
 
 /**
  * 
- * Logon decorators can add principals to a subject.
+ * Logon decorators can decorate principals.
  * Classes implementing this interface should be configured in
  * the JAAS configuration file.
  * 
  * The configured decorators are evaluated in the commit() method of the 
- * LoginModule and the resulting Principals will be stored with the subject
+ * LoginModule for all <code>Principal</code>s. The returned principle 
+ * that can be an 'enriched' instance of the given principal is stored with the
+ * subject. DO NOT change the name of the principle! This makes it another 
+ * principel effectively. The only reason that default constructors and 
+ * <code>setName(String)</code> are supported in principals is to allow them 
+ * to be handled by persistence engines like OJB.
+ * 
+ * The resulting Principals will be stored with the subject.
  * 
  * Note that, allthough the implementations of OpenEdge Access does support
  * this behaviour, the Implementors of the LogonModule could decide not to 
- * implement it.
+ * support it.
  * 
  * @author E.F. Hillenius
  */
@@ -84,8 +90,8 @@ public interface LoginDecorator {
 	/**
 	 * get extra principals for this subject
 	 * @param subject immutable subject
-	 * @return an array of extra principals to be saved with the subject
+	 * @return the decorated principal to be saved with the subject.
 	 */
-	public Principal[] getPrincipals(final Subject subject);
+	public Principal decorate(final Principal principal);
 
 }
