@@ -10,15 +10,18 @@ import nl.openedge.gaps.core.Entity;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.groups.impl.GroupDAO;
 import nl.openedge.gaps.core.groups.impl.GroupDAOException;
+import nl.openedge.gaps.core.parameters.impl.ParameterDAO;
 
 /**
  * Basisklasse voor groepen.
  */
 public abstract class Group extends Entity
 {
-
 	/** DAO voor groepen. */
-	private static GroupDAO groupDao = new GroupDAO();
+	protected static GroupDAO groupDao = new GroupDAO();
+
+	/** parameter dao. */
+	protected static ParameterDAO parameterDao = new ParameterDAO();
 
 	/** Omschrijving van de parametergroep. */
 	private String description;

@@ -15,7 +15,6 @@ import nl.openedge.util.ser.SerializedAndZipped;
  */
 public final class GroupWrapper implements Serializable, Cloneable
 {
-
 	/** Opslag id. */
 	private Long id;
 
@@ -139,4 +138,5 @@ public final class GroupWrapper implements Serializable, Cloneable
 				+ "{id = " + getId() + ", path = " + getPath() + ", datalength = " + len
 				+ "}[" + getVersionId() + "]";
 	}
+
 }

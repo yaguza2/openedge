@@ -58,6 +58,57 @@ public final class GroupDAO
 	}
 
 	/**
+	 * Zoekt wrapper (opslagformaat Group) op gegeven groep.
+	 * @param group de groep
+	 * @return de wrapper of null indien niet gevonden
+	 * @throws GroupDAOException bij onverwachte fouten
+	 */
+	public GroupWrapper findGroupWrapper(Group group) throws GroupDAOException
+	{
+
+		return findGroupWrapper(group.getId(), group.getVersion());
+	}
+
+	/**
+	 * Zoekt wrapper (opslagformaat Group) op gegeven pad/ versie.
+	 * @param path zoekpad
+	 * @param version de versie voor de zoektocht
+	 * @return de wrapper of null indien niet gevonden
+	 * @throws GroupDAOException bij onverwachte fouten
+	 */
+	public GroupWrapper findGroupWrapper(String path, Version version)
+			throws GroupDAOException
+	{
+
+		GroupWrapper wrapper = null;
+		Session session = null;
+		try
+		{
+			session = HibernateHelper.getSession();
+			List results = session.find(
+					"from " + GroupWrapper.class.getName()
+					+ " gw where gw.path = ? and gw.versionId = ?",
+					new Object[] {path, version.getName()},
+					new Type[] {Hibernate.STRING, Hibernate.STRING});
+			if ((results != null) && (!results.isEmpty()))
+			{
+				if (results.size() > 1)
+				{
+					throw new GroupDAOException(
+							"meer dan 1 resultaat gevonden; database state is ambigu!");
+				}
+				wrapper = (GroupWrapper) results.get(0);
+			}
+		}
+		catch (HibernateException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new GroupDAOException(e);
+		}
+		return wrapper;
+	}
+
+	/**
 	 * Pak representatie object uit naar {@link Group}.
 	 * @param wrapper representatie object.
 	 * @return de uitgepakte groep of null indien de wrapper null was
@@ -118,56 +169,6 @@ public final class GroupDAO
 				log.error(e.getMessage(), e);
 				throw new GroupDAOException(e);
 			}
-		}
-		return wrapper;
-	}
-
-	/**
-	 * Zoekt wrapper (opslagformaat Group) op gegeven groep.
-	 * @param group de groep
-	 * @return de wrapper of null indien niet gevonden
-	 * @throws GroupDAOException bij onverwachte fouten
-	 */
-	public GroupWrapper findGroupWrapper(Group group) throws GroupDAOException
-	{
-
-		return findGroupWrapper(group.getId(), group.getVersion());
-	}
-
-	/**
-	 * Zoekt wrapper (opslagformaat Group) op gegeven pad/ versie.
-	 * @param path zoekpad
-	 * @param version de versie voor de zoektocht
-	 * @return de wrapper of null indien niet gevonden
-	 * @throws GroupDAOException bij onverwachte fouten
-	 */
-	public GroupWrapper findGroupWrapper(String path, Version version)
-			throws GroupDAOException
-	{
-
-		GroupWrapper wrapper = null;
-		Session session = null;
-		try
-		{
-			session = HibernateHelper.getSession();
-			List results = session.find("from "
-					+ GroupWrapper.class.getName()
-					+ " gw where gw.path = ? and gw.versionId = ?", new Object[] {path,
-					version.getName()}, new Type[] {Hibernate.STRING, Hibernate.STRING});
-			if ((results != null) && (!results.isEmpty()))
-			{
-				if (results.size() > 1)
-				{
-					throw new GroupDAOException(
-							"meer dan 1 resultaat gevonden; database state is ambigu!");
-				}
-				wrapper = (GroupWrapper) results.get(0);
-			}
-		}
-		catch (HibernateException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new GroupDAOException(e);
 		}
 		return wrapper;
 	}

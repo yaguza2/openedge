@@ -631,7 +631,7 @@ public class ParameterBuilder
 					"er is geen actieve parametergroep gezet!");
 		}
 		param.setLocalId(localId);
-		param.setGroup(parameterGroup);
+		param.setParameterGroup(parameterGroup);
 		param.setVersion(getVersionWithCheck());
 		if (topParam != null)
 		{ // mogelijk ooit mooier oplossen...

@@ -21,6 +21,18 @@
 			length="255"
 		 />
 		<property
+			column="LOCALID"
+			name="localId"
+			type="string"
+			length="255"
+		 />
+		<property
+			column="PGID"
+			name="parameterGroupId"
+			type="string"
+			length="255"
+		 />
+		<property
 			column="VID"
 			name="versionId"
 			type="string"

@@ -28,18 +28,20 @@ import nl.openedge.gaps.core.versions.VersionRegistry;
  */
 public abstract class Parameter extends Entity implements Externalizable
 {
-
-	/** de parameter groep waartoe deze parameter behoort. */
-	private ParameterGroup group;
-
-	/** de waarde. */
-	private ParameterValue value;
-
 	/** id van parent indien dit een geneste parameter is. */
 	private String parentId;
 
 	/** local id van parent indien dit een geneste parameter is. */
 	private String parentLocalId;
+
+	/** id van de parameter groep. */
+	private String parameterGroupId;
+
+	/** de parameter groep waartoe deze parameter behoort. */
+	private ParameterGroup parameterGroup;
+
+	/** de waarde. */
+	private ParameterValue value;
 
 	/**
 	 * Construct; maakt altijd een instantie aan met de huidige versie. Overervende
@@ -72,19 +74,27 @@ public abstract class Parameter extends Entity implements Externalizable
 	 * Geeft de groep waartoe deze parameter behoort.
 	 * @return de groep waartoe deze parameter behoort
 	 */
-	public ParameterGroup getGroup()
+	public ParameterGroup getParameterGroup()
 	{
-		return group;
+		return parameterGroup;
 	}
 
 	/**
 	 * Zet de groep waartoe deze parameter behoort, en voeg de parameter toe aan de
 	 * gegeven groep.
-	 * @param group de groep waartoe deze parameter behoort
+	 * @param parameterGroup de groep waartoe deze parameter behoort
 	 */
-	public void setGroup(ParameterGroup group)
+	public void setParameterGroup(ParameterGroup group)
 	{
-		this.group = group;
+		this.parameterGroup = group;
+		if(group != null)
+		{
+			setParameterGroupId(group.getId());
+		}
+		else
+		{
+			setParameterGroupId(null);
+		}
 	}
 
 	/**
@@ -147,8 +157,8 @@ public abstract class Parameter extends Entity implements Externalizable
 	}
 
 	/**
-	 * Get parentId.
-	 * @return parentId.
+	 * Get id van parent indien dit een geneste parameter is.
+	 * @return id van parent indien dit een geneste parameter is.
 	 */
 	public String getParentId()
 	{
@@ -156,8 +166,8 @@ public abstract class Parameter extends Entity implements Externalizable
 	}
 
 	/**
-	 * Set parentId.
-	 * @param parentId parentId.
+	 * Set id van parent indien dit een geneste parameter is.
+	 * @param parentId id van parent indien dit een geneste parameter is.
 	 */
 	public void setParentId(String parentId)
 	{
@@ -165,8 +175,8 @@ public abstract class Parameter extends Entity implements Externalizable
 	}
 
 	/**
-	 * Get parentLocalId.
-	 * @return parentLocalId.
+	 * Get local id van parent indien dit een geneste parameter is.
+	 * @return local id van parent indien dit een geneste parameter is.
 	 */
 	public String getParentLocalId()
 	{
@@ -174,12 +184,30 @@ public abstract class Parameter extends Entity implements Externalizable
 	}
 
 	/**
-	 * Set parentLocalId.
-	 * @param parentLocalId parentLocalId.
+	 * Set local id van parent indien dit een geneste parameter is.
+	 * @param parentLocalId local id van parent indien dit een geneste parameter is.
 	 */
 	public void setParentLocalId(String parentLocalId)
 	{
 		this.parentLocalId = parentLocalId;
+	}
+
+	/**
+	 * Get id van de parameter groep.
+	 * @return id van de parameter groep.
+	 */
+	public String getParameterGroupId()
+	{
+		return parameterGroupId;
+	}
+
+	/**
+	 * Set id van de parameter groep.
+	 * @param parameterGroupId id van de parameter groep.
+	 */
+	protected void setParameterGroupId(String parameterGroupId)
+	{
+		this.parameterGroupId = parameterGroupId;
 	}
 
 	/**
@@ -233,10 +261,9 @@ public abstract class Parameter extends Entity implements Externalizable
 	 */
 	public void writeExternal(ObjectOutput out) throws IOException
 	{
-
 		out.writeObject(getId());
 		out.writeObject(getVersion().getName());
-		out.writeObject(getGroup().getId());
+		out.writeObject(getParameterGroupId());
 		out.writeObject(getValue());
 		out.writeObject(getParentId());
 	}
@@ -248,14 +275,13 @@ public abstract class Parameter extends Entity implements Externalizable
 	 */
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
 	{
-
 		setId((String) in.readObject());
 		String versionId = (String) in.readObject();
 		String groupId = (String) in.readObject();
 		try
 		{
 			setVersion(VersionRegistry.getVersion(versionId));
-			setGroup(ParameterRegistry.getParameterGroup(groupId));
+			setParameterGroup(ParameterRegistry.getParameterGroup(groupId));
 			setValue((ParameterValue) in.readObject());
 			setParentId((String) in.readObject());
 		}

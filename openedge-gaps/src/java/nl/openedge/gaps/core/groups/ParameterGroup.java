@@ -6,7 +6,11 @@
  */
 package nl.openedge.gaps.core.groups;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +19,7 @@ import nl.openedge.gaps.core.NotFoundException;
 import nl.openedge.gaps.core.RegistryException;
 import nl.openedge.gaps.core.parameters.Parameter;
 import nl.openedge.gaps.core.parameters.ParameterRegistry;
+import nl.openedge.gaps.core.parameters.impl.ParameterDAOException;
 import nl.openedge.gaps.core.versions.Version;
 import nl.openedge.gaps.util.NotNullArrayList;
 import nl.openedge.gaps.util.NotNullHashMap;
@@ -26,12 +31,11 @@ import nl.openedge.gaps.util.NotNullHashMap;
  */
 public class ParameterGroup extends Group
 {
-
 	/** Parameters. */
-	private List parameterIds = new NotNullArrayList();
+	private transient List parameterIds = new NotNullArrayList();
 
 	/** map voor snel opzoeken. */
-	private Map mapIdParameterIds = new NotNullHashMap();
+	private transient Map mapIdParameterIds = new NotNullHashMap();
 
 	/**
 	 * Eventuele super; als deze is ingevuld, overerft deze groep van de super groep.
@@ -255,7 +259,7 @@ public class ParameterGroup extends Group
 	 * Set mapIdParameterIds.
 	 * @param mapIdParameterIds mapIdParameterIds.
 	 */
-	public void setMapIdParameterIds(Map mapIdParameterIds)
+	protected void setMapIdParameterIds(Map mapIdParameterIds)
 	{
 		this.mapIdParameterIds = mapIdParameterIds;
 	}
@@ -273,7 +277,7 @@ public class ParameterGroup extends Group
 	 * Set parameterIds.
 	 * @param parameterIds parameterIds.
 	 */
-	public void setParameterIds(List parameterIds)
+	protected void setParameterIds(List parameterIds)
 	{
 		this.parameterIds = parameterIds;
 	}
@@ -308,5 +312,48 @@ public class ParameterGroup extends Group
 			repr = repr + " -> " + superGID;
 		}
 		return repr;
+	}
+
+    /** 
+	 * Schrijft standaard velden weg.
+	 * @param s object output stream
+	 * @serialData Schrijf de default serializable velden weg
+	 * @throws IOException bij schrijffouten
+	 */
+	private void writeObject(ObjectOutputStream s) throws IOException
+	{
+		s.defaultWriteObject();
+	}
+
+    /** 
+	 * Schrijft standaard velden weg.
+	 * @param s object input stream
+	 * @serialData Lees de default serializable velden in, en vul de parameter ids
+	 * @throws IOException bij leesfouten
+	 */
+	private void readObject(ObjectInputStream s) throws IOException,
+			ClassNotFoundException
+	{
+		s.defaultReadObject();
+		List ids;
+		Map idmap;
+		try
+		{
+			List all = parameterDao.findParameterIdsForParameterGroup(getId(), getVersion());
+			ids = new ArrayList(all.size());
+			idmap = new HashMap(all.size());
+			for(Iterator i = all.iterator(); i.hasNext();)
+			{
+				Object[] struct = (Object[])i.next();
+				ids.add((String)struct[0]);
+				idmap.put((String)struct[1], (String)struct[0]);
+			}
+			setParameterIds(ids);
+			setMapIdParameterIds(idmap);
+		}
+		catch (ParameterDAOException e)
+		{
+			throw new RegistryException(e);
+		}
 	}
 }

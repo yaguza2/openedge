@@ -58,7 +58,7 @@ public final class EntityUtil
 		else if (entity instanceof Parameter)
 		{
 			Parameter param = (Parameter) entity;
-			Group group = param.getGroup();
+			Group group = param.getParameterGroup();
 			String path = group.getPath();
 			String localId = param.getLocalId();
 			if (param.getParentId() != null)

@@ -19,11 +19,17 @@ public final class ParameterWrapper implements Serializable, Cloneable
 	/** Opslag id. */
 	private Long id;
 
+	/** localId. */
+	private String localId;
+
 	/** Pad property. */
 	private String path;
 
 	/** Versie id. */
 	private String versionId;
+
+	/** id van de parameter groep. */
+	private String parameterGroupId;
 
 	/** data repr. */
 	private SerializedAndZipped data;
@@ -91,6 +97,23 @@ public final class ParameterWrapper implements Serializable, Cloneable
 	}
 
 	/**
+	 * Get localId.
+	 * @return localId.
+	 */
+	public String getLocalId()
+	{
+		return localId;
+	}
+	/**
+	 * Set localId.
+	 * @param localId localId.
+	 */
+	public void setLocalId(String localId)
+	{
+		this.localId = localId;
+	}
+
+	/**
 	 * Get versionId.
 	 * @return versionId.
 	 */
@@ -106,6 +129,24 @@ public final class ParameterWrapper implements Serializable, Cloneable
 	public void setVersionId(String versionId)
 	{
 		this.versionId = versionId;
+	}
+
+	/**
+	 * Get id van de parameter groep.
+	 * @return id van de parameter groep.
+	 */
+	public String getParameterGroupId()
+	{
+		return parameterGroupId;
+	}
+
+	/**
+	 * Set id van de parameter groep.
+	 * @param parameterGroupId id van de parameter groep.
+	 */
+	public void setParameterGroupId(String parameterGroupId)
+	{
+		this.parameterGroupId = parameterGroupId;
 	}
 
 	/**
@@ -136,7 +177,7 @@ public final class ParameterWrapper implements Serializable, Cloneable
 			len = getData().getCompressedData().length;
 		}
 		return simpleClsName
-				+ "{id = " + getId() + ", path = " + getPath() + ", datalength = " + len
+				+ "{Id = " + getId() + ", path = " + getPath() + ", datalength = " + len
 				+ "}[" + getVersionId() + "]";
 	}
 }

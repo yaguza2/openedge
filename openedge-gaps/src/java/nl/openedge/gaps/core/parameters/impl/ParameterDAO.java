@@ -59,6 +59,89 @@ public final class ParameterDAO
 	}
 
 	/**
+	 * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven parameter.
+	 * @param parameter de parameter
+	 * @return de parameter wrapper of null indien niet gevonden
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public ParameterWrapper findParameterWrapper(Parameter parameter)
+			throws ParameterDAOException
+	{
+
+		return findParameterWrapper(parameter.getId(), parameter.getVersion());
+	}
+
+	/**
+	 * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven pad/ version.
+	 * @param path zoekpad
+	 * @param version de versie voor de zoektocht
+	 * @return de parameter wrapper of null indien niet gevonden
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public ParameterWrapper findParameterWrapper(String path, Version version)
+			throws ParameterDAOException
+	{
+
+		ParameterWrapper wrapper = null;
+		Session session = null;
+		try
+		{
+			session = HibernateHelper.getSession();
+			List results = session.find(
+					"from " + ParameterWrapper.class.getName()
+					+ " pw where pw.path = ? and pw.versionId = ?",
+					new Object[] {path, version.getName()},
+					new Type[] {Hibernate.STRING, Hibernate.STRING});
+			if ((results != null) && (!results.isEmpty()))
+			{
+				if (results.size() > 1)
+				{
+					throw new ParameterDAOException(
+							"meer dan 1 resultaat gevonden; database state is ambigu!");
+				}
+				wrapper = (ParameterWrapper) results.get(0);
+			}
+		}
+		catch (HibernateException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new ParameterDAOException(e);
+		}
+		return wrapper;
+	}
+
+	/**
+	 * Geeft de parameter-ids voor de gegeven parametergroep-id
+	 * @param parameterGroupId id van de parametergroep
+	 * @param version de versie waarvoor de parameters dienen te worden bepaald
+	 * @return de parameter-ids (mogelijk lege lijst, maar niet null) met elementen
+	 *  vh type String[2]; pos 0 == id, pos 1 == localId
+	 * @throws ParameterDAOException bij onverwachte fouten
+	 */
+	public List findParameterIdsForParameterGroup(
+			String parameterGroupId, Version version)
+		throws ParameterDAOException
+	{
+		List results = null;
+		Session session = null;
+		try
+		{
+			session = HibernateHelper.getSession();
+			results = session.find(
+					"select pw.path, pw.localId from " + ParameterWrapper.class.getName()
+					+ " pw where pw.parameterGroupId = ? and pw.versionId = ?",
+					new Object[] {parameterGroupId, version.getName()},
+					new Type[] {Hibernate.STRING, Hibernate.STRING});
+		}
+		catch (HibernateException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new ParameterDAOException(e);
+		}
+		return results;
+	}
+
+	/**
 	 * Pak representatie object uit naar {@link Parameter}.
 	 * @param wrapper representatie object.
 	 * @return de uitgepakte parameter of null indien de wrapper null was
@@ -115,6 +198,8 @@ public final class ParameterDAO
 				wrapper = new ParameterWrapper();
 				wrapper.setData(data);
 				wrapper.setPath(parameter.getId());
+				wrapper.setLocalId(parameter.getLocalId());
+				wrapper.setParameterGroupId(parameter.getParameterGroupId());
 				wrapper.setVersionId(parameter.getVersion().getName());
 			}
 			catch (IOException e)
@@ -122,57 +207,6 @@ public final class ParameterDAO
 				log.error(e.getMessage(), e);
 				throw new ParameterDAOException(e);
 			}
-		}
-		return wrapper;
-	}
-
-	/**
-	 * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven parameter.
-	 * @param parameter de parameter
-	 * @return de parameter wrapper of null indien niet gevonden
-	 * @throws ParameterDAOException bij onverwachte fouten
-	 */
-	public ParameterWrapper findParameterWrapper(Parameter parameter)
-			throws ParameterDAOException
-	{
-
-		return findParameterWrapper(parameter.getId(), parameter.getVersion());
-	}
-
-	/**
-	 * Zoekt parameter wrapper (opslagformaat Parameter) op gegeven pad/ version.
-	 * @param path zoekpad
-	 * @param version de versie voor de zoektocht
-	 * @return de parameter wrapper of null indien niet gevonden
-	 * @throws ParameterDAOException bij onverwachte fouten
-	 */
-	public ParameterWrapper findParameterWrapper(String path, Version version)
-			throws ParameterDAOException
-	{
-
-		ParameterWrapper wrapper = null;
-		Session session = null;
-		try
-		{
-			session = HibernateHelper.getSession();
-			List results = session.find("from "
-					+ ParameterWrapper.class.getName()
-					+ " pw where pw.path = ? and pw.versionId = ?", new Object[] {path,
-					version.getName()}, new Type[] {Hibernate.STRING, Hibernate.STRING});
-			if ((results != null) && (!results.isEmpty()))
-			{
-				if (results.size() > 1)
-				{
-					throw new ParameterDAOException(
-							"meer dan 1 resultaat gevonden; database state is ambigu!");
-				}
-				wrapper = (ParameterWrapper) results.get(0);
-			}
-		}
-		catch (HibernateException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new ParameterDAOException(e);
 		}
 		return wrapper;
 	}
@@ -237,7 +271,6 @@ public final class ParameterDAO
 	 */
 	public void deleteParameter(Parameter param) throws ParameterDAOException
 	{
-
 		//TODO check op actieve versie
 		// het verwijderen van een parameter zal in
 		// praktijk slechts worden toegestaan indien de parameter nog niet met
