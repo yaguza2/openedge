@@ -162,7 +162,7 @@ public final class MailJob implements StatefulJob
 		} 
 		catch(Exception e) 
 		{
-			log.fatal(e);
+			log.fatal("Exception ", e);
 			log.fatal("will unschedule all triggers");
 			JobExecutionException je = new JobExecutionException(e, false);
 			je.setErrorCode(JobExecutionException.ERR_BAD_CONFIGURATION);
@@ -192,7 +192,7 @@ public final class MailJob implements StatefulJob
 		} 
 		catch(Exception ex) 
 		{
-			log.fatal(ex);
+			log.fatal("Exception: ", ex);
 			log.fatal("will unschedule all triggers");
 			
 			JobExecutionException e = new JobExecutionException(ex, false);
@@ -208,7 +208,7 @@ public final class MailJob implements StatefulJob
 		} 
 		catch(Exception e) 
 		{
-			log.fatal(e);
+			log.fatal("Exception: ", e);
 		}
 
 	}
@@ -242,14 +242,14 @@ public final class MailJob implements StatefulJob
 					catch(Exception e) 
 					{
 						log.fatal("Exception sending message with id[" + msg.getId() + "]");
-						log.fatal(e);
+						log.fatal("Exception: ", e);
 						try 
 						{
 							mqMod.flagFailedMessage(msg, e);
 						} 
 						catch(Exception e2) 
 						{ // ooops this is pretty bad!
-							log.fatal(e2);
+							log.fatal("Exception", e2);
 							// nothing else to do than to ignore it
 						}
 					}
@@ -261,7 +261,7 @@ public final class MailJob implements StatefulJob
 		} 
 		catch(Exception e) 
 		{
-			log.fatal(e);
+			log.fatal("Exception: ", e);
 			throw e; 
 		}
 	}
