@@ -1,0 +1,164 @@
+body  { 	
+	background-image:url("images/background.gif");
+	background-position:top left;
+	background-repeat:no-repeat;
+	font-family: 'Trebuchet MS', 'Lucida Grande',
+	  Verdana, Lucida, Geneva, Helvetica, 
+	  Arial, sans-serif;
+	font-size:10pt;
+	overflow:hidden;
+} 
+
+.body {
+	position: absolute;
+	top: 70px;
+	left:20px;
+	height: 90%;
+	width: 100%;
+	padding-left: 120px;
+	padding-right: 20%;
+	padding-bottom: 100px;
+	overflow: auto;
+}
+A {
+  text-decoration:none;
+  color: blue;
+}
+A:HOVER { 
+  cursor:hand; 
+  text-decoration:underline;
+  /* background-color: #cccccc; */
+}
+h1  { 	
+	font-size:175%;
+	font-weight:bold;
+	height:60px
+} 
+
+h2  { 	
+	font-size:150%;
+	font-weight:bold 
+} 
+
+h3  { 	
+	font-size:125%;
+	font-weight:bold 
+}
+
+code  { 	
+	display:block;
+	font-size:100%;
+	border-style:solid;
+	border-color:black;
+	border-width:1px;
+	padding:5px;
+	margin:5px 
+} 
+
+img  { 	
+	border:0 solid 
+} 
+		
+th  { 	
+	text-align:left;
+	font-size:10pt;
+} 
+
+td  {
+	padding:0;
+	font-size:10pt;
+} 
+
+tr  { 	
+	height:20px 
+}
+
+tr.selectrowover {
+	cursor : hand;
+	background-color:#00584b;
+	color:#FFF6E5	
+}
+      
+fieldset  { 	
+	padding:6px;
+	margin-bottom:6px 
+}
+
+label.indent  { 	
+	margin-right:10px;
+	width:150px 
+} 
+
+input, select, label  { 	
+	font-size:12px;
+	margin-right:10px 
+}
+
+#resultstable {
+ caption-side:bottom;
+}
+#resultstable thead {
+
+}
+#resultstable thead th {
+ background-color: #CECECE;
+ text-align: center;
+ border: 1px solid #339900;
+ padding:2px;
+ width:260px;
+}
+#resultstable tbody {
+
+}
+#resultstable tbody tr {
+
+}
+#resultstable tbody td {
+ padding:2px;
+ background-color: #E9E9E9;
+}
+#resultstable tfoot td {
+ padding:8px;
+}
+#button {
+	position:absolute;
+	top:90px;
+	width: 9em;
+	padding: 0 0 1em 0;
+	color: #333;
+	filter:alpha(opacity=60);-moz-opacity:0.6;
+}
+
+#button ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+		
+#button li {
+	border-bottom: 1px solid #90bade;
+	margin: 0;
+}
+
+#button li a {
+	display: block;
+	padding: 5px 5px 5px 0.5em;
+	background-color: #2175bc;
+	
+	color: #fff;
+	text-decoration: none;
+	width: 100%;
+}
+
+html>body #button li a {
+	width: auto;
+}
+
+#button li a:hover {
+	border-left: 10px solid #1c64d1;
+	border-right: 10px solid #5ba3e0;
+	background-color: #2586d7;
+	filter:alpha(opacity=60);-moz-opacity:0.6;
+	color: #fff;
+}
