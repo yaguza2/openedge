@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<access-config>
+	
+	<access-manager class="nl.openedge.access.impl.DefaultAccesManager">
+		<access-provider class="nl.openedge.access.impl.jdbc.JDBCAccessProvider">
+			<param name="datasource" value="jdbc/openedge"/>
+		</access-provider>
+	</access-manager>
+	
+</access-config>
