@@ -8,11 +8,11 @@
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
-    <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+    <logo>http://www.openedge.nl/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
   <package>nl.openedge.modules</package>
-  <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+  <logo>http://www.openedge.nl/images/logo.jpg</logo>
   <shortDescription>The OpenEdge Module framework provides a component factory and a wrapper for the Quartz sceduler</shortDescription>
   <description>The OpenEdge Module framework provides for an easy to use object factory that can build and configure instances of objects (Modules) from a configuration xml document. Clients can then ask the ModuleFactory for instances.</description>
   <url>http://maven.apache.org/</url>

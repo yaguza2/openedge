@@ -8,11 +8,11 @@
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
-    <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+    <logo>http://www.openedge.nl/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
   <package>nl.openedge.util</package>
-  <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+  <logo>http://www.openedge.nl/images/logo.jpg</logo>
   <shortDescription>OpenEdge Util: set of reusable classes and components</shortDescription>
   <description>OpenEdge Utils is a project for reusable classes and components that are useful enough to share among projects, but are too small to have their own project</description>
   <url>http://maven.apache.org/</url>

@@ -8,11 +8,11 @@
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
-    <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+    <logo>http://www.openedge.nl/images/logo.jpg</logo>
   </organization>
   <inceptionYear>2003</inceptionYear>
   <package>nl.openedge.access</package>
-  <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+  <logo>http://www.openedge.nl/images/logo.jpg</logo>
   <shortDescription>OpenEdge Access: Security framework bases on JAAS</shortDescription>
   <description>The OpenEdge security framework gives you the option of using a near black box security implementation that is based on Java Authentication and Authorization Service (JAAS).</description>
   <url>http://maven.apache.org/</url>
