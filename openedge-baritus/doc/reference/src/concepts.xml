@@ -42,7 +42,7 @@
 			As the controls are responsible for creating instances of the objects that should be populated
 			(usually called form beans), no extra configuration is needed. Furthermore, you can do very 
 			interesting things with those objects before actually having them populated by Baritus. 
-			For instance, if you are working with an ORM tool 
+			For instance, if you are working with a ORM tool 
 			(like <ulink url="http://www.hibernate.org">Hibernate</ulink>), you could load your
 			persistent object, let <literal>Baritus</literal> populate it, and persist the changed object 
 			in the command method (perform) of your control. Tricks like these can be serious code
@@ -59,9 +59,9 @@
 		
 		<para>
 			Besides populating objects with HTTP request parameters, you can optionally have your
-			objects populated with Maverick configuration parameters, Request attributes (which is
-			great when you link controls together within one request) and session attributes. It's 
-			all configurable for each instance of a control, or even for each request if you like.
+			objects populated with Maverick configuration parameters, request attributes 
+			and session attributes. It's all configurable for each instance of a control, or even 
+			for each request if you like.
 		</para>
 			
     </sect1>
@@ -71,9 +71,10 @@
 		<title>Validation</title>
 		
 		<para>
-			Depending on how you look at it, the type conversion during population is your first validation
-			step. For further validation, like checking if a required property was set, or checking that a
-			certain date is actually after the date of today.
+			Type conversion during population is in fact your first validation step. 
+			For further validation, like checking if a required property was set, or checking that a
+			certain date is actually after the date of today, Baritus provides a flexible and
+			pluggable validation mechanism.
 		</para>
 		
 		<para>
@@ -81,8 +82,8 @@
 			the validation, and that are registered in the controls that want to use them. The default
 			mechanism is probably powerfull enough for everything you want to do. It is possible however,
 			to plug in one or more additional mechanisms. This way, you could use Commons Validator,
-			FormProc, or possibly another validation framework with Baritus (though at this time there
-			are no plugins written).
+			FormProc, or possibly another validation framework with Baritus (though at this time 
+			no implementations are available).
 		</para>
 		
 		<para>

@@ -6,9 +6,9 @@
         <title>Population process</title>
 		
 	    <para>
-			When building web applications with Java, one of the most commons things you want to
+			When building web applications with Java, one of the commons things you want to
 			do is to translate user input, i.e. request parameters, into server side objects, like
-			objects from your domain model. Population is the process of matching request parameters
+			objects of your domain model. Population is the process of matching request parameters
 			(and optionally configuration parameters, session attributes and request attributes) with
 			properties of the form bean, converting the request parameters to the target property
 			type and setting the converted values on the form bean.
@@ -29,7 +29,7 @@
 		<title>Conversion</title>
 		
 		<para>
-			One of the central tasks to be done when populating a java bean from an HTTP request is the
+			One of the tasks to be done when populating a java bean from an HTTP request is the
 			conversion of string parameters to Java types (Integers, Dates, etc.). 
 			<literal>Converters</literal> are used for this purpose. <literal>Converters</literal>
 			are globally registered with the <literal>ConverterRegistry</literal>.
@@ -47,15 +47,20 @@
 		</para>
 		
         <programlisting><![CDATA[
-		ConverterRegistry reg = ConverterRegistry.getInstance();
-		reg.register(new FallbackDateConverter(), Date.class);
-		reg.register(new FallbackDateConverter(), java.sql.Date.class);
-		reg.register(new FallbackDateConverter(), Timestamp.class);
+ConverterRegistry reg = ConverterRegistry.getInstance();
+reg.register(new FallbackDateConverter(), Date.class);
+reg.register(new FallbackDateConverter(), java.sql.Date.class);
+reg.register(new FallbackDateConverter(), Timestamp.class);
 ]]></programlisting>
 		
 		<para>
 			Converters must implement either <literal>org.apache.commons.beanutils.Converter</literal>
 			or <literal>org.apache.commons.beanutils.locale.LocaleConverter</literal>.
+		</para>
+		
+		<para>
+			ConverterRegistry is a global registry. Hence, registered converters (and formatters) are
+			shared amongst all controllers.
 		</para>
 		
 	</sect1>
@@ -77,23 +82,55 @@
 	            </listitem>
 	            <listitem>
 	                <para>
-	                   Other formatters (that also implement interface 
+	                   Other formatters. Formatters (that implement interface 
 					   <literal>nl.openedge.baritus.converters.Formatter</literal>) can registered on name.
 					   For example:
 					   
-
+		<programlisting><![CDATA[
+public class InverseFormatter implements Formatter
+{
+	/** reverse input */
+	public String format(Object object, String pattern)
+	{
+		String formatted = null;
+		if(object != null)
+		{
+			StringBuffer b = new StringBuffer(String.valueOf(object));
+			formatted = b.reverse();
+		}
+		return formatted;
+	}
+}
+]]></programlisting>
+					   
+		<programlisting><![CDATA[
+...
+ConverterRegistry reg = ConverterRegistry.getInstance();
+reg.register(new InverseFormatter(), "*REVERSE");
+...
+]]></programlisting>
+					   
+		<programlisting><![CDATA[
+#set( $myString = "toBeReversed" )
+$!{model.format($myString, "*REVERSE")}
+]]></programlisting>
+			or, if the form bean has property 'myProperty':
+		<programlisting><![CDATA[
+$!{model.displayProperty("myProperty", "*REVERSE")}
+]]></programlisting>
 			
 						Note that displayProperty not only looks up the property value, and checks if there is
 						an override value registered for that property, but also tries to format the value 
 						using one of the registered formatters.
-	                </para>
+					</para>
 	            </listitem>
 	        </itemizedlist>
 		
 		</para>
 		
 		<para>
-			To find a formatter: first see if there's a formatter registered on fieldName (e.g. 'myProperty').
+			The algoritm to find a formatter is: 
+			first see if there's a formatter registered on fieldName (e.g. 'myProperty').
 			If not found, see if there's a formatter registered with the provided pattern (e.g. '*REVERSE).
 			If not found, see if the converter that is registered for the property type and
 			(the optional) locale, implements Formatter. If so, use the converter for formatting. 
@@ -102,5 +139,78 @@
 		
 	</sect1>
 
+	<sect1 id="population-s4">
+		<title>Custom population</title>
+
+		<para>
+			The population process can be customized to suit your requirements. By default, class
+			<literal>nl.openedge.baritus.population.DefaultFieldPopulator</literal> is used
+			for population. <literal>DefaultFieldPopulator</literal> uses introspection to set
+			the properties. You can however, create custom populators by creating implementations
+			of <literal>nl.openedge.baritus.population.FieldPopulator</literal>.
+			<literal>nl.openedge.baritus.population.AbstractFieldPopulator</literal> can be used
+			as a base class.
+			
+			You can register custom populators in two ways:
+			
+	        <itemizedlist spacing="compact">
+	            <listitem>
+	                <para>
+						Register the populator with a field name like:
+		<programlisting><![CDATA[
+addPopulator("myProperty",  new MySpecialPopulator());
+]]></programlisting>
+						E.g. with:
+		<programlisting><![CDATA[
+<form action="${request.contextType}/mycmd.m">
+	<input type="text" name="myProperty" value="">
+	<input type="text" name="someOtherProperty" value="">
+	<input type="submit" value="submit">
+</form>
+]]></programlisting>
+	                In the above example, <literal>MySpecialPopulator</literal> will be used to handle 
+					request parameter 'myProperty', and <literal>DefaultFieldPopulator</literal> 
+					will be used to handle 'someOtherProperty'.
+					</para>
+					
+	            </listitem>
+	            <listitem>
+	                <para>
+						Register the populator with a regexp like:
+		<programlisting><![CDATA[
+addPopulator(Pattern.compile("(.)*ByRegex$"), new IgnoreFieldPopulator()); // block property by regex pattern
+]]></programlisting>	                
+						E.g. with:
+		<programlisting><![CDATA[
+<form action="${request.contextType}/mycmd.m">
+	<input type="text" name="myPropertyByRegex" value="">
+	<input type="text" name="anotherPropertyByRegex" value="">
+	<input type="text" name="someOtherProperty" value="">
+	<input type="submit" value="submit">
+</form>
+]]></programlisting>
+	                In the above example, <literal>IgnoreFieldPopulator</literal> will be used to handle 
+					request parameters 'myPropertyByRegex' and 'anotherPropertyByRegex', and 
+					<literal>DefaultFieldPopulator</literal> will be used to handle 'someOtherProperty'.
+					
+					<literal>IgnoreFieldPopulator</literal> is actually shipped with Baritus as it has a common
+					use. When working with pojo that come for instance from your domain model, you potentially
+					introduce a security hazard. A common case is that clients should never be able to
+					change id's directly from the request. Using <literal>IgnoreFieldPopulator</literal>
+					you can, for instance, block all request parameters that end with '.id'.
+				  </para>
+
+				</listitem>
+	        </itemizedlist>
+			
+		</para>
+		
+		<para>
+				Custom populators are registered with a controller. Hence, registering a custom
+				populator for controller A does not have effect on the population for controller B.
+		</para>
+		
+	</sect1>
+	
 </chapter>
 

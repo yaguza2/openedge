@@ -28,7 +28,9 @@
 		<literal>nl.openedge.baritus.FormBeanCtrl</literal> that is modeled after 
 		<literal>org.infohazard.maverick.ctl.FormBeanUser</literal>
 		from the Maverick project. Like <literal>FormBeanUser</literal>, instances of 
-		<literal>FormBeanCtrl</literal> are singletons and use seperate JavaBeans for population.
+		<literal>FormBeanCtrl</literal> are singletons (allthough by extending from 
+		<literal>FormBeanCtrlBase</literal> you can use single-use controllers)
+		and use seperate JavaBeans for population.
 	</para>
-
+	
 </preface>

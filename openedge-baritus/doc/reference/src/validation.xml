@@ -2,5 +2,45 @@
 
     <title>Validation</title>
     
+	<sect1 id="validation-s1">
+        <title>Population process</title>
+		
+	    <para>
+			The first pass in the population process is the conversion of request parameters etc. to
+			Java objects and populating the provided form bean with those objects.
+			If this is successful, you know that inputs for integers, dates, etc. conform to a
+			valid form (e.g. 'foo' is not a valid integer, but '12' is).
+	    </para>
+		
+		<para>
+			Next, you might want to check if, for instance, a provided parameter not only is a
+			valid integer, but is also greater than say 10. Or that a parameter not only is
+			a valid date, but that this date also is after today.
+		</para>
+		
+		<para>
+			Validation can be performed on two levels: field and form level. Field level validation is related to 
+			one input field (e.g. a request parameter) at a time. 
+			Form level validation is executed regardles the provided parameters.
+		</para>
+
+		<para>
+			Furthermore, whether a validation action is executed can be made dependend of a certain
+			state (like the value a parameter) using 
+			<literal>nl.openedge.baritus.validation.ValidationActivationRule</literal>s.
+		</para>
+		
+	</sect1>
+	
+	<sect1 id="validation-s2">
+		<title>An example</title>
+		
+		<para>
+			Let us start with an example that displays some usages of the validation mechanism
+			of Baritus.
+		</para>
+		
+	</sect1>
+	
 </chapter>
 
