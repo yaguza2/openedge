@@ -63,6 +63,13 @@ public abstract class RdbmsBase {
 	/** construct */
 	public RdbmsBase() {
 
+		queries = new Properties();
+		try {
+			queries.load(RdbmsBase.class
+				.getResourceAsStream("RdbmsQueries.properties"));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
