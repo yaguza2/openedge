@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanContext.java,v 1.3 2004-03-01 10:00:24 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-01 10:00:24 $
+ * $Id: FormBeanContext.java,v 1.4 2004-03-02 13:23:22 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-03-02 13:23:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -526,20 +526,20 @@ public final class FormBeanContext
 	/**
 	 * get the formatter for the given fieldname/ class/ locale
 	 * 
-	 * 	1. look in the ConverterRegistry if a formatter was stored with the fieldname
+	 * 	1. look in the ConverterRegistry if a formatter was stored with the formatterName
 	 * 			and optionally locale as key.
 	 * 	2. if not found, look in the ConverterRegistry if a formatter was stored with
 	 * 			the pattern and optionally the locale as key.
 	 * 	3. if not found, look in the ConverterRegistry if a Converter was stored for the 
 	 * 			type of the property that implements Formatter (as well as Converter). 
 	 * 
-	 * @param fieldname name of field
+	 * @param formatterName name of formatter
 	 * @param pattern pattern: might be used as a key to store a Formatter
 	 * @param clazz class of property
 	 * @param locale locale to get Formatter for
 	 * @return Formatter instance of Formatter if found, null otherwise
 	 */
-	public Formatter getFormatter(String fieldname, String pattern, Class clazz, Locale locale)
+	public Formatter getFormatter(String formatterName, String pattern, Class clazz, Locale locale)
 	{
 		Formatter formatter = null;
 		ConverterRegistry reg = ConverterRegistry.getInstance();
@@ -547,9 +547,9 @@ public final class FormBeanContext
 		try
 		{
 			// first look up on fieldname
-			if(fieldname != null)
+			if(formatterName != null)
 			{
-				formatter = reg.lookup(fieldname);
+				formatter = reg.lookup(formatterName);
 			}
 			
 			if(formatter == null && (pattern != null)) // not found, try pattern
@@ -604,31 +604,31 @@ public final class FormBeanContext
 	
 	/**
 	 * Format the given value, independent of the current form.
-	 * @param fieldname fieldname that can be used to get a formatter. This will not be used
-	 * 		to get the property value.
+	 * 
+	 * @param formatterName name of formatter.
 	 * @param value value to format
 	 * @return String formatted value
 	 */
-	public String format(String fieldname, Object value)
+	public String format(String formatterName, Object value)
 	{
-		return format(fieldname, value, null);
+		return format(formatterName, value, null);
 	}
 	
 	/**
 	 * Format the given value, independent of the current form.
-	 * @param fieldname fieldname that can be used to get a formatter. This will not be used
-	 * 		to get the property value.
+	 * 
+	 * @param formatterName name of formatter.
 	 * @param value value to format
 	 * @param pattern pattern for format
 	 * @return String formatted value
 	 */
-	public String format(String fieldname, Object value, String pattern)
+	public String format(String formatterName, Object value, String pattern)
 	{
 		if(value == null) return null;
 		
 		String formatted = null;
 		Formatter formatter =
-			getFormatter(fieldname, pattern, value.getClass(), getCurrentLocale());
+			getFormatter(formatterName, pattern, value.getClass(), getCurrentLocale());
 		
 		if (formatter != null)
 		{
@@ -636,7 +636,7 @@ public final class FormBeanContext
 			{
 				formattingLog.debug(
 					"using formatter " + formatter +
-					" for property " + fieldname);
+					" for property " + formatterName);
 			}
 			formatted = formatter.format(value, pattern);
 		}
@@ -645,7 +645,7 @@ public final class FormBeanContext
 			if(formattingLog.isDebugEnabled())
 			{
 				formattingLog.debug(
-					"using default convertUtils formatter for property " + fieldname);
+					"using default convertUtils formatter for property " + formatterName);
 			}
 			formatted = ConvertUtils.convert(value);
 		}

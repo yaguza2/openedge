@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrl.java,v 1.11 2004-03-01 21:15:02 eelco12 Exp $
- * $Revision: 1.11 $
- * $Date: 2004-03-01 21:15:02 $
+ * $Id: FormBeanCtrl.java,v 1.12 2004-03-02 13:23:22 eelco12 Exp $
+ * $Revision: 1.12 $
+ * $Date: 2004-03-02 13:23:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -170,8 +170,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Locale locale = null;
 		boolean populated = true;
 		
-		ExecutionParams _execParams = getExecutionParams();
-		if(_execParams.isNoCache())
+		ExecutionParams execParams = getExecutionParams();
+		if(execParams.isNoCache())
 		{
 			doSetNoCache(cctx); // set no cache headers
 		}
@@ -182,7 +182,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		String flowInterceptView = null; // view possibly assigned by an interceptor
 		
 		// get the form bean context and set it in the flow interceptor context
-		FormBeanContext formBeanContext = getFormBeanContext(cctx, _execParams);
+		FormBeanContext formBeanContext = getFormBeanContext(cctx, execParams);
 		cctx.setModel(formBeanContext); // set context as model
 		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
@@ -215,7 +215,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			// (as it is by default)
 			if(formBeanContext.isPopulateAndValidate())
 			{
-				populated = populateFormBean(cctx, formBeanContext, locale, _execParams);	
+				populated = populateFormBean(cctx, formBeanContext, locale, execParams);	
 			}
 			
 		} 
@@ -224,7 +224,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			// as we should normally not get here, log stacktrace
 			log.error("Unexpected exception occured during form population.", e);
 				
-			internalPerformError(cctx, formBeanContext, e);
+			internalPerformError(cctx, execParams, formBeanContext, e);
 			viewName = getErrorView(cctx, formBeanContext);
 			
 			// intercept population error
@@ -240,7 +240,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		{	
 			// was the bean population successful or should we execute perform
 			// regardless of the population/ validation outcome?
-			if(populated || _execParams.isDoPerformIfPopulationFailed()) 
+			if(populated || execParams.isDoPerformIfPopulationFailed()) 
 			{
 				// flow intercept after population
 				intercDlg.doInterceptAfterPopulation(cctx, formBeanContext);
@@ -258,7 +258,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				 // this is the normal place of handling a failed (by either populators
 				 // or validators) population attempt.
 			{	
-				internalPerformError(cctx, formBeanContext, null);
+				internalPerformError(cctx, execParams, formBeanContext, null);
 				viewName = getErrorView(cctx, formBeanContext);
 				
 				// intercept on population error
@@ -275,7 +275,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			log.error(e.getMessage(), e);
 			
 			// prepare for error command and execute it
-			internalPerformError(cctx, formBeanContext, e);
+			internalPerformError(cctx, execParams, formBeanContext, e);
 
 			// flow intercept on perform error
 			intercDlg.doInterceptPerformException(cctx, formBeanContext);
@@ -751,10 +751,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	/*
 	 * Called when populating the form failed.
 	 * @param cctx maverick context
+	 * @param params execution params
 	 * @param formBeanContext context with form bean
 	 */
 	private void internalPerformError(
 		ControllerContext cctx, 
+		ExecutionParams execParams,
 		FormBeanContext formBeanContext,
 		Throwable e)
 		throws ServletException
@@ -774,12 +776,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 				formBeanContext.setError(e, true); 
 			}
 		}
-	
-		// set the current model
-		cctx.setModel(formBeanContext);
 
-		// first, set overrides for the current request parameters
-		formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	
+		// set overrides for the current request parameters if params allow
+		if(execParams.isSaveReqParamsAsOverrideFieldsOnError())
+		{
+			formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());	 
+		}	
 		
 		if(populationLog.isDebugEnabled()) traceErrors(formBeanContext);
 	}

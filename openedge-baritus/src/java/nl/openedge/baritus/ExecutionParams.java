@@ -1,7 +1,7 @@
 /*
- * $Id: ExecutionParams.java,v 1.3 2004-02-27 19:52:23 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-02-27 19:52:23 $
+ * $Id: ExecutionParams.java,v 1.4 2004-03-02 13:23:22 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-03-02 13:23:22 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -126,6 +126,17 @@ public final class ExecutionParams
 	 * Default is true.
 	 */
 	private boolean reuseFormBeanContext = true;
+	
+	/**
+	 * If population or validation failes and this property is true,
+	 * all request parameters will be saved as override values. This
+	 * will give you at least the full request the client sent, and
+	 * guards you for the situation where properties that normally
+	 * would be loaded in the command method are not set because
+	 * of the population/ validation failure.
+	 * Default is true.
+	 */
+	private boolean saveReqParamsAsOverrideFieldsOnError = true;
 
 	/**
 	 * if true, the no cache headers will be set
@@ -329,6 +340,43 @@ public final class ExecutionParams
 	public void setReuseFormBeanContext(boolean b)
 	{
 		reuseFormBeanContext = b;
+	}
+
+	/**
+	 * Gets whether all request parameters should be saved as override
+	 * 	values when population or validation fails.
+	 * If population or validation failes and this property is true,
+	 * all request parameters will be saved as override values. This
+	 * will give you at least the full request the client sent, and
+	 * guards you for the situation where properties that normally
+	 * would be loaded in the command method are not set because
+	 * of the population/ validation failure.
+	 * Default is true.
+
+	 * @return boolean wheter all request parameters should be saved as override
+	 * 	values when population or validation fails.
+	 */
+	public boolean isSaveReqParamsAsOverrideFieldsOnError()
+	{
+		return saveReqParamsAsOverrideFieldsOnError;
+	}
+
+	/**
+	 * Sets whether all request parameters should be saved as override
+	 * 	values when population or validation fails.
+	 * If population or validation failes and this property is true,
+	 * all request parameters will be saved as override values. This
+	 * will give you at least the full request the client sent, and
+	 * guards you for the situation where properties that normally
+	 * would be loaded in the command method are not set because
+	 * of the population/ validation failure.
+	 * Default is true.
+
+	 * @param b
+	 */
+	public void setSaveReqParamsAsOverrideFieldsOnError(boolean b)
+	{
+		saveReqParamsAsOverrideFieldsOnError = b;
 	}
 
 }
