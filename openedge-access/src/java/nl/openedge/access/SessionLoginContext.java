@@ -47,7 +47,8 @@ import javax.servlet.http.*;
  */
 
 public final class SessionLoginContext extends LoginContext 
-				implements HttpSessionBindingListener
+				implements HttpSessionBindingListener,
+				java.io.Serializable
 {
 
 	/**
