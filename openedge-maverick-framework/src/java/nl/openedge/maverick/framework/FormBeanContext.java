@@ -418,11 +418,22 @@ public final class FormBeanContext
 				{
 					storedValue = (String)storedRawValue;
 				}
-				else // this is probably a String[]; convert to a simple String
+				else if(storedRawValue instanceof String[]) 
+					// this is a  String[]; convert to a simple String
 				{
 					storedValue = ConvertUtils.convert(storedRawValue);
 				}
-
+				else // another type, try to format 
+				{
+					try
+					{
+						storedValue = format(name, storedRawValue, pattern);
+					}
+					catch(Exception e)
+					{
+						storedValue = ConvertUtils.convert(storedRawValue);
+					}
+				}
 				if (storedValue != null)
 				{
 					displayString = storedValue;

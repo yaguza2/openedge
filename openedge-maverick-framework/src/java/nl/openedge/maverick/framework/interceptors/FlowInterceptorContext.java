@@ -28,23 +28,68 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework;
+ 
+package nl.openedge.maverick.framework.interceptors;
+
+import nl.openedge.maverick.framework.FormBeanContext;
+
+import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Holder for constants for logging
- * 
  * @author Eelco Hillenius
  */
-public interface LogConstants
-{	
-	/** 
-	 * log name for population logging, value: nl.openedge.maverick.framework.population
-	 */
-	public final static String POPULATION_LOG = "nl.openedge.maverick.framework.population";
+public final class FlowInterceptorContext
+{
+	private ControllerContext cctx;
+	private FormBeanContext formBeanContext;
+	private Throwable exception;
 
-	/** 
-	 * log name for format logging, value: nl.openedge.maverick.framework.formatting
+	/**
+	 * @return ControllerContext
 	 */
-	public final static String FORMATTING_LOG = "nl.openedge.maverick.framework.formatting";
+	public ControllerContext getCctx()
+	{
+		return cctx;
+	}
+
+	/**
+	 * @return Throwable
+	 */
+	public Throwable getException()
+	{
+		return exception;
+	}
+
+	/**
+	 * @return FormBeanContext
+	 */
+	public FormBeanContext getFormBeanContext()
+	{
+		return formBeanContext;
+	}
+
+	/**
+	 * @param context
+	 */
+	public void setCctx(ControllerContext context)
+	{
+		cctx = context;
+	}
+
+	/**
+	 * @param throwable
+	 */
+	public void setException(Throwable throwable)
+	{
+		exception = throwable;
+	}
+
+	/**
+	 * @param context
+	 */
+	public void setFormBeanContext(FormBeanContext context)
+	{
+		formBeanContext = context;
+	}
 
 }

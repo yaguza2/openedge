@@ -28,23 +28,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.maverick.framework;
+ 
+package nl.openedge.maverick.framework.interceptors;
 
 /**
- * Holder for constants for logging
- * 
  * @author Eelco Hillenius
  */
-public interface LogConstants
-{	
-	/** 
-	 * log name for population logging, value: nl.openedge.maverick.framework.population
+public final class FlowInterceptorResult
+{
+	
+	public final static int ACTION_GO_ON = 0;
+	public final static int ACTION_SHOW_VIEW = 1;
+	public final static int ACTION_DISPATCH = 2;
+	
+	private String view;
+	private int action;
+	
+	/**
+	 * @return int
 	 */
-	public final static String POPULATION_LOG = "nl.openedge.maverick.framework.population";
+	public int getAction()
+	{
+		return action;
+	}
 
-	/** 
-	 * log name for format logging, value: nl.openedge.maverick.framework.formatting
+	/**
+	 * @return String
 	 */
-	public final static String FORMATTING_LOG = "nl.openedge.maverick.framework.formatting";
+	public String getView()
+	{
+		return view;
+	}
+
+	/**
+	 * @param i
+	 */
+	public void setAction(int i)
+	{
+		action = i;
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setView(String string)
+	{
+		view = string;
+	}
 
 }

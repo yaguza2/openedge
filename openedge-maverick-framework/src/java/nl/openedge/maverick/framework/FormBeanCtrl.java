@@ -54,9 +54,10 @@ import javax.servlet.http.HttpSession;
 
 import nl.openedge.maverick.framework.interceptors.AfterPerformInterceptor;
 import nl.openedge.maverick.framework.interceptors.BeforePerformInterceptor;
+import nl.openedge.maverick.framework.interceptors.FlowInterceptor;
+import nl.openedge.maverick.framework.interceptors.FlowInterceptorContext;
 import nl.openedge.maverick.framework.interceptors.Interceptor;
 import nl.openedge.maverick.framework.interceptors.PopulationErrorInterceptor;
-import nl.openedge.maverick.framework.population.DefaultFieldPopulator;
 import nl.openedge.maverick.framework.population.FieldPopulator;
 import nl.openedge.maverick.framework.population.PropertyUtil;
 import nl.openedge.maverick.framework.population.TargetPropertyMeta;
@@ -68,7 +69,6 @@ import nl.openedge.maverick.framework.validation.ValidatorActivationRule;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.MappedPropertyDescriptor;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.lang.exception.NestableException;
 import org.apache.commons.logging.Log;
@@ -102,6 +102,8 @@ import org.jdom.Element;
 public abstract class FormBeanCtrl implements ControllerSingleton
 {
 	
+	//-------------------------- constants ---------------------------------------/
+	
 	/** Common name for the typical "success" view */
 	public static final String SUCCESS = "success";
 
@@ -127,15 +129,16 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	private static final String REQUEST_ATTRIBUTE_FORMBEANCONTEXT = "__formBeanContext";
 	
+	//--------------------- logs --------------------------------------------------/
+	
 	/** log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrl.class);
 	
 	/** population log */
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
 
-	/** special performance log */
-	private static Log performanceLog = 
-		LogFactory.getLog(LogConstants.PERFORMANCE_LOG);
+	
+	//--------------------- properties that influence the execution path ----------/
 	
 	/** if true, the no cache headers will be set */
 	private boolean noCache = true;
@@ -206,58 +209,26 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 * probably result in messy code. Default == false
 	 */
 	private boolean doPerformIfFieldValidationFailed = false;
-
-	/**
-	 * subclasses can register fieldValidators for custom validation on field level
-	 */
-	private MultiMap fieldValidators = null;
-	
-	/**
-	 * Subclasses can register custom populators that override the default population
-	 * process for a given request parameter (that usually corresponds to a property with the
-	 * same name in the form. Custom populators are stored by name of the property. 
-	 */
-	private Map fieldPopulators = null;
-	
-	/**
-	 * Subclasses can register custom populators that override the default population
-	 * process for all request parameters that match the regular expressions.
-	 * The registered populators are tried for a match in order of registration. For each match
-	 * that was found, the populator that was registered for it will be used, and the
-	 * request parameter(s) will be removed from the map that is used for population.
-	 * As a consequence, regexFieldPopulators overrule 'normal' field populators, and
-	 * if more than one regex populator would match the parameters, only the first match is used.
-	 * Custom populators are stored by name of the property. 
-	 */
-	private Map regexFieldPopulators = null;
-	
-	/**
-	 * the default field populator
-	 */
-	private FieldPopulator defaultFieldPopulator = new DefaultFieldPopulator(this);
-	
-	/**
-	 * subclasses can register formValidators for custom validation on form level
-	 * formValidators will be called AFTER field validators executed SUCCESSFULLY
-	 */
-	private List formValidators = null;
-	
-	/**
-	 * Optional objects that can be used to switch whether validation with
-	 * custom fieldValidators should be performed in this currentRequest
-	 */
-	private List globalValidatorActivationRules = null;
-	
-	/**
-	 * option list of interceptors. An interceptor can add behaviour to an action command.
-	 */
-	private List interceptors = null;
 	
 	/**
 	 * If true, reuse the context for multiple invocations within the same request.
 	 * Default is true.
 	 */
 	private boolean reuseFormBeanContext = true;
+
+	//------------------------ registries ----------------------------------------/
+	
+	// registry for populators by field name and the default populator
+	private PopulatorRegistry populatorRegistry = new PopulatorRegistry(this);
+
+	// registry for form validators, field validators and rules that apply to them
+	private ValidatorRegistry validatorRegistry = new ValidatorRegistry();
+	
+	// registry for form interceptors
+	private InterceptorRegistry interceptorRegistry = new InterceptorRegistry();
+	
+	
+	//------------------------- methods ------------------------------------------/
 
 	
 	/**
@@ -272,57 +243,33 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	public final String go(ControllerContext cctx) throws ServletException 
 	{
-		long tsBegin = System.currentTimeMillis();
 		
-		String viewName = SUCCESS;
+		String viewName = SUCCESS; // default view
 		if(isNoCache())
 		{
 			doSetNoCache(cctx);
 		}
 
-		FormBeanContext formBeanContext = null;
-		if(reuseFormBeanContext) // if true, see if an instance was save earlier req
-		{
-			formBeanContext = (FormBeanContext)
-				cctx.getRequest().getAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT);
-			if(formBeanContext == null) 
-			{
-				formBeanContext = new FormBeanContext();
-				cctx.getRequest().setAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT, formBeanContext);
-			}
-		}
-		else
-		{
-			formBeanContext = new FormBeanContext();	
-		}
+		FlowInterceptorContext flowInterceptorContext = new FlowInterceptorContext();
+		flowInterceptorContext.setCctx(cctx);
+		
+		//TODO FlowInterceptor 0
+
+		FormBeanContext formBeanContext = getFormBeanContext(cctx);
+		
+		flowInterceptorContext.setFormBeanContext(formBeanContext);
 		
 		Object bean = null;
 		try 
 		{	
 			// let controller create form
-			long tsBeginMakeFormBean = System.currentTimeMillis();
-
-			bean = this.makeFormBean(cctx);
+			bean = getFormBean(cctx);
 			formBeanContext.setBean(bean);
-			
-			if(performanceLog.isDebugEnabled())
-			{
-				long tsEndMakeFormBean = System.currentTimeMillis();
-				performanceLog.debug("execution of " + this + ".makeFormBean: " +
-					(tsEndMakeFormBean - tsBeginMakeFormBean) + " milis");
-			}
-			
-			long tsBeginBefore = System.currentTimeMillis();
 			
 			// intercept before
 			interceptBeforePerform(cctx, formBeanContext);
 			
-			if(performanceLog.isDebugEnabled())
-			{
-				long tsEndBefore = System.currentTimeMillis();
-				performanceLog.debug("execution of " + this + ".doBefore: " +
-					(tsEndBefore - tsBeginBefore) + " milis");
-			}
+			// TODO FlowInterceptor 1
 
 			cctx.setModel(formBeanContext);
 			Locale locale = getLocaleForRequest(cctx, formBeanContext);
@@ -333,22 +280,20 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			// go on?
 			if(populated || isDoPerformIfFieldValidationFailed()) 
 			{
-				// execute command
-				long tsBeginPerform = System.currentTimeMillis();
-				viewName = this.perform(formBeanContext, cctx);
 				
-				if(performanceLog.isDebugEnabled())
-				{
-					long tsEndPerform = System.currentTimeMillis();
-					performanceLog.debug("execution of " + this + ".perform: " +
-						(tsEndPerform - tsBeginPerform) + " milis");
-				}	
+				// TODO FlowInterceptor 2
+				
+				// execute command
+				viewName = this.perform(formBeanContext, cctx);	
 
 			}
 			else // an error occured
 			{
 				// prepare for error command and execute it
 				internalPerformError(cctx, formBeanContext);
+				
+				
+				// TODO FlowInterceptor 3
 				
 				viewName = getErrorView(cctx, formBeanContext);
 			}
@@ -375,29 +320,45 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			// prepare for error command and execute it
 			internalPerformError(cctx, formBeanContext);
 			
+			flowInterceptorContext.setException(e);
+			// TODO FlowInterceptor 5
+			
 			viewName = getErrorView(cctx, formBeanContext);
 		}
-		
-		long tsBeginAfter = System.currentTimeMillis();
 
 		// intercept after
 		interceptAfterPerform(cctx, formBeanContext);
-
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEndAfter = System.currentTimeMillis();
-			performanceLog.debug("execution of " + this + ".doAfter: " +
-				(tsEndAfter - tsBeginAfter) + " milis");
-		}
 		
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("total execution of " + this + ": " +
-				(tsEnd - tsBegin) + " milis");
-		}
+		// TODO FlowInterceptor 4
 		
 		return viewName;
+	}
+	
+	/* get the formBeanContext */
+	private FormBeanContext getFormBeanContext(ControllerContext cctx)
+	{
+		FormBeanContext formBeanContext = null;
+		if(reuseFormBeanContext) // if true, see if an instance was save earlier req
+		{
+			formBeanContext = (FormBeanContext)
+				cctx.getRequest().getAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT);
+			if(formBeanContext == null) 
+			{
+				formBeanContext = new FormBeanContext();
+				cctx.getRequest().setAttribute(REQUEST_ATTRIBUTE_FORMBEANCONTEXT, formBeanContext);
+			}
+		}
+		else
+		{
+			formBeanContext = new FormBeanContext();	
+		}
+		return formBeanContext;
+	}
+	
+	/* get the form bean */
+	private Object getFormBean(ControllerContext cctx)
+	{
+		return this.makeFormBean(cctx);
 	}
 	
 	/*
@@ -414,7 +375,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		Locale locale) 
 		throws Exception 
 	{
-		long tsBegin = System.currentTimeMillis();
+
 		boolean success = true;
 		
 		// map to store the request parameters in
@@ -471,13 +432,6 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		
 		// populate using the paramters map		
 		success = populateWithErrorReport(cctx, formBeanContext, parameters, locale);
-
-		if(performanceLog.isDebugEnabled())
-		{
-			long tsEnd = System.currentTimeMillis();
-			performanceLog.debug("execution of " + this + ".populateForm: " +
-				(tsEnd - tsBegin) + " milis");
-		}
 		
 		return success;
 	}
@@ -552,6 +506,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		PropertyDescriptor propertyDescriptor = null;
 		TargetPropertyMeta targetPropertyMeta = null;
 		
+		Map regexFieldPopulators = populatorRegistry.getRegexFieldPopulators();
 		// first, see if there are matches with registered regex populators
 		if(regexFieldPopulators != null) // there are registrations
 		{
@@ -683,15 +638,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 						bean, name, propertyDescriptor);
 
 					// See if we have a custom populator registered for the given field
-					FieldPopulator fieldPopulator = null;
-					if(fieldPopulators != null)
-					{
-						fieldPopulator = (FieldPopulator)fieldPopulators.get(name);
-					}
+					FieldPopulator fieldPopulator = 
+						populatorRegistry.getFieldPopulator(name);
 				
 					if(fieldPopulator == null) // if no custom populator was found, we use the default
 					{
-						fieldPopulator = defaultFieldPopulator;
+						fieldPopulator = populatorRegistry.getDefaultFieldPopulator();
 					}
 				
 					// execute population on form
@@ -763,11 +715,14 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		boolean succeeded)
 	{
 		
+		MultiMap fieldValidators = validatorRegistry.getFieldValidators();
+		List formValidators = validatorRegistry.getFormValidators();
+		List globalValidatorActivationRules = 
+			validatorRegistry.getGlobalValidatorActivationRules();
+		
 		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
 			(formValidators != null && (!formValidators.isEmpty())))
 		{
-			
-			long tsBegin = System.currentTimeMillis();
 	
 			boolean doCustomValidation = true;
 			// see if there's any globally (form level) defined rules
@@ -858,14 +813,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 					}
 				}
 			}
-			
-			if(performanceLog.isDebugEnabled())
-			{
-				long tsEnd = System.currentTimeMillis();
-				performanceLog.debug("execution of " + 
-					this + ".doCustomValidation: " +
-					(tsEnd - tsBegin) + " milis");
-			}
+
 		}
 		
 		return succeeded;
@@ -1206,7 +1154,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		FormBeanContext formBeanContext) 
 		throws ServletException
 	{
-		Interceptor[] commands = getInterceptors(BeforePerformInterceptor.class);
+		Interceptor[] commands = interceptorRegistry.getInterceptors(
+			BeforePerformInterceptor.class);
 		if(commands != null)
 		{
 			int nbrcmds = commands.length;
@@ -1228,7 +1177,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		FormBeanContext formBeanContext) 
 		throws ServletException
 	{
-		Interceptor[] commands = getInterceptors(AfterPerformInterceptor.class);
+		Interceptor[] commands = interceptorRegistry.getInterceptors(
+			AfterPerformInterceptor.class);
 		if(commands != null)
 		{
 			int nbrcmds = commands.length;
@@ -1252,7 +1202,8 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 		FormBeanContext formBeanContext)
 		throws ServletException
 	{
-		Interceptor[] commands = getInterceptors(PopulationErrorInterceptor.class);
+		Interceptor[] commands = interceptorRegistry.getInterceptors(
+			PopulationErrorInterceptor.class);
 		if(commands != null)
 		{
 			int nbrcmds = commands.length;
@@ -1262,49 +1213,18 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 			}
 		}
 	}
-	
-	/*
-	 * get all registered interceptors of the provided type 
-	 * @param type the type
-	 * @return array of Interceptors or null if none
-	 */
-	private Interceptor[] getInterceptors(Class type)
-	{
-		Interceptor[] result = null;
-		if(interceptors != null && (!interceptors.isEmpty()))
-		{
-			List temp = new ArrayList();
-			for(Iterator i = interceptors.listIterator(); i.hasNext(); )
-			{
-				Interceptor intc = (Interceptor)i.next();
-				if(type.isAssignableFrom(intc.getClass()))
-				{
-					temp.add(intc);
-				}
-			}
-			if(!temp.isEmpty())
-			{
-				result = (Interceptor[])temp.toArray(new Interceptor[temp.size()]);
-			}
-		}
-		return result;
-	}
 		
 	//**************************** validators ********************************************/
 	
 	/**
 	 * register a field validator for the given fieldName. 
-	 * multiple fieldValidators for one key are allowed 
+	 * multiple fieldValidators for one key are allowed. 
 	 * @param fieldName name of field
 	 * @param validator validator instance
 	 */
 	protected void addValidator(String fieldName, FieldValidator validator)
 	{
-		if(fieldValidators == null)
-		{
-			fieldValidators = new MultiHashMap();
-		}
-		fieldValidators.put(fieldName, validator);
+		validatorRegistry.addValidator(fieldName, validator);
 	}
 	
 	/**
@@ -1315,11 +1235,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void addValidator(FormValidator validator)
 	{
-		if(formValidators == null)
-		{
-			formValidators = new ArrayList();
-		}
-		formValidators.add(validator);
+		validatorRegistry.addValidator(validator);
 	}
 	
 	/**
@@ -1328,10 +1244,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removeValidators(String fieldName)
 	{
-		if(fieldValidators != null)
-		{
-			fieldValidators.remove(fieldName);
-		}
+		validatorRegistry.removeValidators(fieldName);
 	}
 	
 	/**
@@ -1341,10 +1254,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removeValidator(String fieldName, FieldValidator validator)
 	{
-		if(fieldValidators != null)
-		{
-			fieldValidators.remove(fieldName, validator);
-		}
+		validatorRegistry.removeValidator(fieldName, validator);
 	}
 	
 	/**
@@ -1353,10 +1263,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removeValidator(FormValidator validator)
 	{
-		if(formValidators != null)
-		{
-			formValidators.remove(validator);
-		}
+		validatorRegistry.removeValidator(validator);
 	}
 	
 	/**
@@ -1366,11 +1273,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void addGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
-		if(globalValidatorActivationRules == null)
-		{
-			globalValidatorActivationRules = new ArrayList();
-		}
-		globalValidatorActivationRules.add(rule);
+		validatorRegistry.addGlobalValidatorActivationRule(rule);
 	}
 	
 	/**
@@ -1379,22 +1282,17 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removeGlobalValidatorActivationRule(ValidatorActivationRule rule)
 	{
-		if(globalValidatorActivationRules != null)
-		{
-			globalValidatorActivationRules.remove(rule);
-			if(globalValidatorActivationRules.isEmpty()) globalValidatorActivationRules = null;
-		}
+		validatorRegistry.removeGlobalValidatorActivationRule(rule);
 	}
 	
 	/**
 	 * get the fieldValidators that were registered with the given fieldName
 	 * @param fieldName name of the field
-	 * @return FieldValidator the instance of FieldValidator that was registered with the given 
-	 * 		fieldName or null if none was registered with that name
+	 * @return MultiMap the fieldValidators that were registered with the given fieldName
 	 */
-	protected Collection getValidators(String fieldName)
+	protected MultiMap getValidators(String fieldName)
 	{
-		return (fieldValidators != null) ? (Collection)fieldValidators.get(fieldName) : null;
+		return validatorRegistry.getValidators(fieldName);
 	}
 	
 	
@@ -1408,11 +1306,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void addPopulator(String fieldName, FieldPopulator populator)
 	{
-		if(fieldPopulators == null)
-		{
-			fieldPopulators = new HashMap();
-		}
-		fieldPopulators.put(fieldName, populator);
+		populatorRegistry.addPopulator(fieldName, populator);
 	}
 
 	
@@ -1422,15 +1316,11 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removePopulator(String fieldName)
 	{
-		if(fieldPopulators != null)
-		{
-			fieldPopulators.remove(fieldName);
-			if(fieldPopulators.isEmpty()) fieldPopulators = null;
-		}
+		populatorRegistry.removePopulator(fieldName);
 	}
 	
 	/**
-	 * Register a custom populator that override the default population
+	 * Register a custom populator that overrides the default population
 	 * process for all request parameters that match the regular expression stored in
 	 * the provided pattern.
 	 * 
@@ -1446,16 +1336,12 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void addPopulator(Pattern pattern, FieldPopulator populator)
 	{
-		if(regexFieldPopulators == null)
-		{
-			regexFieldPopulators = new HashMap();
-		}
-		regexFieldPopulators.put(pattern, populator);
+		populatorRegistry.addPopulator(pattern, populator);
 	}
 
 	
 	/**
-	 * Register a custom populator that override the default population
+	 * Register a custom populator that overrides the default population
 	 * process for all request parameters that match the regular expression stored in
 	 * the provided pattern.
 	 * 
@@ -1470,10 +1356,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removePopulator(Pattern pattern)
 	{
-		if(regexFieldPopulators != null)
-		{
-			regexFieldPopulators.remove(pattern);
-		}
+		populatorRegistry.removePopulator(pattern);
 	}
 	
 	//**************************** interceptors *******************************************/
@@ -1484,11 +1367,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void addInterceptor(Interceptor interceptor)
 	{
-		if(interceptors == null)
-		{
-			interceptors = new ArrayList();
-		}
-		interceptors.add(interceptor);
+		interceptorRegistry.addInterceptor(interceptor);
 	}
 	
 	/**
@@ -1498,11 +1377,7 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void addInterceptor(int index, Interceptor interceptor)
 	{
-		if(interceptors == null)
-		{
-			interceptors = new ArrayList();
-		}
-		interceptors.add(index, interceptor);
+		interceptorRegistry.addInterceptor(index, interceptor);
 	}
 
 	
@@ -1512,11 +1387,62 @@ public abstract class FormBeanCtrl implements ControllerSingleton
 	 */
 	protected void removeInterceptor(Interceptor interceptor)
 	{
-		if(interceptors != null)
-		{
-			interceptors.remove(interceptor);
-			if(interceptors.isEmpty()) interceptors = null;
-		}
+		interceptorRegistry.removeInterceptor(interceptor);
+	}
+	
+	/**
+	 * add a flow interceptor to the current list of flow interceptors for the
+	 * provided interception point 
+	 * @param interceptor the interceptor to add to the current list of interceptors
+	 * @param interceptionPoint the point at where the interceptor should be called.
+	 * 		Use one of the public fields of FlowInterceptor.
+	 */
+	protected void addInterceptor(
+		FlowInterceptor interceptor, 
+		int interceptionPoint)
+	{
+		interceptorRegistry.addInterceptor(interceptor, interceptionPoint);
+	}
+	
+	/**
+	 * add a flow interceptor to the current list of flow interceptors for the
+	 * provided interception point 
+	 * @param index index position where to insert the interceptor
+	 * @param interceptor the interceptor to add to the current list of interceptors
+	 * @param interceptionPoint the point at where the interceptor should be called.
+	 * 		Use one of the public fields of FlowInterceptor.
+	 */
+	protected void addInterceptor(
+		int index,
+		FlowInterceptor interceptor, 
+		int interceptionPoint)
+	{
+		interceptorRegistry.addInterceptor(index, interceptor, interceptionPoint);
+	}
+
+	
+	/**
+	 * remove all interceptors from the current list of interceptors for the given
+	 * interception point.
+	 * @param interceptionPoint the interception point to remove interceptors for.
+	 */
+	protected void removeInterceptors(
+		int interceptionPoint)
+	{
+		interceptorRegistry.removeInterceptors(interceptionPoint);
+	}
+	
+	/**
+	 * remove an interceptor from the current list of interceptors for the given
+	 * interception point.
+	 * @param interceptor the interceptor to remove from the current list of interceptors
+	 * @param interceptionPoint the interception point to remove interceptor for.
+	 */
+	protected void removeInterceptor(
+		FlowInterceptor interceptor,
+		int interceptionPoint)
+	{
+		interceptorRegistry.removeInterceptor(interceptor, interceptionPoint);
 	}
 
 	//*************************** utility methods for localized messages ********************/
