@@ -32,17 +32,17 @@
     <classpathentry kind="var"
         path="MAVEN_REPO/javamail/jars/javamail-1.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/javamail-1.3-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/quartz/jars/quartz-1.2.0.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/quartz-1.2.0-src.jar"/>
+        path="MAVEN_REPO/quartz/jars/quartz-1.2.3.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/quartz-1.2.3-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-modules-SNAPSHOT-src.jar"/>
+        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/openedge-modules-1.1-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-access/jars/openedge-access-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-access/src/java"/>
+        path="MAVEN_REPO/openedge-access/jars/openedge-access-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-access/src/java"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/oe-mailjob/jars/oe-mailjob-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-mailjob-SNAPSHOT-src.jar"/>
+        path="MAVEN_REPO/oe-mailjob/jars/oe-mailjob-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-mailjob-1.1-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/oe-usermanager-hib/jars/oe-usermanager-hib-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-usermanager-hib-SNAPSHOT-src.jar"/>
+        path="MAVEN_REPO/oe-usermanager-hib/jars/oe-usermanager-hib-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/oe-usermanager-hib-SNAPSHOT-src.jar"/>
     <classpathentry kind="var"
-        path="MAVEN_REPO/openedge-util/jars/openedge-util-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
+        path="MAVEN_REPO/openedge-util/jars/openedge-util-1.1.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-util/src/java"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/hibernate/jars/hibernate-2.0.2.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/hibernate-2.0.2-src.jar"/>
     <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
