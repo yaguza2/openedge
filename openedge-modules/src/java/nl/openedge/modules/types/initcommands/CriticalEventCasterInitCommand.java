@@ -75,7 +75,7 @@ public class CriticalEventCasterInitCommand implements InitCommand
 		else
 		{
 			throw new InitCommandException(
-			"component is not of type ConfigurableType");	
+			"component is not of type " + CriticalEventCaster.class.getName());	
 		}
 
 	}

@@ -33,7 +33,7 @@ package nl.openedge.modules.types.base;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.ModuleLookupException;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.ModuleAdapter;
 import nl.openedge.modules.types.initcommands.InitCommand;
@@ -58,14 +58,16 @@ public class JobTypeAdapter extends ModuleAdapter
 	private static Log log = LogFactory.getLog(JobTypeAdapter.class);
 
 	/**
-	 * @throws ModuleLookpupException allways, 
+	 * @throws ModuleLookupException allways, 
 	 * as you are not allowed to get a direct instance
 	 */
-	public Object getModule() throws ModuleLookpupException
+	public Object getModule() throws ModuleLookupException
 	{
 
-		throw new ModuleLookpupException(
-			"you are not allowed to access a job module directely");
+		log.error("getting jobs from the module factory has no effect " +
+			"as they are managed by the sceduler. Get them from there instead!");
+		
+		return null;
 	}
 
 	/**

@@ -45,7 +45,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.ModuleLookupException;
 import nl.openedge.modules.ModuleFactory;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
@@ -158,6 +158,17 @@ public class DefaultModuleFactory implements ModuleFactory
 		Element modulesNode = factoryNode.getChild("modules");
 		// load modules into modules map
 		loadModules(modulesNode, classLoader);
+		
+		// test the modules first
+		try 
+		{
+			testModules();
+		} 
+		catch(ModuleLookupException e)
+		{
+			e.printStackTrace();
+			throw new ConfigException(e);	
+		}
 
 		//	get node for quartz scheduler
 		Element schedulerNode = factoryNode.getChild("scheduler");
@@ -196,6 +207,26 @@ public class DefaultModuleFactory implements ModuleFactory
 				"scheduler will not be started");
 		}
 
+	}
+	
+	/**
+	 * test all loaded modules by getting them
+	 */
+	protected void testModules() throws ModuleLookupException
+	{
+		
+		String[] names = getModuleNames();
+		int size = names.length;
+		
+		for(int i = 0; i < size; i++)
+		{
+			Object o = getModule(names[i]);
+			
+			if(log.isDebugEnabled())
+			{
+				log.debug("name " + names[i] + " tested (" + o + ")");	
+			}
+		}
 	}
 
 	/**
@@ -620,8 +651,8 @@ public class DefaultModuleFactory implements ModuleFactory
 		for (Iterator i = observers.iterator(); i.hasNext();)
 		{
 
-			ModuleFactoryObserver mo = (CriticalEventObserver)i.next();
-			if (mo instanceof SchedulerObserver)
+			ModuleFactoryObserver mo = (ModuleFactoryObserver)i.next();
+			if (mo instanceof CriticalEventObserver)
 			{
 				((CriticalEventObserver)mo).criticalEventOccured(evt);
 			}
@@ -637,17 +668,26 @@ public class DefaultModuleFactory implements ModuleFactory
 		ModuleAdapter moduleAdapter = (ModuleAdapter)modules.get(name);
 		if (moduleAdapter == null)
 		{
-			throw new ModuleLookpupException("unable to find module with name: " + name);
+			throw new ModuleLookupException(
+				"unable to find module with name: " + name);
 		}
 		return moduleAdapter.getModule();
 	}
 
-	/*
+	/**
 	 * @see nl.openedge.modules.ModuleFactory#getScheduler()
 	 */
 	public Scheduler getScheduler()
 	{
 		return scheduler;
+	}
+	
+	/**
+	 * @see nl.openedge.modules.ModuleFactory#getModuleNames()
+	 */
+	public String[] getModuleNames()
+	{
+		return (String[])modules.keySet().toArray(new String[modules.size()]);
 	}
 
 }

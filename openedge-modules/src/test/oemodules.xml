@@ -33,6 +33,9 @@
 		
 		<module name="CriticalTest" 
 				class="nl.openedge.modules.test.CriticalModuleImpl"/>
+			
+		<module name="CriticalTestObserver" 
+				class="nl.openedge.modules.test.CriticalEventObserverImpl"/>
 		
 		<module name="BeanTest" 
 				class="nl.openedge.modules.test.BeanModuleImpl">
@@ -52,8 +55,10 @@
 		</module>
 		
 		<module name="BlancoTest"
-				class="nl.openedge.modules.test.BlancoTypeImpl">
-		</module>
+				class="nl.openedge.modules.test.BlancoTypeImpl"/>
+
+		<module name="SchedulerObserverTest"
+				class="nl.openedge.modules.test.SchedulerObserverImpl"/>
 	
 	</modules>
 	

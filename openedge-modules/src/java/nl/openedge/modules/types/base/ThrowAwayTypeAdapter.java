@@ -30,7 +30,7 @@
  */
 package nl.openedge.modules.types.base;
 
-import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.ModuleLookupException;
 import nl.openedge.modules.types.ModuleAdapter;
 
 /**
@@ -45,7 +45,7 @@ public class ThrowAwayTypeAdapter extends ModuleAdapter
 	 * @return new instance for each request
 	 * @see nl.openedge.modules.ModuleAdapter#getModule()
 	 */
-	public Object getModule() throws ModuleLookpupException
+	public Object getModule() throws ModuleLookupException
 	{
 
 		Object instance = null;
@@ -55,11 +55,11 @@ public class ThrowAwayTypeAdapter extends ModuleAdapter
 		}
 		catch (InstantiationException ex)
 		{
-			throw new ModuleLookpupException(ex);
+			throw new ModuleLookupException(ex);
 		}
 		catch (IllegalAccessException ex)
 		{
-			throw new ModuleLookpupException(ex);
+			throw new ModuleLookupException(ex);
 		}
 		
 		try
@@ -68,7 +68,7 @@ public class ThrowAwayTypeAdapter extends ModuleAdapter
 		}
 		catch (Exception e)
 		{
-			throw new ModuleLookpupException(e);
+			throw new ModuleLookupException(e);
 		}
 
 		return instance;

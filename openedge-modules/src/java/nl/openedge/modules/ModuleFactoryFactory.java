@@ -79,12 +79,12 @@ public class ModuleFactoryFactory
 	 * construct with configuration node and ServletContext
 	 * @param factoryNode configuration node
 	 * @param servletContext use null if not in servlet environment
-	 * @throws ModuleLookpupException
+	 * @throws ModuleLookupException
 	 * @throws ConfigException
 	 */
 	protected synchronized static void initialize(
 				Element factoryNode, ServletContext servletContext) 
-				throws ModuleLookpupException, ConfigException
+				throws ModuleLookupException, ConfigException
 	{
 		if(!initialized)
 		{
@@ -100,12 +100,12 @@ public class ModuleFactoryFactory
 	 * load/ instantiate the module factory
 	 * @param factoryNode configuration node
 	 * @param servletContext use null if not in servlet environment
-	 * @throws ModuleLookpupException
+	 * @throws ModuleLookupException
 	 * @throws ConfigException
 	 */
 	protected static void load(
 					Element factoryNode, ServletContext servletContext) 
-					throws ModuleLookpupException, ConfigException
+					throws ModuleLookupException, ConfigException
 	{
 		log.info("initializing module factory (" + _implementingClass + ")");
 		initialized = true;
@@ -139,7 +139,7 @@ public class ModuleFactoryFactory
 	 * @param implementingClass
 	 */
 	public static void setImplementingClass(String implementingClass)
-			throws ModuleLookpupException
+			throws ModuleLookupException
 	{
 		if(initialized)
 		{

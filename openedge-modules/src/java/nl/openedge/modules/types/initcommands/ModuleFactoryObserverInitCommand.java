@@ -28,50 +28,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules;
+package nl.openedge.modules.types.initcommands;
+
+import org.jdom.Element;
+
+import nl.openedge.modules.ModuleFactory;
+import nl.openedge.modules.config.ConfigException;
+import nl.openedge.modules.observers.ModuleFactoryObserver;
 
 /**
- * ModuleExceptions can be thrown when query-ing the ModuleFactory for modules. 
- * 
+ * Command that populates instances using BeanUtils
  * @author Eelco Hillenius
  */
-public class ModuleLookpupException extends RuntimeException
+public class ModuleFactoryObserverInitCommand implements InitCommand
 {
+	
+	private ModuleFactory moduleFactory = null;
+	
 
 	/**
-	 * construct exception
+	 * initialize
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
 	 */
-	public ModuleLookpupException()
+	public void init(
+		String componentName, 
+		Element componentNode,
+		ModuleFactory moduleFactory)
+		throws ConfigException
 	{
-		super();
+		this.moduleFactory = moduleFactory;
 	}
 
 	/**
-	 * construct exception with message
-	 * @param message
+	 * populate the component instance
+	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
 	 */
-	public ModuleLookpupException(String message)
+	public void execute(Object componentInstance) 
+		throws InitCommandException, ConfigException
 	{
-		super(message);
-	}
 
-	/**
-	 * construct exception with message and cause
-	 * @param message
-	 * @param cause
-	 */
-	public ModuleLookpupException(String message, Throwable cause)
-	{
-		super(message, cause);
-	}
+		if(componentInstance instanceof ModuleFactoryObserver)
+		{
+			moduleFactory.addObserver(
+				(ModuleFactoryObserver)componentInstance);
+		}
+		else
+		{
+			throw new InitCommandException(
+			"component is not of type " + ModuleFactoryObserver.class.getName());	
+		}
 
-	/**
-	 * construct exception with cause
-	 * @param cause
-	 */
-	public ModuleLookpupException(Throwable cause)
-	{
-		super(cause);
 	}
 
 }

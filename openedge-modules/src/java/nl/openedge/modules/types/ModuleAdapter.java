@@ -31,7 +31,7 @@
 package nl.openedge.modules.types;
 
 import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.ModuleLookupException;
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.initcommands.InitCommand;
 import nl.openedge.modules.types.initcommands.InitCommandException;
@@ -159,6 +159,6 @@ public abstract class ModuleAdapter
 	}
 	
 	/** get instantiated module */
-	public abstract Object getModule() throws ModuleLookpupException;
+	public abstract Object getModule() throws ModuleLookupException;
 
 }

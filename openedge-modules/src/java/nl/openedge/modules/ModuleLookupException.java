@@ -28,51 +28,50 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.modules.types.initcommands;
-
-import org.jdom.Element;
-
-import nl.openedge.modules.ModuleFactory;
-import nl.openedge.modules.config.ConfigException;
+package nl.openedge.modules;
 
 /**
- * Command for configurable types
+ * ModuleExceptions can be thrown when query-ing the ModuleFactory for modules. 
+ * 
  * @author Eelco Hillenius
  */
-public class ConfigurableTypeInitCommand implements InitCommand
+public class ModuleLookupException extends RuntimeException
 {
-	
-	private Element componentNode = null;
 
 	/**
-	 * initialize
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#init(java.lang.String, org.jdom.Element, nl.openedge.modules.ModuleFactory)
+	 * construct exception
 	 */
-	public void init(
-		String componentName, 
-		Element componentNode,
-		ModuleFactory moduleFactory)
-		throws ConfigException
+	public ModuleLookupException()
 	{
-		this.componentNode = componentNode;
+		super();
 	}
 
 	/**
-	 * call init on the component instance
-	 * @see nl.openedge.modules.types.initcommands.InitCommand#execute(java.lang.Object)
+	 * construct exception with message
+	 * @param message
 	 */
-	public void execute(Object componentInstance) 
-		throws InitCommandException, ConfigException
+	public ModuleLookupException(String message)
 	{
-		if(componentInstance instanceof ConfigurableType)
-		{
-			((ConfigurableType)componentInstance).init(this.componentNode);	
-		}
-		else
-		{
-			throw new InitCommandException(
-			"component is not of type " + ConfigurableType.class.getName());	
-		}
+		super(message);
+	}
+
+	/**
+	 * construct exception with message and cause
+	 * @param message
+	 * @param cause
+	 */
+	public ModuleLookupException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
+
+	/**
+	 * construct exception with cause
+	 * @param cause
+	 */
+	public ModuleLookupException(Throwable cause)
+	{
+		super(cause);
 	}
 
 }

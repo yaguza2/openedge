@@ -57,9 +57,15 @@ public class ModulesTest extends AbstractTestBase
 		try
 		{
 
-			ThrowAwayModuleImpl module = (ThrowAwayModuleImpl)
+			ThrowAwayModuleImpl module1 = (ThrowAwayModuleImpl)
 					moduleFactory.getModule("ThrowAwayTest");
-			assertNotNull(module);
+			assertNotNull(module1);
+			
+			ThrowAwayModuleImpl module2 = (ThrowAwayModuleImpl)
+					moduleFactory.getModule("ThrowAwayTest");
+			assertNotNull(module2);
+			
+			assertNotSame(module1, module2);
 
 		}
 		catch (Exception e)
@@ -75,9 +81,15 @@ public class ModulesTest extends AbstractTestBase
 		try
 		{
 
-			SingletonModuleImpl module = (SingletonModuleImpl)
+			SingletonModuleImpl module1 = (SingletonModuleImpl)
 					moduleFactory.getModule("SingletonTest");
-			assertNotNull(module);
+			assertNotNull(module1);
+			
+			SingletonModuleImpl module2 = (SingletonModuleImpl)
+					moduleFactory.getModule("SingletonTest");
+			assertNotNull(module2);
+			
+			assertSame(module1, module2);
 
 		}
 		catch (Exception e)
@@ -139,8 +151,10 @@ public class ModulesTest extends AbstractTestBase
 			assertNotNull(module);
 
 			// create and add observer
-			CriticalEventObserverImpl observer = new CriticalEventObserverImpl();
-			module.addObserver(observer);
+			CriticalEventObserverImpl observer = (CriticalEventObserverImpl)
+					moduleFactory.getModule("CriticalTestObserver");
+			
+			//module.addObserver(observer);
 			// call method that fires critical event
 			module.doFoo();
 			// the observer should now have received a critical event
@@ -183,6 +197,25 @@ public class ModulesTest extends AbstractTestBase
 		BlancoTypeImpl module = (BlancoTypeImpl)
 				moduleFactory.getModule("BlancoTest");
 		assertNotNull(module);
+	}
+	
+	public void testScedulerObserver()
+	{
+
+		try
+		{
+
+			SchedulerObserverImpl module = (SchedulerObserverImpl)
+					moduleFactory.getModule("SchedulerObserverTest");
+			assertNotNull(module);
+			assertNotNull(module.getEvt());
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 	}
 
 }

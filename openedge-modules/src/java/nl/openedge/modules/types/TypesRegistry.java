@@ -40,6 +40,7 @@ import org.quartz.Job;
 
 import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.observers.CriticalEventCaster;
+import nl.openedge.modules.observers.ModuleFactoryObserver;
 import nl.openedge.modules.types.base.JobTypeAdapterFactory;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.base.SingletonTypeAdapterFactory;
@@ -50,6 +51,7 @@ import nl.openedge.modules.types.initcommands.BeanTypeInitCommand;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ConfigurableTypeInitCommand;
 import nl.openedge.modules.types.initcommands.CriticalEventCasterInitCommand;
+import nl.openedge.modules.types.initcommands.ModuleFactoryObserverInitCommand;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
 /**
@@ -106,24 +108,39 @@ public class TypesRegistry
 		
 		// and the adapter factories for them
 		baseTypeAdapterFactories.put(
-			SingletonType.class, new SingletonTypeAdapterFactory());
+			SingletonType.class, 
+			new SingletonTypeAdapterFactory());
+			
 		baseTypeAdapterFactories.put(
-			ThrowAwayType.class, new ThrowAwayTypeAdapterFactory());
+			ThrowAwayType.class, 
+			new ThrowAwayTypeAdapterFactory());
+			
 		baseTypeAdapterFactories.put(
-			Job.class, new JobTypeAdapterFactory()); 
+			Job.class, 
+			new JobTypeAdapterFactory()); 
 		
 		// add the default enhancer types
 		initCommandTypes.add(BeanType.class);
 		initCommandTypes.add(ConfigurableType.class);
 		initCommandTypes.add(CriticalEventCaster.class);
+		initCommandTypes.add(ModuleFactoryObserver.class);
 
 		// and the commands for them
 		initCommandClasses.put(
-			BeanType.class, BeanTypeInitCommand.class);
+			BeanType.class, 
+			BeanTypeInitCommand.class);
+			
 		initCommandClasses.put(
-			ConfigurableType.class, ConfigurableTypeInitCommand.class);
+			ConfigurableType.class, 
+			ConfigurableTypeInitCommand.class);
+			
 		initCommandClasses.put(
-			CriticalEventCaster.class, CriticalEventCasterInitCommand.class);
+			CriticalEventCaster.class, 
+			CriticalEventCasterInitCommand.class);
+			
+		initCommandClasses.put(
+			ModuleFactoryObserver.class, 
+			ModuleFactoryObserverInitCommand.class);
 	}
 
 	/**

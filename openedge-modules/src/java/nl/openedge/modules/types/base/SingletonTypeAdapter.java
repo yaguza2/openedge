@@ -30,7 +30,7 @@
  */
 package nl.openedge.modules.types.base;
 
-import nl.openedge.modules.ModuleLookpupException;
+import nl.openedge.modules.ModuleLookupException;
 import nl.openedge.modules.types.ModuleAdapter;
 
 /**
@@ -48,7 +48,7 @@ public class SingletonTypeAdapter extends ModuleAdapter
 	 * @return new instance for each request
 	 * @see nl.openedge.modules.ModuleAdapter#getModule()
 	 */
-	public Object getModule() throws ModuleLookpupException
+	public Object getModule() throws ModuleLookupException
 	{
 		synchronized(this)
 		{
@@ -64,7 +64,7 @@ public class SingletonTypeAdapter extends ModuleAdapter
 				}
 				catch (Exception ex)
 				{
-					throw new ModuleLookpupException(ex);
+					throw new ModuleLookupException(ex);
 				}	
 			}
 		}
