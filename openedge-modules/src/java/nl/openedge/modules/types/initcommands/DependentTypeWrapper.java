@@ -58,7 +58,6 @@ public class DependentTypeWrapper
 	
 	/** just need to react to components loaded event once */
 	protected static boolean wasAdded = false;
-	protected static boolean modulesLoaded = false;
 	
 	/** instance of module factory */
 	protected ComponentRepository moduleFactory = null;
@@ -83,13 +82,8 @@ public class DependentTypeWrapper
 	public void execute(Object componentInstance) 
 		throws InitCommandException, ConfigException
 	{
-		
-		if(modulesLoaded)
-		{
-		
-			setDependencies(componentInstance);	
-		} 
-		// else ignore until components are loaded
+
+		setDependencies(componentInstance);	
 	}
 	
 	public void setDependencies(Object componentInstance)
@@ -243,9 +237,6 @@ public class DependentTypeWrapper
 		 */
 		public void modulesLoaded(ComponentsLoadedEvent evt)
 		{
-			// set flag
-			DependentTypeWrapper.modulesLoaded = true;
-			
 			// test it
 			setDependencies(componentInstance);
 		}	

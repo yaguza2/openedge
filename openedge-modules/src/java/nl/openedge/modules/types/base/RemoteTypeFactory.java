@@ -107,6 +107,21 @@ public final class RemoteTypeFactory extends AbstractComponentFactory
 
 			}
 			
+			try
+			{
+				executeRequestLevelInitCommands(remoteInstance);	
+			}
+			catch (InitCommandException e)
+			{
+				e.printStackTrace();
+				throw new ComponentLookupException(e);
+			}
+			catch (ConfigException e)
+			{
+				e.printStackTrace();
+				throw new ComponentLookupException(e);
+			}
+			
 			if(executeInitCommands)
 			{
 				executeInitCommands = false;
@@ -125,21 +140,6 @@ public final class RemoteTypeFactory extends AbstractComponentFactory
 					e.printStackTrace();
 					throw new ComponentLookupException(e);
 				}
-			}
-			
-			try
-			{
-				executeRequestLevelInitCommands(remoteInstance);	
-			}
-			catch (InitCommandException e)
-			{
-				e.printStackTrace();
-				throw new ComponentLookupException(e);
-			}
-			catch (ConfigException e)
-			{
-				e.printStackTrace();
-				throw new ComponentLookupException(e);
 			}
 			
 		}

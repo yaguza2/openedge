@@ -77,6 +77,21 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 					throw new ComponentLookupException(e);
 				}
 				
+				try
+				{
+					executeRequestLevelInitCommands(singletonInstance);	
+				}
+				catch (InitCommandException e)
+				{
+					e.printStackTrace();
+					throw new ComponentLookupException(e);
+				}
+				catch (ConfigException e)
+				{
+					e.printStackTrace();
+					throw new ComponentLookupException(e);
+				}
+				
 				if(executeInitCommands)
 				{
 					try
@@ -94,21 +109,6 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory
 						throw new ComponentLookupException(e);
 					}
 				}
-			}
-			
-			try
-			{
-				executeRequestLevelInitCommands(singletonInstance);	
-			}
-			catch (InitCommandException e)
-			{
-				e.printStackTrace();
-				throw new ComponentLookupException(e);
-			}
-			catch (ConfigException e)
-			{
-				e.printStackTrace();
-				throw new ComponentLookupException(e);
 			}
 			
 		}
