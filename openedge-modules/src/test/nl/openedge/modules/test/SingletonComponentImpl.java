@@ -30,17 +30,36 @@
  */
 package nl.openedge.modules.test;
 
+import org.jdom.Element;
+
+import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.base.SingletonType;
+import nl.openedge.modules.types.initcommands.ConfigurableType;
 
 /**
  * @author Eelco Hillenius
  */
-public class SingletonComponentImpl implements SingletonType
+public class SingletonComponentImpl implements SingletonType, ConfigurableType
 {
+
+	private int numberOfTimesInitialized = 0;
 
 	public SingletonComponentImpl()
 	{
 		System.out.println(getClass().getName() + ": created");
+	}
+	
+	public void init(Element configNode) throws ConfigException
+	{
+		this.numberOfTimesInitialized++;
+	}
+
+	/**
+	 * @return int
+	 */
+	public int getNumberOfTimesInitialized()
+	{
+		return numberOfTimesInitialized;
 	}
 
 }

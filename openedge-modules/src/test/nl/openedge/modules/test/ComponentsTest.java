@@ -99,6 +99,9 @@ public class ComponentsTest extends AbstractTestBase
 			assertNotNull(module2);
 			
 			assertSame(module1, module2);
+			
+			// test if this component was initialized exactely once
+			assertEquals(1, module1.getNumberOfTimesInitialized());
 
 		}
 		catch (Exception e)
