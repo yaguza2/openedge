@@ -1,7 +1,7 @@
 /*
- * $Id: MaximumFieldLengthValidator.java,v 1.5 2004-04-07 10:43:12 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-07 10:43:12 $
+ * $Id: MaximumFieldLengthValidator.java,v 1.6 2004-04-07 14:05:04 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2004-04-07 14:05:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -163,7 +163,8 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 		if(maxExceeded)
 		{
 			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
-				new Object[]{value, fieldName, new Integer(maxLength)});
+				new Object[]{getFieldName(formBeanContext, fieldName), 
+				value, new Integer(maxLength)});
 		}
 		
 		return (!maxExceeded);

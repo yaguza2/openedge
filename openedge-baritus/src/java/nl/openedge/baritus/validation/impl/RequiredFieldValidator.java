@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredFieldValidator.java,v 1.4 2004-04-07 10:43:12 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-07 10:43:12 $
+ * $Id: RequiredFieldValidator.java,v 1.5 2004-04-07 14:05:02 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-07 14:05:02 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -137,8 +137,8 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 		
 		if(!isValid)
 		{
-			setErrorMessage(formBeanContext, fieldName, 
-				getErrorMessageKey(), new Object[]{fieldName});
+			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
+				new Object[]{getFieldName(formBeanContext, fieldName)});
 		}
 		
 		return isValid;

@@ -1,7 +1,7 @@
 /*
- * $Id: PropertyNotNullFormValidator.java,v 1.3 2004-04-07 10:43:12 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-04-07 10:43:12 $
+ * $Id: PropertyNotNullFormValidator.java,v 1.4 2004-04-07 14:05:04 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-07 14:05:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -123,6 +123,12 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
+		}
+		
+		if(!valid)
+		{
+			setErrorMessage(formBeanContext, propertyName, getErrorMessageKey(), 
+				new Object[]{getFieldName(formBeanContext, propertyName)});	
 		}
 
 		return valid;

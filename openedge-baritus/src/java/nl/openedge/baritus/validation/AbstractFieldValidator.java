@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.6 2004-04-07 10:43:24 eelco12 Exp $
- * $Revision: 1.6 $
- * $Date: 2004-04-07 10:43:24 $
+ * $Id: AbstractFieldValidator.java,v 1.7 2004-04-07 14:05:04 eelco12 Exp $
+ * $Revision: 1.7 $
+ * $Date: 2004-04-07 14:05:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -30,9 +30,6 @@
  */
 package nl.openedge.baritus.validation;
 
-import java.util.Locale;
-
-import nl.openedge.baritus.FormBeanContext;
 
 /**
  * Convenience class with default error message handling.
@@ -67,33 +64,6 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	public Object getOverrideValue(Object value)
 	{
 		return value;
-	}
-	
-	/**
-	 * set error message in formBeanContext using the provided name
-	 * (try to lookup the translated field name with key of provided name),
-	 * the current locale that is stored in the form bean context, the provided
-	 * errorMessageKey and the provided arguments for parsing the localized message;
-	 * the message will be stored in the form bean context with key that was
-	 * provided as argument name (the untranslated name of the field). If no
-	 * message was found, the provided errorMessageKey will be used.
-	 * 
-	 * @param formBeanContext form bean context
-	 * @param name untransalated name of the field
-	 * @param errorMessageKey message key for error
-	 * @param messageArguments arguments for parsing the message
-	 */
-	protected void setErrorMessage(
-		FormBeanContext formBeanContext, 
-		String name,
-		String errorMessageKey,
-		Object[] messageArguments)
-	{
-		Locale locale = formBeanContext.getCurrentLocale();
-		String fieldName = getFieldName(formBeanContext, name);
-		String msg = getLocalizedMessage(errorMessageKey, locale, messageArguments);
-		if(msg == null) msg = errorMessageKey;
-		formBeanContext.setError(name, msg);	
 	}
 	
 }

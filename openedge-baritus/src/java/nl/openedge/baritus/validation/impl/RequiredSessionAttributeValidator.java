@@ -1,7 +1,7 @@
 /*
- * $Id: RequiredSessionAttributeValidator.java,v 1.2 2004-04-07 10:43:12 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-07 10:43:12 $
+ * $Id: RequiredSessionAttributeValidator.java,v 1.3 2004-04-07 14:05:04 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-07 14:05:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -29,8 +29,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.baritus.validation.impl;
-
-import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
@@ -115,12 +113,8 @@ public class RequiredSessionAttributeValidator extends AbstractFormValidator
 		
 		if(!valid)
 		{
-			Locale locale = formBeanContext.getCurrentLocale();
-			String fieldName = getFieldName(formBeanContext, sessionAttributeKey);
-			String msg = getLocalizedMessage(
-				errorMessageKey, locale, 
-				new Object[]{sessionAttributeKey});
-			formBeanContext.setError(sessionAttributeKey, msg);
+			setErrorMessage(formBeanContext, sessionAttributeKey, getErrorMessageKey(), 
+				new Object[]{getFieldName(formBeanContext, sessionAttributeKey)});	
 		}
 		
 		return valid;

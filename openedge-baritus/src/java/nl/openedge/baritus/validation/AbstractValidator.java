@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractValidator.java,v 1.4 2004-04-07 10:43:24 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-07 10:43:24 $
+ * $Id: AbstractValidator.java,v 1.5 2004-04-07 14:05:04 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-07 14:05:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -150,6 +150,31 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 		String fieldName = MessageUtils.getLocalizedMessage(
 			ctrl.getPropertyNameKey(name));
 		return (fieldName != null) ? fieldName : name;
+	}
+	
+	/**
+	 * set error message in formBeanContext using the provided name,
+	 * the current locale that is stored in the form bean context, the provided
+	 * errorMessageKey and the provided arguments for parsing the localized message;
+	 * the message will be stored in the form bean context with key that was
+	 * provided as argument name. If no
+	 * message was found, the provided errorMessageKey will be used.
+	 * 
+	 * @param formBeanContext form bean context
+	 * @param name untransalated name of the field
+	 * @param errorMessageKey message key for error
+	 * @param messageArguments arguments for parsing the message
+	 */
+	protected void setErrorMessage(
+		FormBeanContext formBeanContext, 
+		String name,
+		String errorMessageKey,
+		Object[] messageArguments)
+	{
+		Locale locale = formBeanContext.getCurrentLocale();
+		String msg = getLocalizedMessage(errorMessageKey, locale, messageArguments);
+		if(msg == null) msg = errorMessageKey;
+		formBeanContext.setError(name, msg);	
 	}
 
 }

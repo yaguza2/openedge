@@ -1,7 +1,7 @@
 /*
- * $Id: MinimumFieldLengthValidator.java,v 1.4 2004-04-07 10:43:12 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-07 10:43:12 $
+ * $Id: MinimumFieldLengthValidator.java,v 1.5 2004-04-07 14:05:04 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-07 14:05:04 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -154,7 +154,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 			else
 			{
 				// just ignore; wrong type to check on
-				System.err.println(fieldName + " with value: " + value + 
+				log.warn(fieldName + " with value: " + value + 
 					" is of the wrong type for checking on length"); // give a warning though
 			}
 		}
@@ -162,7 +162,8 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 		if(minExceeded)
 		{
 			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
-				new Object[]{value, fieldName, new Integer(minLength)});
+				new Object[]{getFieldName(formBeanContext, fieldName), 
+				value, new Integer(minLength)});
 		}
 		
 		return (!minExceeded);
