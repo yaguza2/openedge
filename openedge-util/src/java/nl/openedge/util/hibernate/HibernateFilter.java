@@ -73,7 +73,7 @@ public final class HibernateFilter extends HibernateHelper implements Filter
 			{
 				
 				URL configUrl = HibernateFilter.class.getClassLoader().getResource(configStr);
-				log.fatal("Using configfile " + configUrl.toString());
+				log.info("Using configfile " + configUrl.toString());
 				super.setConfigURL(configUrl);
 			}
 			super.init();
