@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -101,11 +102,7 @@ public class QueryHelper extends DataSourceBase {
 		try {
 				
 			pstmt = conn.prepareStatement(stmt);
-			int paramIndex = 0;
-			for(int i = 0; i < params.length; i++) {
-				paramIndex++;
-				pstmt.setObject(paramIndex, params[i]);
-			}
+			setParameters(pstmt, params);
 			rs = pstmt.executeQuery();
 			result = new ResultImpl(rs, -1, -1);
 			
@@ -137,11 +134,7 @@ public class QueryHelper extends DataSourceBase {
 		try {
 			
 			pstmt = conn.prepareStatement(stmt);
-			int paramIndex = 0;
-			for(int i = 0; i < params.length; i++) {
-				paramIndex++;
-				pstmt.setObject(paramIndex, params[i]);
-			}
+			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
 			
 		} catch(SQLException e) {
@@ -204,11 +197,7 @@ public class QueryHelper extends DataSourceBase {
 			
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
-			int paramIndex = 0;
-			for(int i = 0; i < params.length; i++) {
-				paramIndex++;
-				pstmt.setObject(paramIndex, params[i]);
-			}
+			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
 			
 		} catch(SQLException e) {
@@ -263,11 +252,7 @@ public class QueryHelper extends DataSourceBase {
 			
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
-			int paramIndex = 0;
-			for(int i = 0; i < params.length; i++) {
-				paramIndex++;
-				pstmt.setObject(paramIndex, params[i]);
-			}
+			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
 			
 		} catch(SQLException e) {
@@ -319,11 +304,7 @@ public class QueryHelper extends DataSourceBase {
 			
 			String stmt = b.toString();
 			pstmt = conn.prepareStatement(stmt);
-			int paramIndex = 0;
-			for(int i = 0; i < params.length; i++) {
-				paramIndex++;
-				pstmt.setObject(paramIndex, params[i]);
-			}
+			setParameters(pstmt, params);
 			result = pstmt.executeUpdate();
 			
 		} catch(SQLException e) {
@@ -334,6 +315,21 @@ public class QueryHelper extends DataSourceBase {
 			if(conn != null) try { conn.close(); } catch(SQLException sqle) { }
 		}
 		return result;
+	}
+	
+	private void setParameters(PreparedStatement pstmt, Object[] params)
+						throws SQLException {
+	
+		int paramIndex = 0;
+		for(int i = 0; i < params.length; i++) {
+			paramIndex++;
+			if(params[i] instanceof Date) { // hack for inconsistent setObject behaviour
+				pstmt.setDate(paramIndex, new java.sql.Date(((Date)params[i]).getTime()));
+			} else{
+				pstmt.setObject(paramIndex, params[i]);
+			}
+		}
+		
 	}
 	
 	/**
