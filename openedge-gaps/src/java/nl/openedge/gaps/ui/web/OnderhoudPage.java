@@ -39,7 +39,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
 	        // TODO los op met msg panel ofzo
 	    }
 	    StructuralGroup group = (StructuralGroup)pos;
-	    SGroupPanel panel = new SGroupPanel(
+	    GroupPanel panel = new GroupPanel(
 	            "structuralGroupPanel", group);
 	    add(panel);
 	}
