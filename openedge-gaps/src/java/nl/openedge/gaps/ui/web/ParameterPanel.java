@@ -495,8 +495,8 @@ public class ParameterPanel extends Panel
                 protected void populateCell(Cell cell)
                 {
                     Parameter parameter = (Parameter)cell.getModelObject();
-                    cell.add(new TextField("value", new ParameterModel(parameter)));
-            		//cell.add(new Label("value", new ParameterModel(parameter)).setNoBreak(true));
+                    //cell.add(new TextField("value", new ParameterModel(parameter)));
+            		cell.add(new Label("value", new ParameterModel(parameter)));
                 }
             }
         }

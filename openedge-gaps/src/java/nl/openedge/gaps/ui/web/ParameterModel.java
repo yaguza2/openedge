@@ -59,9 +59,16 @@ public class ParameterModel extends DetachableModel
     {
         Parameter parameter = (Parameter)super.getObject();
         ParameterValue paramValue = parameter.getValue();
-        Object value = paramValue.getValue();
-        FormattingUtils util = converterRegistry.getFormattingUtils();
-        return util.getObjectFormatted(value, locale);
+        if(paramValue != null)
+        {
+	        Object value = paramValue.getValue();
+	        FormattingUtils util = converterRegistry.getFormattingUtils();
+	        return util.getObjectFormatted(value, locale);
+        }
+        else
+        {
+            return null;
+        }
     }
     /**
      * @see com.voicetribe.wicket.PropertyModel#setObject(java.io.Serializable)
