@@ -164,7 +164,7 @@ public class AccessFactory
 
 		//	add policy file (with policies) if property exists
 		String policyFile = configuration.getProperty("policies");
-		if (jaasConfig != null)
+		if (policyFile != null)
 		{
 			try
 			{
