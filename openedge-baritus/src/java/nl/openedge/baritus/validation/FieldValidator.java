@@ -1,7 +1,7 @@
 /*
- * $Id: FieldValidator.java,v 1.2 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: FieldValidator.java,v 1.3 2004-04-02 09:51:16 eelco12 Exp $
+ * $Revision: 1.3 $
+ * $Date: 2004-04-02 09:51:16 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -29,8 +29,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.baritus.validation;
-
-import java.util.Locale;
 
 import nl.openedge.baritus.FormBeanContext;
 
@@ -78,7 +76,6 @@ public interface FieldValidator
 	 * @param formBeanContext form bean context
 	 * @param fieldName name of field
 	 * @param value value that did not pass validation
-	 * @param locale current locale
 	 * @return String the error message that should be saved or null if no message should
 	 * be saved.
 	 */		
@@ -86,8 +83,7 @@ public interface FieldValidator
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String fieldName,
-		Object value,
-		Locale locale);
+		Object value);
 		
 	/**
 	 * if value is not valid, get the custom value to set as the field override

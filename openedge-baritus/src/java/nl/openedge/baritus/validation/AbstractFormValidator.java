@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFormValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: AbstractFormValidator.java,v 1.4 2004-04-02 09:51:16 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-02 09:51:16 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -93,16 +93,15 @@ public abstract class AbstractFormValidator extends AbstractValidator
 	 * no message should be saved. 
 	 * @param cctx
 	 * @param formBeanContext
-	 * @param locale
 	 * @return String[] the message key ([0]) and the localized error message ([1])
 	 * or null if no message should be saved here.
 	 * @see nl.openedge.baritus.validation.FormValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.util.Locale)
 	 */
 	public String[] getErrorMessage(
 		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		Locale locale)
+		FormBeanContext formBeanContext)
 	{
+		Locale locale = formBeanContext.getCurrentLocale();
 		String key = getMessagePrefix();
 		String msg = getLocalizedMessage(key, locale);
 		String storeKey = getErrorKey();

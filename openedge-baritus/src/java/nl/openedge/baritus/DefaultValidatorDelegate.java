@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultValidatorDelegate.java,v 1.4 2004-04-01 09:13:01 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-01 09:13:01 $
+ * $Id: DefaultValidatorDelegate.java,v 1.5 2004-04-02 09:51:16 eelco12 Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004-04-02 09:51:16 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -160,7 +160,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 							{
 								succeeded = false;
 								String[] msg = fValidator.getErrorMessage(
-									cctx, formBeanContext, locale);
+									cctx, formBeanContext);
 									
 								if(msg != null && (msg.length > 0))
 								{
@@ -345,7 +345,7 @@ final class DefaultValidatorDelegate implements ValidatorDelegate
 						String msgName = MessageUtils.getLocalizedMessage(
 							ctrl.getPropertyNameKey(name));
 						String msg = validator.getErrorMessage(
-							cctx, formBeanContext, (msgName != null) ? msgName : name, value, locale);
+							cctx, formBeanContext, (msgName != null) ? msgName : name, value);
 						
 						if(msg != null)
 						{

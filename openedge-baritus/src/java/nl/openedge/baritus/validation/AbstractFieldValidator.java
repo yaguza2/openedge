@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractFieldValidator.java,v 1.3 2004-03-29 15:26:53 eelco12 Exp $
- * $Revision: 1.3 $
- * $Date: 2004-03-29 15:26:53 $
+ * $Id: AbstractFieldValidator.java,v 1.4 2004-04-02 09:51:16 eelco12 Exp $
+ * $Revision: 1.4 $
+ * $Date: 2004-04-02 09:51:16 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -93,7 +93,6 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 	 * @param formBeanContext form bean context
 	 * @param fieldName name of field
 	 * @param value value that did not pass validation
-	 * @param locale current locale
 	 * @return String the error message that should be saved or null if no message should
 	 * be saved.
 	 */
@@ -101,10 +100,9 @@ public abstract class AbstractFieldValidator extends AbstractValidator
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		String fieldName,
-		Object value,
-		Locale locale)
+		Object value)
 	{
-		
+		Locale locale = formBeanContext.getCurrentLocale();
 		String key = getMessagePrefix() + fieldName;
 		return getLocalizedMessage(key, locale, new Object[]{value, fieldName});
 	}
