@@ -1,7 +1,7 @@
 /*
- * $Id: OgnlConverterWrapper.java,v 1.1 2004-04-04 18:26:59 eelco12 Exp $
- * $Revision: 1.1 $
- * $Date: 2004-04-04 18:26:59 $
+ * $Id: OgnlConverterWrapper.java,v 1.2 2004-04-08 20:56:11 eelco12 Exp $
+ * $Revision: 1.2 $
+ * $Date: 2004-04-08 20:56:11 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -47,7 +47,12 @@ import ognl.DefaultTypeConverter;
 import ognl.OgnlOps;
 
 /**
- * @author hillenius
+ * This class should be registered with the Ognl context before parsing
+ * in order to be abel to use our converters. It implements Ognl TypeConverter
+ * and uses the ConverterRegistry to lookup converters. If no converter is found
+ * for a given type, the default conversion of Ognl is used.
+ * 
+ * @author Eelco Hillenius
  */
 public class OgnlConverterWrapper extends DefaultTypeConverter
 {
@@ -55,11 +60,11 @@ public class OgnlConverterWrapper extends DefaultTypeConverter
 	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
 
 	/**
-	 * convert the provided value to provided type using provided context
-	 * @param context
-	 * @param value
-	 * @param toType
-	 * @return Converted value
+	 * Convert the provided value to provided type using provided context.
+	 * @param context Ognl context
+	 * @param value the current, unconverted value
+	 * @param toType the type that should be converted to
+	 * @return Object the converted value
 	 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
 	 */
 	public Object convertValue(Map context, Object value, Class toType)
@@ -97,7 +102,7 @@ public class OgnlConverterWrapper extends DefaultTypeConverter
 			ConverterRegistry reg = ConverterRegistry.getInstance();
 			Converter converter = reg.lookup(toType, locale);
 			
-			if(converter != null)
+			if(converter != null) // we found a converter
 			{
 				context.put(OgnlFieldPopulator.CTX_KEY_CURRENT_CONVERTER, converter);
 				
@@ -110,18 +115,18 @@ public class OgnlConverterWrapper extends DefaultTypeConverter
 						" (type " + toType + ")");
 				}
 				
-				converted = converter.convert(toType, value);
-				
-				if(!toType.isArray())
+				if(!toType.isArray()) // a common case with request parameters is that
+					// they are send as a string array instead of a plain string
 				{
 					if(value instanceof String[] && ((String[])value).length == 1) 
 					{
 						value = ((String[])value)[0];
 					}					
 				}
+				
 				converted = converter.convert(toType, value);	
 			}
-			else
+			else // no converter was found
 			{
 				converted = OgnlOps.convertValue(value, toType);
 			}
@@ -140,6 +145,11 @@ public class OgnlConverterWrapper extends DefaultTypeConverter
 		return converted;
 	}
 
+	/**
+	 * This method is only here to satisfy the interface. Method convertValue(Map, Object, Class)
+	 * is called, so parameters member and propertyName are ignored.
+	 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object, java.lang.Class)
+	 */
 	public Object convertValue(
 		Map context,
 		Object target,
