@@ -70,7 +70,7 @@ import java.util.Hashtable;
  * @author E.F. Hillenius
  */
 
-public final class AccessPermission extends BasicPermission
+public final class NamedActionPermission extends BasicPermission
 {
 
 	/**
@@ -114,7 +114,7 @@ public final class AccessPermission extends BasicPermission
 	// created and re-used in the getAction function.
 
 	/**
-	 * initialize a AccessPermission object. Common to all constructors.
+	 * initialize a NamedActionPermission object. Common to all constructors.
 	 * Also called during de-serialization.
 	 *
 	 * @param mask the actions mask to use.
@@ -137,29 +137,29 @@ public final class AccessPermission extends BasicPermission
 	}
 
 	/**
-	 * Creates a new AccessPermission object with the specified name.
+	 * Creates a new NamedActionPermission object with the specified name.
 	 * The name is the name of the custom action, and
 	 * <i>actions</i> contains a comma-separated list of the
 	 * desired actions granted on the property. Possible actions are
 	 * "read" and "write".
 	 *
-	 * @param name the name of the AccessPermission.
+	 * @param name the name of the NamedActionPermission.
 	 * @param actions the actions string.
 	 */
 
-	public AccessPermission(String name, String actions)
+	public NamedActionPermission(String name, String actions)
 	{
 		super(name, actions);
 		init(getMask(actions));
 	}
 
 	/**
-	 * Checks if this AccessPermission object "implies" the specified
+	 * Checks if this NamedActionPermission object "implies" the specified
 	 * permission.
 	 * <P>
 	 * More specifically, this method returns true if:<p>
 	 * <ul>
-	 * <li> <i>p</i> is an instanceof AccessPermission,<p>
+	 * <li> <i>p</i> is an instanceof NamedActionPermission,<p>
 	 * <li> <i>p</i>'s actions are a subset of this
 	 * object's actions, and <p>
 	 * <li> <i>p</i>'s name is implied by this object's
@@ -172,10 +172,10 @@ public final class AccessPermission extends BasicPermission
 	 */
 	public boolean implies(Permission p)
 	{
-		if (!(p instanceof AccessPermission))
+		if (!(p instanceof NamedActionPermission))
 			return false;
 
-		AccessPermission that = (AccessPermission)p;
+		NamedActionPermission that = (NamedActionPermission)p;
 
 		// we get the effective mask. i.e., the "and" of this and that.
 		// They must be equal to that.mask for implies to return true.
@@ -184,22 +184,22 @@ public final class AccessPermission extends BasicPermission
 	}
 
 	/**
-	 * Checks two AccessPermission objects for equality. Checks that <i>obj</i> is
-	 * a AccessPermission, and has the same name and actions as this object.
+	 * Checks two NamedActionPermission objects for equality. Checks that <i>obj</i> is
+	 * a NamedActionPermission, and has the same name and actions as this object.
 	 * <P>
 	 * @param obj the object we are testing for equality with this object.
-	 * @return true if obj is a AccessPermission, and has the same name and
-	 * actions as this AccessPermission object.
+	 * @return true if obj is a NamedActionPermission, and has the same name and
+	 * actions as this NamedActionPermission object.
 	 */
 	public boolean equals(Object obj)
 	{
 		if (obj == this)
 			return true;
 
-		if (!(obj instanceof AccessPermission))
+		if (!(obj instanceof NamedActionPermission))
 			return false;
 
-		AccessPermission that = (AccessPermission)obj;
+		NamedActionPermission that = (NamedActionPermission)obj;
 
 		return (this.mask == that.mask) && (this.getName().equals(that.getName()));
 	}
@@ -386,7 +386,7 @@ public final class AccessPermission extends BasicPermission
 	/**
 	 * Returns the "canonical string representation" of the actions.
 	 * That is, this method always returns present actions in the following order:
-	 * read, write. For example, if this AccessPermission object
+	 * read, write. For example, if this NamedActionPermission object
 	 * allows both write and read actions, a call to <code>getActions</code>
 	 * will return the string "read,write".
 	 *
@@ -414,7 +414,7 @@ public final class AccessPermission extends BasicPermission
 
 	/**
 	 * Returns a new PermissionCollection object for storing
-	 * AccessPermission objects.
+	 * NamedActionPermission objects.
 	 * <p>
 	 *
 	 * @return a new PermissionCollection object suitable for storing
@@ -427,7 +427,7 @@ public final class AccessPermission extends BasicPermission
 	}
 
 	/**
-	 * WriteObject is called to save the state of the AccessPermission
+	 * WriteObject is called to save the state of the NamedActionPermission
 	 * to a stream. The actions are serialized, and the superclass
 	 * takes care of the name.
 	 */
@@ -442,7 +442,7 @@ public final class AccessPermission extends BasicPermission
 	}
 
 	/**
-	 * readObject is called to restore the state of the AccessPermission from
+	 * readObject is called to restore the state of the NamedActionPermission from
 	 * a stream.
 	 */
 	private synchronized void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
@@ -454,7 +454,7 @@ public final class AccessPermission extends BasicPermission
 }
 
 /**
- * A AccessPermissionCollection stores a set of AccessPermission
+ * A AccessPermissionCollection stores a set of NamedActionPermission
  * permissions.
  *
  * @see java.security.Permission
@@ -498,7 +498,7 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 	 * @param permission the Permission object to add.
 	 *
 	 * @exception IllegalArgumentException - if the permission is not a
-	 *                                       AccessPermission
+	 *                                       NamedActionPermission
 	 *
 	 * @exception SecurityException - if this AccessPermissionCollection
 	 *                                object has been marked readonly
@@ -506,14 +506,14 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 
 	public void add(Permission permission)
 	{
-		if (!(permission instanceof AccessPermission))
+		if (!(permission instanceof NamedActionPermission))
 			throw new IllegalArgumentException("invalid permission: " + permission);
 		if (isReadOnly())
 			throw new SecurityException("attempt to add a Permission to a readonly PermissionCollection");
 
-		AccessPermission pp = (AccessPermission)permission;
+		NamedActionPermission pp = (NamedActionPermission)permission;
 
-		AccessPermission existing = (AccessPermission)permissions.get(pp.getName());
+		NamedActionPermission existing = (NamedActionPermission)permissions.get(pp.getName());
 
 		if (existing != null)
 		{
@@ -522,8 +522,8 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 			if (oldMask != newMask)
 			{
 				int effective = oldMask | newMask;
-				String actions = AccessPermission.getActions(effective);
-				permissions.put(pp.getName(), new AccessPermission(pp.getName(), actions));
+				String actions = NamedActionPermission.getActions(effective);
+				permissions.put(pp.getName(), new NamedActionPermission(pp.getName(), actions));
 
 			}
 		}
@@ -551,11 +551,11 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 
 	public boolean implies(Permission permission)
 	{
-		if (!(permission instanceof AccessPermission))
+		if (!(permission instanceof NamedActionPermission))
 			return false;
 
-		AccessPermission pp = (AccessPermission)permission;
-		AccessPermission x;
+		NamedActionPermission pp = (NamedActionPermission)permission;
+		NamedActionPermission x;
 
 		int desired = pp.getMask();
 		int effective = 0;
@@ -563,7 +563,7 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 		// short circuit if the "*" Permission was added
 		if (all_allowed)
 		{
-			x = (AccessPermission)permissions.get("*");
+			x = (NamedActionPermission)permissions.get("*");
 			if (x != null)
 			{
 				effective |= x.getMask();
@@ -579,7 +579,7 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 		String name = pp.getName();
 		//System.out.println("check "+name);
 
-		x = (AccessPermission)permissions.get(name);
+		x = (NamedActionPermission)permissions.get(name);
 
 		if (x != null)
 		{
@@ -599,7 +599,7 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 
 			name = name.substring(0, last + 1) + "*";
 			//System.out.println("check "+name);
-			x = (AccessPermission)permissions.get(name);
+			x = (NamedActionPermission)permissions.get(name);
 
 			if (x != null)
 			{
@@ -616,10 +616,10 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 	}
 
 	/**
-	 * Returns an enumeration of all the AccessPermission objects in the
+	 * Returns an enumeration of all the NamedActionPermission objects in the
 	 * container.
 	 *
-	 * @return an enumeration of all the AccessPermission objects.
+	 * @return an enumeration of all the NamedActionPermission objects.
 	 */
 
 	public Enumeration elements()

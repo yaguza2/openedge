@@ -8,6 +8,7 @@
         path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.6.1.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-beanutils-1.6.1-src.jar"/>
     <classpathentry kind="var"
         path="MAVEN_REPO/commons-collections/jars/commons-collections-3.0-dev.jar" sourcepath="ECLIPSE_HOME/workspace/java-source-jars/source-jars/commons-collections-3.0-dev-src.jar"/>
-    <classpathentry kind="src" path="/openedge-modules"/>
+    <classpathentry kind="var"
+        path="MAVEN_REPO/openedge-modules/jars/openedge-modules-SNAPSHOT.jar" sourcepath="ECLIPSE_HOME/workspace/openedge-modules/src/java"/>
     <classpathentry kind="output" path="target/classes"/>
 </classpath>
