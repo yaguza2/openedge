@@ -30,13 +30,12 @@
  */
 package nl.openedge.modules.impl.menumodule;
 
-import java.security.AccessController;
-import java.security.Permission;
-import java.security.PrivilegedAction;
 import java.util.Map;
 
 import javax.security.auth.AuthPermission;
 import javax.security.auth.Subject;
+
+import nl.openedge.access.AccessHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,13 +64,13 @@ public final class AuthorizationFilter implements SessionScopeMenuFilter
 		{
 			link = link.substring(0, ix);
 		}
-		UriAction action = new UriAction(link);
+
 		Subject subject = (Subject)context.get(MenuFilter.CONTEXT_KEY_SUBJECT);
 		try
 		{
 			
 			// doe autorisatie
-			Subject.doAsPrivileged(subject, action, null);
+			AccessHelper.checkPermissionForSubject(new AuthPermission(link), subject);
 			// geen exception: subject is geautoriseerd
 			// maak nieuwe werk node
 
@@ -91,24 +90,3 @@ public final class AuthorizationFilter implements SessionScopeMenuFilter
 
 }
 
-/** action for checking permissions for a specific subject */
-class UriAction implements PrivilegedAction
-{
-
-	// uri to check on
-	private String uri;
-
-	/** construct with uri */
-	public UriAction(String uri)
-	{
-		this.uri = uri;
-	}
-
-	/** run check */
-	public Object run()
-	{
-		Permission p = new AuthPermission(uri);
-		AccessController.checkPermission(p);
-		return null;
-	}
-}

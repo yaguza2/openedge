@@ -39,7 +39,7 @@ import javax.security.auth.Subject;
 
 import junit.framework.TestCase;
 
-import nl.openedge.access.AccessFactory;
+import nl.openedge.access.AccessHelper;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
@@ -482,8 +482,8 @@ public class MenuTest extends TestCase
 	{
 		try
 		{
-			AccessFactory.reload(
-				System.getProperty("configfile", "/test.oeaccess.properties"));
+			AccessHelper.reload(
+				System.getProperty("configfile", "/test.oeaccess.properties"), "test");
 		}
 		catch (Exception e)
 		{

@@ -1,4 +1,5 @@
-grant principal nl.openedge.access.UserPrincipal "chef"
+grant  codeBase "${oeaccess.codesource.test}"
+	principal nl.openedge.access.UserPrincipal "chef"
 {  
   permission javax.security.auth.AuthPermission "/admin.onderhoud.m";
   permission javax.security.auth.AuthPermission "/admin.onderhoud.functie.m";
@@ -15,7 +16,8 @@ grant principal nl.openedge.access.UserPrincipal "chef"
   permission javax.security.auth.AuthPermission "/zoeken.passant.m";
 };
 
-grant principal nl.openedge.access.UserPrincipal "admin"
+grant  codeBase "${oeaccess.codesource.test}"
+	 principal nl.openedge.access.UserPrincipal "admin"
 {  
   permission javax.security.auth.AuthPermission "/medischdossier.m";
   permission javax.security.auth.AuthPermission "/medischdossier.journaal.m";
