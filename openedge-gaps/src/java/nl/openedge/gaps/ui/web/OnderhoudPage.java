@@ -16,7 +16,6 @@ import nl.openedge.gaps.core.groups.StructuralGroup;
 import nl.openedge.gaps.core.groups.StructuralRootGroup;
 import nl.openedge.gaps.support.ParameterBrowser;
 
-import com.voicetribe.util.collections.MicroMap;
 import com.voicetribe.wicket.PageParameters;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
@@ -85,7 +84,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
          */
         public SGroupPathNavigationTable(String componentName, List model)
         {
-            super(componentName, new MicroMap(componentName, model));
+            super(componentName, model);
         }
 
         /**
@@ -93,7 +92,7 @@ public final class OnderhoudPage extends SimpleBorderedPage
          */
         protected void populateCell(Cell cell)
         {
-    		final StructuralGroup group = (StructuralGroup)cell.getModel();
+    		final StructuralGroup group = (StructuralGroup)cell.getModelObject();
     		Link actionLinkLocalId =
     		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
     		        .setParameter("browseexpr", group.getId())

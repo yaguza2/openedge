@@ -14,7 +14,6 @@ import java.util.List;
 
 import nl.openedge.gaps.core.groups.StructuralGroup;
 
-import com.voicetribe.util.collections.MicroMap;
 import com.voicetribe.wicket.markup.html.HtmlContainer;
 import com.voicetribe.wicket.markup.html.basic.Label;
 import com.voicetribe.wicket.markup.html.link.ExternalPageLink;
@@ -68,7 +67,7 @@ public class StructuralGroupPanel extends Panel
          */
         public SGroupTable(String componentName, List model)
         {
-            super(componentName, new MicroMap(componentName, model));
+            super(componentName, model);
         }
 
         /**
@@ -76,7 +75,7 @@ public class StructuralGroupPanel extends Panel
          */
         protected void populateCell(Cell cell)
         {
-    		final StructuralGroup group = (StructuralGroup)cell.getModel();
+    		final StructuralGroup group = (StructuralGroup)cell.getModelObject();
     		cell.add(new Label("description", group.getDescription()));
     		Link actionLinkLocalId =
     		    new ExternalPageLink("groupLinkId", OnderhoudPage.class)
