@@ -115,6 +115,26 @@ public abstract class HibernateHelper
 
 		return sess;
 	}
+	
+	/**
+	 * close session for this Thread
+	 */
+	public static void closeSession() throws HibernateException
+	{
+		Session sess = (Session)hibernateHolder.get();
+		if (sess != null)
+		{
+			hibernateHolder.set(null);
+			try
+			{
+				sess.close();
+			}
+			catch (HibernateException ex)
+			{
+				log.error(ex);
+			}
+		}
+	}
 
 	/**
 	 * @return the hibernate session factory
