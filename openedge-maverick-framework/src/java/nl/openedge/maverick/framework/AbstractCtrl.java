@@ -436,7 +436,8 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		}
 		
 		// do custom validation
-		if(fieldValidators != null && (!fieldValidators.isEmpty()))
+		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
+			(formValidators != null && (!formValidators.isEmpty())))
 		{
 			succeeded = doCustomValidation(cctx, formBean, properties, locale, succeeded);
 		}
@@ -467,33 +468,37 @@ public abstract class AbstractCtrl implements ControllerSingleton
 		
 		if(doCustomValidation)
 		{
-			Iterator names = properties.keySet().iterator();
-			while(names.hasNext())
+			// if fieldValidators were registered
+			if(fieldValidators != null && (!fieldValidators.isEmpty()))
 			{
-				String name = (String)names.next();
-				if (name == null) continue;
-				if(formBean.getError(name) == null) 
+				Iterator names = properties.keySet().iterator(); // loop through the properties
+				while(names.hasNext())
 				{
-					Collection propertyValidators = (Collection)fieldValidators.get(name);
-					// these are the fieldValidators for one property
-					if(propertyValidators != null)
+					String name = (String)names.next();
+					if (name == null) continue;
+					if(formBean.getError(name) == null) 
 					{
-						try
+						Collection propertyValidators = (Collection)fieldValidators.get(name);
+						// these are the fieldValidators for one property
+						if(propertyValidators != null)
 						{
-							succeeded = doCustomValidationForOneField(
-								cctx, formBean, locale, succeeded, 
-								name, propertyValidators);
-						}
-						catch (Exception e)
-						{
-							if(log.isDebugEnabled())
+							try
 							{
-								log.debug(e.getMessage());
+								succeeded = doCustomValidationForOneField(
+									cctx, formBean, locale, succeeded, 
+									name, propertyValidators);
 							}
-							// ignore
-						}
-					}	
-				} // else an error allready occured; do not validate
+							catch (Exception e)
+							{
+								if(log.isDebugEnabled())
+								{
+									log.debug(e.getMessage());
+								}
+								// ignore
+							}
+						}	
+					} // else an error allready occured; do not validate
+				}	
 			}
 			// if we are still successful so far, check with the form level validators
 			if(succeeded && (formValidators != null))
@@ -503,13 +508,27 @@ public abstract class AbstractCtrl implements ControllerSingleton
 				for(Iterator i = formValidators.iterator(); i.hasNext(); )
 				{
 					FormValidator fValidator = (FormValidator)i.next();
-					if(!fValidator.isValid(cctx, formBean))
+					boolean fireValidator = true;
+					if(fValidator instanceof ValidationRuleDependend)
 					{
-						succeeded = false;
-						String[] msg = fValidator.getErrorMessage(
-							cctx, formBean, locale);
-						formBean.setError(msg[0], msg[1]);
+						ValidatorActivationRule fRule = 
+							((ValidationRuleDependend)fValidator).getValidationActivationRule();
+						if(!fRule.allowValidation(cctx, formBean))
+						{
+							fireValidator = false;
+						}
 					}
+					if(fireValidator)
+					{
+						if(!fValidator.isValid(cctx, formBean))
+						{
+							succeeded = false;
+							String[] msg = fValidator.getErrorMessage(
+								cctx, formBean, locale);
+							formBean.setError(msg[0], msg[1]);
+						}	
+					}
+					// else ignore
 				}
 			}
 		}
