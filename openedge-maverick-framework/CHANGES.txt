@@ -7,16 +7,18 @@
 
 - some minor doc/ variable name changes
 
-- ability to reuse the instance of FormBeanContext in one request. This is convenient
-	when linking (dispatching) controlls within one request. Default is true.
+- added the ability to reuse the instance of FormBeanContext in one request. 
+	This is convenient when linking (dispatching) controlls within one request. 
+	This is turned on by default. Set property reuseFormBeanContext to false
+	if you do not want to have the formBeanContext reused within a request.
 	
-- FormBeanContext is now a decorator for HashMap as well. You can now
-	add arbitrary attributes. You can use this as an alternative for request attributes
+- FormBeanContext is now a decorator for HashMap. You can now add arbitrary attributes. 
+	You can use this as an alternative for request attributes
 	(and Maverick view params for that matter). This is a good idea when you do
 	include request parameters in the population process, but want certain attributes
 	not to be included in the population. An example of such a case is a user message
-	that you want to have passed through the chain of commands without having
-	any effect on the form bean population.
+	that you want to have passed through the chain of commands an ultimately have
+	available for the view without having an effect on the form bean population.
 	
 - better error reporting for field validation
 
@@ -30,7 +32,7 @@
 -------------------------------------------------
 1.4.4
 
-- fixed bug that ignored empty request parameters (empty strings) in the 
+- fixed a bug that ignored empty request parameters (empty strings) in the 
 	population process. They are now interpreted as a null or an empty
 	string, depending on the property setNullForEmptyString in FormBeanCtrl.
 
@@ -40,16 +42,16 @@
 - added property doPerformIfFieldValidationFailed (default == false). If true,
 	the perform method of the control will be executed, even if the population/
 	validation failed. Use this only in very special cases; extended usage will
-	probably result in messy code.
+	probably result in messy source code.
 
 -------------------------------------------------
 1.4.2
 
 - if a validator returns null with getErrorMessage, the error will not be
-	set in the formBeanContext (and thus will not set any previous message
+	set in the formBeanContext (and thus will not set any previously set message
 	to null).
 	
-- extra debug info population and validation; created special log for this with name:
+- extra debug info om population and validation; created special log for this with name:
 	'nl.openedge.maverick.framework.population'.
 	
 - extra debug info formatting; created special log for this with name:
@@ -74,9 +76,9 @@
 - renamed FormBean to FormBeanContext.
 
 - FormBeanContext is now a wrapper for the bean that should be populated. Clients of this
-	project are now free to use whatever bean they want to populate; it is not nescesarry
-	(or even permitted) to extend FormBeanContext anymore. The only class that clients must
-	extends in order to use this framework is FormBeanCtrl.
+	project are now free to use whatever bean they wish to populate; it is not nescesarry
+	(or even useful) to extend FormBeanContext. The only class that clients must
+	extend in order to use this framework is FormBeanCtrl.
 
 - moved isNullOrEmpty from FormBeanContext to FormBeanCtrl.
 
