@@ -30,6 +30,7 @@
  */
 package nl.openedge.access;
 
+import java.io.Serializable;
 import java.security.Principal;
 
 /**
@@ -54,7 +55,7 @@ import java.security.Principal;
  * 
  * @author Eelco Hillenius
  */
-public interface LoginDecorator
+public interface LoginDecorator extends Serializable
 {
 
 	/**

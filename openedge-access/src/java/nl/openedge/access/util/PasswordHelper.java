@@ -30,7 +30,8 @@
  */
 package nl.openedge.access.util;
 
-import java.security.*;
+import java.io.Serializable;
+import java.security.MessageDigest;
 
 /**
  * Helper class for password handling
@@ -38,7 +39,7 @@ import java.security.*;
  * @author Andy Armstrong
  * @author Eelco Hillenius
  */
-public final class PasswordHelper {
+public final class PasswordHelper implements Serializable {
 	
 	private final static String ALGORITHM   = "MD5";
 	private static MessageDigest md = null;

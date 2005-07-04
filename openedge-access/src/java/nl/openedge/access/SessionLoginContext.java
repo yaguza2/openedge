@@ -30,10 +30,14 @@
  */
 package nl.openedge.access;
 
+import java.io.Serializable;
+
 import javax.security.auth.Subject;
-import javax.security.auth.login.*;
 import javax.security.auth.callback.CallbackHandler;
-import javax.servlet.http.*;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 /**
  * The SessionLoginContext extends the JAAS LoginContext, so that,
@@ -47,9 +51,22 @@ import javax.servlet.http.*;
  */
 
 public final class SessionLoginContext extends LoginContext 
-				implements HttpSessionBindingListener,
-				java.io.Serializable
+				implements HttpSessionBindingListener, Serializable
 {
+	/**
+	 * We hebben dit nodig om de laatste naam te onthouden voor het deserialiseren.
+	 * Het is een hack, maar de kans dat deze context instantie vaker wordt aangemaakt met
+	 * een varierende naam is nihil.
+	 */
+	private static String name;
+
+	/**
+	 * Construct.
+	 */
+	public SessionLoginContext() throws LoginException
+	{
+		this(SessionLoginContext.name);
+	}
 
 	/**
 	 * Default constructor. See javax.security.auth.login.LoginContext
@@ -58,6 +75,7 @@ public final class SessionLoginContext extends LoginContext
 	public SessionLoginContext(String name) throws LoginException
 	{
 		super(name);
+		SessionLoginContext.name = name;
 	}
 
 	/**
@@ -68,6 +86,7 @@ public final class SessionLoginContext extends LoginContext
 			throws LoginException
 	{
 		super(name, callbackHandler);
+		SessionLoginContext.name = name;
 	}
 
 	/**
@@ -77,6 +96,7 @@ public final class SessionLoginContext extends LoginContext
 	public SessionLoginContext(String name, Subject subject) throws LoginException
 	{
 		super(name, subject);
+		SessionLoginContext.name = name;
 	}
 
 	/**
@@ -87,6 +107,7 @@ public final class SessionLoginContext extends LoginContext
 				CallbackHandler callbackHandler) throws LoginException
 	{
 		super(name, subject, callbackHandler);
+		SessionLoginContext.name = name;
 	}
 
 	/**

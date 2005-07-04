@@ -30,23 +30,33 @@
  */
 package nl.openedge.access.impl;
 
+import java.io.Serializable;
 import java.security.Principal;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
-import javax.security.auth.spi.LoginModule;
-import javax.security.auth.login.LoginException;
 import javax.security.auth.Subject;
-import javax.security.auth.callback.*;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.spi.LoginModule;
 
-import nl.openedge.access.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import nl.openedge.access.AccessCallbackHandler;
+import nl.openedge.access.LoginDecorator;
 import nl.openedge.access.RolePrincipal;
+import nl.openedge.access.UserManagerModule;
 import nl.openedge.access.UserPrincipal;
 import nl.openedge.access.util.PasswordHelper;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.RepositoryFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -100,7 +110,7 @@ import org.apache.commons.logging.LogFactory;
  * @author  Eelco Hillenius
  */
 
-public final class LoginModuleImpl implements LoginModule
+public final class LoginModuleImpl implements LoginModule, Serializable
 {
 
 	// initial state

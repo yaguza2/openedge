@@ -30,6 +30,8 @@
  */
 package nl.openedge.access;
 
+import java.io.Serializable;
+
 import javax.security.auth.callback.*;
 
 /**
@@ -45,11 +47,18 @@ import javax.security.auth.callback.*;
  * @author Eelco Hillenius
  */
 
-public final class AccessCallbackHandler implements CallbackHandler
+public final class AccessCallbackHandler implements CallbackHandler, Serializable
 {
 
 	private String username;
-	char[] password;
+	private char[] password;
+
+	/**
+	 * Construct.
+	 */
+	public AccessCallbackHandler()
+	{
+	}
 
 	/**
 	 * Creates a callback handler with the give username
@@ -106,7 +115,9 @@ public final class AccessCallbackHandler implements CallbackHandler
 		if (password != null)
 		{
 			for (int i = 0; i < password.length; i++)
+			{
 				password[i] = ' ';
+			}
 			password = null;
 		}
 	}
