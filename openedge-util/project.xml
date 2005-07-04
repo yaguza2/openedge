@@ -5,7 +5,7 @@
   <id>openedge-util</id>
   <name>OpenEdge Util</name>
   <groupId>openedge-util</groupId>
-  <currentVersion>1.2.14</currentVersion>
+  <currentVersion>1.2.16</currentVersion>
   <organization>
     <name>Open Edge</name>
     <url>http://www.openedge.nl/</url>
@@ -25,6 +25,11 @@
     <developerConnection>scm:cvs:ssh:${maven.username}@cvs.topicus.nl:/home/openedge:${pom.artifactId}</developerConnection>
   </repository>
   <versions>
+    <version>
+      <id>1.2.16</id>
+      <name>1.2.16</name>
+      <tag>B1_2_16</tag>
+    </version>
     <version>
       <id>1.2.12</id>
       <name>1.2.12</name>
@@ -213,7 +218,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>2.6.5</version>
+      <version>2.6.7</version>
       <url>http://ognl.org</url>
     </dependency>
     <dependency>
@@ -227,6 +232,17 @@
       <artifactId>velocity-tools</artifactId>
       <version>1.1</version>
       <url>http://jakarta.apache.org/velocity/tools/</url>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <url>http://www.junit.org</url>
+      <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Used for testing Wicket</wicket.description>
+        <war.bundle>false</war.bundle>
+      </properties>
     </dependency>
     <!-- END Webapp stuff -->
     <!-- BEGIN XML -->

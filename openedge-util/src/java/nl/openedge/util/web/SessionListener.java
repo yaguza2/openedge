@@ -31,9 +31,8 @@
 
 package nl.openedge.util.web;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionEvent;
@@ -50,7 +49,7 @@ import org.apache.commons.logging.LogFactory;
 public class SessionListener implements HttpSessionListener, HttpSessionActivationListener
 {
 	/** sessions. */
-	private static List sessions = Collections.synchronizedList(new ArrayList());
+	private static Vector sessions = new Vector();
 
 	/** logger. */
 	private Log log = LogFactory.getLog(SessionListener.class);
@@ -71,9 +70,11 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 */
 	public void sessionCreated(HttpSessionEvent event)
 	{
-
 		log.info(event.getSession().getId() + " created");
-		sessions.add(event.getSession());
+		synchronized (sessions)
+		{
+			sessions.add(event.getSession());
+		}
 	}
 
 	/**
@@ -84,9 +85,11 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 */
 	public void sessionDestroyed(HttpSessionEvent event)
 	{
-
 		log.info(event.getSession().getId() + " destroyed");
-		sessions.remove(event.getSession());
+		synchronized (sessions)
+		{
+			sessions.remove(event.getSession());
+		}
 	}
 
 	/**
@@ -99,7 +102,10 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	{
 
 		log.info(event.getSession().getId() + " passivated");
-		sessions.remove(event.getSession());
+		synchronized (sessions)
+		{
+			sessions.remove(event.getSession());
+		}
 	}
 
 	/**
@@ -110,9 +116,11 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 */
 	public void sessionDidActivate(HttpSessionEvent event)
 	{
-
 		log.info(event.getSession().getId() + " activated");
-		sessions.add(event.getSession());
+		synchronized (sessions)
+		{
+			sessions.add(event.getSession());
+		}
 	}
 
 	/**
@@ -122,7 +130,10 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 */
 	public static List getSessions()
 	{
-		return Collections.unmodifiableList(sessions);
+		synchronized (sessions)
+		{
+			return (List)sessions.clone();
+		}
 	}
 
 }
