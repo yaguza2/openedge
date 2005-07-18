@@ -1,7 +1,7 @@
 /*
- * $Id: AbstractValidator.java,v 1.5 2004-04-07 14:05:04 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-04-07 14:05:04 $
+ * $Id: AbstractValidator.java,v 1.6 2005-07-18 14:37:06 eelco12 Exp $
+ * $Revision: 1.6 $
+ * $Date: 2005-07-18 14:37:06 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -137,7 +137,8 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 	}
 	
 	/**
-	 * Get the - possibly translated - name of the field. If lookup in the
+	 * Get the - possibly translated using the current locale that is 
+	 * stored in the form bean context - name of the field. If lookup in the
 	 * resources failed, the provided name will be returned as is.
 	 * @param formBeanContext form bean context
 	 * @param name original name of field
@@ -147,8 +148,8 @@ public abstract class AbstractValidator implements ValidationRuleDependend
 	protected String getFieldName(FormBeanContext formBeanContext, String name)
 	{
 		FormBeanCtrlBase ctrl = formBeanContext.getController();
-		String fieldName = MessageUtils.getLocalizedMessage(
-			ctrl.getPropertyNameKey(name));
+		Locale locale = formBeanContext.getCurrentLocale();
+		String fieldName = getLocalizedMessage(ctrl.getPropertyNameKey(name), locale);
 		return (fieldName != null) ? fieldName : name;
 	}
 	
