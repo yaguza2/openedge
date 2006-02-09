@@ -33,6 +33,7 @@ package nl.openedge.modules.impl.menumodule;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -92,7 +93,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	private TreeModel menuModel = null;
 
 	/** cache for user model. */
-	private Map userModelCache = new HashMap();
+	private Map userModelCache = Collections.synchronizedMap(new HashMap());
 
 	/** context for the current thread. */
 	private ThreadLocal contextHolder = new ThreadLocal();
@@ -554,7 +555,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 *            the subject to get the treemodel for
 	 * @return TreeModel the treemodel for the given subject
 	 */
-	private synchronized TreeModel getModelForSubject(Subject subject)
+	private TreeModel getModelForSubject(Subject subject)
 	{
 		Map filterContext = (Map) contextHolder.get();
 		if (filterContext == null) // fallthrough
