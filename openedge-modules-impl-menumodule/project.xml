@@ -18,7 +18,12 @@
   <url>http://maven.apache.org/</url>
 
   <versions>
-  <version>
+    <version>
+      <id>1.4.6</id>
+      <name>1.4.6</name>
+      <tag>B1_4_6</tag>
+    </version>
+    <version>
       <id>1.4.4</id>
       <name>1.4.4</name>
       <tag>B1_4_4</tag>
