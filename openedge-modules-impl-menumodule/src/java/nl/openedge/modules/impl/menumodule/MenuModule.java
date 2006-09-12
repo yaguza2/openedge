@@ -1030,12 +1030,12 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	private void debugTree(TreeModel treeModel)
 	{
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeModel.getRoot();
-		Enumeration enum = node.breadthFirstEnumeration();
-		enum = node.preorderEnumeration();
+		Enumeration en = node.breadthFirstEnumeration();
+		en = node.preorderEnumeration();
 		log.debug("-- MENU TREE DUMP --");
-		while (enum.hasMoreElements())
+		while (en.hasMoreElements())
 		{
-			DefaultMutableTreeNode nd = (DefaultMutableTreeNode) enum.nextElement();
+			DefaultMutableTreeNode nd = (DefaultMutableTreeNode) en.nextElement();
 			String tabs = "|";
 			for (int i = 0; i < nd.getLevel(); i++)
 				tabs += "\t";
