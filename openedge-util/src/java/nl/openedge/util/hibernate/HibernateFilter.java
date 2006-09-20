@@ -109,7 +109,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 			Session session = (Session) getHibernateHolder().get();
 			if (session != null)
 			{
-				log.warn("A session is already associated with this thread!  "
+				log.error("A session is already associated with this thread!  "
 						+ "Someone must have called getSession() outside of the context "
 						+ "of a servlet request; closing session");
 				try
