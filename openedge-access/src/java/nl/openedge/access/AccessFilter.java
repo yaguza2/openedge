@@ -131,6 +131,7 @@ public final class AccessFilter implements Filter
 		HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)res;
 		HttpSession session = request.getSession();
+		AccessHelper.setHttpSession( session);
 
 		Subject subject = (Subject)session.getAttribute(AUTHENTICATED_SUBJECT_KEY);
 		boolean needsAuthentication = false;

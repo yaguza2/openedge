@@ -43,10 +43,14 @@ import java.util.Properties;
 
 import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
+import nl.openedge.access.cache.Cache;
+import nl.openedge.access.cache.CacheProvider;
+import nl.openedge.access.cache.impl.EhCacheProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 
 /**
  * The AccessHelper constructs and initialises objects that are used within
@@ -98,12 +102,44 @@ public final class AccessHelper
 	/** logger */
 	private static Log log = LogFactory.getLog(AccessHelper.class);
 
+	private static final Integer GRANTED = new Integer(1);
+
+	private static final Integer NOT_CACHED = new Integer(0);
+
+	private static final Integer DENIED = new Integer(-1);
+
+	private static final String JAASCACHE_SESSION_ATTR_NAME = "jaasCache";
+
+	// maak http sessie opvraagbaar voor permissie caching
+	private static ThreadLocal<HttpSession> httpSession = new ThreadLocal<HttpSession>();
+	public static HttpSession getHttpSession()
+	{
+		return httpSession.get();
+	}
+	public static void setHttpSession( HttpSession session)
+	{
+		httpSession.set( session);
+	}
+
 	/**
 	 * hidden constructor. Clients should use the static methods instead
 	 */
 	protected AccessHelper()
 	{
 		//noop	
+	}
+
+	public static Integer PermissionCached(Cache cache, Permission permission)
+	{
+		if(cache == null)
+			return NOT_CACHED;
+		Object item = cache.read(permission);
+		if(GRANTED.equals(item))
+			return GRANTED;
+		else if(DENIED.equals(item))
+			return DENIED;
+		else
+			return NOT_CACHED;
 	}
 	
 	/**
@@ -114,8 +150,59 @@ public final class AccessHelper
 	 */
 	public static void checkPermissionForSubject(Permission permission, Subject subject)
 	{
-		AccessAction action = new AccessAction(permission);
-		Subject.doAsPrivileged(subject, action, null);
+		long start = System.currentTimeMillis();
+		if(log.isDebugEnabled())
+			log.debug("checking " + permission);
+		// would not be here if we didnt have a jaas security factory,
+		// unless someone is dumb enough to use this code stand alone
+		HttpSession session = getHttpSession();
+		Cache cache = null;
+		Object tmp = session.getAttribute( JAASCACHE_SESSION_ATTR_NAME);
+		if( tmp == null)
+		{
+			CacheProvider provider = new EhCacheProvider();
+			provider.start( null);
+			cache = provider.buildCache( JAASCACHE_SESSION_ATTR_NAME, null);
+			session.setAttribute( JAASCACHE_SESSION_ATTR_NAME, cache);
+		}
+		else
+		{
+			cache = (Cache) tmp;
+		}
+
+		Integer cacheResult = PermissionCached(cache, permission);
+		if(GRANTED.equals(cacheResult))
+		{
+			if(log.isDebugEnabled())
+				log.debug(permission + " granted (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
+		}
+		if(DENIED.equals(cacheResult))
+		{
+			if(log.isDebugEnabled())
+				log.debug(permission + " denied (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
+			throw new SecurityException( permission.getName() + " DENIED");
+		}
+		try
+		{
+			AccessAction action = new AccessAction(permission);
+			Subject.doAsPrivileged(subject, action, null);
+			// TODO does this action modify the supplied context and should we have a different context per user or
+			// is the original context unchanged?
+
+			if(log.isDebugEnabled())
+				log.debug(permission + " granted " + (System.currentTimeMillis() - start) + " ms");
+			if(cache != null)
+				cache.put(permission, GRANTED);
+		}
+		catch (SecurityException e)
+		{
+			if(log.isDebugEnabled())
+				log.debug(permission + " denied " + (System.currentTimeMillis() - start) + " ms", e);
+			if(cache != null)
+				cache.put(permission, DENIED);
+			throw e;
+		}
+
 		// if we get here and return normally, the user was authorised
 		// otherwise a security exception will be thrown	
 	}
