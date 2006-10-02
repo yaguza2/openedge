@@ -35,10 +35,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.Permission;
+import java.security.Policy;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
-
-import java.security.Policy;
 import java.util.Properties;
 
 import javax.security.auth.Subject;
@@ -110,6 +109,8 @@ public final class AccessHelper
 
 	private static final String JAASCACHE_SESSION_ATTR_NAME = "jaasCache";
 
+	private static final CacheProvider cacheProvider = new EhCacheProvider();
+	
 	// maak http sessie opvraagbaar voor permissie caching
 	private static ThreadLocal<HttpSession> httpSession = new ThreadLocal<HttpSession>();
 	public static HttpSession getHttpSession()
@@ -120,13 +121,20 @@ public final class AccessHelper
 	{
 		httpSession.set( session);
 	}
+	public static void destroyCache()
+	{
+		HttpSession session = getHttpSession();
+		Object cache = session.getAttribute( JAASCACHE_SESSION_ATTR_NAME);
+
+		if( cache != null)
+			((Cache) cache).destroy();
+	}
 
 	/**
 	 * hidden constructor. Clients should use the static methods instead
 	 */
 	protected AccessHelper()
 	{
-		//noop	
 	}
 
 	public static Integer PermissionCached(Cache cache, Permission permission)
@@ -160,9 +168,7 @@ public final class AccessHelper
 		Object tmp = session.getAttribute( JAASCACHE_SESSION_ATTR_NAME);
 		if( tmp == null)
 		{
-			CacheProvider provider = new EhCacheProvider();
-			provider.start( null);
-			cache = provider.buildCache( JAASCACHE_SESSION_ATTR_NAME, null);
+			cache = cacheProvider.buildCache( session.getId(), null);
 			session.setAttribute( JAASCACHE_SESSION_ATTR_NAME, cache);
 		}
 		else
@@ -395,6 +401,8 @@ public final class AccessHelper
 			}
 		}
 
+		// startup jaas cache provider
+		cacheProvider.start( null);
 	}
 
 	/**
