@@ -182,31 +182,34 @@ public final class AccessHelper
 			if(log.isDebugEnabled())
 				log.debug(permission + " granted (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
 		}
-		if(DENIED.equals(cacheResult))
+		else
 		{
-			if(log.isDebugEnabled())
-				log.debug(permission + " denied (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
-			throw new SecurityException( permission.getName() + " DENIED");
-		}
-		try
-		{
-			AccessAction action = new AccessAction(permission);
-			Subject.doAsPrivileged(subject, action, null);
-			// TODO does this action modify the supplied context and should we have a different context per user or
-			// is the original context unchanged?
-
-			if(log.isDebugEnabled())
-				log.debug(permission + " granted " + (System.currentTimeMillis() - start) + " ms");
-			if(cache != null)
-				cache.put(permission, GRANTED);
-		}
-		catch (SecurityException e)
-		{
-			if(log.isDebugEnabled())
-				log.debug(permission + " denied " + (System.currentTimeMillis() - start) + " ms", e);
-			if(cache != null)
-				cache.put(permission, DENIED);
-			throw e;
+			if(DENIED.equals(cacheResult))
+			{
+				if(log.isDebugEnabled())
+					log.debug(permission + " denied (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
+				throw new SecurityException( permission.getName() + " DENIED");
+			}
+			try
+			{
+				AccessAction action = new AccessAction(permission);
+				Subject.doAsPrivileged(subject, action, null);
+				// TODO does this action modify the supplied context and should we have a different context per user or
+				// is the original context unchanged?
+	
+				if(log.isDebugEnabled())
+					log.debug(permission + " granted " + (System.currentTimeMillis() - start) + " ms");
+				if(cache != null)
+					cache.put(permission, GRANTED);
+			}
+			catch (SecurityException e)
+			{
+				if(log.isDebugEnabled())
+					log.debug(permission + " denied " + (System.currentTimeMillis() - start) + " ms", e);
+				if(cache != null)
+					cache.put(permission, DENIED);
+				throw e;
+			}
 		}
 
 		// if we get here and return normally, the user was authorised
