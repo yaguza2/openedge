@@ -48,6 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import nl.openedge.access.cache.Cache;
+import nl.openedge.access.cache.HashMapCacheImpl;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -95,6 +98,9 @@ public final class AccessFilter implements Filter
 	/** last request before logon redirect will be saved as a request parameter */
 	public final static String LAST_REQUEST_KEY = "_lastRequest";
 
+	/** save cached permissions in session */
+	public final static String SESSION_CACHE_KEY = "_jaasCache";
+
 	/** if authentication failed or was not done yet, redirect to this url */
 	protected static String loginRedirect;
 
@@ -131,7 +137,15 @@ public final class AccessFilter implements Filter
 		HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)res;
 		HttpSession session = request.getSession();
-		AccessHelper.setHttpSession( session);
+		Object cache = session.getAttribute( SESSION_CACHE_KEY);
+		if( cache == null)
+		{
+		    // nieuwe cache aanmaken wanneer deze nog niet bestaat 
+		    // (eerste request van een sessie)
+		    cache = new HashMapCacheImpl();
+		    session.setAttribute( SESSION_CACHE_KEY, cache);
+		}
+		AccessHelper.setCache( (Cache) cache);
 
 		Subject subject = (Subject)session.getAttribute(AUTHENTICATED_SUBJECT_KEY);
 		boolean needsAuthentication = false;

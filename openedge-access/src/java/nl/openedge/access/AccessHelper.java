@@ -42,11 +42,8 @@ import java.util.Properties;
 
 import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
 
 import nl.openedge.access.cache.Cache;
-import nl.openedge.access.cache.CacheProvider;
-import nl.openedge.access.cache.impl.EhCacheProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,27 +104,15 @@ public final class AccessHelper
 
 	private static final Integer DENIED = new Integer(-1);
 
-	private static final String JAASCACHE_SESSION_ATTR_NAME = "jaasCache";
-
-	private static final CacheProvider cacheProvider = new EhCacheProvider();
-	
-	// maak http sessie opvraagbaar voor permissie caching
-	private static ThreadLocal<HttpSession> httpSession = new ThreadLocal<HttpSession>();
-	public static HttpSession getHttpSession()
+	// threadlocal om cache in op te slaan; verantwoordelijkheid ligt bij accessfilter
+	private static ThreadLocal<Cache> cacheHolder = new ThreadLocal<Cache>();
+	public static Cache getCache()
 	{
-		return httpSession.get();
+		return cacheHolder.get();
 	}
-	public static void setHttpSession( HttpSession session)
+	public static void setCache( Cache cache)
 	{
-		httpSession.set( session);
-	}
-	public static void destroyCache()
-	{
-		HttpSession session = getHttpSession();
-		Object cache = session.getAttribute( JAASCACHE_SESSION_ATTR_NAME);
-
-		if( cache != null)
-			((Cache) cache).destroy();
+		cacheHolder.set( cache);
 	}
 
 	/**
@@ -141,7 +126,7 @@ public final class AccessHelper
 	{
 		if(cache == null)
 			return NOT_CACHED;
-		Object item = cache.read(permission);
+		Object item = cache.get(permission);
 		if(GRANTED.equals(item))
 			return GRANTED;
 		else if(DENIED.equals(item))
@@ -161,22 +146,19 @@ public final class AccessHelper
 		long start = System.currentTimeMillis();
 		if(log.isDebugEnabled())
 			log.debug("checking " + permission);
-		// would not be here if we didnt have a jaas security factory,
-		// unless someone is dumb enough to use this code stand alone
-		HttpSession session = getHttpSession();
-		Cache cache = null;
-		Object tmp = session.getAttribute( JAASCACHE_SESSION_ATTR_NAME);
-		if( tmp == null)
+
+		Cache cache = getCache();
+		Integer cacheResult = null;
+		if( cache != null)
 		{
-			cache = cacheProvider.buildCache( session.getId(), null);
-			session.setAttribute( JAASCACHE_SESSION_ATTR_NAME, cache);
+		    cacheResult = PermissionCached(cache, permission);
 		}
 		else
 		{
-			cache = (Cache) tmp;
+		    log.error( "jaas cache missing!");
+		    cacheResult = NOT_CACHED;
 		}
 
-		Integer cacheResult = PermissionCached(cache, permission);
 		if(GRANTED.equals(cacheResult))
 		{
 			if(log.isDebugEnabled())
@@ -403,9 +385,6 @@ public final class AccessHelper
 				throw new ConfigException(e);
 			}
 		}
-
-		// startup jaas cache provider
-		cacheProvider.start( null);
 	}
 
 	/**
