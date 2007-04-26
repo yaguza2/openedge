@@ -33,6 +33,12 @@ public class HtmlTool
 	 */
 	private static Map javascriptEncoding;
 
+	/**
+	 * the key-characters in this map have to be replaced with the values to create a valid
+	 * html attribte value text.
+	 */
+	private static Map htmlAttributeValueEncoding;
+
 	static
 	{
 		/*
@@ -49,71 +55,71 @@ public class HtmlTool
 
 		javascriptEncoding = new HashMap();
 		javascriptEncoding.put(new Character('\''), "\\'");
+		// TODO shouldn't '\' also be escaped?
+		
+		htmlAttributeValueEncoding = new HashMap();
+		htmlAttributeValueEncoding.put(new Character('"'), "&#034;");
 	}
 
 	/**
 	 * Replaces all characters in original with the value that it represents.
-	 * 
-	 * @param original
-	 *            the Java string that has special characters.
+	 * @param original the Java string that has special characters.
+	 * @param the mapping specifying what to replace
+	 * @return the safe string with all special characters replaced.
+	 */
+	private static String parse(String original, Map mapping)
+	{
+		if (original == null)
+		{
+			return original;
+		}
+
+		StringBuffer encodedStr = new StringBuffer(original.length());
+
+		for (int i = 0; i < original.length(); i++)
+		{
+			Character current = new Character(original.charAt(i));
+
+			if (mapping.containsKey(current))
+			{
+				encodedStr.append(mapping.get(current));
+			}
+			else
+			{
+				encodedStr.append(current);
+			}
+		}
+
+		return encodedStr.toString();
+	}
+
+	/**
+	 * Replaces all characters in original with the value that it represents.
+	 * @param original the Java string that has special characters.
 	 * @return the HTML safe string with all special characters replaced.
 	 */
 	public static String parseText(String original)
 	{
-		if (original == null)
-		{
-			return original;
-		}
-
-		StringBuffer encodedStr = new StringBuffer(original.length());
-
-		for (int i = 0; i < original.length(); i++)
-		{
-			Character current = new Character(original.charAt(i));
-
-			if (htmlEncoding.containsKey(current))
-			{
-				encodedStr.append(htmlEncoding.get(current));
-			}
-			else
-			{
-				encodedStr.append(current);
-			}
-		}
-
-		return encodedStr.toString();
+		return parse(original, htmlEncoding);
 	}
-
+	
 	/**
 	 * Replaces all characters in original with the value that it represents.
-	 * 
-	 * @param original
-	 *            the Java string that has special characters.
+	 * @param original the Java string that has special characters.
 	 * @return the Javascript safe string with all special characters replaced.
 	 */
 	public static String parseJavascipt(String original)
 	{
-		if (original == null)
-		{
-			return original;
-		}
-
-		StringBuffer encodedStr = new StringBuffer(original.length());
-
-		for (int i = 0; i < original.length(); i++)
-		{
-			Character current = new Character(original.charAt(i));
-
-			if (javascriptEncoding.containsKey(current))
-			{
-				encodedStr.append(javascriptEncoding.get(current));
-			}
-			else
-			{
-				encodedStr.append(current);
-			}
-		}
-
-		return encodedStr.toString();
+		return parse(original, javascriptEncoding);
+	}
+	
+	/**
+	 * Replaces all characters in original with the value that it represents.
+	 * @param original the Java string that has special characters.
+	 * @return the HTML-attribute-safe string with all special characters replaced.
+	 */
+	public static String parseAttribute(String original)
+	{
+		return parse(original, htmlAttributeValueEncoding);
 	}
 }
