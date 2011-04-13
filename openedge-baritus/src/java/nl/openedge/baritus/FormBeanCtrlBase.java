@@ -1,7 +1,7 @@
 /*
- * $Id: FormBeanCtrlBase.java,v 1.16 2004-06-22 17:57:24 eelco12 Exp $
+ * $Id: FormBeanCtrlBase.java,v 1.16 2004/06/22 17:57:24 eelco12 Exp $
  * $Revision: 1.16 $
- * $Date: 2004-06-22 17:57:24 $
+ * $Date: 2004/06/22 17:57:24 $
  *
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V.
@@ -387,11 +387,11 @@ public abstract class FormBeanCtrlBase implements Controller
 		{
 			Map parameters = new HashMap();
 			HttpSession httpSession = cctx.getRequest().getSession();
-			Enumeration enum = httpSession.getAttributeNames();
-			if (enum != null) {
-				while (enum.hasMoreElements())
+			Enumeration attributeNames = httpSession.getAttributeNames();
+			if (attributeNames != null) {
+				while (attributeNames.hasMoreElements())
 				{
-					String attrName = (String)enum.nextElement();
+					String attrName = (String)attributeNames.nextElement();
 					parameters.put(attrName, httpSession.getAttribute(attrName));
 				}
 			}
@@ -410,11 +410,11 @@ public abstract class FormBeanCtrlBase implements Controller
 		{
 			Map parameters = new HashMap();
 			HttpServletRequest request = cctx.getRequest();
-			Enumeration enum = request.getAttributeNames();
-			if (enum != null)
-				while (enum.hasMoreElements())
+			Enumeration attributeNames = request.getAttributeNames();
+			if (attributeNames != null)
+				while (attributeNames.hasMoreElements())
 				{
-					String attrName = (String)enum.nextElement();
+					String attrName = (String)attributeNames.nextElement();
 					if ((!REQUEST_ATTRIBUTE_FORMBEANCONTEXT.equals(attrName))
 						&& (!REQUEST_ATTRIBUTE_EXECUTION_PARAMS.equals(attrName)))
 					{
