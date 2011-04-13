@@ -5,7 +5,7 @@
 	<artifactId>baritus</artifactId>
 	<packaging>jar</packaging>
 	<name>OpenEdge Baritus</name>
-	<version>1.0.14</version>
+	<version>1.0.14-SNAPSHOT</version>
 	<description>Parnassys legacy support</description>
 	<url>http://start.parnassys.net/</url>
 	<issueManagement>
