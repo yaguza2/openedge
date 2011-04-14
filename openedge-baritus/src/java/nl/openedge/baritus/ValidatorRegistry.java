@@ -50,9 +50,9 @@ public final class ValidatorRegistry
 
 	private MultiHashMap fieldValidators = null;
 	
-	private List formValidators = null;
+	private List<FormValidator> formValidators = null;
 	
-	private List globalValidatorActivationRules = null;
+	private List<ValidationActivationRule> globalValidatorActivationRules = null;
 
 	/**
 	 * register a field validator for the given fieldName. 
@@ -77,7 +77,7 @@ public final class ValidatorRegistry
 	{
 		if(formValidators == null)
 		{
-			formValidators = new ArrayList();
+			formValidators = new ArrayList<FormValidator>();
 		}
 		formValidators.add(validator);
 	}
@@ -127,7 +127,7 @@ public final class ValidatorRegistry
 	{
 		if(globalValidatorActivationRules == null)
 		{
-			globalValidatorActivationRules = new ArrayList();
+			globalValidatorActivationRules = new ArrayList<ValidationActivationRule>();
 		}
 		globalValidatorActivationRules.add(rule);
 	}
@@ -161,7 +161,7 @@ public final class ValidatorRegistry
 	 * get all global activation rules
 	 * @return List all global activation rules
 	 */
-	public List getGlobalValidatorActivationRules()
+	public List<ValidationActivationRule> getGlobalValidatorActivationRules()
 	{
 		return globalValidatorActivationRules;
 	}
@@ -170,7 +170,7 @@ public final class ValidatorRegistry
 	 * get all form validators
 	 * @return List all form validators
 	 */
-	public List getFormValidators()
+	public List<FormValidator> getFormValidators()
 	{
 		return formValidators;
 	}

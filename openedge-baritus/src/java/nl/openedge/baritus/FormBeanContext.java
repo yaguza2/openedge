@@ -68,10 +68,10 @@ public final class FormBeanContext implements Map
 	private Object bean = null;
 
 	/* errors */
-	private Map errors = null;
+	private Map<String, String> errors = null;
 
 	/* overriden values as strings */
-	private Map overrideFields = null;
+	private Map<String, Object> overrideFields = null;
 	
 	/* the current controller */
 	private FormBeanCtrlBase controller = null;
@@ -80,7 +80,7 @@ public final class FormBeanContext implements Map
 	 * if, for some reason, you want to store extra attributes in this context
 	 * instead in the formBean, you can do this here (e.g. messages)
 	 */
-	private Map attributes = null;
+	private Map<Object, Object> attributes = null;
 
 	/* log for this class */
 	private static Log log = LogFactory.getLog(FormBeanCtrlBase.class);
@@ -142,7 +142,7 @@ public final class FormBeanContext implements Map
 	 * Get the map with errors. Returns null if no errors are registered.
 	 * @return Map map with errors or null if no errors are registered.
 	 */
-	public Map getErrors()
+	public Map<String, String> getErrors()
 	{
 		return errors;
 	}
@@ -156,14 +156,14 @@ public final class FormBeanContext implements Map
 	 */
 	public String getError(String field)
 	{
-		return (errors != null) ? (String)errors.get(field) : null;
+		return (errors != null) ? errors.get(field) : null;
 	}
 
 	/**
 	 * Set the map of errors.
 	 * @param errors The map of errors to set
 	 */
-	public void setErrors(Map errors)
+	public void setErrors(Map<String, String> errors)
 	{
 		this.errors = errors;
 	}
@@ -240,7 +240,7 @@ public final class FormBeanContext implements Map
 	 */
 	public void setError(String key, String value)
 	{
-		if (errors == null) errors = new HashMap();
+		if (errors == null) errors = new HashMap<String, String>();
 		
 		errors.put(key, value);
 	}
@@ -285,7 +285,7 @@ public final class FormBeanContext implements Map
 	 * Get the map of failed field values.
 	 * @return Map map with override fields
 	 */
-	public Map getOverrideFields()
+	public Map<String, Object> getOverrideFields()
 	{
 		return overrideFields;
 	}
@@ -299,7 +299,7 @@ public final class FormBeanContext implements Map
 	{
 		if (overrideFields == null)
 		{
-			overrideFields = new HashMap();
+			overrideFields = new HashMap<String, Object>();
 		}
 		overrideFields.put(name, value);
 	}
@@ -331,7 +331,7 @@ public final class FormBeanContext implements Map
 		{
 			if (overrideFields == null)
 			{
-				overrideFields = new HashMap();
+				overrideFields = new HashMap<String, Object>();
 				overrideFields.putAll(fields);
 			}
 			else
@@ -410,7 +410,7 @@ public final class FormBeanContext implements Map
 		String displayString = null;
 		
 		// first, check if there is a registration in the override fields
-		Map _overrideFields = getOverrideFields();
+		Map<String, Object> _overrideFields = getOverrideFields();
 		boolean wasOverriden = false;
 		if (_overrideFields != null)
 		{
@@ -639,7 +639,7 @@ public final class FormBeanContext implements Map
 	 */
 	public Object put(Object key, Object value)
 	{
-		if(attributes == null) attributes = new HashMap();
+		if(attributes == null) attributes = new HashMap<Object, Object>();
 		return attributes.put(key, value);
 	}
 
@@ -689,7 +689,7 @@ public final class FormBeanContext implements Map
 	 */
 	public void putAll(Map t)
 	{
-		if(attributes == null) attributes = new HashMap();
+		if(attributes == null) attributes = new HashMap<Object, Object>();
 		attributes.putAll(t);
 	}
 
@@ -778,7 +778,7 @@ public final class FormBeanContext implements Map
         if(attributes != null && (!attributes.isEmpty()))
         {
             b.append(", attributes{");
-            for(Iterator i = attributes.keySet().iterator(); i.hasNext(); )
+            for(Iterator<Object> i = attributes.keySet().iterator(); i.hasNext(); )
             {
                 String key = (String)i.next();
                 b.append(key)
@@ -794,9 +794,9 @@ public final class FormBeanContext implements Map
         b.append(", errors{");
         if(errors != null)
         {
-            for(Iterator i = errors.keySet().iterator(); i.hasNext(); )
+            for(Iterator<String> i = errors.keySet().iterator(); i.hasNext(); )
             {
-                String errorKey = (String)i.next();
+                String errorKey = i.next();
                 b.append(errorKey)
                  .append("=")
                  .append(getError(errorKey))

@@ -45,7 +45,7 @@ import nl.openedge.baritus.interceptors.Interceptor;
 final class InterceptorRegistry
 {
 
-	private List interceptors = null;
+	private List<Interceptor> interceptors = null;
 	
 	private List[] flowInterceptors;
 	
@@ -58,7 +58,7 @@ final class InterceptorRegistry
 	{
 		if(interceptors == null)
 		{
-			interceptors = new ArrayList();
+			interceptors = new ArrayList<Interceptor>();
 		}
 		interceptors.add(interceptor);
 	}
@@ -72,7 +72,7 @@ final class InterceptorRegistry
 	{
 		if(interceptors == null)
 		{
-			interceptors = new ArrayList();
+			interceptors = new ArrayList<Interceptor>();
 		}
 		interceptors.add(index, interceptor);
 	}
@@ -101,10 +101,10 @@ final class InterceptorRegistry
 		Interceptor[] result = null;
 		if(interceptors != null && (!interceptors.isEmpty()))
 		{
-			List temp = new ArrayList();
-			for(Iterator i = interceptors.listIterator(); i.hasNext(); )
+			List<Interceptor> temp = new ArrayList<Interceptor>();
+			for(Iterator<Interceptor> i = interceptors.listIterator(); i.hasNext(); )
 			{
-				Interceptor intc = (Interceptor)i.next();
+				Interceptor intc = i.next();
 				if(type.isAssignableFrom(intc.getClass()))
 				{
 					temp.add(intc);
@@ -112,7 +112,7 @@ final class InterceptorRegistry
 			}
 			if(!temp.isEmpty())
 			{
-				result = (Interceptor[])temp.toArray(new Interceptor[temp.size()]);
+				result = temp.toArray(new Interceptor[temp.size()]);
 			}
 		}
 		return result;

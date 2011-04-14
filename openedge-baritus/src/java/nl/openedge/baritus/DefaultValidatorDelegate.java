@@ -85,15 +85,15 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 		ControllerContext cctx, 
 		FormBeanContext formBeanContext, 
 		ExecutionParams execParams,
-		Map parameters,
+		Map<String, Object> parameters,
 		boolean succeeded)
 	{
 		
 		if(parameters == null) return succeeded;
 		
 		MultiHashMap fieldValidators = validatorRegistry.getFieldValidators();
-		List formValidators = validatorRegistry.getFormValidators();
-		List globalValidatorActivationRules = 
+		List<FormValidator> formValidators = validatorRegistry.getFormValidators();
+		List<ValidationActivationRule> globalValidatorActivationRules = 
 			validatorRegistry.getGlobalValidatorActivationRules();
 		
 		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
@@ -104,9 +104,9 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 			// see if there's any globally (form level) defined rules
 			if(globalValidatorActivationRules != null && (!globalValidatorActivationRules.isEmpty()))
 			{
-				for(Iterator i = globalValidatorActivationRules.iterator(); i.hasNext(); )
+				for(Iterator<ValidationActivationRule> i = globalValidatorActivationRules.iterator(); i.hasNext(); )
 				{
-					ValidationActivationRule rule = (ValidationActivationRule)i.next();
+					ValidationActivationRule rule = i.next();
 					doCustomValidation = rule.allowValidation(cctx, formBeanContext); // fire rule
 					if(!doCustomValidation) break;
 				}
@@ -117,10 +117,10 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 				// if fieldValidators were registered
 				if(fieldValidators != null && (!fieldValidators.isEmpty()))
 				{
-					Iterator names = parameters.keySet().iterator(); // loop through the properties
+					Iterator<String> names = parameters.keySet().iterator(); // loop through the properties
 					while(names.hasNext())
 					{
-						String name = (String)names.next();
+						String name = names.next();
 						if (name == null) continue;
 						if(formBeanContext.getOverrideField(name) == null) 
 							// see if there allready was an override registered
@@ -136,9 +136,9 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 				{
 					// check all registered until either all fired successfully or
 					// one did not fire succesfully
-					for(Iterator i = formValidators.iterator(); i.hasNext(); )
+					for(Iterator<FormValidator> i = formValidators.iterator(); i.hasNext(); )
 					{
-						FormValidator fValidator = (FormValidator)i.next();
+						FormValidator fValidator = i.next();
 						succeeded = doFormValidationForOneValidator(
 							cctx, formBeanContext, fValidator, succeeded);
 					}

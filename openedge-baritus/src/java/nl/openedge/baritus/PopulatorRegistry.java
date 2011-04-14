@@ -46,9 +46,9 @@ import nl.openedge.baritus.population.OgnlFieldPopulator;
 public final class PopulatorRegistry
 {
 
-	private Map fieldPopulators = null;
+	private Map<String, FieldPopulator> fieldPopulators = null;
 	
-	private Map regexFieldPopulators = null;
+	private Map<Pattern, FieldPopulator> regexFieldPopulators = null;
 	
 	private FieldPopulator defaultFieldPopulator = null;
 	
@@ -71,7 +71,7 @@ public final class PopulatorRegistry
 	{
 		if(fieldPopulators == null)
 		{
-			fieldPopulators = new HashMap();
+			fieldPopulators = new HashMap<String, FieldPopulator>();
 		}
 		fieldPopulators.put(fieldName, populator);
 	}
@@ -102,7 +102,7 @@ public final class PopulatorRegistry
 	{
 		if(regexFieldPopulators == null)
 		{
-			regexFieldPopulators = new HashMap();
+			regexFieldPopulators = new HashMap<Pattern, FieldPopulator>();
 		}
 		regexFieldPopulators.put(pattern, populator);
 	}
@@ -124,7 +124,7 @@ public final class PopulatorRegistry
 	 * get the populators that were registered with regex patterns
 	 * @return Map the populators that were registered with regex patterns
 	 */
-	public Map getRegexFieldPopulators()
+	public Map<Pattern, FieldPopulator> getRegexFieldPopulators()
 	{
 		return regexFieldPopulators;
 	}
@@ -137,14 +137,14 @@ public final class PopulatorRegistry
 	public FieldPopulator getFieldPopulator(String fieldName)
 	{
 		return (fieldPopulators != null) ? 
-			(FieldPopulator)fieldPopulators.get(fieldName) : null;
+			fieldPopulators.get(fieldName) : null;
 	}
 
 	/**
 	 * get the field populators
 	 * @return Map the field populators
 	 */
-	public Map getFieldPopulators()
+	public Map<String, FieldPopulator> getFieldPopulators()
 	{
 		return fieldPopulators;
 	}

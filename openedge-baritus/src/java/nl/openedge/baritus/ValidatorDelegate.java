@@ -83,6 +83,6 @@ interface ValidatorDelegate
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
 		ExecutionParams execParams,
-		Map parameters,
+		Map<String, Object> parameters,
 		boolean succeeded);
 }

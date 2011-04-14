@@ -49,7 +49,7 @@ import org.infohazard.maverick.flow.ControllerContext;
 public class NestedValidationActivationRule implements ValidationActivationRule
 {
 
-	private List rules = null;
+	private List<ValidationActivationRule> rules = null;
 
 	/**
 	 * allows validation if all nested rules return true.
@@ -67,9 +67,9 @@ public class NestedValidationActivationRule implements ValidationActivationRule
 		
 		if(rules != null)
 		{
-			for(Iterator i = rules.iterator(); i.hasNext(); )
+			for(Iterator<ValidationActivationRule> i = rules.iterator(); i.hasNext(); )
 			{
-				ValidationActivationRule nested = (ValidationActivationRule)i.next();
+				ValidationActivationRule nested = i.next();
 				allow = nested.allowValidation(cctx, formBeanContext);
 				
 				if(!allow) break;
@@ -87,7 +87,7 @@ public class NestedValidationActivationRule implements ValidationActivationRule
 	{
 		if(rules == null)
 		{
-			rules = new ArrayList();
+			rules = new ArrayList<ValidationActivationRule>();
 		}
 		rules.add(rule);
 	}
@@ -103,7 +103,7 @@ public class NestedValidationActivationRule implements ValidationActivationRule
 	{
 		if(rules == null)
 		{
-			rules = new ArrayList();
+			rules = new ArrayList<ValidationActivationRule>();
 		}
 		rules.add(index, rule);
 	}
@@ -164,7 +164,7 @@ public class NestedValidationActivationRule implements ValidationActivationRule
 	 * get list of validation activation rules.
 	 * @return List validation activation rules
 	 */
-	public List getRules()
+	public List<ValidationActivationRule> getRules()
 	{
 		return rules;
 	}
@@ -173,7 +173,7 @@ public class NestedValidationActivationRule implements ValidationActivationRule
 	 * set list of validation activation rules.
 	 * @param list validation activation rules
 	 */
-	public void setRules(List list)
+	public void setRules(List<ValidationActivationRule> list)
 	{
 		rules = list;
 	}

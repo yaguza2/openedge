@@ -89,9 +89,9 @@ public class TestBean
 	};
 	private String toValidate4 = "validValue";
 	
-	private List listProperty = new ArrayList();
+	private List<Object> listProperty = new ArrayList<Object>();
 	
-	private List multiDimensionalList = new ArrayList();
+	private List<List<List>> multiDimensionalList = new ArrayList<List<List>>();
 	
 	private Map multiDimensionalMap = new HashMap();
 	
@@ -109,14 +109,14 @@ public class TestBean
 		List lOne0 = new ArrayList();
 		List lOne1 = new ArrayList();
 		List lOne2 = new ArrayList();
-		List lOne = new ArrayList();
+		List<List> lOne = new ArrayList<List>();
 		lOne.add(lOne0);
 		lOne.add(lOne1);
 		lOne.add(lOne2);
 		multiDimensionalList.add(lOne);
 		
 		List lTwo0 = new ArrayList();
-		List lTwo = new ArrayList();
+		List<List> lTwo = new ArrayList<List>();
 		lTwo.add(lTwo);
 		multiDimensionalList.add(lTwo);
 	}
@@ -397,14 +397,14 @@ public class TestBean
 	/**
 	 * @return Returns the listProperty.
 	 */
-	public java.util.List getListProperty()
+	public java.util.List<Object> getListProperty()
 	{
 		return listProperty;
 	}
 	/**
 	 * @param listProperty The listProperty to set.
 	 */
-	public void setListProperty(java.util.List listProperty)
+	public void setListProperty(java.util.List<Object> listProperty)
 	{
 		this.listProperty = listProperty;
 	}
@@ -421,7 +421,7 @@ public class TestBean
 	/**
 	 * @return
 	 */
-	public List getMultiDimensionalList()
+	public List<List<List>> getMultiDimensionalList()
 	{
 		return multiDimensionalList;
 	}
@@ -429,7 +429,7 @@ public class TestBean
 	/**
 	 * @param list
 	 */
-	public void setMultiDimensionalList(List list)
+	public void setMultiDimensionalList(List<List<List>> list)
 	{
 		multiDimensionalList = list;
 	}

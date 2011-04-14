@@ -137,7 +137,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	private ValidatorDelegate defaultValidatorDelegate = new DefaultValidatorDelegate(validatorRegistry, this);
 
 	/** validator delegates. */
-	private List validatorDelegates = null;
+	private List<ValidatorDelegate> validatorDelegates = null;
 
 	/** registry for form interceptors. */
 	private InterceptorRegistry interceptorRegistry = new InterceptorRegistry();
@@ -357,7 +357,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		throws Exception
 	{
 
-		Map allParameters = new HashMap(); // for use with validators later on
+		Map<String, Object> allParameters = new HashMap<String, Object>(); // for use with validators later on
 
 		// The order in which parameters/ attributes are used for population:
 		//	1. controller parameters (if includeControllerParameters == true)
@@ -377,7 +377,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		// controller parameters
 		if (_execParams.isIncludeControllerParameters() && (cctx.getControllerParams() != null))
 		{
-			Map parameters = new HashMap(cctx.getControllerParams());
+			Map<String, Object> parameters = new HashMap<String, Object>(cctx.getControllerParams());
 			traceParameters(parameters, traceMsg, "maverick controller params");
 			allParameters.putAll(parameters);
 		}
@@ -385,7 +385,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		// session attributes
 		if (_execParams.isIncludeSessionAttributes())
 		{
-			Map parameters = new HashMap();
+			Map<String, Object> parameters = new HashMap<String, Object>();
 			HttpSession httpSession = cctx.getRequest().getSession();
 			Enumeration attributeNames = httpSession.getAttributeNames();
 			if (attributeNames != null) {
@@ -400,7 +400,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		}
 
 		// request parameters
-		Map reqParameters = new HashMap();
+		Map<String, Object> reqParameters = new HashMap<String, Object>();
 		reqParameters.putAll(cctx.getRequest().getParameterMap());
 		traceParameters(reqParameters, traceMsg, "request parameters");
 		allParameters.putAll(reqParameters);
@@ -408,7 +408,7 @@ public abstract class FormBeanCtrlBase implements Controller
 		// request attributes
 		if (_execParams.isIncludeRequestAttributes())
 		{
-			Map parameters = new HashMap();
+			Map<String, Object> parameters = new HashMap<String, Object>();
 			HttpServletRequest request = cctx.getRequest();
 			Enumeration attributeNames = request.getAttributeNames();
 			if (attributeNames != null)
@@ -445,14 +445,14 @@ public abstract class FormBeanCtrlBase implements Controller
 		succeeded = defaultValidatorDelegate.doValidation(
 		    cctx, formBeanContext, _execParams, allParameters, succeeded);
 
-		List additionalValidators = getValidatorDelegates();
+		List<ValidatorDelegate> additionalValidators = getValidatorDelegates();
 		if (additionalValidators != null) // if there are any delegates registered
 		{
-			for (Iterator i = additionalValidators.iterator(); i.hasNext();)
+			for (Iterator<ValidatorDelegate> i = additionalValidators.iterator(); i.hasNext();)
 			{ // loop through them
 				boolean _succeeded = succeeded; // set to last known val
 
-				ValidatorDelegate valDel = (ValidatorDelegate)i.next();
+				ValidatorDelegate valDel = i.next();
 				_succeeded = valDel.doValidation(
 				    cctx, formBeanContext, executionParams, allParameters, _succeeded);
 
@@ -470,12 +470,12 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @param msg the message to append to logging
 	 * @param parameterSet set name to append to logging
 	 */
-	private final void traceParameters(Map parameters, StringBuffer msg, String parameterSet)
+	private final void traceParameters(Map<String, Object> parameters, StringBuffer msg, String parameterSet)
 	{
 		if (populationLog.isDebugEnabled() && (parameters != null) && (!parameters.isEmpty()))
 		{
 			msg.append("\n\t").append(parameterSet).append(": ");
-			for (Iterator i = parameters.keySet().iterator(); i.hasNext();)
+			for (Iterator<String> i = parameters.keySet().iterator(); i.hasNext();)
 			{
 				Object key = i.next();
 				Object value = parameters.get(key);
@@ -497,7 +497,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	private boolean populateWithErrorReport(
 	        ControllerContext cctx, 
 	        FormBeanContext formBeanContext, 
-	        Map parameters)
+	        Map<String, Object> parameters)
 	{
 		// Do nothing unless both arguments have been specified or parameters is empty
 		if ((formBeanContext == null) || (parameters == null) || (parameters.isEmpty()))
@@ -523,20 +523,20 @@ public abstract class FormBeanCtrlBase implements Controller
 	private boolean regexPopulateWithErrorReport(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
-		Map parameters)
+		Map<String, Object> parameters)
 	{
 		boolean succeeded = true;
-		Map regexFieldPopulators = populatorRegistry.getRegexFieldPopulators();
+		Map<Pattern, FieldPopulator> regexFieldPopulators = populatorRegistry.getRegexFieldPopulators();
 		// first, see if there are matches with registered regex populators
 		if (regexFieldPopulators != null) // there are registrations
 		{
-			List keysToBeRemoved = new ArrayList();
-			for (Iterator i = regexFieldPopulators.keySet().iterator(); i.hasNext();)
+			List<String> keysToBeRemoved = new ArrayList<String>();
+			for (Iterator<Pattern> i = regexFieldPopulators.keySet().iterator(); i.hasNext();)
 			{
-				Pattern pattern = (Pattern)i.next();
-				for (Iterator j = parameters.keySet().iterator(); j.hasNext();)
+				Pattern pattern = i.next();
+				for (Iterator<String> j = parameters.keySet().iterator(); j.hasNext();)
 				{
-					String name = (String)j.next();
+					String name = j.next();
 					// See if we have a custom populator registered for the given field
 					if (populatorRegistry.getFieldPopulator(name) != null)
 					{
@@ -549,7 +549,7 @@ public abstract class FormBeanCtrlBase implements Controller
 						if (matcher.matches())
 						{
 							FieldPopulator fieldPopulator = 
-							    (FieldPopulator)regexFieldPopulators.get(pattern);
+							    regexFieldPopulators.get(pattern);
 							keysToBeRemoved.add(name);
 							boolean success;
 							try
@@ -585,7 +585,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			}
 			if (!keysToBeRemoved.isEmpty()) // for all found matches, remove the parameter
 			{
-				for (Iterator i = keysToBeRemoved.iterator(); i.hasNext();)
+				for (Iterator<String> i = keysToBeRemoved.iterator(); i.hasNext();)
 				{
 					parameters.remove(i.next());
 				}
@@ -607,16 +607,16 @@ public abstract class FormBeanCtrlBase implements Controller
 	private boolean fieldPopulateWithErrorReport(
 		ControllerContext cctx,
 		FormBeanContext formBeanContext,
-		Map parameters,
+		Map<String, Object> parameters,
 		boolean succeeded)
 	{
 		// Loop through the property name/value pairs to be set
-		Iterator names = parameters.keySet().iterator();
+		Iterator<String> names = parameters.keySet().iterator();
 		while (names.hasNext())
 		{
 			boolean success = true;
 			// Identify the property name and value(s) to be assigned
-			String name = (String)names.next();
+			String name = names.next();
 			if (name == null)
 				continue;
 			Object value = parameters.get(name);
@@ -695,12 +695,12 @@ public abstract class FormBeanCtrlBase implements Controller
 	 */
 	private final void traceErrors(FormBeanContext formBeanContext)
 	{
-		Map errors = formBeanContext.getErrors();
+		Map<String, String> errors = formBeanContext.getErrors();
 		if (errors != null)
 		{
 			populationLog.debug("population of bean " + formBeanContext.getBean() + " did not succeed; errors:");
 
-			for (Iterator i = errors.keySet().iterator(); i.hasNext();)
+			for (Iterator<String> i = errors.keySet().iterator(); i.hasNext();)
 			{
 				Object key = i.next();
 				Object value = errors.get(key);
@@ -912,7 +912,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	{
 		if (validatorDelegates == null)
 		{
-			validatorDelegates = new ArrayList(1);
+			validatorDelegates = new ArrayList<ValidatorDelegate>(1);
 		}
 		validatorDelegates.add(validatorDelegate);
 	}
@@ -935,7 +935,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * 
 	 * @return the list of registered validator delegates, possibly null.
 	 */
-	protected List getValidatorDelegates()
+	protected List<ValidatorDelegate> getValidatorDelegates()
 	{
 		return validatorDelegates;
 	}

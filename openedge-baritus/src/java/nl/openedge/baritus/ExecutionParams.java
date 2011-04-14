@@ -531,7 +531,7 @@ public final class ExecutionParams implements Serializable, Cloneable
         b.append(" {");
         try
         {
-            Class clz = getClass();
+            Class< ? extends ExecutionParams> clz = getClass();
             Field[] fields = clz.getDeclaredFields();
             int length = fields.length;
             for(int i = 0; i < length; i++)

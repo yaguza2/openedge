@@ -43,7 +43,7 @@ import java.util.Map;
 public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServletRequest
 {
 	
-	private Map attributes = new HashMap();
+	private Map<String, Object> attributes = new HashMap<String, Object>();
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
@@ -97,9 +97,9 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 
 class ItEnum implements Enumeration
 {
-	Iterator i = null;
+	Iterator<String> i = null;
 		
-	public ItEnum(Iterator i)
+	public ItEnum(Iterator<String> i)
 	{
 		this.i = i;
 	}

@@ -30,6 +30,7 @@
  */
 package nl.openedge.baritus;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
@@ -85,13 +86,13 @@ public final class ConverterRegistry
 	 * The set of {@link Converter}s that can be used to convert Strings
 	 * into objects of a specified Class, keyed by the destination Class.
 	 */
-	private Map converters = new HashMap();
+	private Map<Serializable, Object> converters = new HashMap<Serializable, Object>();
 
 	/**
 	 * The set of {@link Converter}s that can be used to convert Strings
 	 * into objects of a specified Class, keyed by the destination Class and locale.
 	 */
-	private Map localizedConverters = new HashMap();
+	private Map<Serializable, Object> localizedConverters = new HashMap<Serializable, Object>();
 
 	/**
 	 * singleton instance
@@ -286,8 +287,8 @@ public final class ConverterRegistry
 	 */
 	public void deregisterByConverterClass(Class clazz)
 	{
-		List keys = new ArrayList();	
-		for(Iterator i = converters.keySet().iterator(); i.hasNext(); )
+		List<Object> keys = new ArrayList<Object>();	
+		for(Iterator<Serializable> i = converters.keySet().iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			Converter converter = (Converter)converters.get(key);
@@ -296,7 +297,7 @@ public final class ConverterRegistry
 				keys.add(key);
 			}
 		}
-		for(Iterator i = keys.iterator(); i.hasNext(); )
+		for(Iterator<Object> i = keys.iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			converters.remove(key);
@@ -304,7 +305,7 @@ public final class ConverterRegistry
 		}
 		
 		keys.clear();
-		for(Iterator i = localizedConverters.keySet().iterator(); i.hasNext(); )
+		for(Iterator<Serializable> i = localizedConverters.keySet().iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			LocaleConverter converter = (LocaleConverter)localizedConverters.get(key);
@@ -313,7 +314,7 @@ public final class ConverterRegistry
 				keys.add(key);
 			}
 		}
-		for(Iterator i = keys.iterator(); i.hasNext(); )
+		for(Iterator<Object> i = keys.iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			localizedConverters.remove(key);
@@ -328,8 +329,8 @@ public final class ConverterRegistry
 	 */
 	public void deregister(LocaleConverter converter)
 	{
-		List keys = new ArrayList();
-		for(Iterator i = localizedConverters.keySet().iterator(); i.hasNext(); )
+		List<Object> keys = new ArrayList<Object>();
+		for(Iterator<Serializable> i = localizedConverters.keySet().iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			LocaleConverter _converter = (LocaleConverter)localizedConverters.get(key);
@@ -338,7 +339,7 @@ public final class ConverterRegistry
 				keys.add(key);
 			}
 		}
-		for(Iterator i = keys.iterator(); i.hasNext(); )
+		for(Iterator<Object> i = keys.iterator(); i.hasNext(); )
 		{
 			Object key = i.next();
 			localizedConverters.remove(key);
@@ -452,13 +453,13 @@ public final class ConverterRegistry
 				// if found, instantiate a localized one and store for next use
 				if(_converter != null)
 				{
-					Class cls = _converter.getClass();
+					Class< ? extends LocaleConverter> cls = _converter.getClass();
 					Class[] paramTypes = new Class[]{ Locale.class };
-					Constructor constructor = cls.getConstructor(paramTypes);
+					Constructor< ? extends LocaleConverter> constructor = cls.getConstructor(paramTypes);
 					Object[] initArgs = new Object[]{ locale };
 					// create new instance for this locale
 					LocaleConverter _newConverter = 
-						(LocaleConverter)constructor.newInstance(initArgs); 
+						constructor.newInstance(initArgs); 
 					
 					// try to copy the pattern
 					if((_converter instanceof BaseLocaleConverter) &&
@@ -529,8 +530,8 @@ public final class ConverterRegistry
 				// if found, instantiate a localized one and store for next use
 				if(_formatter != null)
 				{
-					Class cls = _formatter.getClass();
-					LocaleFormatter _newFormatter = (LocaleFormatter)cls.newInstance();
+					Class< ? extends LocaleFormatter> cls = _formatter.getClass();
+					LocaleFormatter _newFormatter = cls.newInstance();
 					_newFormatter.setLocale(locale);
 
 					// register the new instance for this locale
