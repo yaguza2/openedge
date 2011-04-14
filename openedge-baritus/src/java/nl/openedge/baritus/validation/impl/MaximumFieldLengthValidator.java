@@ -39,11 +39,9 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * This validator checks on maximum length. If the type of the value is a String,
- * the string length is checked. If the type of the value is a Number, the actual
- * number is used. E.g. if property maxLength is 4, "hello" will fail, but "hi" 
- * will pass, and number 5 will fail, but 2 will pass.
- *  
+ * This validator checks on maximum length. If the type of the value is a String, the
+ * string length is checked. E.g. if property maxLength is 4, "hello" will fail, but "hi"
+ * will pass, and number 47535 will fail, but 635 will pass.
  * @author Eelco Hillenius
  */
 public final class MaximumFieldLengthValidator extends AbstractFieldValidator
@@ -52,9 +50,9 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	public final static int NO_MAXIMUM = -1;
 
 	private int maxLength = NO_MAXIMUM;
-	
+
 	private static Log log = LogFactory.getLog(MaximumFieldLengthValidator.class);
-	
+
 	private String errorMessageKey = "invalid.field.input.size";
 
 	/**
@@ -73,10 +71,10 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	{
 		setErrorMessageKey(errorMessageKey);
 	}
-	
+
 	/**
-	 * Construct with message prefix for error message keys and set
-	 * checking on maximum length with given length of fields only.
+	 * Construct with message prefix for error message keys and set checking on maximum
+	 * length with given length of fields only.
 	 * @param errorMessageKey message key
 	 * @param maxLength maximum length allowed for values; use -1 for no maximum
 	 */
@@ -85,7 +83,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 		setErrorMessageKey(errorMessageKey);
 		setMaxLength(maxLength);
 	}
-	
+
 	/**
 	 * Construct with activation rule.
 	 * @param rule activation rule
@@ -100,9 +98,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	 * @param errorMessageKey error message key
 	 * @param rule activation rule
 	 */
-	public MaximumFieldLengthValidator(
-		String errorMessageKey,
-		ValidationActivationRule rule)
+	public MaximumFieldLengthValidator(String errorMessageKey, ValidationActivationRule rule)
 	{
 		setErrorMessageKey(errorMessageKey);
 		setValidationRule(rule);
@@ -118,58 +114,48 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Checks whether the provided value is less than the maximum.
-	 * In case the value is an instance of string: checks whether the length of the string
-	 * is equal to or smaller than the maximumLength property.
-	 * In case the value is an instance of number: checks whether the length of the integer
-	 * value is equal to or smaller than the maximumLength property.
-	 * @return boolean true if the length of value is equal to or less than the
-	 * 	maxLength property, false otherwise
-	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 * Checks whether the lenth of the provided value is less than the maximum.
+	 * @return boolean true if the length of value is equal to or less than the maxLength
+	 *         property, false otherwise
+	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
+			String fieldName, Object value)
 	{
+		if (maxLength == NO_MAXIMUM)
+			return true;
+
 		boolean maxExceeded = false;
-		if(value != null)
+		if (value != null)
 		{
-			if(value instanceof String)
+			if (value instanceof String)
 			{
-				String toCheck = (String)value;
+				String toCheck = (String) value;
 				int length = toCheck.length();
-				if(maxLength != NO_MAXIMUM)
-				{
-					maxExceeded = (length > maxLength);
-				}
+				maxExceeded = (length > maxLength);
 			}
-			else if(value instanceof Number)
+			else if (value instanceof Number)
 			{
-				Number toCheck = (Number)value;
-				int length = toCheck.intValue();
-				if(maxLength != NO_MAXIMUM)
-				{
-					maxExceeded = (length > maxLength);
-				}
+				Number toCheck = (Number) value;
+				int length = toCheck.toString().length();
+				maxExceeded = (length > maxLength);
 			}
 			else
 			{
 				// just ignore; wrong type to check on
-				log.warn(fieldName + " with value: " + value + 
-					" is of the wrong type for checking on length"); 
+				log.warn(fieldName
+						+ " with value: " + value + " is of the wrong type for checking on length");
 				// give a warning though
 			}
 		}
-		
-		if(maxExceeded)
+
+		if (maxExceeded)
 		{
-			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
-				new Object[]{getFieldName(formBeanContext, fieldName), 
-				value, new Integer(maxLength)});
+			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), new Object[] {
+					getFieldName(formBeanContext, fieldName), value, new Integer(maxLength)});
 		}
-		
+
 		return (!maxExceeded);
 	}
 
@@ -184,7 +170,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Set maximum length that is checked on .
-	 * @param i maximum length that is checked on 
+	 * @param i maximum length that is checked on
 	 */
 	public void setMaxLength(int i)
 	{
@@ -208,5 +194,4 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 	{
 		errorMessageKey = string;
 	}
-
 }
