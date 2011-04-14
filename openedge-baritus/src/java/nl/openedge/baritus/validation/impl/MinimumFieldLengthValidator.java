@@ -39,11 +39,8 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * This validator checks on minimum length. If the type of the value is a String,
- * the string length is checked. If the type of the value is a Number, the actual
- * number is used. E.g. if property minLength is 4, "hello" will pass, but "hi" 
- * will fail, and number 5 will pass, but 2 will fail.
- * 
+ * This validator checks on minimum length. E.g. if property minLength is 4, "hello" will
+ * pass, but "hi" will fail, and number 98765 will pass, but 159 will fail.
  * @author Eelco Hillenius
  */
 public final class MinimumFieldLengthValidator extends AbstractFieldValidator
@@ -52,9 +49,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	public final static int NO_MINIMUM = -1;
 
 	private int minLength = NO_MINIMUM;
-	
+
 	private static Log log = LogFactory.getLog(MinimumFieldLengthValidator.class);
-	
+
 	private String errorMessageKey = "invalid.field.input.size";
 
 	/**
@@ -73,10 +70,10 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	{
 		setErrorMessageKey(errorMessageKey);
 	}
-	
+
 	/**
-	 * Construct with message key for error message keys and set
-	 * checking on minimum length with given length of fields only.
+	 * Construct with message key for error message keys and set checking on minimum
+	 * length with given length of fields only.
 	 * @param errorMessageKey key for error messages
 	 * @param minLength minimum length allowed for values; use -1 for no minimum
 	 */
@@ -85,7 +82,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 		setErrorMessageKey(errorMessageKey);
 		setMinLength(minLength);
 	}
-	
+
 	/**
 	 * Construct with activation rule.
 	 * @param rule activation rule
@@ -100,9 +97,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	 * @param errorMessageKey
 	 * @param rule activation rule
 	 */
-	public MinimumFieldLengthValidator(
-		String errorMessageKey,
-		ValidationActivationRule rule)
+	public MinimumFieldLengthValidator(String errorMessageKey, ValidationActivationRule rule)
 	{
 		setErrorMessageKey(errorMessageKey);
 		setValidationRule(rule);
@@ -118,57 +113,51 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Checks whether the provided value is greater than the minimum.
-	 * In case the value is an instance of string: checks whether the length of the string
-	 * is equal to or smaller than the minLength property.
-	 * In case the value is an instance of number: checks whether the length of the integer
-	 * value is equal to or smaller than the minLength property.
-	 * @return boolean true if the length of value is equal to or less than the
-	 * 	minLength property, false otherwise
-	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
+	 * Checks whether the provided value is greater than the minimum. In case the value is
+	 * an instance of string: checks whether the length of the string is equal to or
+	 * smaller than the minLength property. In case the value is an instance of number:
+	 * checks whether the length of the integer value is equal to or smaller than the
+	 * minLength property.
+	 * @return boolean true if the length of value is equal to or less than the minLength
+	 *         property, false otherwise
+	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		String fieldName,
-		Object value)
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
+			String fieldName, Object value)
 	{
+		if (minLength == NO_MINIMUM)
+			return true;
+
 		boolean minExceeded = false;
-		if(value != null)
+		if (value != null)
 		{
-			if(value instanceof String)
+			if (value instanceof String)
 			{
-				String toCheck = (String)value;
+				String toCheck = (String) value;
 				int length = toCheck.length();
-				if(minLength != NO_MINIMUM)
-				{
-					minExceeded = (length < minLength);
-				}
+				minExceeded = (length < minLength);
 			}
-			else if(value instanceof Number)
+			else if (value instanceof Number)
 			{
-				Number toCheck = (Number)value;
-				int length = toCheck.intValue();
-				if(minLength != NO_MINIMUM)
-				{
-					minExceeded = (length < minLength);
-				}
+				Number toCheck = (Number) value;
+				int length = toCheck.toString().length();
+				minExceeded = (length < minLength);
 			}
 			else
 			{
 				// just ignore; wrong type to check on
-				log.warn(fieldName + " with value: " + value + 
-					" is of the wrong type for checking on length"); // give a warning though
+				log.warn(fieldName
+						+ " with value: " + value + " is of the wrong type for checking on length");
 			}
 		}
-		
-		if(minExceeded)
+
+		if (minExceeded)
 		{
-			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), 
-				new Object[]{getFieldName(formBeanContext, fieldName), 
-				value, new Integer(minLength)});
+			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), new Object[] {
+					getFieldName(formBeanContext, fieldName), value, Integer.valueOf(minLength)});
 		}
-		
+
 		return (!minExceeded);
 	}
 
@@ -181,13 +170,13 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * @param i minimum length that is checked on 
+	 * @param i minimum length that is checked on
 	 */
 	public void setMinLength(int i)
 	{
 		minLength = i;
 	}
-	
+
 	/**
 	 * Get key of error message.
 	 * @return String key of error message
@@ -205,5 +194,4 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	{
 		errorMessageKey = string;
 	}
-
 }
