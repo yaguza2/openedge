@@ -76,7 +76,7 @@ public final class ByteConverter implements Converter
         } 
         else if (value instanceof Number) 
         {
-            return new Byte(((Number)value).byteValue());
+            return Byte.valueOf(((Number)value).byteValue());
         }
 
         try 

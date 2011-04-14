@@ -38,10 +38,8 @@ package nl.openedge.baritus.converters;
  * 
  * @author Eelco Hillenius
  */
-
 public final class LongConverter implements Converter 
 {
-
     /**
      * Create a {@link Converter} that will throw a {@link ConversionException}
      * if a conversion error occurs.
@@ -63,7 +61,6 @@ public final class LongConverter implements Converter
      */
     public Object convert(Class type, Object value) 
     {
-
         if (value == null) 
         {
 			return null;
@@ -75,19 +72,16 @@ public final class LongConverter implements Converter
         } 
         else if(value instanceof Number) 
         {
-            return new Long(((Number)value).longValue());
+            return Long.valueOf(((Number)value).longValue());
         }
 
         try 
         {
-            return (new Long(value.toString()));
+            return (Long.valueOf(value.toString()));
         } 
         catch (Exception e) 
         {
             throw new ConversionException(e);
         }
-
     }
-
-
 }

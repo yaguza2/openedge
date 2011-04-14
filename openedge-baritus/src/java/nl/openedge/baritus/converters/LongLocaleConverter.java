@@ -39,16 +39,11 @@ import java.util.Locale;
  */
 public class LongLocaleConverter extends DecimalLocaleConverter
 {
-
 	// ----------------------------------------------------------- Constructors
-
 	/**
-	 * Create a {@link LocaleConverter} 
-	 * that will throw a {@link ConversionException}
-	 * if a conversion error occurs. The locale is the default locale for
-	 * this instance of the Java Virtual Machine and an unlocalized pattern is used
-	 * for the convertion.
-	 *
+	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} if a
+	 * conversion error occurs. The locale is the default locale for this instance of the
+	 * Java Virtual Machine and an unlocalized pattern is used for the convertion.
 	 */
 	public LongLocaleConverter()
 	{
@@ -56,11 +51,9 @@ public class LongLocaleConverter extends DecimalLocaleConverter
 	}
 
 	/**
-	 * Create a {@link LocaleConverter} 
-	 * that will throw a {@link ConversionException}
-	 * if a conversion error occurs. An unlocalized pattern is used for the convertion.
-	 *
-	 * @param locale        The locale
+	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} if a
+	 * conversion error occurs. An unlocalized pattern is used for the convertion.
+	 * @param locale The locale
 	 */
 	public LongLocaleConverter(Locale locale)
 	{
@@ -68,12 +61,10 @@ public class LongLocaleConverter extends DecimalLocaleConverter
 	}
 
 	/**
-	 * Create a {@link LocaleConverter} 
-	 * that will throw a {@link ConversionException}
-	 * if a conversion error occurs. An unlocalized pattern is used for the convertion.
-	 *
-	 * @param locale        The locale
-	 * @param pattern       The convertion pattern
+	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} if a
+	 * conversion error occurs. An unlocalized pattern is used for the convertion.
+	 * @param locale The locale
+	 * @param pattern The convertion pattern
 	 */
 	public LongLocaleConverter(Locale locale, String pattern)
 	{
@@ -81,32 +72,24 @@ public class LongLocaleConverter extends DecimalLocaleConverter
 	}
 
 	/**
-	 * Create a {@link LocaleConverter} 
-	 * that will throw a {@link ConversionException}
-	 * if a conversion error occurs.
-	 *
-	 * @param locale        The locale
-	 * @param pattern       The convertion pattern
-	 * @param locPattern    Indicate whether the pattern is localized or not
+	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} if a
+	 * conversion error occurs.
+	 * @param locale The locale
+	 * @param pattern The convertion pattern
+	 * @param locPattern Indicate whether the pattern is localized or not
 	 */
-	public LongLocaleConverter(
-		Locale locale,
-		String pattern,
-		boolean locPattern)
+	public LongLocaleConverter(Locale locale, String pattern, boolean locPattern)
 	{
 		super(locale, pattern, locPattern);
 	}
-	
+
 	/**
 	 * Convert the specified locale-sensitive input object into an output object of the
 	 * specified type.
-	 *
 	 * @param type Data type to which this value should be converted
 	 * @param value The input object to be converted
 	 * @param pattern The pattern is used for the convertion
-	 *
-	 * @exception ConversionException if conversion cannot be performed
-	 *  successfully
+	 * @exception ConversionException if conversion cannot be performed successfully
 	 */
 	public Object convert(Class type, Object value, String pattern)
 	{
@@ -114,10 +97,9 @@ public class LongLocaleConverter extends DecimalLocaleConverter
 		{
 			return null;
 		}
-		
-		Number temp = getNumber(value, pattern);
-		
-		return (temp instanceof Long) ? (Long)temp : new Long(temp.longValue());
-	}
 
+		Number temp = getNumber(value, pattern);
+
+		return (temp instanceof Long) ? (Long) temp : Long.valueOf(temp.longValue());
+	}
 }

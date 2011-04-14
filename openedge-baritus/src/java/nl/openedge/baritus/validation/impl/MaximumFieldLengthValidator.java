@@ -39,9 +39,8 @@ import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * This validator checks on maximum length. If the type of the value is a String, the
- * string length is checked. E.g. if property maxLength is 4, "hello" will fail, but "hi"
- * will pass, and number 47535 will fail, but 635 will pass.
+ * This validator checks on maximum length. E.g. if property maxLength is 4, "hello" will
+ * fail, but "hi" will pass, and number 47535 will fail, but 635 will pass.
  * @author Eelco Hillenius
  */
 public final class MaximumFieldLengthValidator extends AbstractFieldValidator
@@ -153,7 +152,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 		if (maxExceeded)
 		{
 			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), new Object[] {
-					getFieldName(formBeanContext, fieldName), value, new Integer(maxLength)});
+					getFieldName(formBeanContext, fieldName), value, Integer.valueOf(maxLength)});
 		}
 
 		return (!maxExceeded);
