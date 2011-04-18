@@ -213,8 +213,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				else
 				{
 					log
-							.warn("sceduler was started but "
-									+ "there are no jobs to scedule");
+							.warn("scheduler was started but "
+									+ "there are no jobs to schedule");
 				}
 
 			}
