@@ -415,13 +415,13 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Slotwaarde Praenumerando AnnuïTeit.
+	 * Slotwaarde Praenumerando AnnuÃ¯Teit.
 	 * 
 	 * @param n
 	 *            duur
 	 * @param i
 	 *            percentage intrest
-	 * @return double Slotwaarde Praenumerando AnnuïTeit
+	 * @return double Slotwaarde Praenumerando AnnuÃ¯Teit
 	 */
 	public static double slotwaardePraenumerandoAnnuiTeit(final int n, final double i)
 	{
@@ -429,13 +429,13 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Slotwaarde Postnumerando AnnuïTeit.
+	 * Slotwaarde Postnumerando AnnuÃ¯Teit.
 	 * 
 	 * @param n
 	 *            duur
 	 * @param i
 	 *            percntege intrest
-	 * @return double Slotwaarde Postnumerando AnnuïTeit
+	 * @return double Slotwaarde Postnumerando AnnuÃ¯Teit
 	 */
 	public static double slotwaardePostnumerandoAnnuiTeit(final int n, final double i)
 	{
@@ -443,7 +443,7 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Slotwaarde Praenumerando AnnuïTeit in termijnen nauwkeurig.
+	 * Slotwaarde Praenumerando AnnuÃ¯Teit in termijnen nauwkeurig.
 	 * 
 	 * @param n
 	 *            duur
@@ -451,7 +451,7 @@ public final class Rekenhulp
 	 *            termijnen in een jaar
 	 * @param i
 	 *            percentage intrest
-	 * @return double Slotwaarde Praenumerando AnnuïTeit in termijnen nauwkeurig.
+	 * @return double Slotwaarde Praenumerando AnnuÃ¯Teit in termijnen nauwkeurig.
 	 */
 	public static double slotwaardePraenumerandoTermAnnuiTeit(final int n, final int t,
 			final double i)
@@ -464,7 +464,7 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Slotwaarde Postnumerando AnnuïTeit in termijnen nauwkeurig.
+	 * Slotwaarde Postnumerando AnnuÃ¯Teit in termijnen nauwkeurig.
 	 * 
 	 * @param n
 	 *            duur
@@ -472,7 +472,7 @@ public final class Rekenhulp
 	 *            termijnen in een jaar
 	 * @param i
 	 *            percentage intrest
-	 * @return double Slotwaarde Postnumerando AnnuïTeit in termijnen nauwkeurig
+	 * @return double Slotwaarde Postnumerando AnnuÃ¯Teit in termijnen nauwkeurig
 	 */
 	public static double slotwaardePostnumerandoTermAnnuiTeit(final int n, final int t,
 			final double i)
