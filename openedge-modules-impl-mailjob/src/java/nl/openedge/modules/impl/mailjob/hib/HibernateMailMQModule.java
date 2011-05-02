@@ -38,9 +38,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.impl.mailjob.MailMQModule;
 import nl.openedge.modules.impl.mailjob.MailMessage;
@@ -320,7 +320,7 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		{
 			session = HibernateHelper.getSessionFactory().openSession();
 			tx = session.beginTransaction();
-			messages = session.find(query);
+			messages = ((org.hibernate.classic.Session) session).find(query);
 			if (messages != null)
 			{
 				for (Iterator i = messages.iterator(); i.hasNext();)

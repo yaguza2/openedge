@@ -5,14 +5,15 @@
  */
 package nl.openedge.modules.impl.mailjob;
 
+import java.io.Serializable;
 import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.UserType;
+import org.hibernate.HibernateException;
+import org.hibernate.usertype.UserType;
 
 /**
  * @author hop
@@ -69,6 +70,37 @@ public class StringClobType implements UserType
 	public boolean isMutable()
 	{
 		return false;
+	}
+
+	@Override
+	public Object assemble(Serializable arg0, Object arg1)
+			throws HibernateException {
+		// TODO Auto-generated method stub
+		
+		throw new RuntimeException(" not implemented");
+//		return null;
+	}
+
+	@Override
+	public Serializable disassemble(Object arg0) throws HibernateException {
+		// TODO Auto-generated method stub
+		throw new RuntimeException(" not implemented");
+//		return null;
+	}
+
+	@Override
+	public int hashCode(Object arg0) throws HibernateException {
+		// TODO Auto-generated method stub
+		throw new RuntimeException(" not implemented");
+//		return 0;
+	}
+
+	@Override
+	public Object replace(Object arg0, Object arg1, Object arg2)
+			throws HibernateException {
+		// TODO Auto-generated method stub
+		throw new RuntimeException(" not implemented");
+//		return null;
 	}
 
 }
