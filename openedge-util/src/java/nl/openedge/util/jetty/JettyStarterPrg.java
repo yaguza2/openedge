@@ -143,6 +143,10 @@ public class JettyStarterPrg
 		{
 			log.error(e.getMessage(), e);
 		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -168,7 +172,7 @@ public class JettyStarterPrg
 	 */
 	private static void startServer(String jettyConfig, int port, String webappContextRoot,
 			String contextPath, boolean useJettyPlus, String monitorCommKey, int monitorPort)
-			throws MalformedURLException, MultiException, JettyHelperException
+			throws MalformedURLException, MultiException, JettyHelperException, Exception
 	{
 		Server jettyServer = null;
 		// get instance of proper Jetty server

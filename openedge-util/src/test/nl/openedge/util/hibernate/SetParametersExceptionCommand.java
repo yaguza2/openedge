@@ -9,8 +9,9 @@
 package nl.openedge.util.hibernate;
 
 import junit.framework.TestCase;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 
 /**
  * SetParametersExceptionCommand is een speciale mock class voor het gooien van een

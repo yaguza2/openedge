@@ -14,14 +14,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
 import nl.openedge.util.URLHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.classic.Session;
 
 /**
  * Helper class to be able to transparantly obtain and configure Hibernate sessions.

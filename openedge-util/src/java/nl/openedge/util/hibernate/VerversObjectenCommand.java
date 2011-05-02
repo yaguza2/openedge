@@ -18,11 +18,11 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.engine.SessionFactoryImplementor;
-import net.sf.hibernate.persister.ClassPersister;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.SessionImplementor;
+import org.hibernate.metadata.ClassMetadata;
 
 /**
  * Ververst de opgegeven objecten met data uit de database.
@@ -74,9 +74,10 @@ public class VerversObjectenCommand implements HibernateCommand
 			// vervangen door 'ververste' objecten
 			Object object = i.next();
 			Class clazz = object.getClass();
-			ClassPersister persister = sessionFactoryImpl.getPersister(clazz); // haal persister op
-			Serializable id = persister.getIdentifier(object); // bepaal id property(/ies) van dit
-			// object
+
+			// TODO: ongetest - aangepast voor hibernate3
+			ClassMetadata meta = sessionFactoryImpl.getClassMetadata(clazz);
+			Serializable id = meta.getIdentifier( object, (SessionImplementor) hibernateSession);			
 			Object copy = hibernateSession.load(clazz, id); // laat Hibernate object laden
 			try
 			{

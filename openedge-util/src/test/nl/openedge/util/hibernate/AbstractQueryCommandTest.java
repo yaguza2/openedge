@@ -11,11 +11,11 @@ package nl.openedge.util.hibernate;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
 
 import org.easymock.MockControl;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  * AbstractHibernateCommandTest controleert de AbstractQueryCommand binnen een Unit test. Eigenlijk

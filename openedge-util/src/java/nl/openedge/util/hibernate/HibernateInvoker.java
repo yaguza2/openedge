@@ -8,11 +8,10 @@
  */
 package nl.openedge.util.hibernate;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 
 /**
  * De HibernateInvoker wordt gebruikt om HibernateCommands uit te voeren.

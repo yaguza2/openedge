@@ -8,9 +8,9 @@
  */
 package nl.openedge.util.hibernate;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  * Vult alle objecten van de gegeven persistente klasse.

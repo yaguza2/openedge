@@ -10,14 +10,13 @@ package nl.openedge.util.hibernate;
 
 import java.net.URL;
 
-import net.sf.hibernate.FlushMode;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.SessionFactory;
-import net.sf.hibernate.cfg.Configuration;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.FlushMode;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.classic.Session;
 
 /**
  * HibernateHelper geeft toegang tot Hibernate functionaliteit.

@@ -10,12 +10,11 @@ package nl.openedge.util.hibernate;
 
 import java.util.List;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Query;
-import net.sf.hibernate.Session;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  * AbstractQueryCommand voert een zogeheten named query uit via Hibernate.

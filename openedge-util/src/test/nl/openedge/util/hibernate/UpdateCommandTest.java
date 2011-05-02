@@ -9,11 +9,11 @@
 package nl.openedge.util.hibernate;
 
 import junit.framework.TestCase;
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
-import net.sf.hibernate.Transaction;
 
 import org.easymock.MockControl;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  * AbstractUpdateCommand.

@@ -135,6 +135,10 @@ public class JettyDecorator extends AbstractJettyDecorator
 		{
 			log.error(e.getMessage(), e);
 		}
+		catch(Exception e)
+		{
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	/**

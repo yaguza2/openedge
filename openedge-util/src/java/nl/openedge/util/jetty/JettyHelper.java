@@ -22,11 +22,8 @@ import java.net.URL;
 import nl.openedge.util.URLHelper;
 
 import org.apache.commons.logging.LogFactory;
-import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
-import org.mortbay.util.Log;
 import org.mortbay.util.MultiException;
-import org.mortbay.util.OutputStreamLogSink;
 
 /**
  * Helperclass for Jetty.
@@ -82,7 +79,9 @@ public final class JettyHelper
 			}
 			else
 			{
-				server = new Server(config);
+				//	TODO - jetty 6 kent geen config veld meer			
+				//server = new Server(config);
+				server = new Server();
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -110,11 +109,11 @@ public final class JettyHelper
 			log.error(e.getMessage(), e);
 			throw new JettyHelperException(e);
 		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new JettyHelperException(e);
-		}
+//		catch (IOException e)
+//		{
+//			log.error(e.getMessage(), e);
+//			throw new JettyHelperException(e);
+//		}
 		return server;
 	}
 
@@ -165,31 +164,32 @@ public final class JettyHelper
 			server = new Server();
 		}
 
-		try
-		{
-			Log logInstance = Log.instance();
-			OutputStreamLogSink sink = new OutputStreamLogSink();
-			sink.start();
-			logInstance.add(sink);
-			SocketListener listener = new SocketListener();
-			listener.setPort(port);
-			listener.setMaxThreads(MAX_THREADS);
-			listener.setMaxIdleTimeMs(MAX_IDLE_TIME);
-			listener.setLowResourcePersistTimeMs(LOW_RESOURCE_PERSIST_TIME);
-			listener.setConfidentialPort(CONFIDENTIALPORT);
-			server.addListener(listener);
-			server.addWebApplication(contextPath, webappContextRoot);
-		}
-		catch (IllegalArgumentException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new JettyHelperException(e);
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new JettyHelperException(e);
-		}
+//		try
+//		{
+			// wordt toch niet meer gebruikt
+//			Log logInstance = Log.instance();
+//			OutputStreamLogSink sink = new OutputStreamLogSink();
+//			sink.start();
+//			logInstance.add(sink);
+//			SocketListener listener = new SocketListener();
+//			listener.setPort(port);
+//			listener.setMaxThreads(MAX_THREADS);
+//			listener.setMaxIdleTimeMs(MAX_IDLE_TIME);
+//			listener.setLowResourcePersistTimeMs(LOW_RESOURCE_PERSIST_TIME);
+//			listener.setConfidentialPort(CONFIDENTIALPORT);
+//			server.addListener(listener);
+//			server.addWebApplication(contextPath, webappContextRoot);
+//		}
+//		catch (IllegalArgumentException e)
+//		{
+//			log.error(e.getMessage(), e);
+//			throw new JettyHelperException(e);
+//		}
+//		catch (IOException e)
+//		{
+//			log.error(e.getMessage(), e);
+//			throw new JettyHelperException(e);
+//		}
 
 		return server;
 	}
@@ -221,6 +221,11 @@ public final class JettyHelper
 			server.start();
 		}
 		catch (MultiException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
 			throw new JettyHelperException(e);
@@ -264,6 +269,11 @@ public final class JettyHelper
 			throw new JettyHelperException(e);
 		}
 		catch (MultiException e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JettyHelperException(e);
+		}
+		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
 			throw new JettyHelperException(e);

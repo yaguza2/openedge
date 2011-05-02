@@ -14,8 +14,8 @@ import java.sql.Statement;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import net.sf.hibernate.Session;
-import nl.openedge.util.hibernate.HibernateHelper;
+
+import org.hibernate.Session;
 
 /**
  */

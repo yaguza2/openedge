@@ -8,8 +8,8 @@
  */
 package nl.openedge.util.hibernate;
 
-import net.sf.hibernate.HibernateException;
-import net.sf.hibernate.Session;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 
 /**
  * Interface voor het uitvoeren van database commando's via Hibernate.
