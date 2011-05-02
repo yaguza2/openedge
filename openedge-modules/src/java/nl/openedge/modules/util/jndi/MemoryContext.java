@@ -113,7 +113,7 @@ public final class MemoryContext implements Context
 	 */
 	public MemoryContext(Hashtable env) throws NamingException
 	{
-		Enumeration enum;
+		Enumeration enumeration;
 		String name;
 		Object value;
 
@@ -132,10 +132,10 @@ public final class MemoryContext implements Context
 			}
 			else
 				_bindings = new MemoryBinding();
-			enum = env.keys();
-			while (enum.hasMoreElements())
+			enumeration = env.keys();
+			while (enumeration.hasMoreElements())
 			{
-				name = (String) enum.nextElement();
+				name = (String) enumeration.nextElement();
 				value = env.get(name);
 				if (name.equals("readOnly"))
 					_readOnly = value.toString().equalsIgnoreCase("true");
@@ -154,7 +154,7 @@ public final class MemoryContext implements Context
 	 */
 	MemoryContext(MemoryBinding bindings, Hashtable env)
 	{
-		Enumeration enum;
+		Enumeration enumeration;
 		String name;
 		Object value;
 		_bindings = bindings;
@@ -163,10 +163,10 @@ public final class MemoryContext implements Context
 		// This takes care of setting certain flags appropriately.
 		if (env != null)
 		{
-			enum = env.keys();
-			while (enum.hasMoreElements())
+			enumeration = env.keys();
+			while (enumeration.hasMoreElements())
 			{
-				name = (String) enum.nextElement();
+				name = (String) enumeration.nextElement();
 				value = env.get(name);
 				if (name.equals("readOnly"))
 				{
