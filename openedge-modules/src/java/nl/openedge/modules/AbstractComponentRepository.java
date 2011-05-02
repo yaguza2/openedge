@@ -641,6 +641,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 */
 	public Object getComponent(String name)
 	{
+		log.info( "looking for component " + name);
 		ComponentFactory componentFactory = (ComponentFactory) components.get(name);
 		if (componentFactory == null)
 		{
