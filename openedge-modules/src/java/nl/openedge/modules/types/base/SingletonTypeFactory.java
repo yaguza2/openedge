@@ -128,7 +128,7 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 	 */
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
-		setComponentRepository(componentRepository);
+		super.setComponentRepository(componentRepository);
 		componentRepository.addObserver(this);
 	}
 
