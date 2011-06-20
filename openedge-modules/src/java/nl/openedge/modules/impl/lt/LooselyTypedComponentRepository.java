@@ -119,12 +119,12 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 				factory = TypesRegistry.getDefaultComponentFactory();
 
 				log.warn(name
-						+ " is not of any know type... using " + factory
+						+ " is not of any known type... using " + factory
 						+ " as component factory");
 			}
 			else
 			{
-				throw new ConfigException(name + " is not of any know type");
+				throw new ConfigException(name + " is not of any known type");
 			}
 		}
 
