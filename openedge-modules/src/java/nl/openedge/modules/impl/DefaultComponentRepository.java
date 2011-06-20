@@ -133,7 +133,7 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 			factory = TypesRegistry.getDefaultComponentFactory();
 
 			log.warn(name
-					+ " is not of any know type... using " + factory
+					+ " is not of any known type... using " + factory
 					+ " as component factory");
 		}
 
