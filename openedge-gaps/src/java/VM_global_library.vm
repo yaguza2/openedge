@@ -1,0 +1,26 @@
+## Global Macros
+
+#macro( forminput $fieldname $type $size )
+	#if( $model.errors.get($fieldname) )
+		<input type="${type}" name="${fieldname}" 
+			size="${size}" class="fielderror" 
+			value="$!{model.displayProperty($fieldname)}">
+	#else
+		<input type="${type}" name="${fieldname}" 
+			size="${size}" class="field" 
+			value="$!{model.displayProperty($fieldname)}">	
+	#end
+#end
+
+#macro( arrayforminput $fieldname $index $type $size )
+	#set( $displayfieldname = "${fieldname}[$index]" ) 
+	#if( $model.errors.get($displayfieldname) )
+		<input type="${type}" name="${fieldname}" 
+			size="${size}" class="fielderror" 
+			value="$!{model.displayProperty($displayfieldname)}">
+	#else
+		<input type="${type}" name="${fieldname}" 
+			size="${size}" class="field" 
+			value="$!{model.displayProperty($displayfieldname)}">	
+	#end
+#end

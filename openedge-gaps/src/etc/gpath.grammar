@@ -1,0 +1,158 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * SableCC definities om mbv paden groepen/parameters aan te       *
+ * kunnen spreken                                                  *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+Package nl.openedge.gaps.support.gapspath;
+
+Helpers
+
+	allchars = [0 .. 127];
+    digit = ['0' .. '9'];
+    ascii_character = [0..0xff];
+  	ascii_small = ['a'..'z'];
+  	ascii_caps = ['A'..'Z'];
+    dot = '.';
+    tab = 9;
+    cr = 13;
+    lf = 10;
+	line_terminator     = lf | cr | cr lf; 
+    blank = (' ' | tab | line_terminator)+;
+  	input_character     = [ascii_character - [cr + lf]];
+  	letter              = ascii_small | ascii_caps | '_' | dot;
+  	letter_or_digit     = letter | digit;
+    identifier = letter_or_digit (letter_or_digit)*;
+    at = '@';
+    eq = '=';
+    colon = ':';
+    l_bracket = '[';
+    r_bracket = ']';
+    l_brace = '{';
+    r_brace = '}';
+    l_par = '(';
+    r_par = ')';
+
+Tokens
+
+	and = 'and';
+	or = 'or';
+
+    l_bracket = l_bracket;
+    r_bracket = r_bracket;
+    l_brace = l_brace;
+    r_brace = r_brace;
+    slash = '/';
+    at = at;
+    colon = colon;
+	id = identifier;
+	eq = eq;
+	quote = ''';
+
+	blank = blank;
+
+Ignored Tokens
+
+    blank;
+
+Productions
+
+    path =
+        {group} struct_group param_group? options?
+      | {param} struct_group param_group param options?
+    ;
+
+	struct_group =
+        {root} slash
+      | slash? id struct_group_tail*
+    ;
+
+	struct_group_tail =
+	    slash id
+	;
+
+    param_group =
+        colon id
+    ;
+
+    param =
+    	slash id array_select? attribute?
+    ;
+
+	array_select =
+		l_bracket [left_quote]:quote [select_expr]:id [right_quote]:quote r_bracket
+	;
+
+    attribute =
+        at [expr]:id
+    ;    
+
+	options =
+	    l_brace options_block r_brace
+	;
+
+	options_block =
+	    options_part options_part_tail*
+	;
+
+	options_part_tail =
+	    {and} and options_part
+	  | {or} or options_part
+	;
+
+	options_part =
+	    [parameter]:id eq [left_quote]:quote [select_expr]:id [right_quote]:quote
+	;
+
+/*
+
+AST '/foo/bar:pgroup/2':
+
+  >- AParamPath
+     |- AStructGroup
+     |  |- /
+     |  |- foo
+     |  `- AStructGroupTail
+     |     |- /
+     |     `- bar
+     |- AParamGroup
+     |  |- :
+     |  `- pgroup
+     `- AParam
+        |- /
+        `- 2
+
+AST '/foo/bar:pgroup/2['blah']@value{version='3'}':
+
+  >- AParamPath
+     |- AStructGroup
+     |  |- /
+     |  |- foo
+     |  `- AStructGroupTail
+     |     |- /
+     |     `- bar
+     |- AParamGroup
+     |  |- :
+     |  `- pgroup
+     |- AParam
+     |  |- /
+     |  |- 2
+     |  |- AArraySelect
+     |  |  |- [
+     |  |  |- '
+     |  |  |- blah
+     |  |  |- '
+     |  |  `- ]
+     |  `- AAttribute
+     |     |- @
+     |     `- value
+     `- AOptions
+        |- {
+        |- AOptionsBlock
+        |  `- AOptionsPart
+        |     |- version
+        |     |- =
+        |     |- '
+        |     |- 3
+        |     `- '
+        `- }
+ */
