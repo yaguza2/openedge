@@ -36,6 +36,7 @@ package nl.openedge.baritus.converters;
  * <code>java.lang.Character</code> object, throwing a {@link ConversionException} if a
  * conversion error occurs.
  * </p>
+ * 
  * @author Eelco Hillenius
  */
 public final class CharacterConverter implements Converter
@@ -46,16 +47,20 @@ public final class CharacterConverter implements Converter
 	 */
 	public CharacterConverter()
 	{
-
 	}
 
 	/**
 	 * Convert the specified input object into an output object of the specified type.
-	 * @param type Data type to which this value should be converted
-	 * @param value The input value to be converted
-	 * @exception ConversionException if conversion cannot be performed successfully
+	 * 
+	 * @param type
+	 *            Data type to which this value should be converted
+	 * @param value
+	 *            The input value to be converted
+	 * @exception ConversionException
+	 *                if conversion cannot be performed successfully
 	 */
-	public Object convert(Class type, Object value)
+	@Override
+	public Object convert(Class< ? > type, Object value)
 	{
 		if (value == null)
 		{

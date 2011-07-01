@@ -36,13 +36,11 @@ import java.util.Locale;
 
 /**
  * base class for localized converters
+ * 
  * @author Eelco Hillenius
  */
 public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 {
-
-	// ----------------------------------------------------- Instance Variables
-
 	/** The locale specified to our Constructor, by default - system locale. */
 	protected Locale locale = Locale.getDefault();
 
@@ -52,36 +50,33 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 	/** The flag indicating whether the given pattern string is localized or not. */
 	protected boolean locPattern = false;
 
-	// ----------------------------------------------------------- Constructors
-
 	/**
-	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException}
-	 * if a conversion error occurs.
-	 * An unlocalized pattern is used for the convertion.
-	 *
-	 * @param locale        The locale
-	 * @param pattern       The convertion pattern
+	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} if a
+	 * conversion error occurs. An unlocalized pattern is used for the convertion.
+	 * 
+	 * @param locale
+	 *            The locale
+	 * @param pattern
+	 *            The convertion pattern
 	 */
 	protected BaseLocaleConverter(Locale locale, String pattern)
 	{
 		this(locale, pattern, false);
 	}
 
-
 	/**
-	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} 
-	 * if an conversion error occurs.
-	 *
-	 * @param locale        The locale
-	 * @param pattern       The convertion pattern
-	 * @param locPattern    Indicate whether the pattern is localized or not
+	 * Create a {@link LocaleConverter} that will throw a {@link ConversionException} if
+	 * an conversion error occurs.
+	 * 
+	 * @param locale
+	 *            The locale
+	 * @param pattern
+	 *            The convertion pattern
+	 * @param locPattern
+	 *            Indicate whether the pattern is localized or not
 	 */
-	protected BaseLocaleConverter(
-		Locale locale,
-		String pattern,
-		boolean locPattern)
+	protected BaseLocaleConverter(Locale locale, String pattern, boolean locPattern)
 	{
-
 		if (locale != null)
 		{
 			this.locale = locale;
@@ -91,47 +86,48 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 		this.locPattern = locPattern;
 	}
 
-	// --------------------------------------------------------- Methods
-
 	/**
 	 * Convert the specified locale-sensitive input object into an output object of the
 	 * specified type.
-	 *
-	 * @param value The input object to be converted
-	 * @param pattern The pattern is used for the convertion
-	 *
-	 * @exception ConversionException if conversion cannot be performed
-	 *  successfully
+	 * 
+	 * @param value
+	 *            The input object to be converted
+	 * @param pattern
+	 *            The pattern is used for the convertion
+	 * 
+	 * @exception ConversionException
+	 *                if conversion cannot be performed successfully
 	 */
-
-	abstract protected Object parse(Object value, String pattern)
-		throws ParseException;
+	abstract protected Object parse(Object value, @SuppressWarnings("hiding") String pattern)
+			throws ParseException;
 
 	/**
-	 * Convert the specified locale-sensitive input object into an output object.
-	 * The default pattern is used for the convertion.
-	 *
-	 * @param value The input object to be converted
-	 *
-	 * @exception ConversionException if conversion cannot be performed
-	 *  successfully
+	 * Convert the specified locale-sensitive input object into an output object. The
+	 * default pattern is used for the convertion.
+	 * 
+	 * @param value
+	 *            The input object to be converted
+	 * 
+	 * @exception ConversionException
+	 *                if conversion cannot be performed successfully
 	 */
 	public Object convert(Object value)
-	
 	{
 		return convert(value, null);
 	}
 
 	/**
 	 * Convert the specified locale-sensitive input object into an output object.
-	 *
-	 * @param value The input object to be converted
-	 * @param pattern The pattern is used for the convertion
-	 *
-	 * @exception ConversionException if conversion cannot be performed
-	 *  successfully
+	 * 
+	 * @param value
+	 *            The input object to be converted
+	 * @param pattern
+	 *            The pattern is used for the convertion
+	 * 
+	 * @exception ConversionException
+	 *                if conversion cannot be performed successfully
 	 */
-	public Object convert(Object value, String pattern)
+	public Object convert(Object value, @SuppressWarnings("hiding") String pattern)
 	{
 		return convert(null, value, pattern);
 	}
@@ -139,54 +135,24 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 	/**
 	 * Convert the specified locale-sensitive input object into an output object of the
 	 * specified type. The default pattern is used for the convertion.
-	 *
-	 * @param type Data type to which this value should be converted
-	 * @param value The input object to be converted
-	 *
-	 * @exception ConversionException if conversion cannot be performed
-	 *  successfully
+	 * 
+	 * @param type
+	 *            Data type to which this value should be converted
+	 * @param value
+	 *            The input object to be converted
+	 * 
+	 * @exception ConversionException
+	 *                if conversion cannot be performed successfully
 	 */
-	public Object convert(Class type, Object value)
+	@Override
+	public Object convert(Class< ? > type, Object value)
 	{
 		return convert(type, value, null);
 	}
 
-//	/**
-//	 * Convert the specified locale-sensitive input object into an output object of the
-//	 * specified type.
-//	 *
-//	 * @param type Data type to which this value should be converted
-//	 * @param value The input object to be converted
-//	 * @param pattern The pattern is used for the convertion
-//	 *
-//	 * @exception ConversionException if conversion cannot be performed successfully
-//	 */
-//	public Object convert(Class type, Object value, String pattern)
-//	{
-//		if (value == null)
-//		{
-//			return null;
-//		}
-//
-//		try
-//		{
-//			if (pattern != null)
-//			{
-//				return parse(value, pattern);
-//			}
-//			else
-//			{
-//				return parse(value, this.pattern);
-//			}
-//		}
-//		catch (Exception e)
-//		{
-//			throw new ConversionException(e);
-//		}
-//	}
-
 	/**
 	 * get the locale
+	 * 
 	 * @return Locale
 	 */
 	public Locale getLocale()
@@ -196,6 +162,7 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 
 	/**
 	 * get the pattern
+	 * 
 	 * @return String
 	 */
 	public String getPattern()
@@ -205,6 +172,7 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 
 	/**
 	 * set the locale
+	 * 
 	 * @param locale
 	 */
 	public void setLocale(Locale locale)
@@ -214,11 +182,11 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 
 	/**
 	 * set the pattern
+	 * 
 	 * @param string
 	 */
 	public void setPattern(String string)
 	{
 		pattern = string;
 	}
-
 }
