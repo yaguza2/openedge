@@ -12,6 +12,10 @@
 	<name>OpenEdge Mailjob</name>
 	<dependencies>
 		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
@@ -22,10 +26,6 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javamail</groupId>
-			<artifactId>javamail</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>nl.topicus.onderwijs.openedge</groupId>
