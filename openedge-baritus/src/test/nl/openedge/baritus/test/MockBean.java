@@ -42,70 +42,67 @@ import java.util.Map;
  * @author Eelco Hillenius
  * @author Sander Hofstee
  */
-public class TestBean
+public class MockBean
 {
 	private String testTrimString;
-	private String[] testTrimStringArray = new String[] { "" };
-	
+
+	private String[] testTrimStringArray = new String[] {""};
+
 	private Integer testInteger1;
+
 	private Integer testInteger2;
-	
+
 	private Long testLong1;
+
 	private Long testLong2;
-	
+
 	private Double testDouble1;
+
 	private Double testDouble2;
-	
+
 	private Date testDate1;
+
 	private Date testDate2;
-	
+
 	private String[] testStringArray1 = null;
-	
-	private String[] testStringArray2 = new String[] 
-	{
-		"existing0", "existing1"	
-	};
-	
-	private Integer[] testIntegerArray1 = new Integer[]
-	{
-	  new Integer(-1), new Integer(-1)
-	};
-	
+
+	private String[] testStringArray2 = new String[] {"existing0", "existing1"};
+
+	private Integer[] testIntegerArray1 = new Integer[] {new Integer(-1), new Integer(-1)};
+
 	private Map testMap = new HashMap();
-	
+
 	// custom population tests
 	private String uppercaseTest = null;
-	private String ignore = "unchanged";
-	private String ignoreByRegex = "unchanged (regex)";
-	
-	private String toValidate1;
-	private String[] toValidate2 = new String[] 
-	{
-		"", ""
-	};
-	private String[] toValidate3 = new String[] 
-	{
-		"", ""
-	};
-	private String toValidate4 = "validValue";
-	
-	private List<Object> listProperty = new ArrayList<Object>();
-	
-	private List<List<List>> multiDimensionalList = new ArrayList<List<List>>();
-	
-	private Map multiDimensionalMap = new HashMap();
-	
-	private TestObject testObject = null;
 
+	private String ignore = "unchanged";
+
+	private String ignoreByRegex = "unchanged (regex)";
+
+	private String toValidate1;
+
+	private String[] toValidate2 = new String[] {"", ""};
+
+	private String[] toValidate3 = new String[] {"", ""};
+
+	private String toValidate4 = "validValue";
+
+	private List<Object> listProperty = new ArrayList<Object>();
+
+	private List<List<List>> multiDimensionalList = new ArrayList<List<List>>();
+
+	private Map multiDimensionalMap = new HashMap();
+
+	private MockObject testObject = null;
 
 	/**
 	 * construct
 	 */
-	public TestBean()
+	public MockBean()
 	{
 		multiDimensionalMap.put("one", new HashMap());
 		multiDimensionalMap.put("two", new HashMap());
-		
+
 		List lOne0 = new ArrayList();
 		List lOne1 = new ArrayList();
 		List lOne2 = new ArrayList();
@@ -114,13 +111,12 @@ public class TestBean
 		lOne.add(lOne1);
 		lOne.add(lOne2);
 		multiDimensionalList.add(lOne);
-		
+
 		List lTwo0 = new ArrayList();
 		List<List> lTwo = new ArrayList<List>();
 		lTwo.add(lTwo);
 		multiDimensionalList.add(lTwo);
 	}
-
 
 	/**
 	 * @return
@@ -393,7 +389,7 @@ public class TestBean
 	{
 		toValidate3 = strings;
 	}
-	
+
 	/**
 	 * @return Returns the listProperty.
 	 */
@@ -401,23 +397,26 @@ public class TestBean
 	{
 		return listProperty;
 	}
+
 	/**
-	 * @param listProperty The listProperty to set.
+	 * @param listProperty
+	 *            The listProperty to set.
 	 */
 	public void setListProperty(java.util.List<Object> listProperty)
 	{
 		this.listProperty = listProperty;
 	}
-	
+
 	public void setListProperty(int index, Object element)
 	{
 		listProperty.add(index, element);
 	}
-	
+
 	public Object getListProperty(int index)
 	{
 		return listProperty.get(index);
 	}
+
 	/**
 	 * @return
 	 */
@@ -453,7 +452,7 @@ public class TestBean
 	/**
 	 * @return
 	 */
-	public TestObject getTestObject()
+	public MockObject getTestObject()
 	{
 		return testObject;
 	}
@@ -461,7 +460,7 @@ public class TestBean
 	/**
 	 * @param object
 	 */
-	public void setTestObject(TestObject object)
+	public void setTestObject(MockObject object)
 	{
 		testObject = object;
 	}
@@ -514,20 +513,24 @@ public class TestBean
 		testTrimStringArray = strings;
 	}
 
-    /**
-     * Get testIntegerArray1.
-     * @return Integer[] Returns the testIntegerArray1.
-     */
-    public Integer[] getTestIntegerArray1()
-    {
-        return testIntegerArray1;
-    }
-    /**
-     * Set testIntegerArray1.
-     * @param testIntegerArray1 testIntegerArray1 to set.
-     */
-    public void setTestIntegerArray1(Integer[] testIntegerArray1)
-    {
-        this.testIntegerArray1 = testIntegerArray1;
-    }
+	/**
+	 * Get testIntegerArray1.
+	 * 
+	 * @return Integer[] Returns the testIntegerArray1.
+	 */
+	public Integer[] getTestIntegerArray1()
+	{
+		return testIntegerArray1;
+	}
+
+	/**
+	 * Set testIntegerArray1.
+	 * 
+	 * @param testIntegerArray1
+	 *            testIntegerArray1 to set.
+	 */
+	public void setTestIntegerArray1(Integer[] testIntegerArray1)
+	{
+		this.testIntegerArray1 = testIntegerArray1;
+	}
 }

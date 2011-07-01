@@ -17,34 +17,33 @@ import org.infohazard.maverick.flow.ControllerContext;
 /**
  * @author hillenius
  */
-public class TestFormValidator1 extends AbstractFormValidator
+public class MockFormValidator1 extends AbstractFormValidator
 {
-
 	/**
 	 * @param cctx
 	 * @param formBeanContext
 	 * @return
-	 * @see nl.openedge.baritus.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext)
+	 * @see nl.openedge.baritus.validation.FormValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.baritus.FormBeanContext)
 	 */
-	public boolean isValid(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext)
+	@Override
+	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
 		boolean valid = true;
-		TestBean bean = (TestBean)formBeanContext.getBean();
-		
+		MockBean bean = (MockBean) formBeanContext.getBean();
+
 		// test runtime exception
-		if(bean.getToValidate4().equals("kill"))
+		if (bean.getToValidate4().equals("kill"))
 		{
 			throw new RuntimeException("big mistake");
 		}
-		
+
 		valid = bean.getToValidate4().equals("validValue");
-		if(!valid)
+		if (!valid)
 		{
 			formBeanContext.setError("toValidate4", "wrong input");
 		}
-		
+
 		return valid;
 	}
 

@@ -1,35 +1,6 @@
-/*
- * $Id: PopulationTest.java,v 1.12 2004-06-11 09:19:43 eelco12 Exp $
- * $Revision: 1.12 $
- * $Date: 2004-06-11 09:19:43 $
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
- 
 package nl.openedge.baritus.test;
+
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -47,13 +18,13 @@ import nl.openedge.baritus.test.mock.MockHttpServletRequest;
 import nl.openedge.baritus.test.mock.MockHttpServletResponse;
 
 import org.infohazard.maverick.flow.MaverickContext;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.mockobjects.servlet.MockHttpSession;
 import com.mockobjects.servlet.MockRequestDispatcher;
 import com.mockobjects.servlet.MockServletConfig;
 import com.mockobjects.servlet.MockServletContext;
-
-import junit.framework.TestCase;
 
 /**
  * Testcase for population of form beans and interceptors.
@@ -61,31 +32,24 @@ import junit.framework.TestCase;
  * @author Eelco Hillenius
  * @author Sander Hofstee
  */
-public class PopulationTest extends TestCase
+public class PopulationTest
 {
-	
 	private Locale dutch = new Locale("nl", "NL");
 
 	private MockRequestDispatcher requestDispatcher = null;
+
 	private MockServletContext servletContext = null;
+
 	private MockServletConfig servletConfig = null;
+
 	private MockHttpSession session = null;
-	private MockHttpServletResponse response = null;		
+
+	private MockHttpServletResponse response = null;
+
 	private MockHttpServletRequest request = null;
 
-	/**
-	 * construct
-	 * @param name
-	 */
-	public PopulationTest(String name)
-	{
-		super(name);
-	}
-	
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception
+	@Before
+	public void setUp()
 	{
 		this.requestDispatcher = new MockRequestDispatcher();
 		this.servletContext = new MockServletContext();
@@ -93,9 +57,8 @@ public class PopulationTest extends TestCase
 		this.servletConfig = new MockServletConfig();
 		this.servletConfig.setServletContext(servletContext);
 		this.session = new MockHttpSession();
-		this.session.setupGetAttribute(
-			FormBeanCtrlBase.SESSION_KEY_CURRENT_LOCALE, dutch);
-			
+		this.session.setupGetAttribute(FormBeanCtrlBase.SESSION_KEY_CURRENT_LOCALE, dutch);
+
 		this.session.setupServletContext(servletContext);
 		this.response = new MockHttpServletResponse();
 		this.request = new MockHttpServletRequest();
@@ -103,23 +66,22 @@ public class PopulationTest extends TestCase
 		this.request.setSession(session);
 		this.request.setupGetRequestDispatcher(requestDispatcher);
 	}
-	
 
-	public void testIntegerPopulationAndBeforePerformInterceptor()
+	@Test
+	public void integerPopulationAndBeforePerformInterceptor()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testInteger1", "1"); // test simple string
-		requestParams.put("testInteger2", new String[]{"2"}); // test string array
+		requestParams.put("testInteger2", new String[] {"2"}); // test string array
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
-		
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
+
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestInteger1());
 			assertEquals(new Integer(1), bean.getTestInteger1());
@@ -130,24 +92,23 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
 
-	public void testLongPopulation()
+	@Test
+	public void longPopulation()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testLong1", "1"); // test simple string
-		requestParams.put("testLong2", new String[]{"2"}); // test string array
+		requestParams.put("testLong2", new String[] {"2"}); // test string array
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestLong1());
 			assertEquals(new Long(1), bean.getTestLong1());
@@ -158,65 +119,64 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
 
-	public void testDoublePopulationAndLocalizedDisplayProperty()
+	@Test
+	public void doublePopulationAndLocalizedDisplayProperty()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testDouble1", "1,1"); // test simple string
-		requestParams.put("testDouble2", new String[]{"1,2"}); // test string array
+		requestParams.put("testDouble2", new String[] {"1,2"}); // test string array
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestDouble1());
 			assertEquals(new Double(1.1), bean.getTestDouble1());
 			assertNotNull(bean.getTestDouble2());
 			assertEquals(new Double(1.2), bean.getTestDouble2());
 			FormBeanContext formBeanContext = ctrl.getFormBeanContext();
-			assertEquals("dutch locale should be used for formatting a double property",
-				"1,1", formBeanContext.displayProperty("testDouble1"));
+			assertEquals("dutch locale should be used for formatting a double property", "1,1",
+				formBeanContext.displayProperty("testDouble1"));
 		}
 		catch (ServletException e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testDatePopulation()
+
+	@Test
+	public void datePopulation()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testDate1", "20-02-2004"); // test simple string
-		requestParams.put("testDate2", new String[]{"21-03-2005"}); // test string array
+		requestParams.put("testDate2", new String[] {"21-03-2005"}); // test string array
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestDate1());
 			assertNotNull(bean.getTestDate2());
-			
+
 			Calendar cal = Calendar.getInstance();
 			Date date = bean.getTestDate1();
 			cal.setTime(date);
 			assertEquals(cal.get(Calendar.YEAR), 2004);
 			assertEquals(cal.get(Calendar.MONTH), 1);
 			assertEquals(cal.get(Calendar.DAY_OF_MONTH), 20);
-			
+
 			date = bean.getTestDate2();
 			cal.setTime(date);
 			assertEquals(cal.get(Calendar.YEAR), 2005);
@@ -227,26 +187,26 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
+
 	/**
-	 * Test the population of arrays when the parameters are in the request as 
-	 * array = {value1, value2}
+	 * Test the population of arrays when the parameters are in the request as array =
+	 * {value1, value2}
 	 */
-	public void testRequestStringArrayPopulation()
+	@Test
+	public void requestStringArrayPopulation()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testStringArray1", new String[] {"arrayelem0", "arrayelem1"});
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			String[] testStringArray1 = bean.getTestStringArray1();
 			assertNotNull(testStringArray1);
@@ -258,23 +218,23 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}		
+		}
 	}
-	
-	public void testStringMapPopulation()
+
+	@Test
+	public void stringMapPopulation()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testMap['key1']", "val1");
 		requestParams.put("testMap['key2']", "val2");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			Map map = bean.getTestMap();
 			assertNotNull(map);
@@ -286,23 +246,23 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testPopulationWithCustomPopulators()
+
+	@Test
+	public void populationWithCustomPopulators()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("uppercaseTest", "this once was lower case");
 		requestParams.put("ignore", "this should never come through");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertEquals("THIS ONCE WAS LOWER CASE", bean.getUppercaseTest());
 			assertEquals("unchanged", bean.getIgnore());
@@ -311,22 +271,22 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testPopulationWithCustomPopulatorByRegexMatch()
+
+	@Test
+	public void populationWithCustomPopulatorByRegexMatch()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("ignoreByRegex", "this should never come through");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertEquals("unchanged (regex)", bean.getIgnoreByRegex());
 		}
@@ -334,29 +294,29 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
+
 	/**
 	 * Test the population of indexed properties.
-	 *
+	 * 
 	 */
-	public void testPopulationWithListProperties()
+	@Test
+	public void populationWithListProperties()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("listProperty[0]", "newval0");
 		requestParams.put("listProperty[1]", "newval1");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
-			
+
 			List listProperty = bean.getListProperty();
 			assertNotNull(listProperty);
 			assertEquals(2, listProperty.size());
@@ -369,45 +329,45 @@ public class PopulationTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Test the population of multidimensional mapped properties.
-	 *
+	 * 
 	 */
-	public void testPopulationWithMultiDimensionalMappedProperties()
+	@Test
+	public void populationWithMultiDimensionalMappedProperties()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("multiDimensionalMap['one']['one']", "newval0");
 		requestParams.put("multiDimensionalMap['one']['two']", "newval1");
 		requestParams.put("multiDimensionalMap['one']['three']", "newval2");
 		requestParams.put("multiDimensionalMap['two']['one']", "newval3");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
-		
+
 			Map listProperty = bean.getMultiDimensionalMap();
 			assertNotNull(listProperty);
 			assertEquals(2, listProperty.size());
-			
-			Map one = (Map)listProperty.get("one");				
+
+			Map one = (Map) listProperty.get("one");
 			assertEquals(3, one.size());
-			
+
 			assertTrue(one.containsKey("one"));
 			assertTrue(one.containsKey("two"));
 			assertTrue(one.containsKey("three"));
-			
+
 			assertEquals("newval0", one.get("one"));
 			assertEquals("newval1", one.get("two"));
 			assertEquals("newval2", one.get("three"));
-			
-			Map two = (Map)listProperty.get("two");
+
+			Map two = (Map) listProperty.get("two");
 			assertEquals(1, two.size());
 			assertTrue(two.containsKey("one"));
 			assertEquals("newval3", two.get("one"));
@@ -420,43 +380,43 @@ public class PopulationTest extends TestCase
 	}
 
 	/**
-	 * Test the population of multidimensional List properties. 
-	 *
+	 * Test the population of multidimensional List properties.
+	 * 
 	 */
-	public void testPopulationWithMultiDimensionalListProperties()
+	@Test
+	public void populationWithMultiDimensionalListProperties()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("multiDimensionalList[0][0]", "newval0");
 		requestParams.put("multiDimensionalList[0][1]", "newval1");
 		requestParams.put("multiDimensionalList[0][2]", "newval2");
 		requestParams.put("multiDimensionalList[1][0]", "newval0");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
-			
+
 			List listProperty = bean.getMultiDimensionalList();
 			assertNotNull(listProperty);
 			assertEquals(2, listProperty.size());
-			
-			List one = (List)listProperty.get(0);
+
+			List one = (List) listProperty.get(0);
 			assertEquals(3, one.size());
-			
-			List two = (List)listProperty.get(1);
+
+			List two = (List) listProperty.get(1);
 			assertEquals(1, two.size());
-			
-			assertTrue(listProperty.get(0).getClass().getName() + 
-				" with value " + listProperty.get(0)
-				, listProperty.get(0) instanceof List);
-			assertTrue(listProperty.get(1).getClass().getName() + 
-				" with value " + listProperty.get(0)
-				, listProperty.get(1) instanceof List);
+
+			assertTrue(
+				listProperty.get(0).getClass().getName() + " with value " + listProperty.get(0),
+				listProperty.get(0) instanceof List);
+			assertTrue(
+				listProperty.get(1).getClass().getName() + " with value " + listProperty.get(0),
+				listProperty.get(1) instanceof List);
 		}
 		catch (ServletException e)
 		{
@@ -465,19 +425,19 @@ public class PopulationTest extends TestCase
 		}
 	}
 
-	public void testError1()
+	@Test
+	public void error1()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testDouble1", "wrong"); // test simple string
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
 			assertNull(bean.getTestDouble1());
 
@@ -486,52 +446,26 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	
-//	public void testGetMultiDimProperty()
-//	{
-//		TestBean bean = new TestBean();
-//		Map map1 = new HashMap();
-//		Map map2a = new HashMap();
-//		map2a.put("key2a-1", "value2a-1");
-//		map2a.put("key2a-2", "value2a-2");
-//		Map map2b = new HashMap();
-//		map2b.put("key2b-1", "value2b-1");
-//		map1.put("map2a", map2a);
-//		map1.put("map2b", map2b);
-//		bean.setMultiDimensionalMap(map1);
-//		try
-//		{
-//			Object result = Ognl.getValue("multiDimensionalMap['map2a']['key2a-2']", bean);
-//			assertEquals("value2a-2", result);
-//			bean.setTestDate1(new Date());
-//			result = Ognl.getValue("testDate1", bean);
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//		}
-//	}
 
-	public void testObjectFromRequestAttributesPopulation()
+	@Test
+	public void objectFromRequestAttributesPopulation()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 
 		Map requestParams = new HashMap();
-		TestObject testObject = new TestObject();
+		MockObject testObject = new MockObject();
 		testObject.setTestString("a test");
 		request.setAttribute("testObject", testObject);
 		request.setupGetParameterMap(requestParams);
 
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestObject());
 			assertEquals("a test", bean.getTestObject().getTestString());
@@ -540,71 +474,73 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
+
 	// OGNL!
-	public void testStrictParsing()
+	@Test
+	public void strictParsing()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("not-a-valid-name", "foo"); // test simple string
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView()); // should fail by default
+			MockBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView()); // should fail by
+																	// default
 		}
 		catch (ServletException e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
+
 	// OGNL!
-	public void testNonStrictParsing()
+	@Test
+	public void nonStrictParsing()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		ExecutionParams params = ctrl.getExecutionParams(null);
 		params.setStrictPopulationMode(false);
 		ctrl.fixExecutionParams(params);
 		Map requestParams = new HashMap();
 		requestParams.put("not-a-valid-name", "foo"); // test simple string
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
-			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView()); // should be succesfull now
+			MockBean bean = ctrl.getTestBean();
+			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView()); // should be
+																	// succesfull now
 		}
 		catch (ServletException e)
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testTrimString1()
+
+	@Test
+	public void trimString1()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimString", "    tobetrimmed     ");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestTrimString());
 			assertEquals("tobetrimmed", bean.getTestTrimString());
@@ -613,22 +549,22 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testTrimString2()
+
+	@Test
+	public void trimString2()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimStringArray[0]", "    tobetrimmed     ");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestTrimStringArray());
 			assertNotNull(bean.getTestTrimStringArray()[0]);
@@ -638,25 +574,25 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testTrimString3()
+
+	@Test
+	public void trimString3()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		ExecutionParams params = ctrl.getExecutionParams(null);
 		params.setTrimStringInputValues(false);
 		ctrl.fixExecutionParams(params);
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimString", "    notbetrimmed     ");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestTrimString());
 			assertEquals("    notbetrimmed     ", bean.getTestTrimString());
@@ -665,25 +601,25 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
-	public void testTrimString4()
+
+	@Test
+	public void trimString4()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		ExecutionParams params = ctrl.getExecutionParams(null);
 		params.setTrimStringInputValues(false);
 		ctrl.fixExecutionParams(params);
 		Map requestParams = new HashMap();
 		requestParams.put("testTrimStringArray[0]", "    notbetrimmed     ");
 		request.setupGetParameterMap(requestParams);
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestTrimStringArray());
 			assertNotNull(bean.getTestTrimStringArray()[0]);
@@ -693,30 +629,30 @@ public class PopulationTest extends TestCase
 		{
 			e.printStackTrace();
 			fail(e.getMessage());
-		}	
+		}
 	}
-	
+
 	/**
-	 * Tests that a request attribute overrides a request parameter,
-	 * and that the population with the request parameter is never tried
-	 * when there is an overruling parameter.
+	 * Tests that a request attribute overrides a request parameter, and that the
+	 * population with the request parameter is never tried when there is an overruling
+	 * parameter.
 	 */
-	public void testRequestParamAndRequestAttribPopulation()
+	@Test
+	public void requestParamAndRequestAttribPopulation()
 	{
-		TestCtrl ctrl = new TestCtrl();
+		MockCtrl ctrl = new MockCtrl();
 		Map requestParams = new HashMap();
 		requestParams.put("testInteger1", "not a number at all"); // test invalid value
 		request.setupGetParameterMap(requestParams);
 		request.setAttribute("testInteger1", "1"); // this is valid, and should
-			// override the non-valid request parameter. Hence, population
-			// should not result in errors.
-		MaverickContext mockMavCtx = new MaverickContext(
-			null, request, response);
+		// override the non-valid request parameter. Hence, population
+		// should not result in errors.
+		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
-			TestBean bean = ctrl.getTestBean();
+			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
 			assertNotNull(bean.getTestInteger1());
 			assertEquals(new Integer(1), bean.getTestInteger1());
@@ -727,39 +663,4 @@ public class PopulationTest extends TestCase
 			fail(e.getMessage());
 		}
 	}
-	
-// THIS TESTS AN OGNL BUG/ FEATURE
-//	/**
-//	 * Test the population of arrays when the parameters are in the request as 
-//	 * array[0] = 1
-//	 * array[1] = 2
-//	 */
-//	public void testIntegerArrayPopulation1()
-//	{
-//		TestCtrl ctrl = new TestCtrl();
-//		Map requestParams = new HashMap();
-//		requestParams.put("testIntegerArray1[0]", "1");
-//		requestParams.put("testIntegerArray1[1]", "2");
-//		request.setupGetParameterMap(requestParams);
-//		MaverickContext mockMavCtx = new MaverickContext(
-//			null, request, response);
-//		try
-//		{
-//			ctrl.init(null);
-//			ctrl.go(mockMavCtx);
-//			TestBean bean = ctrl.getTestBean();
-//			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());			
-//			Integer[] testIntegerArray = bean.getTestIntegerArray1();
-//			assertNotNull(testIntegerArray);
-//			assertEquals(2, testIntegerArray.length);
-//			assertEquals(new Integer(1), testIntegerArray[0]);
-//			assertEquals(new Integer(2), testIntegerArray[1]);
-//		}
-//		catch (ServletException e)
-//		{
-//			e.printStackTrace();
-//			fail(e.getMessage());
-//		}	
-//	}
-	
 }

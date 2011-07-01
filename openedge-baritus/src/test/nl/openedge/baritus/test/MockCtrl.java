@@ -46,20 +46,21 @@ import org.jdom.Element;
 /**
  * @author Eelco Hillenius
  */
-public class TestCtrl extends FormBeanCtrlBase
+public class MockCtrl extends FormBeanCtrlBase
 {
+	private MockBean bean = null;
 
-	private TestBean bean = null;
 	private FormBeanContext formBeanContext = null;
+
 	private String view = SUCCESS;
 
 	/**
-	 * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext, org.infohazard.maverick.flow.ControllerContext)
+	 * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext,
+	 *      org.infohazard.maverick.flow.ControllerContext)
 	 */
-	protected String perform(
-		FormBeanContext formBeanContext,
-		ControllerContext cctx)
-		throws Exception
+	@Override
+	protected String perform(FormBeanContext formBeanContext, ControllerContext cctx)
+			throws Exception
 	{
 		return view;
 	}
@@ -67,11 +68,10 @@ public class TestCtrl extends FormBeanCtrlBase
 	/**
 	 * @see nl.openedge.baritus.FormBeanBase#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
 	 */
-	protected Object makeFormBean(
-		FormBeanContext formBeanContext,
-		ControllerContext cctx)
+	@Override
+	protected Object makeFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
 	{
-		this.bean = new TestBean();
+		this.bean = new MockBean();
 		return bean;
 	}
 
@@ -84,33 +84,35 @@ public class TestCtrl extends FormBeanCtrlBase
 		params.setIncludeSessionAttributes(true);
 		params.setIncludeRequestAttributes(true);
 		fixExecutionParams(params);
-		
+
 		addPopulator("uppercaseTest", new ToUpperCasePopulator());
 		addPopulator("ignore", new IgnoreFieldPopulator());
 		// block property by field name
-		addPopulator(
-			Pattern.compile("(.)*ByRegex$"),
-			new IgnoreFieldPopulator());
+		addPopulator(Pattern.compile("(.)*ByRegex$"), new IgnoreFieldPopulator());
 		// block property by regex pattern
-		
-		addValidator("toValidate1", new TestFieldValidator());
-		addValidator("toValidate2", new TestFieldValidator()); // test form toValidate2[..]
-		addValidator("toValidate3[0]", new TestFieldValidator()); // test form toValidate3[..]
-	
-		addValidator(new TestFormValidator1());
+
+		addValidator("toValidate1", new MockFieldValidator());
+		addValidator("toValidate2", new MockFieldValidator()); // test form
+																// toValidate2[..]
+		addValidator("toValidate3[0]", new MockFieldValidator()); // test form
+																	// toValidate3[..]
+
+		addValidator(new MockFormValidator1());
 	}
 
 	/**
 	 * get test bean
+	 * 
 	 * @return TestBean instance of test bean
 	 */
-	public TestBean getTestBean()
+	public MockBean getTestBean()
 	{
 		return bean;
 	}
 
 	/**
 	 * get view
+	 * 
 	 * @return String name of view
 	 */
 	public String getView()
@@ -119,11 +121,11 @@ public class TestCtrl extends FormBeanCtrlBase
 	}
 
 	/**
-	 * @see nl.openedge.baritus.FormBeanBase#getLocaleForRequest(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext)
+	 * @see nl.openedge.baritus.FormBeanBase#getLocaleForRequest(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.baritus.FormBeanContext)
 	 */
-	protected Locale getLocaleForRequest(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext)
+	@Override
+	protected Locale getLocaleForRequest(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
 		// hack to be able to get the formBeanContext
 		this.formBeanContext = formBeanContext;
@@ -133,27 +135,28 @@ public class TestCtrl extends FormBeanCtrlBase
 
 	/**
 	 * get formBeanContext
+	 * 
 	 * @return FormBeanContext
 	 */
 	public FormBeanContext getFormBeanContext()
 	{
 		return formBeanContext;
 	}
-	
+
 	/**
 	 * Get error view. This is 'error' by default.
 	 * 
-	 * @param cctx controller context
-	 * @param formBeanContext context
+	 * @param cctx
+	 *            controller context
+	 * @param formBeanContext
+	 *            context
 	 * @return String logical name of view
 	 */
-	protected String getErrorView(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext)
+	@Override
+	protected String getErrorView(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
 		this.view = ERROR;
 		return ERROR;
 	}
-
 
 }
