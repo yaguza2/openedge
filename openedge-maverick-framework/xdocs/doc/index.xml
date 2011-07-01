@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Maverick Framework</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Getting Started with OpenEdge Maverick Framework">
+      <p>
+        This document (as well as the others in this section) provide
+        an introduction to OpenEdge Maverick Framework and how to use it within a project.
+      </p>
+
+      <subsection name="Overview of the Getting Started Documentation">
+        <table>
+          <tr><th>Document</th><th>Description</th></tr>
+          <tr><td><a href="motivation.html">Goals and motivation</a></td>
+            <td>
+              The goals for and history of this project are stated in this document. 
+            </td>
+          </tr>
+		  <tr><td><a href="download.html">Download</a></td>
+            <td>
+              This document
+              provides links to the distributions available
+			  for OpenEdge Maverick Framework.
+            </td>
+          </tr>
+          <tr><td><a href="build.html">Building</a></td>
+            <td>
+              For those who want to build OpenEdge Maverick Framework from
+			  source, this document provides step-by-step instructions on the
+			  build process.
+            </td>
+          </tr>
+          <tr><td><a href="use.html">Usage</a></td>
+            <td>
+              This document provides a short tutorial on the usage of
+			  OpenEdge Maverick Framework. 
+            </td>
+          </tr>
+          <tr><td><a href="bestpractices.html">Best practices</a></td>
+            <td>
+              As there are numerous ways to use this project, some hints are provided as to 
+			  what we think are the best ways of using it.
+            </td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+
+</body>
+</document>
+

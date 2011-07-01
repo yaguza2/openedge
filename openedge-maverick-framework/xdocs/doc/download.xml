@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Downloading OpenEdge Maverick Framework</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+    <section name="Download OpenEdge Maverick Framework">
+
+      <p>
+        OpenEdge Maverick Framework is currently distributed in two formats for user convenience:
+        a tar/gzipped install archive and a zipped install archive. You can find the install archives
+        <a href="http://TODO/builds/release/1.0/">here</a>.
+      </p>
+      
+    </section>
+  </body>
+</document>
