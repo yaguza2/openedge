@@ -1,0 +1,105 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Definitie van een eenvoudige taal om te kunnen rekenen met      *
+ * generieke parameters                                            *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+Package nl.openedge.gaps.support.berekeningen;
+
+Helpers
+
+	allchars = [0 .. 127];
+    digit = ['0' .. '9'];
+    ascii_character = [0..0xff];
+  	ascii_small = ['a'..'z'];
+  	ascii_caps = ['A'..'Z'];
+    tab = 9;
+    cr = 13;
+    lf = 10;
+    dot = '.';
+    at = '@';
+    colon = ':';
+    slash = '/';
+    is = '=';
+    quote = ''';
+    underscore = '_';
+    l_bracket = '[';
+    r_bracket = ']';
+    l_brace = '{';
+    r_brace = '}';
+	line_terminator     = lf | cr | cr lf; 
+    blank = (' ' | tab | line_terminator)+;
+  	input_character     = [ascii_character - [cr + lf]];
+  	specials = l_bracket | r_bracket | underscore | dot | slash | colon | at | is | quote;
+  	letter              = ascii_small | ascii_caps | specials;
+  	letter_or_digit     = letter | digit;
+    identifier = letter (letter_or_digit)*;
+
+Tokens
+
+    l_par = '(';
+    r_par = ')';
+    plus = '+';
+    minus = '-';
+    mult = '*';
+    div = '/';
+    comma = ',';
+    l_brace = l_brace;
+    r_brace = r_brace;
+
+    blank = blank;
+    number = digit+ (dot digit+)?;
+
+	id = colon identifier;
+	funcid = identifier;
+
+Ignored Tokens
+
+    blank;
+
+Productions
+
+	block =
+		  {block} exp               {-> New block(exp) }
+	;	
+
+    exp = 
+    	  {cast_plus} plus factor      {-> New exp.cast_plus(factor.exp) }
+		| {cast_minus} minus factor    {-> New exp.cast_minus(factor.exp) }
+        | {plus}   exp plus factor     {-> New exp.plus(exp, factor.exp)  }
+        | {minus}  exp minus factor    {-> New exp.minus(exp, factor.exp) }
+        | {factor} factor              {-> factor.exp}
+    ;
+
+    factor {-> exp} = 
+          {mult} factor mult term      {-> New exp.mult(factor.exp, term.exp)}
+        | {div}  factor div term       {-> New exp.div(factor.exp, term.exp) }
+        | {term} term                  {-> term.exp}
+    ;
+
+    term {-> exp} = 
+          {number} number              {-> New exp.number(number)}
+        | {id} id                      {-> New exp.id(id)}
+        | {call} [func]:funcid l_par [params]:exp_list r_par
+                                       {-> New exp.call(func, [params.exp])}
+        | {exp} l_par exp r_par        {-> exp}
+    ;
+
+	exp_list    {-> exp*} = exp another_exp* {-> [exp another_exp.exp]};
+	another_exp {-> exp}  = comma exp        {-> exp};
+
+Abstract Syntax Tree
+
+	block = exp;
+
+	if_then = [condition]:exp [true]:block;
+
+    exp = {plus}   [left]:exp [right]:exp
+	    | {minus}  [left]:exp [right]:exp
+	    | {div}    [left]:exp [right]:exp
+	    | {mult}   [left]:exp [right]:exp
+	    | {cast_plus} exp
+	    | {cast_minus} exp
+	    | {number} number
+	    | {id} id
+	    | {call} [func]:funcid [params]:exp*
+	    ;

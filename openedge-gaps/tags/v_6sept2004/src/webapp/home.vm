@@ -1,0 +1,15 @@
+$request.setAttribute("_pagetitle", "Home" )
+<h1>Generic Application Parameter Setting</h1>
+<p>
+Met deze webapplicatie kunnen parameters worden gezet.<br />
+Er kan gekozen worden voor een groep van parametes zoals
+b.v. het alureplan.<br />
+Binnen een groep kan er gekozen voor een versie.<br />
+Binnen een versie komen dan de eigenlijke parameters.<br />
+</p>
+<p>
+Klik met de muis op onderstaande link<br />om naar de onderhoud groepen te gaan.
+</p>
+<div class="nextprev">
+	<a href="$linkTool.setRelative('onderhoudgroepen.m')"><img src="${request.contextPath}/images/next.gif" alt="volgende"></a>
+</div>

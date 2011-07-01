@@ -1,0 +1,17 @@
+#set( $allMenuItems = $model.leftMenu )
+#set( $menuItems = $arrayTool.elementAt( $allMenuItems, 0 ) )
+<script language="JavaScript" type="text/JavaScript" version="1.2">
+  function doSubmit(view) {
+    document.hoofdformulier.view.value = view;
+    document.hoofdformulier.submit();
+  }
+</script>
+#foreach( $item in $menuItems )
+	#if ($item.active)
+		<a href="#" class="tabselected" onClick="javascript: doSubmit('${item.link}');">${item.tag}</a>
+	#elseif( $item.enabled )
+		<a href="#" class="tabitem" onClick="javascript: doSubmit('${item.link}');">${item.tag}</a>
+	#else
+		<div class="tabitemdisabled">${item.tag}</div>	
+	#end
+#end

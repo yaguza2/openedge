@@ -1,0 +1,113 @@
+<div id = "wcn-[panel]">
+    
+  <!-- omvattend panel -->
+  <div id="wcn-outerPanel">
+
+    <!-- container voor gewone, niet-geneste parameters -->
+    <div id="wcn-plainParamsPanel">
+     <form id="wcn-paramForm"> 
+      <div id="plainParamsMainPanel">
+      <!-- header -->
+      <table id="resultstable">
+        <caption>parameters</caption>
+        <thead>
+          <tr>
+            <th width="180">
+                Naam
+            </th>
+            <th width="330">
+                Waarde
+            </th>
+            <th width="80">
+                Verwijder
+            </th>
+          </tr>
+        </thead>
+      </table>
+
+     <!-- body -->
+      <div id="plainParamScrollPane">
+       <table id="resultstable">
+        <tbody id="plainParamScrollPane">
+          <tr id="wcn-plainParams">
+            <td width="180">
+                <span id="wcn-name">(Naam)</span>
+            </td>
+            <td width="330">
+                <input id="wcn-value" type="text" size="20"/>
+            </td>
+            <td width="80">
+                <span id="deleteButton">(x)</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+     </div>
+       <div class="floatright">
+        <input type="submit" class="strongsubmit" value="opslaan"/>
+       </div>
+     </div>
+    </form>
+    <!-- einde gewone, niet-geneste parameters -->
+    </div>
+
+    <div id="newParameterPanel">
+        <form id="wcn-newParamForm">
+          <fieldset>
+            <legend>Nieuwe parameter</legend>
+              <label for="title">Type</label>
+              <select id="wcn-typeChoice">
+                <option>numeriek</option>
+                <option>logisch</option>
+                <option>datum</option>
+              </select>
+              <label for="name">Naam</label>
+              <input id="wcn-name" type="text" size="20"/>
+              <label for="value">Waarde</label>
+              <!-- een van onderstaande inputs zal werkelijk visible/ benaderbaar zijn -->
+               <input id="wcn-input" type="text" size="20"/>
+               <input id="wcn-checkbox" type="checkbox"/>
+              <!-- einde inputs -->
+              <input type="submit" value="voeg toe" class="strongsubmit"/>
+          </fieldset>
+        </form>
+    </div>
+
+    <!-- container voor geneste parameters -->
+    <div id="wcn-nestedParamsPanel">
+
+     <!-- voor ieder blok -->
+     <div id="wcn-nestedParams">
+
+      <!-- header -->
+      <table id="resultstable">
+        <caption>tabellen</caption>
+        <thead>
+          <tr>
+            <th>
+                Tabel
+            </th>
+          </tr>
+        </thead>
+      </table>
+
+     <!-- body -->
+     <div id="nestedParamScrollPane">
+      <table id="resultstable">
+        <tfoot>
+        </tfoot>
+        <tbody>
+          <tr id="wcn-nested">
+            <td>
+                <span id="wcn-name">(Naam)</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+     </div>
+    <!-- einde geneste parameters -->
+    </div>
+   </div>
+  </div>
+
+</div>

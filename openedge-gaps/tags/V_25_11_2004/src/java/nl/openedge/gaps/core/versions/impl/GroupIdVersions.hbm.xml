@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+	<class name="nl.openedge.gaps.core.versions.impl.GroupIdVersions"
+		table="GAPS_GVA">
+
+		<cache usage="read-write"/>
+		<id
+			column="ID"
+			name="id"
+			type="java.lang.Long"
+			unsaved-value="null"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="GID"
+			name="groupId"
+			not-null="true"
+			type="string"
+		 />
+		<set name="versionIds" table="GAPS_GVA_EL" cascade="all">
+		    <key column="REF"/>
+		    <element column="VID" type="string"/>
+		</set>
+	</class>
+</hibernate-mapping>

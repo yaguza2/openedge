@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<toolbox>
+	<tool>
+		<key>arrayTool</key>
+		<class>nl.openedge.util.velocity.tools.ArrayTool</class>
+	</tool>
+	<tool>
+		<key>linkTool</key>
+		<class>org.apache.velocity.tools.view.tools.LinkTool</class>
+	</tool>
+</toolbox>

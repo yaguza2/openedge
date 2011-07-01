@@ -1,0 +1,19 @@
+-----------------------------------------------
+1.0.3
+
+- UUID serialiseerbare klassen toegevoegd
+
+-----------------------------------------------
+1.0.2
+
+- bug opgelost die betrekking had op root groepen. De rootgroep werd slechts
+	eenmaal gezet, en verder niet meer bijgewerkt voor nieuwe versies
+
+-----------------------------------------------
+1.0.1
+
+- implementatie builder eenvoudiger gemaakt
+- generieke builder methoden toegevoegd met Class en Class[] argumenten
+
+-----------------------------------------------
+1.0 eerste release

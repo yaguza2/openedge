@@ -1,0 +1,284 @@
+body  { 	
+	background-image:url("../images/background.gif");
+	background-position:top left;
+	background-repeat:no-repeat;
+	font-family:Arial, sans-serif;
+	font-size:12px;
+	overflow:hidden 
+} 
+
+.body {
+	position: absolute;
+	top: 70px;
+	left:20px;
+	height: 90%;
+	width: 100%;
+	padding-left: 200px;
+	padding-right: 20%;
+	padding-bottom: 100px;
+	overflow: auto;
+}
+			
+h1  { 	
+	font-size:175%;
+	font-weight:bold 
+} 
+
+h2  { 	
+	font-size:150%;
+	font-weight:bold 
+} 
+
+h3  { 	
+	font-size:125%;
+	font-weight:bold 
+} 
+
+samp  { 	
+	font-size:125% 
+} 
+
+code  { 	
+	display:block;
+	font-size:100%;
+	border-style:solid;
+	border-color:black;
+	border-width:1px;
+	padding:5px;
+	margin:5px 
+} 
+
+img  { 	
+	border:0 solid 
+} 
+		
+th  { 	
+	text-align:left 
+} 
+
+td  { 	
+	font-family:Arial, sans-serif;
+	font-size:12px;
+	padding:0;
+	border:1 solid 
+} 
+
+td.nogrid  { 	
+	border:0 
+} 
+
+tr  { 	
+	height:20px 
+}
+
+tr.selectrow {
+	
+}
+
+tr.selectrowover {
+	cursor : hand;
+	background-color:#00584b;
+	color:#FFF6E5	
+}
+
+      
+fieldset  { 	
+	padding:10px;
+	margin-bottom:10px 
+} 
+
+Xlabel  { 	
+	font-size:105%;
+	font-family:Arial, sans-serif;
+	margin-right:10px 
+} 
+
+label.indent  { 	
+	margin-right:10px;
+	width:150px 
+} 
+
+label.fielddisplay  { 	
+	margin-right:10px;
+} 
+
+span.indent  { 	
+	margin-right:20px 
+} 
+
+input.button  { 	
+	background-color:#FFF6E5;
+	width:100px 
+} 
+
+input, select, label  { 	
+	font-family:Arial, sans-serif;
+	font-size:12px;
+	margin-right:10px 
+} 
+
+.navmain  { 	
+	position:absolute;
+	top:10px;
+	left:210px;
+	font-weight:bold 
+} 
+
+.logo {
+	position:absolute;
+	top:10px;
+	right:10px;
+	font-weight:bold;
+        font-size:2.5em;
+        color:white;
+}
+
+.navitem  { 	
+	color:#FF9900;
+	text-decoration:none;
+	display:inline;
+	padding:5px 
+} 
+
+.navitemdisabled  { 	
+	color:#808080;
+	text-decoration:none;
+	display:inline;
+	padding:5px 
+} 
+
+.tabsmain  { 	
+	position:absolute;
+	vertical-align:top;
+	top:120px;
+	left:20px;
+	font-family:arial, sans-serif;
+	font-size:13px;
+	font-weight:bold;
+	color:white 
+} 
+
+.tabitem  { 	
+    background-color:#FFF6E5;
+	border-color:black;
+	border-style:ridge;
+	border-width:1;
+	color:black;
+	text-decoration:none;
+	width:155;
+	height:25;
+	padding-left:10px;
+	padding-top:3px;
+	padding-bottom:3px;
+	margin-bottom:7px;
+	display:block 
+} 
+
+.tabitem:hover  { 	
+	background-color:#00584A;
+	color:#FFF6E5 
+} 
+
+.tabselected  { 	
+	background-color:orange;
+	border-color:black;
+	border-style:ridge;
+	border-width:1;
+	color:#FFF6E5;
+	text-decoration:none;
+	width:155;
+	height:25;
+	padding-left:10px;
+	padding-top:3px;
+	padding-bottom:3px;
+	margin-bottom:7px;
+	display:block 
+} 
+
+.tabselected:hover  { 	
+	background-color:#00584A;
+	color:#FFF6E5
+} 
+
+.tabitemdisabled  { 	
+    background-color:#FFF6E5;
+	border-color:#CCCCCC;
+	border-style:ridge;
+	border-width:1;
+	color:#CCCCCC;
+	text-decoration:none;
+	width:155;
+	height:25;
+	padding-left:10px;
+	padding-top:3px;
+	padding-bottom:3px;
+	margin-bottom:7px;
+	display:block 
+} 
+
+.selected  { 	
+	background-color:#00584A;
+	border-color:black;
+	border-style:ridge;
+	border-width:1;
+	color:#FFF6E5;
+	text-decoration:none;
+	width:155;
+	height:25;
+	padding-left:10px;
+	padding-top:3px;
+	padding-bottom:3px;
+	margin-bottom:7px;
+	display:block 
+} 
+
+.nextprev  { 	
+	margin-top:20px;
+	float:left 
+} 
+
+.error  { 	
+	color:red;
+	background-color:white;
+	font-size:10pt;
+	font-weight:bold 
+}
+.fielderror  { 	
+	color:white;
+	background-color:red 
+}
+.field  { 	
+	color:black;
+	background-color:white 
+}
+.message  { 	
+	color:green;
+	background-color:white;
+	font-size:10pt;
+	font-weight:bold 
+}
+
+.footermain  {
+	position: absolute;
+	bottom: 0px;
+	left:20px;
+	width: 100%;
+	padding-left: 200px;
+	padding-right: 20%;
+	overflow: auto;
+	font-weight:bold 
+} 
+
+.footererroritem  { 	
+	color:red;
+	text-decoration:none;
+	display:inline;
+	padding:5px 
+} 
+
+.footerstatusitem {
+        color:green;
+	text-decoration:none;
+	display:inline;
+	padding:5px 
+} 

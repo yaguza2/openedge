@@ -1,0 +1,58 @@
+/*
+ * $Id$
+ * $Revision$ $Date$
+ * ================================================================================
+ * Copyright (c) All rechten voorbehouden.
+ */
+package nl.openedge.gaps.core.parameters.impl;
+
+import nl.openedge.gaps.core.parameters.ParameterValue;
+
+/**
+ * Houder voor numerieke parameterwaarden.
+ */
+public final class PercentageParameterValue extends ParameterValue
+{
+
+	/** Constante voor percentage deling. */
+	private static final double PERCENTAGE_FACTOR = 100d;
+
+	/**
+	 * Construct.
+	 * @param value de waarde waarmee deze parameter dient te worden aangemaakt
+	 */
+	public PercentageParameterValue(Object value)
+	{
+		super(value);
+	}
+
+	/**
+	 * Geeft de waarde als percentage; als de waarde bijvoorbeeld 50,5% is, retourneert
+	 * deze methode 50.5d.
+	 * @return de waarde als percentage
+	 */
+	public double getPercentageValue()
+	{
+		return ((Number) value).doubleValue();
+	}
+
+	/**
+	 * Geeft de waarde als factor; als de waarde bijvoorbeeld 50,5% is, retourneert deze
+	 * methode 0.505d.
+	 * @return de waarde als percentage
+	 */
+	public double getFactorValue()
+	{
+		return ((Number) value).doubleValue() / PERCENTAGE_FACTOR;
+	}
+
+	/**
+	 * Geeft de factor als een Double.
+	 * @return de factor als een Double
+	 * @see nl.openedge.gaps.core.parameters.ParameterValue#getValue()
+	 */
+	public Object getValue()
+	{
+		return new Double(getFactorValue());
+	}
+}
