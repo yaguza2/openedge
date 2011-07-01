@@ -1,0 +1,7 @@
+build
+maven.log
+target
+velocity.log
+hibernatetest.*
+*.backup
+*.ser
