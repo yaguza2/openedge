@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>nl.topicus.onderwijs</groupId>
-		<artifactId>onderwijs-parent</artifactId>
-		<version>2011.4.3</version>
+		<groupId>nl.topicus.onderwijs.openedge</groupId>
+		<artifactId>openedge-parent</artifactId>
+		<version>2.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>nl.topicus.onderwijs.openedge</groupId>
 	<artifactId>openedge-baritus</artifactId>
 	<packaging>jar</packaging>
 	<name>OpenEdge Baritus</name>
-	<version>1.0.14-SNAPSHOT</version>
-	<description>Parnassys legacy support</description>
-	<inceptionYear>2003</inceptionYear>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>ognl</groupId>
-				<artifactId>ognl</artifactId>
-				<version>2.7.2</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -42,35 +26,14 @@
 		<dependency>
 			<groupId>maverick</groupId>
 			<artifactId>maverick</artifactId>
-			<version>2.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>mockobjects</groupId>
 			<artifactId>mockobjects-core</artifactId>
-			<version>0.09</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>mockobjects</groupId>
 			<artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
-			<version>0.09</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>

@@ -1,2 +1,0 @@
-# test met eerste kolom voor parameternaam, vanaf kolom 2 (0..n-1)
-FOO	BAR	DAT_3	21	22	23	24	25	26	27	28	29	30

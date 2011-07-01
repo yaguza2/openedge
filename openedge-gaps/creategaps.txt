@@ -1,6 +1,0 @@
-Om de gaps-database aan te maken in eclipse:
-	- selecteer project in de package explorer
-	- kies run java applicatie
-	// eclipse zoekt naar main types
-	- selecteer CreateParametersHSQL of CreateParametersOracle 
-	- en click op OK

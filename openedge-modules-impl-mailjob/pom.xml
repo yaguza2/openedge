@@ -16,11 +16,11 @@
 			<artifactId>servlet-api</artifactId>
 		</dependency>
 		<dependency>
-		        <groupId>org.hibernate</groupId>
-		        <artifactId>hibernate-core</artifactId>
+	        <groupId>org.hibernate</groupId>
+	        <artifactId>hibernate-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.quartz-framework.quartz</groupId>
+			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
 		</dependency>
 		<dependency>
