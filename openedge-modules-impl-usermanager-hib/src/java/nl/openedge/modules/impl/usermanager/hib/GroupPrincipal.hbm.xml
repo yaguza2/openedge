@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+	PUBLIC "-//Hibernate/Hibernate Mapping DTD 1.1//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd"
+>
+
+
+<hibernate-mapping>
+	<class name="nl.openedge.modules.impl.usermanager.hib.GroupPrincipal" table="oeaccess_group">
+
+		<id name="name" column="name" type="java.lang.String" unsaved-value="any">
+
+			<generator class="assigned"></generator>
+		</id>
+
+		<property name="description" type="string" column="description" />
+
+	</class>
+
+</hibernate-mapping>

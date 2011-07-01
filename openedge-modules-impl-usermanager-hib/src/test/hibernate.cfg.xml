@@ -1,0 +1,35 @@
+<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-2.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+
+		<property name="connection.url">jdbc:mysql://localhost/oeaccess_test</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="dialect">net.sf.hibernate.dialect.MySQLDialect</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password"></property>
+		
+ 		<property name="dbcp.maxActive">20</property>
+		<property name="dbcp.whenExhaustedAction">1</property>
+		<property name="dbcp.maxWait">12000</property>
+		<property name="dbcp.maxIdle">10</property>
+
+		<property name="dbcp.ps.maxActive">20</property>
+		<property name="dbcp.ps.whenExhaustedAction">1</property>
+		<property name="dbcp.ps.maxWait">12000</property>
+		<property name="dbcp.ps.maxIdle">10</property>
+		
+		<!--<property name="dbcp.validationQuery">select id from cd</property>-->
+		<property name="dbcp.testOnBorrow">false</property>
+		<property name="dbcp.testOnReturn">false</property>
+
+		<mapping resource="nl/openedge/modules/impl/usermanager/hib/UserPrincipal.hbm.xml"/>
+		<mapping resource="nl/openedge/modules/impl/usermanager/hib/RolePrincipal.hbm.xml"/>
+		<mapping resource="nl/openedge/modules/impl/usermanager/hib/GroupPrincipal.hbm.xml"/>
+
+	</session-factory>
+	
+</hibernate-configuration>
