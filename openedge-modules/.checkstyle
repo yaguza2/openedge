@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.0.0">
+    <fileset name="Topicus Checks" enabled="true" check-config-name="Topicus Checks">
+        <file-match-pattern match-pattern=".java$" include-pattern="true"/>
+        <file-match-pattern match-pattern="nl.openedge.modules.test" include-pattern="false"/>
+        <file-match-pattern
+            match-pattern="nl.openedge.modules.util.jndi" include-pattern="false"/>
+    </fileset>
+</fileset-config>
