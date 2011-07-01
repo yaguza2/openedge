@@ -1,4 +1,0 @@
-CONTENTS MOVED TO xdocs/changes.xml
-===================================
-
-Please update your changes in that file.
