@@ -1,0 +1,14 @@
+-------------------------------------------------
+1.1.2
+
+SubjectSessionListener now implements java.io.Serializable
+
+-------------------------------------------------
+1.1.1
+
+SessionLoginContext now implements java.io.Serializable
+
+-------------------------------------------------
+1.1
+
+First (numbered) release.

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+<body bgcolor="white">
+
+Provides the main classes and interfaces for the Open Edge 
+Access security framework.
+
+<p>
+The security framework gives you the option of using a near black box 
+security implementation that is based on Java Authentication and Authorization 
+Service (JAAS).<br> 
+Authentication with JAAS is done by providing an implementation of the 
+JAAS LoginModule. This framework not only gives you a default, ready to use 
+implementations of LoginModule, but also provides a mechanism to add LoginModule 
+implementations and policies to the JVM dynamically.<br>
+For authorisation in web application environments, the <code>javax.servlet.Filter</a> 
+implementation and <code>javax.security.auth.login.LoginContext</a> wrapper are 
+given to provide a default way of doing authorization. 
+<p>
+The non-JAAS interface <code>UserManager<code> and it's (possible) implementations 
+provide for simple user/ role managent. This gives users a ready out of the box 
+implementation of basic user- and role managent that, possibly combined with an 
+application specific implementation of <code>LoginDecorator</code>, is 
+probably sufficient for most cases of authorisation in applications. 
+
+<p>
+The main class for clients is the <code>AccessFactory</code>. 
+This factory is used to instantiate and initialise concrete implementations 
+of interfaces in this package based on the configuration document and holds a 
+reference to relevant modules (i.e. the instance of <code>UserManager</code>
+
+@see java.security.Permission
+@see java.security.Permissions
+@see java.security.PermissionCollection
+@see java.lang.SecurityManager
+
+
+</body>
+</html>

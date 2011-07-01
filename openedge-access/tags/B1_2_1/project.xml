@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+	<pomVersion>3</pomVersion>
+	<id>openedge-access</id>
+	<name>OpenEdge Access</name>
+	<currentVersion>1.2.1</currentVersion>
+	<organization>
+		<name>Open Edge</name>
+		<url>http://www.openedge.nl/</url>
+		<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	</organization>
+	<inceptionYear>2003</inceptionYear>
+	<package>nl.openedge.access</package>
+	<logo>http://www.openedge.nl/images/logo.jpg</logo>
+	<shortDescription>OpenEdge Access: Security framework bases on JAAS</shortDescription>
+	<description>
+		The OpenEdge security framework gives you the option of using a near black box security implementation that is
+		based on Java Authentication and Authorization Service (JAAS).
+	</description>
+	<url>http://maven.apache.org/</url>
+
+	<versions>
+		<version>
+			<id>1.2.1</id>
+			<name>1.2.1</name>
+			<tag>B1_2_1</tag>
+		</version>
+		<version>
+			<id>1.2</id>
+			<name>1.2</name>
+			<tag>B1_2</tag>
+		</version>
+		<version>
+			<id>1.1.2</id>
+			<name>1.1.2</name>
+			<tag>B1_1_2</tag>
+		</version>
+		<version>
+			<id>1.1.1</id>
+			<name>1.1.1</name>
+			<tag>B1_1_1</tag>
+		</version>
+		<version>
+			<id>1.1</id>
+			<name>1.1</name>
+			<tag>B1</tag>
+		</version>
+	</versions>
+	<branches />
+	<mailingLists></mailingLists>
+
+	<developers>
+		<developer>
+			<name>Eelco Hillenius</name>
+			<id>eelco</id>
+			<email>eelco.hillenius@openedge.nl</email>
+			<organization>Open Edge</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<name>Sander Hofstee</name>
+			<id>sander</id>
+			<email>sander.hofstee@openedge.nl</email>
+			<organization>Open Edge</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<name>Klaasjan Brand</name>
+			<id>kj</id>
+			<email>klaasjan.brand@openedge.nl</email>
+			<organization>Open Edge</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<dependencies>
+
+		<dependency>
+			<id>commons-logging</id>
+			<version>1.1-dev</version>
+			<url>http://jakarta.apache.org/commons/logging/</url>
+		</dependency>
+
+		<dependency>
+			<id>servletapi</id>
+			<version>2.3</version>
+		</dependency>
+
+		<dependency>
+			<id>openedge-modules</id>
+			<version>1.2</version>
+			<url>http://www.openedge.nl</url>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<nagEmailAddress>info@openedge.nl</nagEmailAddress>
+
+		<sourceDirectory>src/java</sourceDirectory>
+		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+		<unitTest>
+			<includes>
+				<include>**/*Test.java</include>
+			</includes>
+			<resources>
+				<resource>
+					<directory>${basedir}/src/test</directory>
+					<includes>
+						<include>**/*.properties</include>
+						<include>**/*.xml</include>
+						<include>**/*.xsd</include>
+						<include>**/*.dtd</include>
+						<include>**/*.vm</include>
+						<include>**/*.config</include>
+						<include>**/*.policy</include>
+					</includes>
+				</resource>
+			</resources>
+		</unitTest>
+
+		<resources>
+			<resource>
+				<directory>${basedir}/src/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.xsd</include>
+					<include>**/*.dtd</include>
+					<include>**/*.vm</include>
+					<include>**/*.config</include>
+					<include>**/*.policy</include>
+				</includes>
+			</resource>
+		</resources>
+
+	</build>
+
+</project>
