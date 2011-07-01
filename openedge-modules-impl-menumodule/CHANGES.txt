@@ -1,0 +1,68 @@
+-------------------------------------------------
+1.4.3
+
+-Fixed bug that would apply the filter for children on the original tree instead of the copy for the request.
+
+-------------------------------------------------
+1.4.2
+
+- Fix for bug that prevented proper usage of more than one concurrent instance of the module
+	(reference to cache was static).
+- Refactored JUnit test to use a decorator for initialization.
+- JavaDocs & code conventions.
+- Added module property 'useRootForNullPath' (see JavaDoc).
+
+-------------------------------------------------
+1.4.1
+
+-Fixed bug that would leave the children (getChildren()) of an item unfiltered.
+In other words: getChildren() produced a list of all the children  instead of just those that were allowed in the current context.
+-Wrote JUnitTest to verify this behaviour in the future.
+
+-------------------------------------------------
+1.4
+
+- Added childs to MenuItem (duplicating tree behaviour, perhaps we should make the MenuItems extends TreeNode)
+
+-------------------------------------------------
+1.3
+
+- Added AttributeEnabledObject interface
+- Added Attributes to MenuFilters
+- Made abstract MenuFilter
+- Changed MenuItem to implement AttributeEnebledObject
+- deprecated MenuModule.getAttribute() for a cleaner method with the same name
+
+-------------------------------------------------
+1.2
+
+- Removed Commons BeanUtils/ Commons Collections dependency in favor of Ognl
+
+-------------------------------------------------
+1.1.2 b (bug fixes)
+
+- changed parameters from Properties to Map for velocity
+- removed the url encoding which was probably overkill and was killing parnassays
+- fixed parameter element to always be included not just when there was a ? in the link
+
+-------------------------------------------------
+1.1.2
+
+- added dtd for the xml , dtd is not yet enforced by the code
+- replaced setQueryString in MenuItem with new request parameter structure
+- it is now possible to add xml element parameter (equal to attribute) to specify parameters for the url
+- getQueryString now returns dynamicly build String dependend on the request parameters
+- added url encoding to the parameters
+
+-------------------------------------------------
+1.1.1
+
+- Moved class TreeStateCache from OpenEdge Util to this project, package:
+	nl.openedge.modules.impl.menumodule
+	
+- Cleaned up dependencies
+
+-------------------------------------------------
+1.1
+
+First production release.

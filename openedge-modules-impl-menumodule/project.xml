@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project>
+  <pomVersion>3</pomVersion>
+  <id>oe-menu</id>
+  <name>OpenEdge Menu Module</name>
+  <currentVersion>1.4.6</currentVersion>
+  <organization>
+    <name>Open Edge</name>
+    <url>http://www.openedge.nl/</url>
+    <logo>http://www.openedge.nl/images/logo.jpg</logo>
+  </organization>
+  <inceptionYear>2003</inceptionYear>
+  <package>nl.openedge.modules.impl.menumodule</package>
+  <logo>http://www.openedge.nl/images/logo.jpg</logo>
+  <shortDescription>Menu Module</shortDescription>
+  <description></description>
+  <url>http://maven.apache.org/</url>
+
+  <versions>
+    <version>
+      <id>1.4.6</id>
+      <name>1.4.6</name>
+      <tag>B1_4_6</tag>
+    </version>
+    <version>
+      <id>1.4.4</id>
+      <name>1.4.4</name>
+      <tag>B1_4_4</tag>
+    </version>
+	<version>
+      <id>1.4.3</id>
+      <name>1.4.3</name>
+      <tag>B1_4_3</tag>
+    </version>
+	<version>
+      <id>1.4.2</id>
+      <name>1.4.2</name>
+      <tag>B1_4_2</tag>
+    </version>
+	<version>
+      <id>1.4.1</id>
+      <name>1.4.1</name>
+      <tag>B1_4_1</tag>
+    </version>
+	<version>
+      <id>1.4</id>
+      <name>1.4</name>
+      <tag>B1_4</tag>
+    </version>
+	<version>
+      <id>1.3</id>
+      <name>1.3</name>
+      <tag>B1_3</tag>
+    </version>
+	<version>
+      <id>1.2</id>
+      <name>1.2</name>
+      <tag>B1_2</tag>
+    </version>
+	<version>
+      <id>1.1.2</id>
+      <name>1.1.2</name>
+      <tag>B1_1_2</tag>
+    </version>
+    <version>
+      <id>1.1.1</id>
+      <name>1.1.1</name>
+      <tag>B1_1_1</tag>
+    </version>
+    <version>
+      <id>1.1</id>
+      <name>1.1</name>
+      <tag>B1</tag>
+    </version>
+  </versions>
+  <branches></branches>
+  <mailingLists>
+  </mailingLists>
+  
+  <developers>
+	
+    <developer>
+      <name>Eelco Hillenius</name>
+      <id>eelco</id>
+      <email>eelco.hillenius@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+	
+	<developer>
+		<name>Sander Hofstee</name>
+		<id>sander</id>
+		<email>sander.hofstee@topicus.nl</email>
+		<organization>Topicus</organization>
+		<roles>
+			<role>Java Developer</role>
+		</roles>
+		<timezone>+1</timezone>
+	</developer>
+
+	<developer>
+		<name>Maurice Marrink</name>
+		<id>maurice</id>
+		<email>marrink@topicus.nl</email>
+		<organization>Topicus</organization>
+		<roles>
+			<role>Java Developer</role>
+		</roles>
+		<timezone>+1</timezone>
+	</developer>
+	
+  </developers>
+
+  <dependencies>
+  
+    <dependency>
+      <id>servletapi</id>
+      <version>2.3</version>
+    </dependency>
+
+	<dependency>
+		<id>ognl</id>
+		<version>2.6.4</version>
+		<url>http://www.ognl.org/</url>
+	</dependency>
+
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.1-dev</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+    </dependency>
+    
+    <dependency>
+      <id>jdom</id>
+      <version>b9</version>
+      <url>http://www.jdom.org/</url>
+    </dependency>
+
+    <dependency>
+      <id>quartz</id>
+      <version>1.2.3</version>
+      <url>http://www.part.net/quartz.html</url>
+    </dependency>
+    
+    <dependency>
+      <id>openedge-modules</id>
+      <version>1.2</version>
+      <url>http://www.openedge.nl</url>
+    </dependency>
+    
+    <dependency>
+      <id>openedge-access</id>
+      <version>1.2</version>
+      <url>http://www.openedge.nl</url>
+    </dependency>
+    
+   </dependencies>
+
+  <build>
+    <nagEmailAddress>info@openedge.nl</nagEmailAddress>
+    
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <resources>
+        <resource>
+          <directory>${basedir}/src/test</directory>
+          <includes>
+          	<include>**/*.properties</include>
+          	<include>**/*.xml</include>
+          	<include>**/*.xsd</include>
+          	<include>**/*.dtd</include>
+          	<include>**/*.vm</include>
+          	<include>**/*.config</include>
+          	<include>**/*.policy</include>
+          	<include>**/*.ccf</include>
+          </includes>
+        </resource>
+      </resources>
+    </unitTest>
+
+    <resources>
+      <resource>
+        <directory>${basedir}/src/java</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+          <include>**/*.xsd</include>
+          <include>**/*.dtd</include>
+          <include>**/*.vm</include>
+          <include>**/*.config</include>
+          <include>**/*.ccf</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
+</project>
