@@ -1,0 +1,27 @@
+-------------------------------------------------
+1.6.1
+
+- changed hibernate config so that the attachments property is no longer has "not-null=true"
+
+-------------------------------------------------
+1.6
+
+- Hopefully improved on the exceptionhandling.
+- Added the possibility to send failed messages again.
+
+-------------------------------------------------
+1.5
+
+- Add attachments
+
+-------------------------------------------------
+1.4
+
+- Updated libs
+
+-------------------------------------------------
+
+- ???
+
+-------------------------------------------------
+1.1 First official release.
