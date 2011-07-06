@@ -43,7 +43,6 @@ public class CyclicComponentThrowAwayImpl implements DependentType, ThrowAwayTyp
 
 	public CyclicComponentThrowAwayImpl()
 	{
-		System.out.println(this + " created!");
 	}
 
 	/**

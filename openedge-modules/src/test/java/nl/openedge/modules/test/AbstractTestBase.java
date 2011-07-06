@@ -32,67 +32,35 @@ package nl.openedge.modules.test;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
-import nl.openedge.modules.config.URLHelper;
+
+import org.junit.Before;
 
 /**
- * This is the baseclass for testcases. It does some initialisation and provides additional test
- * methods
+ * This is the baseclass for testcases. It does some initialisation and provides
+ * additional test methods
  * 
  * @author E.F. Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public abstract class AbstractTestBase
 {
+	protected ComponentRepository componentFactory;
 
-	protected static ComponentRepository componentFactory;
+	protected JDOMConfigurator configurator;
 
-	protected static boolean initialised = false;
-
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
+	@Before
+	public void init() throws Exception
 	{
-		super(name);
-		init();
-	}
-
-	/**
-	 * initialise
-	 */
-	protected void init() throws Exception
-	{
-
 		loadComponentFactory();
 	}
 
-	/**
-	 * load the module factory
-	 * 
-	 * @throws Exception
-	 */
 	protected void loadComponentFactory() throws Exception
 	{
+		URL url = getClass().getResource("/oemodules.xml");
 
-		if (!initialised)
-		{
-			initialised = true;
-			try
-			{
-
-				URL url = URLHelper.convertToURL(System.getProperty("configfile",
-						"/oemodules.xml"), AbstractTestBase.class, null);
-
-				JDOMConfigurator c = new JDOMConfigurator(url);
-				componentFactory = RepositoryFactory.getRepository();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
-		}
+		configurator = new JDOMConfigurator(url);
+		componentFactory = RepositoryFactory.getRepository();
 	}
 }

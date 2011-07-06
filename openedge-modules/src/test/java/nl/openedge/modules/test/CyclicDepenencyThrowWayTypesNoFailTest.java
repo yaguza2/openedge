@@ -32,49 +32,29 @@ package nl.openedge.modules.test;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
-import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.types.initcommands.DependentTypeWrapper;
+
+import org.junit.Test;
 
 /**
  * components related tests
  * 
  * @author E.F. Hillenius
  */
-public class CyclicDepenencyThrowWayTypesNoFailTest extends TestCase
+public class CyclicDepenencyThrowWayTypesNoFailTest
 {
-
-	/**
-	 * construct with name
-	 * 
-	 * @param name
-	 */
-	public CyclicDepenencyThrowWayTypesNoFailTest(String name) throws Exception
+	@Test
+	public void cyclicComponentFactoryDoesntFail() throws Exception
 	{
-		super(name);
+		DependentTypeWrapper.setFailOnCycle(false);
+		URL url =
+			URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml", AbstractTestBase.class, null);
+
+		JDOMConfigurator c = new JDOMConfigurator(url);
+		ComponentRepository moduleFactory = RepositoryFactory.getRepository();
 	}
-
-	public void testLoadCyclicComponentFactory() throws Exception
-	{
-		try
-		{
-			DependentTypeWrapper.setFailOnCycle(false);
-			URL url = URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml",
-					AbstractTestBase.class, null);
-
-			JDOMConfigurator c = new JDOMConfigurator(url);
-			ComponentRepository moduleFactory = RepositoryFactory.getRepository();
-		}
-		catch (ConfigException e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
 }
-

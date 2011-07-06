@@ -45,14 +45,15 @@ import org.jdom.Element;
 import org.quartz.Job;
 
 /**
- * Loosely typed implementation of ComponentRepository. If this component repository is used,
- * components do not have to implement any interface at all, as all type information and coupling to
- * InitCommands will be read from the configuration file.
+ * Loosely typed implementation of ComponentRepository. If this component repository is
+ * used, components do not have to implement any interface at all, as all type information
+ * and coupling to InitCommands will be read from the configuration file.
  * 
  * @author Eelco Hillenius
  */
-public final class LooselyTypedComponentRepository extends AbstractComponentRepository
+public class LooselyTypedComponentRepository extends AbstractComponentRepository
 {
+	private static final long serialVersionUID = 1L;
 
 	/** logger. */
 	private Log log = LogFactory.getLog(this.getClass());
@@ -68,13 +69,17 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 	/**
 	 * add one component.
 	 * 
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node component config node
-	 * @throws ConfigException when an configuration error occurs
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            component config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected void addComponent(String name, Class clazz, Element node)
-			throws ConfigException
+	@Override
+	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
 
@@ -97,12 +102,17 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 	/**
 	 * get the component factory.
 	 * 
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node configuration node
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            configuration node
 	 * @return ComponentFactory
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
 			throws ConfigException
 	{
@@ -118,9 +128,8 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 			{
 				factory = TypesRegistry.getDefaultComponentFactory();
 
-				log.warn(name
-						+ " is not of any known type... using " + factory
-						+ " as component factory");
+				log.warn(name + " is not of any known type... using " + factory
+					+ " as component factory");
 			}
 			else
 			{
@@ -142,11 +151,16 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 	/**
 	 * add initialization commands.
 	 * 
-	 * @param factory factory
-	 * @param node config node
-	 * @param clazz component class
-	 * @throws ConfigException when an configuration error occurs
+	 * @param factory
+	 *            factory
+	 * @param node
+	 *            config node
+	 * @param clazz
+	 *            component class
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
 			throws ConfigException
 	{
@@ -162,16 +176,15 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 				Element cnode = (Element) i.next();
 				String commandName = cnode.getTextNormalize();
 
-				InitCommand initCommand = (InitCommand) TypesRegistry
-						.getInitCommand(commandName);
+				InitCommand initCommand = TypesRegistry.getInitCommand(commandName);
 
 				// initialize the command
 				initCommand.init(factory.getName(), node, this);
 				// add command to the list
 				commands.add(initCommand);
 
-				InitCommand[] cmds = (InitCommand[]) commands
-						.toArray(new InitCommand[commands.size()]);
+				InitCommand[] cmds =
+					(InitCommand[]) commands.toArray(new InitCommand[commands.size()]);
 
 				if (cmds.length > 0)
 				{
@@ -185,8 +198,10 @@ public final class LooselyTypedComponentRepository extends AbstractComponentRepo
 	}
 
 	/**
-	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class, boolean)
+	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class,
+	 *      boolean)
 	 */
+	@Override
 	public List getComponentsByType(Class type, boolean exact)
 	{
 		List sublist = new ArrayList();

@@ -46,13 +46,15 @@ import org.jdom.Element;
 import org.quartz.Job;
 
 /**
- * Default implementation of ComponentRepository. This implementation looks for interfaces that are
- * implemented by the components for the coupling to the framework types and InitCommands.
+ * Default implementation of ComponentRepository. This implementation looks for interfaces
+ * that are implemented by the components for the coupling to the framework types and
+ * InitCommands.
  * 
  * @author Eelco Hillenius
  */
-public final class DefaultComponentRepository extends AbstractComponentRepository
+public class DefaultComponentRepository extends AbstractComponentRepository
 {
+	private static final long serialVersionUID = 1L;
 
 	/** logger. */
 	private static Log log = LogFactory.getLog(DefaultComponentRepository.class);
@@ -68,13 +70,17 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 	/**
 	 * add one component.
 	 * 
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node component config node
-	 * @throws ConfigException when an configuration error occurs when an configuration error occurs
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            component config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs when an configuration error occurs
 	 */
-	protected void addComponent(String name, Class clazz, Element node)
-			throws ConfigException
+	@Override
+	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
 
@@ -93,12 +99,17 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 	/**
 	 * get the component factory.
 	 * 
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node configuration node
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            configuration node
 	 * @return ComponentFactory
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
 			throws ConfigException
 	{
@@ -119,8 +130,8 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 			{
 				if (wasFoundOnce) // more than one base type!
 				{
-					throw new ConfigException("component "
-							+ name + " is of more than one registered base type!");
+					throw new ConfigException("component " + name
+						+ " is of more than one registered base type!");
 				}
 				wasFoundOnce = true;
 
@@ -132,9 +143,8 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 		{
 			factory = TypesRegistry.getDefaultComponentFactory();
 
-			log.warn(name
-					+ " is not of any known type... using " + factory
-					+ " as component factory");
+			log.warn(name + " is not of any known type... using " + factory
+				+ " as component factory");
 		}
 
 		factory.setName(name);
@@ -151,11 +161,16 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 	/**
 	 * add initialization commands.
 	 * 
-	 * @param factory factory
-	 * @param node config node
-	 * @param clazz component class
-	 * @throws ConfigException when an configuration error occurs
+	 * @param factory
+	 *            factory
+	 * @param node
+	 *            config node
+	 * @param clazz
+	 *            component class
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
 			throws ConfigException
 	{
@@ -177,8 +192,7 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 				}
 			}
 
-			InitCommand[] cmds = (InitCommand[]) commands
-					.toArray(new InitCommand[commands.size()]);
+			InitCommand[] cmds = (InitCommand[]) commands.toArray(new InitCommand[commands.size()]);
 
 			if (cmds.length > 0)
 			{
@@ -188,8 +202,10 @@ public final class DefaultComponentRepository extends AbstractComponentRepositor
 	}
 
 	/**
-	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class, boolean)
+	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class,
+	 *      boolean)
 	 */
+	@Override
 	public List getComponentsByType(Class type, boolean exact)
 	{
 		List sublist = new ArrayList();

@@ -58,6 +58,7 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory i
 	 * @return new instance for each request
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
+	@Override
 	public Object getComponent()
 	{
 		Object singletonInstance = singletonInstanceHolder.get();
@@ -122,22 +123,25 @@ public final class ThreadSingletonTypeFactory extends AbstractComponentFactory i
 	/**
 	 * set component factory.
 	 * 
-	 * @param componentRepository component repository
+	 * @param componentRepository
+	 *            component repository
 	 */
+	@Override
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
-		setComponentRepository(componentRepository);
+		super.setComponentRepository(componentRepository);
 		componentRepository.addObserver(this);
 	}
 
 	/**
 	 * fired after all components are (re)loaded.
 	 * 
-	 * @param evt event
+	 * @param evt
+	 *            event
 	 */
+	@Override
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		//noop
+		// noop
 	}
-
 }

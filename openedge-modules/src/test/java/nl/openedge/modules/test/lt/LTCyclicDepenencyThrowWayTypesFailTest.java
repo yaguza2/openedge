@@ -32,64 +32,32 @@ package nl.openedge.modules.test.lt;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
-import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
-import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.impl.lt.LooselyTypedComponentRepository;
 import nl.openedge.modules.types.initcommands.CyclicDependencyException;
 import nl.openedge.modules.types.initcommands.DependentTypeWrapper;
+
+import org.junit.Test;
 
 /**
  * components related tests
  * 
  * @author E.F. Hillenius
  */
-public class LTCyclicDepenencyThrowWayTypesFailTest extends TestCase
+public class LTCyclicDepenencyThrowWayTypesFailTest
 {
-
-	/**
-	 * construct with name
-	 * 
-	 * @param name
-	 */
-	public LTCyclicDepenencyThrowWayTypesFailTest(String name) throws Exception
-	{
-		super(name);
-	}
-
+	@Test(expected = CyclicDependencyException.class)
 	public void testLoadCyclicComponentFactory() throws Exception
 	{
-		try
-		{
-			DependentTypeWrapper.setFailOnCycle(true);
-			URL url = URLHelper.convertToURL("/cyclic-throwaway-oeltmodules.xml",
-					AbstractTestBase.class, null);
+		DependentTypeWrapper.setFailOnCycle(true);
+		URL url =
+			URLHelper.convertToURL("/cyclic-throwaway-oeltmodules.xml", AbstractTestBase.class,
+				null);
 
-			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class
-					.getName());
-			JDOMConfigurator c = new JDOMConfigurator(url);
-			ComponentRepository cRepo = RepositoryFactory.getRepository();
-			// if we get here, the cycle was not detected
-			fail("cycle was not detected!");
-
-		}
-		catch (ConfigException e)
-		{
-			if (e.getCause() instanceof CyclicDependencyException)
-			{
-				System.err.println("successfully detected cycle during startup\n"
-						+ e.getMessage());
-			}
-			else
-			{
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
+		RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
+		new JDOMConfigurator(url);
+		RepositoryFactory.getRepository();
 	}
-
 }
-

@@ -32,73 +32,52 @@ package nl.openedge.modules.test.lt;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
-import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.impl.lt.LooselyTypedComponentRepository;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+
 /**
- * This is the baseclass for testcases. It does some initialisation and provides additional test
- * methods
+ * This is the baseclass for testcases. It does some initialization and provides
+ * additional test methods
  * 
  * @author E.F. Hillenius
  */
-public abstract class AbstractTestBase extends TestCase
+public abstract class AbstractTestBase
 {
-
-	/** access factory */
 	protected static ComponentRepository componentFactory;
+
+	protected JDOMConfigurator configurator;
 
 	protected static boolean initialised = false;
 
-	/** construct */
-	public AbstractTestBase(String name) throws Exception
+	@Before
+	public void init() throws Exception
 	{
-		super(name);
-		init();
-	}
-
-	/**
-	 * initialise
-	 */
-	protected void init() throws Exception
-	{
-
 		loadComponentFactory();
 	}
 
-	/**
-	 * load the module factory
-	 * 
-	 * @throws Exception
-	 */
+	@AfterClass
+	public static void reset()
+	{
+		initialised = false;
+	}
+
 	protected void loadComponentFactory() throws Exception
 	{
-
 		if (!initialised)
 		{
 			initialised = true;
 
-			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class
-					.getName());
+			RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
 
-			try
-			{
+			URL url = getClass().getResource("/oeltmodules.xml");
 
-				URL url = URLHelper.convertToURL(System.getProperty("configfile",
-						"/oeltmodules.xml"), AbstractTestBase.class, null);
-
-				JDOMConfigurator c = new JDOMConfigurator(url);
-				componentFactory = RepositoryFactory.getRepository();
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				throw e;
-			}
+			configurator = new JDOMConfigurator(url);
+			componentFactory = RepositoryFactory.getRepository();
 		}
 	}
 }
