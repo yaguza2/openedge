@@ -12,21 +12,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * UpdateCommand voert updates uit via Hibernate. UpdateCommand kan een collectie van objecten in 1
- * transactie persisteren in database.
+ * UpdateCommand voert updates uit via Hibernate. UpdateCommand kan een collectie van
+ * objecten in 1 transactie persisteren in database.
  */
 public class UpdateCommand implements HibernateCommand
 {
 
 	/** Logger. */
-	private static Log log = LogFactory.getLog(UpdateCommand.class);
+	private static Logger log = LoggerFactory.getLogger(UpdateCommand.class);
 
 	/**
 	 * Collectie van te persisteren objecten.
@@ -45,10 +45,12 @@ public class UpdateCommand implements HibernateCommand
 	}
 
 	/**
-	 * Voert saveOrUpdate uit voor de collectie te persisteren objecten binnen 1 transactie.
+	 * Voert saveOrUpdate uit voor de collectie te persisteren objecten binnen 1
+	 * transactie.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractHibernateCommand#execute(net.sf.hibernate.Session)
 	 */
+	@Override
 	public void execute(final Session hibernateSession) throws HibernateException
 	{
 		Transaction transaction = hibernateSession.beginTransaction();
@@ -69,7 +71,7 @@ public class UpdateCommand implements HibernateCommand
 			}
 			catch (HibernateException e1)
 			{
-				log.fatal("Kan geen rollback uitvoeren");
+				log.error("Kan geen rollback uitvoeren");
 			}
 			throw (e);
 		}
@@ -79,6 +81,7 @@ public class UpdateCommand implements HibernateCommand
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer msg = new StringBuffer();

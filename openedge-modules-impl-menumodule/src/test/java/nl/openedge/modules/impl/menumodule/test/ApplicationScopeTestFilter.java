@@ -36,8 +36,8 @@ import nl.openedge.modules.impl.menumodule.AbstractMenuFilter;
 import nl.openedge.modules.impl.menumodule.ApplicationScopeMenuFilter;
 import nl.openedge.modules.impl.menumodule.MenuItem;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Eelco Hillenius
@@ -46,7 +46,7 @@ public final class ApplicationScopeTestFilter extends AbstractMenuFilter impleme
 		ApplicationScopeMenuFilter
 {
 
-	private static Log log = LogFactory.getLog(ApplicationScopeTestFilter.class);
+	private static Logger log = LoggerFactory.getLogger(ApplicationScopeTestFilter.class);
 
 	/**
 	 * test method

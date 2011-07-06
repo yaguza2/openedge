@@ -34,8 +34,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.openedge.baritus.ConverterRegistry;
 import nl.openedge.baritus.converters.ConversionException;
@@ -50,7 +50,7 @@ public final class ValueUtils
 {
     
     /* logger */
-    private static Log log = LogFactory.getLog(ValueUtils.class);
+    private static Logger log = LoggerFactory.getLogger(ValueUtils.class);
 
 	/**
 	 * check if the value is null or empty

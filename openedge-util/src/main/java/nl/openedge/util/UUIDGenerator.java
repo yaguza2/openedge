@@ -6,8 +6,8 @@ package nl.openedge.util;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The base class for ID generators that use a UUID algorithm. This class implements the algorithm,
@@ -36,7 +36,7 @@ public abstract class UUIDGenerator
 	private static final int JVM_TIME = (int) (System.currentTimeMillis() >>> JVM_SHIFT);
 
 	/** log. */
-	private static Log log = LogFactory.getLog(UUIDGenerator.class);
+	private static Logger log = LoggerFactory.getLogger(UUIDGenerator.class);
 
 	static
 	{

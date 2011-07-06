@@ -59,8 +59,8 @@ import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ServletContextAwareType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -81,7 +81,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	private static final Pattern PATTERN_IS = Pattern.compile("=");
 
 	/** logger. */
-	private static Log log = LogFactory.getLog(MenuModule.class);
+	private static Logger log = LoggerFactory.getLogger(MenuModule.class);
 
 	/** the location of the configuration document. */
 	private String configLocation;

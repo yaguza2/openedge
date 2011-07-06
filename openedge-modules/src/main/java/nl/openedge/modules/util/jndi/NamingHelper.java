@@ -42,8 +42,8 @@ import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper for JNDI namings
@@ -63,7 +63,7 @@ public final class NamingHelper
 	protected static String JNDI_PREFIX = "jndi";
 
 	/* log */
-	private static final Log log = LogFactory.getLog(NamingHelper.class);
+	private static final Logger log = LoggerFactory.getLogger(NamingHelper.class);
 
 	protected static final String EMPTY_STRING = "";
 

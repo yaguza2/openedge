@@ -44,8 +44,8 @@ import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper for parsing dates in multiple formats, currently for non localized. Loads formats defined
@@ -74,7 +74,7 @@ public final class DateFormatHelper
 	private static boolean checkForSize = true;
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(DateFormatHelper.class);
+	private static Logger log = LoggerFactory.getLogger(DateFormatHelper.class);
 
 	/** Special var to check years. */
 	private static final int MAX_YEARS = 9999;

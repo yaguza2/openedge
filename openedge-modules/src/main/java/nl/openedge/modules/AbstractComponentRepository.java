@@ -61,8 +61,8 @@ import nl.openedge.modules.types.base.JobTypeFactory;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 import org.quartz.Job;
 import org.quartz.JobDetail;
@@ -82,7 +82,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	private static final int DEFAULT_WAIT_UNTIL_SCHEDULER_STARTUP = 20;
 
 	/** logger. */
-	private static Log log = LogFactory.getLog(AbstractComponentRepository.class);
+	private static Logger log = LoggerFactory.getLogger(AbstractComponentRepository.class);
 
 	/** holder for component builders. */
 	private Map components = Collections.synchronizedMap(new HashMap());

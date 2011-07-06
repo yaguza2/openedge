@@ -35,8 +35,8 @@ import java.net.URL;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 
@@ -48,7 +48,7 @@ import org.jdom.input.SAXBuilder;
 public final class DocumentLoader
 {
 	/** logger. */
-	private static Log log = LogFactory.getLog(DocumentLoader.class);
+	private static Logger log = LoggerFactory.getLogger(DocumentLoader.class);
 
 	/**
 	 * Load configuration document.

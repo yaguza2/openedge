@@ -32,8 +32,8 @@ package nl.openedge.modules.impl.menumodule;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allways disables all.
@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 public final class DisabledFilter extends AbstractMenuFilter implements RequestScopeMenuFilter
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(DisabledFilter.class);
+	private static Logger log = LoggerFactory.getLogger(DisabledFilter.class);
 
 	/**
 	 * Allways disables.

@@ -37,8 +37,8 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 import org.quartz.JobDataMap;
 
@@ -50,7 +50,7 @@ import org.quartz.JobDataMap;
 public final class JobTypeFactory extends AbstractComponentFactory
 {
 	/** logger. */
-	private static Log log = LogFactory.getLog(JobTypeFactory.class);
+	private static Logger log = LoggerFactory.getLogger(JobTypeFactory.class);
 
 	/** job data object. */
 	private JobDataMap jobData = null;

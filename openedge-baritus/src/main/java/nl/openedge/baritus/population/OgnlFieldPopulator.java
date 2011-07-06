@@ -40,19 +40,20 @@ import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * OGNL populator for bean properties. Tries to set a property using OGNL.
+ * 
  * @author Eelco Hillenius
  * @author Sander Hofstee
  */
 public final class OgnlFieldPopulator extends AbstractFieldPopulator
 {
 
-	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
+	private static Logger populationLog = LoggerFactory.getLogger(LogConstants.POPULATION_LOG);
 
 	private final static OgnlConverterWrapper converter = new OgnlConverterWrapper();
 
@@ -76,6 +77,7 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 
 	/**
 	 * construct with reference to the control
+	 * 
 	 * @param ctrl
 	 */
 	public OgnlFieldPopulator(FormBeanCtrlBase ctrl)
@@ -85,13 +87,18 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 
 	/**
 	 * set a property
-	 * @param cctx maverick context
-	 * @param formBeanContext context with instance of the form bean to set the property
-	 *            on
-	 * @param name name of the property
-	 * @param value unconverted value to set
+	 * 
+	 * @param cctx
+	 *            maverick context
+	 * @param formBeanContext
+	 *            context with instance of the form bean to set the property on
+	 * @param name
+	 *            name of the property
+	 * @param value
+	 *            unconverted value to set
 	 * @throws Exception
 	 */
+	@Override
 	public boolean setProperty(ControllerContext cctx, FormBeanContext formBeanContext,
 			String fieldname, Object value) throws Exception
 	{
@@ -143,7 +150,7 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 					Class targetType = (Class) context.get(CTX_KEY_CURRENT_TARGET_TYPE);
 					value = context.get(CTX_KEY_CURRENT_TRIED_VALUE);
 					ctrl.setConversionErrorForField(cctx, formBeanContext, targetType, name, value,
-							e);
+						e);
 					ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);
 					success = false;
 				}

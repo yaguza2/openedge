@@ -38,9 +38,6 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -50,6 +47,9 @@ import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.impl.menumodule.MenuItem;
 import nl.openedge.modules.impl.menumodule.MenuModule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Unit tests for menu component.
  * 
@@ -58,7 +58,7 @@ import nl.openedge.modules.impl.menumodule.MenuModule;
 public class MenuTest extends TestCase
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(MenuTest.class);
+	private static Logger log = LoggerFactory.getLogger(MenuTest.class);
 
 	/**
 	 * contstruct.
@@ -275,11 +275,9 @@ public class MenuTest extends TestCase
 		for (; i < size; i++)
 		{
 			MenuItem item = (MenuItem) items[0].get(i);
-			log.info(item);
 			if ("/medischdossier.m".equals(item.getLink()))
 			{
 				assertTrue(item.isActive());
-
 			}
 		}
 
@@ -288,7 +286,6 @@ public class MenuTest extends TestCase
 		for (; i < size; i++)
 		{
 			MenuItem item = (MenuItem) items[1].get(i);
-			log.info(item);
 			if ("/medischdossier.allergieen.m".equals(item.getLink()))
 			{
 				assertTrue(item.isActive());
@@ -321,11 +318,9 @@ public class MenuTest extends TestCase
 		for (; i < size; i++)
 		{
 			MenuItem item = (MenuItem) items[0].get(i);
-			log.info(item);
 			if ("/medischdossier.m".equals(item.getLink()))
 			{
 				assertTrue(item.isActive());
-
 			}
 		}
 
@@ -334,7 +329,6 @@ public class MenuTest extends TestCase
 		for (; i < size; i++)
 		{
 			MenuItem item = (MenuItem) items[1].get(i);
-			log.info(item);
 			if ("/medischdossier.journaal.m".equals(item.getLink()))
 			{
 				assertTrue(item.isActive());
@@ -407,13 +401,13 @@ public class MenuTest extends TestCase
 
 		subject.getPrincipals().addAll(principals);
 
-		Object test = menuModule
-				.getFilterContextVariable(RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
+		Object test =
+			menuModule.getFilterContextVariable(RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
 
 		List[] items = menuModule.getMenuItems(subject);
 
-		test = menuModule
-				.getFilterContextVariable(RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
+		test =
+			menuModule.getFilterContextVariable(RequestScopeTestFilterForOneItem.TEST_CONTEXT_KEY);
 
 		assertNotNull(test);
 	}
@@ -440,7 +434,8 @@ public class MenuTest extends TestCase
 			if (actief.isActive())
 				break;
 		}
-		// the menuitems in items[1] should be exactly the same as those in actief.children
+		// the menuitems in items[1] should be exactly the same as those in
+		// actief.children
 		assertEquals("Mismatch in children.", items[1], actief.getChildren());
 	}
 

@@ -41,8 +41,8 @@ import java.util.zip.Inflater;
 
 import nl.openedge.util.rekenen.Rekenhulp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper for serialization and zipping of objects.
@@ -57,7 +57,7 @@ public final class SerializeAndZipHelper
 	/**
 	 * Logger.
 	 */
-	private static Log log = LogFactory.getLog(SerializeAndZipHelper.class);
+	private static Logger log = LoggerFactory.getLogger(SerializeAndZipHelper.class);
 
 	/**
 	 * Hidden constructor.

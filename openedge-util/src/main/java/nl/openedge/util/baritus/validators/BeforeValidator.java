@@ -37,8 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 import nl.openedge.util.DateComparator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -56,7 +56,7 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Logger.
 	 */
-	private Log log = LogFactory.getLog(BeforeValidator.class);
+	private Logger log = LoggerFactory.getLogger(BeforeValidator.class);
 
 	/**
 	 * Construct.

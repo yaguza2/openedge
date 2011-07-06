@@ -34,8 +34,8 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -50,7 +50,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	private int minLength = NO_MINIMUM;
 
-	private static Log log = LogFactory.getLog(MinimumFieldLengthValidator.class);
+	private static Logger log = LoggerFactory.getLogger(MinimumFieldLengthValidator.class);
 
 	private String errorMessageKey = "invalid.field.input.size";
 

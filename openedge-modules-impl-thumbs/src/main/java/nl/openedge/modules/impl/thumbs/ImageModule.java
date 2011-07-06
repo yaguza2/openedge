@@ -48,8 +48,8 @@ import javax.swing.ImageIcon;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.util.ImageInfo;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
@@ -63,7 +63,7 @@ public final class ImageModule implements SingletonType
 {
 
 	/* logger */
-	private Log log = LogFactory.getLog(ImageModule.class);
+	private Logger log = LoggerFactory.getLogger(ImageModule.class);
 	/* suffix to use when caching; max size will be appended */
 
 	/**

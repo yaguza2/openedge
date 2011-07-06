@@ -13,8 +13,8 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for handling localized messages.
@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 public final class MessageUtils
 {
 
-	private static Log log = LogFactory.getLog(MessageUtils.class);
+	private static Logger log = LoggerFactory.getLogger(MessageUtils.class);
 
 	/**
 	 * Get localized message for given key.

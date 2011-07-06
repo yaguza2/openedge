@@ -46,8 +46,8 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.openedge.access.AccessCallbackHandler;
 import nl.openedge.access.LoginDecorator;
@@ -148,7 +148,7 @@ public final class LoginModuleImpl implements LoginModule, Serializable
 	public final static String USER_MANAGER_ALIAS = "userManagerAlias";
 
 	/* logger */
-	protected Log log = LogFactory.getLog(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * <p>Creates a login module.

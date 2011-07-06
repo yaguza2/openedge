@@ -37,8 +37,8 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class for Http related things.
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
 public final class HttpHelper
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(HttpHelper.class);
+	private static Logger log = LoggerFactory.getLogger(HttpHelper.class);
 	/**
 	 * Hidden constructor.
 	 */

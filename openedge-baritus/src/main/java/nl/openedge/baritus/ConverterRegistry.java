@@ -63,8 +63,8 @@ import nl.openedge.baritus.converters.LongLocaleConverter;
 import nl.openedge.baritus.converters.ShortConverter;
 import nl.openedge.baritus.converters.ShortLocaleConverter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Global registry for converters.
@@ -110,7 +110,7 @@ public final class ConverterRegistry
 	 */
 	private static boolean returnNoopConverterWhenNotFound = true;
 	
-	private static Log log = LogFactory.getLog(ConverterRegistry.class);
+	private static Logger log = LoggerFactory.getLogger(ConverterRegistry.class);
 
 	/*
 	 * hidden constructor

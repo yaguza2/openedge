@@ -32,8 +32,8 @@ package nl.openedge.util.maverick;
 
 import javax.servlet.ServletConfig;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.AbstractControllerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.Controller;
@@ -76,7 +76,7 @@ public class AllwaysReloadControllerFactory extends AbstractControllerFactory
 	public static final String ATTRIB_ALLWAYS_RELOAD = "allways-reload";
 
 	/** log. */
-	private static Log log = LogFactory.getLog(AllwaysReloadControllerFactory.class);
+	private static Logger log = LoggerFactory.getLogger(AllwaysReloadControllerFactory.class);
 
 	/** whether controllers should allways be reloaded, regardless of their types. */
 	private boolean allwaysReload = false;

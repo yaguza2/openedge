@@ -32,8 +32,8 @@ package nl.openedge.modules.impl.thumbs;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.modules.types.initcommands.BeanType;
@@ -46,7 +46,7 @@ public final class ThumbnailFileCacheModule implements SingletonType, BeanType
 {
 
 	/* logger */
-	private Log log = LogFactory.getLog(ThumbnailFileCacheModule.class);
+	private Logger log = LoggerFactory.getLogger(ThumbnailFileCacheModule.class);
 	/* suffix to use when caching; max size will be appended */
 	private String cacheSuffix;
 	/* name of cache dir */

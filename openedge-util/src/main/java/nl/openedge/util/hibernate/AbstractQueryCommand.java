@@ -10,16 +10,15 @@ package nl.openedge.util.hibernate;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * AbstractQueryCommand voert een zogeheten named query uit via Hibernate.
- * <h3>Gebruikte Patterns</h3>
- * Deze klasse implementeert of is onderdeel van de volgende patterns:
+ * AbstractQueryCommand voert een zogeheten named query uit via Hibernate. <h3>Gebruikte
+ * Patterns</h3> Deze klasse implementeert of is onderdeel van de volgende patterns:
  * <ul>
  * <li>Template method (implementeert <em>AbstractClass</em>)</li>
  * <li>Command (implementeert <em>ConcreteCommand</em>)</li>
@@ -30,7 +29,7 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	/**
 	 * Gebruikt voor logging.
 	 */
-	private static Log log = LogFactory.getLog(AbstractQueryCommand.class);
+	private static Logger log = LoggerFactory.getLogger(AbstractQueryCommand.class);
 
 	/**
 	 * De naam van de uit te voeren query.
@@ -43,8 +42,8 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	private List resultaat;
 
 	/**
-	 * Construeert een AbstractQueryCommand die een Hibernate 'named query uitvoert met de naam
-	 * 'deQuery'.
+	 * Construeert een AbstractQueryCommand die een Hibernate 'named query uitvoert met de
+	 * naam 'deQuery'.
 	 * 
 	 * @param deQuery
 	 *            de naam van de named query.
@@ -57,11 +56,12 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	}
 
 	/**
-	 * Implementatie van het concrete commando in de vorm van een <em>template method</em>.
-	 * Vervult de rol van <em>TemplateMethod</em> uit het pattern.
+	 * Implementatie van het concrete commando in de vorm van een <em>template method</em>
+	 * . Vervult de rol van <em>TemplateMethod</em> uit het pattern.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractHibernateCommand#execute(net.sf.hibernate.Session)
 	 */
+	@Override
 	public final void execute(final Session hibernateSession) throws HibernateException
 	{
 		log.trace("Enter");
@@ -72,11 +72,12 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	}
 
 	/**
-	 * Haalt het resultaat uit de query op. Vervult de rol van <em>primitive operation</em> uit
-	 * het pattern <em>template method</em>.
+	 * Haalt het resultaat uit de query op. Vervult de rol van
+	 * <em>primitive operation</em> uit het pattern <em>template method</em>.
 	 * 
 	 * @param query
-	 *            de Hibernate <code>Query</code> waarvan het resultaat bepaald moet worden.
+	 *            de Hibernate <code>Query</code> waarvan het resultaat bepaald moet
+	 *            worden.
 	 * @throws HibernateException
 	 *             als er een probleem optreedt bij het uitvoeren.
 	 */
@@ -88,8 +89,8 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	}
 
 	/**
-	 * Geeft een Hibernate Query terug op basis van de <code>queryNaam</code>. Vervult de rol van
-	 * <em>primitive operation</em> uit het pattern <em>template method</em>.
+	 * Geeft een Hibernate Query terug op basis van de <code>queryNaam</code>. Vervult de
+	 * rol van <em>primitive operation</em> uit het pattern <em>template method</em>.
 	 * 
 	 * @param hibernateSession
 	 *            de sessie waarop de query moet draaien.
@@ -106,12 +107,13 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	}
 
 	/**
-	 * Zet de parameters op de Hibernate Query, indien de query parameters heeft, moet deze method
-	 * overriden worden. Vervult de rol van <em>primitive operation</em> uit het pattern
-	 * <em>template method</em>.
+	 * Zet de parameters op de Hibernate Query, indien de query parameters heeft, moet
+	 * deze method overriden worden. Vervult de rol van <em>primitive operation</em> uit
+	 * het pattern <em>template method</em>.
 	 * 
 	 * @param query
-	 *            de Hibernate <code>Query</code> waarop de parameters gezet moeten worden.
+	 *            de Hibernate <code>Query</code> waarop de parameters gezet moeten
+	 *            worden.
 	 * @throws HibernateException
 	 *             als het zetten van parameters fout gaat.
 	 */
@@ -119,10 +121,8 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	{
 		log.trace("Enter");
 
-		if (true)
-		{
-			log.debug(query);
-		}
+		if (query != null)
+			log.debug(query.toString());
 		// deze methode is opzettelijk leeg gelaten zodat query commands zonder parameters
 		// deze methode niet verplicht hoeven te implementeren.
 		// De checkstyle waarschuwing mag dus genegeerd worden.
@@ -152,11 +152,12 @@ public abstract class AbstractQueryCommand implements HibernateCommand
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer msg = new StringBuffer();
 		msg.append(getClass().getName()).append("@").append(Integer.toHexString(hashCode()))
-				.append(", querynaam: ").append(queryNaam);
+			.append(", querynaam: ").append(queryNaam);
 		if (resultaat != null)
 		{
 			msg.append(", ").append(resultaat.size()).append(" resultaten");

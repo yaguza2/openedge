@@ -34,8 +34,8 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -50,7 +50,7 @@ public final class MaximumFieldLengthValidator extends AbstractFieldValidator
 
 	private int maxLength = NO_MAXIMUM;
 
-	private static Log log = LogFactory.getLog(MaximumFieldLengthValidator.class);
+	private static Logger log = LoggerFactory.getLogger(MaximumFieldLengthValidator.class);
 
 	private String errorMessageKey = "invalid.field.input.size";
 

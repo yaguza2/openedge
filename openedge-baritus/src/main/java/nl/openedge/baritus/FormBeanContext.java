@@ -32,21 +32,26 @@ package nl.openedge.baritus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import nl.openedge.baritus.converters.Converter;
 import nl.openedge.baritus.converters.Formatter;
 import nl.openedge.baritus.util.ValueUtils;
 import ognl.Ognl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FormBeanContext wraps the form bean, errors the current locale and overrideFields.
  * Furthermore, it acts as a decorator for a HashMap where you can optionally store
  * attributes you do not want to include as properties in your form bean.
+ * 
  * @author Eelco Hillenius
  * @author Maurice Marrink
  */
@@ -78,10 +83,10 @@ public final class FormBeanContext implements Map
 	private Map<Object, Object> attributes = null;
 
 	/* log for this class */
-	private static Log log = LogFactory.getLog(FormBeanCtrlBase.class);
+	private static Logger log = LoggerFactory.getLogger(FormBeanCtrlBase.class);
 
 	/* format log */
-	private static Log formattingLog = LogFactory.getLog(LogConstants.FORMATTING_LOG);
+	private static Logger formattingLog = LoggerFactory.getLogger(LogConstants.FORMATTING_LOG);
 
 	/** error key for stacktrace if any */
 	public final static String ERROR_KEY_STACKTRACE = "stacktrace";
@@ -93,6 +98,7 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Get the current locale.
+	 * 
 	 * @return Locale current locale
 	 */
 	public Locale getCurrentLocale()
@@ -102,7 +108,9 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Set the current locale.
-	 * @param locale current locale
+	 * 
+	 * @param locale
+	 *            current locale
 	 */
 	public void setCurrentLocale(Locale locale)
 	{
@@ -112,6 +120,7 @@ public final class FormBeanContext implements Map
 	/**
 	 * Get the form bean. The current control provided a bean to populate with method
 	 * makeFormBean. That bean is saved (before population) in the formBeanContext.
+	 * 
 	 * @return Object the bean that will be populated, and that is returned by
 	 *         makeFormbean
 	 */
@@ -123,7 +132,9 @@ public final class FormBeanContext implements Map
 	/**
 	 * Set the form bean. This is the bean that will be populated, and that is returned by
 	 * make formbean.
-	 * @param bean the bean that will be populated, and that is returned by makeFormbean
+	 * 
+	 * @param bean
+	 *            the bean that will be populated, and that is returned by makeFormbean
 	 */
 	public void setBean(Object bean)
 	{
@@ -134,6 +145,7 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Get the map with errors. Returns null if no errors are registered.
+	 * 
 	 * @return Map map with errors or null if no errors are registered.
 	 */
 	public Map<String, String> getErrors()
@@ -144,7 +156,9 @@ public final class FormBeanContext implements Map
 	/**
 	 * Get the registered error for one field. Returns null if no error is registered for
 	 * the given field name.
-	 * @param field name of the field to lookup the error for.
+	 * 
+	 * @param field
+	 *            name of the field to lookup the error for.
 	 * @return String the error that was registered for the provided field name, or null
 	 *         if no error was registered for the provided field name.
 	 */
@@ -155,7 +169,9 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Set the map of errors.
-	 * @param errors The map of errors to set
+	 * 
+	 * @param errors
+	 *            The map of errors to set
 	 */
 	public void setErrors(Map<String, String> errors)
 	{
@@ -166,10 +182,13 @@ public final class FormBeanContext implements Map
 	 * Either add this exception with the given key, or add the stacktrace of this
 	 * exception with the given key. Any value that was registered with the same key prior
 	 * to this is overwritten.
-	 * @param key key to store error under
-	 * @param t exception
-	 * @param asStackTrace if true, the stacktrace is added; otherwise the exception is
-	 *            added
+	 * 
+	 * @param key
+	 *            key to store error under
+	 * @param t
+	 *            exception
+	 * @param asStackTrace
+	 *            if true, the stacktrace is added; otherwise the exception is added
 	 */
 	public void setError(String key, Throwable t, boolean asStackTrace)
 	{
@@ -188,9 +207,13 @@ public final class FormBeanContext implements Map
 	/**
 	 * Add exception and its stacktrace. Any value that was registered with the same key
 	 * prior to this is overwritten.
-	 * @param exceptionKey key to use for exception
-	 * @param stackTraceKey key to use for stacktrace
-	 * @param t exception
+	 * 
+	 * @param exceptionKey
+	 *            key to use for exception
+	 * @param stackTraceKey
+	 *            key to use for stacktrace
+	 * @param t
+	 *            exception
 	 */
 	public void setError(String exceptionKey, String stackTraceKey, Throwable t)
 	{
@@ -204,7 +227,9 @@ public final class FormBeanContext implements Map
 	 * Adds an exception with key 'exception' and adds the stacktrace of this exception
 	 * with key 'stacktrace'. Any value that was registered with the same keys prior to
 	 * this are overwritten.
-	 * @param t exception
+	 * 
+	 * @param t
+	 *            exception
 	 */
 	public void setError(Throwable t)
 	{
@@ -216,8 +241,11 @@ public final class FormBeanContext implements Map
 	 * exception with key 'stacktrace' if asStackTrace is true, or add the exception
 	 * message with key 'exception' if asStackTrace is false. Any value that was
 	 * registered with the same keys prior to this are overwritten.
-	 * @param t exception
-	 * @param asStackTrace if true, the stacktrace is added; otherwise the exception
+	 * 
+	 * @param t
+	 *            exception
+	 * @param asStackTrace
+	 *            if true, the stacktrace is added; otherwise the exception
 	 */
 	public void setError(Throwable t, boolean asStackTrace)
 	{
@@ -226,8 +254,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Register (or overwrite) an error with the provided key and value.
-	 * @param key the key that the error should be registered with.
-	 * @param value the value (message) of the error.
+	 * 
+	 * @param key
+	 *            the key that the error should be registered with.
+	 * @param value
+	 *            the value (message) of the error.
 	 */
 	public void setError(String key, String value)
 	{
@@ -239,7 +270,9 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * De-register (remove) an error that was registered with the provided key.
-	 * @param key the key that the error was registered with.
+	 * 
+	 * @param key
+	 *            the key that the error was registered with.
 	 */
 	public void removeError(String key)
 	{
@@ -275,6 +308,7 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Get the map of failed field values.
+	 * 
 	 * @return Map map with override fields
 	 */
 	public Map<String, Object> getOverrideFields()
@@ -284,8 +318,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Set value of field that overrides. WILL overwrite any allready registered override
-	 * @param name name of the field/ property
-	 * @param value usually the original input value
+	 * 
+	 * @param name
+	 *            name of the field/ property
+	 * @param value
+	 *            usually the original input value
 	 */
 	public void setOverrideField(String name, Object value)
 	{
@@ -302,7 +339,9 @@ public final class FormBeanContext implements Map
 	 * date. Now, if setFailedField('myDate', 'blah') is called, the view can show the
 	 * 'wrong' value transparently, as an Velocity EventCardridge will override any
 	 * property with a failed field if set.
-	 * @param name name of the field/ property
+	 * 
+	 * @param name
+	 *            name of the field/ property
 	 * @return Object usually the original input value
 	 */
 	public Object getOverrideField(String name)
@@ -313,7 +352,9 @@ public final class FormBeanContext implements Map
 	/**
 	 * Set values of fields that have overrides. This WILL NOT overwrite allready
 	 * registered overrides.
-	 * @param fields map of fields to override the current values.
+	 * 
+	 * @param fields
+	 *            map of fields to override the current values.
 	 */
 	public void setOverrideField(Map<String, Object> fields)
 	{
@@ -340,6 +381,7 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * Whether any errors were registered during population/ validation.
+	 * 
 	 * @return boolean are there any errors registered for this formBean? True if so,
 	 *         false otherwise.
 	 */
@@ -360,7 +402,9 @@ public final class FormBeanContext implements Map
 	 * used for formatting the property (using the format(property, pattern) method). If
 	 * not, ConvertUtils of the BeanUtils package is used to get the string representation
 	 * of the property.
-	 * @param name name of the property
+	 * 
+	 * @param name
+	 *            name of the property
 	 * @return String the formatted value of the property of the current bean instance or
 	 *         the registered override value if any was registered.
 	 */
@@ -380,8 +424,11 @@ public final class FormBeanContext implements Map
 	 * well as Converter). If a formatter was found, it will be used for formatting the
 	 * property (using the format(property, pattern) method). If not, ConvertUtils of the
 	 * BeanUtils package is used to get the string representation of the property.
-	 * @param name name of the property
-	 * @param pattern optional pattern to use for formatting
+	 * 
+	 * @param name
+	 *            name of the property
+	 * @param pattern
+	 *            optional pattern to use for formatting
 	 * @return String the formatted value (using the pattern) of the property of the
 	 *         current bean instance or the registered override value if any was
 	 *         registered.
@@ -468,13 +515,19 @@ public final class FormBeanContext implements Map
 	 * stored with the pattern and optionally the locale as key. 3. if not found, look in
 	 * the ConverterRegistry if a Converter was stored for the type of the property that
 	 * implements Formatter (as well as Converter).
-	 * @param formatterName name of formatter
-	 * @param pattern pattern: might be used as a key to store a Formatter
-	 * @param clazz class of property
-	 * @param locale locale to get Formatter for
+	 * 
+	 * @param formatterName
+	 *            name of formatter
+	 * @param pattern
+	 *            pattern: might be used as a key to store a Formatter
+	 * @param clazz
+	 *            class of property
+	 * @param locale
+	 *            locale to get Formatter for
 	 * @return Formatter instance of Formatter if found, null otherwise
 	 */
-	public Formatter getFormatter(String formatterName, String pattern, Class< ? extends Object> clazz, Locale locale)
+	public Formatter getFormatter(String formatterName, String pattern,
+			Class< ? extends Object> clazz, Locale locale)
 	{
 		Formatter formatter = null;
 		ConverterRegistry reg = ConverterRegistry.getInstance();
@@ -503,12 +556,10 @@ public final class FormBeanContext implements Map
 		}
 		catch (Exception e)
 		{
-			log.error(e);
 			if (log.isDebugEnabled())
-			{
 				log.error(e.getMessage(), e);
-			}
-			// ignore
+			else
+				log.error(e.getMessage());
 		}
 
 		return formatter;
@@ -519,7 +570,9 @@ public final class FormBeanContext implements Map
 	/**
 	 * Format the given value, independent of the current form, using the class of the
 	 * value to lookup a formatter.
-	 * @param value value to format
+	 * 
+	 * @param value
+	 *            value to format
 	 * @return String formatted value
 	 */
 	public String format(Object value)
@@ -530,8 +583,11 @@ public final class FormBeanContext implements Map
 	/**
 	 * Format the given value, independent of the current form, using the class of the
 	 * value to lookup a formatter using the provided pattern.
-	 * @param value value to format
-	 * @param pattern pattern for format
+	 * 
+	 * @param value
+	 *            value to format
+	 * @param pattern
+	 *            pattern for format
 	 * @return String formatted value
 	 */
 	public String format(Object value, String pattern)
@@ -543,8 +599,11 @@ public final class FormBeanContext implements Map
 	 * Format the given value, independent of the current form, using the provided name of
 	 * the formatter to lookup the formatter or - if no formatter was found - using the
 	 * class of the value to lookup the formatter.
-	 * @param formatterName name of formatter.
-	 * @param value value to format
+	 * 
+	 * @param formatterName
+	 *            name of formatter.
+	 * @param value
+	 *            value to format
 	 * @return String formatted value
 	 */
 	public String format(String formatterName, Object value)
@@ -559,9 +618,13 @@ public final class FormBeanContext implements Map
 	 * stored with the pattern and optionally the locale as key; 3. if not found, look in
 	 * the ConverterRegistry if a Converter was stored for the type of the property that
 	 * implements Formatter (as well as Converter);
-	 * @param formatterName name of formatter.
-	 * @param value value to format
-	 * @param pattern pattern for format
+	 * 
+	 * @param formatterName
+	 *            name of formatter.
+	 * @param value
+	 *            value to format
+	 * @param pattern
+	 *            pattern for format
 	 * @return String formatted value
 	 */
 	public String format(String formatterName, Object value, String pattern)
@@ -570,15 +633,15 @@ public final class FormBeanContext implements Map
 			return null;
 
 		String formatted = null;
-		Formatter formatter = getFormatter(formatterName, pattern, value.getClass(),
-				getCurrentLocale());
+		Formatter formatter =
+			getFormatter(formatterName, pattern, value.getClass(), getCurrentLocale());
 
 		if (formatter != null)
 		{
 			if (formattingLog.isDebugEnabled())
 			{
-				formattingLog.debug("using formatter "
-						+ formatter + " for property " + formatterName);
+				formattingLog.debug("using formatter " + formatter + " for property "
+					+ formatterName);
 			}
 			formatted = formatter.format(value, pattern);
 		}
@@ -587,7 +650,7 @@ public final class FormBeanContext implements Map
 			if (formattingLog.isDebugEnabled())
 			{
 				formattingLog.debug("using default convertUtils formatter for property "
-						+ formatterName);
+					+ formatterName);
 			}
 			formatted = ValueUtils.convertToString(value);
 		}
@@ -599,11 +662,14 @@ public final class FormBeanContext implements Map
 	/**
 	 * Returns the value to which the attributes map maps the specified key. Returns null
 	 * if the map contains no mapping for this key.
-	 * @param key key whose associated value is to be returned
+	 * 
+	 * @param key
+	 *            key whose associated value is to be returned
 	 * @return Object the value to which the attributes map maps the specified key, or
 	 *         null if the map contains no mapping for this key.
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
+	@Override
 	public Object get(Object key)
 	{
 		return (attributes != null) ? attributes.get(key) : null;
@@ -613,10 +679,14 @@ public final class FormBeanContext implements Map
 	 * Associates the specified value with the specified key in the attribute map. If the
 	 * attribute map previously contained a mapping for this key, the old value is
 	 * replaced by the specified value.
-	 * @param key key with which the specified value is to be associated.
-	 * @param value value to be associated with the specified key.
+	 * 
+	 * @param key
+	 *            key with which the specified value is to be associated.
+	 * @param value
+	 *            value to be associated with the specified key.
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public Object put(Object key, Object value)
 	{
 		if (attributes == null)
@@ -626,9 +696,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * get the attribute values
+	 * 
 	 * @return Collection the attribute values or null if no attributes were set
 	 * @see java.util.Map#values()
 	 */
+	@Override
 	public Collection<Object> values()
 	{
 		return (attributes != null) ? attributes.values() : null;
@@ -636,9 +708,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * get the key set of the attributes
+	 * 
 	 * @return Set the key set of the attributes or null if no attributes were set
 	 * @see java.util.Map#keySet()
 	 */
+	@Override
 	public Set<Object> keySet()
 	{
 		return (attributes != null) ? attributes.keySet() : null;
@@ -646,8 +720,10 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * clear the attributes
+	 * 
 	 * @see java.util.Map#clear()
 	 */
+	@Override
 	public void clear()
 	{
 		this.attributes = null;
@@ -655,9 +731,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * get the number of attributes
+	 * 
 	 * @return int the number of attributes
 	 * @see java.util.Map#size()
 	 */
+	@Override
 	public int size()
 	{
 		return (attributes != null) ? attributes.size() : 0;
@@ -665,9 +743,12 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * put the provided map in the attribute map
-	 * @param t map to put in attributes
+	 * 
+	 * @param t
+	 *            map to put in attributes
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
+	@Override
 	public void putAll(Map t)
 	{
 		if (attributes == null)
@@ -677,9 +758,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * get the entries of the attributes
+	 * 
 	 * @return Set the entries of the attributes or null if no attributes were set
 	 * @see java.util.Map#entrySet()
 	 */
+	@Override
 	public Set<Entry<Object, Object>> entrySet()
 	{
 		return (attributes != null) ? attributes.entrySet() : null;
@@ -687,10 +770,13 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * is the provided key the key of an attribute
-	 * @param key the key to look for
+	 * 
+	 * @param key
+	 *            the key to look for
 	 * @return boolean is the provided key the key of an attribute
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
+	@Override
 	public boolean containsKey(Object key)
 	{
 		return (attributes != null) ? attributes.containsKey(key) : false;
@@ -698,9 +784,11 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * are there any attributes
+	 * 
 	 * @return boolean are there any attributes
 	 * @see java.util.Map#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return (attributes != null) ? attributes.isEmpty() : true;
@@ -708,10 +796,13 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * remove an attribute
-	 * @param key key of the attribute to remove
+	 * 
+	 * @param key
+	 *            key of the attribute to remove
 	 * @return Object the object that was stored under the given key, if any
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
+	@Override
 	public Object remove(Object key)
 	{
 		return (attributes != null) ? attributes.remove(key) : null;
@@ -719,10 +810,13 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * is the provided value stored as an attribute
-	 * @param value the value to look for
+	 * 
+	 * @param value
+	 *            the value to look for
 	 * @return boolean is the provided value stored as an attribute
 	 * @see java.util.Map#containsValue(java.lang.Object value)
 	 */
+	@Override
 	public boolean containsValue(Object value)
 	{
 		return (attributes != null) ? attributes.containsValue(value) : false;
@@ -730,6 +824,7 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * get current controller
+	 * 
 	 * @return FormBeanCtrlBase
 	 */
 	public FormBeanCtrlBase getController()
@@ -739,7 +834,9 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * set current controller
-	 * @param controller current controller
+	 * 
+	 * @param controller
+	 *            current controller
 	 */
 	public void setController(FormBeanCtrlBase controller)
 	{
@@ -748,8 +845,10 @@ public final class FormBeanContext implements Map
 
 	/**
 	 * String rep.
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer(super.toString());
@@ -775,7 +874,7 @@ public final class FormBeanContext implements Map
 			{
 				String errorKey = i.next();
 				b.append(errorKey).append("=").append(getError(errorKey)).append("(override=")
-						.append(getOverrideField(errorKey)).append(")");
+					.append(getOverrideField(errorKey)).append(")");
 				if (i.hasNext())
 				{
 					b.append(",");

@@ -52,8 +52,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.velocity.tools.view.context.ViewContext;
 import org.apache.velocity.tools.view.tools.ViewTool;
 
@@ -87,7 +87,7 @@ public final class ImportTool implements ViewTool
 	public static final String DEFAULT_ENCODING = "ISO-8859-1";
 
 	/** log. */
-	private static Log log = LogFactory.getLog(ImportTool.class);
+	private static Logger log = LoggerFactory.getLogger(ImportTool.class);
 
 	/** A reference to the ServletContext. */
 	private ServletContext application;

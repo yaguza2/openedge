@@ -16,8 +16,8 @@ import java.util.Properties;
 
 import nl.openedge.util.URLHelper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -95,7 +95,7 @@ public class HibernateHelper
 	public static final String PROPERTIES_LOCATION = "/hibernatehelper.properties";
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(HibernateHelper.class);
+	private static Logger log = LoggerFactory.getLogger(HibernateHelper.class);
 
 	/** the implementation delegate; does the 'real' work for this class. */
 	private static HibernateHelperDelegate delegate = null;

@@ -37,8 +37,8 @@ import javax.security.auth.Subject;
 
 import nl.openedge.access.AccessHelper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Filters on authorisations with Access/ JAAS.
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
 public final class AuthorizationFilter extends AbstractMenuFilter implements SessionScopeMenuFilter
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(AuthorizationFilter.class);
+	private static Logger log = LoggerFactory.getLogger(AuthorizationFilter.class);
 
 	/**
 	 * accepts if the subject stored in the context has permission for this item.

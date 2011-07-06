@@ -10,13 +10,13 @@ package nl.openedge.util.hibernate;
 
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * HibernateHelper geeft toegang tot Hibernate functionaliteit.
@@ -32,7 +32,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * Gebruikt voor logging.
 	 */
-	private static Log log = LogFactory.getLog(HibernateHelperReloadConfigImpl.class);
+	private static Logger log = LoggerFactory.getLogger(HibernateHelperReloadConfigImpl.class);
 
 	/**
 	 * URL Hibernate configuratie.
@@ -50,8 +50,8 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	protected static ThreadLocal sessionHolder = new ThreadLocal();
 
 	/**
-	 * Set FlushMode voor sessies. Standaard is COMMIT Zie Hibernate documentatie voor uitleg
-	 * FlushModes.
+	 * Set FlushMode voor sessies. Standaard is COMMIT Zie Hibernate documentatie voor
+	 * uitleg FlushModes.
 	 * 
 	 * @param mode
 	 *            the new FlushMode.
@@ -75,6 +75,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 * @throws Exception
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#init()
 	 */
+	@Override
 	public void init() throws ConfigException
 	{
 		// test een keer
@@ -84,6 +85,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @return @see nl.openedge.util.hibernate.HibernateHelperDelegate#getSessionFactory()
 	 */
+	@Override
 	public SessionFactory getSessionFactory()
 	{
 		log.trace("Enter");
@@ -95,7 +97,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 		}
 		catch (HibernateException e)
 		{
-			log.fatal("Kan geen connectie maken", e);
+			log.error("Kan geen connectie maken", e);
 		}
 		log.trace("Leave");
 		return factory;
@@ -105,13 +107,14 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 * @return URL
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#getConfigURL()
 	 */
+	@Override
 	public URL getConfigURL()
 	{
 		if (hibernateConfigURL == null)
 		{
 			log.info("geen configuratie voor Hibernate gegeven; gebruik /hibernate.cfg.xml");
-			hibernateConfigURL = HibernateHelperReloadConfigImpl.class
-					.getResource("/hibernate.cfg.xml");
+			hibernateConfigURL =
+				HibernateHelperReloadConfigImpl.class.getResource("/hibernate.cfg.xml");
 		}
 		return hibernateConfigURL;
 	}
@@ -120,6 +123,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 * @param url
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setConfigURL(java.net.URL)
 	 */
+	@Override
 	public void setConfigURL(final URL url)
 	{
 		hibernateConfigURL = url;
@@ -128,6 +132,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @return @see nl.openedge.util.hibernate.HibernateHelperDelegate#getConfiguration()
 	 */
+	@Override
 	public Configuration getConfiguration()
 	{
 		try
@@ -144,10 +149,10 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	}
 
 	/**
-	 * @return @throws
-	 *         HibernateException
+	 * @return @throws HibernateException
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#getSession()
 	 */
+	@Override
 	public Session getSession() throws HibernateException
 	{
 		return openSession();
@@ -177,6 +182,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 * @throws HibernateException
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#closeSession()
 	 */
+	@Override
 	public void closeSession() throws HibernateException
 	{
 		Session session = (Session) sessionHolder.get();
@@ -237,6 +243,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 *             indien disconnect bij Hibernate mislukt
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#disconnectSession()
 	 */
+	@Override
 	public void disconnectSession() throws HibernateException
 	{
 		Session session = (Session) sessionHolder.get();
@@ -250,6 +257,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setSession(net.sf.hibernate.Session,
 	 *      int)
 	 */
+	@Override
 	public void setSession(final Session session, final int actionForCurrentSession)
 	{
 		throw new UnsupportedOperationException();
@@ -258,6 +266,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setSessionFactory(net.sf.hibernate.SessionFactory)
 	 */
+	@Override
 	public void setSessionFactory(final SessionFactory factory)
 	{
 		throw new UnsupportedOperationException();
@@ -266,6 +275,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#getInterceptorClass()
 	 */
+	@Override
 	public String getInterceptorClass()
 	{
 		throw new UnsupportedOperationException();
@@ -274,6 +284,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setInterceptorClass(java.lang.String)
 	 */
+	@Override
 	public void setInterceptorClass(final String className)
 	{
 		throw new UnsupportedOperationException();
@@ -282,6 +293,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#isSingleInterceptor()
 	 */
+	@Override
 	public boolean isSingleInterceptor()
 	{
 		throw new UnsupportedOperationException();
@@ -290,6 +302,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setSingleInterceptor(boolean)
 	 */
+	@Override
 	public void setSingleInterceptor(final boolean b)
 	{
 		throw new UnsupportedOperationException();

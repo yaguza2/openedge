@@ -39,8 +39,8 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 import org.quartz.Job;
 
@@ -56,7 +56,7 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 	private static final long serialVersionUID = 1L;
 
 	/** logger. */
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * construct.

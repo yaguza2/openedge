@@ -37,8 +37,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.ComponentRepository;
@@ -91,7 +91,7 @@ public final class DependentTypeWrapper
 	}
 
 	/** log. */
-	private static Log log = LogFactory.getLog(DependentTypeWrapper.class);
+	private static Logger log = LoggerFactory.getLogger(DependentTypeWrapper.class);
 
 	/** fail on cycle. */
 	private static boolean failOnCycle = false;

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Deletes the given objects in the order they were added from the database.
@@ -24,7 +24,7 @@ import org.hibernate.Transaction;
 public class DeleteObjectsCommand implements HibernateCommand
 {
 	/** Logger. */
-	private static Log log = LogFactory.getLog(DeleteObjectsCommand.class);
+	private static Logger log = LoggerFactory.getLogger(DeleteObjectsCommand.class);
 
 	/**
 	 * Collection of objects to delete.
@@ -32,8 +32,8 @@ public class DeleteObjectsCommand implements HibernateCommand
 	private final List objectsToDelete = new ArrayList();
 
 	/**
-	 * Adds object to the list of objects to be deleted. The order in which the objects are added,
-	 * is the same order in which they are deleted, i.e. first in, first out.
+	 * Adds object to the list of objects to be deleted. The order in which the objects
+	 * are added, is the same order in which they are deleted, i.e. first in, first out.
 	 * 
 	 * @param object
 	 *            the object to be deleted
@@ -44,10 +44,12 @@ public class DeleteObjectsCommand implements HibernateCommand
 	}
 
 	/**
-	 * Voert saveOrUpdate uit voor de collectie te persisteren objecten binnen 1 transactie.
+	 * Voert saveOrUpdate uit voor de collectie te persisteren objecten binnen 1
+	 * transactie.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractHibernateCommand#execute(net.sf.hibernate.Session)
 	 */
+	@Override
 	public void execute(final Session hibernateSession) throws HibernateException
 	{
 		if (log.isTraceEnabled())
@@ -76,7 +78,7 @@ public class DeleteObjectsCommand implements HibernateCommand
 			}
 			catch (HibernateException e1)
 			{
-				log.fatal("Kan geen rollback uitvoeren");
+				log.error("Kan geen rollback uitvoeren");
 			}
 			throw (e);
 		}
@@ -86,6 +88,7 @@ public class DeleteObjectsCommand implements HibernateCommand
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer msg = new StringBuffer();

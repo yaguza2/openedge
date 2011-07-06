@@ -37,8 +37,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Eelco Hillenius
@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
 public class SubjectSessionListener implements HttpSessionBindingListener, Serializable
 { 
 
-	private static Log log = LogFactory.getLog(SubjectSessionListener.class);
+	private static Logger log = LoggerFactory.getLogger(SubjectSessionListener.class);
 	private Subject subject = null;
 
 	public SubjectSessionListener(Subject subject)

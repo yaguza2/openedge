@@ -51,8 +51,8 @@ import javax.servlet.http.HttpServletResponse;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.RepositoryFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -65,7 +65,7 @@ public final class FileImageServlet extends HttpServlet
 {
 
 	/** logger */
-	protected Log log = LogFactory.getLog(FileImageServlet.class);
+	protected Logger log = LoggerFactory.getLogger(FileImageServlet.class);
 	/** alias of image module */
 	protected String imageModuleAlias = null;
 	/** alias of cache module */

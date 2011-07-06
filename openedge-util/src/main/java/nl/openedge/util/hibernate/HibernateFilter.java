@@ -18,10 +18,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Filter which manages a ThreadLocal hibernate session. Obtain the session by calling
@@ -32,20 +32,21 @@ import org.hibernate.Session;
 public final class HibernateFilter extends HibernateHelperThreadLocaleImpl implements Filter
 {
 	/** log. */
-	private Log log = LogFactory.getLog(HibernateFilter.class);
+	private Logger log = LoggerFactory.getLogger(HibernateFilter.class);
 
 	/** whether this filter 'works' or not. */
 	private boolean active = false;
 
 	/**
-	 * Initialise filter. If an initparameter 'config' exists use the value to configure the
-	 * HibernateHelperThreadLocaleImpl.
+	 * Initialise filter. If an initparameter 'config' exists use the value to configure
+	 * the HibernateHelperThreadLocaleImpl.
 	 * 
 	 * @param filterConfig
 	 *            the filter config object
 	 * @throws ServletException
 	 *             when a servlet exception occurs
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		HibernateHelperDelegate delegate = HibernateHelper.getDelegate();
@@ -56,8 +57,8 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 		else
 		{
 			log.warn("This filter only functions when used with "
-					+ HibernateHelperThreadLocaleImpl.class.getName()
-					+ " as the HibernateHelperDelegate for HibernateHelper");
+				+ HibernateHelperThreadLocaleImpl.class.getName()
+				+ " as the HibernateHelperDelegate for HibernateHelper");
 		}
 
 		if (active)
@@ -83,9 +84,9 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 	}
 
 	/**
-	 * Execute filter. If active == true, this filter tries to open a session, execute the next
-	 * filters/ servlets and finally (at the end of the request execution) tries to close the
-	 * session again.
+	 * Execute filter. If active == true, this filter tries to open a session, execute the
+	 * next filters/ servlets and finally (at the end of the request execution) tries to
+	 * close the session again.
 	 * 
 	 * @param request
 	 *            http request
@@ -100,6 +101,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
@@ -109,15 +111,15 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 			if (session != null)
 			{
 				log.error("A session is already associated with this thread!  "
-						+ "Someone must have called getSession() outside of the context "
-						+ "of a servlet request; closing session");
+					+ "Someone must have called getSession() outside of the context "
+					+ "of a servlet request; closing session");
 				try
 				{
 					session.close();
 				}
 				catch (HibernateException e)
 				{
-					log.error(e);
+					log.error(e.getMessage(), e);
 					throw new ServletException(e);
 				}
 				getHibernateHolder().set(null);
@@ -134,7 +136,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 			{
 				Session sess = (Session) getHibernateHolder().get();
 
-				//log.info(Thread.currentThread() + ": closing " + sess);
+				// log.info(Thread.currentThread() + ": closing " + sess);
 				if (sess != null)
 				{
 
@@ -146,8 +148,8 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 					}
 					catch (HibernateException ex)
 					{
-						log.error(ex);
-						//throw new ServletException(ex);
+						log.error(ex.getMessage(), ex);
+						// throw new ServletException(ex);
 					}
 				}
 			}
@@ -159,6 +161,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 	 * 
 	 * @see javax.servlet.Filter#destroy()
 	 */
+	@Override
 	public void destroy()
 	{
 

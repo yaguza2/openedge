@@ -10,8 +10,8 @@ package nl.openedge.util.hibernate;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -34,7 +34,7 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	/**
 	 * Gebruikt voor logging.
 	 */
-	private static Log log = LogFactory.getLog(PagedQueryCommandDecorator.class);
+	private static Logger log = LoggerFactory.getLogger(PagedQueryCommandDecorator.class);
 
 	/**
 	 * Het gedecoreerde query command.

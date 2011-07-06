@@ -36,8 +36,8 @@ import nl.openedge.modules.impl.menumodule.AbstractMenuFilter;
 import nl.openedge.modules.impl.menumodule.MenuItem;
 import nl.openedge.modules.impl.menumodule.RequestScopeMenuFilter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Eelco Hillenius
@@ -49,7 +49,7 @@ public final class RequestScopeTestFilter extends AbstractMenuFilter implements
 	public static final String TEST_CONTEXT_KEY = "testkey";
 
 	/** log. */
-	private static Log log = LogFactory.getLog(RequestScopeTestFilter.class);
+	private static Logger log = LoggerFactory.getLogger(RequestScopeTestFilter.class);
 
 	/**
 	 * test method

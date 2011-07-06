@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.baritus;
 
 import java.util.ArrayList;
@@ -40,14 +40,13 @@ import java.util.Map;
 import nl.openedge.baritus.util.MultiHashMap;
 import nl.openedge.baritus.validation.FieldValidator;
 import nl.openedge.baritus.validation.FormValidator;
-import nl.openedge.baritus.validation.ValidationRuleDependend;
 import nl.openedge.baritus.validation.ValidationActivationRule;
-
+import nl.openedge.baritus.validation.ValidationRuleDependend;
 import ognl.Ognl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.infohazard.maverick.flow.ControllerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Eelco Hillenius
@@ -56,175 +55,176 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 {
 	// validator registry
 	private ValidatorRegistry validatorRegistry = null;
-	
+
 	// instance of formbean ctrl
 	private FormBeanCtrlBase ctrl = null;
-	
+
 	/* population log */
-	private static Log populationLog = LogFactory.getLog(LogConstants.POPULATION_LOG);
-	
-	private static char[] BREAKSYMBOLS = new char[]{'[','('};
-	
+	private static Logger populationLog = LoggerFactory.getLogger(LogConstants.POPULATION_LOG);
+
+	private static char[] BREAKSYMBOLS = new char[] {'[', '('};
+
 	/**
 	 * construct with validator registry and instance of ctrl
+	 * 
 	 * @param validatorRegistry
 	 * @param ctrl
 	 */
-	public DefaultValidatorDelegate(
-		ValidatorRegistry validatorRegistry,
-		FormBeanCtrlBase ctrl)
+	public DefaultValidatorDelegate(ValidatorRegistry validatorRegistry, FormBeanCtrlBase ctrl)
 	{
 		this.validatorRegistry = validatorRegistry;
 		this.ctrl = ctrl;
 	}
-	
+
 	/**
-	 * @see nl.openedge.baritus.ValidatorDelegate#doValidation(org.infohazard.maverick.flow.ControllerContext, nl.openedge.baritus.FormBeanContext, nl.openedge.baritus.ExecutionParams, java.util.Map, boolean)
+	 * @see nl.openedge.baritus.ValidatorDelegate#doValidation(org.infohazard.maverick.flow.ControllerContext,
+	 *      nl.openedge.baritus.FormBeanContext, nl.openedge.baritus.ExecutionParams,
+	 *      java.util.Map, boolean)
 	 */
-	public boolean doValidation(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext, 
-		ExecutionParams execParams,
-		Map<String, Object> parameters,
-		boolean succeeded)
+	@Override
+	public boolean doValidation(ControllerContext cctx, FormBeanContext formBeanContext,
+			ExecutionParams execParams, Map<String, Object> parameters, boolean succeeded)
 	{
-		
-		if(parameters == null) return succeeded;
-		
+
+		if (parameters == null)
+			return succeeded;
+
 		MultiHashMap fieldValidators = validatorRegistry.getFieldValidators();
 		List<FormValidator> formValidators = validatorRegistry.getFormValidators();
-		List<ValidationActivationRule> globalValidatorActivationRules = 
+		List<ValidationActivationRule> globalValidatorActivationRules =
 			validatorRegistry.getGlobalValidatorActivationRules();
-		
-		if( (fieldValidators != null && (!fieldValidators.isEmpty())) ||
-			(formValidators != null && (!formValidators.isEmpty())))
+
+		if ((fieldValidators != null && (!fieldValidators.isEmpty()))
+			|| (formValidators != null && (!formValidators.isEmpty())))
 		{
-	
+
 			boolean doCustomValidation = true;
 			// see if there's any globally (form level) defined rules
-			if(globalValidatorActivationRules != null && (!globalValidatorActivationRules.isEmpty()))
+			if (globalValidatorActivationRules != null
+				&& (!globalValidatorActivationRules.isEmpty()))
 			{
-				for(Iterator<ValidationActivationRule> i = globalValidatorActivationRules.iterator(); i.hasNext(); )
+				for (Iterator<ValidationActivationRule> i =
+					globalValidatorActivationRules.iterator(); i.hasNext();)
 				{
 					ValidationActivationRule rule = i.next();
-					doCustomValidation = rule.allowValidation(cctx, formBeanContext); // fire rule
-					if(!doCustomValidation) break;
+					doCustomValidation = rule.allowValidation(cctx, formBeanContext); // fire
+																						// rule
+					if (!doCustomValidation)
+						break;
 				}
 			}
-			
-			if(doCustomValidation)
+
+			if (doCustomValidation)
 			{
 				// if fieldValidators were registered
-				if(fieldValidators != null && (!fieldValidators.isEmpty()))
+				if (fieldValidators != null && (!fieldValidators.isEmpty()))
 				{
-					Iterator<String> names = parameters.keySet().iterator(); // loop through the properties
-					while(names.hasNext())
+					Iterator<String> names = parameters.keySet().iterator(); // loop
+																				// through
+																				// the
+																				// properties
+					while (names.hasNext())
 					{
 						String name = names.next();
-						if (name == null) continue;
-						if(formBeanContext.getOverrideField(name) == null) 
-							// see if there allready was an override registered
+						if (name == null)
+							continue;
+						if (formBeanContext.getOverrideField(name) == null)
+						// see if there allready was an override registered
 						{
-							succeeded = doValidationForOneField(
-								fieldValidators, cctx, formBeanContext, succeeded, name);	
+							succeeded =
+								doValidationForOneField(fieldValidators, cctx, formBeanContext,
+									succeeded, name);
 						} // else an error allready occured; do not validate
-					}	
+					}
 				}
 				// if we are still successful so far, check with the form level validators
-				if( (succeeded || execParams.isDoFormValidationIfFieldValidationFailed()) 
+				if ((succeeded || execParams.isDoFormValidationIfFieldValidationFailed())
 					&& (formValidators != null))
 				{
 					// check all registered until either all fired successfully or
 					// one did not fire succesfully
-					for(Iterator<FormValidator> i = formValidators.iterator(); i.hasNext(); )
+					for (Iterator<FormValidator> i = formValidators.iterator(); i.hasNext();)
 					{
 						FormValidator fValidator = i.next();
-						succeeded = doFormValidationForOneValidator(
-							cctx, formBeanContext, fValidator, succeeded);
+						succeeded =
+							doFormValidationForOneValidator(cctx, formBeanContext, fValidator,
+								succeeded);
 					}
 				}
 			}
 		}
-		
+
 		return succeeded;
 	}
-	
+
 	/* execute validation for one form validator */
-	private boolean doFormValidationForOneValidator(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		FormValidator fValidator,
-		boolean succeeded)
+	private boolean doFormValidationForOneValidator(ControllerContext cctx,
+			FormBeanContext formBeanContext, FormValidator fValidator, boolean succeeded)
 	{
-		
+
 		boolean success = true;
 		try
 		{
 			boolean validateForm = true;
-			if(fValidator instanceof ValidationRuleDependend)
+			if (fValidator instanceof ValidationRuleDependend)
 			{
-				ValidationActivationRule fRule = 
-					((ValidationRuleDependend)fValidator).getValidationActivationRule();
-				if(fRule != null)
+				ValidationActivationRule fRule =
+					((ValidationRuleDependend) fValidator).getValidationActivationRule();
+				if (fRule != null)
 				{
-					if(!fRule.allowValidation(cctx, formBeanContext))
+					if (!fRule.allowValidation(cctx, formBeanContext))
 					{
 						validateForm = false;
 					}
-					
-					if(populationLog.isDebugEnabled())
+
+					if (populationLog.isDebugEnabled())
 					{
-						populationLog.debug("rule " + fRule + 
-							((validateForm) ? " ALLOWS" : " DISALLOWS") +
-							" validation with " + fValidator);
-					}	
+						populationLog.debug("rule " + fRule
+							+ ((validateForm) ? " ALLOWS" : " DISALLOWS") + " validation with "
+							+ fValidator);
+					}
 				}
 			}
-			if(validateForm)
+			if (validateForm)
 			{
 				success = fValidator.isValid(cctx, formBeanContext);
-				
-				if(populationLog.isDebugEnabled())
+
+				if (populationLog.isDebugEnabled())
 				{
-					populationLog.debug( "validation" +
-						((success) ? " PASSED" : " FAILED") +
-						" using validator " + fValidator);
-				}	
+					populationLog.debug("validation" + ((success) ? " PASSED" : " FAILED")
+						+ " using validator " + fValidator);
+				}
 			}
-		} 
+		}
 		catch (Exception e)
 		{
 			success = false;
 			String msg = "validator " + fValidator + " threw exception: " + e.getMessage();
 			populationLog.error(msg);
-			populationLog.error(e.getMessage(), e);	
+			populationLog.error(e.getMessage(), e);
 		}
-		
-		if(!success) succeeded = false;
-		
+
+		if (!success)
+			succeeded = false;
+
 		return succeeded;
 	}
-	
+
 	/* execute validation for one field */
-	private boolean doValidationForOneField(
-		MultiHashMap fieldValidators,
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		boolean succeeded,
-		String name)
+	private boolean doValidationForOneField(MultiHashMap fieldValidators, ControllerContext cctx,
+			FormBeanContext formBeanContext, boolean succeeded, String name)
 	{
 
-		Collection propertyValidators = 
-			getFieldValidatorsForField(name, fieldValidators);
+		Collection propertyValidators = getFieldValidatorsForField(name, fieldValidators);
 		// these are the fieldValidators for one property
-		
-		if(propertyValidators != null)
+
+		if (propertyValidators != null)
 		{
 			try
 			{
-				succeeded = doValidationForOneField(
-					cctx, formBeanContext, succeeded, 
-					name, propertyValidators);
+				succeeded =
+					doValidationForOneField(cctx, formBeanContext, succeeded, name,
+						propertyValidators);
 			}
 			catch (Exception e)
 			{
@@ -232,106 +232,98 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 				populationLog.error(e.getMessage(), e);
 			}
 		}
-		
+
 		return succeeded;
 	}
-	
+
 	/* Get the validators for a field, possibly null. */
-	private List getFieldValidatorsForField(
-		String name, MultiHashMap fieldValidators)
+	private List getFieldValidatorsForField(String name, MultiHashMap fieldValidators)
 	{
 		List propertyValidators = null;
-		propertyValidators = getFieldValidatorsForFieldRecursively(
-			name, fieldValidators, propertyValidators);
-		return propertyValidators;	
+		propertyValidators =
+			getFieldValidatorsForFieldRecursively(name, fieldValidators, propertyValidators);
+		return propertyValidators;
 	}
-	
-	/* 
-	 * Get the validators for a field, null if none found.
-	 * work our way back to simple property name
-	 * e.g., take complex (bogus) case 'myproperty('key1')[1]('key2')[2]',
-	 * we should be able to look for registered validators with:
-	 * 	- myproperty['key1'][1]['key2'][2]
-	 * 	- myproperty['key1'][1]['key2']
-	 * 	- myproperty['key1'][1]
-	 * 	- myproperty['key1']
-	 * 	- myproperty 
+
+	/*
+	 * Get the validators for a field, null if none found. work our way back to simple
+	 * property name e.g., take complex (bogus) case 'myproperty('key1')[1]('key2')[2]',
+	 * we should be able to look for registered validators with: -
+	 * myproperty['key1'][1]['key2'][2] - myproperty['key1'][1]['key2'] -
+	 * myproperty['key1'][1] - myproperty['key1'] - myproperty
 	 */
-	private List getFieldValidatorsForFieldRecursively(
-		String currentName, MultiHashMap fieldValidators, List propertyValidators)
+	private List getFieldValidatorsForFieldRecursively(String currentName,
+			MultiHashMap fieldValidators, List propertyValidators)
 	{
-		List validators = (List)fieldValidators.get(currentName);
-		if(validators != null)
+		List validators = (List) fieldValidators.get(currentName);
+		if (validators != null)
 		{
-			if(propertyValidators == null) propertyValidators = new ArrayList();
+			if (propertyValidators == null)
+				propertyValidators = new ArrayList();
 			propertyValidators.addAll(validators);
 		}
-		
+
 		int delim = 0;
-		for(int i = 0; i < BREAKSYMBOLS.length; i++)
+		for (int i = 0; i < BREAKSYMBOLS.length; i++)
 		{
 			int ix = currentName.lastIndexOf(BREAKSYMBOLS[i]);
-			if(ix > -1)
+			if (ix > -1)
 			{
 				delim = ix;
 				break;
-			}	
+			}
 		}
-		
-		if(delim > 0)
+
+		if (delim > 0)
 		{
 			// just cut off wihout further checking
 			currentName = currentName.substring(0, delim);
-			propertyValidators = getFieldValidatorsForFieldRecursively(
-				currentName, fieldValidators, propertyValidators);
+			propertyValidators =
+				getFieldValidatorsForFieldRecursively(currentName, fieldValidators,
+					propertyValidators);
 		}
-		
+
 		return propertyValidators;
 	}
-	
+
 	/* handle the custom validation for one field */
-	private boolean doValidationForOneField(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext,
-		boolean succeeded,
-		String name,
-		Collection propertyValidators)
-		throws Exception
+	private boolean doValidationForOneField(ControllerContext cctx,
+			FormBeanContext formBeanContext, boolean succeeded, String name,
+			Collection propertyValidators) throws Exception
 	{
 		// get target value;
 		// this could be done a bit more efficient, as we allready had
-		// the (converted) value when populating. Working more efficient 
+		// the (converted) value when populating. Working more efficient
 		// (like with a converted value cache) would make the API of
 		// populators less straightforward, and by getting the property
 		// from the bean instead of using the converted value, we are
 		// sure that we get the property the proper (java beans) way.
 		Object value = Ognl.getValue(name, formBeanContext.getBean());
-		
+
 		// for all validators for this field
-		for(Iterator j = propertyValidators.iterator(); j.hasNext(); )
+		for (Iterator j = propertyValidators.iterator(); j.hasNext();)
 		{
-			FieldValidator validator = (FieldValidator)j.next();
+			FieldValidator validator = (FieldValidator) j.next();
 			boolean validateField = true;
-								
-			if(validator instanceof ValidationRuleDependend) // should we execute rule
+
+			if (validator instanceof ValidationRuleDependend) // should we execute rule
 			{
-				ValidationActivationRule rule = 
-					((ValidationRuleDependend)validator)
-						.getValidationActivationRule();
-				if(rule != null)
+				ValidationActivationRule rule =
+					((ValidationRuleDependend) validator).getValidationActivationRule();
+				if (rule != null)
 				{
-					validateField = rule.allowValidation(cctx, formBeanContext); //test
-					
-					if(populationLog.isDebugEnabled())
+					validateField = rule.allowValidation(cctx, formBeanContext); // test
+
+					if (populationLog.isDebugEnabled())
 					{
-						populationLog.debug( name + ": rule " + rule + 
-							((validateField) ? " ALLOWS" : " DISALLOWS") +
-							" validation with " + validator);
+						populationLog.debug(name + ": rule " + rule
+							+ ((validateField) ? " ALLOWS" : " DISALLOWS") + " validation with "
+							+ validator);
 					}
 				}
 			}
-								
-			if(validateField)
+
+			if (validateField)
 			{
 				// execute validation method
 				boolean success;
@@ -341,32 +333,30 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 				}
 				catch (Exception e)
 				{
-					String msg = "validator " + validator + " threw exception: " +
-						e.getMessage() + " on property " + name + " with value " +
-						value;
+					String msg =
+						"validator " + validator + " threw exception: " + e.getMessage()
+							+ " on property " + name + " with value " + value;
 					populationLog.error(msg);
 					throw e;
 				}
-				
-				if(populationLog.isDebugEnabled())
+
+				if (populationLog.isDebugEnabled())
 				{
-					populationLog.debug( "validation" +
-						((success) ? " PASSED" : " FAILED") +
-						" for field " + name + " using validator " + validator);
+					populationLog.debug("validation" + ((success) ? " PASSED" : " FAILED")
+						+ " for field " + name + " using validator " + validator);
 				}
-				
-				if(!success)
+
+				if (!success)
 				{
 					succeeded = false;
-					ctrl.setOverrideField(
-						cctx, formBeanContext, name, value, null, validator);
+					ctrl.setOverrideField(cctx, formBeanContext, name, value, null, validator);
 					break;
-				}	
+				}
 			}
 		}
-		return succeeded;	
+		return succeeded;
 	}
-	
+
 	/**
 	 * @return char[]
 	 */

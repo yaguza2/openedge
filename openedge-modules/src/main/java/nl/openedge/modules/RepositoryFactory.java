@@ -49,8 +49,8 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.impl.DefaultComponentRepository;
 import nl.openedge.modules.util.jndi.NamingHelper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 
 /**
@@ -111,7 +111,7 @@ public final class RepositoryFactory implements ObjectFactory
 	private static boolean initialized = false;
 
 	/** logger. */
-	private static Log log = LogFactory.getLog(RepositoryFactory.class);
+	private static Logger log = LoggerFactory.getLogger(RepositoryFactory.class);
 
 	/**
 	 * get the instance of the component repository.

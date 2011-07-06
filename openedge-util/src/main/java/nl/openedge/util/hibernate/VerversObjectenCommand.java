@@ -16,8 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.SessionFactoryImplementor;
@@ -34,7 +34,7 @@ public class VerversObjectenCommand implements HibernateCommand
 	/**
 	 * Logger.
 	 */
-	private static Log log = LogFactory.getLog(VerversObjectenCommand.class);
+	private static Logger log = LoggerFactory.getLogger(VerversObjectenCommand.class);
 
 	/**
 	 * De lijst van te verversen objecten.

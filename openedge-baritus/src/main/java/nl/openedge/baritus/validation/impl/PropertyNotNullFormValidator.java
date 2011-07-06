@@ -36,8 +36,8 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 
 import ognl.Ognl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
@@ -53,7 +53,7 @@ public class PropertyNotNullFormValidator extends AbstractFormValidator
 	
 	private String errorMessageKey = "object.not.found";
 	
-	private Log log = LogFactory.getLog(PropertyNotNullFormValidator.class);
+	private Logger log = LoggerFactory.getLogger(PropertyNotNullFormValidator.class);
 
 	/**
 	 * construct

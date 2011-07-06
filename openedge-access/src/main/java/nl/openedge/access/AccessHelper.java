@@ -45,8 +45,8 @@ import javax.servlet.ServletContext;
 
 import nl.openedge.access.cache.Cache;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The AccessHelper constructs and initialises objects that are used within
@@ -96,7 +96,7 @@ public final class AccessHelper
 	public static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
 	/** logger */
-	private static Log log = LogFactory.getLog(AccessHelper.class);
+	private static Logger log = LoggerFactory.getLogger(AccessHelper.class);
 
 	private static final Integer GRANTED = new Integer(1);
 

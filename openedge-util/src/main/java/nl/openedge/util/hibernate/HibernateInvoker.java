@@ -8,10 +8,10 @@
  */
 package nl.openedge.util.hibernate;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * De HibernateInvoker wordt gebruikt om HibernateCommands uit te voeren.
@@ -34,7 +34,7 @@ public class HibernateInvoker
 	/**
 	 * Logger.
 	 */
-	private static Log log = LogFactory.getLog(HibernateInvoker.class);
+	private static Logger log = LoggerFactory.getLogger(HibernateInvoker.class);
 
 	/**
 	 * Voert het <code>command</code> uit binnen een Hibernate sessie. Gooit een
@@ -76,7 +76,7 @@ public class HibernateInvoker
 			}
 			catch (HibernateException e)
 			{
-				log.fatal("Kan resources niet sluiten: ", e);
+				log.error("Kan resources niet sluiten: ", e);
 			}
 		}
 		log.trace("Leave");
@@ -96,14 +96,15 @@ public class HibernateInvoker
 
 	/**
 	 * Sluit resources indien huidige HibernateHelper delegate instantie is van
-	 * HibernateHelperReloadConfigImpl, sluit dan resources; anders: als er een exception opgetreden
-	 * is, wordt de sessie gesloten, als er geen exceptie afgehandeld wordt, wordt er niets
-	 * ondernomen. Dit laatste betekent dat voor de HibernateFilter implementatie, de Hibernate
-	 * resources opgeruimd worden na het beeindigen van het request.
+	 * HibernateHelperReloadConfigImpl, sluit dan resources; anders: als er een exception
+	 * opgetreden is, wordt de sessie gesloten, als er geen exceptie afgehandeld wordt,
+	 * wordt er niets ondernomen. Dit laatste betekent dat voor de HibernateFilter
+	 * implementatie, de Hibernate resources opgeruimd worden na het beeindigen van het
+	 * request.
 	 * 
 	 * @param exceptionOccurred
-	 *            als <code>true</code> dan de sessie sluiten (Hibernate kan er niet tegen als er
-	 *            nog een sessie actief is).
+	 *            als <code>true</code> dan de sessie sluiten (Hibernate kan er niet tegen
+	 *            als er nog een sessie actief is).
 	 * 
 	 * @throws HibernateException
 	 *             indien resources niet kunnen worden gesloten door Hibernate

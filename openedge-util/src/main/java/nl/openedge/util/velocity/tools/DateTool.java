@@ -39,8 +39,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.openedge.util.DateFormatHelper;
 
@@ -51,7 +51,7 @@ import nl.openedge.util.DateFormatHelper;
 public final class DateTool
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(DateTool.class);
+	private static Logger log = LoggerFactory.getLogger(DateTool.class);
 	// ------------------------- system date access ------------------
 
 	/**

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -34,7 +34,7 @@ public class SortedQueryCommandDecorator extends AbstractQueryCommand
 	/**
 	 * Gebruikt voor logging.
 	 */
-	private static Log log = LogFactory.getLog(SortedQueryCommandDecorator.class);
+	private static Logger log = LoggerFactory.getLogger(SortedQueryCommandDecorator.class);
 
 	/**
 	 * Het gedecoreerde query command.

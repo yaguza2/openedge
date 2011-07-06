@@ -51,8 +51,8 @@ import javax.servlet.http.HttpSession;
 import nl.openedge.access.cache.Cache;
 import nl.openedge.access.cache.HashMapCacheImpl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The AccessFilter can be used for automatic authentication of web applications.
@@ -111,7 +111,7 @@ public final class AccessFilter implements Filter
 	protected FilterConfig config = null;
 
 	/** log */
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)

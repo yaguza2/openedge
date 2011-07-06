@@ -38,8 +38,8 @@ import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Keeps track of sessions.
@@ -52,7 +52,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	private static Vector sessions = new Vector();
 
 	/** logger. */
-	private Log log = LogFactory.getLog(SessionListener.class);
+	private Logger log = LoggerFactory.getLogger(SessionListener.class);
 
 	/**
 	 * Constructor.

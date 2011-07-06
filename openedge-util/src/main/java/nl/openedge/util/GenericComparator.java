@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Compares using introspection.
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
 public class GenericComparator<T> implements Comparator<T>
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(GenericComparator.class);
+	private static Logger log = LoggerFactory.getLogger(GenericComparator.class);
 
 	/** Arguments. */
 	private Object[] args = new Object[0];
