@@ -36,44 +36,29 @@ import nl.openedge.modules.types.initcommands.DependentType;
 /**
  * @author Eelco Hillenius
  */
-public class DependentThreadSingletonComponentImpl implements SingletonType,
-		DependentType
+public class DependentThreadSingletonComponentImpl implements SingletonType, DependentType
 {
-
 	private BeanComponentImpl beanComponent = null;
 
 	private ConfigurableComponentImpl configComponent = null;
 
-	/**
-	 * @return
-	 */
 	public BeanComponentImpl getBeanComponent()
 	{
 		return beanComponent;
 	}
 
-	/**
-	 * @return
-	 */
 	public ConfigurableComponentImpl getConfigComponent()
 	{
 		return configComponent;
 	}
 
-	/**
-	 * @param impl
-	 */
 	public void setBeanComponent(BeanComponentImpl impl)
 	{
 		beanComponent = impl;
 	}
 
-	/**
-	 * @param impl
-	 */
 	public void setConfigComponent(ConfigurableComponentImpl impl)
 	{
 		configComponent = impl;
 	}
-
 }

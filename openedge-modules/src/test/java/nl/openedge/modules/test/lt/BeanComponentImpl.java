@@ -35,64 +35,39 @@ package nl.openedge.modules.test.lt;
  */
 public class BeanComponentImpl
 {
-
 	private String myString;
 
 	private Integer myInteger;
 
 	private BeanComponentImplNested nested = new BeanComponentImplNested();
 
-	public BeanComponentImpl()
-	{
-		System.out.println(getClass().getName() + ": created");
-	}
-
-	/**
-	 * @return
-	 */
 	public Integer getMyInteger()
 	{
 		return myInteger;
 	}
 
-	/**
-	 * @return
-	 */
 	public String getMyString()
 	{
 		return myString;
 	}
 
-	/**
-	 * @param integer
-	 */
 	public void setMyInteger(Integer integer)
 	{
 		myInteger = integer;
 	}
 
-	/**
-	 * @param string
-	 */
 	public void setMyString(String string)
 	{
 		myString = string;
 	}
 
-	/**
-	 * @return
-	 */
 	public BeanComponentImplNested getNested()
 	{
 		return nested;
 	}
 
-	/**
-	 * @param nested
-	 */
 	public void setNested(BeanComponentImplNested nested)
 	{
 		this.nested = nested;
 	}
-
 }

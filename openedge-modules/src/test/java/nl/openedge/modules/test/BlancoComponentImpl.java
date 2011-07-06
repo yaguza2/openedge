@@ -37,15 +37,12 @@ package nl.openedge.modules.test;
  */
 public class BlancoComponentImpl
 {
-
 	public BlancoComponentImpl()
 	{
-
 	}
 
 	public String alive()
 	{
 		return "yep, here I am";
 	}
-
 }

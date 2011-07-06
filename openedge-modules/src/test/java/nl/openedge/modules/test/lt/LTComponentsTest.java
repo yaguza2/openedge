@@ -159,11 +159,11 @@ public class LTComponentsTest extends AbstractTestBase
 	@Test
 	public void testGetComponentsByType()
 	{
-		List mods1 = componentFactory.getComponentsByType(SingletonType.class, false);
+		List< ? > mods1 = componentFactory.getComponentsByType(SingletonType.class, false);
 
 		assertTrue(mods1.size() == 0);
 
-		List mods2 = componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
+		List< ? > mods2 = componentFactory.getComponentsByType(SingletonComponentImpl.class, false);
 
 		assertTrue(mods2.size() == 1);
 	}
@@ -211,8 +211,6 @@ public class LTComponentsTest extends AbstractTestBase
 	class ThreadSingletonThread extends Thread
 	{
 		private ThreadSingletonComponentImpl module1 = null;
-
-		private ThreadSingletonComponentImpl module2 = null;
 
 		@Override
 		public void run()

@@ -39,17 +39,15 @@ import org.jdom.Element;
  */
 public class ConfigurableComponentImpl
 {
-
 	private String message = null;
 
 	public ConfigurableComponentImpl()
 	{
-		System.out.println(getClass().getName() + ": created");
 	}
 
 	public void init(Element configNode) throws ConfigException
 	{
-		System.out.println(getClass().getName() + ": initialised with " + configNode);
+		// System.out.println(getClass().getName() + ": initialised with " + configNode);
 		Element p1 = configNode.getChild("param1");
 		if (p1 == null)
 			throw new ConfigException("where's param1?");
@@ -66,12 +64,8 @@ public class ConfigurableComponentImpl
 		this.message = "HELLO!";
 	}
 
-	/**
-	 * @return String
-	 */
 	public String getMessage()
 	{
 		return message;
 	}
-
 }

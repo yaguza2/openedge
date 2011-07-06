@@ -35,28 +35,19 @@ package nl.openedge.modules.test.lt;
  */
 public class CyclicComponentImpl
 {
-
 	private CyclicComponentImpl reference = null;
 
 	public CyclicComponentImpl()
 	{
-		System.out.println(this + " created!");
 	}
 
-	/**
-	 * @return CyclicComponentImpl
-	 */
 	public CyclicComponentImpl getReference()
 	{
 		return reference;
 	}
 
-	/**
-	 * @param reference
-	 */
 	public void setReference(CyclicComponentImpl reference)
 	{
 		this.reference = reference;
 	}
-
 }

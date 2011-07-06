@@ -38,27 +38,19 @@ import nl.openedge.modules.types.initcommands.DependentType;
  */
 public class CyclicComponentThrowAwayImpl implements DependentType, ThrowAwayType
 {
-
 	private DependentType reference = null;
 
 	public CyclicComponentThrowAwayImpl()
 	{
 	}
 
-	/**
-	 * @return DependentType
-	 */
 	public DependentType getReference()
 	{
 		return reference;
 	}
 
-	/**
-	 * @param reference
-	 */
 	public void setReference(DependentType reference)
 	{
 		this.reference = reference;
 	}
-
 }

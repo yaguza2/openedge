@@ -38,28 +38,19 @@ import nl.openedge.modules.types.initcommands.DependentType;
  */
 public class CyclicComponentSingletonImpl implements DependentType, SingletonType
 {
-
 	private DependentType reference = null;
 
 	public CyclicComponentSingletonImpl()
 	{
-		System.out.println(this + " created!");
 	}
 
-	/**
-	 * @return DependentType
-	 */
 	public DependentType getReference()
 	{
 		return reference;
 	}
 
-	/**
-	 * @param reference
-	 */
 	public void setReference(DependentType reference)
 	{
 		this.reference = reference;
 	}
-
 }

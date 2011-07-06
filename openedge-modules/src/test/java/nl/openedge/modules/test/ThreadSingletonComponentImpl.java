@@ -30,7 +30,6 @@
  */
 package nl.openedge.modules.test;
 
-import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.base.ThreadSingletonType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 
@@ -39,36 +38,26 @@ import org.jdom.Element;
 /**
  * @author Eelco Hillenius
  */
-public class ThreadSingletonComponentImpl implements ThreadSingletonType,
-		ConfigurableType
+public class ThreadSingletonComponentImpl implements ThreadSingletonType, ConfigurableType
 {
-
 	private int numberOfTimesInitialized = 0;
 
+	@SuppressWarnings("unused")
 	private static int numberOfTimesConstructed = 0;
 
 	public ThreadSingletonComponentImpl()
 	{
 		numberOfTimesConstructed++;
-		System.out.println(Thread.currentThread().getName()
-				+ ": created instance nbr " + numberOfTimesConstructed + " of class "
-				+ getClass().getName());
 	}
 
-	/**
-	 * @return int
-	 */
 	public int getNumberOfTimesInitialized()
 	{
 		return numberOfTimesInitialized;
 	}
 
-	/**
-	 * init
-	 */
-	public void init(Element configNode) throws ConfigException
+	@Override
+	public void init(Element configNode)
 	{
 		this.numberOfTimesInitialized++;
 	}
-
 }

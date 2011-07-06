@@ -43,43 +43,31 @@ import org.jdom.Element;
 public class DependentSingletonComponentImpl implements SingletonType, DependentType,
 		ConfigurableType
 {
-
 	private BeanComponentImpl beanComponent = null;
 
 	private ConfigurableComponentImpl configComponent = null;
 
-	/**
-	 * @return
-	 */
 	public BeanComponentImpl getBeanComponent()
 	{
 		return beanComponent;
 	}
 
-	/**
-	 * @return
-	 */
 	public ConfigurableComponentImpl getConfigComponent()
 	{
 		return configComponent;
 	}
 
-	/**
-	 * @param impl
-	 */
 	public void setBeanComponent(BeanComponentImpl impl)
 	{
 		beanComponent = impl;
 	}
 
-	/**
-	 * @param impl
-	 */
 	public void setConfigComponent(ConfigurableComponentImpl impl)
 	{
 		configComponent = impl;
 	}
 
+	@Override
 	public void init(Element configNode) throws ConfigException
 	{
 		// check if both components are allready set by now
@@ -88,5 +76,4 @@ public class DependentSingletonComponentImpl implements SingletonType, Dependent
 			throw new ConfigException("components were not yet set!");
 		}
 	}
-
 }

@@ -32,7 +32,6 @@ package nl.openedge.modules.test;
 
 import java.net.URL;
 
-import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.URLHelper;
@@ -55,7 +54,7 @@ public class CyclicDepenencyThrowWayTypesFailTest
 		URL url =
 			URLHelper.convertToURL("/cyclic-throwaway-oemodules.xml", AbstractTestBase.class, null);
 
-		JDOMConfigurator c = new JDOMConfigurator(url);
-		ComponentRepository moduleFactory = RepositoryFactory.getRepository();
+		new JDOMConfigurator(url);
+		RepositoryFactory.getRepository();
 	}
 }

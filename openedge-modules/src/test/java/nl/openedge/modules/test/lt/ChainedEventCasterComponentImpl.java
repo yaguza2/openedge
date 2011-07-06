@@ -42,46 +42,29 @@ import nl.openedge.modules.observers.ChainedExceptionEvent;
  */
 public class ChainedEventCasterComponentImpl
 {
+	private List<ChainedEventObserver> observers = new ArrayList<ChainedEventObserver>();
 
-	// observers
-	private List observers = new ArrayList();
-
-	/**
-	 * construct
-	 */
 	public ChainedEventCasterComponentImpl()
 	{
-		System.out.println(getClass().getName() + ": created");
 	}
 
-	/**
-	 * @see nl.openedge.components.ChainedEventCaster#addObserver(nl.openedge.components.ChainedEventObserver)
-	 */
 	public void addObserver(ChainedEventObserver observer)
 	{
 		observers.add(observer);
 	}
 
-	/**
-	 * test method; this method will fire a critical event
-	 */
 	public void doFoo()
 	{
 		fireCriticalEvent();
 	}
 
-	/**
-	 * fire event
-	 */
 	protected void fireCriticalEvent()
 	{
 		Exception e = new Exception("I am a critical event!");
-		for (Iterator i = observers.iterator(); i.hasNext();)
+		for (Iterator<ChainedEventObserver> i = observers.iterator(); i.hasNext();)
 		{
-
-			ChainedEventObserver observer = (ChainedEventObserver) i.next();
+			ChainedEventObserver observer = i.next();
 			observer.recieveChainedEvent(new ChainedExceptionEvent(this, e));
 		}
 	}
-
 }

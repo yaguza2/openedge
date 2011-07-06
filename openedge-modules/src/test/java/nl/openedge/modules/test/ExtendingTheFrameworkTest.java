@@ -30,58 +30,39 @@
  */
 package nl.openedge.modules.test;
 
+import static org.junit.Assert.*;
+
 import java.net.URL;
 
-import junit.framework.TestCase;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.URLHelper;
 import nl.openedge.modules.impl.TypesRegistry;
 
+import org.junit.Test;
+
 /**
  * components related tests
  * 
  * @author E.F. Hillenius
  */
-public class ExtendingTheFrameworkTest extends TestCase
+public class ExtendingTheFrameworkTest
 {
-
-	/**
-	 * construct with name
-	 * 
-	 * @param name
-	 */
-	public ExtendingTheFrameworkTest(String name) throws Exception
+	@Test
+	public void helloWorldExt() throws Exception
 	{
-		super(name);
+		URL url = URLHelper.convertToURL("/oemodulesext.xml", AbstractTestBase.class, null);
+
+		TypesRegistry.registerInitCommand(MyType.class, MyTypeInitCommand.class);
+
+		@SuppressWarnings("unused")
+		JDOMConfigurator c = new JDOMConfigurator(url);
+		ComponentRepository crep = RepositoryFactory.getRepository();
+
+		MyTypeImpl module = (MyTypeImpl) crep.getComponent("MyTypeTest");
+
+		assertNotNull(module);
+		assertNotNull(module.getMessage());
 	}
-
-	public void testHelloWorldExt()
-	{
-
-		try
-		{
-			URL url = URLHelper.convertToURL("/oemodulesext.xml", AbstractTestBase.class,
-					null);
-
-			TypesRegistry.registerInitCommand(MyType.class, MyTypeInitCommand.class);
-
-			JDOMConfigurator c = new JDOMConfigurator(url);
-			ComponentRepository crep = RepositoryFactory.getRepository();
-
-			MyTypeImpl module = (MyTypeImpl) crep.getComponent("MyTypeTest");
-
-			assertNotNull(module);
-			assertNotNull(module.getMessage());
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
 }
-

@@ -37,10 +37,7 @@ import nl.openedge.modules.types.base.ThreadSingletonType;
  */
 public class OtherThreadSingletonComponentImpl implements ThreadSingletonType
 {
-
 	public OtherThreadSingletonComponentImpl()
 	{
-		System.out.println(getClass().getName() + ": created");
 	}
-
 }

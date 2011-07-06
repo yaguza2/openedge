@@ -35,10 +35,7 @@ package nl.openedge.modules.test.lt;
  */
 public class SingletonComponentImpl
 {
-
 	public SingletonComponentImpl()
 	{
-		System.out.println(getClass().getName() + ": created");
 	}
-
 }

@@ -35,10 +35,7 @@ package nl.openedge.modules.test.lt;
  */
 public class ThrowAwayComponentImpl
 {
-
 	public ThrowAwayComponentImpl()
 	{
-		System.out.println(getClass().getName() + ": created");
 	}
-
 }

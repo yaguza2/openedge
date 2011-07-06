@@ -37,29 +37,15 @@ import nl.openedge.modules.observers.ChainedEvent;
  */
 public class ChainedEventObserverImpl
 {
-
-	// event
 	private ChainedEvent evt = null;
 
-	/**
-	 * @see nl.openedge.components.ChainedEventObserver#criticalEventOccured(nl.openedge.components.ChainedEvent)
-	 */
-	public void recieveChainedEvent(ChainedEvent evt)
+	public void recieveChainedEvent(ChainedEvent event)
 	{
-
-		System.out
-				.println("critical event: " + evt + " received from " + evt.getSource());
-		this.evt = evt;
+		this.evt = event;
 	}
 
-	/**
-	 * gets the event
-	 * 
-	 * @return ChainedEvent
-	 */
 	public ChainedEvent getCriticalEvent()
 	{
 		return evt;
 	}
-
 }

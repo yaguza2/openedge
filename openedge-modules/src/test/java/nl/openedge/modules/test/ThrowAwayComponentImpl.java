@@ -37,10 +37,7 @@ import nl.openedge.modules.types.base.ThrowAwayType;
  */
 public class ThrowAwayComponentImpl implements ThrowAwayType
 {
-
 	public ThrowAwayComponentImpl()
 	{
-		System.out.println(getClass().getName() + ": created");
 	}
-
 }

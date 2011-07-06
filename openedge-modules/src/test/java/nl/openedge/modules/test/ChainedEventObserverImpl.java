@@ -38,40 +38,24 @@ import nl.openedge.modules.observers.ChainedEventObserver;
  */
 public class ChainedEventObserverImpl implements ChainedEventObserver
 {
-
-	// event
 	private ChainedEvent evt = null;
 
 	private static int numberOfEventsReceived = 0;
 
-	/**
-	 * @see nl.openedge.components.ChainedEventObserver#criticalEventOccured(nl.openedge.components.ChainedEvent)
-	 */
-	public void recieveChainedEvent(ChainedEvent evt)
+	@Override
+	public void recieveChainedEvent(ChainedEvent event)
 	{
-
-		System.out
-				.println("critical event: " + evt + " received from " + evt.getSource());
-		this.evt = evt;
+		this.evt = event;
 		numberOfEventsReceived++;
 	}
 
-	/**
-	 * gets the event
-	 * 
-	 * @return ChainedEvent
-	 */
 	public ChainedEvent getCriticalEvent()
 	{
 		return evt;
 	}
 
-	/**
-	 * @return int number of events received
-	 */
 	public static int getNumberOfEventsReceived()
 	{
 		return numberOfEventsReceived;
 	}
-
 }

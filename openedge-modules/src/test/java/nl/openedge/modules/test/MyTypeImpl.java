@@ -37,6 +37,7 @@ public class MyTypeImpl implements MyType
 {
 	private String message = null;
 
+	@Override
 	public void setMessage(String message)
 	{
 		this.message = message;

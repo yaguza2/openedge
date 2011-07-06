@@ -32,7 +32,6 @@ package nl.openedge.modules.test.lt;
 
 import java.net.URL;
 
-import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.JDOMConfigurator;
 import nl.openedge.modules.RepositoryFactory;
 import nl.openedge.modules.config.URLHelper;
@@ -58,7 +57,7 @@ public class LTCyclicDepenencySingletonTypesFailTest
 				null);
 
 		RepositoryFactory.setImplementingClass(LooselyTypedComponentRepository.class.getName());
-		JDOMConfigurator c = new JDOMConfigurator(url);
-		ComponentRepository cRepo = RepositoryFactory.getRepository();
+		new JDOMConfigurator(url);
+		RepositoryFactory.getRepository();
 	}
 }

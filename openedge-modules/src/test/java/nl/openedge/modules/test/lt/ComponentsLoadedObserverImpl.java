@@ -38,29 +38,18 @@ import nl.openedge.modules.observers.ComponentsLoadedEvent;
  */
 public class ComponentsLoadedObserverImpl
 {
-
 	private ComponentsLoadedEvent evt;
 
-	/**
-	 * fired after all components are (re)loaded
-	 * 
-	 * @param evt event
-	 */
-	public void modulesLoaded(ComponentsLoadedEvent evt)
+	public void modulesLoaded(ComponentsLoadedEvent event)
 	{
-		this.evt = evt;
+		this.evt = event;
 
 		ComponentRepository mf = (ComponentRepository) evt.getSource();
-		String[] names = mf.getComponentNames();
-
+		mf.getComponentNames();
 	}
 
-	/**
-	 * @return SchedulerStartedEvent
-	 */
 	public ComponentsLoadedEvent getEvt()
 	{
 		return evt;
 	}
-
 }
