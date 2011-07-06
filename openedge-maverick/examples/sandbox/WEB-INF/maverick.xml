@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+
+<!--
+	$Id: maverick.xml,v 1.9 2001/10/16 22:17:05 lhoriman Exp $
+	$Source: /cvsroot-fuse/mav/maverick/examples/sandbox/WEB-INF/maverick.xml,v $
+-->
+
+<maverick version="1.0">
+	<!-- Global views -->
+
+	<view name="success">
+		<document path="success.html"/>
+	</view>
+
+	<view name="failure">
+		<document path="failure.html"/>
+	</view>
+
+	<view name="home">
+		<document path="home.html"/>
+	</view>
+	
+	<view name="microsoft">
+		<redirect path="http://www.microsoft.com"/>
+	</view>
+	
+	<view name="build">
+		<document path="build.xml"/>
+	</view>
+
+	<!-- commands -->
+	<command name="document">
+		<view>
+			<document path="some.xml">
+				<transform path="identity.xsl"/>
+			</document>
+		</view>
+	</command>
+	
+	<command name="subdir">
+		<view>
+			<document path="subdir/some.xml">
+				<transform path="subdir.xsl"/>
+			</document>
+		</view>
+	</command>
+
+	<command name="simplejsp">
+		<controller type="org.infohazard.sandbox.SimpleModel" />
+		<view>
+			<jsp bean="model" path="trivial.jsp"/>
+		</view>
+	</command>
+
+	<command name="velocityPlain">
+		<view>
+			<velocity model="model" path="test.vm"/>
+		</view>
+	</command>
+	
+	<command name="velocityPrePipeline">
+		<controller type="org.infohazard.sandbox.SimpleModel" />
+		<view>
+			<velocity model="model" path="xml.vm"/>
+		</view>
+	</command>
+	
+	<command name="velocityPipeline">
+		<controller type="org.infohazard.sandbox.SimpleModel" />
+		<view content-type="text/xml">
+			<velocity model="model" path="xml.vm">
+				<transform path="identity.xsl"/>
+			</velocity>
+		</view>
+	</command>
+	
+	<command name="velocitySimple">
+		<controller type="org.infohazard.sandbox.SimpleModel" />
+		<view>
+			<velocity model="model" path="simple.vm"/>
+		</view>
+	</command>
+	
+	<command name="jspxmlTrans">
+		<controller type="org.infohazard.sandbox.SimpleModel" />
+		<view content-type="text/plain">
+			<jsp bean="model" path="xml.jsp">
+				<transform path="identity.xsl"/>
+			</jsp>
+		</view>
+	</command>
+	
+	<command name="hello">
+		<view>
+			<document path="hello.html"/>
+		</view>
+	</command>
+
+	<command name="someXML">
+		<view content-type="text/xml">
+			<document path="some.xml"/>
+		</view>
+	</command>
+
+	<command name="simple">
+		<controller type="org.infohazard.sandbox.Simple" />
+		<view content-type="text/xml">
+			<domify node="simpleModel"/>
+		</view>
+	</command>
+
+	<command name="simpleModel">
+		<controller type="org.infohazard.sandbox.SimpleModel" />
+		<view content-type="text/xml">
+			<domify node="simpleModel"/>
+		</view>
+	</command>
+
+	<command name="simpleModelTrans">
+		<controller type="org.infohazard.sandbox.SimpleModelTrans" />
+		<view>
+			<domify node="simple">
+					<transform path="identity.xsl"/>
+					<transform path="identity.xsl"/>
+					<transform path="identity.xsl"/>
+					<transform path="identity.xsl"/>
+					<transform path="simple.xsl"/>
+			</domify>
+		</view>
+	</command>
+
+	<command name="simpleModelTrans2">
+		<controller type="org.infohazard.sandbox.SimpleModelTrans" />
+		<view>
+			<domify node="simple2">
+				<transform path="simple.xsl">
+					<param name="foo" value="bar"/>
+				</transform>
+			</domify>
+		</view>
+	</command>
+
+
+	<command name="velComplex">
+		<controller type="org.infohazard.sandbox.Complex" />
+		<view>
+			<velocity model="model" path="complex.vm"/>
+		</view>
+	</command>
+
+
+	<command name="*">
+		<controller type="org.infohazard.sandbox.route" />
+		<view name="success">
+			<domify node="route"/>
+		</view>
+	</command>
+</maverick>
