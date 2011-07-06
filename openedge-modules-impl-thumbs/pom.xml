@@ -16,8 +16,8 @@
 			<artifactId>servlet-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ognl</groupId>
-			<artifactId>ognl</artifactId>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>nl.topicus.onderwijs.openedge</groupId>
@@ -28,12 +28,12 @@
 			<artifactId>openedge-util</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
+			<groupId>ognl</groupId>
+			<artifactId>ognl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
 		</dependency>
 	</dependencies>
 </project>
