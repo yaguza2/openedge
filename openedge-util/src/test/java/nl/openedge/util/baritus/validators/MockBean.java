@@ -28,65 +28,26 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.util.jetty;
+package nl.openedge.util.baritus.validators;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import nl.openedge.util.net.HttpHelper;
+import java.util.Date;
 
 /**
- * Test for JettyDecorator with xml config file and use of JettyPlus.
+ * (Form)Bean for testing.
  * 
  * @author Eelco Hillenius
  */
-public class JettyDecoratorWithXMLPlusTest extends TestCase
+public class MockBean
 {
+	private Date testDate;
 
-	/**
-	 * Construct.
-	 */
-	public JettyDecoratorWithXMLPlusTest()
+	public Date getTestDate()
 	{
-		super();
+		return testDate;
 	}
 
-	/**
-	 * Construct with name.
-	 * 
-	 * @param name
-	 *            test name
-	 */
-	public JettyDecoratorWithXMLPlusTest(String name)
+	public void setTestDate(final Date deTestDatum)
 	{
-		super(name);
+		this.testDate = deTestDatum;
 	}
-
-	/**
-	 * Test servlet that gets answer from JNDI var from web xml file file.
-	 * 
-	 * @throws Exception
-	 */
-	public void testJNDIServlet() throws Exception
-	{
-		String jndiValueFromServlet = HttpHelper.get("http://localhost:8098/test/servlet/jnditest");
-		assertEquals("testValue", jndiValueFromServlet);
-	}
-
-	/**
-	 * Suite method.
-	 * 
-	 * @return Test suite
-	 */
-	public static Test suite()
-	{
-		TestSuite suite = new TestSuite();
-		suite.addTest(new JettyDecoratorWithXMLPlusTest("testJNDIServlet"));
-		JettyDecorator deco = new JettyDecorator(suite);
-		String config = "jetty-decorator-test-plus.xml";
-		deco.setJettyConfig(config, JettyDecoratorWithXMLPlusTest.class);
-		deco.setUseJettyPlus(true);
-		return deco;
-	}
-
 }

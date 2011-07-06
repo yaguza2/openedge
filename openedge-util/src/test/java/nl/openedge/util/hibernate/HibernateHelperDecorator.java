@@ -55,7 +55,7 @@ public class HibernateHelperDecorator extends TestSetup
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate("create table test( id integer )");
 
-			TestClass test = new TestClass();
+			MockClass test = new MockClass();
 			session.save(test);
 			session.flush();
 

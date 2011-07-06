@@ -10,33 +10,19 @@ package nl.openedge.util.hibernate;
 
 import java.io.Serializable;
 
-/**
- */
-public class TestClass implements Serializable
+public class MockClass implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 
-	/** test id. */
 	private int id;
 
-	/**
-	 * Get id.
-	 * 
-	 * @return int id
-	 */
 	public int getId()
 	{
 		return id;
 	}
 
-	/**
-	 * Zet id.
-	 * 
-	 * @param i
-	 *            id
-	 */
 	public void setId(final int i)
 	{
 		id = i;
 	}
-
 }

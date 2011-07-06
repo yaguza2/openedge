@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>nl.topicus.onderwijs.openedge</groupId>
@@ -19,24 +20,11 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-discovery</groupId>
-			<artifactId>commons-discovery</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-		</dependency>
--->
+		<!-- <dependency> <groupId>commons-dbcp</groupId> <artifactId>commons-dbcp</artifactId> 
+			</dependency> <dependency> <groupId>commons-discovery</groupId> <artifactId>commons-discovery</artifactId> 
+			</dependency> <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> 
+			</dependency> <dependency> <groupId>commons-pool</groupId> <artifactId>commons-pool</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
@@ -45,12 +33,11 @@
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 		</dependency>
-<!--
 		<dependency>
 			<groupId>easymock</groupId>
 			<artifactId>easymock</artifactId>
+			<version>1.1</version>
 		</dependency>
--->
 		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -59,19 +46,11 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>jdom</groupId>
-			<artifactId>jdom</artifactId>
-		</dependency>
-<!--
-		<dependency>
-			<groupId>jta</groupId>
-			<artifactId>jta</artifactId>
-		</dependency>
--->
+		<!-- <dependency> <groupId>jta</groupId> <artifactId>jta</artifactId> </dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>maverick</groupId>
@@ -80,10 +59,12 @@
 		<dependency>
 			<groupId>mockobjects</groupId>
 			<artifactId>mockobjects-core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mockobjects</groupId>
 			<artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>nl.topicus.onderwijs.openedge</groupId>
@@ -98,15 +79,15 @@
 			<artifactId>axis</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-jaxrpc</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-tools</artifactId>
-		</dependency>
--->
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-tools</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -116,8 +97,28 @@
 			<artifactId>hibernate-jpa-2.0-api</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>velocity-tools</groupId>
 			<artifactId>velocity-tools</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkMode>always</forkMode>
+					<excludes>
+						<exclude>**/*TestCase.java</exclude>
+						<exclude>**/*Decorator.java</exclude>
+						<exclude>**/*Ctrl.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

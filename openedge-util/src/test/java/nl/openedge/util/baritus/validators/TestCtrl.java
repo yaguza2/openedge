@@ -28,78 +28,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.util.jetty;
+package nl.openedge.util.baritus.validators;
 
-import junit.framework.TestCase;
+import nl.openedge.baritus.ExecutionParams;
+import nl.openedge.baritus.FormBeanContext;
+import nl.openedge.util.baritus.AbstractBaritusTestCtrl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mortbay.jetty.Server;
+import org.infohazard.maverick.flow.ConfigException;
+import org.infohazard.maverick.flow.ControllerContext;
+import org.jdom.Element;
 
 /**
- * Testcase for JettyHelper.
+ * Dummy control for testing.
  * 
  * @author Eelco Hillenius
  */
-public class JettyHelperTest extends TestCase
+public class TestCtrl extends AbstractBaritusTestCtrl
 {
-	/** Log. */
-	private Log log = LogFactory.getLog(JettyHelperTest.class);
-
-	/**
-	 * Localhost constant.
-	 */
-	private final static String LOCALHOST = "127.0.0.1";
-
-	/**
-	 * Construct.
-	 */
-	public JettyHelperTest()
+	@Override
+	protected String perform(final FormBeanContext deFormBeanContext, final ControllerContext cctx)
 	{
-		super();
+		return view;
 	}
 
-	/**
-	 * Construct with test name.
-	 * 
-	 * @param name
-	 *            name of test
-	 */
-	public JettyHelperTest(String name)
+	@Override
+	protected Object makeFormBean(final FormBeanContext deFormBeanContext,
+			final ControllerContext cctx)
 	{
-		super(name);
+		this.bean = new MockBean();
+		return bean;
 	}
 
-	/**
-	 * Test local (in this VM) startup of Jetty and monitor and shutdown.
-	 * 
-	 * @throws Exception
-	 */
-	public void testLocalStartupAndShutdownWithMonitor() throws Exception
+	public void init(final Element controllerNode) throws ConfigException
 	{
-		String testMonitorCommKey = "mortbay";
-		int testMonitorPort = 8078;
-		int jettyServerPort = 8099;
-		String webContextRoot = "src/webapp";
-		String contextPath = "/test";
-
-		// start server
-		Server server = JettyHelper.startJetty(jettyServerPort, webContextRoot, contextPath, false);
-
-		// start monitor
-		JettyMonitor.startMonitor(server, testMonitorCommKey, testMonitorPort);
-
-		Thread.sleep(1000); // wait a bit longer to be sure that everything is really up
-
-		// ping for startup
-		boolean started = JettyHelper.pingMonitorForServerStarted(testMonitorCommKey, LOCALHOST,
-				testMonitorPort, 30, 1000);
-		assertTrue(started);
-		log.info("Stopping Jetty");
-
-		// issue stop command; throws exception when issueing failed
-		JettyHelper.issueStopCommandToMonitor(testMonitorCommKey, LOCALHOST, testMonitorPort);
-		log.info("Jetty stopped");
+		ExecutionParams params = getExecutionParams(null);
+		params.setIncludeSessionAttributes(true);
+		params.setIncludeRequestAttributes(true);
 	}
-
 }

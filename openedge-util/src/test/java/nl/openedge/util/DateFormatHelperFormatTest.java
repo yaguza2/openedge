@@ -30,230 +30,114 @@
  */
 package nl.openedge.util;
 
-import java.text.DecimalFormat;
+import static org.junit.Assert.*;
+
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-import nl.openedge.util.DateFormatHelper;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Aantal DateFormatHelper gerelateerde tests
  * 
  * @author Eelco Hillenius
  */
-public class DateFormatHelperFormatTest extends TestCase
+public class DateFormatHelperFormatTest
 {
 	/**
-	 * construct
-	 * 
-	 * @param name
-	 */
-	public DateFormatHelperFormatTest(String name)
-	{
-		super(name);
-	}
-
-	/**
-	 * gaandeweg bleek dat NumberFormatters (die intern worden gebruikt door dateformatters voor het
-	 * parsen van onderdelen) parsen tot ze niet meer verder kunnen, en dan - indien ze digits
-	 * hebben kunnen parsen - het tot dan gevonden getal terug geven (zonder exception dus)
-	 */
-	public void testDecimal1()
-	{
-
-		try
-		{
-			DecimalFormat dcf = new DecimalFormat();
-			Number n = dcf.parse("45akdl12");
-			// dit is toegestaan; er wordt geparsed tot a
-			assertEquals(45, n.intValue());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	/**
-	 * Het eerste karakter moet echter wel een getal zijn
-	 */
-	public void testDecimal2()
-	{
-
-		try
-		{
-			DecimalFormat dcf = new DecimalFormat();
-			Number n = dcf.parse("h45");
-			fail("h45 should not have been parsed");
-		}
-		catch (Exception e)
-		{
-
-		}
-	}
-
-	/**
-	 * Integer (en bijv. Double) zijn echter wel strikt
-	 */
-	public void testDecimal3()
-	{
-
-		try
-		{
-			int i = Integer.parseInt("45akdl12");
-			fail("45akdl12 should not have been parsed");
-		}
-		catch (Exception e)
-		{
-
-		}
-	}
-
-	/**
 	 * check voor bugfix #2131: 11-12-20la mag niet worden opgevat als een geldige datum
+	 * 
+	 * @throws ParseException
 	 */
-	public void testInvalidFormat1()
+	@Test(expected = ParseException.class)
+	public void testInvalidFormat1() throws ParseException
 	{
-
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("11-12-20la");
-
-			System.err.println("invalid result: 11-12-20la -> " + d);
-			fail("date should not have been parsed");
-		}
-		catch (Exception e)
-		{
-
-		}
+		DateFormatHelper.fallbackParse("11-12-20la");
 	}
 
 	/**
 	 * check voor bugfix #2131: 111220la mag niet worden opgevat als een geldige datum
+	 * 
+	 * @throws ParseException
 	 */
-	public void testInvalidFormat2()
+	@Test(expected = ParseException.class)
+	public void testInvalidFormat2() throws ParseException
 	{
-
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("111220la");
-
-			System.err.println("invalid result: 11-12-20la -> " + d);
-			fail("date should not have been parsed");
-		}
-		catch (Exception e)
-		{
-
-		}
+		DateFormatHelper.fallbackParse("111220la");
 	}
 
 	/**
 	 * check voor troep
+	 * 
+	 * @throws ParseException
 	 */
-	public void testInvalidFormat3()
+	@Test(expected = ParseException.class)
+	public void testInvalidFormat3() throws ParseException
 	{
-
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("11!12!2003");
-
-			System.err.println("invalid result: 11!12!2003 -> " + d);
-			fail("date should not have been parsed");
-		}
-		catch (Exception e)
-		{
-
-		}
+		DateFormatHelper.fallbackParse("11!12!2003");
 	}
 
 	/**
 	 * check voor bugfix #2131: 11122003 is een geldige datum
+	 * 
+	 * @throws ParseException
 	 */
-	public void testValidFormat1()
+	@Test
+	public void testValidFormat1() throws ParseException
 	{
-
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("11122003");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		DateFormatHelper.fallbackParse("11122003");
 	}
 
 	/**
 	 * check voor bugfix #2131: 11-12-2003 is een geldige datum
+	 * 
+	 * @throws ParseException
 	 */
-	public void testValidFormat2()
+	@Test
+	public void testValidFormat2() throws ParseException
 	{
-
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("11-12-2003");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
-
-	//------------------- test alle configuratie items uit dateformathelper.cfg -------------
-
-	/**
-	 * check ddMMyy
-	 */
-	public void testValidFormatddMMyy()
-	{
-
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("111203");
-
-			Calendar c = Calendar.getInstance();
-			c.setTime(d);
-			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12 - 1, c.get(Calendar.MONTH));
-			assertEquals(2003, c.get(Calendar.YEAR));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		DateFormatHelper.fallbackParse("11-12-2003");
 	}
 
 	/**
 	 * check ddMMyy
+	 * 
+	 * @throws ParseException
 	 */
-	public void testValidFormatddMMyyyy()
+	@Test
+	public void testValidFormatddMMyy() throws ParseException
 	{
+		Date d = DateFormatHelper.fallbackParse("111203");
 
-		try
-		{
-			Date d = DateFormatHelper.fallbackParse("11122003");
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		assertEquals(11, c.get(Calendar.DATE));
+		assertEquals(12 - 1, c.get(Calendar.MONTH));
+		assertEquals(2003, c.get(Calendar.YEAR));
+	}
 
-			Calendar c = Calendar.getInstance();
-			c.setTime(d);
-			assertEquals(11, c.get(Calendar.DATE));
-			assertEquals(12 - 1, c.get(Calendar.MONTH));
-			assertEquals(2003, c.get(Calendar.YEAR));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+	/**
+	 * check ddMMyy
+	 * 
+	 * @throws ParseException
+	 */
+	@Test
+	public void testValidFormatddMMyyyy() throws ParseException
+	{
+		Date d = DateFormatHelper.fallbackParse("11122003");
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		assertEquals(11, c.get(Calendar.DATE));
+		assertEquals(12 - 1, c.get(Calendar.MONTH));
+		assertEquals(2003, c.get(Calendar.YEAR));
 	}
 
 	/**
 	 * check d-M-yy
 	 */
+	@Test
 	public void testValidFormatd_M_yy()
 	{
 
@@ -277,6 +161,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d-MM-yy
 	 */
+	@Test
 	public void testValidFormatd_MM_yy()
 	{
 
@@ -300,6 +185,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd-M-yy
 	 */
+	@Test
 	public void testValidFormatdd_M_yy()
 	{
 
@@ -323,6 +209,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd-MM-yy
 	 */
+	@Test
 	public void testValidFormatdd_MM_yy()
 	{
 
@@ -349,6 +236,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d-M-yyyy
 	 */
+	@Test
 	public void testValidFormatd_M_yyyy()
 	{
 
@@ -372,6 +260,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d-MM-yyyy
 	 */
+	@Test
 	public void testValidFormatd_MM_yyyy()
 	{
 
@@ -395,6 +284,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd-M-yyyy
 	 */
+	@Test
 	public void testValidFormatdd_M_yyyy()
 	{
 
@@ -418,6 +308,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd-MM-yyyy
 	 */
+	@Test
 	public void testValidFormatdd_MM_yyyy()
 	{
 
@@ -441,6 +332,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d/M/yy
 	 */
+	@Test
 	public void testValidFormatd__M__yy()
 	{
 
@@ -464,6 +356,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d/MM/yy
 	 */
+	@Test
 	public void testValidFormatd__MM__yy()
 	{
 
@@ -487,6 +380,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd/M/yy
 	 */
+	@Test
 	public void testValidFormatdd__M__yy()
 	{
 
@@ -510,6 +404,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd/MM/yy
 	 */
+	@Test
 	public void testValidFormatdd__MM__yy()
 	{
 
@@ -533,6 +428,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d/M/yyyy
 	 */
+	@Test
 	public void testValidFormatd__M__yyyy()
 	{
 
@@ -556,6 +452,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check d/MM/yyyy
 	 */
+	@Test
 	public void testValidFormatd__MM__yyyy()
 	{
 
@@ -579,6 +476,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd/M/yyyy
 	 */
+	@Test
 	public void testValidFormatdd__M__yyyy()
 	{
 
@@ -602,6 +500,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check dd/MM/yyyy
 	 */
+	@Test
 	public void testValidFormatdd__MM__yyyy()
 	{
 
@@ -625,6 +524,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check yyyy-MM-ddTHH:mm:ss
 	 */
+	@Test
 	public void testValidFormat_yyyy_MM_ddTHH_mm_ss()
 	{
 		boolean org = DateFormatHelper.isCheckForCharacters();
@@ -653,6 +553,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check yyyy-MM-dd'HH:mm:ss
 	 */
+	@Test
 	public void testValidFormat_yyyy_MM_dd_HH_mm_ss()
 	{
 
@@ -682,6 +583,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * check datum: yyyy-MM-dd tijd: HH:mm:ss
 	 */
+	@Test
 	public void testValidFormat_datum_yyyy_MM_dd_tijd_HH_mm_ss()
 	{
 
@@ -711,6 +613,7 @@ public class DateFormatHelperFormatTest extends TestCase
 	/**
 	 * Test the keys generated for a pattern
 	 */
+	@Test
 	public void testKeyGeneration()
 	{
 		String key = DateFormatHelper.getKeyBasedOnPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -724,5 +627,4 @@ public class DateFormatHelperFormatTest extends TestCase
 		key = DateFormatHelper.getKeyBasedOnPattern("yyyy-MM-dd 'a''a'");
 		assertEquals("yyyy-MM-dd a'a", key);
 	}
-
 }

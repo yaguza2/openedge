@@ -28,66 +28,56 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package nl.openedge.util.jetty;
+package nl.openedge.util.ser;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import nl.openedge.util.net.HttpHelper;
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.zip.DataFormatException;
+
+import org.junit.Test;
 
 /**
- * Test for JettyDecorator with simple arguments.
+ * Test for SerializeAndZipHelper.
  * 
  * @author Eelco Hillenius
  */
-public class JettyDecoratorWithArgsTest extends TestCase
+public class SerializeAndZipHelperTest
 {
-
-	/**
-	 * Construct.
-	 */
-	public JettyDecoratorWithArgsTest()
+	@Test
+	public void testSerZipAndDeSerUnzipZip() throws IOException, DataFormatException,
+			ClassNotFoundException
 	{
-		super();
-	}
+		List<Object> theObjects = new ArrayList<Object>();
+		String string1 = "string1";
+		theObjects.add(string1);
+		String string2 = "string2";
+		theObjects.add(string2);
+		Calendar cal = Calendar.getInstance();
+		cal.set(2002, 2, 2);
+		Date date = cal.getTime();
+		theObjects.add(date);
 
-	/**
-	 * Construct with name.
-	 * 
-	 * @param name
-	 *            test name
-	 */
-	public JettyDecoratorWithArgsTest(String name)
-	{
-		super(name);
-	}
+		SerializedAndZipped serializedAndZipped = SerializeAndZipHelper.serializeAndZip(theObjects);
+		byte[] compressedData = serializedAndZipped.getCompressedData();
 
-	/**
-	 * Test the ping page of the test webapp.
-	 * 
-	 * @throws Exception
-	 */
-	public void testPing() throws Exception
-	{
-		String pingBody = HttpHelper.get("http://localhost:8098/test/ping.txt");
-		assertEquals("hi!", pingBody);
-	}
+		assertTrue(serializedAndZipped.getUncompressedDataLength() > 0);
+		assertNotNull(compressedData);
 
-	/**
-	 * Suite method.
-	 * 
-	 * @return Test suite
-	 */
-	public static Test suite()
-	{
-		TestSuite suite = new TestSuite();
-		suite.addTest(new JettyDecoratorWithArgsTest("testPing"));
-		JettyDecorator deco = new JettyDecorator(suite);
-		deco.setPort(8098);
-		deco.setWebappContextRoot("src/webapp");
-		deco.setContextPath("/test");
-		deco.setUseJettyPlus(false);
-		return deco;
-	}
+		System.out.print("\n");
 
+		@SuppressWarnings("unchecked")
+		List<Object> unpackedObjects =
+			(List<Object>) SerializeAndZipHelper.unzipAndDeserialize(serializedAndZipped);
+		assertNotNull(unpackedObjects);
+		assertEquals(3, unpackedObjects.size());
+
+		assertEquals(string1, unpackedObjects.get(0));
+		assertEquals(string2, unpackedObjects.get(1));
+		assertEquals(date, unpackedObjects.get(2));
+	}
 }

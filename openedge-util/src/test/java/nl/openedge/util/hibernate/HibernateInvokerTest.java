@@ -129,7 +129,7 @@ public class HibernateInvokerTest extends TestCase
 	{
 
 		List mockResultaat = new ArrayList();
-		mockResultaat.add(new TestClass());
+		mockResultaat.add(new MockClass());
 
 		mockCommand.execute(mockSession);
 		mockCommandControl.setVoidCallable();
@@ -164,7 +164,7 @@ public class HibernateInvokerTest extends TestCase
 	{
 
 		List mockResultaat = new ArrayList();
-		mockResultaat.add(new TestClass());
+		mockResultaat.add(new MockClass());
 
 		HibernateException e = new HibernateException("Test");
 		mockCommand.execute(mockSession);
