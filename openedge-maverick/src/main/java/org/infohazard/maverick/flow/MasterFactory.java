@@ -12,8 +12,8 @@ import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Element;
 
@@ -25,7 +25,7 @@ class MasterFactory
 {
 
     /** Logger. */
-    private static Log log = LogFactory.getLog(MasterFactory.class);
+    private static Logger log = LoggerFactory.getLogger(MasterFactory.class);
 
     /** xml attribute for type, value = 'type'. */
     public static final String ATTR_FACTORY_TYPE_NAME = "type";

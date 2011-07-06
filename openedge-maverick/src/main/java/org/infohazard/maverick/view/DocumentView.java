@@ -11,8 +11,8 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
 
@@ -42,7 +42,7 @@ import org.infohazard.maverick.flow.ViewContext;
  */
 public abstract class DocumentView implements View
 {
-    private static Log log = LogFactory.getLog(DocumentView.class);
+    private static Logger log = LoggerFactory.getLogger(DocumentView.class);
 
     /**
      * <p>

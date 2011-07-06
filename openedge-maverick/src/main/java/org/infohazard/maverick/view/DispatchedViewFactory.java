@@ -13,8 +13,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.flow.View;
@@ -34,7 +34,7 @@ public class DispatchedViewFactory implements ViewFactory
 	/**
 	 * Logger.
 	 */
-    private static Log log = LogFactory.getLog(DispatchedViewFactory.class);
+    private static Logger log = LoggerFactory.getLogger(DispatchedViewFactory.class);
 
     /**
      * Initialize.

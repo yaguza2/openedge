@@ -11,8 +11,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  */
@@ -21,7 +21,7 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	/**
 	 * Logger.
 	 */
-    private static Log log = LogFactory.getLog(PrintWriterBuffer.class);
+    private static Logger log = LoggerFactory.getLogger(PrintWriterBuffer.class);
 	
 	/**
 	 * Construct.

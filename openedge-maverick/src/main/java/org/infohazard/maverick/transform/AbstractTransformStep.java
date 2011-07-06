@@ -11,8 +11,8 @@ import java.io.Writer;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.TransformContext;
 import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.util.FakeHttpServletResponse;
@@ -32,7 +32,7 @@ public abstract class AbstractTransformStep implements TransformStep
 	/**
 	 * Logger
 	 */
-    private static Log log = LogFactory.getLog(AbstractTransformStep.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractTransformStep.class);
 
 	/**
 	 */

@@ -26,8 +26,8 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.Transform;
 import org.infohazard.maverick.flow.TransformContext;
@@ -51,7 +51,7 @@ class XSLTransform implements Transform
 	public static final int CACHE_DISABLED = 3;
 
 	/** Logger. */
-	private static Log log = LogFactory.getLog(XSLTransform.class);
+	private static Logger log = LoggerFactory.getLogger(XSLTransform.class);
 
 	/** Mime type used if we stop before last transform. */
 	protected final static String UNFINISHED_CONTENTTYPE = "text/xml";
@@ -140,12 +140,12 @@ class XSLTransform implements Transform
 			}
 			catch (MalformedURLException me)
 			{
-				log.fatal("Eror parsing monitored template URL " + path + ":  " + me.toString());
+				log.error("Eror parsing monitored template URL " + path + ":  " + me.toString());
 				throw new ConfigException(me);
 			}
 			catch (SecurityException se)
 			{
-				log.fatal("Unable to access monitored template " + path + ":  " + se.toString());
+				log.error("Unable to access monitored template " + path + ":  " + se.toString());
 				throw new ConfigException(se);
 			}
 		}
@@ -172,7 +172,7 @@ class XSLTransform implements Transform
 					if (this.monitoredFile == null || !this.monitoredFile.canRead())
 					{
 						this.monitoredFile = null;
-						log.fatal("Resource not found or unable to read file:  " + path);
+						log.error("Resource not found or unable to read file:  " + path);
 						throw new ConfigException("Resource not found or unable to read file:  " + path);
 					}
 
@@ -185,13 +185,13 @@ class XSLTransform implements Transform
 
 				if (resURL == null)
 				{
-					log.fatal("Resource not found:  " + path);
+					log.error("Resource not found:  " + path);
 					throw new ConfigException("Resource not found:  " + path);
 				}
 			}
 			catch (MalformedURLException me)
 			{
-				log.fatal("Eror parsing template URL " + path + ":  " + me.toString());
+				log.error("Eror parsing template URL " + path + ":  " + me.toString());
 				throw new ConfigException(me);
 			}
 		}
@@ -206,12 +206,12 @@ class XSLTransform implements Transform
 		}
 		catch (TransformerException ex)
 		{
-			log.fatal("Error loading template " + path + ":  " + ex.toString());
+			log.error("Error loading template " + path + ":  " + ex.toString());
 			throw new ConfigException(ex);
 		}
 		catch (IOException ex)
 		{
-			log.fatal("Eror loading template " + path + ":  " + ex.toString());
+			log.error("Eror loading template " + path + ":  " + ex.toString());
 			throw new ConfigException(ex);
 		}
 

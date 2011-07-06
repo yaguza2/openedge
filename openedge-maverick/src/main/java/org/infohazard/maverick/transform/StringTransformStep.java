@@ -21,8 +21,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.TransformContext;
 import org.xml.sax.ContentHandler;
 
@@ -35,7 +35,7 @@ public abstract class StringTransformStep extends AbstractTransformStep
 	/**
 	 * Logger.
 	 */
-    private static Log log = LogFactory.getLog(StringTransformStep.class);
+    private static Logger log = LoggerFactory.getLogger(StringTransformStep.class);
 	
     /**
      * Construct with transform context.

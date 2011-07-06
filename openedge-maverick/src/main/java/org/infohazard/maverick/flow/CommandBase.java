@@ -8,8 +8,8 @@ package org.infohazard.maverick.flow;
 import java.io.IOException;
 import javax.servlet.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ abstract class CommandBase implements Command
      * CommandBase logger.
      * </p>
 	 */
-	private static Log log = LogFactory.getLog(CommandBase.class);
+	private static Logger log = LoggerFactory.getLogger(CommandBase.class);
 
 	/**
      * <p>

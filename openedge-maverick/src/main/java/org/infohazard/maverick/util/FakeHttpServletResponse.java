@@ -16,8 +16,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Stores data written to the response and allows it to be obtained later.
@@ -27,7 +27,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * Logger.
 	 */
-    private static Log log = LogFactory.getLog(FakeHttpServletResponse.class);
+    private static Logger log = LoggerFactory.getLogger(FakeHttpServletResponse.class);
 
 	/**
 	 */

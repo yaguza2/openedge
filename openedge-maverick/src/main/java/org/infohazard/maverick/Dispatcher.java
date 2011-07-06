@@ -5,8 +5,8 @@
 
 package org.infohazard.maverick;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.Loader;
 import org.infohazard.maverick.flow.Command;
 import org.infohazard.maverick.flow.ConfigException;
@@ -74,6 +74,8 @@ import javax.xml.transform.stream.StreamSource;
  */
 public class Dispatcher extends HttpServlet
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
      * <p>
 	 * The key in the application context ({@link ServletContext}) under which
@@ -197,7 +199,7 @@ public class Dispatcher extends HttpServlet
      * Dispatcher logger.
      * </p>
 	 */
-	private static Log log = LogFactory.getLog(Dispatcher.class);
+	private static Logger log = LoggerFactory.getLogger(Dispatcher.class);
 
 	/**
      * <p>

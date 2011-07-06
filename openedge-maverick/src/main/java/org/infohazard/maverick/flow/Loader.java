@@ -10,8 +10,8 @@ import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -54,7 +54,7 @@ public class Loader
 	protected final static String PARAM_DEFAULT_TRANSFORM_TYPE = "default-transform-type";
 
 	/** Logger. */
-	private static Log log = LogFactory.getLog(Loader.class);
+	private static Logger log = LoggerFactory.getLogger(Loader.class);
 
 	/** Commands get built into this map. */
 	protected Map commands = new HashMap();

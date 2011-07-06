@@ -16,8 +16,8 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.NoSuitableModeException;
 import org.infohazard.maverick.flow.Shunt;
@@ -175,7 +175,7 @@ public class LanguageShuntFactory implements ShuntFactory
 	/**
 	 * Logger.
 	 */
-	private static Log log = LogFactory.getLog(LanguageShuntFactory.class);
+	private static Logger log = LoggerFactory.getLogger(LanguageShuntFactory.class);
 
 	/**
 	 * Does nothing.

@@ -12,8 +12,8 @@ import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.Transform;
 import org.infohazard.maverick.flow.TransformContext;
 import org.infohazard.maverick.flow.TransformStep;
@@ -36,7 +36,7 @@ class DocumentTransform implements Transform
 	/**
 	 * Logger.
 	 */
-	private static Log log = LogFactory.getLog(DocumentTransform.class);
+	private static Logger log = LoggerFactory.getLogger(DocumentTransform.class);
 
 	/**
 	 * Construct with path and name.
