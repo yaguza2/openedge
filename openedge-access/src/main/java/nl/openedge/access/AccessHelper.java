@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.access;
 
 import java.io.IOException;
@@ -49,28 +19,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The AccessHelper constructs and initialises objects that are used within
- * the autorisation framework. 
- * 
- * <p>The AccessHelper can be initialised in several environments; in effect 
- * a web application environment and a standalone environment.
- * 
- * <p>Clients of the AccessHelper should either construct the factory with an
- * instance of <code>javax.servlet.ServletContext</code> or with an instance
- * of <code>java.lang.String</code>. The first is for usage in a web application
- * environment and tries to read the location of the configuration document from
- * <code>javax.servlet.ServletContext.getInitParameter("oeaccess.configFile")</code> 
- * Moreover, all other references to documents (e.g. jaas.config) in the
- * configuration file will be looked up relative to the context path of the web
- * application. The second case tries to load all files from the classpath. To
- * overide this behaviour you can specify url's in the configuration document,
- * e.g: file://c:/mywinboxdrive/mydir/jaas.config. A third option is to load 
- * the configuration document from a custom location. This is done by 
- * constructing the URL yourself and constructing the AccessHelper
- * with this URL.
- * <p>In a web application environment, the constructed instance of this 
- * <code>AccessHelper</code> will be saved in the <code>ServletContext</code>
- * under key 'oeaccess.configFile'. 
+ * The AccessHelper constructs and initialises objects that are used within the
+ * autorisation framework.
+ * <p>
+ * The AccessHelper can be initialised in several environments; in effect a web
+ * application environment and a standalone environment.
+ * <p>
+ * Clients of the AccessHelper should either construct the factory with an instance of
+ * <code>javax.servlet.ServletContext</code> or with an instance of
+ * <code>java.lang.String</code>. The first is for usage in a web application environment
+ * and tries to read the location of the configuration document from
+ * <code>javax.servlet.ServletContext.getInitParameter("oeaccess.configFile")</code>
+ * Moreover, all other references to documents (e.g. jaas.config) in the configuration
+ * file will be looked up relative to the context path of the web application. The second
+ * case tries to load all files from the classpath. To overide this behaviour you can
+ * specify url's in the configuration document, e.g:
+ * file://c:/mywinboxdrive/mydir/jaas.config. A third option is to load the configuration
+ * document from a custom location. This is done by constructing the URL yourself and
+ * constructing the AccessHelper with this URL.
+ * <p>
+ * In a web application environment, the constructed instance of this
+ * <code>AccessHelper</code> will be saved in the <code>ServletContext</code> under key
+ * 'oeaccess.configFile'.
  * 
  * @author Eelco Hillenius
  */
@@ -80,18 +50,17 @@ public final class AccessHelper
 	/**
 	 * Default location of the xml configuration file.
 	 */
-	public static final String DEFAULT_CONFIG_FILE = 
-							"/WEB-INF/oeaccess.properties";
+	public static final String DEFAULT_CONFIG_FILE = "/WEB-INF/oeaccess.properties";
 
 	/**
-	 * If a value is set in the application attribute context with this key,
-	 * the value is used to override the setting of the configFile.
+	 * If a value is set in the application attribute context with this key, the value is
+	 * used to override the setting of the configFile.
 	 */
 	public static final String KEY_CONFIG_FILE = "oeaccess.configFile";
 
 	/**
-	 * Name of the servlet init parameter which defines the path to the
-	 * OpenEdge Access configuration file.  Defaults to DEFAULT_CONFIG_FILE.
+	 * Name of the servlet init parameter which defines the path to the OpenEdge Access
+	 * configuration file. Defaults to DEFAULT_CONFIG_FILE.
 	 */
 	public static final String INITPARAM_CONFIG_FILE = "oeaccess.configFile";
 
@@ -104,15 +73,17 @@ public final class AccessHelper
 
 	private static final Integer DENIED = new Integer(-1);
 
-	// threadlocal om cache in op te slaan; verantwoordelijkheid ligt bij accessfilter
+	/** threadlocal om cache in op te slaan; verantwoordelijkheid ligt bij accessfilter */
 	private static ThreadLocal<Cache> cacheHolder = new ThreadLocal<Cache>();
+
 	public static Cache getCache()
 	{
 		return cacheHolder.get();
 	}
-	public static void setCache( Cache cache)
+
+	public static void setCache(Cache cache)
 	{
-		cacheHolder.set( cache);
+		cacheHolder.set(cache);
 	}
 
 	/**
@@ -124,126 +95,130 @@ public final class AccessHelper
 
 	public static Integer PermissionCached(Cache cache, Permission permission)
 	{
-		if(cache == null)
+		if (cache == null)
 			return NOT_CACHED;
 		Object item = cache.get(permission);
-		if(GRANTED.equals(item))
+		if (GRANTED.equals(item))
 			return GRANTED;
-		else if(DENIED.equals(item))
+		else if (DENIED.equals(item))
 			return DENIED;
 		else
 			return NOT_CACHED;
 	}
-	
+
 	/**
-	 * Check permission for subject. 
-	 * Use this method to allways have the same protection domain
-	 * @param permission permission to check
-	 * @param subject subject to check permission for
+	 * Check permission for subject. Use this method to allways have the same protection
+	 * domain
+	 * 
+	 * @param permission
+	 *            permission to check
+	 * @param subject
+	 *            subject to check permission for
 	 */
 	public static void checkPermissionForSubject(Permission permission, Subject subject)
 	{
 		long start = System.currentTimeMillis();
-		if(log.isDebugEnabled())
-			log.debug("checking " + permission);
+
+		log.debug("checking {}", permission);
 
 		Cache cache = getCache();
 		Integer cacheResult = null;
-		if( cache != null)
+		if (cache != null)
 		{
-		    cacheResult = PermissionCached(cache, permission);
+			cacheResult = PermissionCached(cache, permission);
 		}
 		else
 		{
-		    log.error( "jaas cache missing!");
-		    cacheResult = NOT_CACHED;
+			log.error("jaas cache missing!");
+			cacheResult = NOT_CACHED;
 		}
 
-		if(GRANTED.equals(cacheResult))
+		if (GRANTED.equals(cacheResult))
 		{
-			if(log.isDebugEnabled())
-				log.debug(permission + " granted (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
+			log.debug("{} granted (cache lookup) {}ms", permission, System.currentTimeMillis()
+				- start);
 		}
 		else
 		{
-			if(DENIED.equals(cacheResult))
+			if (DENIED.equals(cacheResult))
 			{
-				if(log.isDebugEnabled())
-					log.debug(permission + " denied (cache lookup) " + (System.currentTimeMillis() - start) + " ms");
-				throw new SecurityException( permission.getName() + " DENIED");
+				log.debug("{} denied (cache lookup) {}ms", permission, System.currentTimeMillis()
+					- start);
+				throw new SecurityException(permission.getName() + " DENIED");
 			}
 			try
 			{
 				AccessAction action = new AccessAction(permission);
 				Subject.doAsPrivileged(subject, action, null);
-				// TODO does this action modify the supplied context and should we have a different context per user or
-				// is the original context unchanged?
-	
-				if(log.isDebugEnabled())
-					log.debug(permission + " granted " + (System.currentTimeMillis() - start) + " ms");
-				if(cache != null)
+
+				// TODO does this action modify the supplied context and should we have a
+				// different context per user or is the original context unchanged?
+
+				log.debug("{} granted {}ms", permission, System.currentTimeMillis() - start);
+
+				if (cache != null)
 					cache.put(permission, GRANTED);
 			}
 			catch (SecurityException e)
 			{
-				if(log.isDebugEnabled())
-					log.debug(permission + " denied " + (System.currentTimeMillis() - start) + " ms", e);
-				if(cache != null)
+				log.debug(permission + " denied " + (System.currentTimeMillis() - start) + " ms", e);
+
+				if (cache != null)
 					cache.put(permission, DENIED);
 				throw e;
 			}
 		}
 
-		// if we get here and return normally, the user was authorised
-		// otherwise a security exception will be thrown	
+		// if we get here and return normally, the user was authorized
+		// otherwise a security exception will be thrown
 	}
 
 	/**
 	 * construct and initialise with URL to configDocument
-	 * @param configURL url to configuration
-	 * @param applicationname logical name of the application. 
-	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
-	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
-	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
-	 * 		IN YOUR POLICY FILE, LIKE: codeBase "${oeaccess.appName}".
-	 * 		THE GIVEN APPNAME WILL BE SET AS A SYSTEM PROPERTY IN THE FORM:
-	 * 		"oeaccess.codesource." + appName
+	 * 
+	 * @param applicationname
+	 *            logical name of the application. NOTE: FOR EACH APPLICATION IN THE SAME
+	 *            VM (IN PARTICULAR WEBAPPS) USE A UNIQUE NAME FOR PROPERTY appName OR YOU
+	 *            CAN HAVE CONFLICTS. ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS
+	 *            NAME AS A SUBSTITUTE IN YOUR POLICY FILE, LIKE: codeBase
+	 *            "${oeaccess.appName}". THE GIVEN APPNAME WILL BE SET AS A SYSTEM
+	 *            PROPERTY IN THE FORM: "oeaccess.codesource." + appName
 	 * @param configDocument
 	 * @throws ConfigException
 	 */
-	public static void reload(String configDocument, String applicationname) 
-		throws ConfigException
+	public static void reload(String configDocument, String applicationname) throws ConfigException
 	{
 		setAppNameSystemProperty(applicationname);
 		Properties configuration = loadConfigFromUrl(configDocument);
 		internalInit(configuration, null);
 	}
-	
+
 	/**
-	 * construct and initialise with URL to configDocument 
-	 * and get the appName from properties with key applicationname
-	 * @param configURL url to configuration
+	 * construct and initialise with URL to configDocument and get the appName from
+	 * properties with key applicationname
+	 * 
 	 * @param configDocument
 	 * @throws ConfigException
 	 */
-	public static void reload(String configDocument) 
-		throws ConfigException
+	public static void reload(String configDocument) throws ConfigException
 	{
 		Properties configuration = loadConfigFromUrl(configDocument);
-		setAppNameSystemProperty(configuration.getProperty("applicationname"));	
+		setAppNameSystemProperty(configuration.getProperty("applicationname"));
 		internalInit(configuration, null);
 	}
 
 	/**
 	 * construct and initialise with URL to configDocument
-	 * @param configURL url to configuration
-	 * @param applicationname logical name of the application. 
-	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
-	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
-	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
-	 * 		IN YOUR POLICY FILE, LIKE: codeBase "${oeaccess.appName}".
-	 * 		THE GIVEN APPNAME WILL BE SET AS A SYSTEM PROPERTY IN THE FORM:
-	 * 		"oeaccess.codesource." + appName
+	 * 
+	 * @param configURL
+	 *            url to configuration
+	 * @param applicationname
+	 *            logical name of the application. NOTE: FOR EACH APPLICATION IN THE SAME
+	 *            VM (IN PARTICULAR WEBAPPS) USE A UNIQUE NAME FOR PROPERTY appName OR YOU
+	 *            CAN HAVE CONFLICTS. ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS
+	 *            NAME AS A SUBSTITUTE IN YOUR POLICY FILE, LIKE: codeBase
+	 *            "${oeaccess.appName}". THE GIVEN APPNAME WILL BE SET AS A SYSTEM
+	 *            PROPERTY IN THE FORM: "oeaccess.codesource." + appName
 	 * @throws ConfigException
 	 */
 	public static void reload(URL configURL, String applicationname) throws ConfigException
@@ -252,11 +227,13 @@ public final class AccessHelper
 		Properties configuration = loadConfigFromUrl(configURL);
 		internalInit(configuration, null);
 	}
-	
+
 	/**
-	 * construct and initialise with URL to configDocument
-	 * and get the appName from properties with key applicationname
-	 * @param configURL url to configuration
+	 * construct and initialise with URL to configDocument and get the appName from
+	 * properties with key applicationname
+	 * 
+	 * @param configURL
+	 *            url to configuration
 	 * @throws ConfigException
 	 */
 	public static void reload(URL configURL) throws ConfigException
@@ -268,84 +245,79 @@ public final class AccessHelper
 
 	/**
 	 * construct and initialise within a servlet context
-	 * @param configURL url to configuration
-	 * @param applicationname logical name of the application. 
-	 * 	NOTE: FOR EACH APPLICATION IN THE SAME VM (IN PARTICULAR WEBAPPS) USE
-	 * 		A UNIQUE NAME FOR PROPERTY appName OR YOU CAN HAVE CONFLICTS.
-	 * 		ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS NAME AS A SUBSTITUTE
-	 * 		IN YOUR POLICY FILE, LIKE: codeBase "${oeaccess.codesource.appName}".
-	 * 		THE GIVEN APPNAME WILL BE SET AS A SYSTEM PROPERTY IN THE FORM:
-	 * 		"oeaccess.codesource." + appName
+	 * 
+	 * @param applicationname
+	 *            logical name of the application. NOTE: FOR EACH APPLICATION IN THE SAME
+	 *            VM (IN PARTICULAR WEBAPPS) USE A UNIQUE NAME FOR PROPERTY appName OR YOU
+	 *            CAN HAVE CONFLICTS. ALSO, YOU CAN - AND ARE WISE TO DO SO - USE THIS
+	 *            NAME AS A SUBSTITUTE IN YOUR POLICY FILE, LIKE: codeBase
+	 *            "${oeaccess.codesource.appName}". THE GIVEN APPNAME WILL BE SET AS A
+	 *            SYSTEM PROPERTY IN THE FORM: "oeaccess.codesource." + appName
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
-	public static void reload(ServletContext servletContext, String applicationname) 
-		throws ConfigException
+	public static void reload(ServletContext servletContext, String applicationname)
+			throws ConfigException
 	{
 		setAppNameSystemProperty(applicationname);
 		Properties configuration = loadConfigInWebApp(servletContext);
 		internalInit(configuration, servletContext);
 	}
-	
+
 	/**
-	 * construct and initialise within a servlet context
-	 * and get the appName from properties with key applicationname
-	 * @param configURL url to configuration
+	 * construct and initialise within a servlet context and get the appName from
+	 * properties with key applicationname
+	 * 
 	 * @param servletContext
 	 * @throws ConfigException
 	 */
-	public static void reload(ServletContext servletContext) 
-		throws ConfigException
+	public static void reload(ServletContext servletContext) throws ConfigException
 	{
 		Properties configuration = loadConfigInWebApp(servletContext);
 		setAppNameSystemProperty(configuration.getProperty("applicationname"));
 		internalInit(configuration, servletContext);
 	}
-	
+
 	/**
 	 * set codesource of this instance of openedge-access as system property in form:
 	 * "oeaccess.codesource." + applicationname
-	 * @param appName logical application name
+	 * 
+	 * @param applicationname
+	 *            logical application name
 	 * @throws ConfigException
 	 */
-	protected static void setAppNameSystemProperty(String applicationname) 
-		throws ConfigException
+	protected static void setAppNameSystemProperty(String applicationname) throws ConfigException
 	{
-		if(applicationname != null)
+		if (applicationname != null)
 		{
 			String key = "oeaccess.codesource." + applicationname;
-			String check = System.getProperty(applicationname);	
-			if(check != null)
+			String check = System.getProperty(applicationname);
+			if (check != null)
 			{
-				throw new ConfigException(
-					"application " + key + " was allready defined in VM");
+				throw new ConfigException("application " + key + " was allready defined in VM");
 			}
 			ProtectionDomain pd = AccessHelper.class.getProtectionDomain();
 			CodeSource cs = pd.getCodeSource();
-			
-			if(cs != null && (cs.getLocation() != null))
+
+			if (cs != null && (cs.getLocation() != null))
 			{
 				URL csurl = cs.getLocation();
 				System.setProperty(key, csurl.toString());
-				log.info("setting applicationname to " + applicationname +
-					"; " + key + " will be expanded to " + csurl);	
+				log.info("setting applicationname to " + applicationname + "; " + key
+					+ " will be expanded to " + csurl);
 			}
 			else
 			{
-				log.warn("CodeSource could not be appointed. This makes " +
-					"substitution in the policy file impossible, and thus it is not safe " +
-					"to use openedge-access for more than one webapp in this server/ VM!");
-			}	
+				log.warn("CodeSource could not be appointed. This makes "
+					+ "substitution in the policy file impossible, and thus it is not safe "
+					+ "to use openedge-access for more than one webapp in this server/ VM!");
+			}
 		}
 	}
 
-	/* do 'real' initialisation */
-	private static void internalInit(
-		Properties configuration,
-		ServletContext servletContext) 
-		throws ConfigException
+	private static void internalInit(Properties configuration, ServletContext servletContext)
+			throws ConfigException
 	{
-
 		// a client of this library does not have to configure the security
 		// element. For instance, it could be configured in the JDK settings
 		// directely instead
@@ -368,7 +340,7 @@ public final class AccessHelper
 			}
 		}
 
-		//	add policy file (with policies) if property exists
+		// add policy file (with policies) if property exists
 		String policyFile = configuration.getProperty("policies");
 		if (policyFile != null)
 		{
@@ -388,8 +360,9 @@ public final class AccessHelper
 	}
 
 	/**
-	 * add the configured LoginModule implementation to the list of LoginModules
-	 * known by the security environment
+	 * add the configured LoginModule implementation to the list of LoginModules known by
+	 * the security environment
+	 * 
 	 * @param convertedJaasConfig
 	 */
 	protected static void addLoginModule(String convertedJaasConfig)
@@ -398,18 +371,16 @@ public final class AccessHelper
 		boolean exists = false;
 		int n = 1;
 		String config_url;
-		while ((config_url = java.security.Security.getProperty(
-					"login.config.url." + n)) != null)
+		while ((config_url = java.security.Security.getProperty("login.config.url." + n)) != null)
 		{
 
 			if (config_url.equalsIgnoreCase(convertedJaasConfig))
 			{
 				exists = true;
-				
-				log.warn("login url " + convertedJaasConfig + 
-						 " is allready in the security environmoment (element " +
-						 n + ")");
-				
+
+				log.warn("login url " + convertedJaasConfig
+					+ " is allready in the security environmoment (element " + n + ")");
+
 				break;
 			}
 			n++;
@@ -418,15 +389,16 @@ public final class AccessHelper
 		{
 			String configKey = ("login.config.url." + n);
 			java.security.Security.setProperty(configKey, convertedJaasConfig);
-			log.info("added " + configKey + "=" + convertedJaasConfig 
+			log.info("added " + configKey + "=" + convertedJaasConfig
 				+ " to java.security.Security properties");
-				
+
 		}
 
 	}
 
 	/**
 	 * add our own policy file to the security environment
+	 * 
 	 * @param convertedPolicyURL
 	 */
 	protected static void addPolicies(String convertedPolicyURL)
@@ -436,16 +408,14 @@ public final class AccessHelper
 		boolean exists = false;
 		int n = 1;
 		String policy_url;
-		while ((policy_url = java.security.Security.getProperty(
-					"auth.policy.url." + n)) != null)
+		while ((policy_url = java.security.Security.getProperty("auth.policy.url." + n)) != null)
 		{
 
 			if (policy_url.equalsIgnoreCase(convertedPolicyURL))
 			{
 				exists = true;
-				log.warn("policy url " + convertedPolicyURL + 
-						 " allready is in the security environmoment (element " +
-						 n + ")");
+				log.warn("policy url " + convertedPolicyURL
+					+ " allready is in the security environmoment (element " + n + ")");
 				break;
 			}
 			n++;
@@ -454,14 +424,14 @@ public final class AccessHelper
 		{
 			String configKey = ("auth.policy.url." + n);
 			java.security.Security.setProperty(configKey, convertedPolicyURL);
-			log.info("added " + configKey + "=" + convertedPolicyURL 
+			log.info("added " + configKey + "=" + convertedPolicyURL
 				+ " to java.security.Security properties");
 		}
-		// reload the policy configuration to add our policies	
+		// reload the policy configuration to add our policies
 		try
 		{
 			Policy policy = Policy.getPolicy();
-			
+
 			log.info("refreshing Policy");
 			policy.refresh();
 
@@ -474,19 +444,17 @@ public final class AccessHelper
 
 	/**
 	 * load Properties
-	 * @return a loaded Properties object containing 
-	 * the configuration information.
+	 * 
+	 * @return a loaded Properties object containing the configuration information.
 	 */
-	protected static Properties loadConfigFromUrl(String configDocument) 
-		throws ConfigException
+	protected static Properties loadConfigFromUrl(String configDocument) throws ConfigException
 	{
 
 		try
 		{
 			java.net.URL configURL = convertToURL(configDocument, null);
 			if (configURL == null)
-				throw new ConfigException(configDocument + 
-						" should be a document but is empty");
+				throw new ConfigException(configDocument + " should be a document but is empty");
 			log.info("Loading config from " + configURL);
 
 			return internalLoad(configURL);
@@ -501,13 +469,11 @@ public final class AccessHelper
 	/**
 	 * @return a loaded Properties object containing the configuration information.
 	 */
-	protected static Properties loadConfigFromUrl(URL configURL) 
-		throws ConfigException
+	protected static Properties loadConfigFromUrl(URL configURL) throws ConfigException
 	{
 
 		if (configURL == null)
-			throw new ConfigException(configURL 
-				+ " should be a document but is empty");
+			throw new ConfigException(configURL + " should be a document but is empty");
 		log.info("Loading config from " + configURL);
 
 		return internalLoad(configURL);
@@ -516,13 +482,13 @@ public final class AccessHelper
 	/**
 	 * @return a loaded Properties object containing the configuration information.
 	 */
-	protected static Properties loadConfigInWebApp(ServletContext servletContext) 
-		throws ConfigException
+	protected static Properties loadConfigInWebApp(ServletContext servletContext)
+			throws ConfigException
 	{
 
 		try
 		{
-			String configFile = (String)servletContext.getAttribute(KEY_CONFIG_FILE);
+			String configFile = (String) servletContext.getAttribute(KEY_CONFIG_FILE);
 			if (configFile == null)
 				configFile = servletContext.getInitParameter(INITPARAM_CONFIG_FILE);
 			if (configFile == null)
@@ -530,8 +496,7 @@ public final class AccessHelper
 
 			java.net.URL configURL = convertToURL(configFile, servletContext);
 			if (configURL == null)
-				throw new ConfigException(
-					configFile + " should be a document but is empty");
+				throw new ConfigException(configFile + " should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());
 
 			return internalLoad(configURL);
@@ -563,16 +528,14 @@ public final class AccessHelper
 
 	/**
 	 * Interprets some absolute URLs as external paths, otherwise generates URL
-	 * appropriate for loading from internal webapp or, servletContext is null,
-	 * loading from the classpath.
+	 * appropriate for loading from internal webapp or, servletContext is null, loading
+	 * from the classpath.
 	 */
-	protected static URL convertToURL(String path, ServletContext servletContext) 
-		throws MalformedURLException
+	protected static URL convertToURL(String path, ServletContext servletContext)
+			throws MalformedURLException
 	{
 
-		if (path.startsWith("file:")
-			|| path.startsWith("http:")
-			|| path.startsWith("https:")
+		if (path.startsWith("file:") || path.startsWith("http:") || path.startsWith("https:")
 			|| path.startsWith("ftp:"))
 		{
 			return new URL(path);
@@ -592,20 +555,17 @@ public final class AccessHelper
 }
 
 /** action for checking permissions for a specific subject */
-class AccessAction implements PrivilegedAction
+class AccessAction implements PrivilegedAction<Permission>
 {
-
-	// permission to check on
 	private Permission permission;
 
-	/** construct with uri */
 	public AccessAction(Permission permission)
 	{
 		this.permission = permission;
 	}
 
-	/** run check */
-	public Object run()
+	@Override
+	public Permission run()
 	{
 		java.security.AccessController.checkPermission(permission);
 		return null;
