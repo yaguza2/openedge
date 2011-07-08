@@ -30,45 +30,22 @@
  */
 package nl.openedge.access;
 
-/**
- * ConfigExceptions are exceptions that are related to 
- * 
- * @author Eelco Hillenius
- */
 public class ConfigException extends Exception
 {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * construct 
-	 */
-	public ConfigException()
-	{
-		super();
-	}
-
-	/**
-	 * @param message
-	 */
 	public ConfigException(String message)
 	{
 		super(message);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public ConfigException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public ConfigException(Throwable cause)
 	{
 		super(cause);
 	}
-
 }
