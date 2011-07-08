@@ -1,67 +1,38 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.access;
 
-import java.io.Serializable;
 import java.io.IOException;
-import java.security.*;
+import java.io.Serializable;
+import java.security.BasicPermission;
+import java.security.Permission;
+import java.security.PermissionCollection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
- * <P>
- * The name is the name of the custom permission. The naming
- * convention follows the  hierarchical property naming convention.
- * Also, an asterisk
- * may appear at the end of the name, following a ".", or by itself, to
- * signify a wildcard match. For example: "myaction.*" or "*" is valid,
- * "*myaction" or "a*b" is not valid.
+ * The name is the name of the custom permission. The naming convention follows the
+ * hierarchical property naming convention. Also, an asterisk may appear at the end of the
+ * name, following a ".", or by itself, to signify a wildcard match. For example:
+ * "myaction.*" or "*" is valid, "*myaction" or "a*b" is not valid.
  * <P>
  * <P>
- * The actions to be granted are passed to the constructor in a string containing 
- * a list of one or more comma-separated keywords. The possible keywords are
- * "read", "write", "execute", and "delete". Their meaning is defined as follows:
+ * The actions to be granted are passed to the constructor in a string containing a list
+ * of one or more comma-separated keywords. The possible keywords are "read", "write",
+ * "execute", and "delete". Their meaning is defined as follows:
  * <P>
- * <DL> 
- *    <DT> read <DD> read permission
- *    <DT> write <DD> write permission
- *    <DT> execute 
- *    <DD> execute permission.
- *    <DT> delete
- *    <DD> delete permission.
+ * <DL>
+ * <DT>read
+ * <DD>read permission
+ * <DT>write
+ * <DD>write permission
+ * <DT>execute
+ * <DD>execute permission.
+ * <DT>delete
+ * <DD>delete permission.
  * </DL>
  * <P>
  * The actions string is converted to lowercase before processing.
  * <P>
- *
+ * 
  * @see java.security.Permission
  * @see java.security.Permissions
  * @see java.security.PermissionCollection
@@ -69,22 +40,25 @@ import java.util.Hashtable;
  * 
  * @author E.F. Hillenius
  */
-
 public final class NamedActionPermission extends BasicPermission
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Execute action.
 	 */
 	private final static int EXECUTE = 0x1;
+
 	/**
 	 * Write action.
 	 */
 	private final static int WRITE = 0x2;
+
 	/**
 	 * Read action.
 	 */
 	private final static int READ = 0x4;
+
 	/**
 	 * Delete action.
 	 */
@@ -94,6 +68,7 @@ public final class NamedActionPermission extends BasicPermission
 	 * All actions (read,write,execute,delete)
 	 */
 	private final static int ALL = READ | WRITE | EXECUTE | DELETE;
+
 	/**
 	 * No actions.
 	 */
@@ -101,52 +76,51 @@ public final class NamedActionPermission extends BasicPermission
 
 	/**
 	 * The actions mask.
-	 *
 	 */
 	private transient int mask;
 
 	/**
 	 * The actions string.
-	 *
-	 * @serial 
+	 * 
+	 * @serial
 	 */
-	private String actions; // Left null as long as possible, then
-	// created and re-used in the getAction function.
+	private String actions;
+
+	// Left null as long as possible, then created and re-used in the getAction function.
 
 	/**
-	 * initialize a NamedActionPermission object. Common to all constructors.
-	 * Also called during de-serialization.
-	 *
-	 * @param mask the actions mask to use.
-	 *
+	 * initialize a NamedActionPermission object. Common to all constructors. Also called
+	 * during de-serialization.
+	 * 
+	 * @param actionsMask
+	 *            the actions mask to use.
 	 */
 
-	private void init(int mask)
+	private void init(int actionsMask)
 	{
-
-		if ((mask & ALL) != mask)
+		if ((actionsMask & ALL) != actionsMask)
 			throw new IllegalArgumentException("invalid actions mask");
 
-		if (mask == NONE)
+		if (actionsMask == NONE)
 			throw new IllegalArgumentException("invalid actions mask");
 
 		if (getName() == null)
 			throw new NullPointerException("name can't be null");
 
-		this.mask = mask;
+		this.mask = actionsMask;
 	}
 
 	/**
-	 * Creates a new NamedActionPermission object with the specified name.
-	 * The name is the name of the custom action, and
-	 * <i>actions</i> contains a comma-separated list of the
-	 * desired actions granted on the property. Possible actions are
-	 * "read" and "write".
-	 *
-	 * @param name the name of the NamedActionPermission.
-	 * @param actions the actions string.
+	 * Creates a new NamedActionPermission object with the specified name. The name is the
+	 * name of the custom action, and <i>actions</i> contains a comma-separated list of
+	 * the desired actions granted on the property. Possible actions are "read" and
+	 * "write".
+	 * 
+	 * @param name
+	 *            the name of the NamedActionPermission.
+	 * @param actions
+	 *            the actions string.
 	 */
-
 	public NamedActionPermission(String name, String actions)
 	{
 		super(name, actions);
@@ -154,28 +128,31 @@ public final class NamedActionPermission extends BasicPermission
 	}
 
 	/**
-	 * Checks if this NamedActionPermission object "implies" the specified
-	 * permission.
+	 * Checks if this NamedActionPermission object "implies" the specified permission.
 	 * <P>
-	 * More specifically, this method returns true if:<p>
+	 * More specifically, this method returns true if:
+	 * <p>
 	 * <ul>
-	 * <li> <i>p</i> is an instanceof NamedActionPermission,<p>
-	 * <li> <i>p</i>'s actions are a subset of this
-	 * object's actions, and <p>
-	 * <li> <i>p</i>'s name is implied by this object's
-	 *      name. For example, "myaction.*" implies "myaction.anotherone".
+	 * <li><i>p</i> is an instanceof NamedActionPermission,
+	 * <p>
+	 * <li><i>p</i>'s actions are a subset of this object's actions, and
+	 * <p>
+	 * <li><i>p</i>'s name is implied by this object's name. For example, "myaction.*"
+	 * implies "myaction.anotherone".
 	 * </ul>
-	 * @param p the permission to check against.
-	 *
-	 * @return true if the specified permission is implied by this object,
-	 * false if not.
+	 * 
+	 * @param p
+	 *            the permission to check against.
+	 * 
+	 * @return true if the specified permission is implied by this object, false if not.
 	 */
+	@Override
 	public boolean implies(Permission p)
 	{
 		if (!(p instanceof NamedActionPermission))
 			return false;
 
-		NamedActionPermission that = (NamedActionPermission)p;
+		NamedActionPermission that = (NamedActionPermission) p;
 
 		// we get the effective mask. i.e., the "and" of this and that.
 		// They must be equal to that.mask for implies to return true.
@@ -184,13 +161,16 @@ public final class NamedActionPermission extends BasicPermission
 	}
 
 	/**
-	 * Checks two NamedActionPermission objects for equality. Checks that <i>obj</i> is
-	 * a NamedActionPermission, and has the same name and actions as this object.
+	 * Checks two NamedActionPermission objects for equality. Checks that <i>obj</i> is a
+	 * NamedActionPermission, and has the same name and actions as this object.
 	 * <P>
-	 * @param obj the object we are testing for equality with this object.
-	 * @return true if obj is a NamedActionPermission, and has the same name and
-	 * actions as this NamedActionPermission object.
+	 * 
+	 * @param obj
+	 *            the object we are testing for equality with this object.
+	 * @return true if obj is a NamedActionPermission, and has the same name and actions
+	 *         as this NamedActionPermission object.
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj == this)
@@ -199,20 +179,19 @@ public final class NamedActionPermission extends BasicPermission
 		if (!(obj instanceof NamedActionPermission))
 			return false;
 
-		NamedActionPermission that = (NamedActionPermission)obj;
+		NamedActionPermission that = (NamedActionPermission) obj;
 
 		return (this.mask == that.mask) && (this.getName().equals(that.getName()));
 	}
 
 	/**
-	 * Returns the hash code value for this object.
-	 * The hash code used is the hash code of this permissions name, that is,
-	 * <code>getName().hashCode()</code>, where <code>getName</code> is
-	 * from the Permission superclass.
-	 *
+	 * Returns the hash code value for this object. The hash code used is the hash code of
+	 * this permissions name, that is, <code>getName().hashCode()</code>, where
+	 * <code>getName</code> is from the Permission superclass.
+	 * 
 	 * @return a hash code value for this object.
 	 */
-
+	@Override
 	public int hashCode()
 	{
 		return this.getName().hashCode();
@@ -220,13 +199,13 @@ public final class NamedActionPermission extends BasicPermission
 
 	/**
 	 * Converts an actions String to an actions mask.
-	 *
-	 * @param action the action string.
+	 * 
+	 * @param action
+	 *            the action string.
 	 * @return the actions mask.
 	 */
 	private static int getMask(String actions)
 	{
-
 		int mask = NONE;
 
 		if (actions == null)
@@ -245,56 +224,42 @@ public final class NamedActionPermission extends BasicPermission
 			char c;
 
 			// skip whitespace
-			while ((i != -1) && ((c = a[i]) == ' ' || c == '\r' || c == '\n' || c == '\f' || c == '\t'))
+			while ((i != -1)
+				&& ((c = a[i]) == ' ' || c == '\r' || c == '\n' || c == '\f' || c == '\t'))
 				i--;
 
 			// check for the known strings
 			int matchlen;
 
-			if (i >= 3
-				&& (a[i - 3] == 'r' || a[i - 3] == 'R')
-				&& (a[i - 2] == 'e' || a[i - 2] == 'E')
-				&& (a[i - 1] == 'a' || a[i - 1] == 'A')
+			if (i >= 3 && (a[i - 3] == 'r' || a[i - 3] == 'R')
+				&& (a[i - 2] == 'e' || a[i - 2] == 'E') && (a[i - 1] == 'a' || a[i - 1] == 'A')
 				&& (a[i] == 'd' || a[i] == 'D'))
 			{
 				matchlen = 4;
 				mask |= READ;
 
 			}
-			else if (
-				i >= 4
-					&& (a[i - 4] == 'w' || a[i - 4] == 'W')
-					&& (a[i - 3] == 'r' || a[i - 3] == 'R')
-					&& (a[i - 2] == 'i' || a[i - 2] == 'I')
-					&& (a[i - 1] == 't' || a[i - 1] == 'T')
-					&& (a[i] == 'e' || a[i] == 'E'))
+			else if (i >= 4 && (a[i - 4] == 'w' || a[i - 4] == 'W')
+				&& (a[i - 3] == 'r' || a[i - 3] == 'R') && (a[i - 2] == 'i' || a[i - 2] == 'I')
+				&& (a[i - 1] == 't' || a[i - 1] == 'T') && (a[i] == 'e' || a[i] == 'E'))
 			{
 				matchlen = 5;
 				mask |= WRITE;
 
 			}
-			else if (
-				i >= 6
-					&& (a[i - 6] == 'e' || a[i - 6] == 'E')
-					&& (a[i - 5] == 'x' || a[i - 5] == 'X')
-					&& (a[i - 4] == 'e' || a[i - 4] == 'E')
-					&& (a[i - 3] == 'c' || a[i - 3] == 'C')
-					&& (a[i - 2] == 'u' || a[i - 2] == 'U')
-					&& (a[i - 1] == 't' || a[i - 1] == 'T')
-					&& (a[i] == 'e' || a[i] == 'E'))
+			else if (i >= 6 && (a[i - 6] == 'e' || a[i - 6] == 'E')
+				&& (a[i - 5] == 'x' || a[i - 5] == 'X') && (a[i - 4] == 'e' || a[i - 4] == 'E')
+				&& (a[i - 3] == 'c' || a[i - 3] == 'C') && (a[i - 2] == 'u' || a[i - 2] == 'U')
+				&& (a[i - 1] == 't' || a[i - 1] == 'T') && (a[i] == 'e' || a[i] == 'E'))
 			{
 				matchlen = 7;
 				mask |= EXECUTE;
 
 			}
-			else if (
-				i >= 5
-					&& (a[i - 5] == 'd' || a[i - 5] == 'D')
-					&& (a[i - 4] == 'e' || a[i - 4] == 'E')
-					&& (a[i - 3] == 'l' || a[i - 3] == 'L')
-					&& (a[i - 2] == 'e' || a[i - 2] == 'E')
-					&& (a[i - 1] == 't' || a[i - 1] == 'T')
-					&& (a[i] == 'e' || a[i] == 'E'))
+			else if (i >= 5 && (a[i - 5] == 'd' || a[i - 5] == 'D')
+				&& (a[i - 4] == 'e' || a[i - 4] == 'E') && (a[i - 3] == 'l' || a[i - 3] == 'L')
+				&& (a[i - 2] == 'e' || a[i - 2] == 'E') && (a[i - 1] == 't' || a[i - 1] == 'T')
+				&& (a[i] == 'e' || a[i] == 'E'))
 			{
 				matchlen = 6;
 				mask |= DELETE;
@@ -307,22 +272,22 @@ public final class NamedActionPermission extends BasicPermission
 			}
 
 			// make sure we didn't just match the tail of a word
-			// like "ackbarfaccept".  Also, skip to the comma.
+			// like "ackbarfaccept". Also, skip to the comma.
 			boolean seencomma = false;
 			while (i >= matchlen && !seencomma)
 			{
 				switch (a[i - matchlen])
 				{
-					case ',' :
+					case ',':
 						seencomma = true;
-						/*FALLTHROUGH*/
-					case ' ' :
-					case '\r' :
-					case '\n' :
-					case '\f' :
-					case '\t' :
+						/* FALLTHROUGH */
+					case ' ':
+					case '\r':
+					case '\n':
+					case '\f':
+					case '\t':
 						break;
-					default :
+					default:
 						throw new IllegalArgumentException("invalid permission: " + actions);
 				}
 				i--;
@@ -336,10 +301,9 @@ public final class NamedActionPermission extends BasicPermission
 	}
 
 	/**
-	 * Return the canonical string representation of the actions.
-	 * Always returns present actions in the following order: 
-	 * read, write, execute, delete.
-	 *
+	 * Return the canonical string representation of the actions. Always returns present
+	 * actions in the following order: read, write, execute, delete.
+	 * 
 	 * @return the canonical string representation of the actions.
 	 */
 	static String getActions(int mask)
@@ -384,14 +348,14 @@ public final class NamedActionPermission extends BasicPermission
 	}
 
 	/**
-	 * Returns the "canonical string representation" of the actions.
-	 * That is, this method always returns present actions in the following order:
-	 * read, write. For example, if this NamedActionPermission object
-	 * allows both write and read actions, a call to <code>getActions</code>
-	 * will return the string "read,write".
-	 *
+	 * Returns the "canonical string representation" of the actions. That is, this method
+	 * always returns present actions in the following order: read, write. For example, if
+	 * this NamedActionPermission object allows both write and read actions, a call to
+	 * <code>getActions</code> will return the string "read,write".
+	 * 
 	 * @return the canonical string representation of the actions.
 	 */
+	@Override
 	public String getActions()
 	{
 		if (actions == null)
@@ -401,37 +365,32 @@ public final class NamedActionPermission extends BasicPermission
 	}
 
 	/**
-	 * Return the current action mask.
-	 * Used by the AccessPermissionCollection
-	 *
+	 * Return the current action mask. Used by the AccessPermissionCollection
+	 * 
 	 * @return the actions mask.
 	 */
-
 	int getMask()
 	{
 		return mask;
 	}
 
 	/**
-	 * Returns a new PermissionCollection object for storing
-	 * NamedActionPermission objects.
+	 * Returns a new PermissionCollection object for storing NamedActionPermission
+	 * objects.
 	 * <p>
-	 *
-	 * @return a new PermissionCollection object suitable for storing
-	 * AccessPermissions.
+	 * 
+	 * @return a new PermissionCollection object suitable for storing AccessPermissions.
 	 */
-
+	@Override
 	public PermissionCollection newPermissionCollection()
 	{
 		return new AccessPermissionCollection();
 	}
 
 	/**
-	 * WriteObject is called to save the state of the NamedActionPermission
-	 * to a stream. The actions are serialized, and the superclass
-	 * takes care of the name.
+	 * WriteObject is called to save the state of the NamedActionPermission to a stream.
+	 * The actions are serialized, and the superclass takes care of the name.
 	 */
-
 	private synchronized void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
 		// Write out the actions. The superclass takes care of the name
@@ -442,10 +401,11 @@ public final class NamedActionPermission extends BasicPermission
 	}
 
 	/**
-	 * readObject is called to restore the state of the NamedActionPermission from
-	 * a stream.
+	 * readObject is called to restore the state of the NamedActionPermission from a
+	 * stream.
 	 */
-	private synchronized void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
+	private synchronized void readObject(java.io.ObjectInputStream s) throws IOException,
+			ClassNotFoundException
 	{
 		// Read in the action, then initialize the rest
 		s.defaultReadObject();
@@ -454,66 +414,65 @@ public final class NamedActionPermission extends BasicPermission
 }
 
 /**
- * A AccessPermissionCollection stores a set of NamedActionPermission
- * permissions.
- *
+ * A AccessPermissionCollection stores a set of NamedActionPermission permissions.
+ * 
  * @see java.security.Permission
  * @see java.security.Permissions
  * @see java.security.PermissionCollection
- *
+ * 
  * @serial include
  */
 final class AccessPermissionCollection extends PermissionCollection implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Table of permissions.
-	 *
+	 * 
 	 * @serial
 	 */
-	private Hashtable permissions;
+	private Hashtable<String, Permission> permissions;
 
 	/**
 	 * Boolean saying if "*" is in the collection.
-	 *
+	 * 
 	 * @serial
 	 */
 	private boolean all_allowed;
 
 	/**
 	 * Create an empty AccessPermissions object.
-	 *
 	 */
-
 	public AccessPermissionCollection()
 	{
-		permissions = new Hashtable(32); // Capacity for default policy
+		permissions = new Hashtable<String, Permission>();
 		all_allowed = false;
 	}
 
 	/**
-	 * Adds a permission to the AccessPermissions. The key for the hash is
-	 * the name.
-	 *
-	 * @param permission the Permission object to add.
-	 *
-	 * @exception IllegalArgumentException - if the permission is not a
-	 *                                       NamedActionPermission
-	 *
-	 * @exception SecurityException - if this AccessPermissionCollection
-	 *                                object has been marked readonly
+	 * Adds a permission to the AccessPermissions. The key for the hash is the name.
+	 * 
+	 * @param permission
+	 *            the Permission object to add.
+	 * 
+	 * @exception IllegalArgumentException
+	 *                - if the permission is not a NamedActionPermission
+	 * 
+	 * @exception SecurityException
+	 *                - if this AccessPermissionCollection object has been marked readonly
 	 */
-
+	@Override
 	public void add(Permission permission)
 	{
 		if (!(permission instanceof NamedActionPermission))
 			throw new IllegalArgumentException("invalid permission: " + permission);
 		if (isReadOnly())
-			throw new SecurityException("attempt to add a Permission to a readonly PermissionCollection");
+			throw new SecurityException(
+				"attempt to add a Permission to a readonly PermissionCollection");
 
-		NamedActionPermission pp = (NamedActionPermission)permission;
+		NamedActionPermission pp = (NamedActionPermission) permission;
 
-		NamedActionPermission existing = (NamedActionPermission)permissions.get(pp.getName());
+		NamedActionPermission existing = (NamedActionPermission) permissions.get(pp.getName());
 
 		if (existing != null)
 		{
@@ -540,21 +499,22 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 	}
 
 	/**
-	 * Check and see if this set of permissions implies the permissions
-	 * expressed in "permission".
-	 *
-	 * @param p the Permission object to compare
-	 *
-	 * @return true if "permission" is a proper subset of a permission in
-	 * the set, false if not.
+	 * Check and see if this set of permissions implies the permissions expressed in
+	 * "permission".
+	 * 
+	 * @param permission
+	 *            the Permission object to compare
+	 * 
+	 * @return true if "permission" is a proper subset of a permission in the set, false
+	 *         if not.
 	 */
-
+	@Override
 	public boolean implies(Permission permission)
 	{
 		if (!(permission instanceof NamedActionPermission))
 			return false;
 
-		NamedActionPermission pp = (NamedActionPermission)permission;
+		NamedActionPermission pp = (NamedActionPermission) permission;
 		NamedActionPermission x;
 
 		int desired = pp.getMask();
@@ -563,7 +523,7 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 		// short circuit if the "*" Permission was added
 		if (all_allowed)
 		{
-			x = (NamedActionPermission)permissions.get("*");
+			x = (NamedActionPermission) permissions.get("*");
 			if (x != null)
 			{
 				effective |= x.getMask();
@@ -577,9 +537,9 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 		// name looking for matches on a.b.*
 
 		String name = pp.getName();
-		//System.out.println("check "+name);
+		// System.out.println("check "+name);
 
-		x = (NamedActionPermission)permissions.get(name);
+		x = (NamedActionPermission) permissions.get(name);
 
 		if (x != null)
 		{
@@ -598,8 +558,8 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 		{
 
 			name = name.substring(0, last + 1) + "*";
-			//System.out.println("check "+name);
-			x = (NamedActionPermission)permissions.get(name);
+			// System.out.println("check "+name);
+			x = (NamedActionPermission) permissions.get(name);
 
 			if (x != null)
 			{
@@ -616,13 +576,12 @@ final class AccessPermissionCollection extends PermissionCollection implements S
 	}
 
 	/**
-	 * Returns an enumeration of all the NamedActionPermission objects in the
-	 * container.
-	 *
+	 * Returns an enumeration of all the NamedActionPermission objects in the container.
+	 * 
 	 * @return an enumeration of all the NamedActionPermission objects.
 	 */
-
-	public Enumeration elements()
+	@Override
+	public Enumeration<Permission> elements()
 	{
 		return permissions.elements();
 	}
