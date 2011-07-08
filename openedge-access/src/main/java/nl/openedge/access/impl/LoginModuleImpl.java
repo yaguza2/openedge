@@ -140,15 +140,14 @@ public final class LoginModuleImpl implements LoginModule, Serializable
 	 * @see javax.security.auth.spi.LoginModule#initialize(javax.security.auth.Subject,
 	 *      javax.security.auth.callback.CallbackHandler, java.util.Map, java.util.Map)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
-	public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState,
-			Map config)
+	public void initialize(Subject s, CallbackHandler handler, Map state, Map config)
 	{
 		// save the initial state
-		this.callbackHandler = callbackHandler;
-		this.subject = subject;
-		this.sharedState = sharedState;
+		this.subject = s;
+		this.callbackHandler = handler;
+		this.sharedState = state;
 		this.options = config;
 
 		String userManagerAlias = (String) config.get(USER_MANAGER_ALIAS);
@@ -344,10 +343,11 @@ public final class LoginModuleImpl implements LoginModule, Serializable
 	 * @exception Exception
 	 *                if the validation fails.
 	 */
+	@SuppressWarnings("hiding")
 	protected boolean validate(String username, char[] password) throws Exception
 	{
 		boolean passwordMatch = false;
-		UserPrincipal user = (UserPrincipal) userManager.getUser(username);
+		UserPrincipal user = userManager.getUser(username);
 
 		if (user == null)
 		{
