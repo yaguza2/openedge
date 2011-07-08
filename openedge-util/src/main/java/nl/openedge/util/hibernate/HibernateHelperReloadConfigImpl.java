@@ -19,11 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * NB: Deze class niet gebruiken: bij enig gebruik leidt dat tot OutOfMemoryErrors.
  * HibernateHelper geeft toegang tot Hibernate functionaliteit.
  */
+@Deprecated
 public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 {
-
 	/**
 	 * De standaard flush mode waarmee sessies worden geopend.
 	 */
@@ -42,12 +43,12 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	/**
 	 * huidige factory voor Thread.
 	 */
-	protected static ThreadLocal factoryHolder = new ThreadLocal();
+	protected static ThreadLocal<SessionFactory> factoryHolder = new ThreadLocal<SessionFactory>();
 
 	/**
 	 * huidige session voor Thread.
 	 */
-	protected static ThreadLocal sessionHolder = new ThreadLocal();
+	protected static ThreadLocal<Session> sessionHolder = new ThreadLocal<Session>();
 
 	/**
 	 * Set FlushMode voor sessies. Standaard is COMMIT Zie Hibernate documentatie voor
@@ -72,11 +73,10 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	}
 
 	/**
-	 * @throws Exception
 	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#init()
 	 */
 	@Override
-	public void init() throws ConfigException
+	public void init()
 	{
 		// test een keer
 		getSessionFactory();
@@ -185,7 +185,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	@Override
 	public void closeSession() throws HibernateException
 	{
-		Session session = (Session) sessionHolder.get();
+		Session session = sessionHolder.get();
 		if (session != null)
 		{
 			session.close();
@@ -200,7 +200,7 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	 */
 	protected void closeFactory() throws HibernateException
 	{
-		SessionFactory sf = (SessionFactory) factoryHolder.get();
+		SessionFactory sf = factoryHolder.get();
 		if (sf != null)
 		{
 			sf.close();
@@ -246,26 +246,19 @@ public class HibernateHelperReloadConfigImpl implements HibernateHelperDelegate
 	@Override
 	public void disconnectSession() throws HibernateException
 	{
-		Session session = (Session) sessionHolder.get();
+		Session session = sessionHolder.get();
 		if (session != null)
 		{
 			session.disconnect();
 		}
 	}
 
-	/**
-	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setSession(net.sf.hibernate.Session,
-	 *      int)
-	 */
 	@Override
 	public void setSession(final Session session, final int actionForCurrentSession)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setSessionFactory(net.sf.hibernate.SessionFactory)
-	 */
 	@Override
 	public void setSessionFactory(final SessionFactory factory)
 	{

@@ -16,19 +16,20 @@ import java.util.Properties;
 
 import nl.openedge.util.URLHelper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class to be able to transparantly obtain and configure Hibernate sessions.
  * <p>
- * Before HibernateHelper can be used, HibernateHelper.init() should be called once. After this, you
- * can obtain the current session with HibernateHelper.getSession(); If you use the HibernateFiler
- * from this package, you do not need to (or better you should never) close the session.
+ * Before HibernateHelper can be used, HibernateHelper.init() should be called once. After
+ * this, you can obtain the current session with HibernateHelper.getSession(); If you use
+ * the HibernateFiler from this package, you do not need to (or better you should never)
+ * close the session.
  * </p>
  * <p>
  * If you want to close the session, preferably use HibernateHelper.closeSession().
@@ -39,9 +40,10 @@ import org.hibernate.classic.Session;
  * <p>
  * providing hibernatehelper.properties in the classpath root with properties:
  * <ul>
- * <li>delegate: the fully classified classname of the delegate implementation. The default
- * implementation is nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl. To override, eg:
- * 'delegate=nl.openedge.util.hibernate.HibernateHelperReloadConfigImpl'.</li>
+ * <li>delegate: the fully classified classname of the delegate implementation. The
+ * default implementation is nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl.
+ * To override, eg: 'delegate=nl.openedge.util.hibernate.HibernateHelperReloadConfigImpl'.
+ * </li>
  * <li>hibernateConfig: the url of the hibernate configuration to use.</li>
  * </ul>
  * </p>
@@ -51,11 +53,12 @@ import org.hibernate.classic.Session;
  * 'hibernatehelper.properties.hibernateConfig' for the hibernate configuration location.
  * </p>
  * <p>
- * Setting the config url like: HibernateHelper.setConfigURL(myUrl); Note that this will override
- * the hibernateConfig variable as well.
+ * Setting the config url like: HibernateHelper.setConfigURL(myUrl); Note that this will
+ * override the hibernateConfig variable as well.
  * </p>
  * <p>
- * By default, the configuration is loaded from the file 'hibernate.cfg.xml' in the classpath root.
+ * By default, the configuration is loaded from the file 'hibernate.cfg.xml' in the
+ * classpath root.
  * 
  * @author Eelco Hillenius
  */
@@ -77,7 +80,8 @@ public class HibernateHelper
 	 * key of the system property for setting the hibernate config. value =
 	 * hibernatehelper.properties.hibernateConfig
 	 */
-	public static final String SYSTEM_PROPERTY_HIBERNATE_CONFIG = "hibernatehelper.properties.hibernateConfig";
+	public static final String SYSTEM_PROPERTY_HIBERNATE_CONFIG =
+		"hibernatehelper.properties.hibernateConfig";
 
 	/**
 	 * key of the property (from file) for setting the delegate. value = delegate.
@@ -85,7 +89,8 @@ public class HibernateHelper
 	public static final String PROPERTY_DELEGATE = "delegate";
 
 	/**
-	 * key of the property (from file) for setting the hibernate config. value = hibernateConfig.
+	 * key of the property (from file) for setting the hibernate config. value =
+	 * hibernateConfig.
 	 */
 	public static final String PROPERTY_HIBERNATE_CONFIG = "hibernateConfig";
 
@@ -172,8 +177,10 @@ public class HibernateHelper
 				{
 					loader = HibernateHelper.class.getClassLoader();
 				}
-				Class clazz = loader.loadClass(delegateImplClass);
-				delegate = (HibernateHelperDelegate) clazz.newInstance();
+				@SuppressWarnings("unchecked")
+				Class< ? extends HibernateHelperDelegate> clazz =
+					(Class< ? extends HibernateHelperDelegate>) loader.loadClass(delegateImplClass);
+				delegate = clazz.newInstance();
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -191,7 +198,7 @@ public class HibernateHelper
 		if (delegate == null) // if no delegate was given or instantiation failed
 		{
 			log.info("fallback on default HibernateHelperDelegate implementation: "
-					+ HibernateHelperThreadLocaleImpl.class.getName());
+				+ HibernateHelperThreadLocaleImpl.class.getName());
 			delegate = new HibernateHelperThreadLocaleImpl();
 		}
 	}
@@ -272,9 +279,9 @@ public class HibernateHelper
 	 * @param session
 	 *            hibernate session
 	 * @param actionForCurrentSession
-	 *            one of the constants HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current
-	 *            session HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current
-	 *            session
+	 *            one of the constants HibernateHelperThreadLocaleImpl.ACTION_CLOSE close
+	 *            current session HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT
+	 *            disconnect current session
 	 */
 	public static void setSession(Session session, int actionForCurrentSession)
 	{
@@ -356,8 +363,8 @@ public class HibernateHelper
 	}
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
-	 * new - and thus thread safe - instance will be created for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if
+	 * false, a new - and thus thread safe - instance will be created for session.
 	 * 
 	 * @return boolean
 	 */
@@ -367,12 +374,13 @@ public class HibernateHelper
 	}
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
-	 * new - and thus thread safe - instance will be created for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if
+	 * false, a new - and thus thread safe - instance will be created for session.
 	 * 
 	 * @param b
-	 *            If true, only one instance will be created of the interceptor for all sessions, if
-	 *            false, a new - and thus thread safe - instance will be created for session
+	 *            If true, only one instance will be created of the interceptor for all
+	 *            sessions, if false, a new - and thus thread safe - instance will be
+	 *            created for session
 	 */
 	public static void setSingleInterceptor(boolean b)
 	{
@@ -388,5 +396,4 @@ public class HibernateHelper
 	{
 		return delegate;
 	}
-
 }

@@ -41,7 +41,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	/**
 	 * Holds the current hibernate session, if one has been created.
 	 */
-	private static ThreadLocal hibernateHolder = new ThreadLocal();
+	private static ThreadLocal<Session> hibernateHolder = new ThreadLocal<Session>();
 
 	/**
 	 * Hibernate session factory.
@@ -61,7 +61,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	/**
 	 * factory level interceptor class.
 	 */
-	private static Class interceptorClass;
+	private static Class< ? extends Interceptor> interceptorClass;
 
 	/**
 	 * class name of the interceptor.
@@ -128,7 +128,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	public Session getSession() throws HibernateException
 	{
 
-		Session sess = (Session) hibernateHolder.get();
+		Session sess = hibernateHolder.get();
 		if (sess == null && factory != null)
 		{
 			if (interceptorClass != null)
@@ -171,7 +171,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	@Override
 	public void closeSession() throws HibernateException
 	{
-		Session sess = (Session) hibernateHolder.get();
+		Session sess = hibernateHolder.get();
 		if (sess != null)
 		{
 			hibernateHolder.set(null);
@@ -195,7 +195,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	@Override
 	public void disconnectSession() throws HibernateException
 	{
-		Session sess = (Session) hibernateHolder.get();
+		Session sess = hibernateHolder.get();
 		if (sess != null)
 		{
 			hibernateHolder.set(null);
@@ -223,7 +223,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	@Override
 	public void setSession(Session session, int actionForCurrentSession)
 	{
-		Session sess = (Session) hibernateHolder.get();
+		Session sess = hibernateHolder.get();
 		if (sess != null)
 		{
 			if (actionForCurrentSession == HibernateHelper.ACTION_CLOSE)
@@ -265,9 +265,6 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 		return factory;
 	}
 
-	/**
-	 * @see nl.openedge.util.hibernate.HibernateHelperDelegate#setSessionFactory(net.sf.hibernate.SessionFactory)
-	 */
 	@Override
 	public void setSessionFactory(SessionFactory theFactory)
 	{
@@ -340,6 +337,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	 * @param className
 	 *            factory level interceptor class name
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setInterceptorClass(String className)
 	{
@@ -349,18 +347,17 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 		staticInterceptor = null;
 
 		// try first
-		Interceptor instance = null;
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
 		{
 			classLoader = HibernateHelperThreadLocaleImpl.class.getClassLoader();
 		}
-		Class clazz = null;
+		Class< ? extends Interceptor> clazz = null;
 
 		try
 		{
-			clazz = classLoader.loadClass(className);
-			instance = getInterceptorInstance(clazz);
+			clazz = (Class< ? extends Interceptor>) classLoader.loadClass(className);
+			getInterceptorInstance(clazz);
 			log.info("set hibernate interceptor to " + className + "; singleInterceptor == "
 				+ singleInterceptor);
 		}
@@ -397,8 +394,8 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	 * @throws InstantiationException
 	 *             see exc doc
 	 */
-	protected Interceptor getInterceptorInstance(Class clazz) throws InstantiationException,
-			IllegalAccessException
+	protected Interceptor getInterceptorInstance(Class< ? extends Interceptor> clazz)
+			throws InstantiationException, IllegalAccessException
 	{
 		if (singleInterceptor)
 		{
@@ -406,14 +403,14 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 			{
 				if (staticInterceptor == null)
 				{
-					staticInterceptor = (Interceptor) clazz.newInstance();
+					staticInterceptor = clazz.newInstance();
 				}
 				return staticInterceptor;
 			}
 		}
 		else
 		{
-			return (Interceptor) clazz.newInstance();
+			return clazz.newInstance();
 		}
 	}
 
@@ -449,7 +446,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	 * 
 	 * @return the hibernateHolder.
 	 */
-	public static ThreadLocal getHibernateHolder()
+	public static ThreadLocal<Session> getHibernateHolder()
 	{
 		return hibernateHolder;
 	}
@@ -460,7 +457,7 @@ public class HibernateHelperThreadLocaleImpl implements HibernateHelperDelegate
 	 * @param hibernateHolder
 	 *            hibernateHolder to set.
 	 */
-	public static void setHibernateHolder(ThreadLocal hibernateHolder)
+	public static void setHibernateHolder(ThreadLocal<Session> hibernateHolder)
 	{
 		HibernateHelperThreadLocaleImpl.hibernateHolder = hibernateHolder;
 	}
