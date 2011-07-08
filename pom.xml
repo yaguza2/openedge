@@ -16,6 +16,7 @@
 		<module>openedge-access</module>
 		<module>openedge-baritus</module>
 		<module>openedge-maverick</module>
+		<module>openedge-maverick-fop</module>
 		<module>openedge-modules</module>
 		<module>openedge-modules-impl-mailjob</module>
 		<module>openedge-modules-impl-menumodule</module>
@@ -64,6 +65,11 @@
 			<dependency>
 				<groupId>nl.topicus.onderwijs.openedge</groupId>
 				<artifactId>openedge-maverick</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>nl.topicus.onderwijs.openedge</groupId>
+				<artifactId>openedge-maverick-fop</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

@@ -24,12 +24,10 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.framework.logger.Log4JLogger;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Options;
 import org.apache.fop.messaging.MessageHandler;
-import org.apache.log4j.Category;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.Transform;
 import org.infohazard.maverick.flow.TransformContext;
@@ -37,15 +35,16 @@ import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.transform.AbstractTransformStep;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 
 
 public class FopTransform implements Transform
 {
-
-	private static Category log = Category.getInstance(FopTransform.class.getName());
-	private static Category fopDriverLog = Category.getInstance(Driver.class.getName());
+	private static Logger log = LoggerFactory.getLogger(FopTransform.class);
+	private static Logger fopDriverLog = LoggerFactory.getLogger(Driver.class);
 
 	protected static final String ATTR_OUTPUT = "output";
 	protected static final String ATTR_DISPOSITION_TYPE = "disposition-type";
@@ -247,11 +246,12 @@ public class FopTransform implements Transform
 		private void go(InputSource input) throws IOException, ServletException
 		{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			Log4JLogger dlog = new Log4JLogger(fopDriverLog);
+			org.apache.avalon.framework.logger.Logger dlog = new Slf4jAvalonLogger(fopDriverLog);
 			MessageHandler.setScreenLogger(dlog);
 			
 			try
 			{
+				@SuppressWarnings("unused")
 				Options options = null;
 
 				//load userconfig file if specified
@@ -336,6 +336,5 @@ public class FopTransform implements Transform
 
 			baos.writeTo(out);
 		}
-
 	}
 }
