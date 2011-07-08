@@ -1,0 +1,225 @@
+$Id: CHANGES.txt,v 1.40 2005/11/30 02:25:13 prophecyslides Exp $
+$Source: /cvsroot-fuse/mav/maverick/CHANGES.txt,v $
+
+Version 2.2.4    [10/03/2005]
+
+- Fixed to work with latest jdom.jar
+
+-----
+
+Version 2.2.3    [8/8/2004]
+
+- Every document view with a path attribute will now be a view with transforms internally,
+  the first transform being the dispatch/ document transform with the given path.
+  This makes it possible to have document views without a dispatch transform,
+  functionality needed for the opt-freemarker package proposed by Ed Ward.
+
+-----
+
+Version 2.2.2    [6/27/2004]
+
+- Use Commons Logging instead of Log4J.
+- Log the stacktrace when reloadConfig() throws a Configuration exception on initialization.
+- A custom controller factory can now be provided. See the manual for an example.
+
+-----
+
+Version 2.2.1    [virtual]
+
+- Added support for URLs (http:, https:, file:, ftp:, jar:) as paths in
+  XSL transforms. Also added support for monitoring 'file:' URLs and
+  re-caching them upon change.
+- Redirects now properly encode session ids in the URL (if necessary).
+
+-----
+
+Version 2.2.0    [6/21/2003]
+
+- Enhanced TransformStep API to allow content-type information
+  to be passed to subsequent steps.  This is an API change.
+- Split up param collections; controller, view, and transform
+  params are now separate.  This is an API change.
+- Better error handling when dispatching to a bad path.
+- Rewrote friendbook-jsp.
+- Added friendbook-jsp-fbu (uses FormBeanUser).
+- Allowed programmatic override of maverick config file and
+  transform locations.
+- Special handling of config file/transform locations which
+  are full URLs (http:, https:, file:, ftp:).
+- Fixed a bug preventing ControllerSingleton.init() from being
+  called.
+- Controller classes are now loaded using the current context
+  classloader rather than Class.forName().
+- Changed Dispatcher init parameters to public.
+- Chaining of MaverickContext is now optional, and default is false.
+
+-----
+
+Version 2.1.2    [12/12/2002]
+
+- MaverickContext is now persisted through recursive command
+  invocations, so chaining commands together with document
+  views is now possible.
+- ModelLifetime.discard() is now guaranteed to be called, even
+  if there was an exception.
+- RedirectView now understands a special param '#'
+- Added ThrowawayFormBeanUser
+- Reduced overzealous logging level in several runtime places.
+- Fixed bad page in friendbook-jsp
+
+-----
+
+Version 2.1.1   [6/18/2002]
+
+- Fixed bug preventing the "trivial" view type from working.
+
+-----
+
+Version 2.1     [6/11/2002]
+
+- Heterogeneous transforms are now supported.
+- A Context object is now passed to Controllers, Views,
+  and Transforms rather than a multitude of arguments.
+- The model is now set on the context explicitly rather
+  than being returned from Controller.go()
+- Params are supported on controller, view, and transform
+  nodes.  Params are interpreted differently (but hopefully
+  in an intuitive and consistent manner) by each pluggable
+  module.
+
+-----
+
+Version 2.0     [3/27/2002]
+
+- Added "null" view type.
+- Added ModelLifetime interface so that models can optionally
+  manage internal resources.
+- Improved the error message when resources cannot be
+  found by XSLTransform.
+
+-----
+
+Version 2.0-rc   [3/6/2002]
+
+- XSL Transforms now have three cache options:  preload,
+  disabled, and lazy.
+- Config options can be overriden by system properties
+  which have the format:  maverick.parentnode.attribute.
+- More documentation.
+
+-----
+
+Version 2.0-b2    [2/20/2002]
+
+- Config file path is now configurable.
+- Can now specify an XSL to transform the config.
+- Eliminated all use of getRealPath().
+- Paths are allowed as part of a command name.
+- Throwaway controllers can have params populated from the
+  config file.
+- Transform interface now takes a Source instead of Node.
+- View name defaults to view ref attribute.
+- XSLTransform now uses SAX between stages rather than
+  building DOM trees.
+- Lots of documentation written.
+
+-----
+
+Version 2.0-b1    [1/10/2002]
+
+This is a complete, ground-up rewrite.  Major new features:
+
+- Pluggable view types.
+- Pluggable transform types.
+- View mode switching.
+- The option of having Singleton controllers.
+- Pluggable bean population (and validation, etc) logic.
+- Log4J logging.
+
+In addition, some view types and examples have been broken out into
+optional modules which can be downloaded separately.
+
+-----
+
+Version 1.0.1     [11/27/2001]
+
+- Fixed a bug preventing JSP beans from being placed in session or
+  application scope.
+
+-----
+
+Version 1.0.0     [10/16/2001]
+
+- Added support to disable caching/compiling of templates. (see 
+  new servlet param named preloadTemplates
+- Added defaultRequestCharset servlet param
+- Domify text nodes now convert any instance of CRLF, or CR by itself, to just LF (XML Spec.)
+- lib/jdom.jar is now beta 7.
+
+-----
+
+Version 0.9.7     [7/12/2001]
+
+- maverick.xml: Renamed "id" attribute to "name" in "view" and 
+  "command" elements
+- Fixed bug in domify/ElementAdapter.hasChildren(). This bug can be found
+  when doing child/sibling xpath expressions.
+- Updated friendbook-velocity to redirect to friends page after init login
+- 
+
+-----
+
+Version 0.9.6     [6/19/2001]
+
+- Added the ability to define parameters in the config file for
+  transforms.
+- Added the ability to define context parameters in the config file
+  for velocity views.
+- Updated friendbook-velocity to use parameters for applying
+  look-and-feel to all the pages.  It's much cleaner now.
+
+-----
+
+Version 0.9.5     [6/15/2001]
+
+- Significant changes to the config file format; see the maverick.xml
+  documentation for details.
+- Velocity can now be used for view templating.
+- When issuing a redirect, if the model is a java.util.Map, the values
+  are used as url parameters.
+- Fixed bug:  Content-type was being ignored for some views without
+  transforms.
+- FAQ questions regarding Velocity and Servlet params added.
+
+-----
+
+Version 0.9.1     [5/4/2001]
+
+- Bean properties can now begin with "is", as per the JavaBeans spec.
+- source-model no longer requires a controller; the resulting
+  document node is simply empty.  The friendbook example's signup
+  form now uses this pattern.
+
+-----
+
+Version 0.9     [5/28/2001]
+
+- Optimized the performance of <source-document> and <source-jsp> without
+  pipelines; no buffering (other than whatever the server does) is used
+  in this case.
+- The reload command can now be configured with a servlet init parameter.
+
+-----
+
+Version 0.8.1    [5/19/2001]
+
+- The error message for template compilation now includes which template
+  caused the error.
+- Rewrote the Friendbook edit/editSubmit process to fix a NullPointerException
+  and to allow for data validation/error handling.
+
+-----
+
+Version 0.8     [5/17/2001]
+
+This is the first public release.
