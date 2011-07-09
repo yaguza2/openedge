@@ -5,10 +5,10 @@
 
 package org.infohazard.maverick.util;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Map wrapper which prevents overwriting existing keys.
@@ -50,22 +50,71 @@ public class NoOverwriteMap implements Map
 
 	/**
 	 */
-	public int size()					{ return wrapped.size(); }
-	public boolean isEmpty()			{ return wrapped.isEmpty(); }
-	public boolean containsKey(Object key)		{ return wrapped.containsKey(key); }
-	public boolean containsValue(Object value)	{ return wrapped.containsValue(value); }
-	public Object get(Object key)		{ return wrapped.get(key); }
-	public Object remove(Object key)	{ return wrapped.remove(key); }
-	public void clear()					{ wrapped.clear(); }
-	public Set keySet()					{ return wrapped.keySet(); }
-	public Collection values()			{ return wrapped.values(); }
-	public Set entrySet()				{ return wrapped.entrySet(); }
-	public boolean equals(Object o)		{ return wrapped.equals(o); }
-	public int hashCode()				{ return wrapped.hashCode(); }
+	public int size()
+	{
+		return wrapped.size();
+	}
+
+	public boolean isEmpty()
+	{
+		return wrapped.isEmpty();
+	}
+
+	public boolean containsKey(Object key)
+	{
+		return wrapped.containsKey(key);
+	}
+
+	public boolean containsValue(Object value)
+	{
+		return wrapped.containsValue(value);
+	}
+
+	public Object get(Object key)
+	{
+		return wrapped.get(key);
+	}
+
+	public Object remove(Object key)
+	{
+		return wrapped.remove(key);
+	}
+
+	public void clear()
+	{
+		wrapped.clear();
+	}
+
+	public Set keySet()
+	{
+		return wrapped.keySet();
+	}
+
+	public Collection values()
+	{
+		return wrapped.values();
+	}
+
+	public Set entrySet()
+	{
+		return wrapped.entrySet();
+	}
+
+	public boolean equals(Object o)
+	{
+		return wrapped.equals(o);
+	}
+
+	public int hashCode()
+	{
+		return wrapped.hashCode();
+	}
 
 	/**
 	 * Prevents overwriting existing keys.
-	 * @throws OverwriteException if the key is already present.
+	 * 
+	 * @throws OverwriteException
+	 *             if the key is already present.
 	 */
 	public Object put(Object key, Object value)
 	{
@@ -77,7 +126,9 @@ public class NoOverwriteMap implements Map
 
 	/**
 	 * Prevents overwriting existing keys.
-	 * @throws OverwriteException if the key is already present.
+	 * 
+	 * @throws OverwriteException
+	 *             if the key is already present.
 	 */
 	public void putAll(Map t)
 	{
@@ -85,7 +136,7 @@ public class NoOverwriteMap implements Map
 
 		while (it.hasNext())
 		{
-			Map.Entry entry = (Map.Entry)it.next();
+			Map.Entry entry = (Map.Entry) it.next();
 			this.put(entry.getKey(), entry.getValue());
 		}
 	}

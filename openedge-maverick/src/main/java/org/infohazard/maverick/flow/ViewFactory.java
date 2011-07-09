@@ -6,24 +6,23 @@
 package org.infohazard.maverick.flow;
 
 import javax.servlet.ServletConfig;
+
 import org.jdom.Element;
 
-
 /**
- * This interface allows user-defined view factories to be added to
- * the system.
+ * This interface allows user-defined view factories to be added to the system.
  */
 public interface ViewFactory
 {
 	/**
-	 * The factory will be initialized with the XML element from from the
-	 * maverick configuration file.
+	 * The factory will be initialized with the XML element from from the maverick
+	 * configuration file.
 	 */
 	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException;
 
 	/**
-	 * Creates a specific instance of the View from the XML element
-	 * in the maverick configuration file.
+	 * Creates a specific instance of the View from the XML element in the maverick
+	 * configuration file.
 	 */
 	public View createView(Element viewNode) throws ConfigException;
 }

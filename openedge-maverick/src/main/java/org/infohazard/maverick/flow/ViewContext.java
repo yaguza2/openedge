@@ -6,14 +6,14 @@
 package org.infohazard.maverick.flow;
 
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * ViewContext defines the methods and data available to a view
- * for a single request.
+ * ViewContext defines the methods and data available to a view for a single request.
  */
 public interface ViewContext
 {
@@ -26,13 +26,13 @@ public interface ViewContext
 	 * Obtain any params that were set.
 	 */
 	public Map getViewParams();
-	
+
 	/**
-	 * This is where output should be sent.  If it returns null,
-	 * there are no transforms, and you should use the real response.
+	 * This is where output should be sent. If it returns null, there are no transforms,
+	 * and you should use the real response.
 	 */
 	public TransformStep getNextStep() throws ServletException;
-	
+
 	/**
 	 */
 	public HttpServletRequest getRequest();
@@ -42,8 +42,7 @@ public interface ViewContext
 	public ServletContext getServletContext();
 
 	/**
-	 * Returns the *real* response object.  Do not use this
-	 * unless you know are the tail!
+	 * Returns the *real* response object. Do not use this unless you know are the tail!
 	 */
 	public HttpServletResponse getRealResponse();
 }

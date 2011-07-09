@@ -5,11 +5,12 @@
 
 package org.infohazard.maverick.util;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
- * Allows us to convert this into a ByteArrayInputStream without copying the
- * buffer.  Just make sure you are finished writing first.
+ * Allows us to convert this into a ByteArrayInputStream without copying the buffer. Just
+ * make sure you are finished writing first.
  */
 public class FastByteArrayOutputStream extends ByteArrayOutputStream
 {

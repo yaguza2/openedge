@@ -5,19 +5,23 @@
 
 package org.infohazard.maverick.ctl;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.infohazard.maverick.flow.Controller;
 import org.infohazard.maverick.flow.ControllerContext;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
- * Note:  While not formally deprecated, use of this class is
- * discouraged.  You should use Throwaway2 instead.
- *
- * Throwaway is a base class for simple controllers which implements
- * the single-use controller pattern (a fresh controller instance is
- * created to service each request).  No population of properties is
- * performed by this class.
+ * Note: While not formally deprecated, use of this class is discouraged. You should use
+ * Throwaway2 instead.
+ * 
+ * Throwaway is a base class for simple controllers which implements the single-use
+ * controller pattern (a fresh controller instance is created to service each request). No
+ * population of properties is performed by this class.
  */
 public abstract class Throwaway implements Controller
 {
@@ -34,14 +38,14 @@ public abstract class Throwaway implements Controller
 	/**
 	 */
 	private ControllerContext controllerCtx;
-	
+
 	/**
-	 * Sets up the servlet parameters and calls through to the
-	 * parameterless rawPerform() method.  Does not result in
-	 * bean population.
-	 *
+	 * Sets up the servlet parameters and calls through to the parameterless rawPerform()
+	 * method. Does not result in bean population.
+	 * 
 	 * @see Controller#go
 	 */
+	@Override
 	public final String go(ControllerContext cctx) throws ServletException
 	{
 		try
@@ -49,9 +53,9 @@ public abstract class Throwaway implements Controller
 			this.controllerCtx = cctx;
 
 			String result = this.rawPerform();
-			
+
 			this.controllerCtx.setModel(this.model());
-			
+
 			return result;
 		}
 		catch (Exception ex)
@@ -66,11 +70,11 @@ public abstract class Throwaway implements Controller
 	protected abstract String rawPerform() throws Exception;
 
 	/**
-	 * This is the method you should override to return the data model after
-	 * rawPerform() is executed.
+	 * This is the method you should override to return the data model after rawPerform()
+	 * is executed.
 	 */
 	public abstract Object model();
-	
+
 	/**
 	 * @return the ControllerContext
 	 */

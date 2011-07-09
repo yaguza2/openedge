@@ -6,6 +6,7 @@
 package org.infohazard.maverick.flow;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 
 /**
@@ -20,9 +21,9 @@ import javax.servlet.ServletException;
 public interface Command
 {
 	/**
-     * <p>
+	 * <p>
 	 * Execute the Command and render the results!
-     * </p>
+	 * </p>
 	 */
 	public void go(MaverickContext mctx) throws IOException, ServletException;
 }

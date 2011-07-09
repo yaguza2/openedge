@@ -6,17 +6,16 @@
 package org.infohazard.maverick.flow;
 
 import javax.servlet.ServletConfig;
-import org.jdom.Element;
 
+import org.jdom.Element;
 
 /**
  */
 public interface TransformFactory
 {
 	/**
-	 * Factories will be initialized with the XML from the configuration file
-	 * so that they can check for any options defined in child nodes,
-	 * attributes, etc.
+	 * Factories will be initialized with the XML from the configuration file so that they
+	 * can check for any options defined in child nodes, attributes, etc.
 	 */
 	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException;
 

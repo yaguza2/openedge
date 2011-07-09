@@ -6,47 +6,47 @@
 package org.infohazard.maverick.flow;
 
 import java.io.IOException;
-import javax.servlet.*;
+
+import javax.servlet.ServletException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * Base class for implementing a Maverick {@link Command}.
- * Implementors must define {@link #getView}.
+ * Base class for implementing a Maverick {@link Command}. Implementors must define
+ * {@link #getView}.
  * </p>
  * <p>
  * CommandBase obtains a {@link View} name by calling its Controller's
- * {@link Controller#go go} method, and then invokes the View's
- * {@link View#go go} method.
+ * {@link Controller#go go} method, and then invokes the View's {@link View#go go} method.
  * <p>
  * <p>
- * The {@link ModelLifetime} interface is honored.
- * After invoking View.go, if the model object is an instance of
- * ModelLifetime, its {@link ModelLifetime#discard discard} method is called.
- *
+ * The {@link ModelLifetime} interface is honored. After invoking View.go, if the model
+ * object is an instance of ModelLifetime, its {@link ModelLifetime#discard discard}
+ * method is called.
+ * 
  */
 abstract class CommandBase implements Command
 {
 	/**
 	 * <p>
-     * CommandBase logger.
-     * </p>
+	 * CommandBase logger.
+	 * </p>
 	 */
 	private static Logger log = LoggerFactory.getLogger(CommandBase.class);
 
 	/**
-     * <p>
-     * Reference to our {@link Controller}.
-     * </p>
+	 * <p>
+	 * Reference to our {@link Controller}.
+	 * </p>
 	 */
 	protected Controller controller;
 
 	/**
-     * <p>
-     * Set reference to out {@link Controller}.
-     * </p>
+	 * <p>
+	 * Set reference to out {@link Controller}.
+	 * </p>
 	 */
 	public CommandBase(Controller ctl)
 	{
@@ -56,26 +56,27 @@ abstract class CommandBase implements Command
 	/**
 	 *
 	 */
+	@Override
 	public void go(MaverickContext mctx) throws IOException, ServletException
 	{
 		Object model = null;
-		
+
 		try
 		{
 			// There must be a controller class to distinguish between views
 			String viewName = this.controller.go(mctx);
-			
+
 			// Hold on to the model now because chained commands might replace it
 			model = mctx.getModel();
-	
+
 			if (log.isDebugEnabled())
 				log.debug("Switching to view:  " + viewName);
-	
+
 			View target = this.getView(viewName);
 			if (null == target)
 				throw new ServletException("Controller specified view \"" + viewName
-											+ "\", but no view with that name is defined.");
-			
+					+ "\", but no view with that name is defined.");
+
 			target.go(mctx);
 		}
 		finally
@@ -83,7 +84,7 @@ abstract class CommandBase implements Command
 			// Allow the model to manage resources
 			// instanceof returns false if object is null
 			if (model instanceof ModelLifetime)
-				((ModelLifetime)model).discard();
+				((ModelLifetime) model).discard();
 		}
 	}
 

@@ -12,31 +12,24 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
+import javax.xml.transform.*;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.Transform;
 import org.infohazard.maverick.flow.TransformContext;
 import org.infohazard.maverick.flow.TransformStep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
 
 /**
  * This Transform runs the input through a series of XSLT transformations.
- *
+ * 
  * @author Jeff Schnitzer
  * @author Scott Hernandez
  * @version $Revision: 1.20 $ $Date: 2004/06/07 20:38:11 $
@@ -45,8 +38,10 @@ class XSLTransform implements Transform
 {
 	/** Enumeration for the caching options */
 	public static final int CACHE_PRELOAD = 1;
+
 	/** Enumeration for the caching options */
 	public static final int CACHE_LAZY = 2;
+
 	/** Enumeration for the caching options */
 	public static final int CACHE_DISABLED = 3;
 
@@ -76,27 +71,30 @@ class XSLTransform implements Transform
 
 	/** If not null, set this as the uri resolver for xslt transformations */
 	protected URIResolver uriResolver;
-	
+
 	/** The caching style to use */
 	protected int cachingStyle;
-	
+
 	/**
 	 * Expects that you will call addTemplate() to add the individual transformations.
-	 *
-	 * @param path The context-relative path to the template
-	 * @param finishedContentType If this is the last transform and the chain
-	 *  completes successfully, this will be the content type set on the response.
-	 * @param webAppContext Allows xsl files to be loaded as resources.
-	 * @param uriRes Set a custom URI Resolver for transformation.  Can be null.
-	 * @param templateCachingStyle Must be one of the CACHE_ constants.
-	 * @exception ConfigException Thrown if there is a problem with the configuration.
+	 * 
+	 * @param path
+	 *            The context-relative path to the template
+	 * @param finishedContentType
+	 *            If this is the last transform and the chain completes successfully, this
+	 *            will be the content type set on the response.
+	 * @param webAppContext
+	 *            Allows xsl files to be loaded as resources.
+	 * @param uriRes
+	 *            Set a custom URI Resolver for transformation. Can be null.
+	 * @param templateCachingStyle
+	 *            Must be one of the CACHE_ constants.
+	 * @exception ConfigException
+	 *                Thrown if there is a problem with the configuration.
 	 */
-	public XSLTransform(String path,
-	                    boolean isMonitored,
-						int templateCachingStyle,
-						ServletContext webAppContext,
-						String finishedContentType,
-						URIResolver uriRes) throws ConfigException
+	public XSLTransform(String path, boolean isMonitored, int templateCachingStyle,
+			ServletContext webAppContext, String finishedContentType, URIResolver uriRes)
+			throws ConfigException
 	{
 		log.debug("Creating xslt transform:  " + path);
 
@@ -105,7 +103,7 @@ class XSLTransform implements Transform
 		this.finalContentType = finishedContentType;
 		this.uriResolver = uriRes;
 		this.cachingStyle = templateCachingStyle;
-		
+
 		if (cachingStyle == CACHE_PRELOAD)
 			this.compiled = loadTemplate(this.path, webAppContext);
 	}
@@ -119,7 +117,8 @@ class XSLTransform implements Transform
 	}
 
 	/**
-	 * @param path Path, starting with /, relative to context root, of xsl
+	 * @param path
+	 *            Path, starting with /, relative to context root, of xsl
 	 * @return The jaxp object for the specified path.
 	 * @exception ConfigException
 	 */
@@ -155,9 +154,8 @@ class XSLTransform implements Transform
 			// it's a proper servlet resource path
 			if (path.toLowerCase().startsWith("file:"))
 				pathIsFileUrl = true;
-			else if (path.toLowerCase().startsWith("http:") ||
-					 path.toLowerCase().startsWith("https:") ||
-					 path.toLowerCase().startsWith("ftp:"))
+			else if (path.toLowerCase().startsWith("http:")
+				|| path.toLowerCase().startsWith("https:") || path.toLowerCase().startsWith("ftp:"))
 				pathIsOtherUrl = true;
 			else if (!path.startsWith("/"))
 				path = "/" + path;
@@ -173,7 +171,8 @@ class XSLTransform implements Transform
 					{
 						this.monitoredFile = null;
 						log.error("Resource not found or unable to read file:  " + path);
-						throw new ConfigException("Resource not found or unable to read file:  " + path);
+						throw new ConfigException("Resource not found or unable to read file:  "
+							+ path);
 					}
 
 					this.monitoredFileLastModified = this.monitoredFile.lastModified();
@@ -219,7 +218,7 @@ class XSLTransform implements Transform
 
 	/**
 	 * Set parameters on a transformer
-	 *
+	 * 
 	 * @param t
 	 * @param params
 	 */
@@ -228,8 +227,8 @@ class XSLTransform implements Transform
 		Iterator entriesIt = params.entrySet().iterator();
 		while (entriesIt.hasNext())
 		{
-			Map.Entry entry = (Map.Entry)entriesIt.next();
-			t.setParameter((String)entry.getKey(), entry.getValue());
+			Map.Entry entry = (Map.Entry) entriesIt.next();
+			t.setParameter((String) entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -240,13 +239,13 @@ class XSLTransform implements Transform
 	{
 		/** */
 		protected boolean handlerUsed = false;
-		
+
 		/** */
 		public Step(TransformContext tctx) throws ServletException
 		{
 			super(tctx);
 		}
-	
+
 		/**
 		 * Set the final content type for this sucka
 		 */
@@ -257,15 +256,15 @@ class XSLTransform implements Transform
 			else
 				this.getNext().setContentType(UNFINISHED_CONTENTTYPE);
 		}
-		
+
 		/**
-		 * Funnels stored output to go(Reader), or just passes on the
-		 * done() message if TransformerHandler was used (yeay SAX!)
+		 * Funnels stored output to go(Reader), or just passes on the done() message if
+		 * TransformerHandler was used (yeay SAX!)
 		 */
 		public void done() throws IOException, ServletException
 		{
 			log.debug("Done being written to");
-			
+
 			if (this.fakeResponse == null)
 			{
 				if (this.handlerUsed)
@@ -279,35 +278,38 @@ class XSLTransform implements Transform
 				this.fakeResponse = null;
 			}
 		}
-	
+
 		/** */
 		public ContentHandler getSAXHandler() throws IOException, ServletException
 		{
 			this.handlerUsed = true;
-			
+
 			// Set the content-type for the output
 			assignContentType(this.getTransformCtx());
-			
+
 			TransformerHandler tHandler;
 			try
 			{
-				SAXTransformerFactory saxTFact = (SAXTransformerFactory)TransformerFactory.newInstance();
+				SAXTransformerFactory saxTFact =
+					(SAXTransformerFactory) TransformerFactory.newInstance();
 				tHandler = saxTFact.newTransformerHandler(this.getCompiled());
 			}
 			catch (TransformerConfigurationException ex)
 			{
 				throw new ServletException(ex);
 			}
-			
+
 			// Populate any params which might have been set
 			if (this.getTransformCtx().getTransformParams() != null)
-				populateParams(tHandler.getTransformer(), this.getTransformCtx().getTransformParams());
-			
+				populateParams(tHandler.getTransformer(), this.getTransformCtx()
+					.getTransformParams());
+
 			if (this.getNext().isLast())
-				tHandler.setResult(new StreamResult(this.getNext().getResponse().getOutputStream()));
+				tHandler
+					.setResult(new StreamResult(this.getNext().getResponse().getOutputStream()));
 			else
 				tHandler.setResult(new SAXResult(this.getNext().getSAXHandler()));
-				
+
 			return tHandler;
 		}
 
@@ -316,7 +318,7 @@ class XSLTransform implements Transform
 		{
 			// Set the content-type for the output
 			assignContentType(this.getTransformCtx());
-			
+
 			Transformer trans;
 			try
 			{
@@ -326,11 +328,11 @@ class XSLTransform implements Transform
 			{
 				throw new ServletException(ex);
 			}
-			
+
 			// Populate any params which might have been set
 			if (this.getTransformCtx().getTransformParams() != null)
 				populateParams(trans, this.getTransformCtx().getTransformParams());
-			
+
 			Result res;
 			if (this.getNext().isLast())
 				res = new StreamResult(this.getNext().getResponse().getOutputStream());
@@ -369,7 +371,8 @@ class XSLTransform implements Transform
 						if (compiled != null)
 							return compiled;
 						else
-							throw new IllegalStateException("Unable to access monitored template " + path);
+							throw new IllegalStateException("Unable to access monitored template "
+								+ path);
 					}
 					else if (monitoredFileLastModified < lastModified)
 					{
@@ -387,7 +390,8 @@ class XSLTransform implements Transform
 					case CACHE_LAZY:
 					{
 						if (compiled == null)
-							compiled = loadTemplate(path, this.getTransformCtx().getServletContext());
+							compiled =
+								loadTemplate(path, this.getTransformCtx().getServletContext());
 
 						return compiled;
 					}
@@ -416,4 +420,3 @@ class XSLTransform implements Transform
 	}
 
 }
-

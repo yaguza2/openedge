@@ -40,4 +40,3 @@ public class ConfigException extends ServletException
 		super(rootCause);
 	}
 }
-

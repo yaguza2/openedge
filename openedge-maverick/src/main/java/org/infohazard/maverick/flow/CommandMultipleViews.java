@@ -8,8 +8,8 @@ package org.infohazard.maverick.flow;
 import java.util.Map;
 
 /**
- * Command implementation which allows one of several views to
- * be determined by the controller result.
+ * Command implementation which allows one of several views to be determined by the
+ * controller result.
  */
 class CommandMultipleViews extends CommandBase
 {
@@ -29,8 +29,9 @@ class CommandMultipleViews extends CommandBase
 
 	/**
 	 */
+	@Override
 	protected View getView(String name)
 	{
-		return (View)this.views.get(name);
+		return (View) this.views.get(name);
 	}
 }

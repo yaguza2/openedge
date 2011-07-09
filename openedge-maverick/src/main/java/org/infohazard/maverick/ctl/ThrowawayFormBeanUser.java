@@ -8,9 +8,8 @@ package org.infohazard.maverick.ctl;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
- * This is a hybrid between Throwaway and FormBeanUser - the controller
- * is instantiated like a Throwaway, but allows a form bean to be
- * populated instead.
+ * This is a hybrid between Throwaway and FormBeanUser - the controller is instantiated
+ * like a Throwaway, but allows a form bean to be populated instead.
  */
 public abstract class ThrowawayFormBeanUser extends Throwaway2
 {
@@ -27,9 +26,10 @@ public abstract class ThrowawayFormBeanUser extends Throwaway2
 	}
 
 	/**
-	 * Executes this controller.  Override the perform()
-	 * method to provide application logic.
+	 * Executes this controller. Override the perform() method to provide application
+	 * logic.
 	 */
+	@Override
 	public final String go() throws Exception
 	{
 		this.formBean = this.makeFormBean();
@@ -44,12 +44,12 @@ public abstract class ThrowawayFormBeanUser extends Throwaway2
 
 	/**
 	 * This method can be overriden to perform application logic.
-	 *
-	 * Override this method if you want the model to be something
-	 * other than the formBean itself.
-	 *
-     * Use getForm to retrieve the bean created by makeFormBean(),
-	 * which has been populated with the http request parameters.
+	 * 
+	 * Override this method if you want the model to be something other than the formBean
+	 * itself.
+	 * 
+	 * Use getForm to retrieve the bean created by makeFormBean(), which has been
+	 * populated with the http request parameters.
 	 */
 	protected String perform() throws Exception
 	{
@@ -57,10 +57,10 @@ public abstract class ThrowawayFormBeanUser extends Throwaway2
 	}
 
 	/**
-	 * This method will be called to produce a simple bean whose properties
-	 * will be populated with the http request parameters.  The parameters
-	 * are useful for doing things like persisting beans across requests.
-	 *
+	 * This method will be called to produce a simple bean whose properties will be
+	 * populated with the http request parameters. The parameters are useful for doing
+	 * things like persisting beans across requests.
+	 * 
 	 * Default is to return this.
 	 */
 	protected Object makeFormBean()

@@ -5,7 +5,8 @@
 
 package org.infohazard.maverick.util;
 
-import java.io.*;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Simple interface to abstract out both ServletOutputStreams and PrintWriters.

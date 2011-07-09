@@ -5,8 +5,12 @@
 
 package org.infohazard.maverick.util;
 
-import java.io.*;
-import javax.servlet.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.ServletOutputStream;
 
 /**
  */
@@ -21,7 +25,8 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 	protected FastByteArrayOutputStream holder = new FastByteArrayOutputStream();
 
 	/**
-	 * @param charset - if null, default character encoding is assumed.
+	 * @param charset
+	 *            - if null, default character encoding is assumed.
 	 */
 	public ServletOutputStreamBuffer(String charset)
 	{
@@ -29,8 +34,7 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 	}
 
 	/**
-	 * It's always more efficient to use a reader because the buffer need
-	 * not be copied.
+	 * It's always more efficient to use a reader because the buffer need not be copied.
 	 */
 	public boolean prefersReader()
 	{

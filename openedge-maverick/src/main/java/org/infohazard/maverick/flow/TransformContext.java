@@ -6,21 +6,22 @@
 package org.infohazard.maverick.flow;
 
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * TransformContext defines the methods and data available to a transform
- * for a single request.
+ * TransformContext defines the methods and data available to a transform for a single
+ * request.
  */
 public interface TransformContext
 {
 	/**
 	 */
 	public HttpServletRequest getRequest();
-	
+
 	/**
 	 */
 	public ServletContext getServletContext();
@@ -32,20 +33,19 @@ public interface TransformContext
 
 	/**
 	 * @return the next step in the transformation process
-	 *
-	 * Call this ONLY ONCE per step!
+	 * 
+	 *         Call this ONLY ONCE per step!
 	 */
 	public TransformStep getNextStep() throws ServletException;
 
 	/**
-	 * @return true if the transformation chain is going to be
-	 *  halted prematurely due to user request.
+	 * @return true if the transformation chain is going to be halted prematurely due to
+	 *         user request.
 	 */
 	public boolean halting();
-	
+
 	/**
-	 * Returns the *real* response object.  Do not use this
-	 * unless you know are the tail!
+	 * Returns the *real* response object. Do not use this unless you know are the tail!
 	 */
 	public HttpServletResponse getRealResponse();
 }

@@ -5,11 +5,11 @@
 
 package org.infohazard.maverick.flow;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Creates Shunted views.
@@ -22,6 +22,7 @@ class ViewRegistryShunted extends ViewRegistry
 	static class ModeData
 	{
 		public String mode;
+
 		public View view;
 
 		public ModeData(String mode, View v)
@@ -53,7 +54,7 @@ class ViewRegistryShunted extends ViewRegistry
 	 */
 	protected void defineGlobalView(String id, String mode, View v) throws ConfigException
 	{
-		List modesForId = (List)this.globalModeLists.get(id);
+		List modesForId = (List) this.globalModeLists.get(id);
 		if (modesForId == null)
 		{
 			modesForId = new ArrayList();
@@ -67,14 +68,14 @@ class ViewRegistryShunted extends ViewRegistry
 	 */
 	protected void addView(Map target, String viewName, String ref) throws ConfigException
 	{
-		List modesForId = (List)this.globalModeLists.get(ref);
+		List modesForId = (List) this.globalModeLists.get(ref);
 		if (modesForId == null)
 			throw new ConfigException("Unknown global view \"" + ref + "\" was referenced.");
 
 		Iterator it = modesForId.iterator();
 		while (it.hasNext())
 		{
-			ModeData data = (ModeData)it.next();
+			ModeData data = (ModeData) it.next();
 
 			this.addView(target, viewName, data.mode, data.view);
 		}
@@ -84,7 +85,7 @@ class ViewRegistryShunted extends ViewRegistry
 	 */
 	protected void addView(Map target, String viewName, String mode, View v) throws ConfigException
 	{
-		ViewShunted shunted = (ViewShunted)target.get(viewName);
+		ViewShunted shunted = (ViewShunted) target.get(viewName);
 		if (shunted == null)
 		{
 			shunted = new ViewShunted(this.shuntFact.createShunt());

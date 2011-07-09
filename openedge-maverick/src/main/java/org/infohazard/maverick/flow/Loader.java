@@ -10,16 +10,17 @@ import java.util.Map;
 
 import javax.servlet.ServletConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Builds the tree of flow objects which process Maverick commands.
- *
+ * 
  * created January 27, 2002
+ * 
  * @author Jeff Schnitzer
  * @version $Revision: 1.17 $ $Date: 2004/06/27 17:42:14 $
  */
@@ -27,21 +28,28 @@ public class Loader
 {
 	/** xml tag for modules, value = 'modules'. */
 	protected final static String TAG_MODULES = "modules";
+
 	/** xml tag for view factories, value = 'view-factory'. */
 	protected final static String TAG_VIEWFACTORY = "view-factory";
+
 	/** xml tag for controller factories, value = 'controller-facotry'. */
 	protected final static String TAG_CONTROLLERFACTORY = "controller-factory";
+
 	/** xml tag for transform factories, value = 'transform-factory'. */
 	protected final static String TAG_TRANSFORMFACTORY = "transform-factory";
+
 	/** xml tag for shunt factories, value = 'shunt-factory'. */
 	protected final static String TAG_SHUNTFACTORY = "shunt-factory";
+
 	/** xml tag for shunt provider, value = 'provider'. */
 	protected final static String ATTR_PROVIDER = "provider";
 
 	/** xml tag for commands, value = 'commands'. */
 	protected final static String TAG_COMMANDS = "commands";
+
 	/** xml tag for a command, value = 'command'. */
 	protected final static String TAG_COMMAND = "command";
+
 	/** xml tag for a command name, value = 'name'. */
 	protected final static String ATTR_COMMAND_NAME = "name";
 
@@ -50,6 +58,7 @@ public class Loader
 
 	/** xml tag for the default view type, value = 'default-view-type'. */
 	protected final static String PARAM_DEFAULT_VIEW_TYPE = "default-view-type";
+
 	/** xml tag for the default transform type, value = 'default-transform-type'. */
 	protected final static String PARAM_DEFAULT_TRANSFORM_TYPE = "default-transform-type";
 
@@ -72,9 +81,12 @@ public class Loader
 	protected CommandFactory commandFact;
 
 	/**
-	 * @param doc An already parsed JDOM Document of the config file.
-	 * @param doc the configuration document
-	 * @param dispatcherConfig servlet configuration of the dispatcher servlet
+	 * @param doc
+	 *            An already parsed JDOM Document of the config file.
+	 * @param doc
+	 *            the configuration document
+	 * @param dispatcherConfig
+	 *            servlet configuration of the dispatcher servlet
 	 * @exception ConfigException
 	 */
 	public Loader(Document doc, ServletConfig dispatcherConfig) throws ConfigException
@@ -82,7 +94,7 @@ public class Loader
 		this.servletCfg = dispatcherConfig;
 		this.masterFact = new MasterFactory(dispatcherConfig);
 
-		// Assume simple, non-shunted system.  These can be replaced later if the
+		// Assume simple, non-shunted system. These can be replaced later if the
 		// user loads a ShuntFactory module.
 		this.viewReg = new ViewRegistrySimple(this.masterFact);
 		this.commandFact = new CommandFactory(this.viewReg);
@@ -94,6 +106,7 @@ public class Loader
 
 	/**
 	 * Get the commands.
+	 * 
 	 * @return Commands map
 	 */
 	public Map getCommands()
@@ -103,12 +116,14 @@ public class Loader
 
 	/**
 	 * setup the core modules.
+	 * 
 	 * @exception ConfigException
 	 */
 	protected void setupCoreModules() throws ConfigException
 	{
 		// Set up the basic transforms
-		TransformFactory docTrans = new org.infohazard.maverick.transform.DocumentTransformFactory();
+		TransformFactory docTrans =
+			new org.infohazard.maverick.transform.DocumentTransformFactory();
 		docTrans.init(null, this.servletCfg);
 		this.masterFact.defineTransformFactory("document", docTrans);
 
@@ -136,7 +151,9 @@ public class Loader
 
 	/**
 	 * load the configuration document.
-	 * @param doc the configuration document
+	 * 
+	 * @param doc
+	 *            the configuration document
 	 * @exception ConfigException
 	 */
 	protected void loadDocument(Document doc) throws ConfigException
@@ -153,12 +170,12 @@ public class Loader
 		if (defaultViewType != null)
 			this.masterFact.setDefaultViewType(defaultViewType);
 
-		// load modules.  probably won't be more than one element, but who knows.
+		// load modules. probably won't be more than one element, but who knows.
 		// don't need to worry about default type being reset because it won't be.
 		Iterator allModulesIt = root.getChildren(TAG_MODULES).iterator();
 		while (allModulesIt.hasNext())
 		{
-			Element modules = (Element)allModulesIt.next();
+			Element modules = (Element) allModulesIt.next();
 			this.loadModules(modules);
 		}
 
@@ -166,7 +183,7 @@ public class Loader
 		Iterator allViewsIt = root.getChildren(TAG_VIEWS).iterator();
 		while (allViewsIt.hasNext())
 		{
-			Element viewsNode = (Element)allViewsIt.next();
+			Element viewsNode = (Element) allViewsIt.next();
 			this.viewReg.defineGlobalViews(viewsNode);
 		}
 
@@ -174,12 +191,12 @@ public class Loader
 		Iterator allCommandsIt = root.getChildren(TAG_COMMANDS).iterator();
 		while (allCommandsIt.hasNext())
 		{
-			Element commandsNode = (Element)allCommandsIt.next();
+			Element commandsNode = (Element) allCommandsIt.next();
 
 			Iterator commandIt = commandsNode.getChildren(TAG_COMMAND).iterator();
 			while (commandIt.hasNext())
 			{
-				Element commandNode = (Element)commandIt.next();
+				Element commandNode = (Element) commandIt.next();
 
 				String commandName = commandNode.getAttributeValue(ATTR_COMMAND_NAME);
 
@@ -194,7 +211,9 @@ public class Loader
 
 	/**
 	 * load the modules.
-	 * @param modulesNode the xml node of the modules
+	 * 
+	 * @param modulesNode
+	 *            the xml node of the modules
 	 * @exception ConfigException
 	 */
 	protected void loadModules(Element modulesNode) throws ConfigException
@@ -216,26 +235,26 @@ public class Loader
 
 			if (providerName == null)
 				throw new ConfigException("Not a valid shunt factory node:  "
-				    + XML.toString(shuntFactoryNode));
+					+ XML.toString(shuntFactoryNode));
 
 			Class providerClass;
 			ShuntFactory instance;
 			try
 			{
 				providerClass = classLoader.loadClass(providerName);
-				instance = (ShuntFactory)providerClass.newInstance();
+				instance = (ShuntFactory) providerClass.newInstance();
 			}
 			catch (Exception ex)
 			{
-				throw new ConfigException("Unable to define shunt factory "
-				    + providerName, ex);
+				throw new ConfigException("Unable to define shunt factory " + providerName, ex);
 			}
 
 			log.info("Using shunt factory " + providerName);
 			// Give the factory an opportunity to initialize itself from any subnodes
 			instance.init(shuntFactoryNode, this.servletCfg);
 
-			// Replace the RendererRegistry and set view registry property on the cmd factory
+			// Replace the RendererRegistry and set view registry property on the cmd
+			// factory
 			this.viewReg = new ViewRegistryShunted(this.masterFact, instance);
 			this.commandFact.setViewRegistry(this.viewReg);
 		}
@@ -246,19 +265,18 @@ public class Loader
 
 			if (providerName == null)
 				throw new ConfigException("Not a valid controller factory node: "
-				    + XML.toString(controllerFactoryNode));
+					+ XML.toString(controllerFactoryNode));
 
 			Class providerClass;
 			ControllerFactory instance;
 			try
 			{
 				providerClass = classLoader.loadClass(providerName);
-				instance = (ControllerFactory)providerClass.newInstance();
+				instance = (ControllerFactory) providerClass.newInstance();
 			}
 			catch (Exception ex)
 			{
-				throw new ConfigException("Unable to define controller factory " 
-				    + providerName, ex);
+				throw new ConfigException("Unable to define controller factory " + providerName, ex);
 			}
 
 			log.info("Using controller factory " + providerName);
@@ -271,4 +289,3 @@ public class Loader
 	}
 
 }
-

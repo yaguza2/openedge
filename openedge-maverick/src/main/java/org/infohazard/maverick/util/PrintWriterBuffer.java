@@ -21,8 +21,8 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	/**
 	 * Logger.
 	 */
-    private static Logger log = LoggerFactory.getLogger(PrintWriterBuffer.class);
-	
+	private static Logger log = LoggerFactory.getLogger(PrintWriterBuffer.class);
+
 	/**
 	 * Construct.
 	 */
@@ -33,6 +33,7 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 
 	/**
 	 * It's more efficient to simply go directly to String.
+	 * 
 	 * @see org.infohazard.maverick.util.Buffer#prefersReader()
 	 */
 	public boolean prefersReader()
@@ -67,7 +68,7 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	 */
 	public int size()
 	{
-		return ((StringWriter)this.out).getBuffer().length();
+		return ((StringWriter) this.out).getBuffer().length();
 	}
 
 	/**

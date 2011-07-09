@@ -5,12 +5,12 @@
 
 package org.infohazard.maverick.flow;
 
-import javax.servlet.*;
+import javax.servlet.ServletException;
 
 /**
- * Controller is the interface that all command controllers must implement.
- * A controller which implements this interface (and not ControllerSingleton)
- * will have a new instance instantiated for every request.
+ * Controller is the interface that all command controllers must implement. A controller
+ * which implements this interface (and not ControllerSingleton) will have a new instance
+ * instantiated for every request.
  */
 public interface Controller
 {

@@ -5,15 +5,19 @@
 
 package org.infohazard.maverick.transform;
 
-import org.infohazard.maverick.flow.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+
 import javax.servlet.ServletException;
 import javax.xml.transform.Source;
+
+import org.infohazard.maverick.flow.TransformContext;
 import org.xml.sax.ContentHandler;
 
 /**
- * Helper class for transform steps that are basically XML by nature.
- * Funnels all method calls into the XML routines.
+ * Helper class for transform steps that are basically XML by nature. Funnels all method
+ * calls into the XML routines.
  */
 public abstract class XMLTransformStep extends AbstractTransformStep
 {
@@ -23,12 +27,12 @@ public abstract class XMLTransformStep extends AbstractTransformStep
 	{
 		super(tctx);
 	}
-	
+
 	/**
 	 * You implement this.
 	 */
 	public abstract ContentHandler getSAXHandler() throws IOException, ServletException;
-	
+
 	/**
 	 * You implement this.
 	 */

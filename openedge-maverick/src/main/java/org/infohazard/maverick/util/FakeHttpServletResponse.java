@@ -27,16 +27,17 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * Logger.
 	 */
-    private static Logger log = LoggerFactory.getLogger(FakeHttpServletResponse.class);
+	private static Logger log = LoggerFactory.getLogger(FakeHttpServletResponse.class);
 
 	/**
 	 */
-	protected static final String NO_BUFFER_MSG = "The previous step never tried to write anything.  Perhaps the document path is incorrect?";
+	protected static final String NO_BUFFER_MSG =
+		"The previous step never tried to write anything.  Perhaps the document path is incorrect?";
 
 	/**
-	 * We need to track the charset which is applied to the response
-	 * using setContentType so that we can intelligently convert between
-	 * streams and readers.  If null, the default encoding is assumed.
+	 * We need to track the charset which is applied to the response using setContentType
+	 * so that we can intelligently convert between streams and readers. If null, the
+	 * default encoding is assumed.
 	 */
 	protected String charset;
 
@@ -44,52 +45,49 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	 * Actually holds all the output data.
 	 */
 	protected Buffer buffer;
-	
+
 	/**
 	 * Creates a response wrapper which buffers the output.
 	 */
 	public FakeHttpServletResponse(HttpServletResponse wrapMe)
 	{
 		super(wrapMe);
-		
+
 		if (log.isDebugEnabled())
-			log.debug("Creating fake response, original buffer size is "
-						+ wrapMe.getBufferSize());
+			log.debug("Creating fake response, original buffer size is " + wrapMe.getBufferSize());
 	}
 
 	/**
 	 * @return true if it is more efficient to call getOutputAsReader() than
-	 *  getOutputAsString().  If false, getOutputAsString() should be used.
+	 *         getOutputAsString(). If false, getOutputAsString() should be used.
 	 */
 	public boolean prefersReader()
 	{
 		if (this.buffer == null)
 			throw new IllegalStateException(NO_BUFFER_MSG);
-		
+
 		return this.buffer.prefersReader();
 	}
-	
+
 	/**
-	 * Provides the buffered output as a Reader.  If output was written
-	 * using a ServletOutputStream, the charset defined in the content-type
-	 * is used to decode the data.  If no charset is set, the default
-	 * encoding is assumed.
+	 * Provides the buffered output as a Reader. If output was written using a
+	 * ServletOutputStream, the charset defined in the content-type is used to decode the
+	 * data. If no charset is set, the default encoding is assumed.
 	 */
 	public Reader getOutputAsReader() throws UnsupportedEncodingException
 	{
 		log.debug("Getting output as Reader");
-		
+
 		if (this.buffer == null)
 			throw new IllegalStateException(NO_BUFFER_MSG);
-		
+
 		return this.buffer.getAsReader();
 	}
 
 	/**
-	 * Provides the buffered output as a String.  If output was written
-	 * using a ServletOutputStream, the charset defined in the content-type
-	 * is used to decode the data.  If no charset is set, the default
-	 * encoding is assumed.
+	 * Provides the buffered output as a String. If output was written using a
+	 * ServletOutputStream, the charset defined in the content-type is used to decode the
+	 * data. If no charset is set, the default encoding is assumed.
 	 */
 	public String getOutputAsString() throws UnsupportedEncodingException
 	{
@@ -97,7 +95,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 
 		if (this.buffer == null)
 			throw new IllegalStateException(NO_BUFFER_MSG);
-		
+
 		return this.buffer.getAsString();
 	}
 
@@ -127,7 +125,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 				throw new IllegalStateException("getWriter() already called");
 		}
 
-		return (ServletOutputStream)this.buffer;
+		return (ServletOutputStream) this.buffer;
 	}
 
 	/**
@@ -136,7 +134,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	public PrintWriter getWriter() throws java.io.IOException
 	{
 		log.debug("View is using PrintWriter");
-		
+
 		if (this.buffer == null)
 			this.buffer = new PrintWriterBuffer();
 		else
@@ -145,7 +143,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 				throw new IllegalStateException("getOutputStream() already called");
 		}
 
-		return (PrintWriter)this.buffer;
+		return (PrintWriter) this.buffer;
 	}
 
 	/**
@@ -155,13 +153,13 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Setting contentType to " + type);
-		
+
 		// Don't pass through
 
 		// Extract out the charset.
-		// type might be something like this:  text/html; charset=utf-8
+		// type might be something like this: text/html; charset=utf-8
 		int semicolonIndex = type.lastIndexOf(';');
-		if (semicolonIndex >= 0 && semicolonIndex != (type.length()-1))
+		if (semicolonIndex >= 0 && semicolonIndex != (type.length() - 1))
 		{
 			String working = type.substring(semicolonIndex + 1);
 			working = working.trim();
@@ -183,7 +181,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Someone wanted to set contentLength to " + len);
-			
+
 		// Don't pass through
 	}
 
@@ -194,7 +192,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Someone wanted to flush the buffer");
-			
+
 		// Don't pass through
 	}
 
@@ -205,7 +203,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Set locale to " + loc);
-			
+
 		super.setLocale(loc);
 	}
 
@@ -216,29 +214,29 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Added cookie " + cookie);
-			
+
 		super.addCookie(cookie);
 	}
-	
+
 	/**
 	 * @see HttpServletResponse#setDateHeader
 	 */
-	public void setDateHeader(java.lang.String name, long date)	
+	public void setDateHeader(java.lang.String name, long date)
 	{
 		if (log.isDebugEnabled())
 			log.debug("Set date header " + name + " to " + date);
-			
+
 		super.setDateHeader(name, date);
 	}
 
 	/**
 	 * @see HttpServletResponse#addDateHeader
 	 */
-	public void addDateHeader(java.lang.String name, long date)	
+	public void addDateHeader(java.lang.String name, long date)
 	{
 		if (log.isDebugEnabled())
 			log.debug("Add date header " + name + " to " + date);
-			
+
 		super.addDateHeader(name, date);
 	}
 
@@ -249,7 +247,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Set header " + name + " to " + value);
-			
+
 		super.setHeader(name, value);
 	}
 
@@ -260,7 +258,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Add header " + name + " to " + value);
-			
+
 		super.addHeader(name, value);
 	}
 
@@ -271,7 +269,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Set int header " + name + " to " + value);
-			
+
 		super.setIntHeader(name, value);
 	}
 
@@ -282,13 +280,13 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Add int header " + name + " to " + value);
-			
+
 		super.addIntHeader(name, value);
 	}
 
 	/**
 	 * This actually sends to the real response and flags an error condition.
-	 *
+	 * 
 	 * @see HttpServletResponse#addIntHeader
 	 */
 	public void sendError(int sc) throws IOException
@@ -297,10 +295,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 
 		super.sendError(sc);
 	}
-	
+
 	/**
 	 * This actually sends to the real response and flags an error condition.
-	 *
+	 * 
 	 * @see HttpServletResponse#addIntHeader
 	 */
 	public void sendError(int sc, java.lang.String msg) throws IOException
@@ -309,7 +307,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 
 		super.sendError(sc, msg);
 	}
-	
+
 	/**
 	 * @see HttpServletResponse#setStatus
 	 */
@@ -317,12 +315,12 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	{
 		if (log.isDebugEnabled())
 			log.debug("Setting status " + sc);
-			
+
 		super.setStatus(sc);
 	}
 
 	/**
-     * @see HttpServletResponse#setStatus
+	 * @see HttpServletResponse#setStatus
 	 */
 	public void setStatus(int sc, java.lang.String sm)
 	{
@@ -330,13 +328,13 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 			log.debug("Setting status " + sc + ", " + sm);
 
 		super.setStatus(sc, sm);
-        // :FIXME: setStatus is deprecated As of version 2.1 [thusted 2003-10-27]
+		// :FIXME: setStatus is deprecated As of version 2.1 [thusted 2003-10-27]
 	}
 
 	/**
 	 */
 	protected HttpServletResponse getHttpResponse()
 	{
-		return (HttpServletResponse)this.getResponse();
+		return (HttpServletResponse) this.getResponse();
 	}
 }

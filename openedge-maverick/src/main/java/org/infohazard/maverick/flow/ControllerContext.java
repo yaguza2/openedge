@@ -6,14 +6,15 @@
 package org.infohazard.maverick.flow;
 
 import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * ControllerContext defines the methods and data available to a
- * controller for a single request.
+ * ControllerContext defines the methods and data available to a controller for a single
+ * request.
  */
 public interface ControllerContext
 {
@@ -21,7 +22,7 @@ public interface ControllerContext
 	 * Basic data
 	 */
 	public HttpServletRequest getRequest();
-	
+
 	/**
 	 * Basic data
 	 */
@@ -31,22 +32,22 @@ public interface ControllerContext
 	 * Basic data
 	 */
 	public ServletConfig getServletConfig();
-	
+
 	/**
 	 * Basic data
 	 */
 	public ServletContext getServletContext();
-	
+
 	/**
 	 * Set the model to be rendered.
 	 */
 	public void setModel(Object mod);
-	
+
 	/**
 	 * @return the model which was set.
 	 */
 	public Object getModel();
-	
+
 	/**
 	 * Sets a parameter to the controller (not view or transforms).
 	 */

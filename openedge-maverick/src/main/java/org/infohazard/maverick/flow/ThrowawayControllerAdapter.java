@@ -9,10 +9,11 @@ import javax.servlet.ServletException;
 import org.jdom.Element;
 
 /**
- * This adapter masquerades as a singleton controller but actually
- * creates single-use instance controllers.
- *
+ * This adapter masquerades as a singleton controller but actually creates single-use
+ * instance controllers.
+ * 
  * created January 27, 2002
+ * 
  * @author Jeff Schnitzer
  * @version $Revision: 1.5 $ $Date: 2004/06/27 17:40:55 $
  */
@@ -23,7 +24,9 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 
 	/**
 	 * Create the adapter.
-	 * @param controllerClass the controller class
+	 * 
+	 * @param controllerClass
+	 *            the controller class
 	 */
 	public ThrowawayControllerAdapter(Class controllerClass)
 	{
@@ -32,7 +35,7 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 
 	/**
 	 * Currently unused.
-	 *
+	 * 
 	 * @param controllerNode
 	 * @exception ConfigException
 	 */
@@ -42,14 +45,16 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 
 	/**
 	 * Instantiates a single-use controller, executes it, and returns the result.
-	 * @param cctx the controller context.
+	 * 
+	 * @param cctx
+	 *            the controller context.
 	 * @return String logical view name (result of command method call of controller)
 	 */
 	public String go(ControllerContext cctx) throws ServletException
 	{
 		try
 		{
-			Controller instance = (Controller)this.controllerClass.newInstance();
+			Controller instance = (Controller) this.controllerClass.newInstance();
 
 			return instance.go(cctx);
 		}
@@ -63,4 +68,3 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 		}
 	}
 }
-

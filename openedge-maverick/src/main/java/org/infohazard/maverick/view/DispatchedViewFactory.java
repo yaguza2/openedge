@@ -13,8 +13,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.flow.View;
@@ -22,24 +20,29 @@ import org.infohazard.maverick.flow.ViewContext;
 import org.infohazard.maverick.flow.ViewFactory;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Element;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * <p>This factory creates Views which use the RequestDispatcher to obtain
- * content.  It is used by the DocumentViewFactory and not intended to be
- * designated as a normal Maverick view type.</p>
+ * <p>
+ * This factory creates Views which use the RequestDispatcher to obtain content. It is
+ * used by the DocumentViewFactory and not intended to be designated as a normal Maverick
+ * view type.
+ * </p>
  */
 public class DispatchedViewFactory implements ViewFactory
 {
 	/**
 	 * Logger.
 	 */
-    private static Logger log = LoggerFactory.getLogger(DispatchedViewFactory.class);
+	private static Logger log = LoggerFactory.getLogger(DispatchedViewFactory.class);
 
-    /**
-     * Initialize.
-     * @see org.infohazard.maverick.flow.ViewFactory#init(org.jdom.Element, javax.servlet.ServletConfig)
-     */
+	/**
+	 * Initialize.
+	 * 
+	 * @see org.infohazard.maverick.flow.ViewFactory#init(org.jdom.Element,
+	 *      javax.servlet.ServletConfig)
+	 */
 	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
 	{
 	}
@@ -53,7 +56,7 @@ public class DispatchedViewFactory implements ViewFactory
 
 		if (path == null)
 			throw new ConfigException("View node must have a path:  " + XML.toString(viewNode));
-			
+
 		return new DispatchedView(path);
 	}
 
@@ -66,9 +69,10 @@ public class DispatchedViewFactory implements ViewFactory
 		 * Source url of the document.
 		 */
 		protected String path;
-		
+
 		/**
-		 * @param path is the URL of the document to render.
+		 * @param path
+		 *            is the URL of the document to render.
 		 */
 		public DispatchedView(String path)
 		{
@@ -76,13 +80,13 @@ public class DispatchedViewFactory implements ViewFactory
 				this.path = path;
 			else
 				this.path = "/" + path;
-	
+
 			log.debug("Creating DispatchedView with path:  " + path);
 		}
-	
+
 		/**
 		 * Renders the url associated with this view directly to the response.
-		 *
+		 * 
 		 * @see View#go
 		 */
 		public void go(ViewContext vctx) throws IOException, ServletException
@@ -92,24 +96,25 @@ public class DispatchedViewFactory implements ViewFactory
 			{
 				if (log.isDebugEnabled())
 					log.debug("Setting " + vctx.getViewParams().size() + " params");
-				
+
 				Iterator entryIt = vctx.getViewParams().entrySet().iterator();
 				while (entryIt.hasNext())
 				{
-					Map.Entry entry = (Map.Entry)entryIt.next();
-					vctx.getRequest().setAttribute((String)entry.getKey(), entry.getValue());
+					Map.Entry entry = (Map.Entry) entryIt.next();
+					vctx.getRequest().setAttribute((String) entry.getKey(), entry.getValue());
 				}
 			}
-			
+
 			RequestDispatcher disp = vctx.getRequest().getRequestDispatcher(this.path);
 			if (null == disp)
-				throw new ServletException("RequestDispatcher could not be created for " + this.path);
+				throw new ServletException("RequestDispatcher could not be created for "
+					+ this.path);
 
 			TransformStep next = vctx.getNextStep();
 
 			if (log.isDebugEnabled())
 				log.debug((next.isLast() ? "Forwarding to " : "Including ") + this.path);
-				
+
 			if (next.isLast())
 				disp.forward(vctx.getRequest(), next.getResponse());
 			else

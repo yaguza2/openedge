@@ -8,14 +8,13 @@ package org.infohazard.maverick.flow;
 import javax.servlet.ServletException;
 
 /**
- * The Transform interface allows some sort of arbitrary transformation on
- * a set of input data.  It is the relatively static object in the Maverick
- * configuration object graph which represents a specific transform node
- * in the config file.
- *
- * The actual work of performing a transformation step during actual
- * request procesing is done by an instance of TransformationStep,
- * which Maverick asks the Transform object to create.
+ * The Transform interface allows some sort of arbitrary transformation on a set of input
+ * data. It is the relatively static object in the Maverick configuration object graph
+ * which represents a specific transform node in the config file.
+ * 
+ * The actual work of performing a transformation step during actual request procesing is
+ * done by an instance of TransformationStep, which Maverick asks the Transform object to
+ * create.
  */
 public interface Transform
 {

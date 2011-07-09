@@ -6,8 +6,8 @@
 package org.infohazard.maverick.flow;
 
 /**
- * If a model implements this interface, method(s) will be called so that
- * the model object can manage internal resources.
+ * If a model implements this interface, method(s) will be called so that the model object
+ * can manage internal resources.
  */
 public interface ModelLifetime
 {

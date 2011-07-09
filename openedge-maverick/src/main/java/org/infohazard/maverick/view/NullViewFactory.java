@@ -5,26 +5,33 @@
 
 package org.infohazard.maverick.view;
 
-import org.infohazard.maverick.flow.*;
-import org.jdom.Element;
 import java.io.IOException;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.flow.ConfigException;
+import org.infohazard.maverick.flow.View;
+import org.infohazard.maverick.flow.ViewContext;
+import org.infohazard.maverick.flow.ViewFactory;
+import org.jdom.Element;
 
 /**
- * <p>Creates a view which does absolutely nothing.  The Controller
- * is assumed to have manually written all data to the response.  The
- * model is ignored.</p>
- *
- * <p>Null views have no extra attributes and cannot have transforms.</p> 
+ * <p>
+ * Creates a view which does absolutely nothing. The Controller is assumed to have
+ * manually written all data to the response. The model is ignored.
+ * </p>
+ * 
+ * <p>
+ * Null views have no extra attributes and cannot have transforms.
+ * </p>
  */
 public class NullViewFactory implements ViewFactory
 {
 	/**
 	 */
 	static View singletonNull = new NullView();
-	 
+
 	/**
 	 */
 	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
@@ -37,7 +44,7 @@ public class NullViewFactory implements ViewFactory
 	{
 		return singletonNull;
 	}
-	
+
 	/**
 	 * Simple implementation does nothing.
 	 */

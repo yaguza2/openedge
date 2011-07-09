@@ -5,8 +5,8 @@
 
 package org.infohazard.maverick.flow;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Only creates simple, non-shunted renderers.
@@ -36,7 +36,7 @@ class ViewRegistrySimple extends ViewRegistry
 	 */
 	protected void addView(Map target, String viewName, String ref) throws ConfigException
 	{
-		View v = (View)this.globalViews.get(ref);
+		View v = (View) this.globalViews.get(ref);
 		if (v == null)
 			throw new ConfigException("Reference to unknown global view \"" + ref + "\".");
 

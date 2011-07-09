@@ -12,15 +12,15 @@ import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.Transform;
 import org.infohazard.maverick.flow.TransformContext;
 import org.infohazard.maverick.flow.TransformStep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This Transform wraps the input one or more times by putting
- * the output from the previous step in the request attributes.
+ * This Transform wraps the input one or more times by putting the output from the
+ * previous step in the request attributes.
  */
 class DocumentTransform implements Transform
 {
@@ -28,6 +28,7 @@ class DocumentTransform implements Transform
 	 * Transform path.
 	 */
 	protected String path;
+
 	/**
 	 * The name.
 	 */
@@ -40,17 +41,21 @@ class DocumentTransform implements Transform
 
 	/**
 	 * Construct with path and name.
-	 * @param path path
-	 * @param wrappedName name
+	 * 
+	 * @param path
+	 *            path
+	 * @param wrappedName
+	 *            name
 	 */
 	public DocumentTransform(String path, String wrappedName)
 	{
 		this.path = path;
 		this.wrappedName = wrappedName;
-		
-		log.debug("Created DocumentTransform with wrapped name \"" + wrappedName + "\" and path " + path);
+
+		log.debug("Created DocumentTransform with wrapped name \"" + wrappedName + "\" and path "
+			+ path);
 	}
-	
+
 	/**
 	 * @see org.infohazard.maverick.flow.Transform#createStep(org.infohazard.maverick.flow.TransformContext)
 	 */
@@ -58,7 +63,7 @@ class DocumentTransform implements Transform
 	{
 		return new Step(tctx);
 	}
-	
+
 	/**
 	 * Transform step.
 	 */
@@ -66,34 +71,37 @@ class DocumentTransform implements Transform
 	{
 		/**
 		 * Construct.
-		 * @param tctx transform context
+		 * 
+		 * @param tctx
+		 *            transform context
 		 * @throws ServletException
 		 */
 		public Step(TransformContext tctx) throws ServletException
 		{
 			super(tctx);
 		}
-	
+
 		/**
 		 * @see org.infohazard.maverick.flow.TransformStep#go(java.lang.String)
-		 */	
+		 */
 		public void go(String input) throws IOException, ServletException
 		{
 			if (log.isDebugEnabled())
 				log.debug("Wrapping text with length " + input.length());
-			
+
 			// Populate params, if applicable
 			if (this.getTransformCtx().getTransformParams() != null)
 			{
-				Iterator entriesIt = this.getTransformCtx().getTransformParams().entrySet().iterator();
+				Iterator entriesIt =
+					this.getTransformCtx().getTransformParams().entrySet().iterator();
 				while (entriesIt.hasNext())
 				{
-					Map.Entry entry = (Map.Entry)entriesIt.next();
+					Map.Entry entry = (Map.Entry) entriesIt.next();
 					this.getTransformCtx().getRequest()
-							.setAttribute((String)entry.getKey(), entry.getValue());
+						.setAttribute((String) entry.getKey(), entry.getValue());
 				}
 			}
-			
+
 			// Set up request attribute with input
 			this.getTransformCtx().getRequest().setAttribute(wrappedName, input);
 
@@ -102,10 +110,9 @@ class DocumentTransform implements Transform
 				throw new ServletException("RequestDispatcher could not be created for " + path);
 
 			if (log.isDebugEnabled())
-				log.debug("Transforming ("
-							+ (this.getNext().isLast() ? "forward" : "include")
-							+ ") with document:  " + path);
-			
+				log.debug("Transforming (" + (this.getNext().isLast() ? "forward" : "include")
+					+ ") with document:  " + path);
+
 			if (this.getNext().isLast())
 				disp.forward(this.getTransformCtx().getRequest(), this.getNext().getResponse());
 			else

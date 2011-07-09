@@ -10,30 +10,33 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Factory for defining global view objects which can then be referenced
- * for the creation of individual commands.
+ * Factory for defining global view objects which can then be referenced for the creation
+ * of individual commands.
  */
 abstract class ViewRegistry
 {
 	/**
-	 * The name assigned to anonymous views.  No risk of conflicts because
-	 * anonymous views are only allowed when there are no other views
-	 * specified.
+	 * The name assigned to anonymous views. No risk of conflicts because anonymous views
+	 * are only allowed when there are no other views specified.
 	 */
 	public static final String ANONYMOUS_VIEW_NAME = "anonymous view";
 
 	/**
 	 */
 	protected static final String TAG_VIEW = "view";
+
 	protected static final String ATTR_VIEW_ID = "id";
+
 	protected static final String ATTR_VIEW_MODE = "mode";
+
 	protected static final String ATTR_VIEW_NAME = "name";
+
 	protected static final String ATTR_VIEW_REF = "ref";
 
 	/**
@@ -61,7 +64,7 @@ abstract class ViewRegistry
 		Iterator it = viewsNode.getChildren(TAG_VIEW).iterator();
 		while (it.hasNext())
 		{
-			Element viewNode = (Element)it.next();
+			Element viewNode = (Element) it.next();
 
 			String id = viewNode.getAttributeValue(ATTR_VIEW_ID);
 			String mode = viewNode.getAttributeValue(ATTR_VIEW_MODE);
@@ -75,9 +78,8 @@ abstract class ViewRegistry
 	}
 
 	/**
-	 * Creates a mapping from view name to View object.  Nameless
-	 * views are given the name ANONYMOUS_VIEW_NAME, in which case
-	 * it will be the only view available.
+	 * Creates a mapping from view name to View object. Nameless views are given the name
+	 * ANONYMOUS_VIEW_NAME, in which case it will be the only view available.
 	 */
 	public Map createViewsMap(List viewNodes) throws ConfigException
 	{
@@ -86,20 +88,22 @@ abstract class ViewRegistry
 		Iterator it = viewNodes.iterator();
 		while (it.hasNext())
 		{
-			Element viewNode = (Element)it.next();
+			Element viewNode = (Element) it.next();
 
 			String viewName = viewNode.getAttributeValue(ATTR_VIEW_NAME);
 			String ref = viewNode.getAttributeValue(ATTR_VIEW_REF);
-			
+
 			// viewName can default to the ref name
 			if (viewName == null)
 				viewName = ref;
-			
+
 			// Maybe no name was specified
 			if (viewName == null)
 			{
 				if (viewNodes.size() > 1)
-					throw new ConfigException("You cannot have views without names if there are more than one:  " + XML.toString(viewNode));
+					throw new ConfigException(
+						"You cannot have views without names if there are more than one:  "
+							+ XML.toString(viewNode));
 				else
 					viewName = ANONYMOUS_VIEW_NAME;
 
@@ -115,7 +119,8 @@ abstract class ViewRegistry
 			{
 				this.addView(result, viewName, ref);
 			}
-			else	// not a reference, thus view is defined in-place
+			else
+			// not a reference, thus view is defined in-place
 			{
 				String mode = viewNode.getAttributeValue(ATTR_VIEW_MODE);
 
@@ -132,10 +137,11 @@ abstract class ViewRegistry
 	}
 
 	/**
-	 * Defines a global view which can later be used by calling addView()
-	 * with the ref parameter.
-	 *
-	 * @param mode can be null
+	 * Defines a global view which can later be used by calling addView() with the ref
+	 * parameter.
+	 * 
+	 * @param mode
+	 *            can be null
 	 */
 	abstract protected void defineGlobalView(String id, String mode, View v) throws ConfigException;
 
@@ -146,8 +152,10 @@ abstract class ViewRegistry
 
 	/**
 	 * Adds one view to the target Map, using the specified mode.
-	 *
-	 * @param mode can be null
+	 * 
+	 * @param mode
+	 *            can be null
 	 */
-	abstract protected void addView(Map target, String viewName, String mode, View v) throws ConfigException;
+	abstract protected void addView(Map target, String viewName, String mode, View v)
+			throws ConfigException;
 }

@@ -6,6 +6,7 @@
 package org.infohazard.maverick.flow;
 
 import java.util.Map;
+
 import javax.servlet.ServletException;
 
 /**
@@ -16,27 +17,28 @@ class TransformWithParams implements Transform
 	/**
 	 */
 	protected Transform decorated;
+
 	protected Map params;
-	
+
 	/**
 	 */
 	public TransformWithParams(Transform simpler, Map params)
 	{
 		if (params == null)
 			throw new IllegalArgumentException("Don't use this decorator without params");
-			
+
 		this.decorated = simpler;
 		this.params = params;
 	}
-	 
+
 	/**
 	 * Sets some params before creating the step
 	 */
 	public TransformStep createStep(TransformContext tctx) throws ServletException
 	{
 		// Get access to the internal API.
-		((MaverickContext)tctx).putAllTransformParams(this.params);
-		
+		((MaverickContext) tctx).putAllTransformParams(this.params);
+
 		return this.decorated.createStep(tctx);
 	}
 }

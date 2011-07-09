@@ -8,8 +8,8 @@ package org.infohazard.maverick.flow;
 import javax.servlet.ServletException;
 
 /**
- * Exception which indicates that a Shunt was unable to pick
- * a mode based on current request state.
+ * Exception which indicates that a Shunt was unable to pick a mode based on current
+ * request state.
  */
 public class NoSuitableModeException extends ServletException
 {
@@ -41,4 +41,3 @@ public class NoSuitableModeException extends ServletException
 		super(rootCause);
 	}
 }
-

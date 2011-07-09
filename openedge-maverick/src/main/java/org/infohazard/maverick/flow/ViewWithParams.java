@@ -5,38 +5,39 @@
 
 package org.infohazard.maverick.flow;
 
-import java.util.*;
 import java.io.IOException;
+import java.util.Map;
+
 import javax.servlet.ServletException;
 
 /**
- * ViewWithTransforms is a decorator that sets params when
- * rendering a view.
+ * ViewWithTransforms is a decorator that sets params when rendering a view.
  */
 class ViewWithParams implements View
 {
 	/**
 	 */
 	protected View decorated;
+
 	protected Map params;
-	
+
 	/**
 	 */
 	public ViewWithParams(View decorate, Map params)
 	{
 		if (params == null)
 			throw new IllegalArgumentException("Don't use this decorator without params");
-			
+
 		this.decorated = decorate;
 		this.params = params;
 	}
-	
+
 	/**
 	 */
 	public void go(ViewContext vctx) throws IOException, ServletException
 	{
-		((MaverickContext)vctx).putAllViewParams(this.params);
-		
+		((MaverickContext) vctx).putAllViewParams(this.params);
+
 		this.decorated.go(vctx);
 	}
 }

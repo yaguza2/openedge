@@ -5,7 +5,6 @@
 
 package org.infohazard.maverick.flow;
 
-
 /**
  * The default implementation of ControllerFactory.
  */
