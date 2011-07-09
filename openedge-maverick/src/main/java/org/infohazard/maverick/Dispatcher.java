@@ -34,14 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
  * Dispatcher is the central command processor of the Maverick framework. All commands are
  * routed to this servlet by way of extension mapping (say, *.m). From here requests are
  * routed through the "workflow" tree of {@link Command},
  * {@link org.infohazard.maverick.flow.View View}, and
  * {@link org.infohazard.maverick.flow.Transform Transform} (or "Pipeline") objects built
- * from the Maverick configuration file.
- * </p>
+ * from the Maverick configuration file. </p>
  * 
  * <p>
  * Commands can be gracefully chained together; if a view references another Maverick
@@ -187,75 +185,59 @@ public class Dispatcher extends HttpServlet
 	protected static final String SAVED_MAVCTX_KEY = "mav.context";
 
 	/**
-	 * <p>
 	 * Dispatcher logger.
-	 * </p>
 	 */
 	private static Logger log = LoggerFactory.getLogger(Dispatcher.class);
 
 	/**
-	 * <p>
 	 * Maps command names to Command objects.
-	 * </p>
 	 */
-	protected Map commands;
+	protected Map<String, Command> commands;
 
 	/**
-	 * <p>
 	 * The current configuration document.
-	 * </p>
 	 */
 	protected Document configDocument;
 
 	/**
-	 * <p>
 	 * The charset to use by default for request parameter decoding [<code>null</code>].
 	 * If not set, the default charset will be whatever the servlet container chooses
 	 * (probably ISO-8859-1 aka Latin-1). If set, this String is used as the character
 	 * encoding for HTTP requests. Leaving the property unset means do nothing special.
-	 * </p>
 	 * <p>
 	 * This property may be set through the {@link #INITPARAM_DEFAULT_REQUEST_CHARSET
 	 * INITPARAM_DEFAULT_REQUEST_CHARSET} Serlvet init parameter.
-	 * </p>
 	 */
 	protected String defaultRequestCharset;
 
 	/**
-	 * <p>
 	 * The number of transformations to run before stopping, regardless of whether the
 	 * final step has been reached. If this property is not set, all transforms will run
 	 * to completion.
-	 * </p>
 	 * <p>
 	 * This property may be set through the {@link #INITPARAM_LIMIT_TRANSFORMS_PARAM
 	 * INITPARAM_LIMIT_TRANSFORMS_PARAM} Serlvet init parameter.
-	 * </p>
 	 */
 	protected String limitTransformsParam;
 
 	/**
-	 * <p>
 	 * If set to <code>true</code>, the {@link MaverickContext} is reused between Commands
 	 * invoked within the same request. This allows Maverick Controllers to be "chained"
 	 * by forwarding context attributes from one Maverick Command to another.
 	 * <p>
 	 * The Context is <b>not</b> preserved in the case of a redirected request, since
 	 * redirection creates a new HTTP request.
-	 * </p>
 	 * <p>
 	 * This property may be set through the {@link #INITPARAM_REUSE_CONTEXT
 	 * INITPARAM_REUSE_CONTEXT} Serlvet init parameter. Set the parameter to "true" or
 	 * leave it undefined ["false"].
-	 * </p>
 	 */
 	protected boolean reuseMaverickContext;
 
 	/**
-	 * <p>
 	 * Initializes the Dispatcher by loading the configuration file.
-	 * </p>
 	 */
+	@Override
 	public void init() throws ServletException
 	{
 		// Make us available in the application attribute collection
@@ -282,10 +264,9 @@ public class Dispatcher extends HttpServlet
 	}
 
 	/**
-	 * <p>
 	 * The main entry point of the servlet; this processes an HTTP request.
-	 * </p>
 	 */
+	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException
 	{
@@ -305,8 +286,7 @@ public class Dispatcher extends HttpServlet
 		}
 		else
 		{
-			if (log.isDebugEnabled())
-				log.debug("Servicing command:  " + commandName);
+			log.debug("Servicing command:  {}", commandName);
 
 			// This must be done before any parameters are read
 			if (this.defaultRequestCharset != null)
@@ -337,10 +317,8 @@ public class Dispatcher extends HttpServlet
 	}
 
 	/**
-	 * <p>
 	 * Extracts the command name from the request. Extension and leading / will be
 	 * removed.
-	 * </p>
 	 */
 	protected String extractCommandName(HttpServletRequest request)
 	{
@@ -370,10 +348,8 @@ public class Dispatcher extends HttpServlet
 	}
 
 	/**
-	 * <p>
 	 * Reloads the XML configuration file. Can be done on-the-fly. Any requests being
 	 * serviced are allowed to complete with the old data.
-	 * </p>
 	 */
 	protected void reloadConfig() throws ConfigException
 	{
@@ -381,7 +357,7 @@ public class Dispatcher extends HttpServlet
 
 		Document replacementConfigDocument = this.loadConfigDocument();
 		Loader loader = new Loader(replacementConfigDocument, this.getServletConfig());
-		Map replacementCommands = loader.getCommands();
+		Map<String, Command> replacementCommands = loader.getCommands();
 
 		//
 		// Add a simple reload command if the user defined one.
@@ -391,7 +367,8 @@ public class Dispatcher extends HttpServlet
 		{
 			Command reload = new Command()
 			{
-				public void go(MaverickContext mctx) throws IOException, ServletException
+				@Override
+				public void go(MaverickContext mctx) throws ServletException
 				{
 					try
 					{
@@ -416,11 +393,10 @@ public class Dispatcher extends HttpServlet
 		{
 			Command currentConfig = new Command()
 			{
-				public void go(MaverickContext mctx) throws IOException, ServletException
+				@Override
+				public void go(MaverickContext mctx) throws IOException
 				{
-					XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());// ("	 ",
-																						// true,
-																						// "UTF-8");
+					XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
 					mctx.getRealResponse().setContentType("text/xml; charset=UTF-8");
 					outputter.output(configDocument, mctx.getRealResponse().getOutputStream());
@@ -448,11 +424,11 @@ public class Dispatcher extends HttpServlet
 	 */
 	protected Command getCommand(String name)
 	{
-		Command cmd = (Command) this.commands.get(name);
+		Command cmd = this.commands.get(name);
 
 		if (cmd == null)
 		{
-			cmd = (Command) this.commands.get("*");
+			cmd = this.commands.get("*");
 			if (cmd != null)
 				log.warn("Unknown command " + name + ", using *.");
 		}
