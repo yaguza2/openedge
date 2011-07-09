@@ -22,7 +22,7 @@ public class ControllerWithParams implements Controller
 	/**
 	 * the controller parameters.
 	 */
-	protected Map params;
+	protected Map<String, Object> params;
 
 	/**
 	 * Create a decorator for the given controller with the given parameters.
@@ -32,7 +32,7 @@ public class ControllerWithParams implements Controller
 	 * @param params
 	 *            the parameters
 	 */
-	public ControllerWithParams(Controller decorate, Map params)
+	public ControllerWithParams(Controller decorate, Map<String, Object> params)
 	{
 		if (params == null)
 			throw new IllegalArgumentException("Don't use this decorator without params");
@@ -47,6 +47,7 @@ public class ControllerWithParams implements Controller
 	 * 
 	 * @see org.infohazard.maverick.flow.Controller#go(org.infohazard.maverick.flow.ControllerContext)
 	 */
+	@Override
 	public String go(ControllerContext cctx) throws ServletException
 	{
 		((MaverickContext) cctx).putAllControllerParams(this.params);
