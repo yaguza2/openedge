@@ -66,7 +66,7 @@ public class Loader
 	private static Logger log = LoggerFactory.getLogger(Loader.class);
 
 	/** Commands get built into this map. */
-	protected Map commands = new HashMap();
+	protected Map<String, Command> commands = new HashMap<String, Command>();
 
 	/** Servlet config. */
 	protected ServletConfig servletCfg;
@@ -83,8 +83,6 @@ public class Loader
 	/**
 	 * @param doc
 	 *            An already parsed JDOM Document of the config file.
-	 * @param doc
-	 *            the configuration document
 	 * @param dispatcherConfig
 	 *            servlet configuration of the dispatcher servlet
 	 * @exception ConfigException
@@ -109,7 +107,7 @@ public class Loader
 	 * 
 	 * @return Commands map
 	 */
-	public Map getCommands()
+	public Map<String, Command> getCommands()
 	{
 		return this.commands;
 	}
@@ -156,6 +154,7 @@ public class Loader
 	 *            the configuration document
 	 * @exception ConfigException
 	 */
+	@SuppressWarnings("unchecked")
 	protected void loadDocument(Document doc) throws ConfigException
 	{
 		Element root = doc.getRootElement();
@@ -172,31 +171,31 @@ public class Loader
 
 		// load modules. probably won't be more than one element, but who knows.
 		// don't need to worry about default type being reset because it won't be.
-		Iterator allModulesIt = root.getChildren(TAG_MODULES).iterator();
+		Iterator<Element> allModulesIt = root.getChildren(TAG_MODULES).iterator();
 		while (allModulesIt.hasNext())
 		{
-			Element modules = (Element) allModulesIt.next();
+			Element modules = allModulesIt.next();
 			this.loadModules(modules);
 		}
 
 		// load global views; can be many elements
-		Iterator allViewsIt = root.getChildren(TAG_VIEWS).iterator();
+		Iterator<Element> allViewsIt = root.getChildren(TAG_VIEWS).iterator();
 		while (allViewsIt.hasNext())
 		{
-			Element viewsNode = (Element) allViewsIt.next();
+			Element viewsNode = allViewsIt.next();
 			this.viewReg.defineGlobalViews(viewsNode);
 		}
 
 		// load commands; can be many elements
-		Iterator allCommandsIt = root.getChildren(TAG_COMMANDS).iterator();
+		Iterator<Element> allCommandsIt = root.getChildren(TAG_COMMANDS).iterator();
 		while (allCommandsIt.hasNext())
 		{
-			Element commandsNode = (Element) allCommandsIt.next();
+			Element commandsNode = allCommandsIt.next();
 
-			Iterator commandIt = commandsNode.getChildren(TAG_COMMAND).iterator();
+			Iterator<Element> commandIt = commandsNode.getChildren(TAG_COMMAND).iterator();
 			while (commandIt.hasNext())
 			{
-				Element commandNode = (Element) commandIt.next();
+				Element commandNode = commandIt.next();
 
 				String commandName = commandNode.getAttributeValue(ATTR_COMMAND_NAME);
 
@@ -237,7 +236,7 @@ public class Loader
 				throw new ConfigException("Not a valid shunt factory node:  "
 					+ XML.toString(shuntFactoryNode));
 
-			Class providerClass;
+			Class< ? > providerClass;
 			ShuntFactory instance;
 			try
 			{
@@ -267,7 +266,7 @@ public class Loader
 				throw new ConfigException("Not a valid controller factory node: "
 					+ XML.toString(controllerFactoryNode));
 
-			Class providerClass;
+			Class< ? > providerClass;
 			ControllerFactory instance;
 			try
 			{
