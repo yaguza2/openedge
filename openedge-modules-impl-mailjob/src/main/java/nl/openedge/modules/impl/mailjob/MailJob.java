@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules.impl.mailjob;
 
 import java.io.FileNotFoundException;
@@ -134,8 +104,8 @@ public final class MailJob implements StatefulJob
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException
 	{
-
-		Map parameters = context.getJobDetail().getJobDataMap();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> parameters = context.getJobDetail().getJobDataMap();
 		String mailSessionRef = (String) parameters.get(PARAMETER_KEY_JNDI_MAIL_SESSION);
 
 		try
@@ -145,15 +115,15 @@ public final class MailJob implements StatefulJob
 				// fallback to normal mail API
 				this.mailProperties = new Properties();
 				log.debug("Reading mailproperties:");
-				for (Iterator i = parameters.keySet().iterator(); i.hasNext();)
+
+				for (String key : parameters.keySet())
 				{
-					String key = (String) i.next();
 					if (key.toLowerCase().startsWith("mailprop."))
 					{
 						String pname = key.substring(9);
 						String pvalue = (String) parameters.get(key);
 						mailProperties.setProperty(pname, pvalue);
-						log.debug(pname + "[" + pvalue + "]");
+						log.debug("{}[{}]", pname, pvalue);
 					}
 				}
 				log.debug("Done.");
@@ -173,8 +143,7 @@ public final class MailJob implements StatefulJob
 		}
 		catch (Exception e)
 		{
-			log.error("Exception ", e);
-			log.error("will unschedule all triggers");
+			log.error("Unschedule all triggers due to exception " + e.getMessage(), e);
 			JobExecutionException je = new JobExecutionException(e, false);
 			je.setErrorCode(SchedulerException.ERR_BAD_CONFIGURATION);
 			je.setUnscheduleAllTriggers(true);
@@ -203,8 +172,7 @@ public final class MailJob implements StatefulJob
 		}
 		catch (Exception ex)
 		{
-			log.error("Exception: ", ex);
-			log.error("will unschedule all triggers");
+			log.error("Unschedule all triggers due to exception " + ex.getMessage(), ex);
 
 			JobExecutionException e = new JobExecutionException(ex, false);
 			e.setErrorCode(SchedulerException.ERR_BAD_CONFIGURATION);
@@ -219,7 +187,7 @@ public final class MailJob implements StatefulJob
 		}
 		catch (Exception e)
 		{
-			log.error("Exception: ", e);
+			log.error("Exception: " + e, e);
 		}
 		Object temp = parameters.get(PARAMETER_KEY_RETRY_TIME);
 		if (temp instanceof String)
@@ -266,15 +234,16 @@ public final class MailJob implements StatefulJob
 			{
 				long maxAge = retryAge.longValue();
 				long now = System.currentTimeMillis();
-				List all = mqMod.getFailedMessages();
-				List filtered = all;
+
+				List<MailMessage> all = mqMod.getFailedMessages();
+				List<MailMessage> filtered = all;
 				if (maxAge > 0)
 				{
-					filtered = new ArrayList();
+					filtered = new ArrayList<MailMessage>();
 					MailMessage tmp = null;
 					for (int i = 0; i < all.size(); i++)
 					{
-						tmp = (MailMessage) all.get(i);
+						tmp = all.get(i);
 						if (now - tmp.getCreated().longValue() < maxAge)
 							filtered.add(tmp);
 						else
@@ -288,52 +257,44 @@ public final class MailJob implements StatefulJob
 				log.error("Exception: ", e);
 			}
 		}
-
 	}
 
-	/**
-	 * send messages from queue
-	 */
-	private void sendMessages(Session session, MailMQModule mqMod, List messages) throws Exception
+	private void sendMessages(Session session, MailMQModule mqMod, List<MailMessage> messages)
+			throws Exception
 	{
-		List succeeded = new ArrayList();
+		List<MailMessage> succeeded = new ArrayList<MailMessage>();
 		try
 		{
-			log.info("Loaded " + messages.size() + " MailMessages from the database.");
-			if (messages != null)
+			log.info("Loaded {} MailMessages from the database.", messages.size());
+			for (MailMessage msg : messages)
 			{
-				for (Iterator i = messages.iterator(); i.hasNext();)
+				MimeMessage mailMsg = null;
+				try
 				{
-					MailMessage msg = (MailMessage) i.next();
-					MimeMessage mailMsg = null;
+					log.debug("Mailing message with id[{}]", msg.getId());
+					mailMsg = constructMessage(msg, session);
+					Transport.send(mailMsg);
+
+					succeeded.add(msg);
+
+				}
+				catch (Exception e)
+				{
+					log.error("Exception sending message with id[" + msg.getId() + "]", e);
 					try
 					{
-						log.debug("Mailing message with id[" + msg.getId() + "]");
-						mailMsg = constructMessage(msg, session);
-						Transport.send(mailMsg);
-
-						succeeded.add(msg);
-
+						mqMod.flagFailedMessage(msg, e);
 					}
-					catch (Exception e)
+					catch (Exception e2)
 					{
-						log.error("Exception sending message with id[" + msg.getId() + "]");
-						log.error("Exception: ", e);
-						try
-						{
-							mqMod.flagFailedMessage(msg, e);
-						}
-						catch (Exception e2)
-						{ // ooops this is pretty bad!
-							log.error("Exception", e2);
-							// nothing else to do than to ignore it
-						}
+						// ooops this is pretty bad!
+						log.error("Exception", e2);
+						// nothing else to do than to ignore it
 					}
 				}
 			}
-			log.info("Succeeded sending " + succeeded.size() + "messages.");
+			log.info("Succeeded sending {} messages.", succeeded.size());
 			mqMod.removeFromQueue(succeeded);
-
 		}
 		catch (Exception e)
 		{
@@ -364,14 +325,14 @@ public final class MailJob implements StatefulJob
 		// attach the attachments to the mailmessage
 		if (msg.getAttachments() != null)
 		{
-			HashMap files = getAttachments(msg.getAttachments());
-			Set keySet = files.keySet();
-			Iterator keySetIterator = keySet.iterator();
+			HashMap<String, FileDataSource> files = getAttachments(msg.getAttachments());
+			Set<String> keySet = files.keySet();
+			Iterator<String> keySetIterator = keySet.iterator();
 			while (keySetIterator.hasNext())
 			{
-				String filename = (String) keySetIterator.next();
+				String filename = keySetIterator.next();
 				MimeBodyPart attachment = new MimeBodyPart();
-				attachment.setDataHandler(new DataHandler((FileDataSource) files.get(filename)));
+				attachment.setDataHandler(new DataHandler(files.get(filename)));
 				attachment.setFileName(filename);
 				mp.addBodyPart(attachment);
 			}
@@ -381,7 +342,6 @@ public final class MailJob implements StatefulJob
 		mailMsg.setContent(mp);
 
 		return mailMsg;
-
 	}
 
 	/**
@@ -401,9 +361,10 @@ public final class MailJob implements StatefulJob
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	public HashMap getAttachments(String attachments) throws FileNotFoundException
+	public HashMap<String, FileDataSource> getAttachments(String attachments)
+			throws FileNotFoundException
 	{
-		HashMap files = new HashMap();
+		HashMap<String, FileDataSource> files = new HashMap<String, FileDataSource>();
 
 		StringTokenizer tk = new StringTokenizer(attachments, System.getProperty("path.separator"));
 		while (tk.hasMoreTokens())

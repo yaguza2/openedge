@@ -1,69 +1,49 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules.impl.mailjob;
 
 /**
- * Holder for email message
+ * Holder for email message.
+ * 
+ * To attach files to the message, the 'Attachments' string must be set. The format of the
+ * string is as follows: {@code  file<filename>:file<filename>: . . .} (Note: the ':' is
+ * the system's path separator. Windows: ';', Unix: ':')
+ * <p>
+ * {@code file} is the string that describes the File. {@code filename} is the string that
+ * describes the name of the file. {@code filename} may be empty or missing, the name of
+ * the file will be the name that can be deduced from the file.
+ * 
  * @author Eelco Hillenius
- * @hibernate.class		table="email_queue"
- * <br><br>
- * To attach files to the message, the 'Attachments' string must be set. 
- * The format of the string is as follow:<br>
- * <br>
- * file&lt;filename&gt;:file&lt;filename&gt;: . . .
- * <br>
- * (Note: the ':' is the system's path seperator. Windows: ';', Unix: ':')<br>
- * <br>
- * 'file' is the string that describes the File. 'filename' is the string that describes the name of the file.<br>
- * 'filename' may be empty or missing, the name of the file will be the name that can be deduced from the file.
+ * @hibernate.class table="email_queue"
  */
 public final class MailMessage
 {
-
 	public final static String STATUS_NEW = "new";
+
 	public final static String STATUS_READ = "read";
+
 	public final static String STATUS_FAILED = "failed";
+
 	public final static String STATUS_SUCCEEDED = "succeeded";
 
 	private Long id;
+
 	private String sendTo;
+
 	private String subject;
+
 	private String sender;
+
 	private String message;
+
 	private Long created;
+
 	private String contentType = "text/plain";
+
 	private String status = STATUS_NEW;
+
 	private String statusDetail;
+
 	private String attachments;
-	
+
 	public MailMessage()
 	{
 		this.created = new Long(System.currentTimeMillis());
@@ -140,7 +120,7 @@ public final class MailMessage
 	{
 		return subject;
 	}
-	
+
 	/**
 	 * @param contentType
 	 */
@@ -158,7 +138,7 @@ public final class MailMessage
 	}
 
 	/**
-	 * @param sender
+	 * @param from
 	 */
 	public void setSender(String from)
 	{
@@ -228,5 +208,4 @@ public final class MailMessage
 	{
 		attachments = string;
 	}
-
 }
