@@ -8,7 +8,6 @@ package org.infohazard.maverick.flow;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 
 import org.infohazard.maverick.util.XML;
 import org.jdom.Element;
@@ -45,7 +44,7 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 
 		/** cmd method impl. */
 		@Override
-		public String go(ControllerContext cctx) throws ServletException
+		public String go(ControllerContext cctx)
 		{
 			return "NO CONTROLLER DEFINED";
 		}
@@ -63,7 +62,7 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 	 *      javax.servlet.ServletConfig)
 	 */
 	@Override
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 		// no nada
 	}
@@ -84,7 +83,7 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 		}
 
 		// get the class of the controller node
-		Class controllerClass = getControllerClass(controllerNode);
+		Class< ? extends Controller> controllerClass = getControllerClass(controllerNode);
 		// create the proper instance based on the class
 		Controller controller = getControllerInstance(controllerNode, controllerClass);
 		// initialize the controller based on the implementation
@@ -102,7 +101,9 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 	 *         null
 	 * @throws ConfigException
 	 */
-	protected Class getControllerClass(Element controllerNode) throws ConfigException
+	@SuppressWarnings("unchecked")
+	protected Class< ? extends Controller> getControllerClass(Element controllerNode)
+			throws ConfigException
 	{
 		if (controllerNode == null)
 			return null;
@@ -114,7 +115,6 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 				+ " attribute:  " + XML.toString(controllerNode));
 		}
 
-		Class controllerClass;
 		try
 		{
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -122,13 +122,12 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 			{
 				classLoader = AbstractControllerFactory.class.getClassLoader();
 			}
-			controllerClass = classLoader.loadClass(className);
+			return (Class< ? extends Controller>) classLoader.loadClass(className);
 		}
 		catch (ClassNotFoundException ex)
 		{
 			throw new ConfigException(ex);
 		}
-		return controllerClass;
 	}
 
 	/**
@@ -142,8 +141,8 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 	 * @return Controller a controller or a controller decorator
 	 * @throws ConfigException
 	 */
-	protected Controller getControllerInstance(Element controllerNode, Class controllerClass)
-			throws ConfigException
+	protected Controller getControllerInstance(Element controllerNode,
+			Class< ? extends Controller> controllerClass) throws ConfigException
 	{
 		Controller controller = null;
 		try
@@ -186,7 +185,7 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 			throws ConfigException
 	{
 		Controller decorated = controller;
-		Map params = XML.getParams(controllerNode);
+		Map<String, Object> params = XML.getParams(controllerNode);
 		if (params != null) // if we have params, create a decorator for the controller
 		{
 			decorated = new ControllerWithParams(controller, params);
@@ -206,10 +205,11 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	protected Controller createSingletonController(Element controllerNode, Class controllerClass)
-			throws ConfigException, InstantiationException, IllegalAccessException
+	protected Controller createSingletonController(Element controllerNode,
+			Class< ? extends Controller> controllerClass) throws ConfigException,
+			InstantiationException, IllegalAccessException
 	{
-		return (ControllerSingleton) controllerClass.newInstance();
+		return controllerClass.newInstance();
 	}
 
 	/**
@@ -225,8 +225,9 @@ public abstract class AbstractControllerFactory implements ControllerFactory
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	protected Controller createThrowawayController(Element controllerNode, Class controllerClass)
-			throws ConfigException, InstantiationException, IllegalAccessException
+	protected Controller createThrowawayController(Element controllerNode,
+			Class< ? extends Controller> controllerClass) throws ConfigException,
+			InstantiationException, IllegalAccessException
 	{
 		return new ThrowawayControllerAdapter(controllerClass);
 	}
