@@ -122,14 +122,15 @@ public class XML
 	 *            Parent element.
 	 * @return null if no parameters are found.
 	 */
-	public static Map getParams(Element node)
+	public static Map<String, Object> getParams(Element node)
 	{
-		Map params = null;
+		Map<String, Object> params = null;
 
-		Iterator it = node.getChildren(TAG_PARAM).iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Element> it = node.getChildren(TAG_PARAM).iterator();
 		while (it.hasNext())
 		{
-			Element paramNode = (Element) it.next();
+			Element paramNode = it.next();
 
 			String name = paramNode.getAttributeValue(ATTR_PARAM_NAME);
 
@@ -143,7 +144,7 @@ public class XML
 			}
 
 			if (params == null)
-				params = new HashMap();
+				params = new HashMap<String, Object>();
 
 			params.put(name, value);
 		}
