@@ -32,20 +32,20 @@ package nl.openedge.util.maverick;
 
 import javax.servlet.ServletConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.infohazard.maverick.flow.AbstractControllerFactory;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.Controller;
 import org.infohazard.maverick.util.XML;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Custom implementation of the controller factory that, in case attribute 'allways-reload' is true,
- * creates and initializes a new instance of controllers even if they are of type
- * ControllerSingleton. This can be usefull when testing controllers; eg when you make changes in
- * the init method, you want these changes be loaded while in a production environment, you want the
- * initialization just done once.
+ * Custom implementation of the controller factory that, in case attribute
+ * 'allways-reload' is true, creates and initializes a new instance of controllers even if
+ * they are of type ControllerSingleton. This can be usefull when testing controllers; eg
+ * when you make changes in the init method, you want these changes be loaded while in a
+ * production environment, you want the initialization just done once.
  * <p>
  * Configure like:
  * 
@@ -60,7 +60,7 @@ import org.jdom.Element;
  *   &lt;/modules&gt; 
  *   ...
  *  &lt;/maverick&gt;
- *  
+ * 
  * </pre>
  * 
  * </p>
@@ -70,8 +70,8 @@ import org.jdom.Element;
 public class AllwaysReloadControllerFactory extends AbstractControllerFactory
 {
 	/**
-	 * Switch attribute that states if a controll should allways be recreated on a call (even if it
-	 * is a controller singleton), value = 'allways-reload'.
+	 * Switch attribute that states if a controll should allways be recreated on a call
+	 * (even if it is a controller singleton), value = 'allways-reload'.
 	 */
 	public static final String ATTRIB_ALLWAYS_RELOAD = "allways-reload";
 
@@ -85,7 +85,8 @@ public class AllwaysReloadControllerFactory extends AbstractControllerFactory
 	 * @see org.infohazard.maverick.flow.ControllerFactory#init(org.jdom.Element,
 	 *      javax.servlet.ServletConfig)
 	 */
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	@Override
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 		String allwaysReloadS = XML.getValue(factoryNode, ATTRIB_ALLWAYS_RELOAD);
 		if (allwaysReloadS != null)
@@ -103,8 +104,8 @@ public class AllwaysReloadControllerFactory extends AbstractControllerFactory
 	 * @see org.infohazard.maverick.flow.AbstractControllerFactory#decorateController(org.jdom.Element,
 	 *      org.infohazard.maverick.flow.Controller)
 	 */
-	protected Controller decorateController(
-			Element controllerNode, Controller controllerToDecorate)
+	@Override
+	protected Controller decorateController(Element controllerNode, Controller controllerToDecorate)
 			throws ConfigException
 	{
 		Controller controller = controllerToDecorate;
