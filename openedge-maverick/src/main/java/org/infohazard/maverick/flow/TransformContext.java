@@ -18,18 +18,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface TransformContext
 {
-	/**
-	 */
 	public HttpServletRequest getRequest();
 
-	/**
-	 */
 	public ServletContext getServletContext();
 
 	/**
 	 * Obtain any params that were set.
 	 */
-	public Map getTransformParams();
+	public Map<String, Object> getTransformParams();
 
 	/**
 	 * @return the next step in the transformation process
