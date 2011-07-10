@@ -68,21 +68,21 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 * Our {@link Controller Controller's} optional parameters, if any.
 	 * </p>
 	 */
-	protected Map controllerParams;
+	protected Map<String, Object> controllerParams;
 
 	/**
 	 * <p>
 	 * Our {@link View View's} optional parameters, if any.
 	 * </p>
 	 */
-	protected Map viewParams;
+	protected Map<String, Object> viewParams;
 
 	/**
 	 * <p>
 	 * Our {@link Transform pipeline's} optional parameters, if any.
 	 * </p>
 	 */
-	protected Map transformParams;
+	protected Map<String, Object> transformParams;
 
 	/**
 	 * <p>
@@ -193,7 +193,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	public void setControllerParam(String name, Object value)
 	{
 		if (this.controllerParams == null)
-			this.controllerParams = new HashMap();
+			this.controllerParams = new HashMap<String, Object>();
 
 		this.controllerParams.put(name, value);
 	}
@@ -205,7 +205,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	public void setViewParam(String name, Object value)
 	{
 		if (this.viewParams == null)
-			this.viewParams = new HashMap();
+			this.viewParams = new HashMap<String, Object>();
 
 		this.viewParams.put(name, value);
 	}
@@ -217,7 +217,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	public void setTransformParam(String name, Object value)
 	{
 		if (this.transformParams == null)
-			this.transformParams = new HashMap();
+			this.transformParams = new HashMap<String, Object>();
 
 		this.transformParams.put(name, value);
 	}
@@ -225,10 +225,10 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	/**
 	 * Appends to existing parameters.
 	 */
-	public void putAllControllerParams(Map addParams)
+	public void putAllControllerParams(Map<String, ? > addParams)
 	{
 		if (this.controllerParams == null)
-			this.controllerParams = new HashMap();
+			this.controllerParams = new HashMap<String, Object>();
 
 		this.controllerParams.putAll(addParams);
 	}
@@ -236,10 +236,10 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	/**
 	 * Appends to existing parameters.
 	 */
-	public void putAllViewParams(Map addParams)
+	public void putAllViewParams(Map<String, ? > addParams)
 	{
 		if (this.viewParams == null)
-			this.viewParams = new HashMap();
+			this.viewParams = new HashMap<String, Object>();
 
 		this.viewParams.putAll(addParams);
 	}
@@ -247,10 +247,10 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	/**
 	 * Appends to existing parameters.
 	 */
-	public void putAllTransformParams(Map addParams)
+	public void putAllTransformParams(Map<String, ? > addParams)
 	{
 		if (this.transformParams == null)
-			this.transformParams = new HashMap();
+			this.transformParams = new HashMap<String, Object>();
 
 		this.transformParams.putAll(addParams);
 	}
@@ -278,7 +278,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 * @see ControllerContext
 	 */
 	@Override
-	public Map getControllerParams()
+	public Map<String, Object> getControllerParams()
 	{
 		return this.controllerParams;
 	}
@@ -287,7 +287,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 * @see ViewContext
 	 */
 	@Override
-	public Map getViewParams()
+	public Map<String, Object> getViewParams()
 	{
 		return this.viewParams;
 	}
@@ -296,7 +296,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 * @see TransformContext
 	 */
 	@Override
-	public Map getTransformParams()
+	public Map<String, Object> getTransformParams()
 	{
 		return this.transformParams;
 	}
