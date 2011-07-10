@@ -72,9 +72,8 @@ public class DocumentTransformFactory implements TransformFactory
 	 */
 	protected String defaultWrappedName = DEFAULT_DEFAULT_WRAPPED_NAME;
 
-	/**
-	 */
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	@Override
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 		if (factoryNode != null)
 		{
@@ -85,8 +84,7 @@ public class DocumentTransformFactory implements TransformFactory
 		}
 	}
 
-	/**
-	 */
+	@Override
 	public Transform createTransform(Element transformNode) throws ConfigException
 	{
 		String path = XML.getValue(transformNode, ATTR_PATH);
