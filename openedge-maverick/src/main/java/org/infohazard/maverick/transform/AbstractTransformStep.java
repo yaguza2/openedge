@@ -27,26 +27,15 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractTransformStep implements TransformStep
 {
-	/**
-	 * Logger
-	 */
 	private static Logger log = LoggerFactory.getLogger(AbstractTransformStep.class);
 
-	/**
-	 */
 	private TransformContext transformCtx;
 
-	/**
-	 */
 	private TransformStep next;
 
-	/**
-	 */
 	protected FakeHttpServletResponse fakeResponse;
 
-	/**
-	 */
-	public AbstractTransformStep(TransformContext tctx) throws ServletException
+	public AbstractTransformStep(TransformContext tctx)
 	{
 		this.transformCtx = tctx;
 	}
@@ -54,6 +43,7 @@ public abstract class AbstractTransformStep implements TransformStep
 	/**
 	 * Always return false from pluggable transform steps.
 	 */
+	@Override
 	public boolean isLast()
 	{
 		return false;
@@ -62,6 +52,7 @@ public abstract class AbstractTransformStep implements TransformStep
 	/**
 	 * By default do nothing.
 	 */
+	@Override
 	public void setContentType(String contentType)
 	{
 	}
@@ -84,9 +75,8 @@ public abstract class AbstractTransformStep implements TransformStep
 		return this.next;
 	}
 
-	/**
-	 */
-	public HttpServletResponse getResponse() throws IOException, ServletException
+	@Override
+	public HttpServletResponse getResponse()
 	{
 		log.debug("Getting fake response");
 
@@ -98,9 +88,8 @@ public abstract class AbstractTransformStep implements TransformStep
 		return this.fakeResponse;
 	}
 
-	/**
-	 */
-	public Writer getWriter() throws IOException, ServletException
+	@Override
+	public Writer getWriter() throws IOException
 	{
 		return this.getResponse().getWriter();
 	}
