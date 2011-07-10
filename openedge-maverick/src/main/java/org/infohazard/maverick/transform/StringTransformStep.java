@@ -32,26 +32,14 @@ import org.xml.sax.ContentHandler;
  */
 public abstract class StringTransformStep extends AbstractTransformStep
 {
-	/**
-	 * Logger.
-	 */
 	private static Logger log = LoggerFactory.getLogger(StringTransformStep.class);
 
-	/**
-	 * Construct with transform context.
-	 * 
-	 * @param tctx
-	 *            transform context
-	 * @throws ServletException
-	 */
-	public StringTransformStep(TransformContext tctx) throws ServletException
+	public StringTransformStep(TransformContext tctx)
 	{
 		super(tctx);
 	}
 
-	/**
-	 * @see org.infohazard.maverick.flow.TransformStep#getSAXHandler()
-	 */
+	@Override
 	public ContentHandler getSAXHandler() throws IOException, ServletException
 	{
 		log.debug("Creating TransformerHandler which sends to next step output stream.");
@@ -78,6 +66,7 @@ public abstract class StringTransformStep extends AbstractTransformStep
 	 * 
 	 * @see org.infohazard.maverick.flow.TransformStep#done()
 	 */
+	@Override
 	public void done() throws IOException, ServletException
 	{
 		log.debug("Done being written to");
@@ -98,6 +87,7 @@ public abstract class StringTransformStep extends AbstractTransformStep
 	 * 
 	 * @see org.infohazard.maverick.flow.TransformStep#go(javax.xml.transform.Source)
 	 */
+	@Override
 	public void go(Source input) throws IOException, ServletException
 	{
 		log.debug("Building String from Source");
@@ -127,6 +117,7 @@ public abstract class StringTransformStep extends AbstractTransformStep
 	 * 
 	 * @see org.infohazard.maverick.flow.TransformStep#go(java.io.Reader)
 	 */
+	@Override
 	public void go(Reader input) throws IOException, ServletException
 	{
 		log.debug("Building String from Reader");
@@ -143,5 +134,6 @@ public abstract class StringTransformStep extends AbstractTransformStep
 	 * 
 	 * @see org.infohazard.maverick.flow.TransformStep#go(java.lang.String)
 	 */
+	@Override
 	public abstract void go(String input) throws IOException, ServletException;
 }
