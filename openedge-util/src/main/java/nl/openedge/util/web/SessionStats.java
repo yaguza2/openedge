@@ -41,6 +41,8 @@ import java.util.HashMap;
  */
 public class SessionStats implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** the remote address. */
 	private String remoteAddr;
 
@@ -51,7 +53,7 @@ public class SessionStats implements Serializable
 	private int hitCount = 0;
 
 	/** extra attributes. */
-	private HashMap attributes = new HashMap();
+	private HashMap<String, Object> attributes = new HashMap<String, Object>();
 
 	/**
 	 * default constructor.
@@ -103,8 +105,11 @@ public class SessionStats implements Serializable
 
 	/**
 	 * Set attribute.
-	 * @param key attribute key
-	 * @param value attribute value
+	 * 
+	 * @param key
+	 *            attribute key
+	 * @param value
+	 *            attribute value
 	 */
 	public void setAttribute(String key, String value)
 	{
@@ -116,7 +121,7 @@ public class SessionStats implements Serializable
 	 * 
 	 * @return HashMap
 	 */
-	public HashMap getAttributes()
+	public HashMap<String, Object> getAttributes()
 	{
 		return attributes;
 	}
@@ -152,7 +157,7 @@ public class SessionStats implements Serializable
 	 * @param attributes
 	 *            The attributes to set
 	 */
-	public void setAttributes(HashMap attributes)
+	public void setAttributes(HashMap<String, Object> attributes)
 	{
 		this.attributes = attributes;
 	}
