@@ -215,6 +215,7 @@ public class Loader
 	 *            the xml node of the modules
 	 * @exception ConfigException
 	 */
+	@SuppressWarnings("unchecked")
 	protected void loadModules(Element modulesNode) throws ConfigException
 	{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
