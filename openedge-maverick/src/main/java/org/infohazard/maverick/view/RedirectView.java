@@ -10,8 +10,6 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
 
@@ -52,7 +50,8 @@ public class RedirectView implements View
 	 * 
 	 * @see View#go
 	 */
-	public void go(ViewContext vctx) throws IOException, ServletException
+	@Override
+	public void go(ViewContext vctx) throws IOException
 	{
 		String result = this.target;
 
@@ -74,8 +73,7 @@ public class RedirectView implements View
 		vctx.getRealResponse().sendRedirect(result);
 	}
 
-	/**
-	 */
+	@SuppressWarnings("rawtypes")
 	protected String addQueryParams(String start, Map params)
 	{
 		if (params == null || params.isEmpty())
