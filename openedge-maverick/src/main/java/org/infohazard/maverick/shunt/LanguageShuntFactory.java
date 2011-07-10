@@ -73,12 +73,13 @@ public class LanguageShuntFactory implements ShuntFactory
 	{
 		/**
 		 */
-		protected Map modes = new HashMap();
+		protected Map<String, View> modes = new HashMap<String, View>();
 
 		/**
 		 * All modes are converted to lower case and trimmed. Note that multiple modes can
 		 * be specified as a comma-delimited sequence, all aliased to the same view.
 		 */
+		@Override
 		public void defineMode(String mode, View v) throws ConfigException
 		{
 			if (mode == null)
@@ -111,6 +112,7 @@ public class LanguageShuntFactory implements ShuntFactory
 
 		/**
 		 */
+		@Override
 		public View getView(HttpServletRequest request) throws NoSuitableModeException
 		{
 			// Must be made lowercase to be case insensitive.
@@ -122,20 +124,20 @@ public class LanguageShuntFactory implements ShuntFactory
 				wholeHeader = wholeHeader.toLowerCase();
 
 			// Languages are separated by commas.
-			Enumeration tokens = new StringTokenizer(wholeHeader, ",");
+			Enumeration<Object> tokens = new StringTokenizer(wholeHeader, ",");
 
 			// We may need multiple passes to process the base prefixes of languages
 			// with dashes in them.
-			List nextPass = null;
+			List<Object> nextPass = null;
 
 			do
 			{
 				while (tokens.hasMoreElements())
 				{
-					String lang = (String) tokens.nextElement();
+					String lang = String.valueOf(tokens.nextElement());
 					lang = lang.trim();
 
-					View theView = (View) modes.get(lang);
+					View theView = modes.get(lang);
 					if (theView != null)
 					{
 						log.debug("Using mode:  " + lang);
@@ -148,7 +150,7 @@ public class LanguageShuntFactory implements ShuntFactory
 					{
 						// Make sure we create the list
 						if (nextPass == null)
-							nextPass = new ArrayList();
+							nextPass = new ArrayList<Object>();
 
 						// Keep it for later!
 						nextPass.add(lang.substring(0, dash));
@@ -165,7 +167,7 @@ public class LanguageShuntFactory implements ShuntFactory
 			while (tokens.hasMoreElements());
 
 			// Try the default view if nothing else was found
-			View defaultView = (View) modes.get(null);
+			View defaultView = modes.get(null);
 			if (defaultView != null)
 				return defaultView;
 
@@ -184,6 +186,7 @@ public class LanguageShuntFactory implements ShuntFactory
 	/**
 	 * Does nothing.
 	 */
+	@Override
 	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 	}
@@ -191,7 +194,8 @@ public class LanguageShuntFactory implements ShuntFactory
 	/**
 	 * Merely creates a shunt object.
 	 */
-	public Shunt createShunt() throws ConfigException
+	@Override
+	public Shunt createShunt()
 	{
 		log.debug("Creating language shunt");
 
