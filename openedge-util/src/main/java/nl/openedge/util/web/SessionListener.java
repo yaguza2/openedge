@@ -34,6 +34,7 @@ package nl.openedge.util.web;
 import java.util.List;
 import java.util.Vector;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -49,7 +50,7 @@ import org.slf4j.LoggerFactory;
 public class SessionListener implements HttpSessionListener, HttpSessionActivationListener
 {
 	/** sessions. */
-	private static Vector sessions = new Vector();
+	private static Vector<HttpSession> sessions = new Vector<HttpSession>();
 
 	/** logger. */
 	private Logger log = LoggerFactory.getLogger(SessionListener.class);
@@ -68,6 +69,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 * @param event
 	 *            session event
 	 */
+	@Override
 	public void sessionCreated(HttpSessionEvent event)
 	{
 		log.info(event.getSession().getId() + " created");
@@ -78,11 +80,13 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	}
 
 	/**
-	 * Record the fact that a session has been destroyed. Remove session from internal store.
+	 * Record the fact that a session has been destroyed. Remove session from internal
+	 * store.
 	 * 
 	 * @param event
 	 *            session event
 	 */
+	@Override
 	public void sessionDestroyed(HttpSessionEvent event)
 	{
 		log.info(event.getSession().getId() + " destroyed");
@@ -98,6 +102,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 * @param event
 	 *            session event
 	 */
+	@Override
 	public void sessionWillPassivate(HttpSessionEvent event)
 	{
 
@@ -114,6 +119,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 * @param event
 	 *            session event
 	 */
+	@Override
 	public void sessionDidActivate(HttpSessionEvent event)
 	{
 		log.info(event.getSession().getId() + " activated");
@@ -128,11 +134,12 @@ public class SessionListener implements HttpSessionListener, HttpSessionActivati
 	 * 
 	 * @return List sessions known to this listener
 	 */
-	public static List getSessions()
+	@SuppressWarnings("unchecked")
+	public static List<HttpSession> getSessions()
 	{
 		synchronized (sessions)
 		{
-			return (List)sessions.clone();
+			return (List<HttpSession>) sessions.clone();
 		}
 	}
 
