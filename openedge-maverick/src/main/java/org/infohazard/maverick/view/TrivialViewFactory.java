@@ -12,7 +12,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.xml.transform.Source;
 
-import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
@@ -46,16 +45,13 @@ import org.w3c.dom.Node;
  */
 public class TrivialViewFactory implements ViewFactory
 {
-	/**
-	 */
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	@Override
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
-		// Do nothing
 	}
 
-	/**
-	 */
-	public View createView(Element viewNode) throws ConfigException
+	@Override
+	public View createView(Element viewNode)
 	{
 		return new TrivialView();
 	}
@@ -66,6 +62,7 @@ public class TrivialViewFactory implements ViewFactory
 	{
 		/**
 		 */
+		@Override
 		public void go(ViewContext vctx) throws IOException, ServletException
 		{
 			TransformStep next = vctx.getNextStep();
