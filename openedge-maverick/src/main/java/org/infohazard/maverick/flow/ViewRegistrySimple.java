@@ -16,7 +16,7 @@ class ViewRegistrySimple extends ViewRegistry
 	/**
 	 * Maps String id to Renderer
 	 */
-	protected Map globalViews = new HashMap();
+	protected Map<String, View> globalViews = new HashMap<String, View>();
 
 	/**
 	 */
@@ -25,27 +25,25 @@ class ViewRegistrySimple extends ViewRegistry
 		super(masterFact);
 	}
 
-	/**
-	 */
-	protected void defineGlobalView(String id, String mode, View v) throws ConfigException
+	@Override
+	protected void defineGlobalView(String id, String mode, View v)
 	{
 		this.globalViews.put(id, v);
 	}
 
-	/**
-	 */
-	protected void addView(Map target, String viewName, String ref) throws ConfigException
+	@Override
+	protected void addView(Map<String, View> target, String viewName, String ref)
+			throws ConfigException
 	{
-		View v = (View) this.globalViews.get(ref);
+		View v = this.globalViews.get(ref);
 		if (v == null)
 			throw new ConfigException("Reference to unknown global view \"" + ref + "\".");
 
 		target.put(viewName, v);
 	}
 
-	/**
-	 */
-	protected void addView(Map target, String viewName, String mode, View v) throws ConfigException
+	@Override
+	protected void addView(Map<String, View> target, String viewName, String mode, View v)
 	{
 		target.put(viewName, v);
 	}
