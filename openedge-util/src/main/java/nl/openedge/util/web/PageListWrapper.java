@@ -41,7 +41,6 @@ import java.util.List;
  */
 public final class PageListWrapper
 {
-
 	/** rowcount for table. */
 	private int rowCount;
 
@@ -58,17 +57,20 @@ public final class PageListWrapper
 	private int currentPagePosition;
 
 	/** pagewrappers before current page. */
-	private List beforeCurrentPages;
+	private List<PageWrapper> beforeCurrentPages;
 
 	/** pagewrappers after current page. */
-	private List afterCurrentPages;
+	private List<PageWrapper> afterCurrentPages;
 
 	/**
 	 * construct wrapper.
 	 * 
-	 * @param rowCount the row count
-	 * @param currentRow the current row
-	 * @param rowsEachPage rows per page
+	 * @param rowCount
+	 *            the row count
+	 * @param currentRow
+	 *            the current row
+	 * @param rowsEachPage
+	 *            rows per page
 	 */
 	public PageListWrapper(int rowCount, int currentRow, int rowsEachPage)
 	{
@@ -84,7 +86,7 @@ public final class PageListWrapper
 			int rowCounter = 0;
 			if (currentPagePosition > 1)
 			{
-				beforeCurrentPages = new ArrayList(currentPagePosition);
+				beforeCurrentPages = new ArrayList<PageWrapper>(currentPagePosition);
 				for (int i = 1; i < currentPagePosition; i++)
 				{
 					beforeCurrentPages.add(new PageWrapper(i, rowCounter, rowsEachPage));
@@ -93,7 +95,7 @@ public final class PageListWrapper
 			}
 			if (currentPagePosition < totalNbrOfPages)
 			{
-				afterCurrentPages = new ArrayList(totalNbrOfPages - currentPagePosition);
+				afterCurrentPages = new ArrayList<PageWrapper>(totalNbrOfPages - currentPagePosition);
 				for (int i = currentPagePosition + 1; i <= totalNbrOfPages; i++)
 				{
 					rowCounter += rowsEachPage;
@@ -105,6 +107,7 @@ public final class PageListWrapper
 
 	/**
 	 * Get the current page position.
+	 * 
 	 * @return int the current page position
 	 */
 	public int getCurrentPagePosition()
@@ -114,6 +117,7 @@ public final class PageListWrapper
 
 	/**
 	 * Get the current row.
+	 * 
 	 * @return int the current row
 	 */
 	public int getCurrentRow()
@@ -123,6 +127,7 @@ public final class PageListWrapper
 
 	/**
 	 * Get row count.
+	 * 
 	 * @return int the row count.
 	 */
 	public int getRowCount()
@@ -132,6 +137,7 @@ public final class PageListWrapper
 
 	/**
 	 * Get number of rows a page.
+	 * 
 	 * @return int number of rows a page
 	 */
 	public int getRowsEachPage()
@@ -141,6 +147,7 @@ public final class PageListWrapper
 
 	/**
 	 * Get number of pages.
+	 * 
 	 * @return int number of pages
 	 */
 	public int getTotalNbrOfPages()
@@ -150,18 +157,20 @@ public final class PageListWrapper
 
 	/**
 	 * Get pages after the current page.
+	 * 
 	 * @return List pages after the current page
 	 */
-	public List getAfterCurrentPages()
+	public List<PageWrapper> getAfterCurrentPages()
 	{
 		return afterCurrentPages;
 	}
 
 	/**
 	 * Get pages before the current page.
+	 * 
 	 * @return List pages before the current page
 	 */
-	public List getBeforeCurrentPages()
+	public List<PageWrapper> getBeforeCurrentPages()
 	{
 		return beforeCurrentPages;
 	}
