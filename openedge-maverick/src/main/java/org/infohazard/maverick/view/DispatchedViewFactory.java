@@ -7,7 +7,7 @@ package org.infohazard.maverick.view;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -43,13 +43,15 @@ public class DispatchedViewFactory implements ViewFactory
 	 * @see org.infohazard.maverick.flow.ViewFactory#init(org.jdom.Element,
 	 *      javax.servlet.ServletConfig)
 	 */
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	@Override
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 	}
 
 	/**
 	 * @see org.infohazard.maverick.flow.ViewFactory#createView(org.jdom.Element)
 	 */
+	@Override
 	public View createView(Element viewNode) throws ConfigException
 	{
 		String path = XML.getValue(viewNode, "path");
@@ -89,6 +91,7 @@ public class DispatchedViewFactory implements ViewFactory
 		 * 
 		 * @see View#go
 		 */
+		@Override
 		public void go(ViewContext vctx) throws IOException, ServletException
 		{
 			// Put any params in the request attributes
@@ -97,11 +100,12 @@ public class DispatchedViewFactory implements ViewFactory
 				if (log.isDebugEnabled())
 					log.debug("Setting " + vctx.getViewParams().size() + " params");
 
-				Iterator entryIt = vctx.getViewParams().entrySet().iterator();
+				Iterator<Entry<String, Object>> entryIt =
+					vctx.getViewParams().entrySet().iterator();
 				while (entryIt.hasNext())
 				{
-					Map.Entry entry = (Map.Entry) entryIt.next();
-					vctx.getRequest().setAttribute((String) entry.getKey(), entry.getValue());
+					Entry<String, Object> entry = entryIt.next();
+					vctx.getRequest().setAttribute(entry.getKey(), entry.getValue());
 				}
 			}
 
