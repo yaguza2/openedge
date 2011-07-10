@@ -25,7 +25,7 @@ public interface ViewContext
 	/**
 	 * Obtain any params that were set.
 	 */
-	public Map getViewParams();
+	public Map<String, Object> getViewParams();
 
 	/**
 	 * This is where output should be sent. If it returns null, there are no transforms,
