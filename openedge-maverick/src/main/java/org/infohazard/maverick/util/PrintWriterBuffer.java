@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +17,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PrintWriterBuffer extends PrintWriter implements Buffer
 {
-	/**
-	 * Logger.
-	 */
 	private static Logger log = LoggerFactory.getLogger(PrintWriterBuffer.class);
 
-	/**
-	 * Construct.
-	 */
 	public PrintWriterBuffer()
 	{
 		super(new StringWriter());
@@ -36,6 +29,7 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	 * 
 	 * @see org.infohazard.maverick.util.Buffer#prefersReader()
 	 */
+	@Override
 	public boolean prefersReader()
 	{
 		return false;
@@ -44,7 +38,8 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	/**
 	 * @see org.infohazard.maverick.util.Buffer#getAsReader()
 	 */
-	public Reader getAsReader() throws UnsupportedEncodingException
+	@Override
+	public Reader getAsReader()
 	{
 		return new StringReader(this.getAsString());
 	}
@@ -52,7 +47,8 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	/**
 	 * @see org.infohazard.maverick.util.Buffer#getAsString()
 	 */
-	public String getAsString() throws UnsupportedEncodingException
+	@Override
+	public String getAsString()
 	{
 		if (this.size() == 0)
 		{
@@ -66,6 +62,7 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	/**
 	 * @see org.infohazard.maverick.util.Buffer#size()
 	 */
+	@Override
 	public int size()
 	{
 		return ((StringWriter) this.out).getBuffer().length();
@@ -74,6 +71,7 @@ public class PrintWriterBuffer extends PrintWriter implements Buffer
 	/**
 	 * @see java.io.Writer#close()
 	 */
+	@Override
 	public void close()
 	{
 		// Actually, do nothing... the default close sets this.out to null.
