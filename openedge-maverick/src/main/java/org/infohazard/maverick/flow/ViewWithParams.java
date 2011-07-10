@@ -15,15 +15,11 @@ import javax.servlet.ServletException;
  */
 class ViewWithParams implements View
 {
-	/**
-	 */
 	protected View decorated;
 
-	protected Map params;
+	protected Map<String, Object> params;
 
-	/**
-	 */
-	public ViewWithParams(View decorate, Map params)
+	public ViewWithParams(View decorate, Map<String, Object> params)
 	{
 		if (params == null)
 			throw new IllegalArgumentException("Don't use this decorator without params");
@@ -32,8 +28,7 @@ class ViewWithParams implements View
 		this.params = params;
 	}
 
-	/**
-	 */
+	@Override
 	public void go(ViewContext vctx) throws IOException, ServletException
 	{
 		((MaverickContext) vctx).putAllViewParams(this.params);
