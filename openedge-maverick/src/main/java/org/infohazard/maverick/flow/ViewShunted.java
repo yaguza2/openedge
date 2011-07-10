@@ -9,30 +9,21 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-/**
- */
 class ViewShunted implements View
 {
-	/**
-	 */
 	protected Shunt shunt;
 
-	/**
-	 */
 	public ViewShunted(Shunt shunt)
 	{
 		this.shunt = shunt;
 	}
 
-	/**
-	 */
 	public void defineMode(String mode, View v) throws ConfigException
 	{
 		this.shunt.defineMode(mode, v);
 	}
 
-	/**
-	 */
+	@Override
 	public void go(ViewContext vctx) throws IOException, ServletException
 	{
 		View v = this.shunt.getView(vctx.getRequest());
