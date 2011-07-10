@@ -34,10 +34,10 @@ class ViewWithTransforms implements View
 		if (decorate instanceof ViewWithTransforms)
 		{
 			final ViewWithTransforms other = (ViewWithTransforms) decorate;
-			final Transform[] transforms = new Transform[trans.length + other.transforms.length];
-			System.arraycopy(other.transforms, 0, transforms, 0, other.transforms.length);
-			System.arraycopy(trans, 0, transforms, other.transforms.length, trans.length);
-			this.transforms = transforms;
+			final Transform[] newTransforms = new Transform[trans.length + other.transforms.length];
+			System.arraycopy(other.transforms, 0, newTransforms, 0, other.transforms.length);
+			System.arraycopy(trans, 0, newTransforms, other.transforms.length, trans.length);
+			this.transforms = newTransforms;
 			this.decorated = other.decorated;
 		}
 		else
@@ -53,6 +53,7 @@ class ViewWithTransforms implements View
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@Override
 	public void go(ViewContext vctx) throws IOException, ServletException
 	{
 		((MaverickContext) vctx).setTransforms(this.transforms);
