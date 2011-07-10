@@ -5,12 +5,8 @@
 
 package org.infohazard.maverick.view;
 
-import java.io.IOException;
-
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 
-import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
 import org.infohazard.maverick.flow.ViewFactory;
@@ -34,13 +30,15 @@ public class NullViewFactory implements ViewFactory
 
 	/**
 	 */
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	@Override
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 	}
 
 	/**
 	 */
-	public View createView(Element viewNode) throws ConfigException
+	@Override
+	public View createView(Element viewNode)
 	{
 		return singletonNull;
 	}
@@ -51,7 +49,8 @@ public class NullViewFactory implements ViewFactory
 	public static class NullView implements View
 	{
 		/** Nothing! */
-		public void go(ViewContext vctx) throws IOException, ServletException
+		@Override
+		public void go(ViewContext vctx)
 		{
 		}
 	}
