@@ -7,7 +7,6 @@ package org.infohazard.maverick.view;
 
 import javax.servlet.ServletConfig;
 
-import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewFactory;
 import org.infohazard.maverick.util.XML;
@@ -43,14 +42,16 @@ public class RedirectViewFactory implements ViewFactory
 {
 	/**
 	 */
-	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
+	@Override
+	public void init(Element factoryNode, ServletConfig servletCfg)
 	{
 		// Nothing to do.
 	}
 
 	/**
 	 */
-	public View createView(Element viewNode) throws ConfigException
+	@Override
+	public View createView(Element viewNode)
 	{
 		String path = XML.getValue(viewNode, "path");
 
