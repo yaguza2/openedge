@@ -53,8 +53,8 @@ public class SessionFilter implements Filter
 	public static final String SESSION_STATS_KEY = "_httpSessionStats";
 
 	/**
-	 * The filter configuration object we are associated with. If this value is null, this filter
-	 * instance is not currently configured.
+	 * The filter configuration object we are associated with. If this value is null, this
+	 * filter instance is not currently configured.
 	 */
 	private FilterConfig filterConfig = null;
 
@@ -69,15 +69,15 @@ public class SessionFilter implements Filter
 	/**
 	 * Take this filter out of service.
 	 */
+	@Override
 	public void destroy()
 	{
-
 		this.filterConfig = null;
 	}
 
 	/**
-	 * Time the processing that is performed by all subsequent filters in the current filter stack,
-	 * including the ultimately invoked servlet.
+	 * Time the processing that is performed by all subsequent filters in the current
+	 * filter stack, including the ultimately invoked servlet.
 	 * 
 	 * @param request
 	 *            The servlet request we are processing
@@ -90,6 +90,7 @@ public class SessionFilter implements Filter
 	 * @exception ServletException
 	 *                if a servlet error occurs
 	 */
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
@@ -116,7 +117,8 @@ public class SessionFilter implements Filter
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
-	public void init(FilterConfig theFilterConfig) throws ServletException
+	@Override
+	public void init(FilterConfig theFilterConfig)
 	{
 		this.filterConfig = theFilterConfig;
 	}
@@ -124,6 +126,7 @@ public class SessionFilter implements Filter
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		if (filterConfig == null)
