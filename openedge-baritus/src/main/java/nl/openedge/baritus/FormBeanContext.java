@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Maurice Marrink
  */
-public final class FormBeanContext implements Map
+public final class FormBeanContext implements Map<String, Object>
 {
 
 	/* the current locale */
@@ -80,7 +80,7 @@ public final class FormBeanContext implements Map
 	 * if, for some reason, you want to store extra attributes in this context instead in
 	 * the formBean, you can do this here (e.g. messages)
 	 */
-	private Map<Object, Object> attributes = null;
+	private Map<String, Object> attributes = null;
 
 	/* log for this class */
 	private static Logger log = LoggerFactory.getLogger(FormBeanCtrlBase.class);
@@ -687,10 +687,10 @@ public final class FormBeanContext implements Map
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Object put(Object key, Object value)
+	public Object put(String key, Object value)
 	{
 		if (attributes == null)
-			attributes = new HashMap<Object, Object>();
+			attributes = new HashMap<String, Object>();
 		return attributes.put(key, value);
 	}
 
@@ -713,7 +713,7 @@ public final class FormBeanContext implements Map
 	 * @see java.util.Map#keySet()
 	 */
 	@Override
-	public Set<Object> keySet()
+	public Set<String> keySet()
 	{
 		return (attributes != null) ? attributes.keySet() : null;
 	}
@@ -749,10 +749,10 @@ public final class FormBeanContext implements Map
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	@Override
-	public void putAll(Map t)
+	public void putAll(Map< ? extends String, ? extends Object> t)
 	{
 		if (attributes == null)
-			attributes = new HashMap<Object, Object>();
+			attributes = new HashMap<String, Object>();
 		attributes.putAll(t);
 	}
 
@@ -763,7 +763,7 @@ public final class FormBeanContext implements Map
 	 * @see java.util.Map#entrySet()
 	 */
 	@Override
-	public Set<Entry<Object, Object>> entrySet()
+	public Set<Entry<String, Object>> entrySet()
 	{
 		return (attributes != null) ? attributes.entrySet() : null;
 	}
@@ -856,9 +856,9 @@ public final class FormBeanContext implements Map
 		if (attributes != null && (!attributes.isEmpty()))
 		{
 			b.append(", attributes{");
-			for (Iterator<Object> i = attributes.keySet().iterator(); i.hasNext();)
+			for (Iterator<String> i = attributes.keySet().iterator(); i.hasNext();)
 			{
-				String key = (String) i.next();
+				String key = i.next();
 				b.append(key).append("=").append(attributes.get(key));
 				if (i.hasNext())
 				{
