@@ -38,43 +38,24 @@ package nl.openedge.modules.config;
 public final class ConfigException extends Exception
 {
 
-	/**
-	 * Construct.
-	 */
+	private static final long serialVersionUID = 1L;
+
 	public ConfigException()
 	{
-		super();
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param message the message
-	 */
 	public ConfigException(String message)
 	{
 		super(message);
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param message the message
-	 * @param cause the cause
-	 */
 	public ConfigException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param cause the cause
-	 */
 	public ConfigException(Throwable cause)
 	{
 		super(cause);
 	}
-
 }
