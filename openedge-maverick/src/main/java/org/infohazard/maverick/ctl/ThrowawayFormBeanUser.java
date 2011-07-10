@@ -51,6 +51,7 @@ public abstract class ThrowawayFormBeanUser extends Throwaway2
 	 * Use getForm to retrieve the bean created by makeFormBean(), which has been
 	 * populated with the http request parameters.
 	 */
+	@SuppressWarnings("unused")
 	protected String perform() throws Exception
 	{
 		return SUCCESS;

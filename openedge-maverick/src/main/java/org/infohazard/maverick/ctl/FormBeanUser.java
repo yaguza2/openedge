@@ -8,7 +8,6 @@ package org.infohazard.maverick.ctl;
 import javax.servlet.ServletException;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.ControllerContext;
 import org.infohazard.maverick.flow.ControllerSingleton;
 import org.jdom.Element;
@@ -38,7 +37,7 @@ public abstract class FormBeanUser implements ControllerSingleton
 	 * @see ControllerSingleton#init
 	 */
 	@Override
-	public void init(Element controllerNode) throws ConfigException
+	public void init(Element controllerNode)
 	{
 		// Defaults to nothing.
 	}
@@ -83,6 +82,7 @@ public abstract class FormBeanUser implements ControllerSingleton
 	 *            will be a bean created by makeFormBean(), which has been populated with
 	 *            the http request parameters.
 	 */
+	@SuppressWarnings("unused")
 	protected String perform(Object formBean, ControllerContext cctx) throws Exception
 	{
 		return SUCCESS;

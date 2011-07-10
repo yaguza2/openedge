@@ -20,6 +20,7 @@ public class ThrowawayBean extends Throwaway
 	 * This is the method you should override to implement application logic. Default
 	 * implementation just returns "success".
 	 */
+	@SuppressWarnings("unused")
 	protected String perform() throws Exception
 	{
 		return SUCCESS;
