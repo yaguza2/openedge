@@ -31,24 +31,16 @@ import org.xml.sax.ContentHandler;
  */
 class LastStep implements TransformStep
 {
-	/**
-	 * Logger.
-	 */
 	private static Logger log = LoggerFactory.getLogger(LastStep.class);
 
-	/**
-	 */
 	protected MaverickContext mavCtx;
 
-	/**
-	 */
 	public LastStep(MaverickContext mctx)
 	{
 		this.mavCtx = mctx;
 	}
 
-	/**
-	 */
+	@Override
 	public boolean isLast()
 	{
 		return true;
@@ -57,6 +49,7 @@ class LastStep implements TransformStep
 	/**
 	 * Actually set this value, we are the last element in the chain.
 	 */
+	@Override
 	public void setContentType(String contentType)
 	{
 		this.getResponse().setContentType(contentType);
@@ -65,6 +58,7 @@ class LastStep implements TransformStep
 	/**
 	 * Dumps directly to the real response
 	 */
+	@Override
 	public ContentHandler getSAXHandler() throws IOException, ServletException
 	{
 		try
@@ -87,10 +81,10 @@ class LastStep implements TransformStep
 	/**
 	 * @return the real response!
 	 */
+	@Override
 	public HttpServletResponse getResponse()
 	{
-		if (log.isDebugEnabled())
-			log.debug("Getting real response");
+		log.debug("Getting real response");
 
 		return this.mavCtx.getRealResponse();
 	}
@@ -98,21 +92,21 @@ class LastStep implements TransformStep
 	/**
 	 * @return th real response writer!
 	 */
-	public Writer getWriter() throws IOException, ServletException
+	@Override
+	public Writer getWriter() throws IOException
 	{
 		return this.getResponse().getWriter();
 	}
 
-	/**
-	 */
-	public void done() throws IOException, ServletException
+	@Override
+	public void done()
 	{
-		// Do nothing
 	}
 
 	/**
 	 * Serializes the XML Source to the response.
 	 */
+	@Override
 	public void go(Source input) throws IOException, ServletException
 	{
 		try
@@ -135,7 +129,8 @@ class LastStep implements TransformStep
 	/**
 	 * Writes the reader to the response.
 	 */
-	public void go(Reader input) throws IOException, ServletException
+	@Override
+	public void go(Reader input) throws IOException
 	{
 		Writer output = this.getResponse().getWriter();
 		while (input.ready())
@@ -145,7 +140,8 @@ class LastStep implements TransformStep
 	/**
 	 * Writes the String to the response.
 	 */
-	public void go(String input) throws IOException, ServletException
+	@Override
+	public void go(String input) throws IOException
 	{
 		Writer output = this.getResponse().getWriter();
 
