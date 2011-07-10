@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -108,10 +109,8 @@ class XSLTransform implements Transform
 			this.compiled = loadTemplate(this.path, webAppContext);
 	}
 
-	/**
-	 * @see org.infohazard.maverick.flow.Transform#createStep(org.infohazard.maverick.flow.TransformContext)
-	 */
-	public TransformStep createStep(TransformContext tctx) throws ServletException
+	@Override
+	public TransformStep createStep(TransformContext tctx)
 	{
 		return new Step(tctx);
 	}
@@ -124,7 +123,6 @@ class XSLTransform implements Transform
 	 */
 	protected Templates loadTemplate(String path, ServletContext servletCtx) throws ConfigException
 	{
-
 		boolean pathIsFileUrl = false;
 		boolean pathIsOtherUrl = false;
 		java.net.URL resURL = null;
@@ -213,7 +211,6 @@ class XSLTransform implements Transform
 			log.error("Eror loading template " + path + ":  " + ex.toString());
 			throw new ConfigException(ex);
 		}
-
 	}
 
 	/**
@@ -222,13 +219,13 @@ class XSLTransform implements Transform
 	 * @param t
 	 * @param params
 	 */
-	protected void populateParams(Transformer t, Map params)
+	protected void populateParams(Transformer t, Map<String, Object> params)
 	{
-		Iterator entriesIt = params.entrySet().iterator();
+		Iterator<Entry<String, Object>> entriesIt = params.entrySet().iterator();
 		while (entriesIt.hasNext())
 		{
-			Map.Entry entry = (Map.Entry) entriesIt.next();
-			t.setParameter((String) entry.getKey(), entry.getValue());
+			Entry<String, Object> entry = entriesIt.next();
+			t.setParameter(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -237,11 +234,9 @@ class XSLTransform implements Transform
 	 */
 	protected class Step extends XMLTransformStep
 	{
-		/** */
 		protected boolean handlerUsed = false;
 
-		/** */
-		public Step(TransformContext tctx) throws ServletException
+		public Step(TransformContext tctx)
 		{
 			super(tctx);
 		}
@@ -261,6 +256,7 @@ class XSLTransform implements Transform
 		 * Funnels stored output to go(Reader), or just passes on the done() message if
 		 * TransformerHandler was used (yeay SAX!)
 		 */
+		@Override
 		public void done() throws IOException, ServletException
 		{
 			log.debug("Done being written to");
@@ -280,6 +276,7 @@ class XSLTransform implements Transform
 		}
 
 		/** */
+		@Override
 		public ContentHandler getSAXHandler() throws IOException, ServletException
 		{
 			this.handlerUsed = true;
@@ -314,6 +311,7 @@ class XSLTransform implements Transform
 		}
 
 		/** */
+		@Override
 		public void go(Source input) throws IOException, ServletException
 		{
 			// Set the content-type for the output
