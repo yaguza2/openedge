@@ -35,7 +35,7 @@ class ViewRegistryShunted extends ViewRegistry
 	/**
 	 * Maps String id to List of ModeData objects.
 	 */
-	protected Map globalModeLists = new HashMap();
+	protected Map<String, List<ModeData>> globalModeLists = new HashMap<String, List<ModeData>>();
 
 	/**
 	 */
@@ -50,40 +50,39 @@ class ViewRegistryShunted extends ViewRegistry
 		this.shuntFact = shuntFact;
 	}
 
-	/**
-	 */
-	protected void defineGlobalView(String id, String mode, View v) throws ConfigException
+	@Override
+	protected void defineGlobalView(String id, String mode, View v)
 	{
-		List modesForId = (List) this.globalModeLists.get(id);
+		List<ModeData> modesForId = this.globalModeLists.get(id);
 		if (modesForId == null)
 		{
-			modesForId = new ArrayList();
+			modesForId = new ArrayList<ModeData>();
 			this.globalModeLists.put(id, modesForId);
 		}
 
 		modesForId.add(new ModeData(mode, v));
 	}
 
-	/**
-	 */
-	protected void addView(Map target, String viewName, String ref) throws ConfigException
+	@Override
+	protected void addView(Map<String, View> target, String viewName, String ref)
+			throws ConfigException
 	{
-		List modesForId = (List) this.globalModeLists.get(ref);
+		List<ModeData> modesForId = this.globalModeLists.get(ref);
 		if (modesForId == null)
 			throw new ConfigException("Unknown global view \"" + ref + "\" was referenced.");
 
-		Iterator it = modesForId.iterator();
+		Iterator<ModeData> it = modesForId.iterator();
 		while (it.hasNext())
 		{
-			ModeData data = (ModeData) it.next();
+			ModeData data = it.next();
 
 			this.addView(target, viewName, data.mode, data.view);
 		}
 	}
 
-	/**
-	 */
-	protected void addView(Map target, String viewName, String mode, View v) throws ConfigException
+	@Override
+	protected void addView(Map<String, View> target, String viewName, String mode, View v)
+			throws ConfigException
 	{
 		ViewShunted shunted = (ViewShunted) target.get(viewName);
 		if (shunted == null)
