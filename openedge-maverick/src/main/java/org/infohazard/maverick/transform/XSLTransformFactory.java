@@ -119,6 +119,7 @@ public class XSLTransformFactory implements TransformFactory
 	 * @exception ConfigException
 	 *                Thrown if configuration is bad.
 	 */
+	@Override
 	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
 	{
 		this.servletCtx = servletCfg.getServletContext();
@@ -161,7 +162,7 @@ public class XSLTransformFactory implements TransformFactory
 					{
 						classLoader = DefaultControllerFactory.class.getClassLoader();
 					}
-					Class resolverClass = classLoader.loadClass(uriResolverStr);
+					Class< ? > resolverClass = classLoader.loadClass(uriResolverStr);
 					this.uriResolver = (URIResolver) resolverClass.newInstance();
 				}
 				catch (ClassNotFoundException ex)
@@ -185,6 +186,7 @@ public class XSLTransformFactory implements TransformFactory
 	 * @return
 	 * @exception ConfigException
 	 */
+	@Override
 	public Transform createTransform(Element transformNode) throws ConfigException
 	{
 		String outputType = XML.getValue(transformNode, ATTR_FINAL_CONTENT_TYPE);
