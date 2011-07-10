@@ -10,12 +10,8 @@ package org.infohazard.maverick.flow;
  */
 class CommandSingleView extends CommandBase
 {
-	/**
-	 */
 	protected View singleView;
 
-	/**
-	 */
 	public CommandSingleView(Controller ctl, View v)
 	{
 		super(ctl);
@@ -26,8 +22,7 @@ class CommandSingleView extends CommandBase
 		this.singleView = v;
 	}
 
-	/**
-	 */
+	@Override
 	protected View getView(String viewName)
 	{
 		return this.singleView;
