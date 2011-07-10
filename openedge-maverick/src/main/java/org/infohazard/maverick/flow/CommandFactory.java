@@ -4,6 +4,7 @@
  */
 package org.infohazard.maverick.flow;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
@@ -31,9 +32,6 @@ class CommandFactory
 	/** the controller factory. */
 	protected ControllerFactory controllerFactory = new DefaultControllerFactory();
 
-	/**
-	 * @param viewRegistry
-	 */
 	public CommandFactory(ViewRegistry viewReg)
 	{
 		this.viewRegistry = viewReg;
@@ -51,14 +49,16 @@ class CommandFactory
 		Controller ctl =
 			this.controllerFactory.createController(commandNode.getChild(TAG_CONTROLLER));
 
-		Map viewsMap = this.viewRegistry.createViewsMap(commandNode.getChildren(TAG_VIEW));
+		@SuppressWarnings("unchecked")
+		List<Element> viewNodes = commandNode.getChildren(TAG_VIEW);
+		Map<String, View> viewsMap = this.viewRegistry.createViewsMap(viewNodes);
 		if (viewsMap.size() > 1)
 			return new CommandMultipleViews(ctl, viewsMap);
 		else
 		{
 			// Optimize with a Command that doesn't do a map lookup.
 			// This is also how nameless views are resolved.
-			View theView = (View) viewsMap.values().iterator().next();
+			View theView = viewsMap.values().iterator().next();
 			return new CommandSingleView(ctl, theView);
 		}
 	}
@@ -76,7 +76,7 @@ class CommandFactory
 	/**
 	 * Set view registry.
 	 * 
-	 * @param viewRegistry
+	 * @param viewReg
 	 *            viewRegistry to set.
 	 */
 	public void setViewRegistry(ViewRegistry viewReg)
