@@ -16,22 +16,18 @@ class CommandMultipleViews extends CommandBase
 	/**
 	 * Stores mapping of String view name to View object
 	 */
-	protected Map views;
+	protected Map<String, View> views;
 
-	/**
-	 */
-	public CommandMultipleViews(Controller ctl, Map views)
+	public CommandMultipleViews(Controller ctl, Map<String, View> views)
 	{
 		super(ctl);
 
 		this.views = views;
 	}
 
-	/**
-	 */
 	@Override
 	protected View getView(String name)
 	{
-		return (View) this.views.get(name);
+		return this.views.get(name);
 	}
 }
