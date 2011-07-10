@@ -125,8 +125,8 @@ public class DocumentViewFactory implements ViewFactory
 
 	/**
 	 * <p>
-	 * Initialize this factory instance by initializing the {@link #dispatchedViewFact}
-	 * property and the {@link #defaultBeanName} property.
+	 * Initialize this factory instance by initializing the dispatchedViewFact property
+	 * and the {@link #defaultBeanName} property.
 	 * </p>
 	 * 
 	 * @param factoryNode
@@ -135,6 +135,7 @@ public class DocumentViewFactory implements ViewFactory
 	 *            ServletConfig
 	 * @throws ConfigException
 	 */
+	@Override
 	public void init(Element factoryNode, ServletConfig servletCfg) throws ConfigException
 	{
 		if (factoryNode != null)
@@ -152,6 +153,7 @@ public class DocumentViewFactory implements ViewFactory
 	 * @throws ConfigException
 	 * @see ViewFactory#createView(Element)
 	 */
+	@Override
 	public View createView(Element viewNode) throws ConfigException
 	{
 		String beanName = XML.getValue(viewNode, ATTR_BEAN_NAME);
@@ -165,6 +167,7 @@ public class DocumentViewFactory implements ViewFactory
 		{
 			return new DocumentView(beanName)
 			{
+				@Override
 				protected void setAttribute(ViewContext vctx)
 				{
 					vctx.getServletContext().setAttribute(this.beanName, vctx.getModel());
@@ -175,6 +178,7 @@ public class DocumentViewFactory implements ViewFactory
 		{
 			return new DocumentView(beanName)
 			{
+				@Override
 				protected void setAttribute(ViewContext vctx)
 				{
 					vctx.getRequest().getSession().setAttribute(this.beanName, vctx.getModel());
@@ -185,6 +189,7 @@ public class DocumentViewFactory implements ViewFactory
 		{
 			return new DocumentView(beanName)
 			{
+				@Override
 				protected void setAttribute(ViewContext vctx)
 				{
 					vctx.getRequest().setAttribute(this.beanName, vctx.getModel());
