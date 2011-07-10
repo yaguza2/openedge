@@ -113,7 +113,8 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see ServletResponse#getOutputStream
 	 */
-	public ServletOutputStream getOutputStream() throws java.io.IOException
+	@Override
+	public ServletOutputStream getOutputStream()
 	{
 		log.debug("View is using ServletOutputStream");
 
@@ -131,7 +132,8 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see ServletResponse#getWriter
 	 */
-	public PrintWriter getWriter() throws java.io.IOException
+	@Override
+	public PrintWriter getWriter()
 	{
 		log.debug("View is using PrintWriter");
 
@@ -149,6 +151,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see ServletResponse#setContentType
 	 */
+	@Override
 	public void setContentType(String type)
 	{
 		if (log.isDebugEnabled())
@@ -177,10 +180,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see ServletResponse#setContentLength
 	 */
+	@Override
 	public void setContentLength(int len)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Someone wanted to set contentLength to " + len);
+		log.debug("Someone wanted to set contentLength to " + len);
 
 		// Don't pass through
 	}
@@ -188,10 +191,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see ServletResponse#flushBuffer
 	 */
-	public void flushBuffer() throws IOException
+	@Override
+	public void flushBuffer()
 	{
-		if (log.isDebugEnabled())
-			log.debug("Someone wanted to flush the buffer");
+		log.debug("Someone wanted to flush the buffer");
 
 		// Don't pass through
 	}
@@ -199,10 +202,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see ServletResponse#setLocale
 	 */
+	@Override
 	public void setLocale(java.util.Locale loc)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Set locale to " + loc);
+		log.debug("Set locale to " + loc);
 
 		super.setLocale(loc);
 	}
@@ -210,10 +213,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#addCookie
 	 */
+	@Override
 	public void addCookie(Cookie cookie)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Added cookie " + cookie);
+		log.debug("Added cookie " + cookie);
 
 		super.addCookie(cookie);
 	}
@@ -221,10 +224,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#setDateHeader
 	 */
+	@Override
 	public void setDateHeader(java.lang.String name, long date)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Set date header " + name + " to " + date);
+		log.debug("Set date header " + name + " to " + date);
 
 		super.setDateHeader(name, date);
 	}
@@ -232,10 +235,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#addDateHeader
 	 */
+	@Override
 	public void addDateHeader(java.lang.String name, long date)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Add date header " + name + " to " + date);
+		log.debug("Add date header " + name + " to " + date);
 
 		super.addDateHeader(name, date);
 	}
@@ -243,10 +246,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#setHeader
 	 */
+	@Override
 	public void setHeader(java.lang.String name, java.lang.String value)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Set header " + name + " to " + value);
+		log.debug("Set header " + name + " to " + value);
 
 		super.setHeader(name, value);
 	}
@@ -254,10 +257,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#addHeader
 	 */
+	@Override
 	public void addHeader(java.lang.String name, java.lang.String value)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Add header " + name + " to " + value);
+		log.debug("Add header " + name + " to " + value);
 
 		super.addHeader(name, value);
 	}
@@ -265,10 +268,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#setIntHeader
 	 */
+	@Override
 	public void setIntHeader(java.lang.String name, int value)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Set int header " + name + " to " + value);
+		log.debug("Set int header " + name + " to " + value);
 
 		super.setIntHeader(name, value);
 	}
@@ -276,10 +279,10 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#addIntHeader
 	 */
+	@Override
 	public void addIntHeader(java.lang.String name, int value)
 	{
-		if (log.isDebugEnabled())
-			log.debug("Add int header " + name + " to " + value);
+		log.debug("Add int header " + name + " to " + value);
 
 		super.addIntHeader(name, value);
 	}
@@ -289,6 +292,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	 * 
 	 * @see HttpServletResponse#addIntHeader
 	 */
+	@Override
 	public void sendError(int sc) throws IOException
 	{
 		log.warn("Sending error " + sc);
@@ -301,6 +305,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	 * 
 	 * @see HttpServletResponse#addIntHeader
 	 */
+	@Override
 	public void sendError(int sc, java.lang.String msg) throws IOException
 	{
 		log.warn("Sending error " + sc + ", " + msg);
@@ -311,6 +316,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#setStatus
 	 */
+	@Override
 	public void setStatus(int sc)
 	{
 		if (log.isDebugEnabled())
@@ -322,6 +328,7 @@ public class FakeHttpServletResponse extends HttpServletResponseWrapper
 	/**
 	 * @see HttpServletResponse#setStatus
 	 */
+	@Override
 	public void setStatus(int sc, java.lang.String sm)
 	{
 		if (log.isDebugEnabled())
