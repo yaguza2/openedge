@@ -7,7 +7,7 @@ package org.infohazard.maverick.transform;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,29 +24,12 @@ import org.slf4j.LoggerFactory;
  */
 class DocumentTransform implements Transform
 {
-	/**
-	 * Transform path.
-	 */
 	protected String path;
 
-	/**
-	 * The name.
-	 */
 	protected String wrappedName;
 
-	/**
-	 * Logger.
-	 */
 	private static Logger log = LoggerFactory.getLogger(DocumentTransform.class);
 
-	/**
-	 * Construct with path and name.
-	 * 
-	 * @param path
-	 *            path
-	 * @param wrappedName
-	 *            name
-	 */
 	public DocumentTransform(String path, String wrappedName)
 	{
 		this.path = path;
@@ -56,9 +39,7 @@ class DocumentTransform implements Transform
 			+ path);
 	}
 
-	/**
-	 * @see org.infohazard.maverick.flow.Transform#createStep(org.infohazard.maverick.flow.TransformContext)
-	 */
+	@Override
 	public TransformStep createStep(TransformContext tctx) throws ServletException
 	{
 		return new Step(tctx);
@@ -84,6 +65,7 @@ class DocumentTransform implements Transform
 		/**
 		 * @see org.infohazard.maverick.flow.TransformStep#go(java.lang.String)
 		 */
+		@Override
 		public void go(String input) throws IOException, ServletException
 		{
 			if (log.isDebugEnabled())
@@ -92,13 +74,13 @@ class DocumentTransform implements Transform
 			// Populate params, if applicable
 			if (this.getTransformCtx().getTransformParams() != null)
 			{
-				Iterator entriesIt =
+				Iterator<Entry<String, Object>> entriesIt =
 					this.getTransformCtx().getTransformParams().entrySet().iterator();
 				while (entriesIt.hasNext())
 				{
-					Map.Entry entry = (Map.Entry) entriesIt.next();
+					Entry<String, Object> entry = entriesIt.next();
 					this.getTransformCtx().getRequest()
-						.setAttribute((String) entry.getKey(), entry.getValue());
+						.setAttribute(entry.getKey(), entry.getValue());
 				}
 			}
 
