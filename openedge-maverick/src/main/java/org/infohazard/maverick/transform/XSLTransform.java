@@ -133,7 +133,7 @@ class XSLTransform implements Transform
 			// This happens if the file is monitored and it has changed on the filesystem
 			try
 			{
-				resURL = this.monitoredFile.toURL();
+				resURL = this.monitoredFile.toURI().toURL();
 				this.monitoredFileLastModified = this.monitoredFile.lastModified();
 			}
 			catch (MalformedURLException me)
