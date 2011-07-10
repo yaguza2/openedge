@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Access</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Overview">
+    <p>
+    The <code>OpenEdge security framework</code> gives you 
+    the option of using a near black box security implementation that is based 
+    on Java Authentication and Authorization Service (JAAS).
+    </p>
+
+  </section>
+
+</body>
+</document>
+
