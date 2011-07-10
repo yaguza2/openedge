@@ -20,7 +20,7 @@ import org.jdom.Element;
 public class ThrowawayControllerAdapter implements ControllerSingleton
 {
 	/** class of controller. */
-	protected Class controllerClass;
+	protected Class< ? extends Controller> controllerClass;
 
 	/**
 	 * Create the adapter.
@@ -28,7 +28,7 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 	 * @param controllerClass
 	 *            the controller class
 	 */
-	public ThrowawayControllerAdapter(Class controllerClass)
+	public ThrowawayControllerAdapter(Class< ? extends Controller> controllerClass)
 	{
 		this.controllerClass = controllerClass;
 	}
@@ -39,6 +39,7 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 	 * @param controllerNode
 	 * @exception ConfigException
 	 */
+	@Override
 	public void init(Element controllerNode) throws ConfigException
 	{
 	}
@@ -50,11 +51,12 @@ public class ThrowawayControllerAdapter implements ControllerSingleton
 	 *            the controller context.
 	 * @return String logical view name (result of command method call of controller)
 	 */
+	@Override
 	public String go(ControllerContext cctx) throws ServletException
 	{
 		try
 		{
-			Controller instance = (Controller) this.controllerClass.newInstance();
+			Controller instance = this.controllerClass.newInstance();
 
 			return instance.go(cctx);
 		}
