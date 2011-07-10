@@ -66,5 +66,5 @@ public interface ControllerContext
 	/**
 	 * @return any params set on the controller node, or null if none.
 	 */
-	public Map getControllerParams();
+	public Map<String, Object> getControllerParams();
 }
