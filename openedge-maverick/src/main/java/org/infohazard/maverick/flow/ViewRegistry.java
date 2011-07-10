@@ -27,8 +27,6 @@ abstract class ViewRegistry
 	 */
 	public static final String ANONYMOUS_VIEW_NAME = "anonymous view";
 
-	/**
-	 */
 	protected static final String TAG_VIEW = "view";
 
 	protected static final String ATTR_VIEW_ID = "id";
@@ -39,32 +37,24 @@ abstract class ViewRegistry
 
 	protected static final String ATTR_VIEW_REF = "ref";
 
-	/**
-	 * Logger.
-	 */
 	private static Logger log = LoggerFactory.getLogger(ViewRegistry.class);
 
-	/**
-	 */
 	protected MasterFactory masterFact;
 
-	/**
-	 */
 	public ViewRegistry(MasterFactory masterFact)
 	{
 		this.masterFact = masterFact;
 	}
 
-	/**
-	 */
 	public void defineGlobalViews(Element viewsNode) throws ConfigException
 	{
 		String defaultMode = viewsNode.getAttributeValue(ATTR_VIEW_MODE);
 
-		Iterator it = viewsNode.getChildren(TAG_VIEW).iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<Element> it = viewsNode.getChildren(TAG_VIEW).iterator();
 		while (it.hasNext())
 		{
-			Element viewNode = (Element) it.next();
+			Element viewNode = it.next();
 
 			String id = viewNode.getAttributeValue(ATTR_VIEW_ID);
 			String mode = viewNode.getAttributeValue(ATTR_VIEW_MODE);
@@ -81,14 +71,14 @@ abstract class ViewRegistry
 	 * Creates a mapping from view name to View object. Nameless views are given the name
 	 * ANONYMOUS_VIEW_NAME, in which case it will be the only view available.
 	 */
-	public Map createViewsMap(List viewNodes) throws ConfigException
+	public Map<String, View> createViewsMap(List<Element> viewNodes) throws ConfigException
 	{
-		Map result = new HashMap();
+		Map<String, View> result = new HashMap<String, View>();
 
-		Iterator it = viewNodes.iterator();
+		Iterator<Element> it = viewNodes.iterator();
 		while (it.hasNext())
 		{
-			Element viewNode = (Element) it.next();
+			Element viewNode = it.next();
 
 			String viewName = viewNode.getAttributeValue(ATTR_VIEW_NAME);
 			String ref = viewNode.getAttributeValue(ATTR_VIEW_REF);
@@ -117,7 +107,7 @@ abstract class ViewRegistry
 			// Hook up any references
 			if (ref != null)
 			{
-				this.addView(result, viewName, ref);
+				addView(result, viewName, ref);
 			}
 			else
 			// not a reference, thus view is defined in-place
@@ -126,7 +116,7 @@ abstract class ViewRegistry
 
 				View v = this.masterFact.createView(viewNode);
 
-				this.addView(result, viewName, mode, v);
+				addView(result, viewName, mode, v);
 			}
 		}
 
@@ -148,7 +138,8 @@ abstract class ViewRegistry
 	/**
 	 * Adds any views to the target Map which are associated with the viewName.
 	 */
-	abstract protected void addView(Map target, String viewName, String ref) throws ConfigException;
+	abstract protected void addView(Map<String, View> target, String viewName, String ref)
+			throws ConfigException;
 
 	/**
 	 * Adds one view to the target Map, using the specified mode.
@@ -156,6 +147,6 @@ abstract class ViewRegistry
 	 * @param mode
 	 *            can be null
 	 */
-	abstract protected void addView(Map target, String viewName, String mode, View v)
+	abstract protected void addView(Map<String, View> target, String viewName, String mode, View v)
 			throws ConfigException;
 }
