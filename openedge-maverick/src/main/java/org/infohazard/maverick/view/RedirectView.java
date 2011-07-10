@@ -6,6 +6,7 @@
 package org.infohazard.maverick.view;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class RedirectView implements View
 
 		if (vctx.getModel() instanceof Map)
 		{
-			result = this.addQueryParams(result, (Map) vctx.getModel());
+			result = this.addQueryParams(result, (Map< ? , ? >) vctx.getModel());
 		}
 		else if (vctx.getModel() instanceof String)
 		{
@@ -123,19 +124,28 @@ public class RedirectView implements View
 		if (namedAnchor != null)
 		{
 			url.append("#");
-			url.append(URLEncoder.encode(namedAnchor.toString()));
-			// :FIXME: encode is deprecated in Java 1.4 [thusted 2003-10-27]
+			url.append(encode(namedAnchor));
 		}
 
 		return url.toString();
 	}
 
+	private String encode(Object encodable)
+	{
+		try
+		{
+			return encodable == null ? "" : URLEncoder.encode(encodable.toString(), "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 	protected void addQueryParam(StringBuffer url, String key, Object value)
 	{
-		url.append(URLEncoder.encode(key));
-		// :FIXME: encode is deprecated in Java 1.4 [thusted 2003-10-27]
+		url.append(encode(key));
 		url.append("=");
-		url.append(URLEncoder.encode(value.toString()));
-		// :FIXME: encode is deprecated in Java 1.4 [thusted 2003-10-27]
+		url.append(encode(value));
 	}
 }
