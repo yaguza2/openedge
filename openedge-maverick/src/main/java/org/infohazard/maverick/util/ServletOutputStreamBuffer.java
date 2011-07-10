@@ -5,7 +5,6 @@
 
 package org.infohazard.maverick.util;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -36,6 +35,7 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 	/**
 	 * It's always more efficient to use a reader because the buffer need not be copied.
 	 */
+	@Override
 	public boolean prefersReader()
 	{
 		return true;
@@ -43,6 +43,7 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 
 	/**
 	 */
+	@Override
 	public Reader getAsReader() throws UnsupportedEncodingException
 	{
 		if (this.charset != null)
@@ -53,6 +54,7 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 
 	/**
 	 */
+	@Override
 	public String getAsString() throws UnsupportedEncodingException
 	{
 		if (this.charset != null)
@@ -63,6 +65,7 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 
 	/**
 	 */
+	@Override
 	public int size()
 	{
 		return this.holder.size();
@@ -71,7 +74,8 @@ public class ServletOutputStreamBuffer extends ServletOutputStream implements Bu
 	/**
 	 * Overriden from ServletOutputStream
 	 */
-	public void write(int b) throws IOException
+	@Override
+	public void write(int b)
 	{
 		holder.write(b);
 	}
