@@ -51,12 +51,13 @@ class MasterFactory
 	/**
 	 * Holds mapping of typeName to ViewFactory.
 	 */
-	protected Map viewFactories = new HashMap();
+	protected Map<String, ViewFactory> viewFactories = new HashMap<String, ViewFactory>();
 
 	/**
 	 * Holds mapping of typeName to TransformFactory.
 	 */
-	protected Map transformFactories = new HashMap();
+	protected Map<String, TransformFactory> transformFactories =
+		new HashMap<String, TransformFactory>();
 
 	/**
 	 * The default type of factory to use if no explicit type is set.
@@ -110,7 +111,8 @@ class MasterFactory
 	{
 		View v = this.createPlainView(viewNode);
 
-		final List transformsList = viewNode.getChildren(TAG_TRANSFORM);
+		@SuppressWarnings("unchecked")
+		final List<Element> transformsList = viewNode.getChildren(TAG_TRANSFORM);
 
 		// Look for a "view transform", specified by the presence of a "path" attribute
 		final String transformPath = viewNode.getAttributeValue(ATTR_PATH);
@@ -126,7 +128,7 @@ class MasterFactory
 					typeName = this.defaultViewType;
 			}
 
-			final TransformFactory tf = (TransformFactory) transformFactories.get(typeName);
+			final TransformFactory tf = transformFactories.get(typeName);
 			if (tf != null)
 				v = new ViewWithTransforms(v, new Transform[] {tf.createTransform(viewNode)});
 		}
@@ -137,7 +139,7 @@ class MasterFactory
 			v = new ViewWithTransforms(v, t);
 		}
 
-		final Map params = XML.getParams(viewNode);
+		final Map<String, Object> params = XML.getParams(viewNode);
 		if (params != null)
 			v = new ViewWithParams(v, params);
 
@@ -160,7 +162,7 @@ class MasterFactory
 
 		log.debug("Creating view of type " + typeName);
 
-		ViewFactory fact = (ViewFactory) this.viewFactories.get(typeName);
+		ViewFactory fact = this.viewFactories.get(typeName);
 
 		if (fact == null)
 			throw new ConfigException("No view factory can be found for " + XML.toString(viewNode));
@@ -194,13 +196,13 @@ class MasterFactory
 	 *            the factory nodes
 	 * @throws ConfigException
 	 */
-	public void defineViewFactories(List viewFactoryNodes) throws ConfigException
+	public void defineViewFactories(List<Element> viewFactoryNodes) throws ConfigException
 	{
 		// Define view factories specified in the config file.
-		Iterator it = viewFactoryNodes.iterator();
+		Iterator<Element> it = viewFactoryNodes.iterator();
 		while (it.hasNext())
 		{
-			Element viewFactoryNode = (Element) it.next();
+			Element viewFactoryNode = it.next();
 
 			String typeName = viewFactoryNode.getAttributeValue(ATTR_FACTORY_TYPE_NAME);
 			String providerName = viewFactoryNode.getAttributeValue(ATTR_FACTORY_PROVIDER);
@@ -209,7 +211,7 @@ class MasterFactory
 				throw new ConfigException("Not a valid view factory node:  "
 					+ XML.toString(viewFactoryNode));
 
-			Class providerClass;
+			Class< ? > providerClass;
 			ViewFactory instance;
 			try
 			{
@@ -250,15 +252,15 @@ class MasterFactory
 	 * @return array of transforms, possibly with length zero
 	 * @throws ConfigException
 	 */
-	protected Transform[] createTransforms(List transformNodes) throws ConfigException
+	protected Transform[] createTransforms(List<Element> transformNodes) throws ConfigException
 	{
 		Transform[] retVal = new Transform[transformNodes.size()];
 
 		int index = 0;
-		Iterator it = transformNodes.iterator();
+		Iterator<Element> it = transformNodes.iterator();
 		while (it.hasNext())
 		{
-			Element transNode = (Element) it.next();
+			Element transNode = it.next();
 
 			retVal[index] = this.createTransform(transNode);
 
@@ -280,7 +282,7 @@ class MasterFactory
 	{
 		Transform t = this.createPlainTransform(transformNode);
 
-		Map params = XML.getParams(transformNode);
+		Map<String, Object> params = XML.getParams(transformNode);
 		if (params != null)
 			t = new TransformWithParams(t, params);
 
@@ -303,7 +305,7 @@ class MasterFactory
 
 		log.debug("Creating transform of type " + typeName);
 
-		TransformFactory fact = (TransformFactory) this.transformFactories.get(typeName);
+		TransformFactory fact = this.transformFactories.get(typeName);
 
 		if (fact == null)
 			throw new ConfigException("No transform factory can be found for "
@@ -338,13 +340,13 @@ class MasterFactory
 	 *            a list factory nodes
 	 * @throws ConfigException
 	 */
-	public void defineTransformFactories(List transFactoryNodes) throws ConfigException
+	public void defineTransformFactories(List<Element> transFactoryNodes) throws ConfigException
 	{
 		// Define transform factories specified in the config file.
-		Iterator it = transFactoryNodes.iterator();
+		Iterator<Element> it = transFactoryNodes.iterator();
 		while (it.hasNext())
 		{
-			Element transFactoryNode = (Element) it.next();
+			Element transFactoryNode = it.next();
 
 			String typeName = transFactoryNode.getAttributeValue(ATTR_FACTORY_TYPE_NAME);
 			String providerName = transFactoryNode.getAttributeValue(ATTR_FACTORY_PROVIDER);
@@ -353,7 +355,7 @@ class MasterFactory
 				throw new ConfigException("Not a valid transform factory node:  "
 					+ XML.toString(transFactoryNode));
 
-			Class providerClass;
+			Class< ? > providerClass;
 			TransformFactory instance;
 			try
 			{
@@ -382,14 +384,13 @@ class MasterFactory
 	 * @return Class the class
 	 * @throws ClassNotFoundException
 	 */
-	protected Class loadClass(String className) throws ClassNotFoundException
+	protected Class< ? > loadClass(String className) throws ClassNotFoundException
 	{
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (classLoader == null)
 		{
 			classLoader = DefaultControllerFactory.class.getClassLoader();
 		}
-		Class cls = classLoader.loadClass(className);
-		return cls;
+		return classLoader.loadClass(className);
 	}
 }
