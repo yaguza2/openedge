@@ -14,15 +14,11 @@ import javax.servlet.ServletException;
  */
 class TransformWithParams implements Transform
 {
-	/**
-	 */
 	protected Transform decorated;
 
-	protected Map params;
+	protected Map<String, Object> params;
 
-	/**
-	 */
-	public TransformWithParams(Transform simpler, Map params)
+	public TransformWithParams(Transform simpler, Map<String, Object> params)
 	{
 		if (params == null)
 			throw new IllegalArgumentException("Don't use this decorator without params");
@@ -34,6 +30,7 @@ class TransformWithParams implements Transform
 	/**
 	 * Sets some params before creating the step
 	 */
+	@Override
 	public TransformStep createStep(TransformContext tctx) throws ServletException
 	{
 		// Get access to the internal API.
