@@ -7,7 +7,7 @@ package org.infohazard.maverick.view;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -65,8 +65,8 @@ public abstract class DocumentView implements View
 	/**
 	 * <p>
 	 * Entry method that initiates the View rendering process. Here, the DocumentView sets
-	 * the the "model" object to the appropriate scope and invokes the {@link #forward}
-	 * View to complete the response.
+	 * the the "model" object to the appropriate scope and invokes the forward View to
+	 * complete the response.
 	 * </p>
 	 * 
 	 * @param vctx
@@ -75,6 +75,7 @@ public abstract class DocumentView implements View
 	 * @throws ServletException
 	 * @see View#go
 	 */
+	@Override
 	public void go(ViewContext vctx) throws IOException, ServletException
 	{
 		// Should we put the null in the collection?
@@ -87,11 +88,11 @@ public abstract class DocumentView implements View
 			if (log.isDebugEnabled())
 				log.debug("Setting " + vctx.getViewParams().size() + " params");
 
-			Iterator entryIt = vctx.getViewParams().entrySet().iterator();
+			Iterator<Entry<String, Object>> entryIt = vctx.getViewParams().entrySet().iterator();
 			while (entryIt.hasNext())
 			{
-				Map.Entry entry = (Map.Entry) entryIt.next();
-				vctx.getRequest().setAttribute((String) entry.getKey(), entry.getValue());
+				Entry<String, Object> entry = entryIt.next();
+				vctx.getRequest().setAttribute(entry.getKey(), entry.getValue());
 			}
 		}
 		vctx.getNextStep().go("");
