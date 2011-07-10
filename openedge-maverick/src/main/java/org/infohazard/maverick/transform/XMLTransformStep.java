@@ -21,39 +21,27 @@ import org.xml.sax.ContentHandler;
  */
 public abstract class XMLTransformStep extends AbstractTransformStep
 {
-	/**
-	 */
-	public XMLTransformStep(TransformContext tctx) throws ServletException
+	public XMLTransformStep(TransformContext tctx)
 	{
 		super(tctx);
 	}
 
-	/**
-	 * You implement this.
-	 */
+	@Override
 	public abstract ContentHandler getSAXHandler() throws IOException, ServletException;
 
-	/**
-	 * You implement this.
-	 */
+	@Override
 	public abstract void done() throws IOException, ServletException;
 
-	/**
-	 * You implement this.
-	 */
+	@Override
 	public abstract void go(Source input) throws IOException, ServletException;
 
-	/**
-	 * Funnels output to go(Source)
-	 */
+	@Override
 	public void go(Reader input) throws IOException, ServletException
 	{
 		this.go(new javax.xml.transform.stream.StreamSource(input));
 	}
 
-	/**
-	 * Funnels output to go(Source)
-	 */
+	@Override
 	public void go(String input) throws IOException, ServletException
 	{
 		this.go(new StringReader(input));
