@@ -13,29 +13,22 @@ import javax.servlet.ServletException;
  */
 public class NoSuitableModeException extends ServletException
 {
-	/**
-	 */
+	private static final long serialVersionUID = 1L;
+
 	public NoSuitableModeException()
 	{
-		super();
 	}
 
-	/**
-	 */
 	public NoSuitableModeException(String message)
 	{
 		super(message);
 	}
 
-	/**
-	 */
 	public NoSuitableModeException(String message, Throwable rootCause)
 	{
 		super(message, rootCause);
 	}
 
-	/**
-	 */
 	public NoSuitableModeException(Throwable rootCause)
 	{
 		super(rootCause);
