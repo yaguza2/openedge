@@ -12,29 +12,22 @@ import javax.servlet.ServletException;
  */
 public class ConfigException extends ServletException
 {
-	/**
-	 */
+	private static final long serialVersionUID = 1L;
+
 	public ConfigException()
 	{
-		super();
 	}
 
-	/**
-	 */
 	public ConfigException(String message)
 	{
 		super(message);
 	}
 
-	/**
-	 */
 	public ConfigException(String message, Throwable rootCause)
 	{
 		super(message, rootCause);
 	}
 
-	/**
-	 */
 	public ConfigException(Throwable rootCause)
 	{
 		super(rootCause);
