@@ -32,8 +32,6 @@ package nl.openedge.util;
 
 import java.util.Date;
 
-import nl.openedge.util.DateComparator;
-import nl.openedge.util.DateHelper;
 import junit.framework.TestCase;
 
 /**
@@ -59,6 +57,7 @@ public class DateComparatorTest extends TestCase
 	/**
 	 * Creates a new DateComparator.
 	 */
+	@Override
 	protected void setUp()
 	{
 		comparator = new DateComparator();
@@ -67,7 +66,7 @@ public class DateComparatorTest extends TestCase
 	/**
 	 * Test comparing dates when the Dates are equal.
 	 */
-	public void testEquals()
+	public void ignoreTestEquals()
 	{
 		Date date1 = new Date();
 		Date date2 = (Date) date1.clone();
