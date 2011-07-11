@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Baritus</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Overview">
+    <p>
+    Baritus is an open source framework for building Java web applications. 
+	Baritus is a powerfull extension of Maverick that focusus on developing web 
+	applications using plain old java objects.
+	</p>
+	<p>
+		Allthough there is no shortage of good-quality OSS MVC frameworks, Baritus has the following unique points:
+		<ul>
+			<li>
+				Ordinary JavaBeans can be populated from the http request, 
+				with fine-grained automatic error reporting and the built-in support for 
+				displaying the original user input when conversion or validation failed.
+			</li>
+			<li>
+				Programmatic configuration instead of XML-based configuration (for e.g. validation and form instantiation), 
+				which gives the users more flexiblity, and keeps the code easier to read.
+			</li>
+			<li>
+				Many extension points. Though Baritus can be used out-of-the-box, it can be tailored to the taste 
+				of the developers that have to work with it.
+			</li>
+		</ul>
+		As Baritus uses (but does not in any way alter) the very mature MVC web framework Maverick, 
+		users can take advantage of it's stability and flexiblity.
+	</p>
+
+  </section>
+
+</body>
+</document>
+
