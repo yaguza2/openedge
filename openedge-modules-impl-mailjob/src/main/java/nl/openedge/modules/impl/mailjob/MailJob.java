@@ -227,7 +227,6 @@ public final class MailJob implements StatefulJob
 		if (retryTime.longValue() > 0
 			&& (lastRetry == null || System.currentTimeMillis() - lastRetry.longValue() >= retryTime
 				.longValue()))
-			;
 		{
 			parameters.put(PARAMETER_KEY_LAST_RETRY_TIME, new Long(System.currentTimeMillis()));
 			try
