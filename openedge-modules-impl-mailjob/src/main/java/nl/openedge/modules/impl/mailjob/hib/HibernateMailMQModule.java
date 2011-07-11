@@ -32,7 +32,7 @@ package nl.openedge.modules.impl.mailjob.hib;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -152,12 +152,14 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 	 * flag message as failed and set failure reason from exception
 	 * 
 	 * @param msg
-	 * @param e
+	 * @param t
 	 * @throws Exception
 	 */
 	@Override
 	public synchronized void flagFailedMessage(MailMessage msg, Throwable t) throws Exception
 	{
+		if (msg == null)
+			return;
 
 		Session session = HibernateHelper.getSessionFactory().openSession();
 		Transaction tx = null;
@@ -165,10 +167,11 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		{
 			tx = session.beginTransaction();
 
-			msg = (MailMessage) session.load(MailMessage.class, msg.getId());
+			Long id = msg.getId();
+			msg = (MailMessage) session.load(MailMessage.class, id);
 			if (msg == null)
 			{
-				throw new Exception("mail message with id " + msg.getId()
+				throw new Exception("mail message with id " + id
 					+ " was not found in the persistent store");
 			}
 			if (t != null)
@@ -193,7 +196,6 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 			}
 			msg.setStatus(MailMessage.STATUS_FAILED);
 			tx.commit();
-
 		}
 		catch (Exception e)
 		{
@@ -201,7 +203,6 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 			log.error("Exception: ", e);
 			if (tx != null)
 			{
-
 				tx.rollback();
 			}
 			throw e;
@@ -210,29 +211,23 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		{
 			session.close();
 		}
-
 	}
 
 	/**
 	 * pop current messages from queue; sets status to 'read'
-	 * 
-	 * @param msg
 	 */
 	@Override
-	public synchronized List popQueue() throws Exception
+	public synchronized List<MailMessage> popQueue() throws Exception
 	{
-
 		return getMailMessages(listNewMessages);
 	}
 
 	/**
 	 * remove given messages from queue; depending on property 'deleteOnRemove' it will
 	 * delete messages from store or set flag to 'succeeded'
-	 * 
-	 * @param msg
 	 */
 	@Override
-	public synchronized void removeFromQueue(List messagesToRemove) throws Exception
+	public synchronized void removeFromQueue(List<MailMessage> messagesToRemove) throws Exception
 	{
 
 		Session session = HibernateHelper.getSessionFactory().openSession();
@@ -246,10 +241,10 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 
 				if (messagesToRemove != null)
 				{
-					for (Iterator i = messagesToRemove.iterator(); i.hasNext();)
+					for (Iterator<MailMessage> i = messagesToRemove.iterator(); i.hasNext();)
 					{
 
-						MailMessage message = (MailMessage) i.next();
+						MailMessage message = i.next();
 						session.delete(message);
 					}
 				}
@@ -260,19 +255,15 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 
 				if (messagesToRemove != null)
 				{
-					for (Iterator i = messagesToRemove.iterator(); i.hasNext();)
+					for (Iterator<MailMessage> i = messagesToRemove.iterator(); i.hasNext();)
 					{
-
-						MailMessage message = (MailMessage) i.next();
+						MailMessage message = i.next();
 						// set flag to 'read'
 						message.setStatus(MailMessage.STATUS_SUCCEEDED);
 					}
 				}
-
 			}
-
 			tx.commit();
-
 		}
 		catch (Exception e)
 		{
@@ -311,7 +302,7 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 	 * @see nl.openedge.modules.impl.mailjob.MailMQModule#getFailedMessages()
 	 */
 	@Override
-	public List getFailedMessages() throws Exception
+	public List<MailMessage> getFailedMessages() throws Exception
 	{
 		return getMailMessages(listFailedMessages);
 	}
@@ -324,9 +315,10 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 	 * @return a list of messages or an empty list if no messages matches the criteria.
 	 * @throws Exception
 	 */
-	private List getMailMessages(String query) throws Exception
+	@SuppressWarnings("unchecked")
+	private List<MailMessage> getMailMessages(String query) throws Exception
 	{
-		List messages = null;
+		List<MailMessage> messages = null;
 
 		Session session = null;
 		Transaction tx = null;
@@ -334,38 +326,23 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		{
 			session = HibernateHelper.getSessionFactory().openSession();
 			tx = session.beginTransaction();
-			messages = ((org.hibernate.classic.Session) session).find(query);
+
+			messages = session.createQuery(query).list();
 			if (messages != null)
 			{
-				for (Iterator i = messages.iterator(); i.hasNext();)
+				for (Iterator<MailMessage> i = messages.iterator(); i.hasNext();)
 				{
-					MailMessage message = (MailMessage) i.next();
+					MailMessage message = i.next();
 					// set flag to 'read'
 					message.setStatus(MailMessage.STATUS_READ);
 				}
 			}
 			tx.commit();
-
-		}
-		catch (HibernateException e)
-		{
-			log.error("Exception: ", e);
-			if (tx != null)
-			{
-				try
-				{
-					tx.rollback();
-				}
-				catch (HibernateException err)
-				{
-					log.error("Rollback failed: ", err);
-				}
-			}
 		}
 		catch (Exception e)
 		{
 			log.error("Exception: ", e);
-			if (tx != null && session != null && session.isConnected())
+			if (tx != null)
 				try
 				{
 					tx.rollback();
@@ -380,7 +357,8 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 		{
 			try
 			{
-				session.close();
+				if (session != null)
+					session.close();
 			}
 			catch (HibernateException e)
 			{
@@ -388,7 +366,7 @@ public class HibernateMailMQModule implements SingletonType, MailMQModule
 			}
 		}
 		if (messages == null)
-			messages = new ArrayList();
+			messages = Collections.emptyList();
 		return messages;
 	}
 }
