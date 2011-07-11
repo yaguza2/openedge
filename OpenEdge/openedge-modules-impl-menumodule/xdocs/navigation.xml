@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="openedge-modules" repository="openedge-modules" href="http://www.openedge.nl/">
+
+	<title>OpenEdge Modules - Menu Module</title>
+
+	<body>
+		<links>
+			<item name="OpenEdge" href="http://www.openedge.nl/" />
+		</links>
+		<menu name="Menu Module">
+			<item name="Overview" href="/index.html" />
+			<item name="Changes" href="/changelog.html" />
+		</menu>
+	</body>
+
+</project>
