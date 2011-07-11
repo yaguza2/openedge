@@ -229,4 +229,10 @@ public class GenericComparator<T> implements Comparator<T>
 			throw new RuntimeException(e);
 		}
 	}
+
+	public static <Y> GenericComparator<Y> of(Class<Y> cls, String sField, boolean bAscending)
+			throws NoSuchFieldException
+	{
+		return new GenericComparator<Y>(cls, sField, bAscending);
+	}
 }
