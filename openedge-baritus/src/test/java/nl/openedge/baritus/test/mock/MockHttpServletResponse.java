@@ -28,19 +28,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.baritus.test.mock;
 
 /**
  * @author Eelco Hillenius
  */
-public class MockHttpServletResponse
-	extends com.mockobjects.servlet.MockHttpServletResponse
+public class MockHttpServletResponse extends com.mockobjects.servlet.MockHttpServletResponse
 {
 
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
 	 */
+	@Override
 	public void addDateHeader(String arg0, long arg1)
 	{
 		// ignore
@@ -49,6 +49,7 @@ public class MockHttpServletResponse
 	/**
 	 * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
 	 */
+	@Override
 	public void setDateHeader(String arg0, long arg1)
 	{
 		// ignore

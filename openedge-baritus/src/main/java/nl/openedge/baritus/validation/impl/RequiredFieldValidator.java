@@ -48,6 +48,7 @@ import org.infohazard.maverick.flow.ControllerContext;
  * non empty value, but that - if a user fools around - does not seriousely break anything
  * when a value is not provided (e.g. you probably have not null constraint in you
  * database as well).
+ * 
  * @author Eelco Hillenius
  */
 public class RequiredFieldValidator extends AbstractFieldValidator
@@ -65,6 +66,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	/**
 	 * Construct using the provided activation rule and 'input.field.required' as the
 	 * message prefix.
+	 * 
 	 * @param rule
 	 */
 	public RequiredFieldValidator(ValidationActivationRule rule)
@@ -74,6 +76,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct using errorMessageKey and the activation rule
+	 * 
 	 * @param errorMessageKey
 	 * @param rule
 	 */
@@ -85,7 +88,9 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct with errorMessageKey for error message keys.
-	 * @param errorMessageKey errorMessageKey
+	 * 
+	 * @param errorMessageKey
+	 *            errorMessageKey
 	 */
 	public RequiredFieldValidator(String errorMessageKey)
 	{
@@ -105,10 +110,12 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 	 * but that - if a user fools around - does not seriousely break anything when a value
 	 * is not provided (e.g. you probably have not null constraint in you database as
 	 * well).
+	 * 
 	 * @return boolean true if not null or empty, false otherwise
 	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
 	 *      nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
 			String fieldName, Object value)
 	{
@@ -129,7 +136,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 		if (!isValid)
 		{
 			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(),
-					new Object[] {getFieldName(formBeanContext, fieldName)});
+				new Object[] {getFieldName(formBeanContext, fieldName)});
 		}
 
 		return isValid;
@@ -137,6 +144,7 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * Get key of error message.
+	 * 
 	 * @return String key of error message
 	 */
 	public String getErrorMessageKey()
@@ -146,7 +154,9 @@ public class RequiredFieldValidator extends AbstractFieldValidator
 
 	/**
 	 * Set key of error message.
-	 * @param string key of error message
+	 * 
+	 * @param string
+	 *            key of error message
 	 */
 	public void setErrorMessageKey(String string)
 	{

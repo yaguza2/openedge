@@ -30,7 +30,6 @@
  */
 package nl.openedge.baritus.population;
 
-
 import nl.openedge.baritus.FormBeanCtrlBase;
 
 /**
@@ -41,7 +40,7 @@ import nl.openedge.baritus.FormBeanCtrlBase;
  */
 public abstract class AbstractFieldPopulator implements FieldPopulator
 {
-	
+
 	/** reference to the controller */
 	protected FormBeanCtrlBase ctrl = null;
 
@@ -60,9 +59,10 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 	{
 		setCtrl(ctrl);
 	}
-	
+
 	/**
 	 * get reference to the controller
+	 * 
 	 * @return reference to the controller
 	 */
 	public FormBeanCtrlBase getCtrl()
@@ -72,12 +72,13 @@ public abstract class AbstractFieldPopulator implements FieldPopulator
 
 	/**
 	 * set reference to the controller
-	 * @param ctrl reference to the controller
+	 * 
+	 * @param ctrl
+	 *            reference to the controller
 	 */
 	public void setCtrl(FormBeanCtrlBase ctrl)
 	{
 		this.ctrl = ctrl;
 	}
-	
 
 }

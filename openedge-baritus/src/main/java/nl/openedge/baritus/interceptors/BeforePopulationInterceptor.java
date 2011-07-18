@@ -37,8 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed before
- * population and validation is done.
+ * Registered instances will have their command method executed before population and
+ * validation is done.
  * 
  * @author Eelco Hillenius
  */
@@ -46,20 +46,20 @@ public interface BeforePopulationInterceptor extends Interceptor
 {
 
 	/**
-	 * Registered instances will have their command method executed before
-	 * population and validation is done.
+	 * Registered instances will have their command method executed before population and
+	 * validation is done.
 	 * 
-	 * @param cctx maverick context
-	 * @param formBeanContext the context with the not-yet populated formBean
-     * @throws ServletException
-     * @throws RedirectingException when an interceptor wants to redirect
-     * @throws DirectReturnFlowException when an interceptor wants to return directly
+	 * @param cctx
+	 *            maverick context
+	 * @param formBeanContext
+	 *            the context with the not-yet populated formBean
+	 * @throws ServletException
+	 * @throws RedirectingException
+	 *             when an interceptor wants to redirect
+	 * @throws DirectReturnFlowException
+	 *             when an interceptor wants to return directly
 	 */
-	public void doBeforePopulation(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-        throws ServletException, 
-        DispatchNowFlowException, 
-        ReturnNowFlowException;
+	public void doBeforePopulation(ControllerContext cctx, FormBeanContext formBeanContext)
+			throws ServletException, DispatchNowFlowException, ReturnNowFlowException;
 
 }

@@ -35,30 +35,32 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Ignores the population of fields.
- * Register IgnoreFieldPopulators if you want to ignore the population of certain properties,
- * for instance id's of persistent objects.
+ * Ignores the population of fields. Register IgnoreFieldPopulators if you want to ignore
+ * the population of certain properties, for instance id's of persistent objects.
+ * 
  * @author Eelco Hillenius
  */
 public final class IgnoreFieldPopulator implements FieldPopulator
 {
 
 	private boolean fail;
-	
+
 	/**
-	 * construct.
-	 * fail is false
+	 * construct. fail is false
 	 */
 	public IgnoreFieldPopulator()
 	{
 		setFail(false);
 	}
-	
+
 	/**
 	 * construct with parameter fail
-	 * @param fail If fail == true, setProperty will allways return false,
-	 *  and thus the population process is flagged as failed, if fail == false,
-	 * 	setProperty will allways return true, and thus has no effect on the total population.
+	 * 
+	 * @param fail
+	 *            If fail == true, setProperty will allways return false, and thus the
+	 *            population process is flagged as failed, if fail == false, setProperty
+	 *            will allways return true, and thus has no effect on the total
+	 *            population.
 	 */
 	public IgnoreFieldPopulator(boolean fail)
 	{
@@ -66,25 +68,22 @@ public final class IgnoreFieldPopulator implements FieldPopulator
 	}
 
 	/**
-	 * Does nothing at all.
-	 * Register IgnoreFieldPopulators if you want to ignore the population of certain properties,
- 	 * for instance id's of persistent objects.
+	 * Does nothing at all. Register IgnoreFieldPopulators if you want to ignore the
+	 * population of certain properties, for instance id's of persistent objects.
 	 */
-	public boolean setProperty(
-		ControllerContext cctx,
-		FormBeanContext form,
-		String name,
-		Object value)
-		throws Exception
+	@Override
+	public boolean setProperty(ControllerContext cctx, FormBeanContext form, String name,
+			Object value) throws Exception
 	{
 		return (!fail);
 	}
 
 	/**
 	 * get the value of property fail
-	 * @return boolean value of property fail. By default fail == false, which means that this method
-	 * 		allways returns true. If you set fail to true, this method will allways return false,
-	 * 		and thus the population process is flagged as failed.
+	 * 
+	 * @return boolean value of property fail. By default fail == false, which means that
+	 *         this method allways returns true. If you set fail to true, this method will
+	 *         allways return false, and thus the population process is flagged as failed.
 	 */
 	public boolean isFail()
 	{
@@ -93,9 +92,12 @@ public final class IgnoreFieldPopulator implements FieldPopulator
 
 	/**
 	 * set the value of property fail
-	 * @param b value of property fail. By default fail == false, which means that this method
-	 * 		allways returns true. If you set fail to true, this method will allways return false,
-	 * 		and thus the population process is flagged as failed.
+	 * 
+	 * @param b
+	 *            value of property fail. By default fail == false, which means that this
+	 *            method allways returns true. If you set fail to true, this method will
+	 *            allways return false, and thus the population process is flagged as
+	 *            failed.
 	 */
 	public void setFail(boolean b)
 	{

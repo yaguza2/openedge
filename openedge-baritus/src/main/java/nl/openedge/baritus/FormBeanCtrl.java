@@ -40,19 +40,19 @@ import org.jdom.Element;
  * 
  * @author Eelco Hillenius
  */
-public abstract class FormBeanCtrl 
-	extends FormBeanCtrlBase implements ControllerSingleton
+public abstract class FormBeanCtrl extends FormBeanCtrlBase implements ControllerSingleton
 {
 
 	/**
-	 * Guaranteed to be called once with the XML configuration of
-	 * the controller from the master config file.
+	 * Guaranteed to be called once with the XML configuration of the controller from the
+	 * master config file.
 	 * 
 	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
 	 * @param controllerNode
 	 * @throws ConfigException
 	 */
-	public void init(Element controllerNode) throws ConfigException 
+	@Override
+	public void init(Element controllerNode) throws ConfigException
 	{
 		// initialise here...
 	}

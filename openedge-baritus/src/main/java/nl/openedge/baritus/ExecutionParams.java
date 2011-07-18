@@ -34,152 +34,141 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 
 /**
- * Each instance of FormBeanBase keeps an instance of ExecutionParams.
- * ExecutionParams are used to influence the execution of population,
- * validation and the general execution of FormBeanBase.
+ * Each instance of FormBeanBase keeps an instance of ExecutionParams. ExecutionParams are
+ * used to influence the execution of population, validation and the general execution of
+ * FormBeanBase.
  * 
- * If you want to override the defaults, you can override method init in your
- * controller, using getExecutionParams() to get the reference to the 
- * execution params that will be used for the instance of your controller.
+ * If you want to override the defaults, you can override method init in your controller,
+ * using getExecutionParams() to get the reference to the execution params that will be
+ * used for the instance of your controller.
  * 
- * For more finegrained (per request) control, another option is to override
- * method getExecutionParams() itself. This method will be called each request
- * and by default just returns the instance variable. You can vary
- * the processing by returning a new instance of ExecutionParams
- * (be carefull NOT to just change values in the instance variable, as this is
- * shared by all clients), with its properties set for that request.
+ * For more finegrained (per request) control, another option is to override method
+ * getExecutionParams() itself. This method will be called each request and by default
+ * just returns the instance variable. You can vary the processing by returning a new
+ * instance of ExecutionParams (be carefull NOT to just change values in the instance
+ * variable, as this is shared by all clients), with its properties set for that request.
  * 
  * @author Eelco Hillenius
  */
 public final class ExecutionParams implements Serializable, Cloneable
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/** if true, the no cache headers will be set */
 	private boolean noCache = true;
-	
+
 	/**
-	 * If we get an empty string, should it be translated to a null (true) or should
-	 * the empty String be kept (false). This property is true by default
+	 * If we get an empty string, should it be translated to a null (true) or should the
+	 * empty String be kept (false). This property is true by default
 	 */
 	private boolean setNullForEmptyString = true;
-	
+
 	/**
-	 * Indicates whether the configuration parameters of the controller 
-	 * should be used for the population process. 
-	 * This property is false by default.
+	 * Indicates whether the configuration parameters of the controller should be used for
+	 * the population process. This property is false by default.
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
-	 * A map with parameters for the population process is filled in the above order, which
-	 * means that every step can overwrite it's predecessor.
-	 *  
-	 */	
+	 * A map with parameters for the population process is filled in the above order,
+	 * which means that every step can overwrite it's predecessor.
+	 * 
+	 */
 	private boolean includeControllerParameters = false;
-	
+
 	/**
-	 * Indicates whether the session attributes of the current session
-	 * should be used for the population process.
-	 * This property is false by default.
+	 * Indicates whether the session attributes of the current session should be used for
+	 * the population process. This property is false by default.
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
-	 * A map with parameters for the population process is filled in the above order, which
-	 * means that every step can overwrite it's predecessor.
+	 * A map with parameters for the population process is filled in the above order,
+	 * which means that every step can overwrite it's predecessor.
 	 * 
-	 */	
+	 */
 	private boolean includeSessionAttributes = false;
-	
+
 	/**
-	 * Indicates whether the attributes of the current request 
-	 * should be used for the population process.
-	 * This property is false by default.
+	 * Indicates whether the attributes of the current request should be used for the
+	 * population process. This property is false by default.
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
-	 * A map with parameters for the population process is filled in the above order, which
-	 * means that every step can overwrite it's predecessor.
+	 * A map with parameters for the population process is filled in the above order,
+	 * which means that every step can overwrite it's predecessor.
 	 * 
-	 */	
+	 */
 	private boolean includeRequestAttributes = false;
-	
+
 	/**
-	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true
+	 * Indicates whether the form validators should be executed when one of the field
+	 * validators failed. Default == true
 	 */
 	private boolean doFormValidationIfFieldValidationFailed = true;
-	
+
 	/**
-	 * Indicates whether the perform method of the control should be executed, 
-	 * even if population/ validation failed. 
-	 * Use this only in very special cases; extended usage will
-	 * probably result in messy code. 
-	 * Default == false
+	 * Indicates whether the perform method of the control should be executed, even if
+	 * population/ validation failed. Use this only in very special cases; extended usage
+	 * will probably result in messy code. Default == false
 	 */
 	private boolean doPerformIfPopulationFailed = false;
-	
+
 	/**
-	 * Indicates whether the form bean context should be reused for multiple invocations 
-	 * within the same request.
-	 * Default is true.
+	 * Indicates whether the form bean context should be reused for multiple invocations
+	 * within the same request. Default is true.
 	 */
 	private boolean reuseFormBeanContext = true;
-	
+
 	/**
-	 * If population or validation fails and this property is true,
-	 * all request parameters will be saved as override values. This
-	 * will give you at least the full request the client sent, and
-	 * guards you for the situation where properties that normally
-	 * would be loaded in the command method are not set because
-	 * of the population/ validation failure.
-	 * Default is true.
+	 * If population or validation fails and this property is true, all request parameters
+	 * will be saved as override values. This will give you at least the full request the
+	 * client sent, and guards you for the situation where properties that normally would
+	 * be loaded in the command method are not set because of the population/ validation
+	 * failure. Default is true.
 	 */
 	private boolean saveReqParamsAsOverrideFieldsOnError = true;
-	
+
 	/**
-	 * When an unexpected error occurs, should that be interpreted as a failure,
-	 * or should it just be ignored. E.g. If you have request parameter
-	 * not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
-	 * In strict mode, this will have the effect that the population process is
-	 * marked as failed. If not in strict mode, the exception will be ignored.
+	 * When an unexpected error occurs, should that be interpreted as a failure, or should
+	 * it just be ignored. E.g. If you have request parameter not-a-valid-property, Ognl
+	 * will throw exception 'ognl.InappropriateExpressionException' In strict mode, this
+	 * will have the effect that the population process is marked as failed. If not in
+	 * strict mode, the exception will be ignored.
 	 */
 	private boolean strictPopulationMode = true;
-	
+
 	/**
-	 * Whether string input values should be trimmed before conversion.
-	 * Note that the actual trimming depends on the used populator, so
-	 * setting this parameter does not garantee trimming for all parameters.
+	 * Whether string input values should be trimmed before conversion. Note that the
+	 * actual trimming depends on the used populator, so setting this parameter does not
+	 * garantee trimming for all parameters.
 	 */
 	private boolean trimStringInputValues = true;
 
-	
 	/**
-	 * flag whether Baritus should try to populate the form bean.
-	 * Setting this flag to false, and thus letting Baritus skip
-	 * population and validation can be usefull when you link commands
-	 * within the same request and want to reuse the allready populated
+	 * flag whether Baritus should try to populate the form bean. Setting this flag to
+	 * false, and thus letting Baritus skip population and validation can be usefull when
+	 * you link commands within the same request and want to reuse the allready populated
 	 * form bean without doing population and validation as well.<br>
 	 * <strong>BEWARE</strong> that this is also skips population of request attributes
 	 * etc. that were set by the controllers earlier in the command stack.<br>
 	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
-	 * population to be succesfull, even though the population of the
-	 * prior control might not have been.
+	 * population to be succesfull, even though the population of the prior control might
+	 * not have been.
 	 */
 	private boolean populateAndValidate = true;
 
 	/**
 	 * if true, the no cache headers will be set
+	 * 
 	 * @return boolean
 	 */
 	public boolean isNoCache()
@@ -189,6 +178,7 @@ public final class ExecutionParams implements Serializable, Cloneable
 
 	/**
 	 * if true, the no cache headers will be set
+	 * 
 	 * @param noCache
 	 */
 	public void setNoCache(boolean noCache)
@@ -197,8 +187,9 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * If we get an empty string it should be translated to a null (true) or to
-	 * an empty String false. This property is true by default
+	 * If we get an empty string it should be translated to a null (true) or to an empty
+	 * String false. This property is true by default
+	 * 
 	 * @return boolean
 	 */
 	public boolean isSetNullForEmptyString()
@@ -207,23 +198,23 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * If we get an empty string it should be translated to a null (true) or to
-	 * an empty String false. This property is true by default
+	 * If we get an empty string it should be translated to a null (true) or to an empty
+	 * String false. This property is true by default
+	 * 
 	 * @param b
 	 */
 	public void setSetNullForEmptyString(boolean b)
 	{
 		setNullForEmptyString = b;
 	}
-	
+
 	/**
 	 * include controller parameters in the population process
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
 	 * @return boolean include controller parameters in the population process
 	 */
@@ -231,17 +222,17 @@ public final class ExecutionParams implements Serializable, Cloneable
 	{
 		return includeControllerParameters;
 	}
-	
+
 	/**
 	 * set whether to include controller parameters in the population process
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
-	 * @param b set whether to include controller parameters in the population process
+	 * @param b
+	 *            set whether to include controller parameters in the population process
 	 */
 	public void setIncludeControllerParameters(boolean b)
 	{
@@ -251,11 +242,10 @@ public final class ExecutionParams implements Serializable, Cloneable
 	/**
 	 * include session attributes in the population process
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
 	 * @return boolean include controller parameters in the population process
 	 */
@@ -267,13 +257,13 @@ public final class ExecutionParams implements Serializable, Cloneable
 	/**
 	 * set whether to include session attributes in the population process
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
-	 * @param b set whether to include session attributes in the population process
+	 * @param b
+	 *            set whether to include session attributes in the population process
 	 */
 	public void setIncludeSessionAttributes(boolean b)
 	{
@@ -283,11 +273,10 @@ public final class ExecutionParams implements Serializable, Cloneable
 	/**
 	 * include request attributes in the population process
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
 	 * @return boolean include request parameters in the population process
 	 */
@@ -299,13 +288,13 @@ public final class ExecutionParams implements Serializable, Cloneable
 	/**
 	 * set whether to include request attributes in the population process
 	 * 
-	 * The order in which parameters/ attributes are used for population:
-	 * 1. controller parameters (if includeControllerParameters == true)
-	 * 2. session attributes (if includeSessionAttributes == true)
-	 * 3. request parameters
-	 * 4. request attributes (if includeRequestAttributes == true)
+	 * The order in which parameters/ attributes are used for population: 1. controller
+	 * parameters (if includeControllerParameters == true) 2. session attributes (if
+	 * includeSessionAttributes == true) 3. request parameters 4. request attributes (if
+	 * includeRequestAttributes == true)
 	 * 
-	 * @param b set whether to include request attributes in the population process
+	 * @param b
+	 *            set whether to include request attributes in the population process
 	 */
 	public void setIncludeRequestAttributes(boolean b)
 	{
@@ -313,11 +302,11 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true.
+	 * Indicates whether the form validators should be executed when one of the field
+	 * validators failed. Default == true.
 	 * 
-	 * @return boolean Whether the form validators should be executed when one of the 
-	 * 		field validators failed.
+	 * @return boolean Whether the form validators should be executed when one of the
+	 *         field validators failed.
 	 */
 	public boolean isDoFormValidationIfFieldValidationFailed()
 	{
@@ -325,11 +314,12 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Indicates whether the form validators should be executed when one of the 
-	 * field validators failed. Default == true.
+	 * Indicates whether the form validators should be executed when one of the field
+	 * validators failed. Default == true.
 	 * 
-	 * @param b whether the form validators should be executed when one of the 
-	 * 		field validators failed.
+	 * @param b
+	 *            whether the form validators should be executed when one of the field
+	 *            validators failed.
 	 */
 	public void setDoFormValidationIfFieldValidationFailed(boolean b)
 	{
@@ -337,12 +327,12 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Whether the perform method of the control should be executed, even if the population/
-	 * validation failed. Use this only in very special cases; extended usage will
-	 * probably result in messy code. Default == false.
+	 * Whether the perform method of the control should be executed, even if the
+	 * population/ validation failed. Use this only in very special cases; extended usage
+	 * will probably result in messy code. Default == false.
 	 * 
-	 * @return boolean whether the perform method of the control should be executed, even if the population/
-	 * validation failed.
+	 * @return boolean whether the perform method of the control should be executed, even
+	 *         if the population/ validation failed.
 	 */
 	public boolean isDoPerformIfPopulationFailed()
 	{
@@ -350,12 +340,13 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Whether the perform method of the control should be executed, even if the population/
-	 * validation failed. Use this only in very special cases; extended usage will
-	 * probably result in messy code. Default == false.
+	 * Whether the perform method of the control should be executed, even if the
+	 * population/ validation failed. Use this only in very special cases; extended usage
+	 * will probably result in messy code. Default == false.
 	 * 
-	 * @param b whether the perform method of the control should be executed, even if the population/
-	 * validation failed.
+	 * @param b
+	 *            whether the perform method of the control should be executed, even if
+	 *            the population/ validation failed.
 	 */
 	public void setDoPerformIfPopulationFailed(boolean b)
 	{
@@ -365,6 +356,7 @@ public final class ExecutionParams implements Serializable, Cloneable
 	/**
 	 * Whether to reuse the context for multiple invocations within the same request.
 	 * Default is true.
+	 * 
 	 * @return reuse the context for multiple invocations within the same request
 	 */
 	public boolean isReuseFormBeanContext()
@@ -375,7 +367,9 @@ public final class ExecutionParams implements Serializable, Cloneable
 	/**
 	 * Set whether to reuse the context for multiple invocations within the same request.
 	 * Default is true.
-	 * @param b reuse the context for multiple invocations within the same request
+	 * 
+	 * @param b
+	 *            reuse the context for multiple invocations within the same request
 	 */
 	public void setReuseFormBeanContext(boolean b)
 	{
@@ -383,18 +377,15 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Gets whether all request parameters should be saved as override
-	 * 	values when population or validation fails.
-	 * If population or validation failes and this property is true,
-	 * all request parameters will be saved as override values. This
-	 * will give you at least the full request the client sent, and
-	 * guards you for the situation where properties that normally
-	 * would be loaded in the command method are not set because
-	 * of the population/ validation failure.
-	 * Default is true.
-
-	 * @return boolean wheter all request parameters should be saved as override
-	 * 	values when population or validation fails.
+	 * Gets whether all request parameters should be saved as override values when
+	 * population or validation fails. If population or validation failes and this
+	 * property is true, all request parameters will be saved as override values. This
+	 * will give you at least the full request the client sent, and guards you for the
+	 * situation where properties that normally would be loaded in the command method are
+	 * not set because of the population/ validation failure. Default is true.
+	 * 
+	 * @return boolean wheter all request parameters should be saved as override values
+	 *         when population or validation fails.
 	 */
 	public boolean isSaveReqParamsAsOverrideFieldsOnError()
 	{
@@ -402,16 +393,13 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Sets whether all request parameters should be saved as override
-	 * 	values when population or validation fails.
-	 * If population or validation failes and this property is true,
-	 * all request parameters will be saved as override values. This
-	 * will give you at least the full request the client sent, and
-	 * guards you for the situation where properties that normally
-	 * would be loaded in the command method are not set because
-	 * of the population/ validation failure.
-	 * Default is true.
-
+	 * Sets whether all request parameters should be saved as override values when
+	 * population or validation fails. If population or validation failes and this
+	 * property is true, all request parameters will be saved as override values. This
+	 * will give you at least the full request the client sent, and guards you for the
+	 * situation where properties that normally would be loaded in the command method are
+	 * not set because of the population/ validation failure. Default is true.
+	 * 
 	 * @param b
 	 */
 	public void setSaveReqParamsAsOverrideFieldsOnError(boolean b)
@@ -420,11 +408,11 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * When an unexpected error occurs, should that be interpreted as a failure,
-	 * or should it just be ignored. E.g. If you have request parameter
-	 * not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
-	 * In strict mode, this will have the effect that the population process is
-	 * marked as failed. If not in strict mode, the exception will be ignored.
+	 * When an unexpected error occurs, should that be interpreted as a failure, or should
+	 * it just be ignored. E.g. If you have request parameter not-a-valid-property, Ognl
+	 * will throw exception 'ognl.InappropriateExpressionException' In strict mode, this
+	 * will have the effect that the population process is marked as failed. If not in
+	 * strict mode, the exception will be ignored.
 	 * 
 	 * @return boolean whether the population mode is strict
 	 */
@@ -434,13 +422,14 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * When an unexpected error occurs, should that be interpreted as a failure,
-	 * or should it just be ignored. E.g. If you have request parameter
-	 * not-a-valid-property, Ognl will throw exception 'ognl.InappropriateExpressionException'
-	 * In strict mode, this will have the effect that the population process is
-	 * marked as failed. If not in strict mode, the exception will be ignored.
+	 * When an unexpected error occurs, should that be interpreted as a failure, or should
+	 * it just be ignored. E.g. If you have request parameter not-a-valid-property, Ognl
+	 * will throw exception 'ognl.InappropriateExpressionException' In strict mode, this
+	 * will have the effect that the population process is marked as failed. If not in
+	 * strict mode, the exception will be ignored.
 	 * 
-	 * @param b whether the population mode is strict
+	 * @param b
+	 *            whether the population mode is strict
 	 */
 	public void setStrictPopulationMode(boolean b)
 	{
@@ -448,8 +437,9 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Get whether string input values should be trimmed before conversion.
-	 * True by default.
+	 * Get whether string input values should be trimmed before conversion. True by
+	 * default.
+	 * 
 	 * @return boolean hhether string input values should be trimmed before conversion.
 	 */
 	public boolean isTrimStringInputValues()
@@ -459,7 +449,9 @@ public final class ExecutionParams implements Serializable, Cloneable
 
 	/**
 	 * Set whether string input values should be trimmed before conversion.
-	 * @param b Whether string input values should be trimmed before conversion.
+	 * 
+	 * @param b
+	 *            Whether string input values should be trimmed before conversion.
 	 */
 	public void setTrimStringInputValues(boolean b)
 	{
@@ -467,16 +459,15 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Get flag whether Baritus should try to populate the form bean.
-	 * Setting this flag to false, and thus letting Baritus skip
-	 * population and validation can be usefull when you link commands
-	 * within the same request and want to reuse the allready populated
+	 * Get flag whether Baritus should try to populate the form bean. Setting this flag to
+	 * false, and thus letting Baritus skip population and validation can be usefull when
+	 * you link commands within the same request and want to reuse the allready populated
 	 * form bean without doing population and validation as well.<br>
 	 * <strong>BEWARE</strong> that this is also skips population of request attributes
 	 * etc. that were set by the controllers earlier in the command stack.<br>
 	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
-	 * population to be succesfull, even though the population of the
-	 * prior control might not have been.
+	 * population to be succesfull, even though the population of the prior control might
+	 * not have been.
 	 * 
 	 * @return boolean whether Baritus should try to populate the form bean.
 	 */
@@ -486,72 +477,74 @@ public final class ExecutionParams implements Serializable, Cloneable
 	}
 
 	/**
-	 * Set flag whether Baritus should try to populate the form bean.
-	 * Setting this flag to false, and thus letting Baritus skip
-	 * population and validation can be usefull when you link commands
-	 * within the same request and want to reuse the allready populated
+	 * Set flag whether Baritus should try to populate the form bean. Setting this flag to
+	 * false, and thus letting Baritus skip population and validation can be usefull when
+	 * you link commands within the same request and want to reuse the allready populated
 	 * form bean without doing population and validation as well.<br>
 	 * <strong>BEWARE</strong> that this is also skips population of request attributes
 	 * etc. that were set by the controllers earlier in the command stack.<br>
 	 * <strong>ALSO</strong> note that if this flag is false, Baritus will consider
-	 * population to be succesfull, even though the population of the
-	 * prior control might not have been.
+	 * population to be succesfull, even though the population of the prior control might
+	 * not have been.
 	 * 
-	 * @param populateAndValidate whether Baritus should try to populate the form bean.
+	 * @param populateAndValidate
+	 *            whether Baritus should try to populate the form bean.
 	 */
 	public void setPopulateAndValidate(boolean populateAndValidate)
 	{
 		this.populateAndValidate = populateAndValidate;
 	}
-    
-    /**
-     * Clone this object.
-     * @return Object deep copy
-     * @see java.lang.Object#clone()
-     */
-    public Object clone()
-    {
-        try 
-        {
-            return super.clone();
-        } 
-        catch (CloneNotSupportedException e) 
-        {
-            throw new RuntimeException(e);
-        }
-    }
 
-    /**
-     * String rep.
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-        StringBuffer b = new StringBuffer(super.toString());
-        b.append(" {");
-        try
-        {
-            Class< ? extends ExecutionParams> clz = getClass();
-            Field[] fields = clz.getDeclaredFields();
-            int length = fields.length;
-            for(int i = 0; i < length; i++)
-            {
-                b.append(fields[i].getName())
-                 .append("=")
-                 .append(fields[i].get(this));
-                if((i+1) < length)
-                {
-                    b.append(",");
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            b.append(e.getMessage());
-        }
-        b.append("}");
-        return b.toString();
-    }
+	/**
+	 * Clone this object.
+	 * 
+	 * @return Object deep copy
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone()
+	{
+		try
+		{
+			return super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * String rep.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuffer b = new StringBuffer(super.toString());
+		b.append(" {");
+		try
+		{
+			Class< ? extends ExecutionParams> clz = getClass();
+			Field[] fields = clz.getDeclaredFields();
+			int length = fields.length;
+			for (int i = 0; i < length; i++)
+			{
+				b.append(fields[i].getName()).append("=").append(fields[i].get(this));
+				if ((i + 1) < length)
+				{
+					b.append(",");
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			b.append(e.getMessage());
+		}
+		b.append("}");
+		return b.toString();
+	}
 
 }

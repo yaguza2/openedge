@@ -31,41 +31,48 @@
 package nl.openedge.baritus.interceptors;
 
 /**
- * Flow exception; is thrown when an interceptor wants to dispatch to another
- * URL immediately.
+ * Flow exception; is thrown when an interceptor wants to dispatch to another URL
+ * immediately.
  * 
  * @author Eelco Hillenius
  */
-public final class DispatchNowFlowException extends FlowException {
+public final class DispatchNowFlowException extends FlowException
+{
 
-    // url to dispatch to
-    private String dispatchPath;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Construct with dispatch path.
-     * @param dispatchPath
-     */    
-    public DispatchNowFlowException(String dispatchPath)
-    {
-        this.dispatchPath = dispatchPath;
-    }
-    
-    /**
-     * Get the path to dispatch to
-     * @return
-     */
-    public String getDispatchPath()
-    {
-        return dispatchPath;
-    }
+	// url to dispatch to
+	private String dispatchPath;
 
-    /**
-     * String representation.
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-        return super.toString() + " {dispatchPath=" + dispatchPath + "}"; 
-    }
+	/**
+	 * Construct with dispatch path.
+	 * 
+	 * @param dispatchPath
+	 */
+	public DispatchNowFlowException(String dispatchPath)
+	{
+		this.dispatchPath = dispatchPath;
+	}
+
+	/**
+	 * Get the path to dispatch to
+	 * 
+	 * @return
+	 */
+	public String getDispatchPath()
+	{
+		return dispatchPath;
+	}
+
+	/**
+	 * String representation.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return super.toString() + " {dispatchPath=" + dispatchPath + "}";
+	}
 
 }

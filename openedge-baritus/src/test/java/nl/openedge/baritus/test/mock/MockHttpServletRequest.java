@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 package nl.openedge.baritus.test.mock;
 
 import java.util.Enumeration;
@@ -42,12 +42,13 @@ import java.util.Map;
  */
 public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServletRequest
 {
-	
+
 	private Map<String, Object> attributes = new HashMap<String, Object>();
 
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
 	 */
+	@Override
 	public long getDateHeader(String arg0)
 	{
 		return System.currentTimeMillis();
@@ -56,6 +57,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#getLocale()
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return null;
@@ -64,6 +66,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
 	 */
+	@Override
 	public Object getAttribute(String anAttributeName)
 	{
 		return attributes.get(anAttributeName);
@@ -72,14 +75,16 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#getAttributeNames()
 	 */
+	@Override
 	public Enumeration getAttributeNames()
 	{
-		return new ItEnum(attributes.keySet().iterator()); 
+		return new ItEnum(attributes.keySet().iterator());
 	}
 
 	/**
 	 * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
 	 */
+	@Override
 	public void removeAttribute(String anAttributeToRemove)
 	{
 		attributes.remove(anAttributeToRemove);
@@ -88,27 +93,30 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#setAttribute(java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void setAttribute(String attributeName, Object attributeValue)
 	{
 		attributes.put(attributeName, attributeValue);
 	}
-	
+
 }
 
 class ItEnum implements Enumeration
 {
 	Iterator<String> i = null;
-		
+
 	public ItEnum(Iterator<String> i)
 	{
 		this.i = i;
 	}
-		
+
+	@Override
 	public boolean hasMoreElements()
 	{
 		return i.hasNext();
 	}
 
+	@Override
 	public Object nextElement()
 	{
 		return i.next();

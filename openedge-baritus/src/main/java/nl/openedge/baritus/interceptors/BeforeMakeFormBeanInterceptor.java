@@ -37,8 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed before the
- * method makeFormBean is called.
+ * Registered instances will have their command method executed before the method
+ * makeFormBean is called.
  * 
  * @author Eelco Hillenius
  */
@@ -48,17 +48,17 @@ public interface BeforeMakeFormBeanInterceptor extends Interceptor
 	/**
 	 * Executed before the method makeFormBean is called.
 	 * 
-	 * @param cctx maverick context
-	 * @param formBeanContext the context with the not-yet populated formBean
-     * @throws ServletException
-     * @throws RedirectingException when an interceptor wants to redirect
-     * @throws DirectReturnFlowException when an interceptor wants to return directly
+	 * @param cctx
+	 *            maverick context
+	 * @param formBeanContext
+	 *            the context with the not-yet populated formBean
+	 * @throws ServletException
+	 * @throws RedirectingException
+	 *             when an interceptor wants to redirect
+	 * @throws DirectReturnFlowException
+	 *             when an interceptor wants to return directly
 	 */
-	public void doBeforeMakeFormBean(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-        throws ServletException, 
-        DispatchNowFlowException, 
-        ReturnNowFlowException;
+	public void doBeforeMakeFormBean(ControllerContext cctx, FormBeanContext formBeanContext)
+			throws ServletException, DispatchNowFlowException, ReturnNowFlowException;
 
 }

@@ -37,8 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed if 
- * an unhandeld exception occured while executing the perform method.
+ * Registered instances will have their command method executed if an unhandeld exception
+ * occured while executing the perform method.
  * 
  * @author Eelco Hillenius
  */
@@ -48,19 +48,20 @@ public interface PerformExceptionInterceptor extends Interceptor
 	/**
 	 * Executed if an unhandeld exception occured while executing the perform method.
 	 * 
-	 * @param cctx maverick context
-	 * @param formBeanContext context with form bean that failed to populate
-     * @param cause the exception that occured during perform
-     * @throws ServletException
-     * @throws RedirectingException when an interceptor wants to redirect
-     * @throws DirectReturnFlowException when an interceptor wants to return directly
+	 * @param cctx
+	 *            maverick context
+	 * @param formBeanContext
+	 *            context with form bean that failed to populate
+	 * @param cause
+	 *            the exception that occured during perform
+	 * @throws ServletException
+	 * @throws RedirectingException
+	 *             when an interceptor wants to redirect
+	 * @throws DirectReturnFlowException
+	 *             when an interceptor wants to return directly
 	 */
-	public void doOnPerformException(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext,
-        Exception cause)
-        throws ServletException, 
-        DispatchNowFlowException, 
-        ReturnNowFlowException;
+	public void doOnPerformException(ControllerContext cctx, FormBeanContext formBeanContext,
+			Exception cause) throws ServletException, DispatchNowFlowException,
+			ReturnNowFlowException;
 
 }

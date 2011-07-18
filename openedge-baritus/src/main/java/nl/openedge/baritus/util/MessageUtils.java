@@ -28,7 +28,9 @@ public final class MessageUtils
 
 	/**
 	 * Get localized message for given key.
-	 * @param key key of message
+	 * 
+	 * @param key
+	 *            key of message
 	 * @return String localized message
 	 */
 	public static String getLocalizedMessage(String key)
@@ -37,10 +39,13 @@ public final class MessageUtils
 	}
 
 	/**
-	 * Get localized message for given key and locale. 
-	 * If locale is null, the default locale will be used.
-	 * @param key key of message
-	 * @param locale locale for message
+	 * Get localized message for given key and locale. If locale is null, the default
+	 * locale will be used.
+	 * 
+	 * @param key
+	 *            key of message
+	 * @param locale
+	 *            locale for message
 	 * @return String localized message
 	 */
 	public static String getLocalizedMessage(String key, Locale locale)
@@ -61,11 +66,13 @@ public final class MessageUtils
 	}
 
 	/**
-	 * Get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used.
-	 * @param key key of message
-	 * @param parameters parameters for the message
+	 * Get localized message for given key and locale and format it with the given
+	 * parameters. If locale is null, the default locale will be used.
+	 * 
+	 * @param key
+	 *            key of message
+	 * @param parameters
+	 *            parameters for the message
 	 * @return String localized message
 	 */
 	public static String getLocalizedMessage(String key, Object[] parameters)
@@ -74,18 +81,18 @@ public final class MessageUtils
 	}
 
 	/**
-	 * Get localized message for given key and locale
-	 * and format it with the given parameters. 
-	 * If locale is null, the default locale will be used.
-	 * @param key key of message
-	 * @param locale locale for message
-	 * @param parameters parameters for the message
+	 * Get localized message for given key and locale and format it with the given
+	 * parameters. If locale is null, the default locale will be used.
+	 * 
+	 * @param key
+	 *            key of message
+	 * @param locale
+	 *            locale for message
+	 * @param parameters
+	 *            parameters for the message
 	 * @return String localized message
 	 */
-	public static String getLocalizedMessage(
-		String key,
-		Locale locale,
-		Object[] parameters)
+	public static String getLocalizedMessage(String key, Locale locale, Object[] parameters)
 	{
 		String msg = null;
 		try

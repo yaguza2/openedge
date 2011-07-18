@@ -34,13 +34,14 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 
+import org.infohazard.maverick.flow.ControllerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * This validator checks on minimum length. E.g. if property minLength is 4, "hello" will
  * pass, but "hi" will fail, and number 98765 will pass, but 159 will fail.
+ * 
  * @author Eelco Hillenius
  */
 public final class MinimumFieldLengthValidator extends AbstractFieldValidator
@@ -64,7 +65,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct with message prefix for error message keys.
-	 * @param errorMessageKey message key of error
+	 * 
+	 * @param errorMessageKey
+	 *            message key of error
 	 */
 	public MinimumFieldLengthValidator(String errorMessageKey)
 	{
@@ -74,8 +77,11 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	/**
 	 * Construct with message key for error message keys and set checking on minimum
 	 * length with given length of fields only.
-	 * @param errorMessageKey key for error messages
-	 * @param minLength minimum length allowed for values; use -1 for no minimum
+	 * 
+	 * @param errorMessageKey
+	 *            key for error messages
+	 * @param minLength
+	 *            minimum length allowed for values; use -1 for no minimum
 	 */
 	public MinimumFieldLengthValidator(String errorMessageKey, int minLength)
 	{
@@ -85,7 +91,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct with activation rule.
-	 * @param rule activation rule
+	 * 
+	 * @param rule
+	 *            activation rule
 	 */
 	public MinimumFieldLengthValidator(ValidationActivationRule rule)
 	{
@@ -94,8 +102,10 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct with errorMessageKey and activation rule.
+	 * 
 	 * @param errorMessageKey
-	 * @param rule activation rule
+	 * @param rule
+	 *            activation rule
 	 */
 	public MinimumFieldLengthValidator(String errorMessageKey, ValidationActivationRule rule)
 	{
@@ -105,7 +115,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Construct with min length.
-	 * @param minLength minimum length allowed for values; use -1 for no minimum
+	 * 
+	 * @param minLength
+	 *            minimum length allowed for values; use -1 for no minimum
 	 */
 	public MinimumFieldLengthValidator(int minLength)
 	{
@@ -118,11 +130,13 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	 * smaller than the minLength property. In case the value is an instance of number:
 	 * checks whether the length of the integer value is equal to or smaller than the
 	 * minLength property.
+	 * 
 	 * @return boolean true if the length of value is equal to or less than the minLength
 	 *         property, false otherwise
 	 * @see nl.openedge.baritus.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
 	 *      nl.openedge.baritus.FormBeanContext, java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
 			String fieldName, Object value)
 	{
@@ -147,15 +161,15 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 			else
 			{
 				// just ignore; wrong type to check on
-				log.warn(fieldName
-						+ " with value: " + value + " is of the wrong type for checking on length");
+				log.warn(fieldName + " with value: " + value
+					+ " is of the wrong type for checking on length");
 			}
 		}
 
 		if (minExceeded)
 		{
 			setErrorMessage(formBeanContext, fieldName, getErrorMessageKey(), new Object[] {
-					getFieldName(formBeanContext, fieldName), value, Integer.valueOf(minLength)});
+				getFieldName(formBeanContext, fieldName), value, Integer.valueOf(minLength)});
 		}
 
 		return (!minExceeded);
@@ -170,7 +184,8 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * @param i minimum length that is checked on
+	 * @param i
+	 *            minimum length that is checked on
 	 */
 	public void setMinLength(int i)
 	{
@@ -179,6 +194,7 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Get key of error message.
+	 * 
 	 * @return String key of error message
 	 */
 	public String getErrorMessageKey()
@@ -188,7 +204,9 @@ public final class MinimumFieldLengthValidator extends AbstractFieldValidator
 
 	/**
 	 * Set key of error message.
-	 * @param string key of error message
+	 * 
+	 * @param string
+	 *            key of error message
 	 */
 	public void setErrorMessageKey(String string)
 	{

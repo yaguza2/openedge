@@ -37,8 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed before the
- * normal action execution took place, but after the form bean was populated.
+ * Registered instances will have their command method executed before the normal action
+ * execution took place, but after the form bean was populated.
  * 
  * @author Eelco Hillenius
  */
@@ -46,20 +46,20 @@ public interface AfterPopulationInterceptor extends Interceptor
 {
 
 	/**
-	 * Executed before the normal action execution takes place, but after
-	 * the form bean was populated.
+	 * Executed before the normal action execution takes place, but after the form bean
+	 * was populated.
 	 * 
-	 * @param cctx maverick context
-	 * @param formBeanContext the context with the not-yet populated formBean
-     * @throws ServletException
-     * @throws RedirectingException when an interceptor wants to redirect
-     * @throws DirectReturnFlowException when an interceptor wants to return directly
+	 * @param cctx
+	 *            maverick context
+	 * @param formBeanContext
+	 *            the context with the not-yet populated formBean
+	 * @throws ServletException
+	 * @throws RedirectingException
+	 *             when an interceptor wants to redirect
+	 * @throws DirectReturnFlowException
+	 *             when an interceptor wants to return directly
 	 */
-	public void doAfterPopulation(
-		ControllerContext cctx,
-		FormBeanContext formBeanContext) 
-        throws ServletException, 
-        DispatchNowFlowException, 
-        ReturnNowFlowException;
+	public void doAfterPopulation(ControllerContext cctx, FormBeanContext formBeanContext)
+			throws ServletException, DispatchNowFlowException, ReturnNowFlowException;
 
 }

@@ -37,8 +37,8 @@ import nl.openedge.baritus.FormBeanContext;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Registered instances will have their command method executed if 
- * the model failed to populate, or did not pass validation.
+ * Registered instances will have their command method executed if the model failed to
+ * populate, or did not pass validation.
  * 
  * @author Eelco Hillenius
  */
@@ -48,19 +48,20 @@ public interface PopulationErrorInterceptor extends Interceptor
 	/**
 	 * Executed if the model failed to populate, or did not pass validation.
 	 * 
-	 * @param cctx maverick context
-	 * @param formBeanContext context with form bean that failed to populate
-     * @param cause possibly the exception that caused the population error
-     * @throws ServletException
-     * @throws RedirectingException when an interceptor wants to redirect
-     * @throws DirectReturnFlowException when an interceptor wants to return directly
+	 * @param cctx
+	 *            maverick context
+	 * @param formBeanContext
+	 *            context with form bean that failed to populate
+	 * @param cause
+	 *            possibly the exception that caused the population error
+	 * @throws ServletException
+	 * @throws RedirectingException
+	 *             when an interceptor wants to redirect
+	 * @throws DirectReturnFlowException
+	 *             when an interceptor wants to return directly
 	 */
-	public void doOnPopulationError(
-		ControllerContext cctx, 
-		FormBeanContext formBeanContext,
-        Exception cause)
-        throws ServletException, 
-        DispatchNowFlowException, 
-        ReturnNowFlowException;
+	public void doOnPopulationError(ControllerContext cctx, FormBeanContext formBeanContext,
+			Exception cause) throws ServletException, DispatchNowFlowException,
+			ReturnNowFlowException;
 
 }
