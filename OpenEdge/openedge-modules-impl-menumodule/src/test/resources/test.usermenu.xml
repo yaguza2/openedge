@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<menu-config>
+
+	<!-- ***************************** filters ***************************** -->
+
+	<filter class="nl.openedge.modules.impl.menumodule.AuthorizationFilter" />
+
+	<filter class="nl.openedge.modules.impl.menumodule.test.ApplicationScopeTestFilter" />
+
+	<filter class="nl.openedge.modules.impl.menumodule.test.RequestScopeTestFilter" />
+
+	<!-- ***************************** menu items ***************************** -->
+
+	<menu-item tag="Onderhoud" link="/admin.onderhoud.m">
+
+		<menu-item tag="teFilterenMetApplicatieScope" link="/admin.onderhoud.filtertest.m" />
+
+		<menu-item tag="Functies" link="/admin.onderhoud.functie.m">
+
+			<menu-item tag="Recursetest" link="/admin.onderhoud.functie.recursetest.m"></menu-item>
+
+		</menu-item>
+
+		<menu-item tag="Praktijk" link="/admin.onderhoud.praktijk.m"></menu-item>
+
+	</menu-item>
+
+	<menu-item tag="Medisch Dossier" link="/medischdossier.m">
+
+		<menu-item tag="Journaal" link="/medischdossier.journaal.m">
+			<alias link="/medischdossier.journaaldetail.m" />
+		</menu-item>
+
+		<menu-item tag="Actuele Medicatie" link="/medischdossier.actuelemedicatie.m"></menu-item>
+
+		<menu-item tag="Contra Indicaties" link="/medischdossier.contraindicaties.m"></menu-item>
+
+		<menu-item tag="Allergieen" link="/medischdossier.allergieen.m"></menu-item>
+
+		<menu-item tag="Probleemlijst" link="/medischdossier.probleemlijst.m"></menu-item>
+
+	</menu-item>
+
+	<menu-item tag="Zoeken" link="/zoeken.m">
+
+		<attribute name="test1">value1</attribute>
+		<attribute name="test2"><![CDATA[ test with CDATA: &'"<> ]]></attribute>
+
+		<!-- test voor node level filter -->
+		<filter class="nl.openedge.modules.impl.menumodule.test.RequestScopeTestFilterForOneItem" />
+
+		<menu-item tag="Zoeken Patient" link="/zoeken.patient.m"></menu-item>
+
+		<menu-item tag="Zoek Passant" link="/zoeken.passant.m"></menu-item>
+		<menu-item tag="Zoek Dokter" link="/zoeken.dokter.m"></menu-item>
+
+	</menu-item>
+
+</menu-config>

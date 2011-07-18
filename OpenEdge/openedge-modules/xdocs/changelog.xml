@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+
+	<properties>
+		<title>OpenEdge Modules Changelog</title>
+		<author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+	</properties>
+
+	<body>
+		<section name="Changelog">
+			<p>A short description of changes is given for each release</p>
+
+            <subsection name="1.2">
+                <ul>
+                	<li>
+                        Removed Commons BeanUtils/ Commons Collections
+                        dependency in favor of Ognl.
+                	</li>
+                </ul>
+            </subsection>
+			
+			<subsection name="1.1">
+				<ul>
+					<li>First release.</li>
+				</ul>
+			</subsection>
+
+		</section>
+	</body>
+</document>
