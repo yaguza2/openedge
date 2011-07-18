@@ -1,0 +1,14 @@
+$Id: TODO.txt,v 1.5 2003/04/12 06:10:47 lhoriman Exp $
+$Source: /cvsroot-fuse/mav/maverick/TODO.txt,v $
+
+Add getDispatcher() to Throwaway?
+Allow config to be modified with code
+Check out how to make a Controller using formproc http://sourceforge.net/projects/formproc/
+
+Check error condition when DispatchedView gets 404 (or other error).
+
+jar files should have version number in their name
+
+make all friendbook examples stand alone ie completely contain all jars
+and have a "normal" ant buildfile.  yes this will suck updating jars
+for new versions but it will be easier for newbies to get started.

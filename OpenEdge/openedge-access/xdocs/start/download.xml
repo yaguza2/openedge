@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Downloading OpenEdge Access</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+    <section name="Download OpenEdge Access">
+
+      <p>
+        OpenEdge Access is currently distributed in two formats for user convenience:
+        a tar/gzipped install archive and a zipped install archive. You can find the install archives
+        <a href="http://TODO/builds/release/1.0-beta-10/">here</a>.
+      </p>
+      
+    </section>
+  </body>
+</document>
