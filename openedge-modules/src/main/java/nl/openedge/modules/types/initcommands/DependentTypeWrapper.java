@@ -37,9 +37,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nl.openedge.modules.ComponentLookupException;
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.config.ConfigException;
@@ -48,24 +45,28 @@ import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import ognl.Ognl;
 import ognl.OgnlException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Tries to solve the dependencies after all components have been loaded. <br>
  * Users can set the static property 'failOnCycle' to true if they want the resolving of
- * dependencies stopped (and thus stop the loading of the component repository) when a circular
- * dependency is detected. Be sure to set this property BEFORE initialising the component
- * repository. <br>
- * If 'failOnCycle' is false (the default), the resolving of dependencies will not stop when a
- * circular dependency is detected. In this case, instead of getting the instance of the component
- * for which the circular dependency was detected from the repository, a cached instance will be
- * used for setting the dependency of the current dependent component. <br>
- * WARNING: as dependencies are potentially loaded from a temporary cache instead of via the
- * component repository when 'failOnCycle' is false, it is not safe to work with components with
- * state (ThrowAwayTypes). If there a cycle was detected, the same instance of a component is shared
- * by more than one module, even if the normal behaviour of the type factory would be to create a
- * new intance (like with ThrowAwayTypes). In most cases, this probably would not be a problem, but
- * if it is, consider setting the 'failOnCycle' property to true or just using the component
- * repository directely in the components that have dependencies instead tagging it as a dependent
- * type.
+ * dependencies stopped (and thus stop the loading of the component repository) when a
+ * circular dependency is detected. Be sure to set this property BEFORE initialising the
+ * component repository. <br>
+ * If 'failOnCycle' is false (the default), the resolving of dependencies will not stop
+ * when a circular dependency is detected. In this case, instead of getting the instance
+ * of the component for which the circular dependency was detected from the repository, a
+ * cached instance will be used for setting the dependency of the current dependent
+ * component. <br>
+ * WARNING: as dependencies are potentially loaded from a temporary cache instead of via
+ * the component repository when 'failOnCycle' is false, it is not safe to work with
+ * components with state (ThrowAwayTypes). If there a cycle was detected, the same
+ * instance of a component is shared by more than one module, even if the normal behaviour
+ * of the type factory would be to create a new intance (like with ThrowAwayTypes). In
+ * most cases, this probably would not be a problem, but if it is, consider setting the
+ * 'failOnCycle' property to true or just using the component repository directely in the
+ * components that have dependencies instead tagging it as a dependent type.
  * 
  * @author Eelco Hillenius
  */
@@ -81,8 +82,10 @@ public final class DependentTypeWrapper
 		/**
 		 * fired after all components are (re)loaded.
 		 * 
-		 * @param evt event
+		 * @param evt
+		 *            event
 		 */
+		@Override
 		public void modulesLoaded(ComponentsLoadedEvent evt)
 		{
 			// test it
@@ -127,19 +130,24 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Execute the command.
-	 * @param cInstance component instance
-	 * @throws InitCommandException when init command threw an error
-	 * @throws ConfigException when the configuration is faulty
+	 * 
+	 * @param cInstance
+	 *            component instance
+	 * @throws InitCommandException
+	 *             when init command threw an error
+	 * @throws ConfigException
+	 *             when the configuration is faulty
 	 */
-	public void execute(Object cInstance) throws InitCommandException,
-			ConfigException
+	public void execute(Object cInstance) throws InitCommandException, ConfigException
 	{
 		setDependencies(cInstance);
 	}
 
 	/**
 	 * Set the dependencies.
-	 * @param cInstance component instance
+	 * 
+	 * @param cInstance
+	 *            component instance
 	 */
 	public void setDependencies(Object cInstance)
 	{
@@ -173,9 +181,9 @@ public final class DependentTypeWrapper
 					if (failOnCycle)
 					{
 						String name = dep.getModuleName();
-						String message = "\ncomponent with name "
-								+ this.componentName + " has a cyclic dependency:"
-								+ " component with name " + name
+						String message =
+							"\ncomponent with name " + this.componentName
+								+ " has a cyclic dependency:" + " component with name " + name
 								+ " was allready referenced. \nHere's a list of"
 								+ " references where the cycle was detected:\n"
 								+ references.toString() + " -> " + name + "\n";
@@ -215,6 +223,7 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Get the component instance.
+	 * 
 	 * @return DependentType the wrapped instance
 	 */
 	public Object getComponentInstance()
@@ -224,7 +233,9 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Set the component instance.
-	 * @param instance the instance to wrap
+	 * 
+	 * @param instance
+	 *            the instance to wrap
 	 */
 	public void setComponentInstance(Object instance)
 	{
@@ -233,6 +244,7 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Get the logical dependencies.
+	 * 
 	 * @return List named dependencies
 	 */
 	public List getNamedDependencies()
@@ -242,7 +254,9 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Set the logical dependencies.
-	 * @param namedDependencies name dependencies
+	 * 
+	 * @param namedDependencies
+	 *            name dependencies
 	 */
 	public void setNamedDependencies(List namedDependencies)
 	{
@@ -270,7 +284,8 @@ public final class DependentTypeWrapper
 	/**
 	 * set component name.
 	 * 
-	 * @param componentName name of the component
+	 * @param componentName
+	 *            name of the component
 	 */
 	public void setComponentName(String componentName)
 	{
@@ -286,7 +301,8 @@ public final class DependentTypeWrapper
 	}
 
 	/**
-	 * @param factory module factory
+	 * @param factory
+	 *            module factory
 	 */
 	public void setModuleFactory(ComponentRepository factory)
 	{
@@ -301,6 +317,7 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Get whether to fail when a cycle is detected.
+	 * 
 	 * @return whether to fail when a cycle is detected
 	 */
 	public static boolean isFailOnCycle()
@@ -310,7 +327,9 @@ public final class DependentTypeWrapper
 
 	/**
 	 * Set whether to fail when a cycle is detected.
-	 * @param b whether to fail when a cycle is detected
+	 * 
+	 * @param b
+	 *            whether to fail when a cycle is detected
 	 */
 	public static void setFailOnCycle(boolean b)
 	{

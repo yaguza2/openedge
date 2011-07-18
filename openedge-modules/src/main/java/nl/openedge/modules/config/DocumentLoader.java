@@ -35,10 +35,10 @@ import java.net.URL;
 
 import javax.servlet.ServletContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class for loading jdom documents.
@@ -53,20 +53,20 @@ public final class DocumentLoader
 	/**
 	 * Load configuration document.
 	 * 
-	 * @param configDocument configuration document
+	 * @param configDocument
+	 *            configuration document
 	 * @return a loaded JDOM document containing the configuration information.
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	public static Document loadDocument(String configDocument) throws ConfigException
 	{
 		try
 		{
-			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class,
-					null);
+			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class, null);
 
 			if (configURL == null)
-				throw new ConfigException(configDocument
-						+ " should be a document but is empty");
+				throw new ConfigException(configDocument + " should be a document but is empty");
 			log.info("Loading config from " + configURL);
 
 			return internalLoad(configURL);
@@ -81,9 +81,11 @@ public final class DocumentLoader
 	/**
 	 * Load configuration document.
 	 * 
-	 * @param configURL URL of configuration document
+	 * @param configURL
+	 *            URL of configuration document
 	 * @return a loaded JDOM document containing the configuration information.
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	public static Document loadDocument(URL configURL) throws ConfigException
 	{
@@ -97,22 +99,24 @@ public final class DocumentLoader
 	/**
 	 * Load configuration document.
 	 * 
-	 * @param configDocument configuration document
-	 * @param servletContext servlet context
+	 * @param configDocument
+	 *            configuration document
+	 * @param servletContext
+	 *            servlet context
 	 * @return a loaded JDOM document containing the configuration information.
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	public static Document loadDocument(String configDocument,
-			ServletContext servletContext) throws ConfigException
+	public static Document loadDocument(String configDocument, ServletContext servletContext)
+			throws ConfigException
 	{
 		try
 		{
-			URL configURL = URLHelper.convertToURL(configDocument, DocumentLoader.class,
-					servletContext);
+			URL configURL =
+				URLHelper.convertToURL(configDocument, DocumentLoader.class, servletContext);
 
 			if (configURL == null)
-				throw new ConfigException(configDocument
-						+ " should be a document but is empty");
+				throw new ConfigException(configDocument + " should be a document but is empty");
 			log.info("Loading config from " + configURL.toString());
 			return internalLoad(configURL);
 		}
@@ -125,9 +129,11 @@ public final class DocumentLoader
 	/**
 	 * Do the real loading.
 	 * 
-	 * @param configURL URL of configuration document
+	 * @param configURL
+	 *            URL of configuration document
 	 * @return a loaded JDOM document containing the configuration information.
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	private static Document internalLoad(URL configURL) throws ConfigException
 	{

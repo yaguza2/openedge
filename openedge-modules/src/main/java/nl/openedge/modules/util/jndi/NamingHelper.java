@@ -70,12 +70,12 @@ public final class NamingHelper
 	/**
 	 * get initial context based on properties and prefix
 	 * 
-	 * @param props properties with jndi config
+	 * @param props
+	 *            properties with jndi config
 	 * @return InitialContext jndi context
 	 * @throws NamingException
 	 */
-	public static InitialContext getInitialContext(Properties props)
-			throws NamingException
+	public static InitialContext getInitialContext(Properties props) throws NamingException
 	{
 
 		Hashtable hash = getJndiProperties(props);
@@ -94,9 +94,12 @@ public final class NamingHelper
 	/**
 	 * Bind val to name in ctx, and make sure that all intermediate contexts exist.
 	 * 
-	 * @param ctx the root context
-	 * @param name the name as a string
-	 * @param val the object to be bound
+	 * @param ctx
+	 *            the root context
+	 * @param name
+	 *            the name as a string
+	 * @param val
+	 *            the object to be bound
 	 * @throws NamingException
 	 */
 	public static void bind(Context ctx, String name, Object val) throws NamingException
@@ -143,8 +146,9 @@ public final class NamingHelper
 	}
 
 	/**
-	 * Transform JNDI properties passed in the form <tt>${prefix}.jndi.*</tt> to the format
-	 * accepted by <tt>InitialContext</tt> by triming the leading "<tt>hibernate.jndi</tt>".
+	 * Transform JNDI properties passed in the form <tt>${prefix}.jndi.*</tt> to the
+	 * format accepted by <tt>InitialContext</tt> by triming the leading "
+	 * <tt>hibernate.jndi</tt>".
 	 */
 	public static Properties getJndiProperties(Properties properties)
 	{
@@ -161,8 +165,8 @@ public final class NamingHelper
 			if (prop.indexOf(JNDI_PREFIX) > -1 && !specialProps.contains(prop))
 			{
 
-				result.setProperty(prop.substring(JNDI_PREFIX.length() + 1), properties
-						.getProperty(prop));
+				result.setProperty(prop.substring(JNDI_PREFIX.length() + 1),
+					properties.getProperty(prop));
 			}
 		}
 

@@ -52,8 +52,9 @@ public final class ConfigurableTypeInitCommand implements InitCommand
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String componentName, Element cNode,
-			ComponentRepository componentRepository) throws ConfigException
+	@Override
+	public void init(String componentName, Element cNode, ComponentRepository componentRepository)
+			throws ConfigException
 	{
 		this.componentNode = cNode;
 	}
@@ -63,8 +64,8 @@ public final class ConfigurableTypeInitCommand implements InitCommand
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException,
-			ConfigException
+	@Override
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 		if (componentInstance instanceof ConfigurableType)
 		{

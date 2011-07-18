@@ -59,8 +59,9 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String componentName, Element componentNode,
-			ComponentRepository cRepo) throws ConfigException
+	@Override
+	public void init(String componentName, Element componentNode, ComponentRepository cRepo)
+			throws ConfigException
 	{
 		this.componentRepository = cRepo;
 	}
@@ -70,8 +71,8 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException,
-			ConfigException
+	@Override
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 		if (executeInitCommands)
 		{
@@ -79,18 +80,16 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 
 			if (componentInstance instanceof ChainedEventCaster)
 			{
-				((ChainedEventCaster) componentInstance)
-						.addObserver(this.componentRepository);
+				((ChainedEventCaster) componentInstance).addObserver(this.componentRepository);
 			}
 			else
 			{
 				Class clazz = componentInstance.getClass();
 				try
 				{
-					Method initMethod = clazz.getMethod("addObserver",
-							new Class[] {ChainedEventObserver.class});
-					initMethod.invoke(componentInstance,
-							new Object[] {this.componentRepository});
+					Method initMethod =
+						clazz.getMethod("addObserver", new Class[] {ChainedEventObserver.class});
+					initMethod.invoke(componentInstance, new Object[] {this.componentRepository});
 				}
 				catch (SecurityException e)
 				{
@@ -119,11 +118,13 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 	/**
 	 * fired after all components are (re)loaded.
 	 * 
-	 * @param evt event
+	 * @param evt
+	 *            event
 	 */
+	@Override
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		//noop
+		// noop
 	}
 
 }

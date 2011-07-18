@@ -37,10 +37,10 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 import org.quartz.JobDataMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wrapper for jobs.
@@ -61,9 +61,12 @@ public final class JobTypeFactory extends AbstractComponentFactory
 	/**
 	 * set config node.
 	 * 
-	 * @param componentNode config node
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentNode
+	 *            config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	public void setComponentNode(Element componentNode) throws ConfigException
 	{
 
@@ -72,8 +75,10 @@ public final class JobTypeFactory extends AbstractComponentFactory
 
 	/**
 	 * Get component; allways null.
+	 * 
 	 * @return allways null; get Jobs from the scheduler
 	 */
+	@Override
 	public Object getComponent()
 	{
 		return null;
@@ -82,8 +87,10 @@ public final class JobTypeFactory extends AbstractComponentFactory
 	/**
 	 * init job using the configuration node.
 	 * 
-	 * @param configNode configuration element for this job
-	 * @throws ConfigException when an configuration error occurs
+	 * @param configNode
+	 *            configuration element for this job
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	public void initJobData(Element configNode) throws ConfigException
 	{
@@ -92,7 +99,7 @@ public final class JobTypeFactory extends AbstractComponentFactory
 		if (detailNode == null)
 		{
 			throw new ConfigException("jobs must have a job detail configured "
-					+ "(element <jobDetail>)");
+				+ "(element <jobDetail>)");
 		}
 		this.group = detailNode.getAttributeValue("group");
 
@@ -103,8 +110,7 @@ public final class JobTypeFactory extends AbstractComponentFactory
 			for (Iterator i = parameters.iterator(); i.hasNext();)
 			{
 				Element node = (Element) i.next();
-				jobData.put(node.getAttributeValue("name"), node
-						.getAttributeValue("value"));
+				jobData.put(node.getAttributeValue("name"), node.getAttributeValue("value"));
 			}
 
 	}
@@ -131,12 +137,15 @@ public final class JobTypeFactory extends AbstractComponentFactory
 
 	/**
 	 * Set init commands.
-	 * @param commands init commands
+	 * 
+	 * @param commands
+	 *            init commands
 	 */
+	@Override
 	public void setInitCommands(InitCommand[] commands)
 	{
 		log.error("\ninitcommands will be ignored for Quartz jobs, as"
-				+ " these jobs are managed by Quartz instead of a ComponentRepository\n");
+			+ " these jobs are managed by Quartz instead of a ComponentRepository\n");
 	}
 
 }

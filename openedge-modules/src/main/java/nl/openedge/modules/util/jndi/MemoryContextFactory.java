@@ -43,28 +43,29 @@ import javax.naming.spi.InitialContextFactory;
 
 /**
  * Implements a context factory for {@link MemoryContext}. When set properly
- * {@link javax.naming.InitialContext}will return a {@linkMemoryContext}referencing the named path
- * in the shared memory space.
+ * {@link javax.naming.InitialContext}will return a {@linkMemoryContext}referencing the
+ * named path in the shared memory space.
  * <p>
- * To use this context factory the JNDI properties file must include the following properties:
+ * To use this context factory the JNDI properties file must include the following
+ * properties:
  * 
  * <pre>
  * 
- *  
- *   
- *    
- *     
+ * 
+ * 
+ * 
+ * 
  *      java.naming.factory.initial=tyrex.naming.MemoryContextFactory
  *      java.naming.provider.url=
- *      
- *     
- *    
- *   
- *  
+ * 
+ * 
+ * 
+ * 
+ * 
  * </pre>
  * 
- * Any non-empty URL will return a context to that path in the object tree, relative to the same
- * shared root. The returned context is read/write.
+ * Any non-empty URL will return a context to that path in the object tree, relative to
+ * the same shared root. The returned context is read/write.
  * 
  * @author <a href="arkin@intalio.com">Assaf Arkin </a>
  * @author Eelco Hillenius
@@ -76,12 +77,15 @@ public final class MemoryContextFactory implements InitialContextFactory
 	private static final MemoryBinding contextRoot = new MemoryBinding();
 
 	/**
-	 * Returns a binding in the specified path. If the binding does not exist, the full path is
-	 * created and a new binding is returned. The binding is always obtained from the shared root.
+	 * Returns a binding in the specified path. If the binding does not exist, the full
+	 * path is created and a new binding is returned. The binding is always obtained from
+	 * the shared root.
 	 * 
-	 * @param path The path
+	 * @param path
+	 *            The path
 	 * @return The memory binding for the path
-	 * @throws NamingException Name is invalid
+	 * @throws NamingException
+	 *             Name is invalid
 	 */
 	synchronized static MemoryBinding getBindings(String path) throws NamingException
 	{
@@ -119,6 +123,7 @@ public final class MemoryContextFactory implements InitialContextFactory
 	/**
 	 * @see InitialContextFactory#getInitialContext(Hashtable)
 	 */
+	@Override
 	public Context getInitialContext(Hashtable env) throws NamingException
 	{
 
@@ -138,4 +143,3 @@ public final class MemoryContextFactory implements InitialContextFactory
 	}
 
 }
-

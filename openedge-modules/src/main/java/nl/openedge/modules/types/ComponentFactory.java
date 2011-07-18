@@ -46,8 +46,10 @@ public interface ComponentFactory
 	/**
 	 * construct with class.
 	 * 
-	 * @param componentClass class of component
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentClass
+	 *            class of component
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 
 	/**
@@ -60,7 +62,8 @@ public interface ComponentFactory
 	/**
 	 * sets the name from config.
 	 * 
-	 * @param name alias for this instance
+	 * @param name
+	 *            alias for this instance
 	 */
 	void setName(String name);
 
@@ -74,8 +77,10 @@ public interface ComponentFactory
 	/**
 	 * construct with class.
 	 * 
-	 * @param componentClass class of component
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentClass
+	 *            class of component
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	void setComponentClass(Class componentClass) throws ConfigException;
 
@@ -89,7 +94,8 @@ public interface ComponentFactory
 	/**
 	 * set component factory.
 	 * 
-	 * @param factory component factory
+	 * @param factory
+	 *            component factory
 	 */
 	void setComponentRepository(ComponentRepository factory);
 
@@ -102,7 +108,9 @@ public interface ComponentFactory
 
 	/**
 	 * set init commands.
-	 * @param commands array of init commands
+	 * 
+	 * @param commands
+	 *            array of init commands
 	 */
 	void setInitCommands(InitCommand[] commands);
 
@@ -116,8 +124,10 @@ public interface ComponentFactory
 	/**
 	 * set config node.
 	 * 
-	 * @param componentNode config node
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentNode
+	 *            config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	void setComponentNode(Element componentNode) throws ConfigException;
 

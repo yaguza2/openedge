@@ -67,9 +67,12 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	/**
 	 * construct with class.
 	 * 
-	 * @param componentClass class of component
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentClass
+	 *            class of component
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	public void setComponentClass(Class componentClass) throws ConfigException
 	{
 		// test first
@@ -92,13 +95,16 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	/**
 	 * execute the init commands.
 	 * 
-	 * @param componentInstance instance to execute commands on
+	 * @param componentInstance
+	 *            instance to execute commands on
 	 * @throws InitCommandException
-	 * @throws ConfigException when an configuration error occurs
-	 * @throws InitCommandException when an init command throws an exception
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 * @throws InitCommandException
+	 *             when an init command throws an exception
 	 */
-	protected void executeInitCommands(Object componentInstance)
-			throws InitCommandException, ConfigException
+	protected void executeInitCommands(Object componentInstance) throws InitCommandException,
+			ConfigException
 	{
 
 		if (initCommands != null && (initCommands.length > 0))
@@ -113,10 +119,13 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	/**
 	 * execute the request level init commands.
 	 * 
-	 * @param componentInstance instance to execute commands on
+	 * @param componentInstance
+	 *            instance to execute commands on
 	 * @throws InitCommandException
-	 * @throws ConfigException when an configuration error occurs
-	 * @throws InitCommandException when an init command throws an exception
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 * @throws InitCommandException
+	 *             when an init command throws an exception
 	 */
 	protected void executeRequestLevelInitCommands(Object componentInstance)
 			throws InitCommandException, ConfigException
@@ -136,6 +145,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	 * 
 	 * @return String name
 	 */
+	@Override
 	public final String getName()
 	{
 		return name;
@@ -144,8 +154,10 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	/**
 	 * sets the name from config.
 	 * 
-	 * @param name alias for this instance
+	 * @param name
+	 *            alias for this instance
 	 */
+	@Override
 	public void setName(String name)
 	{
 		this.name = name;
@@ -153,8 +165,10 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 
 	/**
 	 * Get class of component.
+	 * 
 	 * @return Class of component
 	 */
+	@Override
 	public Class getComponentClass()
 	{
 		return componentClass;
@@ -165,6 +179,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	 * 
 	 * @return ComponentRepository
 	 */
+	@Override
 	public ComponentRepository getComponentRepository()
 	{
 		return componentRepository;
@@ -173,8 +188,10 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	/**
 	 * set component factory.
 	 * 
-	 * @param factory component factory
+	 * @param factory
+	 *            component factory
 	 */
+	@Override
 	public void setComponentRepository(ComponentRepository factory)
 	{
 		componentRepository = factory;
@@ -182,8 +199,10 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 
 	/**
 	 * Get init commands.
+	 * 
 	 * @return init commands
 	 */
+	@Override
 	public InitCommand[] getInitCommands()
 	{
 		return initCommands;
@@ -191,8 +210,11 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 
 	/**
 	 * Set init commands.
-	 * @param commands init commands
+	 * 
+	 * @param commands
+	 *            init commands
 	 */
+	@Override
 	public void setInitCommands(InitCommand[] commands)
 	{
 		List tempInit = new ArrayList();
@@ -211,21 +233,24 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 				}
 			}
 		}
-		InitCommand[] cmds = (InitCommand[]) tempInit.toArray(new InitCommand[tempInit
-				.size()]);
+		InitCommand[] cmds = (InitCommand[]) tempInit.toArray(new InitCommand[tempInit.size()]);
 		this.initCommands = cmds;
 
-		RequestLevelInitCommand[] reqcmds = (RequestLevelInitCommand[]) tempReqInit
-				.toArray(new RequestLevelInitCommand[tempReqInit.size()]);
+		RequestLevelInitCommand[] reqcmds =
+			(RequestLevelInitCommand[]) tempReqInit.toArray(new RequestLevelInitCommand[tempReqInit
+				.size()]);
 		this.reqInitCommands = reqcmds;
 	}
 
 	/**
 	 * set config node.
 	 * 
-	 * @param componentNode config node
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentNode
+	 *            config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
+	@Override
 	public void setComponentNode(Element componentNode) throws ConfigException
 	{
 		// nothing by default
@@ -236,6 +261,7 @@ public abstract class AbstractComponentFactory implements ComponentFactory
 	 * 
 	 * @return instance of component
 	 */
+	@Override
 	public abstract Object getComponent();
 
 }

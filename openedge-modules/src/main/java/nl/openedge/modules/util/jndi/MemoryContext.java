@@ -36,37 +36,24 @@ package nl.openedge.modules.util.jndi;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.naming.CompositeName;
-import javax.naming.Context;
-import javax.naming.ContextNotEmptyException;
-import javax.naming.InvalidNameException;
-import javax.naming.LinkRef;
-import javax.naming.Name;
-import javax.naming.NameAlreadyBoundException;
-import javax.naming.NameNotFoundException;
-import javax.naming.NameParser;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.NotContextException;
-import javax.naming.OperationNotSupportedException;
-import javax.naming.Reference;
-import javax.naming.Referenceable;
+import javax.naming.*;
 import javax.naming.spi.NamingManager;
 
 /**
- * An in-memory JNDI service provider. Binds objects into a namespace held entirely in memory,
- * supporting serializable, remoteable and local objects. The in-memory service provider is
- * particularly useful for holding resource factories (the JNDI ENC) and exposing run-time services
- * and configuration objects.
+ * An in-memory JNDI service provider. Binds objects into a namespace held entirely in
+ * memory, supporting serializable, remoteable and local objects. The in-memory service
+ * provider is particularly useful for holding resource factories (the JNDI ENC) and
+ * exposing run-time services and configuration objects.
  * <p>
- * An instance of {@link MemoryContext}constructed with no environment attribute will use it's
- * namespace and serve as the root of that namespace. Such a namespace is no accessible except
- * through the creating context, and is garbage collected when all such contexts are no longer
- * referenced. If necessary the root context can be duplicated using <tt>lookup( "" )</tt>.
+ * An instance of {@link MemoryContext}constructed with no environment attribute will use
+ * it's namespace and serve as the root of that namespace. Such a namespace is no
+ * accessible except through the creating context, and is garbage collected when all such
+ * contexts are no longer referenced. If necessary the root context can be duplicated
+ * using <tt>lookup( "" )</tt>.
  * <p>
- * If the environment attribute {@link Context.PROVIDER_URL}is set, the context will reference a
- * node in a namespace shared by all such contexts. That tree is statically held in memory for the
- * life time of the virtual machine.
+ * If the environment attribute {@link Context.PROVIDER_URL}is set, the context will
+ * reference a node in a namespace shared by all such contexts. That tree is statically
+ * held in memory for the life time of the virtual machine.
  * 
  * @author <a href="arkin@intalio.com">Assaf Arkin </a>
  * @author Eelco Hillenius
@@ -82,34 +69,37 @@ public final class MemoryContext implements Context
 	public static final NameParser DEFAULT_NAME_PARSER = new DefaultNameParser();
 
 	/*
-	 * Holds the bindings associated with this context. Multiple contexts may share the same
-	 * binding. The binding is selected based on the {@link Context.PROVIDER_URL}attribute. The
-	 * context's name in the name space is know to the bindings.
+	 * Holds the bindings associated with this context. Multiple contexts may share the
+	 * same binding. The binding is selected based on the {@link
+	 * Context.PROVIDER_URL}attribute. The context's name in the name space is know to the
+	 * bindings.
 	 */
 	private final MemoryBinding _bindings;
 
 	/*
-	 * The environment attributes used to construct this context. Will be passed on to all contexts
-	 * constructed by this context.
+	 * The environment attributes used to construct this context. Will be passed on to all
+	 * contexts constructed by this context.
 	 */
 	private final Hashtable _env = new Hashtable();
 
 	/*
-	 * True if this context has been set read-only. Once it has been set read-only, it cannot revert
-	 * to writable and all contexts returns by this context are read-only.
+	 * True if this context has been set read-only. Once it has been set read-only, it
+	 * cannot revert to writable and all contexts returns by this context are read-only.
 	 */
 	private boolean _readOnly;
 
 	/**
-	 * Construct a new context with the specified environment attributes. The environment property
-	 * {@link Context.PROVIDER_URL}names the underlying bindings. If the property is absent, the
-	 * returned context has it's own binding space which is not shared with other contexts created
-	 * in this manner.
+	 * Construct a new context with the specified environment attributes. The environment
+	 * property {@link Context.PROVIDER_URL}names the underlying bindings. If the property
+	 * is absent, the returned context has it's own binding space which is not shared with
+	 * other contexts created in this manner.
 	 * 
-	 * @param env The environment attributes
-	 * @throws NotContextException The attribute {@linkContext.PROVIDER_URL}does not specify a
-	 *             context
-	 * @throws InvalidNameException The attribute {@linkContext.PROVIDER_URL}is an invalid name
+	 * @param env
+	 *            The environment attributes
+	 * @throws NotContextException
+	 *             The attribute {@linkContext.PROVIDER_URL}does not specify a context
+	 * @throws InvalidNameException
+	 *             The attribute {@linkContext.PROVIDER_URL}is an invalid name
 	 */
 	public MemoryContext(Hashtable env) throws NamingException
 	{
@@ -180,6 +170,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#lookup(java.lang.String)
 	 */
+	@Override
 	public Object lookup(String name) throws NamingException
 	{
 
@@ -217,8 +208,8 @@ public final class MemoryContext implements Context
 				// Reconstruct a reference.
 				try
 				{
-					return NamingManager.getObjectInstance(object,
-							new CompositeName(name), this, _env);
+					return NamingManager.getObjectInstance(object, new CompositeName(name), this,
+						_env);
 				}
 				catch (Exception except)
 				{
@@ -238,6 +229,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#lookup(javax.naming.Name)
 	 */
+	@Override
 	public Object lookup(Name name) throws NamingException
 	{
 
@@ -247,6 +239,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#lookupLink(java.lang.String)
 	 */
+	@Override
 	public Object lookupLink(String name) throws NamingException
 	{
 
@@ -256,6 +249,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#lookupLink(javax.naming.Name)
 	 */
+	@Override
 	public Object lookupLink(Name name) throws NamingException
 	{
 
@@ -263,10 +257,10 @@ public final class MemoryContext implements Context
 	}
 
 	/*
-	 * really lookup @param name @param resolveLinkRef @return Object @throws NamingException
+	 * really lookup @param name @param resolveLinkRef @return Object @throws
+	 * NamingException
 	 */
-	private Object internalLookup(Name name, boolean resolveLinkRef)
-			throws NamingException
+	private Object internalLookup(Name name, boolean resolveLinkRef) throws NamingException
 	{
 
 		String simple;
@@ -359,8 +353,8 @@ public final class MemoryContext implements Context
 					// Reconstruct a reference
 					try
 					{
-						return NamingManager.getObjectInstance(object, name,
-								new MemoryContext(bindings, _env), _env);
+						return NamingManager.getObjectInstance(object, name, new MemoryContext(
+							bindings, _env), _env);
 					}
 					catch (Exception except)
 					{
@@ -379,6 +373,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#bind(java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void bind(String name, Object value) throws NamingException
 	{
 
@@ -388,6 +383,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#bind(javax.naming.Name, java.lang.Object)
 	 */
+	@Override
 	public void bind(Name name, Object value) throws NamingException
 	{
 
@@ -451,8 +447,7 @@ public final class MemoryContext implements Context
 			// At this point name.size() == 1 and simple == name.get( 0 ).
 			if (bindings.get(simple) != null)
 			{
-				throw new NameAlreadyBoundException(simple
-						+ " already bound, use rebind instead");
+				throw new NameAlreadyBoundException(simple + " already bound, use rebind instead");
 			}
 			if (value instanceof Referenceable)
 			{
@@ -465,6 +460,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#rebind(java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void rebind(String name, Object value) throws NamingException
 	{
 
@@ -474,6 +470,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#rebind(javax.naming.Name, java.lang.Object)
 	 */
+	@Override
 	public void rebind(Name name, Object value) throws NamingException
 	{
 
@@ -544,6 +541,7 @@ public final class MemoryContext implements Context
 	/*
 	 * @see javax.naming.Context#unbind(java.lang.String)
 	 */
+	@Override
 	public void unbind(String name) throws NamingException
 	{
 
@@ -553,6 +551,7 @@ public final class MemoryContext implements Context
 	/*
 	 * @see javax.naming.Context#unbind(javax.naming.Name)
 	 */
+	@Override
 	public void unbind(Name name) throws NamingException
 	{
 
@@ -618,6 +617,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#rename(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void rename(String oldName, String newName) throws NamingException
 	{
 
@@ -627,6 +627,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#rename(javax.naming.Name, javax.naming.Name)
 	 */
+	@Override
 	public void rename(Name oldName, Name newName) throws NamingException
 	{
 
@@ -690,7 +691,7 @@ public final class MemoryContext implements Context
 		{
 			if (bindings.get(simple) != null)
 				throw new NameAlreadyBoundException(simple
-						+ " already bound, use rebind to override");
+					+ " already bound, use rebind to override");
 			if (oldName.size() == 1)
 			{
 				object = bindings.remove(oldName.get(0));
@@ -709,6 +710,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#list(java.lang.String)
 	 */
+	@Override
 	public NamingEnumeration list(String name) throws NamingException
 	{
 
@@ -725,6 +727,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#list(javax.naming.Name)
 	 */
+	@Override
 	public NamingEnumeration list(Name name) throws NamingException
 	{
 
@@ -793,6 +796,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#listBindings(java.lang.String)
 	 */
+	@Override
 	public NamingEnumeration listBindings(String name) throws NamingException
 	{
 
@@ -809,6 +813,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#listBindings(javax.naming.Name)
 	 */
+	@Override
 	public NamingEnumeration listBindings(Name name) throws NamingException
 	{
 
@@ -882,6 +887,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#createSubcontext(java.lang.String)
 	 */
+	@Override
 	public Context createSubcontext(String name) throws NamingException
 	{
 
@@ -891,6 +897,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#createSubcontext(javax.naming.Name)
 	 */
+	@Override
 	public Context createSubcontext(Name name) throws NamingException
 	{
 
@@ -975,6 +982,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#destroySubcontext(java.lang.String)
 	 */
+	@Override
 	public void destroySubcontext(String name) throws NamingException
 	{
 
@@ -984,6 +992,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#destroySubcontext(javax.naming.Name)
 	 */
+	@Override
 	public void destroySubcontext(Name name) throws NamingException
 	{
 
@@ -1045,8 +1054,7 @@ public final class MemoryContext implements Context
 			if (object instanceof MemoryBinding)
 			{
 				if (!((MemoryBinding) object).isEmpty())
-					throw new ContextNotEmptyException(simple
-							+ " is not empty, cannot destroy");
+					throw new ContextNotEmptyException(simple + " is not empty, cannot destroy");
 				((MemoryBinding) object).destroy();
 				bindings.remove(simple);
 			}
@@ -1063,6 +1071,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#getNameParser(java.lang.String)
 	 */
+	@Override
 	public NameParser getNameParser(String name) throws NamingException
 	{
 
@@ -1074,6 +1083,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#getNameParser(javax.naming.Name)
 	 */
+	@Override
 	public NameParser getNameParser(Name name) throws NamingException
 	{
 
@@ -1128,6 +1138,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#composeName(javax.naming.Name, javax.naming.Name)
 	 */
+	@Override
 	public Name composeName(Name name, Name prefix) throws NamingException
 	{
 
@@ -1138,6 +1149,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#composeName(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public String composeName(String name, String prefix)
 	{
 
@@ -1147,6 +1159,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#getNameInNamespace()
 	 */
+	@Override
 	public String getNameInNamespace() throws NamingException
 	{
 
@@ -1156,6 +1169,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#addToEnvironment(java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public Object addToEnvironment(String name, Object value) throws NamingException
 	{
 
@@ -1173,6 +1187,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#getEnvironment()
 	 */
+	@Override
 	public Hashtable getEnvironment()
 	{
 
@@ -1182,6 +1197,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#removeFromEnvironment(java.lang.String)
 	 */
+	@Override
 	public Object removeFromEnvironment(String name)
 	{
 
@@ -1191,6 +1207,7 @@ public final class MemoryContext implements Context
 	/**
 	 * @see javax.naming.Context#close()
 	 */
+	@Override
 	public void close()
 	{
 
@@ -1202,6 +1219,7 @@ public final class MemoryContext implements Context
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		if (_readOnly)
@@ -1211,8 +1229,8 @@ public final class MemoryContext implements Context
 	}
 
 	/**
-	 * Returns the bindings represented by this context. Used when assigning a memory context into
-	 * the ENC.
+	 * Returns the bindings represented by this context. Used when assigning a memory
+	 * context into the ENC.
 	 * 
 	 * @return MemoryBinding
 	 */
@@ -1221,4 +1239,3 @@ public final class MemoryContext implements Context
 		return _bindings;
 	}
 }
-

@@ -47,14 +47,17 @@ public final class DefaultNameParser implements NameParser
 	/**
 	 * Parses a name into its components.
 	 * 
-	 * @param name The non-null string name to parse
-	 * @return A non-null parsed form of the name using the naming convention of this parser.
-	 * @throws NamingException when the name is not valid
+	 * @param name
+	 *            The non-null string name to parse
+	 * @return A non-null parsed form of the name using the naming convention of this
+	 *         parser.
+	 * @throws NamingException
+	 *             when the name is not valid
 	 */
+	@Override
 	public Name parse(String name) throws NamingException
 	{
 		return new CompositeName(name);
 	}
 
 }
-

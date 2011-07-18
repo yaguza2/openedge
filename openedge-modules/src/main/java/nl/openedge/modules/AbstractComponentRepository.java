@@ -34,16 +34,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 
@@ -61,8 +52,6 @@ import nl.openedge.modules.types.base.JobTypeFactory;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 import org.quartz.Job;
 import org.quartz.JobDetail;
@@ -70,6 +59,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base for implementations of ComponentRepository.
@@ -78,6 +69,8 @@ import org.quartz.Trigger;
  */
 public abstract class AbstractComponentRepository implements ComponentRepository
 {
+	private static final long serialVersionUID = 1L;
+
 	/** default number of seconds to wait until the scheduler starts up. */
 	private static final int DEFAULT_WAIT_UNTIL_SCHEDULER_STARTUP = 20;
 
@@ -113,8 +106,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * add observer of component factory events.
 	 * 
-	 * @param observer event observer
+	 * @param observer
+	 *            event observer
 	 */
+	@Override
 	public void addObserver(ComponentRepositoryObserver observer)
 	{
 		if (observer != null)
@@ -132,8 +127,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * remove observer of component factory events.
 	 * 
-	 * @param observer event observer
+	 * @param observer
+	 *            event observer
 	 */
+	@Override
 	public void removeObserver(ComponentRepositoryObserver observer)
 	{
 		if (observer != null)
@@ -143,25 +140,31 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * initialize the component factory.
 	 * 
-	 * @param rootNode root node
-	 * @param theServletContext servlet context
-	 * @throws ConfigException when an configuration error occurs
+	 * @param rootNode
+	 *            root node
+	 * @param theServletContext
+	 *            servlet context
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	public void start(Element rootNode, ServletContext theServletContext)
-			throws ConfigException
+	@Override
+	public void start(Element rootNode, ServletContext theServletContext) throws ConfigException
 	{
 		this.servletContext = theServletContext;
 		internalInit(rootNode, theServletContext);
 	}
 
-	//-------------------------------------- INIT METHODS -------------------------//
+	// -------------------------------------- INIT METHODS -------------------------//
 
 	/**
 	 * Initialize.
 	 * 
-	 * @param rootNode root node
-	 * @param theServletContext servlet context
-	 * @throws ConfigException when an configuration error occurs
+	 * @param rootNode
+	 *            root node
+	 * @param theServletContext
+	 *            servlet context
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	private void internalInit(Element rootNode, ServletContext theServletContext)
 			throws ConfigException
@@ -190,7 +193,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		// fire components loaded event
 		fireModulesLoadedEvent();
 
-		//	get node for quartz scheduler
+		// get node for quartz scheduler
 		Element schedulerNode = rootNode.getChild("scheduler");
 		if (schedulerNode != null)
 		{
@@ -212,9 +215,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				}
 				else
 				{
-					log
-							.warn("scheduler was started but "
-									+ "there are no jobs to schedule");
+					log.warn("scheduler was started but " + "there are no jobs to schedule");
 				}
 
 			}
@@ -233,7 +234,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * test all loaded components by getting them.
 	 * 
-	 * @throws ComponentLookupException when the component could not be found
+	 * @throws ComponentLookupException
+	 *             when the component could not be found
 	 */
 	protected void testModules()
 	{
@@ -254,13 +256,17 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * initialise the quartz scheduler.
 	 * 
-	 * @param node config node
-	 * @param context servlet context
-	 * @throws ConfigException when an configuration error occurs
-	 * @throws SchedulerException on quartz errors
+	 * @param node
+	 *            config node
+	 * @param context
+	 *            servlet context
+	 * @throws ConfigException
+	 *             when an configuration error occurs
+	 * @throws SchedulerException
+	 *             on quartz errors
 	 */
-	protected void initQuartz(Element node, ServletContext context)
-			throws ConfigException, SchedulerException
+	protected void initQuartz(Element node, ServletContext context) throws ConfigException,
+			SchedulerException
 	{
 		Properties properties = null;
 		if (node != null)
@@ -269,8 +275,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			String proploc = node.getAttributeValue("properties");
 			try
 			{
-				URL urlproploc = URLHelper.convertToURL(proploc,
-						AbstractComponentRepository.class, context);
+				URL urlproploc =
+					URLHelper.convertToURL(proploc, AbstractComponentRepository.class, context);
 				log.info("will use " + urlproploc + " to initialise Quartz");
 				properties.load(urlproploc.openStream());
 			}
@@ -298,9 +304,12 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * get components from config.
 	 * 
-	 * @param componentsNode config node of components
-	 * @param classLoader class loader
-	 * @throws ConfigException when an configuration error occurs
+	 * @param componentsNode
+	 *            config node of components
+	 * @param classLoader
+	 *            class loader
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 * @return components
 	 */
 	protected Map addComponents(Element componentsNode, ClassLoader classLoader)
@@ -314,8 +323,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			String name = node.getAttributeValue("name");
 			if (components.get(name) != null)
 			{
-				throw new ConfigException("names of components have to be unique!"
-						+ name + " is used more than once");
+				throw new ConfigException("names of components have to be unique!" + name
+					+ " is used more than once");
 			}
 			String className = node.getAttributeValue("class");
 			Class clazz = null;
@@ -337,10 +346,14 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * add one component.
 	 * 
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node component config node
-	 * @throws ConfigException when an configuration error occurs
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            component config node
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	protected abstract void addComponent(String name, Class clazz, Element node)
 			throws ConfigException;
@@ -348,33 +361,44 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * get the component factory.
 	 * 
-	 * @param name component name
-	 * @param clazz component class
-	 * @param node configuration node
+	 * @param name
+	 *            component name
+	 * @param clazz
+	 *            component class
+	 * @param node
+	 *            configuration node
 	 * @return ComponentFactory
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected abstract ComponentFactory getComponentFactory(String name, Class clazz,
-			Element node) throws ConfigException;
+	protected abstract ComponentFactory getComponentFactory(String name, Class clazz, Element node)
+			throws ConfigException;
 
 	/**
 	 * add initialization commands.
 	 * 
-	 * @param factory factory
-	 * @param node config node
-	 * @param clazz component class
-	 * @throws ConfigException when an configuration error occurs
+	 * @param factory
+	 *            factory
+	 * @param node
+	 *            config node
+	 * @param clazz
+	 *            component class
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected abstract void addInitCommands(ComponentFactory factory, Class clazz,
-			Element node) throws ConfigException;
+	protected abstract void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+			throws ConfigException;
 
 	/**
 	 * get triggers from config.
 	 * 
-	 * @param schedulerNode scheduler config node
-	 * @param classLoader class loader
+	 * @param schedulerNode
+	 *            scheduler config node
+	 * @param classLoader
+	 *            class loader
 	 * @return map of jobs
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	protected Map addTriggers(Element schedulerNode, ClassLoader classLoader)
 			throws ConfigException
@@ -423,8 +447,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				for (Iterator j = parameters.iterator(); j.hasNext();)
 				{
 					Element pNode = (Element) j.next();
-					paramMap.put(pNode.getAttributeValue("name"), pNode
-							.getAttributeValue("value"));
+					paramMap.put(pNode.getAttributeValue("name"), pNode.getAttributeValue("value"));
 				}
 			try
 			{
@@ -444,9 +467,12 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * populate bean.
 	 * 
-	 * @param bean the bean
-	 * @param parameters the parameters
-	 * @throws OgnlException on population errors
+	 * @param bean
+	 *            the bean
+	 * @param parameters
+	 *            the parameters
+	 * @throws OgnlException
+	 *             on population errors
 	 */
 	private void populate(Object bean, Map parameters) throws OgnlException
 	{
@@ -461,14 +487,17 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * schedule jobs.
 	 * 
-	 * @param schedulerNode config node of scheduler
-	 * @param classLoader class loader
-	 * @throws ConfigException when an configuration error occurs
+	 * @param schedulerNode
+	 *            config node of scheduler
+	 * @param classLoader
+	 *            class loader
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	protected void scheduleJobs(Element schedulerNode, ClassLoader classLoader)
 			throws ConfigException
 	{
-		//get job excecution map from config
+		// get job excecution map from config
 		Element execNode = schedulerNode.getChild("jobExecutionMap");
 		List execs = execNode.getChildren("job");
 		for (Iterator i = execs.iterator(); i.hasNext();)
@@ -489,15 +518,14 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			}
 			if (!Job.class.isAssignableFrom(job.getComponentClass()))
 			{
-				throw new ConfigException("component "
-						+ componentName + " is not a job (does not implement "
-						+ Job.class.getName() + ")");
+				throw new ConfigException("component " + componentName
+					+ " is not a job (does not implement " + Job.class.getName() + ")");
 			}
-			JobDetail jobDetail = new JobDetail(job.getName(), job.getGroup(), job
-					.getComponentClass());
+			JobDetail jobDetail =
+				new JobDetail(job.getName(), job.getGroup(), job.getComponentClass());
 			jobDetail.setJobDataMap(job.getJobData());
 			try
-			{ //start schedule job/trigger combination
+			{ // start schedule job/trigger combination
 				sceduleJob(trigger, jobDetail);
 			}
 			catch (SchedulerException ex)
@@ -511,14 +539,16 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * scedule a Quartz job.
 	 * 
-	 * @param trigger the trigger
-	 * @param jobDetail the job
+	 * @param trigger
+	 *            the trigger
+	 * @param jobDetail
+	 *            the job
 	 * @return actual name used to scedule the trigger will be of form:
 	 *         ${triggerName}_${jobDetail.getName()}
-	 * @throws SchedulerException on Quartz exceptions
+	 * @throws SchedulerException
+	 *             on Quartz exceptions
 	 */
-	protected String sceduleJob(Trigger trigger, JobDetail jobDetail)
-			throws SchedulerException
+	protected String sceduleJob(Trigger trigger, JobDetail jobDetail) throws SchedulerException
 	{
 		String triggerName = trigger.getName();
 		String sceduleName = triggerName + "_" + jobDetail.getName();
@@ -526,8 +556,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 
 		if (trigger.getStartTime() == null)
 		{
-			log.info("start time not set for trigger "
-					+ triggerName + "... trying to set to immediate execution");
+			log.info("start time not set for trigger " + triggerName
+				+ "... trying to set to immediate execution");
 
 			try
 			{
@@ -539,14 +569,13 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 				Calendar start = new GregorianCalendar();
 				start.setLenient(true);
 				start.add(Calendar.SECOND, DEFAULT_WAIT_UNTIL_SCHEDULER_STARTUP);
-				Method setMethod = triggerClass.getMethod("setStartTime",
-						new Class[] {Date.class});
+				Method setMethod = triggerClass.getMethod("setStartTime", new Class[] {Date.class});
 				setMethod.invoke(trigger, new Object[] {start.getTime()});
 			}
 			catch (NoSuchMethodException e)
 			{
 				log.error("\trigger does not support setting the startTime"
-						+ "(method setStartTime not found)");
+					+ "(method setStartTime not found)");
 			}
 			catch (IllegalAccessException e)
 			{
@@ -564,12 +593,13 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		return sceduleName;
 	}
 
-	//--------------------------- NON-INIT METHODS -----------------------------//
+	// --------------------------- NON-INIT METHODS -----------------------------//
 
 	/**
 	 * notify observers that scheduler was started.
 	 * 
-	 * @param theScheduler the scheduler
+	 * @param theScheduler
+	 *            the scheduler
 	 */
 	protected void fireSchedulerStartedEvent(Scheduler theScheduler)
 	{
@@ -609,8 +639,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * fired when (according to the implementing component) a critical event occured.
 	 * 
-	 * @param evt the critical event
+	 * @param evt
+	 *            the critical event
 	 */
+	@Override
 	public void recieveChainedEvent(ChainedEvent evt)
 	{
 		fireCriticalEvent(evt);
@@ -619,7 +651,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * notify observers that a critical event occured.
 	 * 
-	 * @param evt the event
+	 * @param evt
+	 *            the event
 	 */
 	protected void fireCriticalEvent(ChainedEvent evt)
 	{
@@ -639,9 +672,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * @see nl.openedge.components.ComponentRepository#getModule(java.lang.String)
 	 */
+	@Override
 	public Object getComponent(String name)
 	{
-		log.info( "looking for component " + name);
+		log.info("looking for component " + name);
 		ComponentFactory componentFactory = (ComponentFactory) components.get(name);
 		if (componentFactory == null)
 		{
@@ -653,6 +687,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * @see nl.openedge.components.ComponentRepository#getScheduler()
 	 */
+	@Override
 	public Scheduler getScheduler()
 	{
 		return scheduler;
@@ -661,6 +696,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * @see nl.openedge.modules.ComponentRepository#getServletContext()
 	 */
+	@Override
 	public ServletContext getServletContext()
 	{
 		return servletContext;
@@ -669,6 +705,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	/**
 	 * @see nl.openedge.components.ComponentRepository#getModuleNames()
 	 */
+	@Override
 	public String[] getComponentNames()
 	{
 		return (String[]) components.keySet().toArray(new String[components.size()]);

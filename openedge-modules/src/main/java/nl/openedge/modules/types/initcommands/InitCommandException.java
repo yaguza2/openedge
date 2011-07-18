@@ -38,6 +38,8 @@ package nl.openedge.modules.types.initcommands;
 public class InitCommandException extends Exception
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * construct exception.
 	 */
@@ -49,7 +51,8 @@ public class InitCommandException extends Exception
 	/**
 	 * construct exception with message.
 	 * 
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public InitCommandException(String message)
 	{
@@ -59,8 +62,10 @@ public class InitCommandException extends Exception
 	/**
 	 * construct exception with message and cause.
 	 * 
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public InitCommandException(String message, Throwable cause)
 	{
@@ -70,7 +75,8 @@ public class InitCommandException extends Exception
 	/**
 	 * construct exception with cause.
 	 * 
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public InitCommandException(Throwable cause)
 	{

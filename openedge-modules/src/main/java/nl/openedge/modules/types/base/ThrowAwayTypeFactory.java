@@ -48,6 +48,7 @@ public final class ThrowAwayTypeFactory extends AbstractComponentFactory
 	 * @return new instance for each request
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
+	@Override
 	public Object getComponent()
 	{
 

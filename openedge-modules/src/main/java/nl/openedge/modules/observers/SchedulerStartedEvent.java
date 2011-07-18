@@ -41,13 +41,18 @@ import org.quartz.Scheduler;
  */
 public final class SchedulerStartedEvent extends EventObject
 {
+	private static final long serialVersionUID = 1L;
+
 	/** reference to scheduler. */
 	private Scheduler scheduler = null;
 
 	/**
 	 * Construct.
-	 * @param source sender of event
-	 * @param scheduler subject of event
+	 * 
+	 * @param source
+	 *            sender of event
+	 * @param scheduler
+	 *            subject of event
 	 */
 	public SchedulerStartedEvent(Object source, Scheduler scheduler)
 	{
@@ -57,6 +62,7 @@ public final class SchedulerStartedEvent extends EventObject
 
 	/**
 	 * Get reference to scheduler.
+	 * 
 	 * @return Scheduler
 	 */
 	public Scheduler getScheduler()
@@ -66,7 +72,9 @@ public final class SchedulerStartedEvent extends EventObject
 
 	/**
 	 * Set reference to scheduler.
-	 * @param scheduler Scheduler
+	 * 
+	 * @param scheduler
+	 *            Scheduler
 	 */
 	public void setScheduler(Scheduler scheduler)
 	{

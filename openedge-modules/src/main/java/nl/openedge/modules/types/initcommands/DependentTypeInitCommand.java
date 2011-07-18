@@ -59,8 +59,8 @@ public final class DependentTypeInitCommand implements RequestLevelInitCommand
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String cName, Element cNode, ComponentRepository cRepo)
-			throws ConfigException
+	@Override
+	public void init(String cName, Element cNode, ComponentRepository cRepo) throws ConfigException
 	{
 
 		this.componentRepository = cRepo;
@@ -71,7 +71,8 @@ public final class DependentTypeInitCommand implements RequestLevelInitCommand
 	/**
 	 * load dependencies.
 	 * 
-	 * @param componentNode configuration node
+	 * @param componentNode
+	 *            configuration node
 	 */
 	protected void loadDependencies(Element componentNode)
 	{
@@ -93,8 +94,8 @@ public final class DependentTypeInitCommand implements RequestLevelInitCommand
 	/**
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance)
-			throws InitCommandException, ConfigException
+	@Override
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 
 		DependentTypeWrapper solver = new DependentTypeWrapper();

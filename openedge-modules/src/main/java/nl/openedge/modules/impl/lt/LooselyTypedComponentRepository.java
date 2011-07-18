@@ -39,10 +39,10 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.types.ComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommand;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom.Element;
 import org.quartz.Job;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Loosely typed implementation of ComponentRepository. If this component repository is

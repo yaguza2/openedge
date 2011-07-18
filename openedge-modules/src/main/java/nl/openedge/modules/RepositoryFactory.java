@@ -49,9 +49,9 @@ import nl.openedge.modules.config.ConfigException;
 import nl.openedge.modules.impl.DefaultComponentRepository;
 import nl.openedge.modules.util.jndi.NamingHelper;
 
+import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom.Element;
 
 /**
  * Factory that creates instances of the component repository. Provides access to
@@ -68,15 +68,16 @@ public final class RepositoryFactory implements ObjectFactory
 		/**
 		 * @see javax.naming.event.NamespaceChangeListener#objectAdded(javax.naming.event.NamingEvent)
 		 */
+		@Override
 		public void objectAdded(NamingEvent evt)
 		{
-			log.info("a object was successfully bound to name: "
-					+ evt.getNewBinding().getName());
+			log.info("a object was successfully bound to name: " + evt.getNewBinding().getName());
 		}
 
 		/**
 		 * @see javax.naming.event.NamespaceChangeListener#objectRemoved(javax.naming.event.NamingEvent)
 		 */
+		@Override
 		public void objectRemoved(NamingEvent evt)
 		{
 			String name = evt.getOldBinding().getName();
@@ -86,6 +87,7 @@ public final class RepositoryFactory implements ObjectFactory
 		/**
 		 * @see javax.naming.event.NamespaceChangeListener#objectRenamed(javax.naming.event.NamingEvent)
 		 */
+		@Override
 		public void objectRenamed(NamingEvent evt)
 		{
 			String name = evt.getOldBinding().getName();
@@ -95,6 +97,7 @@ public final class RepositoryFactory implements ObjectFactory
 		/**
 		 * @see javax.naming.event.NamingListener#namingExceptionThrown(javax.naming.event.NamingExceptionEvent)
 		 */
+		@Override
 		public void namingExceptionThrown(NamingExceptionEvent evt)
 		{
 			log.info("naming exception occurred accessing object: " + evt.getException());
@@ -131,13 +134,16 @@ public final class RepositoryFactory implements ObjectFactory
 	/**
 	 * construct with configuration node and ServletContext.
 	 * 
-	 * @param factoryNode configuration node
-	 * @param servletContext use null if not in servlet environment
+	 * @param factoryNode
+	 *            configuration node
+	 * @param servletContext
+	 *            use null if not in servlet environment
 	 * @throws ComponentLookupException
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
-	protected static synchronized void initialize(Element factoryNode,
-			ServletContext servletContext) throws ConfigException
+	protected static synchronized void initialize(Element factoryNode, ServletContext servletContext)
+			throws ConfigException
 	{
 		if (!initialized)
 		{
@@ -152,10 +158,13 @@ public final class RepositoryFactory implements ObjectFactory
 	/**
 	 * load/ instantiate the component repository.
 	 * 
-	 * @param factoryNode configuration node
-	 * @param servletContext use null if not in servlet environment
+	 * @param factoryNode
+	 *            configuration node
+	 * @param servletContext
+	 *            use null if not in servlet environment
 	 * @throws ComponentLookupException
-	 * @throws ConfigException when an configuration error occurs
+	 * @throws ConfigException
+	 *             when an configuration error occurs
 	 */
 	protected static void load(Element factoryNode, ServletContext servletContext)
 			throws ConfigException
@@ -204,11 +213,10 @@ public final class RepositoryFactory implements ObjectFactory
 			{
 				Context ctx = NamingHelper.getInitialContext(new Properties());
 				NamingHelper.bind(ctx, name, componentRepository);
-				log.info("bound "
-						+ componentRepository + " to JNDI name: " + name + " to context "
-						+ ctx);
+				log.info("bound " + componentRepository + " to JNDI name: " + name + " to context "
+					+ ctx);
 				((EventContext) ctx).addNamingListener(name, EventContext.OBJECT_SCOPE,
-						NAMING_LISTENER);
+					NAMING_LISTENER);
 			}
 			catch (InvalidNameException ine)
 			{
@@ -237,7 +245,8 @@ public final class RepositoryFactory implements ObjectFactory
 	/**
 	 * set the implementing class.
 	 * 
-	 * @param theImplementingClass the implementing class
+	 * @param theImplementingClass
+	 *            the implementing class
 	 */
 	public static void setImplementingClass(String theImplementingClass)
 	{
@@ -257,13 +266,14 @@ public final class RepositoryFactory implements ObjectFactory
 	}
 
 	/**
-	 * @see ObjectFactory#getObjectInstance(Object, Name, Context, Hashtable) throws Exception
+	 * @see ObjectFactory#getObjectInstance(Object, Name, Context, Hashtable) throws
+	 *      Exception
 	 */
-	public Object getObjectInstance(Object reference, Name name, Context ctx,
-			Hashtable env) throws Exception
+	@Override
+	public Object getObjectInstance(Object reference, Name name, Context ctx, Hashtable env)
+			throws Exception
 	{
-		log.info("ref: "
-				+ reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
+		log.info("ref: " + reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
 
 		log.debug("JNDI lookup: " + name);
 		return componentRepository;

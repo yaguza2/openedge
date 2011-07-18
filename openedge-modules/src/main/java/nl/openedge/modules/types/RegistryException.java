@@ -38,6 +38,8 @@ package nl.openedge.modules.types;
 public class RegistryException extends RuntimeException
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */
@@ -48,7 +50,9 @@ public class RegistryException extends RuntimeException
 
 	/**
 	 * Construct.
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	public RegistryException(String message)
 	{
@@ -57,8 +61,11 @@ public class RegistryException extends RuntimeException
 
 	/**
 	 * Construct.
-	 * @param message the message
-	 * @param cause the cause
+	 * 
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public RegistryException(String message, Throwable cause)
 	{
@@ -67,7 +74,9 @@ public class RegistryException extends RuntimeException
 
 	/**
 	 * Construct.
-	 * @param cause the cause
+	 * 
+	 * @param cause
+	 *            the cause
 	 */
 	public RegistryException(Throwable cause)
 	{

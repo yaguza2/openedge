@@ -55,8 +55,10 @@ public class NamedDependency
 	/**
 	 * utility constructor.
 	 * 
-	 * @param moduleName name of module
-	 * @param propertyName name of property
+	 * @param moduleName
+	 *            name of module
+	 * @param propertyName
+	 *            name of property
 	 */
 	public NamedDependency(String moduleName, String propertyName)
 	{
@@ -66,6 +68,7 @@ public class NamedDependency
 
 	/**
 	 * Get module name.
+	 * 
 	 * @return String name of module
 	 */
 	public String getModuleName()
@@ -75,6 +78,7 @@ public class NamedDependency
 
 	/**
 	 * Get property name.
+	 * 
 	 * @return name of property
 	 */
 	public String getPropertyName()
@@ -84,7 +88,9 @@ public class NamedDependency
 
 	/**
 	 * Set module name.
-	 * @param moduleName name of module
+	 * 
+	 * @param moduleName
+	 *            name of module
 	 */
 	public void setModuleName(String moduleName)
 	{
@@ -93,7 +99,9 @@ public class NamedDependency
 
 	/**
 	 * Set property name.
-	 * @param propertyName name of property
+	 * 
+	 * @param propertyName
+	 *            name of property
 	 */
 	public void setPropertyName(String propertyName)
 	{

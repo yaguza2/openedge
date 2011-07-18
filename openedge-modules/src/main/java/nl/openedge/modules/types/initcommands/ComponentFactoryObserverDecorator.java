@@ -34,6 +34,7 @@ import nl.openedge.modules.observers.ComponentRepositoryObserver;
 
 /**
  * Decorator for component factory observer.
+ * 
  * @author Eelco Hillenius
  */
 public class ComponentFactoryObserverDecorator implements ComponentRepositoryObserver
@@ -43,6 +44,7 @@ public class ComponentFactoryObserverDecorator implements ComponentRepositoryObs
 
 	/**
 	 * Get decorated.
+	 * 
 	 * @return Object
 	 */
 	public Object getDecorated()
@@ -52,7 +54,9 @@ public class ComponentFactoryObserverDecorator implements ComponentRepositoryObs
 
 	/**
 	 * Set decorated.
-	 * @param object the object to decorate
+	 * 
+	 * @param object
+	 *            the object to decorate
 	 */
 	public void setDecorated(Object object)
 	{

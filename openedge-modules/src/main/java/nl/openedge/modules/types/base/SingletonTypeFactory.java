@@ -59,6 +59,7 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 	 * @return singleton instance
 	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
 	 */
+	@Override
 	public Object getComponent()
 	{
 		synchronized (this)
@@ -124,8 +125,10 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 	/**
 	 * set component factory.
 	 * 
-	 * @param componentRepository component repository
+	 * @param componentRepository
+	 *            component repository
 	 */
+	@Override
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
 		super.setComponentRepository(componentRepository);
@@ -135,11 +138,13 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 	/**
 	 * fired after all components are (re)loaded.
 	 * 
-	 * @param evt event
+	 * @param evt
+	 *            event
 	 */
+	@Override
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		//noop
+		// noop
 	}
 
 }

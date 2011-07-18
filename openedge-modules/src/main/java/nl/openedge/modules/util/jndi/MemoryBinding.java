@@ -35,24 +35,18 @@ package nl.openedge.modules.util.jndi;
 
 import java.util.NoSuchElementException;
 
-import javax.naming.Binding;
-import javax.naming.CompositeName;
-import javax.naming.Context;
-import javax.naming.LinkRef;
-import javax.naming.NameClassPair;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.Reference;
+import javax.naming.*;
 import javax.naming.spi.NamingManager;
 
 /**
- * Name/value bindings for use inside {@link MemoryContext}. This one is never constructed directly
- * but through {@linkMemoryContext},{@link MemoryContextFactory}and related classes.
+ * Name/value bindings for use inside {@link MemoryContext}. This one is never constructed
+ * directly but through {@linkMemoryContext},{@link MemoryContextFactory}and related
+ * classes.
  * <p>
- * Provides heirarchial storage for name/value binding in memory that is exposed through the JNDI
- * context model. Each context (not in the tree) is represented by one instance of {@link
- * MemoryBinding}, with each sub-context (child node) or bound value represented by a name/value
- * pair.
+ * Provides heirarchial storage for name/value binding in memory that is exposed through
+ * the JNDI context model. Each context (not in the tree) is represented by one instance
+ * of {@link MemoryBinding}, with each sub-context (child node) or bound value represented
+ * by a name/value pair.
  * <p>
  * This object is thread-safe.
  * 
@@ -63,6 +57,7 @@ public final class MemoryBinding
 {
 
 	private static final int INDEX_AND = 0x7FFFFFFF;
+
 	/** The initial capacity for the hashtable. */
 	public static final int INITIAL_CAPACITY = 11;
 
@@ -111,7 +106,8 @@ public final class MemoryBinding
 	/**
 	 * get instance from bindings.
 	 * 
-	 * @param name binding name
+	 * @param name
+	 *            binding name
 	 * @return Object
 	 */
 	public synchronized Object get(String name)
@@ -143,8 +139,10 @@ public final class MemoryBinding
 	/**
 	 * put instance in bindings with key name.
 	 * 
-	 * @param bindingName binding name
-	 * @param value value to bind
+	 * @param bindingName
+	 *            binding name
+	 * @param value
+	 *            value to bind
 	 */
 	public synchronized void put(String bindingName, Object value)
 	{
@@ -210,7 +208,8 @@ public final class MemoryBinding
 	/**
 	 * remove instance from bindings.
 	 * 
-	 * @param bindingName binding name
+	 * @param bindingName
+	 *            binding name
 	 * @return Object previously bound object if any
 	 */
 	public synchronized Object remove(String bindingName)
@@ -301,8 +300,10 @@ public final class MemoryBinding
 	/**
 	 * get the enumerator of this binding.
 	 * 
-	 * @param context JNDI context
-	 * @param nameOnly is name only
+	 * @param context
+	 *            JNDI context
+	 * @param nameOnly
+	 *            is name only
 	 * @return NamingEnumeration
 	 */
 	public NamingEnumeration enumerate(Context context, boolean nameOnly)
@@ -368,9 +369,13 @@ public final class MemoryBinding
 
 		/**
 		 * construct with name, hasCode and instance.
-		 * @param name binding name
-		 * @param hashCode hash code
-		 * @param value value to bind
+		 * 
+		 * @param name
+		 *            binding name
+		 * @param hashCode
+		 *            hash code
+		 * @param value
+		 *            value to bind
 		 */
 		protected BindingEntry(String name, int hashCode, Object value)
 		{
@@ -381,15 +386,16 @@ public final class MemoryBinding
 	}
 
 	/**
-	 * Naming enumeration supporting {@link NamClassPair}and {@link Binding}, created based of a
-	 * {@link MemoryBinding}. @author <a href="arkin@intalio.com">Assaf Arkin </a>
+	 * Naming enumeration supporting {@link NamClassPair}and {@link Binding}, created
+	 * based of a {@link MemoryBinding}. @author <a href="arkin@intalio.com">Assaf Arkin
+	 * </a>
 	 */
 	private final class MemoryBindingEnumeration implements NamingEnumeration
 	{
 
 		/**
-		 * Holds a reference to the next entry to be returned by {@link next}. Becomes null when
-		 * there are no more entries to return.
+		 * Holds a reference to the next entry to be returned by {@link next}. Becomes
+		 * null when there are no more entries to return.
 		 */
 		private BindingEntry bindingEntry;
 
@@ -399,8 +405,8 @@ public final class MemoryBinding
 		private int bindingIndex;
 
 		/**
-		 * True to return an enumeration of {@link NameClassPair}, false to return an enumeration
-		 * of {@link Binding}
+		 * True to return an enumeration of {@link NameClassPair}, false to return an
+		 * enumeration of {@link Binding}
 		 */
 		private final boolean bindingNameOnly;
 
@@ -420,8 +426,9 @@ public final class MemoryBinding
 		private Object nextValue;
 
 		/**
-		 * The name of the next element to return. Can be null. <P> If the value is null this means
-		 * that there are no element to return.
+		 * The name of the next element to return. Can be null.
+		 * <P>
+		 * If the value is null this means that there are no element to return.
 		 */
 		private String nextName;
 
@@ -432,8 +439,11 @@ public final class MemoryBinding
 
 		/**
 		 * Construct with context.
-		 * @param context JNDI context
-		 * @param nameOnly is name only
+		 * 
+		 * @param context
+		 *            JNDI context
+		 * @param nameOnly
+		 *            is name only
 		 */
 		protected MemoryBindingEnumeration(Context context, boolean nameOnly)
 		{
@@ -455,6 +465,7 @@ public final class MemoryBinding
 		/**
 		 * @see java.util.Enumeration#hasMoreElements()
 		 */
+		@Override
 		public boolean hasMoreElements()
 		{
 			return hasMore();
@@ -463,6 +474,7 @@ public final class MemoryBinding
 		/**
 		 * @see java.util.Enumeration#nextElement()
 		 */
+		@Override
 		public Object nextElement()
 		{
 			return next();
@@ -471,6 +483,7 @@ public final class MemoryBinding
 		/**
 		 * @see javax.naming.NamingEnumeration#close()
 		 */
+		@Override
 		public void close()
 		{
 			bindingEntry = null;
@@ -483,6 +496,7 @@ public final class MemoryBinding
 		/**
 		 * @see javax.naming.NamingEnumeration#hasMore()
 		 */
+		@Override
 		public boolean hasMore()
 		{
 			if (-1 == bindingIndex)
@@ -499,6 +513,7 @@ public final class MemoryBinding
 		/**
 		 * @see javax.naming.NamingEnumeration#next()
 		 */
+		@Override
 		public Object next()
 		{
 			Object value;
@@ -523,8 +538,11 @@ public final class MemoryBinding
 		}
 
 		/**
-		 * Return true if there are more elements in the enumeration. <P> This method has the side
-		 * effects of setting {@link #nextValue},{@link #nextName},{@link #nextClassName}.
+		 * Return true if there are more elements in the enumeration.
+		 * <P>
+		 * This method has the side effects of setting {@link #nextValue},
+		 * {@link #nextName},{@link #nextClassName}.
+		 * 
 		 * @return true if there are more elements in the enumeration.
 		 */
 		private boolean internalHasMore()
@@ -574,8 +592,7 @@ public final class MemoryBinding
 				{
 					// Need to resolve the link.
 					nextValue = bindingContext.lookup(entry.bindingName);
-					nextClassName = (null == nextValue) ? null : nextValue.getClass()
-							.getName();
+					nextClassName = (null == nextValue) ? null : nextValue.getClass().getName();
 				}
 				catch (NamingException except)
 				{
@@ -594,8 +611,9 @@ public final class MemoryBinding
 				{
 					try
 					{
-						nextValue = NamingManager.getObjectInstance(value,
-								new CompositeName(entry.bindingName), bindingContext, null);
+						nextValue =
+							NamingManager.getObjectInstance(value, new CompositeName(
+								entry.bindingName), bindingContext, null);
 					}
 					catch (Exception except)
 					{
@@ -652,4 +670,3 @@ public final class MemoryBinding
 	}
 
 }
-

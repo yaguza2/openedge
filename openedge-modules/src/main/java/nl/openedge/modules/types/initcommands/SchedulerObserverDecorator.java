@@ -40,8 +40,8 @@ import nl.openedge.modules.observers.SchedulerStartedEvent;
 /**
  * @author Eelco Hillenius
  */
-public class SchedulerObserverDecorator extends ComponentFactoryObserverDecorator
-		implements SchedulerObserver
+public class SchedulerObserverDecorator extends ComponentFactoryObserverDecorator implements
+		SchedulerObserver
 {
 
 	/**
@@ -55,14 +55,15 @@ public class SchedulerObserverDecorator extends ComponentFactoryObserverDecorato
 	/**
 	 * @see nl.openedge.modules.observers.SchedulerObserver#schedulerStarted(nl.openedge.modules.observers.SchedulerStartedEvent)
 	 */
+	@Override
 	public void schedulerStarted(SchedulerStartedEvent evt)
 	{
 		Object decorated = getDecorated();
 		Class clazz = decorated.getClass();
 		try
 		{
-			Method initMethod = clazz.getMethod("schedulerStarted",
-					new Class[] {SchedulerStartedEvent.class});
+			Method initMethod =
+				clazz.getMethod("schedulerStarted", new Class[] {SchedulerStartedEvent.class});
 			initMethod.invoke(decorated, new Object[] {evt});
 		}
 		catch (SecurityException e)

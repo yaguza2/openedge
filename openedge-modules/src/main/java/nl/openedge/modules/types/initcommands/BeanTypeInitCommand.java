@@ -65,6 +65,7 @@ public final class BeanTypeInitCommand implements InitCommand
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
+	@Override
 	public void init(String componentName, Element componentNode,
 			ComponentRepository componentRepository) throws ConfigException
 	{
@@ -76,23 +77,24 @@ public final class BeanTypeInitCommand implements InitCommand
 			{
 				Element pElement = (Element) j.next();
 				String value = pElement.getAttributeValue("value");
-				
-				if( value != null && value.length() > (JNDI_PREFIX.length() + 1) &&
-					JNDI_PREFIX.equals( value.substring( 0, JNDI_PREFIX.length()).toUpperCase()))
+
+				if (value != null && value.length() > (JNDI_PREFIX.length() + 1)
+					&& JNDI_PREFIX.equals(value.substring(0, JNDI_PREFIX.length()).toUpperCase()))
 				{
 					try
 					{
 						Context env = (Context) new InitialContext().lookup("java:comp/env");
-						if( env != null)
+						if (env != null)
 						{
-							value = (String) env.lookup( value.substring( JNDI_PREFIX.length()));
+							value = (String) env.lookup(value.substring(JNDI_PREFIX.length()));
 						}
 					}
 					catch (NamingException e)
 					{
 					}
 				}
-				properties.put(pElement.getAttributeValue("name"), value);			}
+				properties.put(pElement.getAttributeValue("name"), value);
+			}
 		}
 	}
 
@@ -101,8 +103,8 @@ public final class BeanTypeInitCommand implements InitCommand
 	 * 
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException,
-			ConfigException
+	@Override
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 		if (properties != null)
 		{
@@ -120,12 +122,14 @@ public final class BeanTypeInitCommand implements InitCommand
 	/**
 	 * default populate of form: BeanUtils way; set error if anything goes wrong.
 	 * 
-	 * @param instance the component instance
-	 * @param propertiesToPopulate properties for population
-	 * @throws OgnlException on population errors
+	 * @param instance
+	 *            the component instance
+	 * @param propertiesToPopulate
+	 *            properties for population
+	 * @throws OgnlException
+	 *             on population errors
 	 */
-	private void populate(Object instance, Map propertiesToPopulate)
-			throws OgnlException
+	private void populate(Object instance, Map propertiesToPopulate) throws OgnlException
 	{
 		for (Iterator i = propertiesToPopulate.keySet().iterator(); i.hasNext();)
 		{

@@ -41,13 +41,18 @@ import java.io.PrintWriter;
  */
 public final class ChainedExceptionEvent extends ChainedEvent
 {
+	private static final long serialVersionUID = 1L;
+
 	/** original exception. */
 	private Exception exception = null;
 
 	/**
 	 * Construct.
-	 * @param source sender of event
-	 * @param exception original exception
+	 * 
+	 * @param source
+	 *            sender of event
+	 * @param exception
+	 *            original exception
 	 */
 	public ChainedExceptionEvent(Object source, Exception exception)
 	{

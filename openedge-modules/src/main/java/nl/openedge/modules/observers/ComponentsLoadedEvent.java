@@ -40,9 +40,13 @@ import java.util.EventObject;
 public final class ComponentsLoadedEvent extends EventObject
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
-	 * @param source sender of event
+	 * 
+	 * @param source
+	 *            sender of event
 	 */
 	public ComponentsLoadedEvent(Object source)
 	{

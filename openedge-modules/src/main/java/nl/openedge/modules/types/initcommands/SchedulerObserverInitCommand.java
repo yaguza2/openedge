@@ -52,8 +52,9 @@ public class SchedulerObserverInitCommand implements InitCommand
 	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
 	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
 	 */
-	public void init(String componentName, Element componentNode,
-			ComponentRepository cRepo) throws ConfigException
+	@Override
+	public void init(String componentName, Element componentNode, ComponentRepository cRepo)
+			throws ConfigException
 	{
 		this.componentRepository = cRepo;
 	}
@@ -61,8 +62,8 @@ public class SchedulerObserverInitCommand implements InitCommand
 	/**
 	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
 	 */
-	public void execute(Object componentInstance) throws InitCommandException,
-			ConfigException
+	@Override
+	public void execute(Object componentInstance) throws InitCommandException, ConfigException
 	{
 
 		if (componentInstance instanceof SchedulerObserver)

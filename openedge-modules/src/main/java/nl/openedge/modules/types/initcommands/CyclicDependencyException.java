@@ -38,6 +38,8 @@ package nl.openedge.modules.types.initcommands;
 public class CyclicDependencyException extends RuntimeException
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * construct.
 	 */
@@ -49,7 +51,8 @@ public class CyclicDependencyException extends RuntimeException
 	/**
 	 * construct with message.
 	 * 
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 */
 	public CyclicDependencyException(String message)
 	{
@@ -59,8 +62,10 @@ public class CyclicDependencyException extends RuntimeException
 	/**
 	 * construct with message and cause.
 	 * 
-	 * @param message the message
-	 * @param cause the cause
+	 * @param message
+	 *            the message
+	 * @param cause
+	 *            the cause
 	 */
 	public CyclicDependencyException(String message, Throwable cause)
 	{
@@ -70,7 +75,8 @@ public class CyclicDependencyException extends RuntimeException
 	/**
 	 * construct with cause.
 	 * 
-	 * @param cause the cause
+	 * @param cause
+	 *            the cause
 	 */
 	public CyclicDependencyException(Throwable cause)
 	{
