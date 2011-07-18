@@ -40,8 +40,8 @@ import org.apache.axis.Constants;
 import org.apache.axis.encoding.SerializerFactory;
 
 /**
- * AXIS Serializer factory for SerializedAndZipped objects. An example of a deployment (.wsdd)
- * script:
+ * AXIS Serializer factory for SerializedAndZipped objects. An example of a deployment
+ * (.wsdd) script:
  * 
  * <pre>
  * 
@@ -62,26 +62,28 @@ import org.apache.axis.encoding.SerializerFactory;
  *  			encodingStyle=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot; /&gt;
  * 	&lt;/service&gt;
  *  &lt;/deployment&gt;
- *  
+ * 
  * </pre>
  * 
  * <p>
  * This can then be consumed by a AXIS client like:
  * 
  * <pre>
- * QName typeQName = new QName(
- * 		&quot;http://levob/flexipluspensioen/&quot;,&quot; SerializedAndZipped&quot;);
- * SerializedAndZipped serializedAndZipped = SerializeAndZipWSHelper.getRemoteObjects(
- * 		endpoint, &quot;getPolissen&quot;, typeQName);
- *  
+ * QName typeQName = new QName(&quot;http://levob/flexipluspensioen/&quot;, &quot; SerializedAndZipped&quot;);
+ * 
+ * SerializedAndZipped serializedAndZipped = SerializeAndZipWSHelper.getRemoteObjects(endpoint,
+ * 	&quot;getPolissen&quot;, typeQName);
+ * 
  * </pre>
  * 
  * </p>
- *
+ * 
  * @author Eelco Hillenius
  */
 public class SerializedAndZippedSerializerFactory implements SerializerFactory
 {
+	private static final long serialVersionUID = 1L;
+
 	/** SAX mechanisms. */
 	private List mechanisms = null;
 

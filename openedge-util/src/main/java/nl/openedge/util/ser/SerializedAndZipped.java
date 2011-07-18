@@ -39,6 +39,7 @@ import java.io.Serializable;
  */
 public final class SerializedAndZipped implements Serializable, Cloneable
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Member compressed data data, value = 'compressedData'.
@@ -71,8 +72,10 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 	/**
 	 * Construct with original length and compressed data.
 	 * 
-	 * @param uncompressedDataLength original length of data
-	 * @param compressedData the compressed data
+	 * @param uncompressedDataLength
+	 *            original length of data
+	 * @param compressedData
+	 *            the compressed data
 	 */
 	public SerializedAndZipped(int uncompressedDataLength, byte[] compressedData)
 	{
@@ -128,8 +131,8 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 	@Override
 	public String toString()
 	{
-		return "SerializedAndZipped {uncompressedDataLength = "
-				+ uncompressedDataLength + ", compressedData = " + compressedData + "}";
+		return "SerializedAndZipped {uncompressedDataLength = " + uncompressedDataLength
+			+ ", compressedData = " + compressedData + "}";
 	}
 
 	/**

@@ -51,6 +51,8 @@ import org.xml.sax.SAXException;
 public class SerializedAndZippedDeserializer extends DeserializerImpl
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct and create a new working copy of the value to deserialize.
 	 */
@@ -60,8 +62,8 @@ public class SerializedAndZippedDeserializer extends DeserializerImpl
 	}
 
 	/**
-	 * @see org.apache.axis.message.SOAPHandler#onStartChild(java.lang.String, java.lang.String,
-	 *      java.lang.String, org.xml.sax.Attributes,
+	 * @see org.apache.axis.message.SOAPHandler#onStartChild(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes,
 	 *      org.apache.axis.encoding.DeserializationContext)
 	 */
 	@Override
