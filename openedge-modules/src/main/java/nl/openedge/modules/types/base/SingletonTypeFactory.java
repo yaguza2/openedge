@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules.types.base;
 
 import nl.openedge.modules.ComponentLookupException;
@@ -38,6 +8,9 @@ import nl.openedge.modules.observers.ComponentsLoadedEvent;
 import nl.openedge.modules.types.AbstractComponentFactory;
 import nl.openedge.modules.types.initcommands.InitCommandException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * wrapper for singleton components.
  * 
@@ -46,19 +19,12 @@ import nl.openedge.modules.types.initcommands.InitCommandException;
 public final class SingletonTypeFactory extends AbstractComponentFactory implements
 		ComponentObserver
 {
+	private static final Logger log = LoggerFactory.getLogger(SingletonTypeFactory.class);
 
-	/** the singleton instance. */
 	private Object singletonInstance;
 
-	/** whether to execute the init commands. */
 	private boolean executeInitCommands = true;
 
-	/**
-	 * get instance of module.
-	 * 
-	 * @return singleton instance
-	 * @see nl.openedge.components.AbstractComponentFactory#getModule()
-	 */
 	@Override
 	public Object getComponent()
 	{
@@ -66,12 +32,10 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 		{
 			if (this.singletonInstance == null)
 			{
-
 				try
 				{
 					singletonInstance = getComponentClass().newInstance();
 				}
-
 				catch (InstantiationException e)
 				{
 					throw new ComponentLookupException(e);
@@ -80,9 +44,7 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 				{
 					throw new ComponentLookupException(e);
 				}
-
 			}
-
 			try
 			{
 				executeRequestLevelInitCommands(singletonInstance);
@@ -113,7 +75,7 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 				}
 				catch (ConfigException e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 					throw new ComponentLookupException(e);
 				}
 			}
@@ -122,12 +84,6 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 		return singletonInstance;
 	}
 
-	/**
-	 * set component factory.
-	 * 
-	 * @param componentRepository
-	 *            component repository
-	 */
 	@Override
 	public void setComponentRepository(ComponentRepository componentRepository)
 	{
@@ -135,16 +91,8 @@ public final class SingletonTypeFactory extends AbstractComponentFactory impleme
 		componentRepository.addObserver(this);
 	}
 
-	/**
-	 * fired after all components are (re)loaded.
-	 * 
-	 * @param evt
-	 *            event
-	 */
 	@Override
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		// noop
 	}
-
 }
