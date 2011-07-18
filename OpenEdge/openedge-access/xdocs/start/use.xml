@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Using OpenEdge Access</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+	
+    <section name="Using OpenEdge Access">
+      <p>
+		OpenEdge Access is really just a thin wrapper for the
+		JAAS (Java Authentication and Authorization Service)
+		framework. Basically, what OpenEdge Access does is:
+		<ul>
+			<li>
+				Provide a means to add your own security policy to the
+				current collection of policies
+			</li>
+			<li>
+				Provide a means to add LoginModules to the current collection 
+				of LoginModules
+			</li>
+		</ul>
+      </p>
+	  
+      <subsection name="Specifics">
+		<p>
+			Authentication with JAAS is done by providing an implementation of the 
+			JAAS LoginModule. This framework not only gives you a default, ready to use 
+			implementations of LoginModule, but also provides a mechanism to add LoginModule 
+			implementations and policies to the JVM dynamically.
+		</p>
+		<p>
+			For authorisation in web application environments, the <code>javax.servlet.Filter</code> 
+			implementation and <code>javax.security.auth.login.LoginContext</code> wrapper are 
+			given to provide a default way of doing authorization. 
+		</p>
+		<p>
+			The non-JAAS interface <code>UserManager</code> and it's (possible) implementations 
+			provide for default user/ role managent. This gives users an out of the box 
+			implementation of basic user- and role managent that, possibly combined with a 
+			application specific implementation of <code>LoginDecorator</code>, is 
+			probably sufficient for most cases of authorisation in applications. 
+		</p>
+	  </subsection>
+
+      <subsection name="Word of warning">
+		<p>
+			You have to know that if you use the framework to add policies or login modules,
+			it will be VM-wide. This is a special point of attention if you develop webapplications,
+			as webapplications within a server share the same VM.
+		</p>
+		<p>
+			Be sure that:
+			<ul>
+				<li>
+					Names of the login modules are unique within the VM
+				</li>
+				<li>
+					Policies you add do not impose security threats or conflics
+					with other policies.
+				</li>
+			</ul>
+		</p>
+		<p>
+			You can use the JAAS framework without using this framework, but you then
+			would have to configure the login modules and policies in a server dependend
+			manner (whereas the JAAS framework is standard Java).<br/>
+			You can still use JAAS, the UserManager and the securityfilter without
+			adding the login modules and policies at runtime; just configure those things
+			with your server.
+		</p>
+	  </subsection>
+
+	  
+   </section>
+ </body>
+</document>
