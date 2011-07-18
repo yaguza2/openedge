@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 package nl.openedge.util;
 
 import java.net.InetAddress;
@@ -10,14 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The base class for ID generators that use a UUID algorithm. This class implements the algorithm,
- * subclasses define the ID format.
+ * The base class for ID generators that use a UUID algorithm. This class implements the
+ * algorithm, subclasses define the ID format.
  * 
  * @see UUIDHexGenerator
- * @see UUIDStringGenerator
  * @author Gavin King
  */
-
 public abstract class UUIDGenerator
 {
 	/** ip adress. */
@@ -64,8 +59,8 @@ public abstract class UUIDGenerator
 	}
 
 	/**
-	 * Unique across JVMs on this machine (unless they load this class in the same
-	 * quater second - very unlikely).
+	 * Unique across JVMs on this machine (unless they load this class in the same quater
+	 * second - very unlikely).
 	 * 
 	 * @return int jvm time
 	 */
@@ -75,9 +70,8 @@ public abstract class UUIDGenerator
 	}
 
 	/**
-	 * Unique in a millisecond for this JVM instance
-	 * (unless there are > Short.MAX_VALUE instances
-	 * created in a millisecond).
+	 * Unique in a millisecond for this JVM instance (unless there are > Short.MAX_VALUE
+	 * instances created in a millisecond).
 	 * 
 	 * @return short count
 	 */
@@ -113,6 +107,7 @@ public abstract class UUIDGenerator
 
 	/**
 	 * Get lo time.
+	 * 
 	 * @return int lo time
 	 */
 	protected int getLoTime()

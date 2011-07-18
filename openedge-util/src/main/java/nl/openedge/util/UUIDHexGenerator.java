@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 package nl.openedge.util;
 
 import java.io.Serializable;
@@ -8,14 +5,12 @@ import java.io.Serializable;
 /**
  * <b>uuid.hex </b> <br>
  * <br>
- * A <tt>UUIDGenerator</tt> that returns a string of length 32, This string will consist of only
- * hex digits. Optionally, the string may be generated with seperators between each component of the
- * UUID.
+ * A <tt>UUIDGenerator</tt> that returns a string of length 32, This string will consist
+ * of only hex digits. Optionally, the string may be generated with seperators between
+ * each component of the UUID.
  * 
- * @see UUIDStringGenerator
  * @author Gavin King
  */
-
 public class UUIDHexGenerator extends UUIDGenerator
 {
 
@@ -25,7 +20,8 @@ public class UUIDHexGenerator extends UUIDGenerator
 	/**
 	 * construct using the given seperator.
 	 * 
-	 * @param seperator seperator
+	 * @param seperator
+	 *            seperator
 	 */
 	public UUIDHexGenerator(String seperator)
 	{
@@ -43,7 +39,8 @@ public class UUIDHexGenerator extends UUIDGenerator
 	/**
 	 * format value.
 	 * 
-	 * @param intval intvalue to format
+	 * @param intval
+	 *            intvalue to format
 	 * @return String formatted intval
 	 */
 	protected String format(int intval)
@@ -71,13 +68,12 @@ public class UUIDHexGenerator extends UUIDGenerator
 	/**
 	 * generate uuid
 	 * 
-	 * @param obj
 	 * @return Serializable
 	 */
 	public Serializable generate()
 	{
 		return new StringBuffer(36).append(format(getIP())).append(sep).append(format(getJVM()))
-				.append(sep).append(format(getHiTime())).append(sep).append(format(getLoTime()))
-				.append(sep).append(format(getCount())).toString();
+			.append(sep).append(format(getHiTime())).append(sep).append(format(getLoTime()))
+			.append(sep).append(format(getCount())).toString();
 	}
 }
