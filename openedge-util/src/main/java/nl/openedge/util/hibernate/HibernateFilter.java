@@ -107,7 +107,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 	{
 		if (active)
 		{
-			Session session = (Session) getHibernateHolder().get();
+			Session session = getHibernateHolder().get();
 			if (session != null)
 			{
 				log.error("A session is already associated with this thread!  "
@@ -134,7 +134,7 @@ public final class HibernateFilter extends HibernateHelperThreadLocaleImpl imple
 		{
 			if (active)
 			{
-				Session sess = (Session) getHibernateHolder().get();
+				Session sess = getHibernateHolder().get();
 
 				// log.info(Thread.currentThread() + ": closing " + sess);
 				if (sess != null)
