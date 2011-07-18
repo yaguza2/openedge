@@ -1,33 +1,3 @@
-/*
- * $Id: ConverterRegistry.java,v 1.4 2004-04-04 18:23:19 eelco12 Exp $
- * $Revision: 1.4 $
- * $Date: 2004-04-04 18:23:19 $
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.baritus;
 
 import java.io.Serializable;
@@ -63,7 +33,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class ConverterRegistry
 {
-
 	/**
 	 * The set of {@link Converter}s that can be used to convert Strings into objects of a
 	 * specified Class, keyed by the destination Class.
@@ -162,13 +131,8 @@ public final class ConverterRegistry
 	/**
 	 * Register a custom {@link Converter} for the specified destination
 	 * <code>Class</code>, replacing any previously registered Converter.
-	 * 
-	 * @param converter
-	 *            Converter to be registered
-	 * @param clazz
-	 *            Destination class for conversions performed by this Converter
 	 */
-	public void register(Converter converter, Class clazz)
+	public void register(Converter converter, Class< ? > clazz)
 	{
 		converters.put(clazz, converter);
 	}
@@ -176,13 +140,8 @@ public final class ConverterRegistry
 	/**
 	 * Register a custom {@link LocaleConverter} for the specified destination
 	 * <code>Class</code>, replacing any previously registered Converter.
-	 * 
-	 * @param converter
-	 *            LocaleConverter to be registered
-	 * @param clazz
-	 *            Destination class for conversions performed by this Converter
 	 */
-	public void register(LocaleConverter converter, Class clazz)
+	public void register(LocaleConverter converter, Class< ? > clazz)
 	{
 		localizedConverters.put(clazz, converter);
 	}
@@ -190,15 +149,8 @@ public final class ConverterRegistry
 	/**
 	 * Register a custom {@link LocaleConverter} for the specified destination
 	 * <code>Class</code>, replacing any previously registered Converter.
-	 * 
-	 * @param converter
-	 *            LocaleConverter to be registered
-	 * @param clazz
-	 *            Destination class for conversions performed by this Converter
-	 * @param locale
-	 *            Locale class
 	 */
-	public void register(LocaleConverter converter, Class clazz, Locale locale)
+	public void register(LocaleConverter converter, Class< ? > clazz, Locale locale)
 	{
 		String lockey = getLocKey(clazz, locale);
 		localizedConverters.put(lockey, converter);
@@ -206,11 +158,6 @@ public final class ConverterRegistry
 
 	/**
 	 * register a global formatter with the given key
-	 * 
-	 * @param formatter
-	 *            the formatter
-	 * @param key
-	 *            the key to register the instance of Formatter with
 	 */
 	public void register(Formatter formatter, String key)
 	{
@@ -220,13 +167,6 @@ public final class ConverterRegistry
 
 	/**
 	 * register a global locale aware formatter with the given key and locale
-	 * 
-	 * @param formatter
-	 *            the formatter
-	 * @param key
-	 *            the key to register the instance of Formatter with
-	 * @param locale
-	 *            the locale
 	 */
 	public void register(LocaleFormatter formatter, String key, Locale locale)
 	{
@@ -236,11 +176,6 @@ public final class ConverterRegistry
 
 	/**
 	 * register a global locale aware formatter with the given key
-	 * 
-	 * @param formatter
-	 *            the formatter
-	 * @param key
-	 *            the key to register the instance of Formatter with
 	 */
 	public void register(LocaleFormatter formatter, String key)
 	{
@@ -251,11 +186,8 @@ public final class ConverterRegistry
 	/**
 	 * Remove any registered {@link Converter} for the specified destination
 	 * <code>Class</code> and <code>Locale</code>.
-	 * 
-	 * @param clazz
-	 *            Class for which to remove a registered Converter
 	 */
-	public void deregister(Class clazz, Locale locale)
+	public void deregister(Class< ? > clazz, Locale locale)
 	{
 		String lockey = getLocKey(clazz, locale);
 		localizedConverters.remove(lockey);
@@ -264,29 +196,19 @@ public final class ConverterRegistry
 	/**
 	 * Remove any registered {@link Converter} for the specified destination
 	 * <code>Class</code>.
-	 * 
-	 * @param clazz
-	 *            Class for which to remove a registered Converter
 	 */
-	public void deregister(Class clazz)
+	public void deregister(Class< ? > clazz)
 	{
 		if (LocaleConverter.class.isAssignableFrom(clazz))
-		{
 			converters.remove(clazz);
-		}
 		else
-		{
 			localizedConverters.remove(clazz);
-		}
 	}
 
 	/**
 	 * Remove all instances registered {@link Converter} by class of converter
-	 * 
-	 * @param clazz
-	 *            Class of converter to remove. Removes all subclasses as well.
 	 */
-	public void deregisterByConverterClass(Class clazz)
+	public void deregisterByConverterClass(Class< ? > clazz)
 	{
 		List<Object> keys = new ArrayList<Object>();
 		for (Iterator<Serializable> i = converters.keySet().iterator(); i.hasNext();)
@@ -362,7 +284,7 @@ public final class ConverterRegistry
 	}
 
 	/**
-	 * deregister a global formatter with the given key and locale
+	 * Deregister a global formatter with the given key and locale
 	 * 
 	 * @param key
 	 *            the key of the formatter
@@ -386,11 +308,6 @@ public final class ConverterRegistry
 
 	/**
 	 * lookup a globally registered formatter
-	 * 
-	 * @param key
-	 *            key of formatter
-	 * @return Formatter instance of Formatter that was registered with the specified key
-	 *         or null if not found
 	 */
 	public Formatter lookup(String key)
 	{
@@ -402,13 +319,10 @@ public final class ConverterRegistry
 	 * Look up and return any registered {@link Converter} for the specified destination
 	 * class. If there is no registered Converter, return an instance of NoopConverter if
 	 * returnNoopConverterWhenNotFound == true or else <code>null</code>.
-	 * 
-	 * @param clazz
-	 *            Class for which to return a registered Converter
-	 * @return Converter converter
 	 */
-	public Converter lookup(Class clazz) throws NoSuchMethodException, IllegalArgumentException,
-			InstantiationException, IllegalAccessException, InvocationTargetException
+	public Converter lookup(Class< ? > clazz) throws NoSuchMethodException,
+			IllegalArgumentException, InstantiationException, IllegalAccessException,
+			InvocationTargetException
 	{
 		return lookup(clazz, null);
 	}
@@ -430,14 +344,8 @@ public final class ConverterRegistry
 	 * returnNoopConverterWhenNotFound is true an instance of NoopConverter is returned,
 	 * so that clients allways get a valid converter. If returnNoopConverterWhenNotFound
 	 * is false, null will be returned.
-	 * 
-	 * @param clazz
-	 *            Class for which to return a registered Converter
-	 * @param locale
-	 *            The Locale
-	 * @return Converter converter
 	 */
-	public Converter lookup(Class clazz, Locale locale) throws NoSuchMethodException,
+	public Converter lookup(Class< ? > clazz, Locale locale) throws NoSuchMethodException,
 			IllegalArgumentException, InstantiationException, IllegalAccessException,
 			InvocationTargetException
 	{
@@ -455,7 +363,7 @@ public final class ConverterRegistry
 				if (_converter != null)
 				{
 					Class< ? extends LocaleConverter> cls = _converter.getClass();
-					Class[] paramTypes = new Class[] {Locale.class};
+					Class< ? >[] paramTypes = new Class[] {Locale.class};
 					Constructor< ? extends LocaleConverter> constructor =
 						cls.getConstructor(paramTypes);
 					Object[] initArgs = new Object[] {locale};
@@ -477,10 +385,11 @@ public final class ConverterRegistry
 				}
 			}
 		}
-		// else // get without locale right away
-		if (converter == null) // (still) not found, try generic non-localized
-								// registration
+		// else get without locale right away
+		if (converter == null)
 		{
+			// (still) not found, try generic non-localized
+			// registration
 			converter = (Converter) converters.get(clazz);
 		}
 
@@ -506,15 +415,9 @@ public final class ConverterRegistry
 	 * is the same as when no locale was given (locale == null): the 'normal', not
 	 * localized registry will be searched for an entry with the given key. If this is not
 	 * found either, null will be returned.
-	 * 
-	 * @param key
-	 *            key that the formatter was registered with
-	 * @param locale
-	 *            the Locale
 	 */
-	public Formatter lookup(String key, Locale locale) throws NoSuchMethodException,
-			IllegalArgumentException, InstantiationException, IllegalAccessException,
-			InvocationTargetException
+	public Formatter lookup(String key, Locale locale) throws InstantiationException,
+			IllegalAccessException
 	{
 		Formatter formatter = null;
 		if (locale != null)
@@ -550,24 +453,18 @@ public final class ConverterRegistry
 		return formatter;
 	}
 
-	/*
+	/**
 	 * get key for localized converters
-	 * @param clazz class
-	 * @param locale locale
-	 * @return String key
 	 */
-	private String getLocKey(Class clazz, Locale locale)
+	private String getLocKey(Class< ? > clazz, Locale locale)
 	{
 		return clazz.getName() + "|" + ((locale.getCountry() != null) ? locale.getCountry() : "_")
 			+ "|" + ((locale.getLanguage() != null) ? locale.getLanguage() : "_") + "|"
 			+ ((locale.getVariant() != null) ? locale.getVariant() : "_");
 	}
 
-	/*
+	/**
 	 * get key for localized formatters
-	 * @param key key
-	 * @param locale locale
-	 * @return String key
 	 */
 	private String getLocKey(String key, Locale locale)
 	{
@@ -576,10 +473,8 @@ public final class ConverterRegistry
 			+ ((locale.getVariant() != null) ? locale.getVariant() : "_");
 	}
 
-	/*
+	/**
 	 * get key for localized formatters
-	 * @param key key
-	 * @return String key
 	 */
 	private String getLocKey(String key)
 	{
@@ -608,5 +503,4 @@ public final class ConverterRegistry
 	{
 		returnNoopConverterWhenNotFound = b;
 	}
-
 }

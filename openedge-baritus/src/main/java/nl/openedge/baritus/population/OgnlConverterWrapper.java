@@ -1,33 +1,3 @@
-/*
- * $Id: OgnlConverterWrapper.java,v 1.2 2004-04-08 20:56:11 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-04-08 20:56:11 $
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.baritus.population;
 
 import java.lang.reflect.Member;
@@ -46,35 +16,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class should be registered with the Ognl context before parsing in order to be
- * abel to use our converters. It implements Ognl TypeConverter and uses the
+ * This class should be registered with the OGNL context before parsing in order to be
+ * able to use our converters. It implements OGNL TypeConverter and uses the
  * ConverterRegistry to lookup converters. If no converter is found for a given type, the
- * default conversion of Ognl is used.
+ * default conversion of OGNL is used.
  * 
  * @author Eelco Hillenius
  */
 public class OgnlConverterWrapper extends DefaultTypeConverter
 {
-
 	private static Logger populationLog = LoggerFactory.getLogger(LogConstants.POPULATION_LOG);
 
 	/**
 	 * Convert the provided value to provided type using provided context.
-	 * 
-	 * @param context
-	 *            Ognl context
-	 * @param value
-	 *            the current, unconverted value
-	 * @param toType
-	 *            the type that should be converted to
-	 * @return Object the converted value
-	 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
-	 *      java.lang.Class)
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public Object convertValue(Map context, Object value, Class toType)
 	{
-
 		if (value == null)
 			return null;
 
@@ -153,15 +112,12 @@ public class OgnlConverterWrapper extends DefaultTypeConverter
 	/**
 	 * This method is only here to satisfy the interface. Method convertValue(Map, Object,
 	 * Class) is called, so parameters member and propertyName are ignored.
-	 * 
-	 * @see ognl.DefaultTypeConverter#convertValue(java.util.Map, java.lang.Object,
-	 *      java.lang.Class)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object convertValue(Map context, Object target, Member member, String propertyName,
 			Object value, Class toType)
 	{
 		return convertValue(context, value, toType);
 	}
-
 }

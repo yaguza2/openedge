@@ -28,10 +28,8 @@ import org.slf4j.LoggerFactory;
  */
 final class InterceptorDelegate
 {
-	/* handle to interceptor registry */
 	private InterceptorRegistry interceptorRegistry = null;
 
-	/* interception logger */
 	private static Logger intercLog = LoggerFactory.getLogger(LogConstants.INTERCEPTION_LOG);
 
 	private final static int LEVEL_BEFORE_MAKE_FORMBEAN = 0;
@@ -57,14 +55,9 @@ final class InterceptorDelegate
 		this.interceptorRegistry = interceptorRegistry;
 	}
 
-	// **************************** interceptors
-	// ******************************************/
-
 	// NOTE: it would be possible to have just two methods instead of the
 	// next bulk of methods using introspection. To keep it straightforward to
 	// read though, and have a small performance edge I just coded the methods.
-
-	// -------------------------- interceptors -----------------------------/
 
 	/**
 	 * Called before any handling like form population etc.

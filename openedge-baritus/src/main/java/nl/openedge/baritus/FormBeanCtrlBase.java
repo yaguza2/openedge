@@ -1,33 +1,3 @@
-/*
- * $Id: FormBeanCtrlBase.java,v 1.16 2004/06/22 17:57:24 eelco12 Exp $
- * $Revision: 1.16 $
- * $Date: 2004/06/22 17:57:24 $
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.baritus;
 
 import java.util.*;
@@ -68,7 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class FormBeanCtrlBase implements Controller
 {
-
 	// -------------------------- constants ---------------------------------------/
 
 	/** Common name for the typical "success" view. */
@@ -392,12 +361,14 @@ public abstract class FormBeanCtrlBase implements Controller
 		{
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			HttpSession httpSession = cctx.getRequest().getSession();
-			Enumeration attributeNames = httpSession.getAttributeNames();
+
+			@SuppressWarnings("unchecked")
+			Enumeration<String> attributeNames = httpSession.getAttributeNames();
 			if (attributeNames != null)
 			{
 				while (attributeNames.hasMoreElements())
 				{
-					String attrName = (String) attributeNames.nextElement();
+					String attrName = attributeNames.nextElement();
 					parameters.put(attrName, httpSession.getAttribute(attrName));
 				}
 			}
@@ -405,9 +376,11 @@ public abstract class FormBeanCtrlBase implements Controller
 			allParameters.putAll(parameters);
 		}
 
-		// request parameters
+		@SuppressWarnings("unchecked")
+		Map<String, Object> requestParameterMap = cctx.getRequest().getParameterMap();
+
 		Map<String, Object> reqParameters = new HashMap<String, Object>();
-		reqParameters.putAll(cctx.getRequest().getParameterMap());
+		reqParameters.putAll(requestParameterMap);
 		traceParameters(reqParameters, traceMsg, "request parameters");
 		allParameters.putAll(reqParameters);
 
@@ -416,11 +389,12 @@ public abstract class FormBeanCtrlBase implements Controller
 		{
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			HttpServletRequest request = cctx.getRequest();
-			Enumeration attributeNames = request.getAttributeNames();
+			@SuppressWarnings("unchecked")
+			Enumeration<String> attributeNames = request.getAttributeNames();
 			if (attributeNames != null)
 				while (attributeNames.hasMoreElements())
 				{
-					String attrName = (String) attributeNames.nextElement();
+					String attrName = attributeNames.nextElement();
 					if ((!REQUEST_ATTRIBUTE_FORMBEANCONTEXT.equals(attrName))
 						&& (!REQUEST_ATTRIBUTE_EXECUTION_PARAMS.equals(attrName)))
 					{
@@ -677,8 +651,9 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @param formBeanContext
 	 *            context with form bean
 	 */
+	@SuppressWarnings("unchecked")
 	private void internalPerformError(ControllerContext cctx, ExecutionParams execParams,
-			FormBeanContext formBeanContext, Throwable e) throws ServletException
+			FormBeanContext formBeanContext, Throwable e)
 	{
 		if (formBeanContext == null)
 			return;
@@ -687,25 +662,17 @@ public abstract class FormBeanCtrlBase implements Controller
 		{
 			// save the exception so it can be displayed in the view
 			if (e.getMessage() != null)
-			{
 				formBeanContext.setError(e, false);
-			}
 			else
-			{
 				// as a fallback, save the stacktrace
 				formBeanContext.setError(e, true);
-			}
 		}
 
 		// set overrides for the current request parameters if params allow
 		if (execParams.isSaveReqParamsAsOverrideFieldsOnError())
-		{
 			formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());
-		}
-		if (populationLog.isDebugEnabled())
-		{
-			traceErrors(formBeanContext);
-		}
+
+		traceErrors(formBeanContext);
 	}
 
 	/**
@@ -728,7 +695,6 @@ public abstract class FormBeanCtrlBase implements Controller
 				Object value = errors.get(key);
 				populationLog.debug("\t " + key + " == " + ValueUtils.convertToString(value));
 			}
-			populationLog.debug("----------------------------------------------------------");
 		}
 	}
 
@@ -742,22 +708,9 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * an entry in the default resource bundle that has form: formname.[name] (eg.
 	 * formname.firstname and formname.lastname) the name parameter {1} will be replaced
 	 * with this value.
-	 * 
-	 * @param cctx
-	 *            controller context
-	 * @param formBeanContext
-	 *            context with form bean
-	 * @param targetType
-	 *            type of target property
-	 * @param name
-	 *            name of field
-	 * @param triedValue
-	 *            value that was tried for population
-	 * @param t
-	 *            exception
 	 */
-	public void setConversionErrorForField(ControllerContext cctx, FormBeanContext formBeanContext,
-			Class targetType, String name, Object triedValue, Throwable t)
+	public void setConversionErrorForField(FormBeanContext formBeanContext, Class< ? > targetType,
+			String name, Object triedValue, Throwable t)
 	{
 		try
 		{
@@ -818,7 +771,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 *            the value that could not be converted to the type of the target property
 	 * @return String message bundle key
 	 */
-	protected String getConversionErrorLabelKey(Class type, String name, Object triedValue)
+	protected String getConversionErrorLabelKey(Class< ? > type, String name, Object triedValue)
 	{
 		String key = null;
 

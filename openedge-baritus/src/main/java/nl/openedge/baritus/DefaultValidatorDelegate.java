@@ -1,34 +1,3 @@
-/*
- * $Id: DefaultValidatorDelegate.java,v 1.9 2004-04-09 18:44:53 eelco12 Exp $
- * $Revision: 1.9 $
- * $Date: 2004-04-09 18:44:53 $
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package nl.openedge.baritus;
 
 import java.util.ArrayList;
@@ -48,44 +17,26 @@ import org.infohazard.maverick.flow.ControllerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Eelco Hillenius
- */
 public final class DefaultValidatorDelegate implements ValidatorDelegate
 {
-	// validator registry
 	private ValidatorRegistry validatorRegistry = null;
 
-	// instance of formbean ctrl
 	private FormBeanCtrlBase ctrl = null;
 
-	/* population log */
 	private static Logger populationLog = LoggerFactory.getLogger(LogConstants.POPULATION_LOG);
 
 	private static char[] BREAKSYMBOLS = new char[] {'[', '('};
 
-	/**
-	 * construct with validator registry and instance of ctrl
-	 * 
-	 * @param validatorRegistry
-	 * @param ctrl
-	 */
 	public DefaultValidatorDelegate(ValidatorRegistry validatorRegistry, FormBeanCtrlBase ctrl)
 	{
 		this.validatorRegistry = validatorRegistry;
 		this.ctrl = ctrl;
 	}
 
-	/**
-	 * @see nl.openedge.baritus.ValidatorDelegate#doValidation(org.infohazard.maverick.flow.ControllerContext,
-	 *      nl.openedge.baritus.FormBeanContext, nl.openedge.baritus.ExecutionParams,
-	 *      java.util.Map, boolean)
-	 */
 	@Override
 	public boolean doValidation(ControllerContext cctx, FormBeanContext formBeanContext,
 			ExecutionParams execParams, Map<String, Object> parameters, boolean succeeded)
 	{
-
 		if (parameters == null)
 			return succeeded;
 
@@ -214,10 +165,10 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 	private boolean doValidationForOneField(MultiHashMap fieldValidators, ControllerContext cctx,
 			FormBeanContext formBeanContext, boolean succeeded, String name)
 	{
+		Collection<FieldValidator> propertyValidators =
+			getFieldValidatorsForField(name, fieldValidators);
 
-		Collection propertyValidators = getFieldValidatorsForField(name, fieldValidators);
 		// these are the fieldValidators for one property
-
 		if (propertyValidators != null)
 		{
 			try
@@ -237,9 +188,10 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 	}
 
 	/* Get the validators for a field, possibly null. */
-	private List getFieldValidatorsForField(String name, MultiHashMap fieldValidators)
+	private List<FieldValidator> getFieldValidatorsForField(String name,
+			MultiHashMap fieldValidators)
 	{
-		List propertyValidators = null;
+		List<FieldValidator> propertyValidators = null;
 		propertyValidators =
 			getFieldValidatorsForFieldRecursively(name, fieldValidators, propertyValidators);
 		return propertyValidators;
@@ -252,14 +204,15 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 	 * myproperty['key1'][1]['key2'][2] - myproperty['key1'][1]['key2'] -
 	 * myproperty['key1'][1] - myproperty['key1'] - myproperty
 	 */
-	private List getFieldValidatorsForFieldRecursively(String currentName,
-			MultiHashMap fieldValidators, List propertyValidators)
+	private List<FieldValidator> getFieldValidatorsForFieldRecursively(String currentName,
+			MultiHashMap fieldValidators, List<FieldValidator> propertyValidators)
 	{
-		List validators = (List) fieldValidators.get(currentName);
+		@SuppressWarnings("unchecked")
+		List<FieldValidator> validators = (List<FieldValidator>) fieldValidators.get(currentName);
 		if (validators != null)
 		{
 			if (propertyValidators == null)
-				propertyValidators = new ArrayList();
+				propertyValidators = new ArrayList<FieldValidator>();
 			propertyValidators.addAll(validators);
 		}
 
@@ -289,7 +242,7 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 	/* handle the custom validation for one field */
 	private boolean doValidationForOneField(ControllerContext cctx,
 			FormBeanContext formBeanContext, boolean succeeded, String name,
-			Collection propertyValidators) throws Exception
+			Collection<FieldValidator> propertyValidators) throws Exception
 	{
 		// get target value;
 		// this could be done a bit more efficient, as we allready had
@@ -301,9 +254,9 @@ public final class DefaultValidatorDelegate implements ValidatorDelegate
 		Object value = Ognl.getValue(name, formBeanContext.getBean());
 
 		// for all validators for this field
-		for (Iterator j = propertyValidators.iterator(); j.hasNext();)
+		for (Iterator<FieldValidator> j = propertyValidators.iterator(); j.hasNext();)
 		{
-			FieldValidator validator = (FieldValidator) j.next();
+			FieldValidator validator = j.next();
 			boolean validateField = true;
 
 			if (validator instanceof ValidationRuleDependend) // should we execute rule
