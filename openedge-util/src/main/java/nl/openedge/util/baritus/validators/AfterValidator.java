@@ -37,9 +37,9 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 import nl.openedge.util.DateComparator;
 
+import org.infohazard.maverick.flow.ControllerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Validates if a date is after a given date.
@@ -67,7 +67,8 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param dateToCheck date to check
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AfterValidator(Calendar dateToCheck)
 	{
@@ -78,7 +79,8 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param dateToCheck date to check
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AfterValidator(Date dateToCheck)
 	{
@@ -89,7 +91,8 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
+	 * @param messageKey
+	 *            the message key
 	 */
 	public AfterValidator(String messageKey)
 	{
@@ -99,8 +102,10 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
-	 * @param dateToCheck date to check
+	 * @param messageKey
+	 *            the message key
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AfterValidator(String messageKey, Calendar dateToCheck)
 	{
@@ -110,8 +115,10 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
-	 * @param dateToCheck date to check
+	 * @param messageKey
+	 *            the message key
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public AfterValidator(String messageKey, Date dateToCheck)
 	{
@@ -121,8 +128,10 @@ public class AfterValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
-	 * @param rule the validation activation rule
+	 * @param messageKey
+	 *            the message key
+	 * @param rule
+	 *            the validation activation rule
 	 */
 	public AfterValidator(String messageKey, ValidationActivationRule rule)
 	{
@@ -130,17 +139,22 @@ public class AfterValidator extends AbstractDateFieldValidator
 	}
 
 	/**
-	 * Check valid. If false an error message is set with parameters: {value, fieldName, checkDate}.
-	 * @param cctx controller context
-	 * @param formBeanContext form bean context
-	 * @param fieldName field name
-	 * @param value object to check
+	 * Check valid. If false an error message is set with parameters: {value, fieldName,
+	 * checkDate}.
+	 * 
+	 * @param cctx
+	 *            controller context
+	 * @param formBeanContext
+	 *            form bean context
+	 * @param fieldName
+	 *            field name
+	 * @param value
+	 *            object to check
 	 * @return true if value is a Date or Calendar and is before or equal to before.
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
-	 *      nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 * @throws IllegalArgumentException
 	 *             when value == null.
 	 */
+	@Override
 	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
 			String fieldName, Object value)
 	{
@@ -168,7 +182,7 @@ public class AfterValidator extends AbstractDateFieldValidator
 		// vergelijk datums
 		if (value instanceof Date)
 		{
-			after = comp.compare((Date) value, compareBefore) <= 0;
+			after = comp.compare(value, compareBefore) <= 0;
 		}
 		else if (value instanceof Calendar)
 		{
@@ -181,8 +195,8 @@ public class AfterValidator extends AbstractDateFieldValidator
 
 		if (!after)
 		{
-			setErrorMessage(formBeanContext, fieldName, getMessageKey(), new Object[]
-				{value, fieldName, compareBefore});
+			setErrorMessage(formBeanContext, fieldName, getMessageKey(), new Object[] {value,
+				fieldName, compareBefore});
 		}
 
 		return after;

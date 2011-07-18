@@ -37,9 +37,9 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 import nl.openedge.util.DateComparator;
 
+import org.infohazard.maverick.flow.ControllerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Validates if a date is before a given date.
@@ -69,7 +69,8 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param dateToCheck date to check
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public BeforeValidator(Calendar dateToCheck)
 	{
@@ -80,7 +81,8 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param dateToCheck date to check
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public BeforeValidator(Date dateToCheck)
 	{
@@ -91,7 +93,8 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
+	 * @param messageKey
+	 *            the message key
 	 */
 	public BeforeValidator(String messageKey)
 	{
@@ -101,8 +104,10 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
-	 * @param dateToCheck date to check
+	 * @param messageKey
+	 *            the message key
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public BeforeValidator(String messageKey, Calendar dateToCheck)
 	{
@@ -112,8 +117,10 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
-	 * @param dateToCheck date to check
+	 * @param messageKey
+	 *            the message key
+	 * @param dateToCheck
+	 *            date to check
 	 */
 	public BeforeValidator(String messageKey, Date dateToCheck)
 	{
@@ -123,8 +130,10 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	/**
 	 * Construct.
 	 * 
-	 * @param messageKey the message key
-	 * @param rule validation activation rule
+	 * @param messageKey
+	 *            the message key
+	 * @param rule
+	 *            validation activation rule
 	 */
 	public BeforeValidator(String messageKey, ValidationActivationRule rule)
 	{
@@ -132,17 +141,22 @@ public class BeforeValidator extends AbstractDateFieldValidator
 	}
 
 	/**
-	 * Check valid. If false an error message is set with parameters: {value, fieldName, checkDate}.
-	 * @param cctx controller context
-	 * @param formBeanContext form bean context
-	 * @param fieldName field name
-	 * @param value object to check
+	 * Check valid. If false an error message is set with parameters: {value, fieldName,
+	 * checkDate}.
+	 * 
+	 * @param cctx
+	 *            controller context
+	 * @param formBeanContext
+	 *            form bean context
+	 * @param fieldName
+	 *            field name
+	 * @param value
+	 *            object to check
 	 * @return true if value is a Date or Calendar and is before or equal to after.
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#isValid(org.infohazard.maverick.flow.ControllerContext,
-	 *      nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object)
 	 * @throws IllegalArgumentException
 	 *             when value == null.
 	 */
+	@Override
 	public boolean isValid(ControllerContext cctx, FormBeanContext formBeanContext,
 			String fieldName, Object value)
 	{
@@ -170,7 +184,7 @@ public class BeforeValidator extends AbstractDateFieldValidator
 		// vergelijk datums
 		if (value instanceof Date)
 		{
-			before = comp.compare((Date) value, compareAfter) >= 0;
+			before = comp.compare(value, compareAfter) >= 0;
 		}
 		else if (value instanceof Calendar)
 		{
@@ -183,8 +197,8 @@ public class BeforeValidator extends AbstractDateFieldValidator
 
 		if (!before)
 		{
-			setErrorMessage(formBeanContext, fieldName, getMessageKey(), new Object[]
-				{value, fieldName, compareAfter});
+			setErrorMessage(formBeanContext, fieldName, getMessageKey(), new Object[] {value,
+				fieldName, compareAfter});
 		}
 
 		return before;
