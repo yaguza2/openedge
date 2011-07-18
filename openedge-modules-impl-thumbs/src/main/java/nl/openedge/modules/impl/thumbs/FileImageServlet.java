@@ -30,6 +30,7 @@
  */
 package nl.openedge.modules.impl.thumbs;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -50,46 +51,46 @@ import javax.servlet.http.HttpServletResponse;
 
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.RepositoryFactory;
+import nl.openedge.util.hibernate.ConfigException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * Image download servlet that gets images from filesystem and optionally 
- * gets it as a resized image
+ * 
+ * Image download servlet that gets images from filesystem and optionally gets it as a
+ * resized image
  * 
  * @author Eelco Hillenius
  */
 public final class FileImageServlet extends HttpServlet
 {
+	private static final long serialVersionUID = 1L;
 
-	/** logger */
 	protected Logger log = LoggerFactory.getLogger(FileImageServlet.class);
-	/** alias of image module */
+
 	protected String imageModuleAlias = null;
-	/** alias of cache module */
+
 	protected String cacheModuleAlias = null;
-	/* reference to servlet context */
+
 	private ServletContext sctx = null;
-	
+
 	private int bufferSize = 8192;
+
 	private boolean useDirectBuffers = true;
-	private static ThreadLocal bufferHolder = new ThreadLocal();
-	
+
+	private static ThreadLocal<ByteBuffer> bufferHolder = new ThreadLocal<ByteBuffer>();
+
 	private String notFoundImage = "images/smiley.jpg";
+
 	private File notFoundImageFile = null;
+
 	private boolean failOnNotFound = true;
 
-	/**
-	 * Process incoming HTTP GET requests
-	 * @param request Object that encapsulates the request to the servlet 
-	 * @param response Object that encapsulates the response from the servlet
-	 */
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException
+			throws ServletException, IOException
 	{
-
 		String sMax = request.getParameter("max");
 		int max = 0;
 		if (sMax != null)
@@ -109,24 +110,24 @@ public final class FileImageServlet extends HttpServlet
 		String realFile = sctx.getRealPath(src);
 		if (realFile == null)
 		{
-			if(failOnNotFound)
+			if (failOnNotFound)
 			{
 				response.getOutputStream().close();
 				log.error(src + " not found!");
-				return;				
+				return;
 			}
 		}
 		File concreteFile = null;
-		if(realFile != null)
+		if (realFile != null)
 		{
 			concreteFile = new File(realFile);
 			if (!concreteFile.isFile())
 			{
-				if(failOnNotFound)
+				if (failOnNotFound)
 				{
 					response.getOutputStream().close();
 					log.error(src + " not found!");
-					return;				
+					return;
 				}
 				else
 				{
@@ -135,18 +136,18 @@ public final class FileImageServlet extends HttpServlet
 			}
 		}
 
-		if(concreteFile == null) // fallthrough
+		if (concreteFile == null) // fallthrough
 		{
 			concreteFile = new File(notFoundImageFile.getAbsolutePath());
 		}
-		
+
 		response.setContentType("images/jpeg"); // always as a jpeg
 		ImageModule iModule = null;
 		ThumbnailFileCacheModule cacheModule = null;
 
 		ComponentRepository mf = RepositoryFactory.getRepository();
-		iModule = (ImageModule)mf.getComponent(imageModuleAlias);
-		cacheModule = (ThumbnailFileCacheModule)mf.getComponent(cacheModuleAlias);
+		iModule = (ImageModule) mf.getComponent(imageModuleAlias);
+		cacheModule = (ThumbnailFileCacheModule) mf.getComponent(cacheModuleAlias);
 
 		// lookup or create file in cache direcory with prefix
 		File cacheFile = cacheModule.getFromCache(concreteFile, max);
@@ -165,19 +166,13 @@ public final class FileImageServlet extends HttpServlet
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 				throw new ServletException(e);
 			}
 			finally
 			{
-				if(fos != null)
-				{
-					fos.close();
-				}
-				if(fis != null)
-				{
-					fis.close();
-				}
+				closeQuietly(fos);
+				closeQuietly(fis);
 			}
 		}
 		FileInputStream cacheFo = null;
@@ -193,25 +188,25 @@ public final class FileImageServlet extends HttpServlet
 			rbc = cacheFo.getChannel();
 			servletOs = response.getOutputStream();
 			wbc = Channels.newChannel(servletOs);
-			
-			ByteBuffer byteBuffer = (ByteBuffer)bufferHolder.get();
-			if(byteBuffer == null)
+
+			ByteBuffer byteBuffer = bufferHolder.get();
+			if (byteBuffer == null)
 			{
-				if(useDirectBuffers)
+				if (useDirectBuffers)
 				{
-					byteBuffer = ByteBuffer.allocateDirect(bufferSize);	
+					byteBuffer = ByteBuffer.allocateDirect(bufferSize);
 				}
 				else
 				{
 					byteBuffer = ByteBuffer.allocate(bufferSize);
-				}	
+				}
 			}
 			byteBuffer.clear(); // Prepare buffer for use
 			for (;;)
 			{
 				if ((bytes = rbc.read(byteBuffer)) < 0)
 				{
-					break; // No more bytes to transfer	
+					break; // No more bytes to transfer
 				}
 				readBytes = readBytes + bytes;
 				byteBuffer.flip();
@@ -221,135 +216,113 @@ public final class FileImageServlet extends HttpServlet
 		}
 		catch (FileNotFoundException e)
 		{
-			//e.printStackTrace();
+			// e.printStackTrace();
 			throw new ServletException(e);
 		}
 		catch (IOException e)
 		{
-			//e.printStackTrace();
+			// e.printStackTrace();
 			throw new ServletException(e);
 		}
 		finally
 		{
-			if(rbc != null)
-			{
-				try
-				{
-					rbc.close();
-				}
-				catch (IOException e1)
-				{
-					// ignore
-				}
-			}
-			if(wbc != null)
-			{
-				try
-				{
-					wbc.close();	
-				}
-				catch (IOException e1)
-				{
-					// ignore
-				}
-			}
-			cacheFo.close();
-			servletOs.close();
+			closeQuietly(rbc);
+			closeQuietly(wbc);
+			closeQuietly(cacheFo);
+			closeQuietly(servletOs);
 		}
 	}
 
-	/*
-	 * get scale
-	 */
-	private double getScale(int width, int height, int maxLen)
+	private void closeQuietly(Closeable closeable)
 	{
-
-		double scale;
-		// get the larger of the 2 values
-		int longest = width > height ? width : height;
-
-		return (double)maxLen / (double)longest;
+		if (closeable != null)
+		{
+			try
+			{
+				closeable.close();
+			}
+			catch (Exception e)
+			{
+				log.error(
+					"Error during closing of " + closeable.getClass().getName() + ": "
+						+ e.getMessage(), e);
+			}
+		}
 	}
 
-	/**
-	 * Returns the servlet info string.
-	 */
+	@Override
 	public String getServletInfo()
 	{
 		return FileImageServlet.class.getName();
 	}
 
-	/**
-	 * Initializes the servlet.
-	 */
+	@Override
 	public void init(ServletConfig config) throws ServletException
 	{
 		super.init(config);
-		
+
 		try
 		{
 			this.imageModuleAlias = config.getInitParameter("imageModule");
 			this.cacheModuleAlias = config.getInitParameter("cacheModule");
 			this.notFoundImage = config.getInitParameter("notFoundImage");
-			// test
+
+			// test if the modules are available
 			ComponentRepository mf = RepositoryFactory.getRepository();
-			// test more
-			ImageModule iModule = (ImageModule)mf.getComponent(imageModuleAlias);
-			// and even more
-			ThumbnailFileCacheModule cacheModule =
-				(ThumbnailFileCacheModule)mf.getComponent(cacheModuleAlias);
+			mf.getComponent(imageModuleAlias);
+			mf.getComponent(cacheModuleAlias);
+
 			this.sctx = config.getServletContext();
-			
+
 			String useDB = config.getInitParameter("useDirectBuffers");
-			if(useDB != null)
+			if (useDB != null)
 			{
 				try
 				{
 					this.useDirectBuffers = Boolean.valueOf(useDB).booleanValue();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 			}
 			String fonf = config.getInitParameter("failOnNotFound");
-			if(fonf != null)
+			if (fonf != null)
 			{
 				try
 				{
 					this.failOnNotFound = Boolean.valueOf(fonf).booleanValue();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					e.printStackTrace();
-				}
-			}
-			
-			if(!failOnNotFound) // check
-			{
-				if(notFoundImage == null)
-				{
-					throw new Exception(
-						"if failOnNotFound == false, parameter notFoundImage" +
-						" must be provided");
-				}
-				this.notFoundImageFile = new File(config.getServletContext().getRealPath(notFoundImage));
-				if(!notFoundImageFile.isFile())
-				{
-					throw new Exception(notFoundImage + 
-						" (parameter notFoundImage) is not a file");
-				}
-				else
-				{
-					log.info("using " + notFoundImageFile.getAbsolutePath() + 
-						" as the image for unknown files");
+					log.error(e.getMessage(), e);
 				}
 			}
 
+			if (!failOnNotFound) // check
+			{
+				if (notFoundImage == null)
+				{
+					throw new ConfigException("if failOnNotFound == false, parameter notFoundImage"
+						+ " must be provided");
+				}
+				this.notFoundImageFile =
+					new File(config.getServletContext().getRealPath(notFoundImage));
+				if (!notFoundImageFile.isFile())
+				{
+					throw new ConfigException(notFoundImage
+						+ " (parameter notFoundImage) is not a file");
+				}
+				else
+				{
+					log.info("using " + notFoundImageFile.getAbsolutePath()
+						+ " as the image for unknown files");
+				}
+			}
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new ServletException(e);
 		}
 	}

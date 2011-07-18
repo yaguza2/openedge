@@ -48,26 +48,20 @@ import javax.swing.ImageIcon;
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.util.ImageInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
- * @author Eelco Hillenius
  * Module image operations
+ * 
+ * @author Eelco Hillenius
  */
 public final class ImageModule implements SingletonType
 {
-
-	/* logger */
-	private Logger log = LoggerFactory.getLogger(ImageModule.class);
-	/* suffix to use when caching; max size will be appended */
-
 	/**
 	 * get image info
+	 * 
 	 * @param dataSource
 	 * @return image info if type is image, null otherwise
 	 */
@@ -82,32 +76,19 @@ public final class ImageModule implements SingletonType
 		}
 		return info;
 	}
+
 	/**
 	 * get resized image instance
-	 * @param is inputstream
-	 * @param maxWidth
-	 * @param maxHeight
-	 * @param maxSize
-	 * @return BufferedImage
-	 * @throws IOException
 	 */
-	public BufferedImage getImage(InputStream is, int maxSize) 
-		throws IOException
+	public BufferedImage getImage(InputStream is, int maxSize) throws IOException
 	{
 		return getImage(is, maxSize, true);
 	}
+
 	/**
 	 * get resized image instance
-	 * @param is inputstream
-	 * @param maxWidth
-	 * @param maxHeight
-	 * @param maxSize
-	 * @param soften
-	 * @return BufferedImage
-	 * @throws IOException
 	 */
-	public BufferedImage getImage(InputStream is, int maxSize, boolean soften) 
-		throws IOException
+	public BufferedImage getImage(InputStream is, int maxSize, boolean soften) throws IOException
 	{
 
 		BufferedImage img = ImageIO.read(is);
@@ -119,23 +100,21 @@ public final class ImageModule implements SingletonType
 		}
 		int width = img.getWidth();
 		int height = img.getHeight();
-		
-		if(width > maxSize  || height > maxSize)
+
+		if (width > maxSize || height > maxSize)
 		{
 			if (width > height)
 			{
 				resizedImage =
-					img.getScaledInstance(maxSize, 
-						(maxSize * height) / width, Image.SCALE_SMOOTH);
+					img.getScaledInstance(maxSize, (maxSize * height) / width, Image.SCALE_SMOOTH);
 			}
 			else
 			{
 				resizedImage =
-					img.getScaledInstance(
-						(maxSize * width) / height, maxSize, Image.SCALE_SMOOTH);
+					img.getScaledInstance((maxSize * width) / height, maxSize, Image.SCALE_SMOOTH);
 			}
 		}
-		else if(!soften)
+		else if (!soften)
 		{
 			return img;
 		}
@@ -143,29 +122,23 @@ public final class ImageModule implements SingletonType
 		// ensure that all the pixels in the image are loaded.
 		resizedImage = new ImageIcon(resizedImage).getImage();
 		// Create the buffered image.
-		img = new BufferedImage(resizedImage.getWidth(null), resizedImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
+		img =
+			new BufferedImage(resizedImage.getWidth(null), resizedImage.getHeight(null),
+				BufferedImage.TYPE_INT_RGB);
 		// Copy image to buffered image.
 		Graphics g = img.createGraphics();
 		// Clear background and paint the image.
-		//g.setColor(Color.white);
-		//g.fillRect(0, 0, temp.getWidth(null), temp.getHeight(null));
+		// g.setColor(Color.white);
+		// g.fillRect(0, 0, temp.getWidth(null), temp.getHeight(null));
 		g.drawImage(resizedImage, 0, 0, null);
 		g.dispose();
 		// soften thumbnail
-		if(soften)
+		if (soften)
 		{
 			float softenFactor = 0.05f;
 			float[] softenArray =
-				{
-					0,
-					softenFactor,
-					0,
-					softenFactor,
-					1 - (softenFactor * 4),
-					softenFactor,
-					0,
-					softenFactor,
-					0 };
+				{0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0,
+					softenFactor, 0};
 			Kernel kernel = new Kernel(3, 3, softenArray);
 			ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
 			img = cOp.filter(img, null);
@@ -175,36 +148,25 @@ public final class ImageModule implements SingletonType
 
 	/**
 	 * write image as JPG to outputstream based on datasource with resizing
-	 * @param is inputstream
-	 * @param os outputstream
-	 * @param maxSize max size (width or height) for resize op
-	 * @throws IOException
 	 */
-	public boolean writeImage(InputStream is, OutputStream os, int maxSize) 
-		throws IOException
+	public boolean writeImage(InputStream is, OutputStream os, int maxSize) throws IOException
 	{
 		return writeImage(is, os, maxSize, true);
 	}
+
 	/**
 	 * write image as JPG to outputstream based on datasource with resizing
-	 * @param is inputstream
-	 * @param os outputstream
-	 * @param maxSize max size (width or height) for resize op
-	 * @throws IOException
 	 */
-	public boolean writeImage(InputStream is, OutputStream os, int maxSize, boolean soften) 
-		throws IOException
+	public boolean writeImage(InputStream is, OutputStream os, int maxSize, boolean soften)
+			throws IOException
 	{
 
-		BufferedImage img = getImage(is, maxSize,soften);
+		BufferedImage img = getImage(is, maxSize, soften);
 		return internalWriteImage(img, os);
 	}
 
 	/**
 	 * write image as JPG to outputstream based on datasource without resizing
-	 * @param is inputstream
-	 * @param os outputstream
-	 * @throws IOException
 	 */
 	public boolean writeImage(InputStream is, OutputStream os) throws IOException
 	{
@@ -214,18 +176,14 @@ public final class ImageModule implements SingletonType
 	}
 
 	/* write */
-	private boolean internalWriteImage(BufferedImage img, OutputStream os) 
-		throws IOException
+	private boolean internalWriteImage(BufferedImage img, OutputStream os) throws IOException
 	{
-
 		if (img == null)
-		{
 			return false;
-		}
-		Iterator it = ImageIO.getImageWritersByMIMEType("image/jpeg");
-		if(it.hasNext())
+		Iterator<ImageWriter> it = ImageIO.getImageWritersByMIMEType("image/jpeg");
+		if (it.hasNext())
 		{
-			ImageWriter ir = (ImageWriter) it.next();
+			ImageWriter ir = it.next();
 			ir.setOutput(ImageIO.createImageOutputStream(os));
 			ir.write(img);
 			ir.dispose();
@@ -240,5 +198,4 @@ public final class ImageModule implements SingletonType
 		}
 		return true;
 	}
-
 }
