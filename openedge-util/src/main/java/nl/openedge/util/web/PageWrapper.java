@@ -50,9 +50,13 @@ public class PageWrapper
 
 	/**
 	 * Construct.
-	 * @param number page number
-	 * @param startRow starting row
-	 * @param numberOfRows number if rows in this page
+	 * 
+	 * @param number
+	 *            page number
+	 * @param startRow
+	 *            starting row
+	 * @param numberOfRows
+	 *            number if rows in this page
 	 */
 	public PageWrapper(int number, int startRow, int numberOfRows)
 	{
@@ -63,6 +67,7 @@ public class PageWrapper
 
 	/**
 	 * number of rows on this page.
+	 * 
 	 * @return int number of rows on this page
 	 */
 	public int getNumberOfRows()
@@ -72,6 +77,7 @@ public class PageWrapper
 
 	/**
 	 * page number.
+	 * 
 	 * @return int page number
 	 */
 	public int getNumber()
@@ -81,6 +87,7 @@ public class PageWrapper
 
 	/**
 	 * starting row or element.
+	 * 
 	 * @return int starting row or element
 	 */
 	public int getStartRow()

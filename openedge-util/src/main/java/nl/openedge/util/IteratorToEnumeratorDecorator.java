@@ -34,7 +34,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
- * Met deze klasse kun je een iterator wrapper zodat deze voldoet aan de Enumerator interface.
+ * Met deze klasse kun je een iterator wrapper zodat deze voldoet aan de Enumerator
+ * interface.
  * 
  * @author Eelco Hillenius
  */

@@ -33,8 +33,6 @@ package nl.openedge.util;
 import java.util.Calendar;
 import java.util.Date;
 
-import nl.openedge.util.DateFormatHelper;
-
 /**
  * Deze test bewijst dat dat DateFormatHelper thread safe is
  * 
@@ -94,6 +92,7 @@ public final class DateFormatHelperTestRunner
 		/**
 		 * run thread
 		 */
+		@Override
 		public void run()
 		{
 			String input = "010445";
@@ -128,7 +127,7 @@ public final class DateFormatHelperTestRunner
 					DateFormatHelper.format("dd-M-yyyy", dat.getTime());
 
 					long wait = (long) (Math.random() * 100);
-					//System.out.println(wait);
+					// System.out.println(wait);
 					Thread.sleep(wait);
 
 				}
@@ -144,4 +143,3 @@ public final class DateFormatHelperTestRunner
 	}
 
 }
-

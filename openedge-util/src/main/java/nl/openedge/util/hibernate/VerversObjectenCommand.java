@@ -16,18 +16,18 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.metadata.ClassMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ververst de opgegeven objecten met data uit de database.
- * {@linkplain #addObject(Object) Voeg objecten toe}die ververst moeten worden. Voer daarna dit
- * commando uit met de <code>HibernateHelper</code>.
+ * {@linkplain #addObject(Object) Voeg objecten toe}die ververst moeten worden. Voer
+ * daarna dit commando uit met de <code>HibernateHelper</code>.
  */
 public class VerversObjectenCommand implements HibernateCommand
 {
@@ -65,10 +65,11 @@ public class VerversObjectenCommand implements HibernateCommand
 			return;
 		}
 
-		// haal de session factory op en cast naar het interne contract om de identifier te kunnen
+		// haal de session factory op en cast naar het interne contract om de identifier
+		// te kunnen
 		// bepalen
-		SessionFactoryImplementor sessionFactoryImpl = (SessionFactoryImplementor) hibernateSession
-				.getSessionFactory();
+		SessionFactoryImplementor sessionFactoryImpl =
+			(SessionFactoryImplementor) hibernateSession.getSessionFactory();
 		for (Iterator i = objecten.iterator(); i.hasNext();)
 		{
 			// loop door objecten; Iterator werkt hier niet aangezien we de objecten
@@ -78,7 +79,7 @@ public class VerversObjectenCommand implements HibernateCommand
 
 			// TODO: ongetest - aangepast voor hibernate3
 			ClassMetadata meta = sessionFactoryImpl.getClassMetadata(clazz);
-			Serializable id = meta.getIdentifier( object, (SessionImplementor) hibernateSession);			
+			Serializable id = meta.getIdentifier(object, (SessionImplementor) hibernateSession);
 			Object copy = hibernateSession.load(clazz, id); // laat Hibernate object laden
 			try
 			{

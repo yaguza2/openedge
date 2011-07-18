@@ -39,19 +39,21 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import nl.openedge.util.DateFormatHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.openedge.util.DateFormatHelper;
-
 /**
  * Velocity tool for handling dates.
+ * 
  * @author Eelco Hillenius
  */
 public final class DateTool
 {
 	/** log. */
 	private static Logger log = LoggerFactory.getLogger(DateTool.class);
+
 	// ------------------------- system date access ------------------
 
 	/**
@@ -99,16 +101,16 @@ public final class DateTool
 	}
 
 	/**
-	 * Returns a {@link Calendar}instance created using the timezone and locale returned by
-	 * getTimeZone() and getLocale(). This allows subclasses to easily override the default locale
-	 * and timezone used by this tool. Sub-classes may override this method to return a Calendar
-	 * instance not based on the system date. Doing so will also cause the getDate(),
-	 * getNormalDate(), getFormattedDate(), and toString() methods to return dates equivalent to the
-	 * Calendar returned by this method, because those methods return values derived from the result
-	 * of this method.
+	 * Returns a {@link Calendar}instance created using the timezone and locale returned
+	 * by getTimeZone() and getLocale(). This allows subclasses to easily override the
+	 * default locale and timezone used by this tool. Sub-classes may override this method
+	 * to return a Calendar instance not based on the system date. Doing so will also
+	 * cause the getDate(), getNormalDate(), getFormattedDate(), and toString() methods to
+	 * return dates equivalent to the Calendar returned by this method, because those
+	 * methods return values derived from the result of this method.
 	 * 
-	 * @return a {@link Calendar}instance created using the results of {@link #getTimeZone()}and
-	 *         {@link #getLocale()}.
+	 * @return a {@link Calendar}instance created using the results of
+	 *         {@link #getTimeZone()}and {@link #getLocale()}.
 	 * @see Calendar#getInstance(TimeZone zone, Locale aLocale)
 	 */
 	public Calendar getCalendar()
@@ -119,8 +121,8 @@ public final class DateTool
 	// ------------------------- formatting methods ---------------------------
 
 	/**
-	 * Returns a formatted string representing the date as returned by {@link #getDate()}. This
-	 * method uses the same formatting instructions as {@link SimpleDateFormat}:
+	 * Returns a formatted string representing the date as returned by {@link #getDate()}.
+	 * This method uses the same formatting instructions as {@link SimpleDateFormat}:
 	 * 
 	 * @param format
 	 *            the formatting instructions
@@ -134,9 +136,9 @@ public final class DateTool
 	}
 
 	/**
-	 * Converts the specified object to a date and returns a formatted string representing that date
-	 * using the locale returned by {@link #getLocale()}. This method uses the same formatting
-	 * instructions as {@link SimpleDateFormat}:
+	 * Converts the specified object to a date and returns a formatted string representing
+	 * that date using the locale returned by {@link #getLocale()}. This method uses the
+	 * same formatting instructions as {@link SimpleDateFormat}:
 	 * 
 	 * @param format
 	 *            the formatting instructions
@@ -183,7 +185,7 @@ public final class DateTool
 	 * 
 	 *    Examples: &quot;E, MMMM d&quot; will result in &quot;Tue, July 24&quot;
 	 *              &quot;EEE, M-d (H:m)&quot; will result in &quot;Tuesday, 7-24 (14:12)&quot;
-	 *  
+	 * 
 	 * </pre>
 	 * 
 	 * @param format
@@ -192,8 +194,8 @@ public final class DateTool
 	 *            the date to format
 	 * @param locale
 	 *            the {@link Locale}to format the date for
-	 * @return a formatted string representing the specified date or <code>null</code> if the
-	 *         parameters are invalid
+	 * @return a formatted string representing the specified date or <code>null</code> if
+	 *         the parameters are invalid
 	 */
 	public static String format(String format, Object obj, Locale locale)
 	{
@@ -209,12 +211,13 @@ public final class DateTool
 	// ------------------------- date conversion methods ---------------
 
 	/**
-	 * Converts an object to an instance of {@link Date}. Uses a DateFormat to parse the string
-	 * value of the object if it is not an instance of Date or Calendar.
+	 * Converts an object to an instance of {@link Date}. Uses a DateFormat to parse the
+	 * string value of the object if it is not an instance of Date or Calendar.
 	 * 
 	 * @param obj
 	 *            the date to convert
-	 * @return the object as a {@link Date}or <code>null</code> if no conversion is possible
+	 * @return the object as a {@link Date}or <code>null</code> if no conversion is
+	 *         possible
 	 */
 	public static Date toDate(Object obj)
 	{
@@ -235,7 +238,7 @@ public final class DateTool
 				d.setTime(((Long) obj).longValue());
 				date = d;
 			}
-			//try parsing the obj as String w/a DateFormat
+			// try parsing the obj as String w/a DateFormat
 			DateFormat parser = DateFormat.getInstance();
 			try
 			{
@@ -252,14 +255,15 @@ public final class DateTool
 
 	/**
 	 * Converts an object to an instance of {@link Date}using the specified format and the
-	 * {@link Locale}returned by {@link #getLocale()}if the object is not already an instance of
-	 * Date or Calendar.
+	 * {@link Locale}returned by {@link #getLocale()}if the object is not already an
+	 * instance of Date or Calendar.
 	 * 
-	 * @param format -
-	 *            the format the date is in
-	 * @param obj -
-	 *            the date to convert
-	 * @return the object as a {@link Date}or <code>null</code> if no conversion is possible
+	 * @param format
+	 *            - the format the date is in
+	 * @param obj
+	 *            - the date to convert
+	 * @return the object as a {@link Date}or <code>null</code> if no conversion is
+	 *         possible
 	 * @see #toDate(String format, Object obj, Locale locale)
 	 */
 	public Date toDate(String format, Object obj)
@@ -271,24 +275,25 @@ public final class DateTool
 	 * Converts an object to an instance of {@link Date}using the specified format and
 	 * {@link Locale}if the object is not already an instance of Date or Calendar.
 	 * 
-	 * @param format -
-	 *            the format the date is in
-	 * @param obj -
-	 *            the date to convert
-	 * @param locale -
-	 *            the {@link Locale}
-	 * @return the object as a {@link Date}or <code>null</code> if no conversion is possible
+	 * @param format
+	 *            - the format the date is in
+	 * @param obj
+	 *            - the date to convert
+	 * @param locale
+	 *            - the {@link Locale}
+	 * @return the object as a {@link Date}or <code>null</code> if no conversion is
+	 *         possible
 	 * @see SimpleDateFormat#parse
 	 */
 	public static Date toDate(String format, Object obj, Locale locale)
 	{
-		//first try the easiest conversions
+		// first try the easiest conversions
 		Date date = toDate(obj);
 		if (date != null)
 		{
 			return date;
 		}
-		//try parsing w/a customized SimpleDateFormat
+		// try parsing w/a customized SimpleDateFormat
 		SimpleDateFormat parser = new SimpleDateFormat(format, locale);
 		try
 		{
@@ -296,8 +301,8 @@ public final class DateTool
 		}
 		catch (ParseException e)
 		{
-			log.debug("DateTool.toDate( " + format + ", " + obj + ", "
-					+ locale + "): " + e.getMessage());
+			log.debug("DateTool.toDate( " + format + ", " + obj + ", " + locale + "): "
+				+ e.getMessage());
 			return null;
 		}
 	}
@@ -338,18 +343,18 @@ public final class DateTool
 		{
 			return (Calendar) obj;
 		}
-		//try to get a date out of it
+		// try to get a date out of it
 		Date date = toDate(obj);
 		if (date == null)
 		{
 			return null;
 		}
 
-		//convert the date to a calendar
+		// convert the date to a calendar
 		Calendar cal = Calendar.getInstance(locale);
 		cal.setTime(date);
 		// HACK: Force all fields to update. see link for explanation of this.
-		//http://java.sun.com/j2se/1.4/docs/api/java/util/Calendar.html
+		// http://java.sun.com/j2se/1.4/docs/api/java/util/Calendar.html
 		cal.getTime();
 		return cal;
 	}
@@ -366,8 +371,8 @@ public final class DateTool
 	}
 
 	/**
-	 * Returns a formatted string representing the date as returned by {@link #getDate()}. This
-	 * method uses the same formatting instructions as {@link SimpleDateFormat}:
+	 * Returns a formatted string representing the date as returned by {@link #getDate()}.
+	 * This method uses the same formatting instructions as {@link SimpleDateFormat}:
 	 * 
 	 * @param format
 	 *            the formatting instructions
@@ -386,7 +391,8 @@ public final class DateTool
 	/**
 	 * get Date object for today plus addition, with hour set to one-o-clock am.
 	 * 
-	 * @param addition days to add
+	 * @param addition
+	 *            days to add
 	 * @return Date date with addition
 	 */
 	public static Date getOtherDay(int addition)
@@ -398,8 +404,8 @@ public final class DateTool
 	}
 
 	/**
-	 * Returns a formatted string representing the date as returned by {@link #getDate()}. This
-	 * method uses the same formatting instructions as {@link SimpleDateFormat}:
+	 * Returns a formatted string representing the date as returned by {@link #getDate()}.
+	 * This method uses the same formatting instructions as {@link SimpleDateFormat}:
 	 * 
 	 * @param format
 	 *            the formatting instructions
@@ -424,8 +430,8 @@ public final class DateTool
 	}
 
 	/**
-	 * Returns a formatted string representing the date as returned by {@link #getDate()}. This
-	 * method uses the same formatting instructions as {@link SimpleDateFormat}:
+	 * Returns a formatted string representing the date as returned by {@link #getDate()}.
+	 * This method uses the same formatting instructions as {@link SimpleDateFormat}:
 	 * 
 	 * @param format
 	 *            the formatting instructions
@@ -450,7 +456,8 @@ public final class DateTool
 	/**
 	 * return timestamp as a date.
 	 * 
-	 * @param timeStamp timestamp to convert
+	 * @param timeStamp
+	 *            timestamp to convert
 	 * @return Date timestamp as a date
 	 */
 	public static Date asDate(Long timeStamp)
@@ -466,7 +473,8 @@ public final class DateTool
 	/**
 	 * Format with DateFormatHelper.
 	 * 
-	 * @param date date to format
+	 * @param date
+	 *            date to format
 	 * @return String formatted date
 	 */
 	public static String format(Date date)

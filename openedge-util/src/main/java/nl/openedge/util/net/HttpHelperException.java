@@ -38,6 +38,8 @@ package nl.openedge.util.net;
 public final class HttpHelperException extends Exception
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

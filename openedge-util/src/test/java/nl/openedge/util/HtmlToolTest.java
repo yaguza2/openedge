@@ -30,19 +30,17 @@
  */
 package nl.openedge.util;
 
-import nl.openedge.util.velocity.tools.HtmlTool;
 import junit.framework.TestCase;
+import nl.openedge.util.velocity.tools.HtmlTool;
 
 /**
  * @author shofstee Test de uitvoer van de HtmlTool
  */
 public class HtmlToolTest extends TestCase
 {
-	private String[] input =
-		{"<", ">", "&", "\"", "'"};
+	private String[] input = {"<", ">", "&", "\"", "'"};
 
-	private String[] output =
-		{"&lt;", "&gt;", "&amp;", "&#034;", "&#039;"};
+	private String[] output = {"&lt;", "&gt;", "&amp;", "&#034;", "&#039;"};
 
 	private String start = "Bijvoorbeeld ";
 
@@ -121,7 +119,8 @@ public class HtmlToolTest extends TestCase
 	}
 
 	/**
-	 * Controleert dat HtmlTool.parseText ook echt null terug geeft als er null in gestopt wordt.
+	 * Controleert dat HtmlTool.parseText ook echt null terug geeft als er null in gestopt
+	 * wordt.
 	 */
 	public void testNull()
 	{

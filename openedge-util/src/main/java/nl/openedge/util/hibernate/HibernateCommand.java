@@ -12,15 +12,15 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 /**
- * Interface voor het uitvoeren van database commando's via Hibernate.
- * <h3>Gebruikte Patterns</h3>
- * Deze klasse vervult de rol van <em>Command</em> uit het <strong>Command </strong> pattern.
+ * Interface voor het uitvoeren van database commando's via Hibernate. <h3>Gebruikte
+ * Patterns</h3> Deze klasse vervult de rol van <em>Command</em> uit het <strong>Command
+ * </strong> pattern.
  */
-public interface HibernateCommand 
+public interface HibernateCommand
 {
 	/**
-	 * Declaratie voor de interface voor het uitvoeren van een database commando. Deze wordt in
-	 * subklassen geimplementeerd.
+	 * Declaratie voor de interface voor het uitvoeren van een database commando. Deze
+	 * wordt in subklassen geimplementeerd.
 	 * 
 	 * @param hibernateSession
 	 *            de Hibernate sessie waarop het commando uitgevoerd moet worden.

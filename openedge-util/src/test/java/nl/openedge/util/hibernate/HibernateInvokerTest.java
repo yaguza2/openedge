@@ -30,7 +30,8 @@ public class HibernateInvokerTest extends TestCase
 	boolean closeResourcesAangeroepen = false;
 
 	/**
-	 * Vlag voor het doorgeven van de waarde van de exceptionOccurred parameter van closeresources.
+	 * Vlag voor het doorgeven van de waarde van de exceptionOccurred parameter van
+	 * closeresources.
 	 */
 	boolean inException = false;
 
@@ -51,6 +52,7 @@ public class HibernateInvokerTest extends TestCase
 		/**
 		 * @see nl.openedge.util.hibernate.HibernateInvoker#getSession()
 		 */
+		@Override
 		protected Session getSession() throws HibernateException
 		{
 			return mockSession;
@@ -59,6 +61,7 @@ public class HibernateInvokerTest extends TestCase
 		/**
 		 * @see nl.openedge.util.hibernate.HibernateInvoker#closeResources()
 		 */
+		@Override
 		protected void closeResources(boolean x) throws HibernateException
 		{
 			closeResourcesAangeroepen = true;
@@ -109,6 +112,7 @@ public class HibernateInvokerTest extends TestCase
 	/**
 	 * Creeert de mock objecten voor het gebruik in deze tests.
 	 */
+	@Override
 	public void setUp()
 	{
 		mockFactory = (SessionFactory) mockFactoryControl.getMock();
@@ -119,8 +123,9 @@ public class HibernateInvokerTest extends TestCase
 	}
 
 	/**
-	 * Controleer of execute functie werkt. initHibernateSession is uitgeschakeld via inner class
-	 * MockHibernateHelper, het verkrijgen van een session loopt via session field.
+	 * Controleer of execute functie werkt. initHibernateSession is uitgeschakeld via
+	 * inner class MockHibernateHelper, het verkrijgen van een session loopt via session
+	 * field.
 	 * 
 	 * @throws HibernateException
 	 *             indien uitvoeren niet lukt
@@ -153,9 +158,9 @@ public class HibernateInvokerTest extends TestCase
 	}
 
 	/**
-	 * Controleer of execute functie werkt als er uit het command een exception gegooid wordt.
-	 * initHibernateSession is uitgeschakeld via inner class MockHibernateHelper, het verkrijgen van
-	 * een session loopt via session field.
+	 * Controleer of execute functie werkt als er uit het command een exception gegooid
+	 * wordt. initHibernateSession is uitgeschakeld via inner class MockHibernateHelper,
+	 * het verkrijgen van een session loopt via session field.
 	 * 
 	 * @throws HibernateException
 	 *             indien uitvoeren niet lukt
@@ -185,7 +190,7 @@ public class HibernateInvokerTest extends TestCase
 		catch (RuntimeException e1)
 		{
 			assertTrue("exception zou van type " + HibernateCommandException.class.getName()
-					+ " moeten zijn", (e1 instanceof HibernateCommandException));
+				+ " moeten zijn", (e1 instanceof HibernateCommandException));
 		}
 
 		assertTrue("Aanroep van closeResources", closeResourcesAangeroepen);

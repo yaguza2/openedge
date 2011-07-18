@@ -48,6 +48,7 @@ public class DeleteObjectCommandTest extends TestCase
 	/**
 	 * Creeert de mock objecten voor het gebruik in deze tests.
 	 */
+	@Override
 	public void setUp()
 	{
 		mockSession = (Session) mockSessionControl.getMock();
@@ -56,8 +57,8 @@ public class DeleteObjectCommandTest extends TestCase
 	}
 
 	/**
-	 * Controleer of het juiste object gepersisteerd wordt via saveOrUpdate en of dit binnen 1
-	 * transactie gebeurt.
+	 * Controleer of het juiste object gepersisteerd wordt via saveOrUpdate en of dit
+	 * binnen 1 transactie gebeurt.
 	 * 
 	 * @throws HibernateException
 	 *             nooit, maar noodzakelijk voor de compilatie.
@@ -94,16 +95,17 @@ public class DeleteObjectCommandTest extends TestCase
 	{
 		// explicit testing of calling order
 		mockSessionControl = MockControl.createStrictControl(Session.class);
-		mockSession = (Session)mockSessionControl.getMock();
+		mockSession = (Session) mockSessionControl.getMock();
 
-		Object[] objects = new Object[] { new Object(), new Object(), new Object() };
-		
+		Object[] objects = new Object[] {new Object(), new Object(), new Object()};
+
 		// instellen van specifieke zaken voor deze test
 		mockSession.beginTransaction();
 		mockSessionControl.setReturnValue(mockTransaction);
 
-		for(int i = 0; i < objects.length; i++){
-		    mockSession.delete(objects[i]);
+		for (int i = 0; i < objects.length; i++)
+		{
+			mockSession.delete(objects[i]);
 		}
 		mockTransaction.commit();
 
@@ -113,8 +115,9 @@ public class DeleteObjectCommandTest extends TestCase
 		DeleteObjectsCommand command = new DeleteObjectsCommand();
 		// de eigenlijke test
 
-		for(int i = 0; i < objects.length; i++){
-		    command.add(objects[i]);
+		for (int i = 0; i < objects.length; i++)
+		{
+			command.add(objects[i]);
 		}
 		command.execute(mockSession);
 

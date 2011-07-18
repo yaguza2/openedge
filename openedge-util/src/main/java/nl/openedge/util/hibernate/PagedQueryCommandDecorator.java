@@ -10,19 +10,19 @@ package nl.openedge.util.hibernate;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PagedQueryCommandDecorator is een paginerings decorator voor het uitvoeren van
- * <code>QueryCommands</code>. Deze decorator zet het maximale aantal resultaten van de query en
- * de eerste start rij van het resultaat. Hierdoor wordt het mogelijk om bijvoorbeeld door een
- * resultset van 100 resultaten met pagina's van 10 objecten te lopen.
- * <h3>Gebruikte Patterns</h3>
- * Deze klasse implementeert of is onderdeel van de volgende patterns:
+ * <code>QueryCommands</code>. Deze decorator zet het maximale aantal resultaten van de
+ * query en de eerste start rij van het resultaat. Hierdoor wordt het mogelijk om
+ * bijvoorbeeld door een resultset van 100 resultaten met pagina's van 10 objecten te
+ * lopen. <h3>Gebruikte Patterns</h3> Deze klasse implementeert of is onderdeel van de
+ * volgende patterns:
  * <ul>
  * <li>Decorator (implementatie)</li>
  * <li>Template method (onderdeel)</li>
@@ -52,7 +52,8 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	private final int maxAantalRijen;
 
 	/**
-	 * Construeert een <strong>Decorator </strong> voor een <code>AbstractQueryCommand</code>.
+	 * Construeert een <strong>Decorator </strong> voor een
+	 * <code>AbstractQueryCommand</code>.
 	 * 
 	 * @param deQuery
 	 *            de query die gedecoreerd moet worden.
@@ -73,7 +74,8 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	}
 
 	/**
-	 * Delegeert het verzoek om een query naar het gedecoreerde <code>AbstractQueryCommand</code>.
+	 * Delegeert het verzoek om een query naar het gedecoreerde
+	 * <code>AbstractQueryCommand</code>.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#getQuery(net.sf.hibernate.Session)
 	 */
@@ -103,8 +105,8 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 
 	/**
 	 * Delegeert het verzoek om de parameters te zetten op de query naar het gedecoreerde
-	 * <code>AbstractQueryCommand</code>, en zet zelf de parameters voor het pagineren. Dit is de
-	 * eigenlijke implementatie van het <strong>Decorator </strong> pattern.
+	 * <code>AbstractQueryCommand</code>, en zet zelf de parameters voor het pagineren.
+	 * Dit is de eigenlijke implementatie van het <strong>Decorator </strong> pattern.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#setParameters(net.sf.hibernate.Query)
 	 */

@@ -36,8 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author Eelco Hillenius Select an array element This is deliberately NOT supported in Velocity,
- *         but I want it anyway ;-)
+ * @author Eelco Hillenius Select an array element This is deliberately NOT supported in
+ *         Velocity, but I want it anyway ;-)
  */
 public class ArrayTool
 {
@@ -65,7 +65,8 @@ public class ArrayTool
 	/**
 	 * wrap as list.
 	 * 
-	 * @param o1 object to wrap
+	 * @param o1
+	 *            object to wrap
 	 * @return object wrapped in a list
 	 */
 	public static List asList(Object o1)
@@ -78,8 +79,10 @@ public class ArrayTool
 	/**
 	 * wrap as list.
 	 * 
-	 * @param o1 object to wrap
-	 * @param o2 object to wrap
+	 * @param o1
+	 *            object to wrap
+	 * @param o2
+	 *            object to wrap
 	 * @return objects wrapped in a list
 	 */
 	public static List asList(Object o1, Object o2)
@@ -93,9 +96,12 @@ public class ArrayTool
 	/**
 	 * wrap as list.
 	 * 
-	 * @param o1 object to wrap
-	 * @param o2 object to wrap
-	 * @param o3 object to wrap
+	 * @param o1
+	 *            object to wrap
+	 * @param o2
+	 *            object to wrap
+	 * @param o3
+	 *            object to wrap
 	 * @return objects wrapped in a list
 	 */
 	public static List asList(Object o1, Object o2, Object o3)
@@ -110,10 +116,14 @@ public class ArrayTool
 	/**
 	 * wrap as list.
 	 * 
-	 * @param o1 object to wrap
-	 * @param o2 object to wrap
-	 * @param o3 object to wrap
-	 * @param o4 object to wrap
+	 * @param o1
+	 *            object to wrap
+	 * @param o2
+	 *            object to wrap
+	 * @param o3
+	 *            object to wrap
+	 * @param o4
+	 *            object to wrap
 	 * @return objects wrapped in a list
 	 */
 	public static List asList(Object o1, Object o2, Object o3, Object o4)
@@ -129,7 +139,8 @@ public class ArrayTool
 	/**
 	 * the length of the input array.
 	 * 
-	 * @param array array to get the size of
+	 * @param array
+	 *            array to get the size of
 	 * @return the length of the input array. if array == null return -1.
 	 */
 	public static int size(Object[] array)
@@ -144,8 +155,10 @@ public class ArrayTool
 	/**
 	 * Uses elementAt to return the last element in array.
 	 * 
-	 * @param array the array to get the last element from
-	 * @return the last object in the array or null if the array is null or has no elements
+	 * @param array
+	 *            the array to get the last element from
+	 * @return the last object in the array or null if the array is null or has no
+	 *         elements
 	 */
 	public static Object getLast(Object[] array)
 	{
@@ -155,7 +168,7 @@ public class ArrayTool
 		}
 		else
 		{
-			return elementAt(array, array.length - 1);	
+			return elementAt(array, array.length - 1);
 		}
 	}
 

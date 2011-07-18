@@ -39,8 +39,9 @@ import nl.openedge.baritus.converters.Formatter;
 import nl.openedge.util.DateFormatHelper;
 
 /**
- * converts a given value to a date, trying multiple options using DateFormatHelper. NOTE: this
- * works for NON-localized applications. Use DateLocaleConverter for localized applications
+ * converts a given value to a date, trying multiple options using DateFormatHelper. NOTE:
+ * this works for NON-localized applications. Use DateLocaleConverter for localized
+ * applications
  * 
  * @author Klaasjan Brand
  * @author Eelco Hillenius
@@ -54,7 +55,8 @@ public final class FallbackDateConverter implements Converter, Formatter
 	 *            type to convert to
 	 * @param value
 	 *            object to convert
-	 * @see org.apache.commons.beanutils.Converter#convert(java.lang.Class, java.lang.Object)
+	 * @see org.apache.commons.beanutils.Converter#convert(java.lang.Class,
+	 *      java.lang.Object)
 	 */
 	@Override
 	public Object convert(Class type, Object value)

@@ -73,9 +73,12 @@ public final class SerializeAndZipHelper
 	 * @param serializedAndZipped
 	 *            struct with serialized and zipped data
 	 * @return root object that was serialized and zipped
-	 * @throws IOException see exception
-	 * @throws DataFormatException  see exception
-	 * @throws ClassNotFoundException see exception
+	 * @throws IOException
+	 *             see exception
+	 * @throws DataFormatException
+	 *             see exception
+	 * @throws ClassNotFoundException
+	 *             see exception
 	 */
 	public static Object unzipAndDeserialize(SerializedAndZipped serializedAndZipped)
 			throws IOException, DataFormatException, ClassNotFoundException
@@ -98,10 +101,11 @@ public final class SerializeAndZipHelper
 	 * Serialize and zip objects in ZLIB compression.
 	 * 
 	 * @param root
-	 *            the root object to serialize and zip; if you need to process more than one object,
-	 *            try packing them in a list or a composite object
+	 *            the root object to serialize and zip; if you need to process more than
+	 *            one object, try packing them in a list or a composite object
 	 * @return struct that holds the serialized and zipped data
-	 * @throws IOException see exception
+	 * @throws IOException
+	 *             see exception
 	 */
 	public static SerializedAndZipped serializeAndZip(Object root) throws IOException
 	{
@@ -121,12 +125,11 @@ public final class SerializeAndZipHelper
 			log.debug("zipped and serialized in " + (end - begin) + " milis");
 			int compressedDataLength = serializedAndZipped.getCompressedData().length;
 			int uncompressedDataLength = serializedAndZipped.getUncompressedDataLength();
-			double zipRatio = ((double)
-					compressedDataLength / (double) uncompressedDataLength) * PERC_FACTOR;
+			double zipRatio =
+				((double) compressedDataLength / (double) uncompressedDataLength) * PERC_FACTOR;
 			zipRatio = Rekenhulp.rondAf(zipRatio, 2);
-			log.debug("zip ratio = "
-					+ zipRatio + "%" + " (compr: " + compressedDataLength + " - uncompr: "
-					+ uncompressedDataLength + ")");
+			log.debug("zip ratio = " + zipRatio + "%" + " (compr: " + compressedDataLength
+				+ " - uncompr: " + uncompressedDataLength + ")");
 		}
 
 		return serializedAndZipped;
@@ -138,7 +141,8 @@ public final class SerializeAndZipHelper
 	 * @param root
 	 *            root object to serialize
 	 * @return serialized data
-	 * @throws IOException see exception
+	 * @throws IOException
+	 *             see exception
 	 */
 	public static byte[] serialize(Object root) throws IOException
 	{
@@ -159,8 +163,10 @@ public final class SerializeAndZipHelper
 	 * @param objectData
 	 *            object data
 	 * @return Object de-serialized object
-	 * @throws IOException see exception
-	 * @throws ClassNotFoundException see exception
+	 * @throws IOException
+	 *             see exception
+	 * @throws ClassNotFoundException
+	 *             see exception
 	 */
 	public static Object deserialize(byte[] objectData) throws IOException, ClassNotFoundException
 	{
@@ -188,8 +194,8 @@ public final class SerializeAndZipHelper
 
 		System.arraycopy(temp, 0, comprBinObjects, 0, compressedDataLength);
 
-		SerializedAndZipped serializedAndZipped = new SerializedAndZipped(uncompressedDataLength,
-				comprBinObjects);
+		SerializedAndZipped serializedAndZipped =
+			new SerializedAndZipped(uncompressedDataLength, comprBinObjects);
 		return serializedAndZipped;
 	}
 
@@ -199,7 +205,8 @@ public final class SerializeAndZipHelper
 	 * @param serializedAndZipped
 	 *            struct with zipped object data
 	 * @return object data
-	 * @throws DataFormatException see exception
+	 * @throws DataFormatException
+	 *             see exception
 	 */
 	public static byte[] unzip(SerializedAndZipped serializedAndZipped) throws DataFormatException
 	{

@@ -9,11 +9,13 @@
 package nl.openedge.util.hibernate;
 
 /**
- * RuntimeException die wordt opgegooid door HibernateCommands indien zich onverwachte situaties
- * voordoen.
+ * RuntimeException die wordt opgegooid door HibernateCommands indien zich onverwachte
+ * situaties voordoen.
  */
 public class HibernateCommandException extends RuntimeException
 {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creeer.

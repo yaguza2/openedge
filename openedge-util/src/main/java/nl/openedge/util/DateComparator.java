@@ -35,8 +35,8 @@ import java.util.Comparator;
 import java.util.Date;
 
 /**
- * Compares java Dates on a date level, without time. The comparator checks year, month, day and
- * returns -1 or 0 or 1. This component is not Thread safe.
+ * Compares java Dates on a date level, without time. The comparator checks year, month,
+ * day and returns -1 or 0 or 1. This component is not Thread safe.
  * 
  * @author shofstee
  */
@@ -46,6 +46,7 @@ public class DateComparator implements Comparator
 	// as we use instance variables, this component is not Thread safe.
 	/** Calendar working object 1. */
 	private Calendar cal1 = Calendar.getInstance();
+
 	/** Calendar working object 2. */
 	private Calendar cal2 = Calendar.getInstance();
 
@@ -80,9 +81,13 @@ public class DateComparator implements Comparator
 
 	/**
 	 * Compare the fields.
-	 * @param yearResult the year result
-	 * @param monthResult the month result
-	 * @param dayResult the day result
+	 * 
+	 * @param yearResult
+	 *            the year result
+	 * @param monthResult
+	 *            the month result
+	 * @param dayResult
+	 *            the day result
 	 * @return int result
 	 */
 	private int compareFields(int yearResult, int monthResult, int dayResult)
@@ -92,7 +97,7 @@ public class DateComparator implements Comparator
 		{
 			if (yearResult > 0)
 			{
-				result = 1;	
+				result = 1;
 			}
 			else
 			{
@@ -103,7 +108,7 @@ public class DateComparator implements Comparator
 		{
 			if (monthResult > 0)
 			{
-				result = 1;	
+				result = 1;
 			}
 			else
 			{
@@ -114,7 +119,7 @@ public class DateComparator implements Comparator
 		{
 			if (dayResult > 0)
 			{
-				result = 1;	
+				result = 1;
 			}
 			else
 			{
@@ -125,10 +130,13 @@ public class DateComparator implements Comparator
 	}
 
 	/**
-	 * Throws a ClassCastException with the parameter that is not instanceof Date checks o1 then o2.
+	 * Throws a ClassCastException with the parameter that is not instanceof Date checks
+	 * o1 then o2.
 	 * 
-	 * @param o1 first object
-	 * @param o2 second object
+	 * @param o1
+	 *            first object
+	 * @param o2
+	 *            second object
 	 */
 	private void handleClassCastException(Object o1, Object o2)
 	{

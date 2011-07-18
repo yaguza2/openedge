@@ -49,6 +49,7 @@ public final class HttpHelper
 {
 	/** Log. */
 	private static Logger log = LoggerFactory.getLogger(HttpHelper.class);
+
 	/**
 	 * Hidden constructor.
 	 */

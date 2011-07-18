@@ -95,7 +95,8 @@ public final class PageListWrapper
 			}
 			if (currentPagePosition < totalNbrOfPages)
 			{
-				afterCurrentPages = new ArrayList<PageWrapper>(totalNbrOfPages - currentPagePosition);
+				afterCurrentPages =
+					new ArrayList<PageWrapper>(totalNbrOfPages - currentPagePosition);
 				for (int i = currentPagePosition + 1; i <= totalNbrOfPages; i++)
 				{
 					rowCounter += rowsEachPage;

@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SortedQueryCommandDecorator is een sortering decorator voor het uitvoeren van
  * <code>QueryCommands</code>. Deze decorator zet de <code>order by</code> van de query.
- * <h3>Gebruikte Patterns</h3>
- * Deze klasse implementeert of is onderdeel van de volgende patterns:
+ * <h3>Gebruikte Patterns</h3> Deze klasse implementeert of is onderdeel van de volgende
+ * patterns:
  * <ul>
  * <li>Decorator (implementatie)</li>
  * <li>Template method (onderdeel)</li>
@@ -47,7 +47,8 @@ public class SortedQueryCommandDecorator extends AbstractQueryCommand
 	private List sorteringen = new ArrayList();
 
 	/**
-	 * Construeert een <strong>Decorator </strong> voor een <code>AbstractQueryCommand</code>.
+	 * Construeert een <strong>Decorator </strong> voor een
+	 * <code>AbstractQueryCommand</code>.
 	 * 
 	 * @param deQuery
 	 *            de query die gedecoreerd moet worden.
@@ -76,7 +77,8 @@ public class SortedQueryCommandDecorator extends AbstractQueryCommand
 	}
 
 	/**
-	 * Haalt de query op uit het gedecoreerde commando, en past de query aan met de sorteringen.
+	 * Haalt de query op uit het gedecoreerde commando, en past de query aan met de
+	 * sorteringen.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#getQuery(net.sf.hibernate.Session)
 	 */
@@ -117,8 +119,8 @@ public class SortedQueryCommandDecorator extends AbstractQueryCommand
 
 	/**
 	 * Delegeert het verzoek om de parameters te zetten op de query naar het gedecoreerde
-	 * <code>AbstractQueryCommand</code>, en zet zelf de parameters voor het pagineren. Dit is de
-	 * eigenlijke implementatie van het <strong>Decorator </strong> pattern.
+	 * <code>AbstractQueryCommand</code>, en zet zelf de parameters voor het pagineren.
+	 * Dit is de eigenlijke implementatie van het <strong>Decorator </strong> pattern.
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#setParameters(net.sf.hibernate.Query)
 	 */

@@ -36,13 +36,13 @@ public final class AllHibernateTests
 	{
 		TestSuite suite = new TestSuite("Hibernate tests");
 
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 
 		suite.addTestSuite(HibernateInvokerTest.class);
 		suite.addTestSuite(UpdateCommandTest.class);
 		suite.addTestSuite(PagedQueryCommandDecoratorTest.class);
 
-		//$JUnit-END$
+		// $JUnit-END$
 
 		return new HibernateHelperDecorator(suite);
 	}

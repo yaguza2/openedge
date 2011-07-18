@@ -68,8 +68,9 @@ public final class URLHelper
 	}
 
 	/**
-	 * Interprets some absolute URLs as external paths, otherwise generates URL appropriate for
-	 * loading from internal webapp or, servletContext is null, loading from the classpath.
+	 * Interprets some absolute URLs as external paths, otherwise generates URL
+	 * appropriate for loading from internal webapp or, servletContext is null, loading
+	 * from the classpath.
 	 * 
 	 * @param pathToTranslate
 	 *            path to translate
@@ -86,9 +87,8 @@ public final class URLHelper
 	{
 		String path = pathToTranslate;
 		URL url = null;
-		if (path.startsWith("file:")
-				|| path.startsWith("http:") || path.startsWith("https:") || path.startsWith("ftp:")
-				|| path.startsWith("jar:"))
+		if (path.startsWith("file:") || path.startsWith("http:") || path.startsWith("https:")
+			|| path.startsWith("ftp:") || path.startsWith("jar:"))
 		{
 			url = new URL(path);
 		}

@@ -42,8 +42,11 @@ public class UrlTool
 
 	/**
 	 * Strips a parameter from url.
-	 * @param url url to strip parameter from
-	 * @param parameter parameter to strip
+	 * 
+	 * @param url
+	 *            url to strip parameter from
+	 * @param parameter
+	 *            parameter to strip
 	 * @return stripped url
 	 */
 	public static String stripParameter(String url, String parameter)
@@ -69,11 +72,13 @@ public class UrlTool
 	}
 
 	/**
-	 * get lastrequest as string; strip given parameter (that is used to store last currentRequest
-	 * in url).
+	 * get lastrequest as string; strip given parameter (that is used to store last
+	 * currentRequest in url).
 	 * 
-	 * @param request the request
-	 * @param parameterToStrip the parameter to strip
+	 * @param request
+	 *            the request
+	 * @param parameterToStrip
+	 *            the parameter to strip
 	 * @return String stripped request url
 	 */
 	public static String getLastRequest(HttpServletRequest request, String parameterToStrip)
@@ -86,9 +91,9 @@ public class UrlTool
 	}
 
 	/**
-	 * Returns <tt>text</tt> performing the following substring replacements
-	 * (to facilitate output to XML/HTML pages):
-	 * & -> &amp; < -> &lt; > -> &gt; " -> &#034; ' -> &#039;.
+	 * Returns <tt>text</tt> performing the following substring replacements (to
+	 * facilitate output to XML/HTML pages): & -> &amp; < -> &lt; > -> &gt; " -> &#034; '
+	 * -> &#039;.
 	 * 
 	 * @param text
 	 *            string to transform
@@ -122,13 +127,15 @@ public class UrlTool
 	}
 
 	/**
-	 * Replace all occurences of scanchar withing the given text
-	 * with the given replacement.
+	 * Replace all occurences of scanchar withing the given text with the given
+	 * replacement.
+	 * 
 	 * @param text
 	 *            string to transform
 	 * @param scanchar
 	 *            char to scan for
-	 * @param replacement the replacement for scanchar
+	 * @param replacement
+	 *            the replacement for scanchar
 	 * @return String transformed string
 	 */
 	public static String replace(String text, char scanchar, String replacement)
@@ -151,13 +158,15 @@ public class UrlTool
 	}
 
 	/**
-	 * Replace all occurences of scanstring withing the given text
-	 * with the given replacement.
+	 * Replace all occurences of scanstring withing the given text with the given
+	 * replacement.
+	 * 
 	 * @param text
 	 *            string to transform
 	 * @param scanstring
 	 *            string to scan for
-	 * @param replacement the replacement for scanchar
+	 * @param replacement
+	 *            the replacement for scanchar
 	 * @return String transformed string
 	 */
 	public static String replace(String text, String scanstring, String replacement)

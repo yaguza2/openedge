@@ -45,11 +45,11 @@ import nl.openedge.baritus.validation.ValidationActivationRule;
 import org.infohazard.maverick.flow.ControllerContext;
 
 /**
- * Abstract class for testing controls in a simulated Baritus/ Maverick/ webapp environment, so that
- * constructs like validators, populators etc can be tested in isolation without much effort. This
- * basecontrol keeps references to things like the formBean, formBeanContext and logical view and
- * overrides some of the propected methods from Baritus with public methods in order to make testing
- * easier.
+ * Abstract class for testing controls in a simulated Baritus/ Maverick/ webapp
+ * environment, so that constructs like validators, populators etc can be tested in
+ * isolation without much effort. This basecontrol keeps references to things like the
+ * formBean, formBeanContext and logical view and overrides some of the propected methods
+ * from Baritus with public methods in order to make testing easier.
  * 
  * @author Eelco Hillenius
  */

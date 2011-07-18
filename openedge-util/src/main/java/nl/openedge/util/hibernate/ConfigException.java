@@ -14,6 +14,8 @@ package nl.openedge.util.hibernate;
 public final class ConfigException extends Exception
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 */

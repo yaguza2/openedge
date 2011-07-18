@@ -113,7 +113,7 @@ public class BeforeAndAfterValidatorTest extends BaritusControlTest
 		testFieldValidationSuccess("testDate", "10-06-2001", validator);
 	}
 
-	//----------------- TESTS FOR AFTER VALIDATOR ---------------------------
+	// ----------------- TESTS FOR AFTER VALIDATOR ---------------------------
 
 	/**
 	 * Check valid on day diff.
@@ -199,8 +199,9 @@ public class BeforeAndAfterValidatorTest extends BaritusControlTest
 			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			FormBeanContext formBeanContext = ctrl.getFormBeanContext();
-			assertNull("no errors should be registered; error == "
-					+ formBeanContext.getError(fieldname), formBeanContext.getError(fieldname));
+			assertNull(
+				"no errors should be registered; error == " + formBeanContext.getError(fieldname),
+				formBeanContext.getError(fieldname));
 			assertEquals("success", ctrl.getView());
 		}
 		catch (ServletException e)

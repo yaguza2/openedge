@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Tool that has methods for creating valid HTML. It replaces special special HTML and Javascript
- * characters in Java strings to valid HTML and Javascript characters.
+ * Tool that has methods for creating valid HTML. It replaces special special HTML and
+ * Javascript characters in Java strings to valid HTML and Javascript characters.
  * 
  * @author shofstee
  */
@@ -22,20 +22,20 @@ public class HtmlTool
 {
 
 	/**
-	 * The Map with HTML-encodings the key-characters in this map have to be replaced with the
-	 * values to create a valid HTML text.
+	 * The Map with HTML-encodings the key-characters in this map have to be replaced with
+	 * the values to create a valid HTML text.
 	 */
 	private static Map htmlEncoding;
 
 	/**
-	 * The Map with Javascript-encodings the key-characters in this map have to be replaced with the
-	 * values to create a valid Javascript text.
+	 * The Map with Javascript-encodings the key-characters in this map have to be
+	 * replaced with the values to create a valid Javascript text.
 	 */
 	private static Map javascriptEncoding;
 
 	/**
-	 * the key-characters in this map have to be replaced with the values to create a valid
-	 * html attribte value text.
+	 * the key-characters in this map have to be replaced with the values to create a
+	 * valid html attribte value text.
 	 */
 	private static Map htmlAttributeValueEncoding;
 
@@ -56,15 +56,18 @@ public class HtmlTool
 		javascriptEncoding = new HashMap();
 		javascriptEncoding.put(new Character('\''), "\\'");
 		// TODO shouldn't '\' also be escaped?
-		
+
 		htmlAttributeValueEncoding = new HashMap();
 		htmlAttributeValueEncoding.put(new Character('"'), "&#034;");
 	}
 
 	/**
 	 * Replaces all characters in original with the value that it represents.
-	 * @param original the Java string that has special characters.
-	 * @param the mapping specifying what to replace
+	 * 
+	 * @param original
+	 *            the Java string that has special characters.
+	 * @param the
+	 *            mapping specifying what to replace
 	 * @return the safe string with all special characters replaced.
 	 */
 	private static String parse(String original, Map mapping)
@@ -95,27 +98,33 @@ public class HtmlTool
 
 	/**
 	 * Replaces all characters in original with the value that it represents.
-	 * @param original the Java string that has special characters.
+	 * 
+	 * @param original
+	 *            the Java string that has special characters.
 	 * @return the HTML safe string with all special characters replaced.
 	 */
 	public static String parseText(String original)
 	{
 		return parse(original, htmlEncoding);
 	}
-	
+
 	/**
 	 * Replaces all characters in original with the value that it represents.
-	 * @param original the Java string that has special characters.
+	 * 
+	 * @param original
+	 *            the Java string that has special characters.
 	 * @return the Javascript safe string with all special characters replaced.
 	 */
 	public static String parseJavascipt(String original)
 	{
 		return parse(original, javascriptEncoding);
 	}
-	
+
 	/**
 	 * Replaces all characters in original with the value that it represents.
-	 * @param original the Java string that has special characters.
+	 * 
+	 * @param original
+	 *            the Java string that has special characters.
 	 * @return the HTML-attribute-safe string with all special characters replaced.
 	 */
 	public static String parseAttribute(String original)

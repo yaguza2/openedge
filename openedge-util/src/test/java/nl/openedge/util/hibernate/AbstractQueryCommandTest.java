@@ -18,9 +18,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 /**
- * AbstractHibernateCommandTest controleert de AbstractQueryCommand binnen een Unit test. Eigenlijk
- * wordt alleen de <code>execute</code> methode getest, aangezien de overige methoden niet
- * aanroepbaar zijn vanaf de buitenwereld.
+ * AbstractHibernateCommandTest controleert de AbstractQueryCommand binnen een Unit test.
+ * Eigenlijk wordt alleen de <code>execute</code> methode getest, aangezien de overige
+ * methoden niet aanroepbaar zijn vanaf de buitenwereld.
  */
 public class AbstractQueryCommandTest extends TestCase
 {
@@ -47,6 +47,7 @@ public class AbstractQueryCommandTest extends TestCase
 	/**
 	 * Creeert de mock objecten voor het gebruik in deze tests.
 	 */
+	@Override
 	public void setUp()
 	{
 		mockSession = (Session) mockSessionControl.getMock();
@@ -54,9 +55,9 @@ public class AbstractQueryCommandTest extends TestCase
 	}
 
 	/**
-	 * Controleer of de juiste query aan Hibernate wordt gevraagd en of de query daadwerkelijk al
-	 * uitgevoerd wordt en niet uitgesteld tot de getResultaat() functie. Als laatste wordt
-	 * gecontroleerd of de juiste lijst wel wordt teruggegeven.
+	 * Controleer of de juiste query aan Hibernate wordt gevraagd en of de query
+	 * daadwerkelijk al uitgevoerd wordt en niet uitgesteld tot de getResultaat() functie.
+	 * Als laatste wordt gecontroleerd of de juiste lijst wel wordt teruggegeven.
 	 * 
 	 * @throws HibernateException
 	 *             nooit, maar noodzakelijk voor de compilatie.
@@ -87,8 +88,8 @@ public class AbstractQueryCommandTest extends TestCase
 	}
 
 	/**
-	 * Controleert of een exceptie uit hibernate.Session.getNamedQuery() wel doorgegeven wordt aan
-	 * de omliggende omgeving.
+	 * Controleert of een exceptie uit hibernate.Session.getNamedQuery() wel doorgegeven
+	 * wordt aan de omliggende omgeving.
 	 * 
 	 * @throws Exception
 	 *             speciaal voor compiler.
@@ -121,8 +122,8 @@ public class AbstractQueryCommandTest extends TestCase
 	}
 
 	/**
-	 * Controleert of een HibernateException gegooid vanuit setParameters wel doorgegeven wordt aan
-	 * de omgeving.
+	 * Controleert of een HibernateException gegooid vanuit setParameters wel doorgegeven
+	 * wordt aan de omgeving.
 	 * 
 	 * @throws Exception
 	 *             speciaal voor de compiler.
@@ -138,8 +139,8 @@ public class AbstractQueryCommandTest extends TestCase
 		mockQueryControl.replay();
 		mockSessionControl.replay();
 
-		AbstractQueryCommand command = new SetParametersExceptionCommand("myTestQuery", exception,
-				mockQuery);
+		AbstractQueryCommand command =
+			new SetParametersExceptionCommand("myTestQuery", exception, mockQuery);
 		try
 		{
 			// de eigenlijke test
@@ -154,8 +155,8 @@ public class AbstractQueryCommandTest extends TestCase
 	}
 
 	/**
-	 * Controleert of een HibernateException gegooid vanuit Query.list wel doorgegeven wordt aan de
-	 * omgeving.
+	 * Controleert of een HibernateException gegooid vanuit Query.list wel doorgegeven
+	 * wordt aan de omgeving.
 	 * 
 	 * @throws Exception
 	 *             Speciaal voor de compiler.

@@ -39,14 +39,15 @@ public class HibernateHelperDecorator extends TestSetup
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 
 		Session session = null;
 		try
 		{
-			URL hibernateConfig = HibernateHelperDecorator.class
-					.getResource("/hibernate.test.cfg.xml");
+			URL hibernateConfig =
+				HibernateHelperDecorator.class.getResource("/hibernate.test.cfg.xml");
 			HibernateHelper.setConfigURL(hibernateConfig);
 
 			session = HibernateHelper.getSession();
@@ -77,6 +78,7 @@ public class HibernateHelperDecorator extends TestSetup
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#tearDown()
 	 */
+	@Override
 	public void tearDown() throws Exception
 	{
 
@@ -84,8 +86,8 @@ public class HibernateHelperDecorator extends TestSetup
 		// start HibernateHelper & creeer tabellen
 		try
 		{
-			URL hibernateConfig = HibernateHelperDecorator.class
-					.getResource("/hibernate.test.cfg.xml");
+			URL hibernateConfig =
+				HibernateHelperDecorator.class.getResource("/hibernate.test.cfg.xml");
 			HibernateHelper.setConfigURL(hibernateConfig);
 
 			session = HibernateHelper.getSession();

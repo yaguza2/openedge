@@ -30,16 +30,7 @@
  */
 package nl.openedge.util.velocity.tools;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -52,15 +43,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.velocity.tools.view.context.ViewContext;
 import org.apache.velocity.tools.view.tools.ViewTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Shawn Bayern
- * @author E.F. Hillenius (just the hack... thanks Shawn Bayern!) $Id: ImportTool.java,v 1.3
- *         2004/06/27 20:49:06 hillenius Exp $
+ * @author E.F. Hillenius (just the hack... thanks Shawn Bayern!) $Id: ImportTool.java,v
+ *         1.3 2004/06/27 20:49:06 hillenius Exp $
  * @see org.apache.taglibs.standard.tag.common.core.ImportSupport
  */
 public final class ImportTool implements ViewTool
@@ -72,15 +63,17 @@ public final class ImportTool implements ViewTool
 	 * <p>
 	 * RFC 1738 says the following:
 	 * </p>
-	 * <blockquote>Scheme names consist of a sequence of characters. The lower case letters
-	 * "a"--"z", digits, and the characters plus ("+"), period ("."), and hyphen ("-") are allowed.
-	 * For resiliency, programs interpreting URLs should treat upper case letters as equivalent to
-	 * lower case in scheme names (e.g., allow "HTTP" as well as "http"). </blockquote>
+	 * <blockquote>Scheme names consist of a sequence of characters. The lower case
+	 * letters "a"--"z", digits, and the characters plus ("+"), period ("."), and hyphen
+	 * ("-") are allowed. For resiliency, programs interpreting URLs should treat upper
+	 * case letters as equivalent to lower case in scheme names (e.g., allow "HTTP" as
+	 * well as "http"). </blockquote>
 	 * <p>
-	 * We treat as absolute any URL that begins with such a scheme name, followed by a colon.
+	 * We treat as absolute any URL that begins with such a scheme name, followed by a
+	 * colon.
 	 * </p>
 	 */
-	public static final String VALID_SCHEME_CHARS = 
+	public static final String VALID_SCHEME_CHARS =
 		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+.-";
 
 	/** Default character encoding for response. */
@@ -100,7 +93,9 @@ public final class ImportTool implements ViewTool
 
 	/**
 	 * acquire the given url and return the result as a string.
-	 * @param url the url to acquire
+	 * 
+	 * @param url
+	 *            the url to acquire
 	 * @return String the result as a string
 	 */
 	public String get(String url)
@@ -147,23 +142,27 @@ public final class ImportTool implements ViewTool
 		this.application = context.getServletContext();
 	}
 
-	//*********************************************************************
+	// *********************************************************************
 	// Actual URL importation logic
 
 	/**
-	 * Acquire the string.
-	 * Overall strategy: we have two entry points, acquireString() and acquireReader(). The latter
-	 * passes data through unbuffered if possible (but note that it is not always possible --
-	 * specifically for cases where we must use the RequestDispatcher. The remaining methods handle
-	 * the common.core logic of loading either a URL or a local resource. We consider the 'natural'
-	 * form of absolute URLs to be Readers and relative URLs to be Strings. Thus, to avoid doing
-	 * extra work, acquireString() and acquireReader() delegate to one another as appropriate.
-	 * (Perhaps I could have spelled things out more clearly, but I thought this implementation was
-	 * instructive, not to mention somewhat cute...)
-	 * @param url url to get
-	 * @param isAbsoluteUrl whether this is a absolute (true) or relative (false) url
+	 * Acquire the string. Overall strategy: we have two entry points, acquireString() and
+	 * acquireReader(). The latter passes data through unbuffered if possible (but note
+	 * that it is not always possible -- specifically for cases where we must use the
+	 * RequestDispatcher. The remaining methods handle the common.core logic of loading
+	 * either a URL or a local resource. We consider the 'natural' form of absolute URLs
+	 * to be Readers and relative URLs to be Strings. Thus, to avoid doing extra work,
+	 * acquireString() and acquireReader() delegate to one another as appropriate.
+	 * (Perhaps I could have spelled things out more clearly, but I thought this
+	 * implementation was instructive, not to mention somewhat cute...)
+	 * 
+	 * @param url
+	 *            url to get
+	 * @param isAbsoluteUrl
+	 *            whether this is a absolute (true) or relative (false) url
 	 * @return String result as string
-	 * @throws IOException when there was a problem getting the url
+	 * @throws IOException
+	 *             when there was a problem getting the url
 	 */
 	private String acquireString(String url, boolean isAbsoluteUrl) throws IOException
 	{
@@ -270,7 +269,7 @@ public final class ImportTool implements ViewTool
 		}
 	}
 
-	//*********************************************************************
+	// *********************************************************************
 	// Public utility methods
 
 	/**
@@ -298,9 +297,9 @@ public final class ImportTool implements ViewTool
 	}
 
 	/**
-	 * Strips a servlet session ID from <tt>url</tt>. The session ID is encoded as a URL "path
-	 * parameter" beginning with "jsessionid=". We thus remove anything we find between
-	 * ";jsessionid=" (inclusive) and either EOS or a subsequent ';' (exclusive).
+	 * Strips a servlet session ID from <tt>url</tt>. The session ID is encoded as a URL
+	 * "path parameter" beginning with "jsessionid=". We thus remove anything we find
+	 * between ";jsessionid=" (inclusive) and either EOS or a subsequent ';' (exclusive).
 	 */
 	public static String stripSession(String url)
 	{
@@ -322,23 +321,25 @@ public final class ImportTool implements ViewTool
 	private class ImportResponseWrapper extends HttpServletResponseWrapper
 	{
 
-		//************************************************************
+		// ************************************************************
 		// Overview
 
 		/*
-		 * We provide either a Writer or an OutputStream as requested. We actually have a true
-		 * Writer and an OutputStream backing both, since we don't want to use a character encoding
-		 * both ways (Writer -> OutputStream -> Writer). So we use no encoding at all (as none is
-		 * relevant) when the target resource uses a Writer. And we decode the OutputStream's bytes
-		 * using OUR tag's 'charEncoding' attribute, or ISO-8859-1 as the default. We thus ignore
-		 * setLocale() and setContentType() in this wrapper. In other words, the target's asserted
-		 * encoding is used to convert from a Writer to an OutputStream, which is typically the
-		 * medium through with the target will communicate its ultimate response. Since we
-		 * short-circuit that mechanism and read the target's characters directly if they're offered
-		 * as such, we simply ignore the target's encoding assertion.
+		 * We provide either a Writer or an OutputStream as requested. We actually have a
+		 * true Writer and an OutputStream backing both, since we don't want to use a
+		 * character encoding both ways (Writer -> OutputStream -> Writer). So we use no
+		 * encoding at all (as none is relevant) when the target resource uses a Writer.
+		 * And we decode the OutputStream's bytes using OUR tag's 'charEncoding'
+		 * attribute, or ISO-8859-1 as the default. We thus ignore setLocale() and
+		 * setContentType() in this wrapper. In other words, the target's asserted
+		 * encoding is used to convert from a Writer to an OutputStream, which is
+		 * typically the medium through with the target will communicate its ultimate
+		 * response. Since we short-circuit that mechanism and read the target's
+		 * characters directly if they're offered as such, we simply ignore the target's
+		 * encoding assertion.
 		 */
 
-		//************************************************************
+		// ************************************************************
 		// Data
 		/** The Writer we convey. */
 		private StringWriter sw = new StringWriter();
@@ -365,7 +366,7 @@ public final class ImportTool implements ViewTool
 		/** The HTTP status set by the target. */
 		private int status = 200;
 
-		//************************************************************
+		// ************************************************************
 		// Constructor and methods
 
 		/** Constructs a new ImportResponseWrapper. */
@@ -420,8 +421,8 @@ public final class ImportTool implements ViewTool
 		}
 
 		/**
-		 * Retrieves the buffered output, using the containing tag's 'charEncoding' attribute, or
-		 * the tag's default encoding, <b>if necessary </b>.
+		 * Retrieves the buffered output, using the containing tag's 'charEncoding'
+		 * attribute, or the tag's default encoding, <b>if necessary </b>.
 		 */
 		// not simply toString() because we need to throw
 		// UnsupportedEncodingException

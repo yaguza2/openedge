@@ -148,9 +148,9 @@ public class BetweenValidator extends AbstractRangeValidator
 		}
 		if (!valid)
 		{
-			Object[] params = new Object[]
-				{getFieldName(formBeanContext, fieldname), String.valueOf(bottomOfRange),
-						String.valueOf(topOfRange), number};
+			Object[] params =
+				new Object[] {getFieldName(formBeanContext, fieldname),
+					String.valueOf(bottomOfRange), String.valueOf(topOfRange), number};
 			setErrorMessage(formBeanContext, fieldname, msgKeyNumberFailure, params);
 		}
 		return valid;
@@ -196,8 +196,9 @@ public class BetweenValidator extends AbstractRangeValidator
 		boolean valid = (afterBottom && beforeTop);
 		if (!valid)
 		{
-			Object[] params = new Object[]
-				{getFieldName(formBeanContext, fieldname), bottomOfRange, topOfRange, date};
+			Object[] params =
+				new Object[] {getFieldName(formBeanContext, fieldname), bottomOfRange, topOfRange,
+					date};
 			setErrorMessage(formBeanContext, fieldname, msgKeyDateFailure, params);
 		}
 		return valid;

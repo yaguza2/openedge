@@ -48,9 +48,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Helper for parsing dates in multiple formats, currently for non localized. Loads formats defined
- * in 'dateformathelper.cfg' in classpath root, or from 'dateformathelper.default.cfg' in this
- * package as a fallthrough.
+ * Helper for parsing dates in multiple formats, currently for non localized. Loads
+ * formats defined in 'dateformathelper.cfg' in classpath root, or from
+ * 'dateformathelper.default.cfg' in this package as a fallthrough.
  * 
  * @author Sander Hofstee
  * @author Eelco Hillenius
@@ -96,7 +96,7 @@ public final class DateFormatHelper
 		catch (IOException e)
 		{
 			log.warn("unable to load /dateformathelper.cfg from the classpath root \n("
-					+ e.getMessage() + "); using defaults");
+				+ e.getMessage() + "); using defaults");
 			try
 			{
 				loadFromFile("dateformathelper.default.cfg");
@@ -166,8 +166,8 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * Adds a new simpledateformatter with the desired pattern to the end of the list of formatters.
-	 * By default the formatter is not lenient.
+	 * Adds a new simpledateformatter with the desired pattern to the end of the list of
+	 * formatters. By default the formatter is not lenient.
 	 * 
 	 * @param pattern
 	 *            the date pattern
@@ -175,18 +175,20 @@ public final class DateFormatHelper
 	 */
 	public static DateFormat addFormatter(String pattern)
 	{
-		SimpleDateFormat sdf = createSimpleDateFormat(pattern); //abort early if pattern is invalid
+		SimpleDateFormat sdf = createSimpleDateFormat(pattern); // abort early if pattern
+																// is invalid
 		formatters.put(getKeyBasedOnPattern(pattern), sdf);
 		return sdf;
 	}
 
 	/**
-	 * Returns a string that can be used as key to store the formatter under. Some formatter
-	 * patterns contain escape like chars (like ' from simpledateformat) that mess up the length
-	 * validation of the pattern against the actual value. by using this key that problem should be
-	 * fixed. We replace the escape sequences here with a string that except for the date and time
-	 * values is identical to the desired input value. This method is public to make the testing
-	 * easier, please regard it as private since you have no further use for it.
+	 * Returns a string that can be used as key to store the formatter under. Some
+	 * formatter patterns contain escape like chars (like ' from simpledateformat) that
+	 * mess up the length validation of the pattern against the actual value. by using
+	 * this key that problem should be fixed. We replace the escape sequences here with a
+	 * string that except for the date and time values is identical to the desired input
+	 * value. This method is public to make the testing easier, please regard it as
+	 * private since you have no further use for it.
 	 * 
 	 * @param pattern
 	 * @return a patternlike string based on the pattern
@@ -194,9 +196,10 @@ public final class DateFormatHelper
 	public static String getKeyBasedOnPattern(String pattern)
 	{
 		String result = pattern;
-		//fairly simple pattern so compiling should not take that much time, use precompiled
-		//pattern if you really want to optimise
-		Pattern quote = Pattern.compile("'(.+)'"); //replace every 'T' but not ''
+		// fairly simple pattern so compiling should not take that much time, use
+		// precompiled
+		// pattern if you really want to optimise
+		Pattern quote = Pattern.compile("'(.+)'"); // replace every 'T' but not ''
 		Matcher m = quote.matcher(pattern);
 		while (m.find(0))
 		{
@@ -268,8 +271,8 @@ public final class DateFormatHelper
 	}
 
 	/**
-	 * Parses a string for date information. Multiple patterns are tried. Stops matching after the
-	 * first match.
+	 * Parses a string for date information. Multiple patterns are tried. Stops matching
+	 * after the first match.
 	 * 
 	 * @param stringDate
 	 *            date as a string
@@ -309,9 +312,8 @@ public final class DateFormatHelper
 				// do nothing... try next if available
 				if (log.isDebugEnabled())
 				{
-					log.debug("parsing "
-							+ stringDate + " failed for " + sdf.toLocalizedPattern() + " ("
-							+ e.getMessage() + ")");
+					log.debug("parsing " + stringDate + " failed for " + sdf.toLocalizedPattern()
+						+ " (" + e.getMessage() + ")");
 				}
 			}
 		}
@@ -506,6 +508,8 @@ public final class DateFormatHelper
 
 class CheckException extends Exception
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * 

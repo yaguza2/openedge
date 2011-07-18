@@ -50,6 +50,7 @@ public class SetParametersExceptionCommand extends AbstractQueryCommand
 	/**
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#setParameters(net.sf.hibernate.Query)
 	 */
+	@Override
 	protected void setParameters(final Query query) throws HibernateException
 	{
 		TestCase.assertEquals(mockQuery, query);

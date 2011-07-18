@@ -48,6 +48,7 @@ public class UpdateCommandTest extends TestCase
 	/**
 	 * Creeert de mock objecten voor het gebruik in deze tests.
 	 */
+	@Override
 	public void setUp()
 	{
 		mockSession = (Session) mockSessionControl.getMock();
@@ -56,8 +57,8 @@ public class UpdateCommandTest extends TestCase
 	}
 
 	/**
-	 * Controleer of het juiste object gepersisteerd wordt via saveOrUpdate en of dit binnen 1
-	 * transactie gebeurt.
+	 * Controleer of het juiste object gepersisteerd wordt via saveOrUpdate en of dit
+	 * binnen 1 transactie gebeurt.
 	 * 
 	 * @throws HibernateException
 	 *             nooit, maar noodzakelijk voor de compilatie.

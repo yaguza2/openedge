@@ -36,7 +36,6 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 import nl.openedge.baritus.ConverterRegistry;
-import nl.openedge.baritus.FormBeanCtrl;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.converters.DateLocaleConverter;
 import nl.openedge.util.baritus.converters.FallbackDateConverter;
@@ -49,10 +48,11 @@ import com.mockobjects.servlet.MockServletConfig;
 import com.mockobjects.servlet.MockServletContext;
 
 /**
- * Base class for testcases that are used to test controlls, validators etc. Note that allthough
- * this class depends on Mock Objects, its actual usage differs from the standard mock objects way.
- * Instead of the white box approach of mock objects (with recording and playback), you can use
- * these mock objects in a black box fashion, ie use them as if being in a real web environment.
+ * Base class for testcases that are used to test controlls, validators etc. Note that
+ * allthough this class depends on Mock Objects, its actual usage differs from the
+ * standard mock objects way. Instead of the white box approach of mock objects (with
+ * recording and playback), you can use these mock objects in a black box fashion, ie use
+ * them as if being in a real web environment.
  * 
  * @author Eelco Hillenius
  */
@@ -137,8 +137,8 @@ public abstract class BaritusControlTest extends TestCase
 	}
 
 	/**
-	 * Sets up the fixture; use instead of setUp(). This method is called after the finalized setUp
-	 * method is called.
+	 * Sets up the fixture; use instead of setUp(). This method is called after the
+	 * finalized setUp method is called.
 	 */
 	protected void setUpTestCase()
 	{
@@ -162,8 +162,8 @@ public abstract class BaritusControlTest extends TestCase
 	}
 
 	/**
-	 * Breaks down the fixture; use instead of breakDown(). This method is called after the
-	 * finalized breakDown method is called.
+	 * Breaks down the fixture; use instead of breakDown(). This method is called after
+	 * the finalized breakDown method is called.
 	 */
 	protected void breakDownTestCase()
 	{

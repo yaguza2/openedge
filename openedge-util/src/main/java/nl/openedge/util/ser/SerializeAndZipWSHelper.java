@@ -64,7 +64,8 @@ public final class SerializeAndZipWSHelper
 	 *            webservice method
 	 * @param qName
 	 *            type qname
-	 * @return the zipped and serialized objecten that were returned by the webservice call
+	 * @return the zipped and serialized objecten that were returned by the webservice
+	 *         call
 	 * @throws ServiceException
 	 *             when an unexpected WS exception occurs
 	 * @throws MalformedURLException
@@ -80,10 +81,10 @@ public final class SerializeAndZipWSHelper
 		call.setTargetEndpointAddress(new java.net.URL(endpoint));
 		call.setOperationName(new QName("http://soapinterop.org/", method));
 		call.registerTypeMapping(SerializedAndZipped.class, qName,
-				SerializedAndZippedSerializerFactory.class,
-				SerializedAndZippedDeserializerFactory.class);
-		SerializedAndZipped serializedAndZipped = (SerializedAndZipped) call
-				.invoke(new Object[] {});
+			SerializedAndZippedSerializerFactory.class,
+			SerializedAndZippedDeserializerFactory.class);
+		SerializedAndZipped serializedAndZipped =
+			(SerializedAndZipped) call.invoke(new Object[] {});
 		return serializedAndZipped;
 	}
 }
