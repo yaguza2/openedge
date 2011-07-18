@@ -55,6 +55,7 @@ public abstract class AbstractMenuFilter implements MenuFilter
 	/**
 	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#getAttribute(java.lang.String)
 	 */
+	@Override
 	public Object getAttribute(String name)
 	{
 		return attributes.get(name);
@@ -63,6 +64,7 @@ public abstract class AbstractMenuFilter implements MenuFilter
 	/**
 	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#getAttributes()
 	 */
+	@Override
 	public Map getAttributes()
 	{
 		return attributes;
@@ -72,6 +74,7 @@ public abstract class AbstractMenuFilter implements MenuFilter
 	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#putAttribute(java.lang.String,
 	 *      java.lang.Object)
 	 */
+	@Override
 	public void putAttribute(String name, Object value)
 	{
 		attributes.put(name, value);
@@ -80,6 +83,7 @@ public abstract class AbstractMenuFilter implements MenuFilter
 	/**
 	 * @see nl.openedge.modules.impl.menumodule.MenuFilter#putAllAttributes(java.util.Map)
 	 */
+	@Override
 	public void putAllAttributes(Map newAttributes)
 	{
 		this.attributes.putAll(newAttributes);
@@ -88,6 +92,7 @@ public abstract class AbstractMenuFilter implements MenuFilter
 	/**
 	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#removeAttribute(java.lang.String)
 	 */
+	@Override
 	public void removeAttribute(String name)
 	{
 		attributes.remove(name);

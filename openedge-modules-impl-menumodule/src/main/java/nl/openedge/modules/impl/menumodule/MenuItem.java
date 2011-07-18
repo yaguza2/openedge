@@ -47,6 +47,8 @@ import java.util.Properties;
  */
 public final class MenuItem implements Serializable, AttributeEnabledObject
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The tag (text to be rendered) of the menu item.
 	 */
@@ -120,7 +122,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * Set the link.
 	 * 
-	 * @param string the link
+	 * @param string
+	 *            the link
 	 */
 	public void setLink(String string)
 	{
@@ -146,6 +149,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param value
 	 *            value of attribute
 	 */
+	@Override
 	public void putAttribute(String key, Object value)
 	{
 		if (attributes == null)
@@ -161,6 +165,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param key
 	 *            key of attribute
 	 */
+	@Override
 	public void removeAttribute(String key)
 	{
 		if (attributes != null)
@@ -211,7 +216,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * set whether this menu item part of the active path.
 	 * 
-	 * @param active whether this menu item part of the active path
+	 * @param active
+	 *            whether this menu item part of the active path
 	 */
 	public void setActive(boolean active)
 	{
@@ -221,14 +227,14 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * Get the query string.
 	 * 
-	 * @return all request parameters in a String (not urlencoded!) or null if there are no
-	 *         parameters
+	 * @return all request parameters in a String (not urlencoded!) or null if there are
+	 *         no parameters
 	 */
 	public String getQueryString()
 	{
-		//TODO we might want to support keys with a String[] as value and have
+		// TODO we might want to support keys with a String[] as value and have
 		// that parameter appear multiple times
-		//like p1=1&p1=2&p1=3
+		// like p1=1&p1=2&p1=3
 		if (parameters == null || parameters.isEmpty())
 			return null;
 		else
@@ -370,6 +376,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * 
 	 * @return Map attributes
 	 */
+	@Override
 	public Map getAttributes()
 	{
 		return attributes;
@@ -397,9 +404,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Set the request parameters. Although it is possible to specify objects as parameters, it is
-	 * not supported. You should only use Strings as keys and values. We only allow a Map because
-	 * Velocity always creates a Map in VLT
+	 * Set the request parameters. Although it is possible to specify objects as
+	 * parameters, it is not supported. You should only use Strings as keys and values. We
+	 * only allow a Map because Velocity always creates a Map in VLT
 	 * 
 	 * @param map
 	 *            the request parameters
@@ -410,9 +417,10 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Add request parameters to the current request parameters. Although it is possible to specify
-	 * objects as parameters, it is not supported. You should only use Strings as keys and values.
-	 * We only allow a Map because Velocity always creates a Map in VLT
+	 * Add request parameters to the current request parameters. Although it is possible
+	 * to specify objects as parameters, it is not supported. You should only use Strings
+	 * as keys and values. We only allow a Map because Velocity always creates a Map in
+	 * VLT
 	 * 
 	 * @param params
 	 *            request paramteres to add
@@ -430,8 +438,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Adds a request parameter to the url. Like we said only Strings are allowed. At some time we
-	 * might allow String[] as value but right now we dont, so dont even try.
+	 * Adds a request parameter to the url. Like we said only Strings are allowed. At some
+	 * time we might allow String[] as value but right now we dont, so dont even try.
 	 * 
 	 * @param name
 	 *            name of the request parameter
@@ -450,6 +458,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#getAttribute(java.lang.String)
 	 */
+	@Override
 	public Object getAttribute(String name)
 	{
 		if (attributes != null)
@@ -465,6 +474,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#putAllAttributes(java.util.Map)
 	 */
+	@Override
 	public void putAllAttributes(Map newAttributes)
 	{
 		if (this.attributes == null)
@@ -478,11 +488,12 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Filters out any child menuitems that should not be be in the list based on the current
-	 * context. Basicly a little hack to keep this list in sync with the results you get if you
-	 * access the children of this item via MenuModule.getMenuItems() for the level above. Since
-	 * Session and RequestScopeMenuFilters are not stored inside the menuitems themselfs you can put
-	 * them in the filterContext under the keys obtainable from MenuFilter.
+	 * Filters out any child menuitems that should not be be in the list based on the
+	 * current context. Basicly a little hack to keep this list in sync with the results
+	 * you get if you access the children of this item via MenuModule.getMenuItems() for
+	 * the level above. Since Session and RequestScopeMenuFilters are not stored inside
+	 * the menuitems themselfs you can put them in the filterContext under the keys
+	 * obtainable from MenuFilter.
 	 * 
 	 * @param filterContext
 	 *            environment variables for the filters
@@ -542,8 +553,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Adds the child to the end of the list. Note this does not insert the item in the cached menu
-	 * tree.
+	 * Adds the child to the end of the list. Note this does not insert the item in the
+	 * cached menu tree.
 	 * 
 	 * @param item
 	 *            the item to add
@@ -554,8 +565,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Inserts the child at the specified index Note this does not insert the item in the cached
-	 * menu tree.
+	 * Inserts the child at the specified index Note this does not insert the item in the
+	 * cached menu tree.
 	 * 
 	 * @param index
 	 *            position where the item should be inserted
@@ -568,8 +579,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	}
 
 	/**
-	 * Removes the item from the list of children. Note this does not remove the item from the
-	 * cached tree as being a child of this menu.
+	 * Removes the item from the list of children. Note this does not remove the item from
+	 * the cached tree as being a child of this menu.
 	 * 
 	 * @param item
 	 *            the item to remove
@@ -586,6 +597,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return super.hashCode();
@@ -594,6 +606,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object o)
 	{
 		if (o == null)
@@ -628,6 +641,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * 
 	 * @return String the string representation with some extra info.
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer("menu -> ").append(link);
@@ -637,7 +651,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 
 	/**
 	 * Print part of string rep.
-	 * @param b current stringbuffer
+	 * 
+	 * @param b
+	 *            current stringbuffer
 	 */
 	private void printItemDetail(StringBuffer b)
 	{
@@ -657,7 +673,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 
 	/**
 	 * Print part of string rep.
-	 * @param b current stringbuffer
+	 * 
+	 * @param b
+	 *            current stringbuffer
 	 */
 	private void printFilters(StringBuffer b)
 	{
@@ -678,7 +696,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 
 	/**
 	 * Print part of string rep.
-	 * @param b current stringbuffer
+	 * 
+	 * @param b
+	 *            current stringbuffer
 	 */
 	private void printAliases(StringBuffer b)
 	{
@@ -698,7 +718,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 
 	/**
 	 * Print part of string rep.
-	 * @param b current stringbuffer
+	 * 
+	 * @param b
+	 *            current stringbuffer
 	 */
 	private void printAttributes(StringBuffer b)
 	{
@@ -719,13 +741,15 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 
 	/**
 	 * Print part of string rep.
-	 * @param b current stringbuffer
+	 * 
+	 * @param b
+	 *            current stringbuffer
 	 */
 	private void printActive(StringBuffer b)
 	{
 		if (active)
 		{
 			b.append(" (active)");
-		}		
+		}
 	}
 }

@@ -61,6 +61,7 @@ public final class RequestScopeTestFilter extends AbstractMenuFilter implements
 	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
 	 *      java.util.Map)
 	 */
+	@Override
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = true;
@@ -79,4 +80,3 @@ public final class RequestScopeTestFilter extends AbstractMenuFilter implements
 	}
 
 }
-

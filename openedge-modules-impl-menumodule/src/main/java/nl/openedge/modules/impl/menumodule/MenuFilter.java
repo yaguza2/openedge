@@ -49,16 +49,16 @@ public interface MenuFilter extends AttributeEnabledObject
 	String CONTEXT_KEY_SESSION_FILTERS = "session_filters";
 
 	/**
-	 * should the provided menu item, based on the given context,
-	 * be a part of the result tree.
+	 * should the provided menu item, based on the given context, be a part of the result
+	 * tree.
 	 * 
 	 * @param menuItem
-	 *            the current menu item. This is a reference to the item that will be part of the
-	 *            result tree if accepted. You can change attributes/ properties if this item for
-	 *            later use without affecting the original tree.
+	 *            the current menu item. This is a reference to the item that will be part
+	 *            of the result tree if accepted. You can change attributes/ properties if
+	 *            this item for later use without affecting the original tree.
 	 * @param context
-	 *            the current context. This context is unique for this thread, but is global within
-	 *            this thread.
+	 *            the current context. This context is unique for this thread, but is
+	 *            global within this thread.
 	 * @return boolean true if the item should be part of the result tree, false if not
 	 */
 	boolean accept(MenuItem menuItem, Map context);

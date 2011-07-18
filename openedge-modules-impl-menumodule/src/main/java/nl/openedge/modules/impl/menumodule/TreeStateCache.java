@@ -47,6 +47,8 @@ import javax.swing.tree.VariableHeightLayoutCache;
 public final class TreeStateCache extends VariableHeightLayoutCache implements Serializable
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/** currently selected path. */
 	private TreePath selectedPath;
 
@@ -69,8 +71,8 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	}
 
 	/**
-	 * expand the selected path and set selection to currently selected path and set the content
-	 * owned by the selected path.
+	 * expand the selected path and set selection to currently selected path and set the
+	 * content owned by the selected path.
 	 * 
 	 * @param selection
 	 *            new selection
@@ -84,8 +86,9 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	}
 
 	/**
-	 * expand the selected path and set selection to currently selected path , set the content owned
-	 * by the selected path and set query that was used to get the selection.
+	 * expand the selected path and set selection to currently selected path , set the
+	 * content owned by the selected path and set query that was used to get the
+	 * selection.
 	 * 
 	 * @param selection
 	 *            new selection
@@ -94,8 +97,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	 * @param query
 	 *            query that was used to get selection
 	 */
-	public void setSelectedPath(
-			TreePath selection, List content, String query)
+	public void setSelectedPath(TreePath selection, List content, String query)
 	{
 		setSelectedPath(selection, content);
 		this.selectedPathQuery = query;
@@ -158,8 +160,9 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	}
 
 	/**
-	 * Returns an <code>Enumerator</code> that increments over the visible paths starting at the
-	 * root. The ordering of the enumeration is based on how the paths are displayed.
+	 * Returns an <code>Enumerator</code> that increments over the visible paths starting
+	 * at the root. The ordering of the enumeration is based on how the paths are
+	 * displayed.
 	 * 
 	 * @return an <code>Enumerator</code> that increments over the visible paths
 	 */
@@ -226,8 +229,9 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 		{
 			for (int i = 0; i < childCount; i++)
 			{
-				resultNode = findNodeRecursively(
-						(DefaultMutableTreeNode) currentNode.getChildAt(i), resultNode, userObject);
+				resultNode =
+					findNodeRecursively((DefaultMutableTreeNode) currentNode.getChildAt(i),
+						resultNode, userObject);
 				if (resultNode != null)
 				{
 					// found it! break loop

@@ -56,8 +56,8 @@ public interface AttributeEnabledObject
 	Map getAttributes();
 
 	/**
-	 * Registers a new Attribute with this filter, overriding any attribute already registered under
-	 * that name.
+	 * Registers a new Attribute with this filter, overriding any attribute already
+	 * registered under that name.
 	 * 
 	 * @param name
 	 *            name of the attribute
@@ -67,7 +67,8 @@ public interface AttributeEnabledObject
 	void putAttribute(String name, Object value);
 
 	/**
-	 * Registers all attributes in the Map, overriding any existing attribute with the same name.
+	 * Registers all attributes in the Map, overriding any existing attribute with the
+	 * same name.
 	 * 
 	 * @param attributes
 	 *            the attributes
@@ -75,8 +76,8 @@ public interface AttributeEnabledObject
 	void putAllAttributes(Map attributes);
 
 	/**
-	 * Removes the attribute with the specified name if it exists, if it doesnt exist nothing
-	 * happens.
+	 * Removes the attribute with the specified name if it exists, if it doesnt exist
+	 * nothing happens.
 	 * 
 	 * @param name
 	 *            the name of the attribute

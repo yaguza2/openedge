@@ -37,8 +37,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * decorator for sets of principals. NOTE: though not strong typed, this set should never contain
- * other set elements other than Principals
+ * decorator for sets of principals. NOTE: though not strong typed, this set should never
+ * contain other set elements other than Principals
  * 
  * @author Eelco Hillenius
  */
@@ -68,6 +68,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#size()
 	 */
+	@Override
 	public int size()
 	{
 		return decorated.size();
@@ -76,6 +77,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#clear()
 	 */
+	@Override
 	public void clear()
 	{
 		decorated.clear();
@@ -84,6 +86,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return decorated.isEmpty();
@@ -92,6 +95,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#toArray()
 	 */
+	@Override
 	public Object[] toArray()
 	{
 		return decorated.toArray();
@@ -100,6 +104,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#add(java.lang.Object)
 	 */
+	@Override
 	public boolean add(Object o)
 	{
 		return decorated.add(o);
@@ -108,6 +113,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#remove(java.lang.Object)
 	 */
+	@Override
 	public boolean remove(Object o)
 	{
 		return decorated.remove(o);
@@ -116,18 +122,20 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */
+	@Override
 	public boolean addAll(Collection c)
 	{
 		return decorated.addAll(c);
 	}
 
 	/**
-	 * Checks if object o is contained in this set. Additionally, in case elements with name '*' are
-	 * found (where * stands for 'valid for all instances'), the occurance will be checked on type
-	 * instead of the equals method
+	 * Checks if object o is contained in this set. Additionally, in case elements with
+	 * name '*' are found (where * stands for 'valid for all instances'), the occurance
+	 * will be checked on type instead of the equals method
 	 * 
 	 * @see java.util.Collection#contains(java.lang.Object)
 	 */
+	@Override
 	public boolean contains(Object o)
 	{
 		Iterator i = iterator();
@@ -174,6 +182,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#containsAll(java.util.Collection)
 	 */
+	@Override
 	public boolean containsAll(Collection c)
 	{
 		Iterator e = c.iterator();
@@ -187,6 +196,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#removeAll(java.util.Collection)
 	 */
+	@Override
 	public boolean removeAll(Collection c)
 	{
 		return decorated.removeAll(c);
@@ -195,6 +205,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#retainAll(java.util.Collection)
 	 */
+	@Override
 	public boolean retainAll(Collection c)
 	{
 		return decorated.retainAll(c);
@@ -203,6 +214,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#iterator()
 	 */
+	@Override
 	public Iterator iterator()
 	{
 		return decorated.iterator();
@@ -211,6 +223,7 @@ public final class PrincipalSet implements Set
 	/**
 	 * @see java.util.Collection#toArray(java.lang.Object[])
 	 */
+	@Override
 	public Object[] toArray(Object[] a)
 	{
 		return decorated.toArray(a);

@@ -52,9 +52,11 @@ public final class AuthorizationFilter extends AbstractMenuFilter implements Ses
 
 	/**
 	 * accepts if the subject stored in the context has permission for this item.
+	 * 
 	 * @see nl.promedico.asp.web.logic.menu.MenuFilter#accept(nl.promedico.asp.web.logic.menu.MenuItem,
 	 *      java.util.Map)
 	 */
+	@Override
 	public boolean accept(MenuItem menuItem, Map context)
 	{
 		boolean accepted = false; // default is to deny
@@ -90,4 +92,3 @@ public final class AuthorizationFilter extends AbstractMenuFilter implements Ses
 	}
 
 }
-

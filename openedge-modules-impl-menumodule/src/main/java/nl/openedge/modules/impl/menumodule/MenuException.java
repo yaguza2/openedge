@@ -38,6 +38,8 @@ package nl.openedge.modules.impl.menumodule;
 public final class MenuException extends Exception
 {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * construct.
 	 */

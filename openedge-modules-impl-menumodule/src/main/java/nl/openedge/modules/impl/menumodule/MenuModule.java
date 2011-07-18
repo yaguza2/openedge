@@ -32,15 +32,7 @@ package nl.openedge.modules.impl.menumodule;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.security.auth.Subject;
@@ -59,15 +51,15 @@ import nl.openedge.modules.types.initcommands.BeanType;
 import nl.openedge.modules.types.initcommands.ConfigurableType;
 import nl.openedge.modules.types.initcommands.ServletContextAwareType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The menu module is responsible for building the menu tree from a configuration (xml) document and
- * for applying rules for specific users/ contexts to get the proper menu tree for those users/
- * contexts.
+ * The menu module is responsible for building the menu tree from a configuration (xml)
+ * document and for applying rules for specific users/ contexts to get the proper menu
+ * tree for those users/ contexts.
  * 
  * @author Eelco Hillenius
  */
@@ -108,9 +100,10 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	private List requestScopedFilters = new ArrayList(1);
 
 	/**
-	 * Whether to use the root (path) as the current path if no path was found based on the given
-	 * context. If true, if a path was not found, the first level of menu items is allways returned.
-	 * This can be usefull when working with several instances of this module.
+	 * Whether to use the root (path) as the current path if no path was found based on
+	 * the given context. If true, if a path was not found, the first level of menu items
+	 * is allways returned. This can be usefull when working with several instances of
+	 * this module.
 	 */
 	private boolean useRootForNullPath = false;
 
@@ -120,6 +113,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	/**
 	 * @see nl.openedge.components.ConfigurableType#init(org.jdom.Element)
 	 */
+	@Override
 	public void init(Element configNode) throws ConfigException
 	{
 		buildTreeModel(true);
@@ -191,9 +185,9 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			else
 			{
 				throw new ConfigException("filters must be of one of the following types: "
-						+ ApplicationScopeMenuFilter.class.getName() + ", "
-						+ SessionScopeMenuFilter.class.getName() + " or "
-						+ RequestScopeMenuFilter.class.getName());
+					+ ApplicationScopeMenuFilter.class.getName() + ", "
+					+ SessionScopeMenuFilter.class.getName() + " or "
+					+ RequestScopeMenuFilter.class.getName());
 			}
 
 		}
@@ -216,8 +210,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			URL configURL = null;
 			try
 			{
-				configURL = URLHelper
-						.convertToURL(configLocation, MenuModule.class, servletContext);
+				configURL =
+					URLHelper.convertToURL(configLocation, MenuModule.class, servletContext);
 			}
 			catch (MalformedURLException e)
 			{
@@ -345,8 +339,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 				if (key != null && (!key.trim().equals("")))
 				{
 					childItem.setShortCutKey(key.trim());
-					log.info("key alt + '"
-							+ key + "' registered as a short cut key " + childItem.getTag());
+					log.info("key alt + '" + key + "' registered as a short cut key "
+						+ childItem.getTag());
 				}
 				// filter on application scope
 				boolean accepted = true;
@@ -375,7 +369,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 					addAliases(childItem, childElement, childNode, classLoader, filterContext);
 					// add filters
 					addNodeLevelFilters(childItem, childElement, childNode, classLoader,
-							filterContext);
+						filterContext);
 					// add attributes
 					addAttributes(childItem, childElement);
 				}
@@ -439,14 +433,14 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 					nodeFilters.add(temp);
 					if (log.isDebugEnabled())
 					{
-						log.debug(className
-								+ " registered as a node filter for " + childItem.getTag());
+						log.debug(className + " registered as a node filter for "
+							+ childItem.getTag());
 					}
 				}
 				else
 				{
 					throw new ConfigException("menu item filters should be of type: "
-							+ RequestScopeMenuFilter.class.getName());
+						+ RequestScopeMenuFilter.class.getName());
 				}
 			}
 			childItem.setFilters(nodeFilters);
@@ -474,9 +468,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 				target.putAttribute(attribName, attribValue);
 				if (log.isDebugEnabled())
 				{
-					log.debug("attribute "
-							+ attribName + "{" + attribValue + "} registered for "
-							+ target.getClass().getName());
+					log.debug("attribute " + attribName + "{" + attribValue + "} registered for "
+						+ target.getClass().getName());
 				}
 			}
 		}
@@ -503,9 +496,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 				childItem.addParameter(attribName, attribValue);
 				if (log.isDebugEnabled())
 				{
-					log.debug("parameter "
-							+ attribName + "{" + attribValue
-							+ "} registered as a request parameter for " + childItem.getTag());
+					log.debug("parameter " + attribName + "{" + attribValue
+						+ "} registered as a request parameter for " + childItem.getTag());
 				}
 			}
 		}
@@ -600,7 +592,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			DefaultMutableTreeNode workNode, Map filterContext)
 	{
 		addFilteredChildsForSession(subject, currentNode, workNode, filterContext,
-				sessionScopedFilters);
+			sessionScopedFilters);
 	}
 
 	/**
@@ -619,7 +611,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			DefaultMutableTreeNode workNode, Map filterContext)
 	{
 		addFilteredChildsForRequest(subject, currentNode, workNode, filterContext,
-				requestScopedFilters);
+			requestScopedFilters);
 	}
 
 	/**
@@ -665,7 +657,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 					{
 						MenuFilter filter = (MenuFilter) k.next();
 						if (filter instanceof ApplicationScopeMenuFilter
-								|| filter instanceof SessionScopeMenuFilter)
+							|| filter instanceof SessionScopeMenuFilter)
 						{
 							accepted = filter.accept(menuItem, filterContext);
 							if (!accepted)
@@ -805,8 +797,8 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			items = new List[depth];
 			for (int i = depth - 1; i >= 0; i--)
 			{
-				DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) selection
-						.getPathComponent(i);
+				DefaultMutableTreeNode currentNode =
+					(DefaultMutableTreeNode) selection.getPathComponent(i);
 				workItem = (MenuItem) currentNode.getUserObject();
 
 				int childCount = currentNode.getChildCount();
@@ -820,14 +812,14 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 					Enumeration children = currentNode.children();
 					while (children.hasMoreElements())
 					{
-						DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) children
-								.nextElement();
+						DefaultMutableTreeNode childNode =
+							(DefaultMutableTreeNode) children.nextElement();
 						MenuItem menu = (MenuItem) childNode.getUserObject();
 						MenuItem childItem = clone(menu);
 						if (i < (depth - 1))
 						{
-							DefaultMutableTreeNode temp = (DefaultMutableTreeNode) selection
-									.getPathComponent(i + 1);
+							DefaultMutableTreeNode temp =
+								(DefaultMutableTreeNode) selection.getPathComponent(i + 1);
 							if (childNode.equals(temp))
 							{
 								childItem.setActive(true);
@@ -867,7 +859,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 		if (menu.getChildren() != null && !menu.getChildren().isEmpty())
 		{
 			Iterator it = menu.getChildren().iterator();
-			//could be an inifinite loop if a child has its parent as a child
+			// could be an inifinite loop if a child has its parent as a child
 			while (it.hasNext())
 				clone.addChild(clone((MenuItem) it.next()));
 		}
@@ -903,7 +895,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 */
 	public TreeStateCache getTreeState(Subject subject)
 	{
-		//TreeStateCache treeState =
+		// TreeStateCache treeState =
 		// (TreeStateCache)userStateCache.get(subject);
 		TreeStateCache treeState = null;
 		if (treeState == null)
@@ -915,14 +907,14 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			treeState.setSelectionModel(selectionModel);
 			treeState.setRootVisible(true);
 
-			//userStateCache.put(subject, treeState);
+			// userStateCache.put(subject, treeState);
 		}
 		return treeState;
 	}
 
 	/**
-	 * reset the context for this Thread. Users of this library are responsible to calling this
-	 * method.
+	 * reset the context for this Thread. Users of this library are responsible to calling
+	 * this method.
 	 */
 	public void resetContextForCurrentThread()
 	{
@@ -1016,6 +1008,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	/**
 	 * @see nl.openedge.modules.types.initcommands.ServletContextAwareType#setServletContext(javax.servlet.ServletContext)
 	 */
+	@Override
 	public void setServletContext(ServletContext servletContext) throws ConfigException
 	{
 		this.servletContext = servletContext;
@@ -1045,12 +1038,13 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	}
 
 	/**
-	 * Get whether to use the root (path) as the current path if no path was found based on the
-	 * given context. If true, if a path was not found, the first level of menu items is allways
-	 * returned. This can be usefull when working with several instances of this module..
+	 * Get whether to use the root (path) as the current path if no path was found based
+	 * on the given context. If true, if a path was not found, the first level of menu
+	 * items is allways returned. This can be usefull when working with several instances
+	 * of this module..
 	 * 
-	 * @return whether to use the root (path) as the current path if no path was found based on the
-	 *         given context.
+	 * @return whether to use the root (path) as the current path if no path was found
+	 *         based on the given context.
 	 */
 	public boolean isUseRootForNullPath()
 	{
@@ -1058,13 +1052,14 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	}
 
 	/**
-	 * Set whether to use the root (path) as the current path if no path was found based on the
-	 * given context. If true, if a path was not found, the first level of menu items is allways
-	 * returned. This can be usefull when working with several instances of this module..
+	 * Set whether to use the root (path) as the current path if no path was found based
+	 * on the given context. If true, if a path was not found, the first level of menu
+	 * items is allways returned. This can be usefull when working with several instances
+	 * of this module..
 	 * 
 	 * @param useRootForNullPath
-	 *            whether to use the root (path) as the current path if no path was found based on
-	 *            the given context.
+	 *            whether to use the root (path) as the current path if no path was found
+	 *            based on the given context.
 	 */
 	public void setUseRootForNullPath(boolean useRootForNullPath)
 	{

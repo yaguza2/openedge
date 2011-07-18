@@ -54,6 +54,7 @@ public final class MenuTestDecorator extends TestSetup
 	/**
 	 * @see junit.extensions.TestSetup#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -64,6 +65,7 @@ public final class MenuTestDecorator extends TestSetup
 	/**
 	 * @see junit.extensions.TestSetup#tearDown()
 	 */
+	@Override
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
@@ -89,7 +91,7 @@ public final class MenuTestDecorator extends TestSetup
 		try
 		{
 			AccessHelper.reload(System.getProperty("configfile", "/test.oeaccess.properties"),
-					"test");
+				"test");
 		}
 		catch (Exception e)
 		{
