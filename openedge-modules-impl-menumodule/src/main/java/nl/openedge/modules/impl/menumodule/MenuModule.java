@@ -583,7 +583,6 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	 *            JAAS subject
 	 * @return the menu options UNDER the root level
 	 */
-	@SuppressWarnings("unchecked")
 	public List<MenuItem>[] getMenuItems(Subject subject)
 	{
 		return getMenuItems(subject, null);
@@ -592,14 +591,10 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 	/**
 	 * Get the menu items for the given subject and the current link.
 	 * 
-	 * @param subject
-	 *            jaas subject
-	 * @param link
-	 *            the link
-	 * @return List[] menuoptions (one level) UNDER the provided level.
+	 * @return List<MenuItem[] menu items (one level) UNDER the provided level.
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public List[] getMenuItems(Subject subject, String link)
+	@SuppressWarnings("unchecked")
+	public List<MenuItem>[] getMenuItems(Subject subject, String link)
 	{
 		String currentLink = link;
 		Map<Object, Object> filterContext = contextHolder.get();
@@ -611,14 +606,13 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 		filterContext.put(MenuFilter.CONTEXT_KEY_SUBJECT, subject);
 		filterContext.put(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS, requestScopedFilters);
 		filterContext.put(MenuFilter.CONTEXT_KEY_SESSION_FILTERS, sessionScopedFilters);
+
 		if (currentLink == null)
-		{
 			currentLink = "/";
-		}
 
 		MenuItem workItem = new MenuItem();
 		workItem.setLink(currentLink);
-		List[] items = null;
+		List<MenuItem>[] items = null;
 		TreeStateCache treeState = getTreeState(subject);
 		TreePath selection = findSelection(workItem, treeState);
 
@@ -639,7 +633,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 				}
 				else
 				{
-					items[i] = new ArrayList(currentNode.getChildCount());
+					items[i] = new ArrayList<MenuItem>(currentNode.getChildCount());
 					Enumeration< ? > children = currentNode.children();
 					while (children.hasMoreElements())
 					{
@@ -652,9 +646,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 							DefaultMutableTreeNode temp =
 								(DefaultMutableTreeNode) selection.getPathComponent(i + 1);
 							if (childNode.equals(temp))
-							{
 								childItem.setActive(true);
-							}
 						}
 						childItem.applyFiltersOnChildren(filterContext);
 						items[i].add(childItem);
@@ -663,9 +655,7 @@ public final class MenuModule implements SingletonType, BeanType, ConfigurableTy
 			}
 		}
 		else
-		{
 			items = new List[0];
-		}
 		return items;
 	}
 
