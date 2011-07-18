@@ -148,9 +148,9 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Berekent het verschil in jaren tussen <tt>datum1</tt> en <tt>datum2</tt>. Als datum1 >
-	 * datum2 levert deze functie nog steeds een verschil > 0. Het betreft dus het daadwerkelijke
-	 * verschil in jaren tussen de twee datums.
+	 * Berekent het verschil in jaren tussen <tt>datum1</tt> en <tt>datum2</tt>. Als
+	 * datum1 > datum2 levert deze functie nog steeds een verschil > 0. Het betreft dus
+	 * het daadwerkelijke verschil in jaren tussen de twee datums.
 	 * 
 	 * @param datum1
 	 *            eerste datum.
@@ -205,9 +205,9 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Berekent het verschil in maanden tussen <tt>datum1</tt> en <tt>datum2</tt>. Als datum1 >
-	 * datum2 levert deze functie nog steeds een verschil > 0. Het betreft dus het daadwerkelijke
-	 * verschil in maanden tussen de twee datums.
+	 * Berekent het verschil in maanden tussen <tt>datum1</tt> en <tt>datum2</tt>. Als
+	 * datum1 > datum2 levert deze functie nog steeds een verschil > 0. Het betreft dus
+	 * het daadwerkelijke verschil in maanden tussen de twee datums.
 	 * 
 	 * @param datum1
 	 *            eerste datum.
@@ -258,15 +258,16 @@ public final class Rekenhulp
 
 	/**
 	 * Berekent het rente op rente percentage dat per termijn nodig is om uit te komen op
-	 * <tt>percentage</tt> over de gehele periode. Bijvoorbeeld: als de jaarrente 5% is, is per
-	 * halfjaar (2 termijnen) een rente op rente nodig van (ongeveer) 2.47%
+	 * <tt>percentage</tt> over de gehele periode. Bijvoorbeeld: als de jaarrente 5% is,
+	 * is per halfjaar (2 termijnen) een rente op rente nodig van (ongeveer) 2.47%
 	 * 
 	 * @param aantalTermijnen
 	 *            het aantal termijnen waarover de rente op rente uitgesmeerd moet worden.
 	 * @param percentage
-	 *            het percentage dat effectief moet gelden over het aantal <tt>termijnen</tt>.
-	 * @return het rente op rente percentage per termijn om effectief op <tt>percentage</tt> uit
-	 *         te komen.
+	 *            het percentage dat effectief moet gelden over het aantal
+	 *            <tt>termijnen</tt>.
+	 * @return het rente op rente percentage per termijn om effectief op
+	 *         <tt>percentage</tt> uit te komen.
 	 */
 	public static double termPercentage(final int aantalTermijnen, final double percentage)
 	{
@@ -292,8 +293,8 @@ public final class Rekenhulp
 	}
 
 	/**
-	 * Interpoleert de bedragen evenredig over een jaar gegeven het aantal maanden waarvoor het
-	 * eerste bedrag mee telt.
+	 * Interpoleert de bedragen evenredig over een jaar gegeven het aantal maanden
+	 * waarvoor het eerste bedrag mee telt.
 	 * 
 	 * @param maandenEerstePeriode
 	 *            het aantal maanden waarvoor het bedragEerstePeriode geldig is.
@@ -301,18 +302,18 @@ public final class Rekenhulp
 	 *            het bedrag dat het aantal maanden in de eerste periode geldig is.
 	 * @param bedragTweedePeriode
 	 *            het bedrag dat <tt>12 - maandenEerstePeriode</tt> geldig is.
-	 * @return het geinterpoleerde bedrag afgerond op 4 decimalen. voorbeelden ter verduidelijking:
-	 *         de duur is 22 jaar precies : (bedrag2 * 0 + bedrag1 * 12) / 12 = bedrag1 de duur is
-	 *         22 jaar en 6 maanden: (bedrag2 * 6 + bedrag1 * 6) / 12 = 50% bedrag1 en 50% bedrag2
-	 *         de duur is 22 jaar en 3 maanden: (bedrag2 * 3 + bedrag1 * 9) / 12 = 75% bedrag1 en
-	 *         25% bedrag2 de duur is 22 jaar en 9 maanden: (bedrag2 * 3 + bedrag1 * 9) / 12 = 25%
-	 *         bedrag1 en 75% bedrag2
+	 * @return het geinterpoleerde bedrag afgerond op 4 decimalen. voorbeelden ter
+	 *         verduidelijking: de duur is 22 jaar precies : (bedrag2 * 0 + bedrag1 * 12)
+	 *         / 12 = bedrag1 de duur is 22 jaar en 6 maanden: (bedrag2 * 6 + bedrag1 * 6)
+	 *         / 12 = 50% bedrag1 en 50% bedrag2 de duur is 22 jaar en 3 maanden: (bedrag2
+	 *         * 3 + bedrag1 * 9) / 12 = 75% bedrag1 en 25% bedrag2 de duur is 22 jaar en
+	 *         9 maanden: (bedrag2 * 3 + bedrag1 * 9) / 12 = 25% bedrag1 en 75% bedrag2
 	 */
 	public static double interpoleerOverJaar(final int maandenEerstePeriode,
 			final double bedragEerstePeriode, final double bedragTweedePeriode)
 	{
-		double bedrag = (maandenEerstePeriode * bedragTweedePeriode
-				+ (YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR - maandenEerstePeriode)
+		double bedrag =
+			(maandenEerstePeriode * bedragTweedePeriode + (YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR - maandenEerstePeriode)
 				* bedragEerstePeriode)
 				/ YearMonthDay.NUMBER_OF_MONTHS_IN_A_YEAR;
 		return Rekenhulp.rondAf4(bedrag);
@@ -388,7 +389,7 @@ public final class Rekenhulp
 	 */
 	public static double praenumerandoTermAnnuiteit(final int n, final int t, final double i)
 	{
-		double n1 = Math.floor((double) (n * t));
+		double n1 = Math.floor((n * t));
 		double i1 = termPercentage(t, i) / HON_PERCENT;
 		double r = 1d / (1d + i1);
 		double d = r;
@@ -408,7 +409,7 @@ public final class Rekenhulp
 	 */
 	public static double postnumerandoTermAnnuiteit(final int n, final int t, final double i)
 	{
-		double n1 = Math.floor((double) (n * t));
+		double n1 = Math.floor((n * t));
 		double i1 = termPercentage(t, i) / HON_PERCENT;
 		double r = 1d / (1d + i1);
 		return (1d - Math.pow(r, n1)) / i1;
