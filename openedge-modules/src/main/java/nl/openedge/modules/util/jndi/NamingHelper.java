@@ -1,38 +1,6 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package nl.openedge.modules.util.jndi;
 
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -52,7 +20,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class NamingHelper
 {
-
 	/** JNDI initial context class, <tt>Context.INITIAL_CONTEXT_FACTORY</tt> */
 	protected static String JNDI_CLASS = "jndi.class";
 
@@ -62,23 +29,13 @@ public final class NamingHelper
 	/** prefix for arbitrary JNDI <tt>InitialContext</tt> properties */
 	protected static String JNDI_PREFIX = "jndi";
 
-	/* log */
 	private static final Logger log = LoggerFactory.getLogger(NamingHelper.class);
 
 	protected static final String EMPTY_STRING = "";
 
-	/**
-	 * get initial context based on properties and prefix
-	 * 
-	 * @param props
-	 *            properties with jndi config
-	 * @return InitialContext jndi context
-	 * @throws NamingException
-	 */
 	public static InitialContext getInitialContext(Properties props) throws NamingException
 	{
-
-		Hashtable hash = getJndiProperties(props);
+		Properties hash = getJndiProperties(props);
 		log.info("JNDI InitialContext properties:" + hash);
 		try
 		{
@@ -104,7 +61,6 @@ public final class NamingHelper
 	 */
 	public static void bind(Context ctx, String name, Object val) throws NamingException
 	{
-
 		try
 		{
 			log.trace("binding: " + name);
@@ -152,19 +108,17 @@ public final class NamingHelper
 	 */
 	public static Properties getJndiProperties(Properties properties)
 	{
-
-		HashSet specialProps = new HashSet();
+		HashSet<String> specialProps = new HashSet<String>();
 		specialProps.add(JNDI_CLASS);
 		specialProps.add(JNDI_URL);
 
-		Iterator iter = properties.keySet().iterator();
+		Iterator<Object> iter = properties.keySet().iterator();
 		Properties result = new Properties();
 		while (iter.hasNext())
 		{
 			String prop = (String) iter.next();
 			if (prop.indexOf(JNDI_PREFIX) > -1 && !specialProps.contains(prop))
 			{
-
 				result.setProperty(prop.substring(JNDI_PREFIX.length() + 1),
 					properties.getProperty(prop));
 			}
@@ -172,15 +126,17 @@ public final class NamingHelper
 
 		String jndiClass = properties.getProperty(JNDI_CLASS);
 		String jndiURL = properties.getProperty(JNDI_URL);
+
 		// we want to be able to just use the defaults,
 		// if JNDI environment properties are not supplied
 		// so don't put null in anywhere
+
 		if (jndiClass != null)
 			result.put(Context.INITIAL_CONTEXT_FACTORY, jndiClass);
+
 		if (jndiURL != null)
 			result.put(Context.PROVIDER_URL, jndiURL);
 
 		return result;
 	}
-
 }
