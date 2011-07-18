@@ -35,12 +35,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.validation.AbstractFieldValidator;
 import nl.openedge.baritus.validation.ValidationActivationRule;
 import nl.openedge.util.DateFormatHelper;
-
-import org.infohazard.maverick.flow.ControllerContext;
 
 /**
  * Abstract class for date validations on field level.
@@ -85,8 +82,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the DEFAULT_PREFIX as error key and today as the date to check
-	 * against.
+	 * Creates a AfterValidator with the DEFAULT_PREFIX as error key and today as the date
+	 * to check against.
 	 */
 	public AbstractDateFieldValidator()
 	{
@@ -94,8 +91,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the date to check against
-	 * before.
+	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the date to check
+	 * against before.
 	 * 
 	 * @param dateToCheck
 	 *            date to check
@@ -106,7 +103,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error key prefix and today to check against before.
+	 * Creates a AfterValidator with the error key prefix and today to check against
+	 * before.
 	 * 
 	 * @param messageKey
 	 *            message key
@@ -144,7 +142,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the date to check against.
+	 * Creates a AfterValidator with the error key DEFAULT_PREFIX and the date to check
+	 * against.
 	 * 
 	 * @param dateToCheck
 	 *            date to check
@@ -180,9 +179,8 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	}
 
 	/**
-	 * Tries to format value to a DateFormat. If this doesn't work, returns value unchanged.
-	 * 
-	 * @see nl.openedge.maverick.framework.validation.AbstractFieldValidator#getOverrideValue(java.lang.Object)
+	 * Tries to format value to a DateFormat. If this doesn't work, returns value
+	 * unchanged.
 	 */
 	@Override
 	public Object getOverrideValue(Object value)
@@ -192,8 +190,9 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 		{
 			try
 			{
-				result = DateFormatHelper.format(datePattern, DateFormatHelper
-						.fallbackParse((String) value));
+				result =
+					DateFormatHelper.format(datePattern,
+						DateFormatHelper.fallbackParse((String) value));
 			}
 			catch (ParseException e)
 			{
@@ -232,16 +231,10 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 		this.datePattern = datePattern;
 	}
 
-	/**
-	 * @see nl.openedge.maverick.framework.validation.FieldValidator#getErrorMessage(org.infohazard.maverick.flow.ControllerContext,
-	 *      nl.openedge.maverick.framework.FormBeanContext, java.lang.String, java.lang.Object,
-	 *      java.util.Locale)
-	 */
-	public String getErrorMessage(ControllerContext cctx, FormBeanContext formBeanContext,
-			String fieldName, Object value, Locale locale)
+	public String getErrorMessage(String fieldName, Object value, Locale locale)
 	{
-		return getLocalizedMessage(getMessageKey(), locale, new Object[]
-			{getOverrideValue(value), fieldName});
+		return getLocalizedMessage(getMessageKey(), locale, new Object[] {getOverrideValue(value),
+			fieldName});
 	}
 
 	/**
