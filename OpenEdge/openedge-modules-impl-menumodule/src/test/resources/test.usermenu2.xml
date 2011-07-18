@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<menu-config>
-    <!-- test more than one concurrent module instance -->
-	<menu-item tag="Test" link="/test.m">
-	</menu-item>
-
-</menu-config>
