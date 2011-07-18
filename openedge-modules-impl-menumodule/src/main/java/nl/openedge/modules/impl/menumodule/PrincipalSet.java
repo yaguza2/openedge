@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules.impl.menumodule;
 
 import java.security.Principal;
@@ -37,27 +7,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * decorator for sets of principals. NOTE: though not strong typed, this set should never
+ * Secorator for sets of principals. NOTE: though not strong typed, this set should never
  * contain other set elements other than Principals
  * 
  * @author Eelco Hillenius
  */
-public final class PrincipalSet implements Set
+public final class PrincipalSet implements Set<Principal>
 {
-	/** decorated instance. */
-	private Set decorated = null;
+	private Set<Principal> decorated = null;
 
-	/**
-	 * construct with set to decorate.
-	 * 
-	 * @param toDecorate
-	 *            set to decorate
-	 */
-	public PrincipalSet(Set toDecorate)
+	public PrincipalSet(Set<Principal> toDecorate)
 	{
 		if (toDecorate == null)
 		{
-			this.decorated = new HashSet();
+			this.decorated = new HashSet<Principal>();
 		}
 		else
 		{
@@ -65,65 +28,44 @@ public final class PrincipalSet implements Set
 		}
 	}
 
-	/**
-	 * @see java.util.Collection#size()
-	 */
 	@Override
 	public int size()
 	{
 		return decorated.size();
 	}
 
-	/**
-	 * @see java.util.Collection#clear()
-	 */
 	@Override
 	public void clear()
 	{
 		decorated.clear();
 	}
 
-	/**
-	 * @see java.util.Collection#isEmpty()
-	 */
 	@Override
 	public boolean isEmpty()
 	{
 		return decorated.isEmpty();
 	}
 
-	/**
-	 * @see java.util.Collection#toArray()
-	 */
 	@Override
 	public Object[] toArray()
 	{
 		return decorated.toArray();
 	}
 
-	/**
-	 * @see java.util.Collection#add(java.lang.Object)
-	 */
 	@Override
-	public boolean add(Object o)
+	public boolean add(Principal o)
 	{
 		return decorated.add(o);
 	}
 
-	/**
-	 * @see java.util.Collection#remove(java.lang.Object)
-	 */
 	@Override
 	public boolean remove(Object o)
 	{
 		return decorated.remove(o);
 	}
 
-	/**
-	 * @see java.util.Collection#addAll(java.util.Collection)
-	 */
 	@Override
-	public boolean addAll(Collection c)
+	public boolean addAll(Collection< ? extends Principal> c)
 	{
 		return decorated.addAll(c);
 	}
@@ -138,7 +80,7 @@ public final class PrincipalSet implements Set
 	@Override
 	public boolean contains(Object o)
 	{
-		Iterator i = iterator();
+		Iterator<Principal> i = iterator();
 		if (o == null)
 		{
 			while (i.hasNext())
@@ -157,7 +99,7 @@ public final class PrincipalSet implements Set
 			{
 				while (i.hasNext())
 				{
-					Principal p = (Principal) i.next();
+					Principal p = i.next();
 					// test on class instead of name
 					if (p.getClass().isAssignableFrom(o.getClass()))
 					{
@@ -179,13 +121,10 @@ public final class PrincipalSet implements Set
 		return false;
 	}
 
-	/**
-	 * @see java.util.Collection#containsAll(java.util.Collection)
-	 */
 	@Override
-	public boolean containsAll(Collection c)
+	public boolean containsAll(Collection< ? > c)
 	{
-		Iterator e = c.iterator();
+		Iterator< ? > e = c.iterator();
 		while (e.hasNext())
 			if (!contains(e.next()))
 				return false;
@@ -193,40 +132,27 @@ public final class PrincipalSet implements Set
 		return true;
 	}
 
-	/**
-	 * @see java.util.Collection#removeAll(java.util.Collection)
-	 */
 	@Override
-	public boolean removeAll(Collection c)
+	public boolean removeAll(Collection< ? > c)
 	{
 		return decorated.removeAll(c);
 	}
 
-	/**
-	 * @see java.util.Collection#retainAll(java.util.Collection)
-	 */
 	@Override
-	public boolean retainAll(Collection c)
+	public boolean retainAll(Collection< ? > c)
 	{
 		return decorated.retainAll(c);
 	}
 
-	/**
-	 * @see java.util.Collection#iterator()
-	 */
 	@Override
-	public Iterator iterator()
+	public Iterator<Principal> iterator()
 	{
 		return decorated.iterator();
 	}
 
-	/**
-	 * @see java.util.Collection#toArray(java.lang.Object[])
-	 */
 	@Override
-	public Object[] toArray(Object[] a)
+	public <T> T[] toArray(T[] a)
 	{
 		return decorated.toArray(a);
 	}
-
 }

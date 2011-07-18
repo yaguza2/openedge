@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules.impl.menumodule;
 
 import java.io.Serializable;
@@ -46,7 +16,6 @@ import javax.swing.tree.VariableHeightLayoutCache;
  */
 public final class TreeStateCache extends VariableHeightLayoutCache implements Serializable
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/** currently selected path. */
@@ -56,7 +25,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	private String selectedPathQuery;
 
 	/** the objects owned by the selected path. */
-	private List pathContent;
+	private List<Object> pathContent;
 
 	/**
 	 * expand the selected path and set selection to currently selected path.
@@ -79,7 +48,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	 * @param content
 	 *            owned by selection
 	 */
-	public void setSelectedPath(TreePath selection, List content)
+	public void setSelectedPath(TreePath selection, List<Object> content)
 	{
 		setSelectedPath(selection);
 		this.pathContent = content;
@@ -97,7 +66,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	 * @param query
 	 *            query that was used to get selection
 	 */
-	public void setSelectedPath(TreePath selection, List content, String query)
+	public void setSelectedPath(TreePath selection, List<Object> content, String query)
 	{
 		setSelectedPath(selection, content);
 		this.selectedPathQuery = query;
@@ -122,7 +91,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	 * 
 	 * @return List list of content
 	 */
-	public List getPathContent()
+	public List<Object> getPathContent()
 	{
 		return pathContent;
 	}
@@ -133,7 +102,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	 * @param list
 	 *            list of content
 	 */
-	public void setPathContent(List list)
+	public void setPathContent(List<Object> list)
 	{
 		pathContent = list;
 	}
@@ -166,7 +135,7 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 	 * 
 	 * @return an <code>Enumerator</code> that increments over the visible paths
 	 */
-	public Enumeration getVisiblePathsFromRoot()
+	public Enumeration<TreePath> getVisiblePathsFromRoot()
 	{
 		TreeNode root = (TreeNode) (getModel().getRoot());
 		TreePath rootPath = new TreePath(root);
@@ -191,31 +160,12 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 		return path;
 	}
 
-	/**
-	 * find the node in model that has arg as its userObject.
-	 * 
-	 * @param userObject
-	 *            object to look for in model
-	 * @return DefaultMutableTreeNode
-	 */
 	public DefaultMutableTreeNode findNodeForPath(Object userObject)
 	{
-
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) getModel().getRoot();
 		return findNodeRecursively(root, null, userObject);
 	}
 
-	/**
-	 * find the child nodes recursively.
-	 * 
-	 * @param currentNode
-	 *            the current node
-	 * @param currentResultNode
-	 *            node of last result
-	 * @param userObject
-	 *            the user object
-	 * @return resulting node
-	 */
 	private DefaultMutableTreeNode findNodeRecursively(DefaultMutableTreeNode currentNode,
 			DefaultMutableTreeNode currentResultNode, Object userObject)
 	{
@@ -241,5 +191,4 @@ public final class TreeStateCache extends VariableHeightLayoutCache implements S
 		} // else: not found in this path
 		return resultNode;
 	}
-
 }

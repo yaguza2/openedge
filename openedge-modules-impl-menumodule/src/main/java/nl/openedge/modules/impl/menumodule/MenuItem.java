@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules.impl.menumodule;
 
 import java.io.Serializable;
@@ -37,7 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * An item that represents one menu item within a menu tree.
@@ -62,17 +31,17 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * Possible aliases.
 	 */
-	private HashSet aliases = null;
+	private HashSet<String> aliases = null;
 
 	/**
 	 * Free-form attributes to be used with filters and views.
 	 */
-	private Map attributes = null;
+	private Map<String, Object> attributes = null;
 
 	/**
 	 * Request parameters.
 	 */
-	private Map parameters;
+	private Map<String, String> parameters;
 
 	/**
 	 * Whether this item is enabled; to be used with filters and views.
@@ -87,7 +56,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * Filters for this menu item.
 	 */
-	private List filters = null;
+	private List<MenuFilter> filters = null;
 
 	/**
 	 * Whether this item is part of the current (active) path.
@@ -97,7 +66,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	/**
 	 * Childs of this menu node.
 	 */
-	private List children = new ArrayList();
+	private List<MenuItem> children = new ArrayList<MenuItem>();
 
 	/**
 	 * Get the link.
@@ -154,7 +123,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	{
 		if (attributes == null)
 		{
-			attributes = new HashMap();
+			attributes = new HashMap<String, Object>();
 		}
 		attributes.put(key, value);
 	}
@@ -239,8 +208,8 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 			return null;
 		else
 		{
-			StringBuffer result = new StringBuffer();
-			Iterator it = parameters.keySet().iterator();
+			StringBuilder result = new StringBuilder();
+			Iterator<String> it = parameters.keySet().iterator();
 			String key, value;
 			Object tempValue = null;
 			while (it.hasNext())
@@ -282,7 +251,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * 
 	 * @return List filters
 	 */
-	public List getFilters()
+	public List<MenuFilter> getFilters()
 	{
 		return filters;
 	}
@@ -293,7 +262,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param list
 	 *            filters
 	 */
-	public void setFilters(List list)
+	public void setFilters(List<MenuFilter> list)
 	{
 		filters = list;
 	}
@@ -355,7 +324,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * 
 	 * @return HashSet aliases
 	 */
-	public HashSet getAliases()
+	public HashSet<String> getAliases()
 	{
 		return aliases;
 	}
@@ -366,7 +335,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param set
 	 *            the aliases
 	 */
-	public void setAliases(HashSet set)
+	public void setAliases(HashSet<String> set)
 	{
 		aliases = set;
 	}
@@ -377,7 +346,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @return Map attributes
 	 */
 	@Override
-	public Map getAttributes()
+	public Map<String, Object> getAttributes()
 	{
 		return attributes;
 	}
@@ -388,7 +357,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param map
 	 *            the attributes
 	 */
-	public void setAttributes(Map map)
+	public void setAttributes(Map<String, Object> map)
 	{
 		attributes = map;
 	}
@@ -398,7 +367,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * 
 	 * @return Map the request parameters
 	 */
-	public Map getParameters()
+	public Map<String, String> getParameters()
 	{
 		return parameters;
 	}
@@ -411,7 +380,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param map
 	 *            the request parameters
 	 */
-	public void setParameters(Map map)
+	public void setParameters(Map<String, String> map)
 	{
 		parameters = map;
 	}
@@ -423,9 +392,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * VLT
 	 * 
 	 * @param params
-	 *            request paramteres to add
+	 *            request parameters to add
 	 */
-	public void addParameters(Map params)
+	public void addParameters(Map<String, String> params)
 	{
 		if (parameters == null)
 		{
@@ -450,14 +419,11 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	{
 		if (parameters == null)
 		{
-			parameters = new Properties();
+			parameters = new HashMap<String, String>();
 		}
 		parameters.put(name, value);
 	}
 
-	/**
-	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#getAttribute(java.lang.String)
-	 */
 	@Override
 	public Object getAttribute(String name)
 	{
@@ -471,57 +437,55 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 		}
 	}
 
-	/**
-	 * @see nl.openedge.modules.impl.menumodule.AttributeEnabledObject#putAllAttributes(java.util.Map)
-	 */
 	@Override
-	public void putAllAttributes(Map newAttributes)
+	public void putAllAttributes(Map<String, Object> newAttributes)
 	{
 		if (this.attributes == null)
-		{
-			this.attributes = new HashMap(newAttributes);
-		}
+			this.attributes = new HashMap<String, Object>(newAttributes);
 		else
-		{
 			this.attributes.putAll(newAttributes);
-		}
 	}
 
 	/**
-	 * Filters out any child menuitems that should not be be in the list based on the
-	 * current context. Basicly a little hack to keep this list in sync with the results
+	 * Filters out any child menu items that should not be be in the list based on the
+	 * current context. Basically a little hack to keep this list in sync with the results
 	 * you get if you access the children of this item via MenuModule.getMenuItems() for
 	 * the level above. Since Session and RequestScopeMenuFilters are not stored inside
-	 * the menuitems themselfs you can put them in the filterContext under the keys
+	 * the menu items themselves you can put them in the filterContext under the keys
 	 * obtainable from MenuFilter.
 	 * 
 	 * @param filterContext
 	 *            environment variables for the filters
 	 */
-	public void applyFiltersOnChildren(Map filterContext)
+	@SuppressWarnings("unchecked")
+	public void applyFiltersOnChildren(Map<Object, Object> filterContext)
 	{
-		List list = getChildren();
 		if (children == null)
 			return;
-		Iterator it = children.iterator();
-		Iterator filtersForChilds = null;
-		MenuItem child = null;
+
+		Iterator<MenuFilter> filtersForChilds = null;
+
 		boolean accept = true;
-		ArrayList filtered = new ArrayList();
-		while (it.hasNext())
+		ArrayList<MenuItem> filtered = new ArrayList<MenuItem>();
+		for (MenuItem child : children)
 		{
 			accept = true;
-			child = (MenuItem) it.next();
-			list = child.getFilters();
-			if (list == null)
+
+			List<MenuFilter> filters = child.getFilters();
+			if (filters == null)
 			{
-				list = new ArrayList();
-				list.addAll((List) filterContext.get(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS));
-				list.addAll((List) filterContext.get(MenuFilter.CONTEXT_KEY_SESSION_FILTERS));
+				filters = new ArrayList<MenuFilter>();
+				filters.addAll((List<MenuFilter>) filterContext
+					.get(MenuFilter.CONTEXT_KEY_REQUEST_FILTERS));
+				filters.addAll((List<MenuFilter>) filterContext
+					.get(MenuFilter.CONTEXT_KEY_SESSION_FILTERS));
 			}
-			filtersForChilds = list.iterator();
+			filtersForChilds = filters.iterator();
 			while (filtersForChilds.hasNext() && accept)
-				accept = ((MenuFilter) filtersForChilds.next()).accept(child, filterContext);
+			{
+				MenuFilter filter = filtersForChilds.next();
+				accept = filter.accept(child, filterContext);
+			}
 			if (accept)
 			{
 				child.applyFiltersOnChildren(filterContext);
@@ -536,7 +500,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * 
 	 * @return the children of this item
 	 */
-	public List getChildren()
+	public List<MenuItem> getChildren()
 	{
 		return children;
 	}
@@ -547,7 +511,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * @param list
 	 *            the children of this item
 	 */
-	public void setChildren(List list)
+	public void setChildren(List<MenuItem> list)
 	{
 		children = list;
 	}
@@ -644,7 +608,7 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer("menu -> ").append(link);
+		StringBuilder b = new StringBuilder("menu -> ").append(link);
 		printItemDetail(b);
 		return b.toString();
 	}
@@ -653,9 +617,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * Print part of string rep.
 	 * 
 	 * @param b
-	 *            current stringbuffer
+	 *            current StringBuilder
 	 */
-	private void printItemDetail(StringBuffer b)
+	private void printItemDetail(StringBuilder b)
 	{
 		printActive(b);
 		if ((aliases != null) || (filters != null) || (attributes != null))
@@ -675,14 +639,14 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * Print part of string rep.
 	 * 
 	 * @param b
-	 *            current stringbuffer
+	 *            current StringBuilder
 	 */
-	private void printFilters(StringBuffer b)
+	private void printFilters(StringBuilder b)
 	{
 		if (filters != null)
 		{
 			b.append(" filters:");
-			for (Iterator i = filters.iterator(); i.hasNext();)
+			for (Iterator<MenuFilter> i = filters.iterator(); i.hasNext();)
 			{
 				RequestScopeMenuFilter f = (RequestScopeMenuFilter) i.next();
 				b.append(f);
@@ -698,14 +662,14 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * Print part of string rep.
 	 * 
 	 * @param b
-	 *            current stringbuffer
+	 *            current StringBuilder
 	 */
-	private void printAliases(StringBuffer b)
+	private void printAliases(StringBuilder b)
 	{
 		if (aliases != null)
 		{
 			b.append(" aliases:");
-			for (Iterator i = aliases.iterator(); i.hasNext();)
+			for (Iterator< ? > i = aliases.iterator(); i.hasNext();)
 			{
 				b.append(i.next());
 				if (i.hasNext())
@@ -720,16 +684,16 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * Print part of string rep.
 	 * 
 	 * @param b
-	 *            current stringbuffer
+	 *            current StringBuilder
 	 */
-	private void printAttributes(StringBuffer b)
+	private void printAttributes(StringBuilder b)
 	{
 		if (attributes != null)
 		{
 			b.append(" attributes:");
-			for (Iterator i = attributes.keySet().iterator(); i.hasNext();)
+			for (Iterator<String> i = attributes.keySet().iterator(); i.hasNext();)
 			{
-				String key = (String) i.next();
+				String key = i.next();
 				b.append(key).append("=").append(attributes.get(key));
 				if (i.hasNext())
 				{
@@ -743,9 +707,9 @@ public final class MenuItem implements Serializable, AttributeEnabledObject
 	 * Print part of string rep.
 	 * 
 	 * @param b
-	 *            current stringbuffer
+	 *            current StringBuilder
 	 */
-	private void printActive(StringBuffer b)
+	private void printActive(StringBuilder b)
 	{
 		if (active)
 		{
