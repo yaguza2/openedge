@@ -1,0 +1,396 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Modules</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+    <section name="MenuModule">
+      <p>
+        De MenuModule is een component binnen het OpenEdge Modules raamwerk
+        waarmee boomgeorienteerde menu's kunnen worden onderhouden binnen
+        webapplicaties.
+      </p>
+      <p>
+          Zonder een centraal component dat de positie binnen een menu beheerd
+          en zaken als autorisatie etc. regelt wordt menu code al snel onoverzichtelijk
+          en (dus) slecht onderhoudbaar.
+      </p>
+      <p>
+          Dit component kan je de volgende diensten verschaffen:
+          <ul>
+              <li>
+                  Laden van een centraal gedefinieerde definitie van de menu boom.
+              </li>
+              <li>
+                  Filteren (maken van een afbeelding) van de totale boom op
+                  basis van bijvoorbeeld autorisaties of sessie attributen.
+              </li>
+              <li>
+                  Bepalen van de huidige positie binnen de boom.
+              </li>
+          </ul>
+      </p>
+    </section>
+    
+    <section name="Voorbeeld">
+        <p>
+            Hieronder een voorbeeld van een menu configuratie.
+        </p>
+        <p>
+            Allereerst moeten we de module in de configuratie van OpenEdge Modules
+            (bijv. in WEB-INF/modules.xml) opnemen en daarbij aangeven waarvandaan
+            de configuratie dient te worden gelezen:
+			<source><![CDATA[
+<component name="MenuModule" class="nl.openedge.modules.impl.menumodule.MenuModule">
+    <property name="configLocation" value="WEB-INF/usermenu.xml"/>
+</component>
+			]]></source>
+		</p>
+		<p>
+            De inhoud van WEB-INF/usermenu.xml kan zijn:
+			<source><![CDATA[
+<?xml version="1.0"?>
+<menu-config>
+
+	<filter class="nl.openedge.modules.impl.menumodule.AuthorizationFilter"/>
+
+	<menu-item tag="Algemeen" link="/wijzigen.algemeen.m" >
+	    <filter class="nl.levob.flexipluspensioen.util.NieuwePolisPositieMenuFilter"/>
+	</menu-item>
+	
+	<menu-item tag="Foo" link="/foo.m">
+        <alias link="/other.m">
+        <menu-item tag="Bar" link="/bar.m">
+            <attribute name="alignment">floating</attribute>
+        </menu-item>
+	</menu-item>
+	
+	<menu-item tag="Nested" link="/nested.m" >
+        <menu-item tag="Level1a" link="/level1a.m" >
+            <menu-item tag="Level2" link="/level2.m" >
+            </menu-item>
+        </menu-item>
+        <menu-item tag="Level1b" link="/level1b.m" >
+        </menu-item>
+	</menu-item>
+	
+	<menu-item tag="Flat" link="/flat.m" >
+	</menu-item>
+
+</menu-config>
+			]]></source>
+
+        Dit representeert de volgende tree
+			<source><![CDATA[
+    |- Algemeen
+    |- Foo
+    |   |- Bar
+    |
+    |- Nested
+    |   |- Level1a
+    |   |   |- Level2
+    |   |
+    |   |- Level1b
+    |
+    |- Flat
+			]]></source>
+        </p>
+        
+        <p>
+            We kunnen nu - op basis van een (veronderstelde) huidige positie binnen
+            het menu - menu items aan de menu module vragen. Hieronder een voorbeeld
+            van een MenuInterceptor voor Baritus:            
+        </p>
+        
+        <source><![CDATA[
+/**
+ * Interceptor voor menu afhandeling.
+ * @author Eelco Hillenius
+ */
+public final class MenuInterceptor implements AfterPopulationInterceptor,
+        AfterPerformInterceptor {
+
+    /**
+     * De root URL van de webapplicatie.
+     */
+    public static final String ROOT_SUBSTITUTE = "/home.m";
+
+    /**
+     * De naam van het usermenu.
+     */
+    public static final String ATTRIB_KEY_MENU = "usermenu";
+
+    /**
+     * @see nl.openedge.maverick.framework.interceptors.BeforePerformInterceptor#doBeforePerform(org.infohazard.maverick.flow.ControllerContext,
+     *      nl.openedge.maverick.framework.FormBean)
+     */
+    public void doAfterPopulation(final ControllerContext cctx,
+            final FormBeanContext formBeanContext) throws ServletException {
+        // maak nieuwe context voor dit request
+        ComponentRepository mf = RepositoryFactory.getRepository();
+        MenuModule menuMod = (MenuModule) mf
+                .getComponent(Constants.MODULE_MENU);
+        menuMod.resetContextForCurrentThread();
+    }
+
+    /**
+     * @see nl.openedge.maverick.framework.interceptors.AfterPerformInterceptor#doAfterPerform(org.infohazard.maverick.flow.ControllerContext,
+     *      nl.openedge.maverick.framework.FormBean)
+     */
+    public void doAfterPerform(final ControllerContext cctx,
+            final FormBeanContext formBeanContext) throws ServletException {
+        ComponentRepository mf = RepositoryFactory.getRepository();
+        MenuModule menuMod = (MenuModule) mf
+                .getComponent(Constants.MODULE_MENU);
+
+        List[] menuItems = getMenuItems(cctx, formBeanContext, menuMod);
+        formBeanContext.put(ATTRIB_KEY_MENU, menuItems);
+    }
+
+    /**
+     * Geeft de menu items.
+     * @param cctx controller context
+     * @param menuMod de menu module
+     * @param formBeanContext de formbean context
+     * @return List[] menu items in oplopende niveaus
+     */
+    public List[] getMenuItems(final ControllerContext cctx,
+            final FormBeanContext formBeanContext, final MenuModule menuMod) {
+
+        HttpServletRequest request = cctx.getRequest();
+        List[] items = null;
+        String commandUri = RequestUtil.getStrippedRequestURI(request);
+        if (ROOT_SUBSTITUTE.equals(commandUri)) {
+            commandUri = "/"; // the menumodule eats this root
+        }
+
+        HttpSession session = request.getSession();
+        Subject subject = (Subject) session
+                .getAttribute(AccessFilter.AUTHENTICATED_SUBJECT_KEY);
+
+        // voeg context variabele toe om request scoped filters toegang
+        // tot request te geven
+        menuMod.putFilterContextVariable(
+                RequestScopeMenuFilter.CONTEXT_KEY_REQUEST, cctx.getRequest());
+
+        items = menuMod.getMenuItems(subject, commandUri);
+
+        return items;
+    }
+}
+
+/**
+ * Utility klasse voor requests
+ * @author Eelco Hillenius
+ */
+public final class RequestUtil {
+
+    /**
+     * Converteer link naar logische naam (zonder voorloop slash en zonder 'punt m').
+     * Dus '/mijn.commando.m' wordt 'mijn.commando'.
+     * @param link de te converteren link
+     * @return String geconverteerde naam
+     */
+    public static String getLogischeNaam(final String link) {
+        if (link == null) {
+            return null;
+        }
+        String naam = getKaleURI(link);
+        if (naam.endsWith(".m")) {
+            naam = naam.substring(0, (naam.length() - 2));
+        }
+        return naam;
+    }
+
+    /**
+     * Geeft de request URI met een voorloop '/' zonder de parameters, contextpad en
+     * session id.
+     * @param request het http servlet request
+     * @return de gestripte request URI.
+     */
+    public static String getStrippedRequestURI(final HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        // strip contextpath
+        uri = uri.substring(request.getContextPath().length());
+        // strip session id
+        uri = getKaleURI(uri);
+        // now, add 1 slash
+        uri = '/' + uri;
+        return uri;
+    }
+
+    /**
+     * Strip URI van info waar we niets mee doen.
+     * @param uri te strippen URI
+     * @return String gestripte URI
+     */
+    public static String getKaleURI(final String uri) {
+        String kaleUri = uri;
+        // strip sessionId
+        kaleUri = getURIZonderSessionId(kaleUri);
+        // compact
+        kaleUri = getURIZonderVoorloopSlashes(kaleUri);
+        return kaleUri;
+    }
+
+    /**
+     * Strip evt aanwezig session id.
+     * @param uri te strippen URI
+     * @return String gestripte URI
+     */
+    public static String getURIZonderSessionId(final String uri) {
+        int sx = uri.indexOf(';');
+        if (sx > -1) {
+            return uri.substring(0, sx);
+        } else {
+            return uri;
+        }
+    }
+
+    /**
+     * Verwijder evt voorloop slashes.
+     * @param uri te converteren uri
+     * @return String geconverteerde uri
+     */
+    public static String getURIZonderVoorloopSlashes(final String uri) {
+        int from = 0;
+        while (uri.charAt(from) == '/') {
+            from++;
+        }
+        if (from > 0) {
+           return uri.substring(from);
+        } else {
+            return uri;
+        }
+    }
+}
+        ]]></source>
+        
+        En tenslotte een voorbeeld van hoe dit kan worden gebruikt binnen
+        een Velocity template:
+        
+			<source><![CDATA[
+#set( $allMenuItems = $model.usermenu )
+#set( $menuItems = $arrayTool.elementAt( $allMenuItems, 0 ) )
+<script language="JavaScript" type="text/JavaScript" version="1.2">
+  function doSubmit(view) {
+    document.hoofdformulier.view.value = view;
+    document.hoofdformulier.submit();
+  }
+</script>
+#foreach( $item in $menuItems )
+	#if ($item.active)
+		<a href="#" class="tabselected" onClick="javascript: doSubmit('${item.link}');">${item.tag}</a>
+	#elseif( $item.enabled )
+		<a href="#" class="tabitem" onClick="javascript: doSubmit('${item.link}');">${item.tag}</a>
+	#else
+		<div class="tabitemdisabled">${item.tag}</div>	
+	#end
+#end
+			]]></source>
+
+    </section>
+    
+    <section name="Filters">
+        <p>
+            Met filters kan worden bestuurd of menuitems onderdeel zijn van de boomafbeelding
+            voor de huidige context (met o.a. bijv. de gebruiker) en kunnen
+            attributen van menu items worden gezet.
+        </p>
+        <p>
+            Filters zijn er op drie niveaus:
+            <ul>
+                <li>
+                    ApplicationScopeMenuFilter - filters van dit type worden eenmalig
+                    gebruikt bij het initialiseren van de module.
+                </li>
+                <li>
+                    SessionScopeMenuFilter - filters van dit type worden eenmalig per
+                    sessie gebruikt en wel de eerste keer dat een menu dient te
+                    worden bepaald voor een sessie (/ gebruiker).
+                </li>
+                <li>
+                    RequestScopeMenuFilter - filters van dit type worden bij
+                    ieder request uitgevoerd. Bedenkt wel dat de boomafbeelding
+                    wordt gecached in de sessie en dat als een filter een attribuut
+                    wijzigt van een menu item, dit attribuut gewijzigd blijft voor
+                    de huidige sessie.
+                </li>
+            </ul> 
+        </p>
+        <p>
+            Een voorbeeld van een filter:
+			<source><![CDATA[
+/**
+ * ActievePatientFilter filtert op actieve patient, 
+ * dwz dit filter is van toepassing op specifieke menu-items die pas actief worden
+ * op het moment dat er een actieve patient is
+ * 
+ * @author Eelco Hillenius
+ */
+public final class ActievePatientFilter implements RequestScopeMenuFilter {
+	
+	/**
+	 * Kijkt of er een patient actief is. Indien dit niet het geval is, wordt het menu-item
+	 * ook geaccepteerd, maar op inactief gezet (hint voor gui rendering)
+	 * @param menuItem menu item
+	 * @param context de filter context
+	 */
+	public boolean accept(MenuItem menuItem, Map context) {
+		
+		boolean accepted = true; // keur altijd goed
+
+		HttpServletRequest request = (HttpServletRequest)
+			context.get(RequestScopeMenuFilter.CONTEXT_KEY_REQUEST);
+		HttpSession session = request.getSession();
+		// check of we een huidige patient hebben 
+		PatientPersoonWrapper patient = (PatientPersoonWrapper)
+            session.getAttribute(Constants.SESSION_PATIENT);
+		if(patient == null) {
+			// geen huidige patient; zet menu item op inactief
+			menuItem.setEnabled(false);
+		} else {
+			// huidige patient; zet menu item op actief
+			// let op! doe dit iedere keer, omdat de referentie van menuItem
+			// wordt gewijzigd (als vorige keer op false is gezet, blijft
+			// de setting bij ieder request op false totdat item hier wordt
+			// gewijzigd
+			menuItem.setEnabled(true);			
+		}
+		
+		return accepted;
+	}
+}
+			]]></source>
+			
+		In de configuratie:
+		<source><![CDATA[
+<menu-item tag="Patient" link="/medischdossier.huidigepatient.m">	
+    <filter class="nl.foo.bar.ActievePatientFilter"/>
+</menu-item>
+		]]></source>
+        </p>
+    </section>
+    
+    <section name="Attributen">
+        <p>
+            Willekeurige attributen voor bijv. gebruik in views of in filters
+            kunnen worden gezet dmv. de attribuut tag. Bijvoorbeeld:
+		<source><![CDATA[
+		<menu-item tag="Patient" link="/medischdossier.huidigepatient.m">
+			<attribute name="activetitle">&lt;u&gt;P&lt;/u&gt;ati&amp;euml;nt</attribute>
+			<attribute name="title">Pati&amp;euml;nt</attribute>			
+			<attribute name="info">Pati&amp;euml;nt gegevens</attribute>
+		</menu-item>
+		]]></source>
+        </p>
+    </section>
+
+</body>
+</document>
+

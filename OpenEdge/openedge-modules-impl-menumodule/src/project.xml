@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project>
+  <extend>${basedir}/../project.xml</extend> 
+  <pomVersion>3</pomVersion>
+  <id>openedge-mailjob</id>
+  <name>OpenEdge Mailjob implementation</name>
+  <currentVersion>1.0</currentVersion>
+  <organization>
+    <name>Open Edge</name>
+    <url>http://www.openedge.nl/</url>
+    <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+  </organization>
+  <inceptionYear>2003</inceptionYear>
+  <package>nl.openedge.modules.impl.mailjob</package>
+  <logo>http://www.openedge.nl/openedge/images/logo.jpg</logo>
+  <shortDescription>Hibernate implementation of OpenEdge Mail Job</shortDescription>
+  <description></description>
+  <url>http://maven.apache.org/</url>
+
+  <!-- <repository>
+    <connection>scm:cvs:pserver:${maven.username}@topicus.dyndns.org:d:/cvs:openedge-util</connection>
+  </repository> -->
+  
+  <versions>
+    <version>
+      <id>1</id>
+      <name>1</name>
+      <tag>HEAD</tag>
+    </version>
+  </versions>
+  <branches></branches>
+  <mailingLists>
+  </mailingLists>
+  
+  <developers>
+    <developer>
+      <name>Eelco Hillenius</name>
+      <id>eelco</id>
+      <email>eelco.hillenius@openedge.nl</email>
+      <organization>Open Edge</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+
+  <dependencies>
+
+  </dependencies>
+
+  <build>
+    <nagEmailAddress>info@openedge.nl</nagEmailAddress>
+    
+    <sourceDirectory>${basedir}/java</sourceDirectory>
+    <unitTestSourceDirectory>${basedir}/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <resources>
+        <resource>
+          <directory>${basedir}/test</directory>
+          <includes>
+          	<include>**/*.properties</include>
+          	<include>**/*.xml</include>
+          	<include>**/*.xsd</include>
+          	<include>**/*.dtd</include>
+          	<include>**/*.vm</include>
+          	<include>**/*.config</include>
+          	<include>**/*.policy</include>
+          </includes>
+        </resource>
+        <resource>
+          <directory>${basedir}/java</directory>
+          <includes>
+          	<include>**/*.properties</include>
+          	<include>**/*.xml</include>
+          	<include>**/*.xsd</include>
+          	<include>**/*.dtd</include>
+          	<include>**/*.vm</include>
+          	<include>**/*.config</include>
+          	<include>**/*.policy</include>
+          </includes>
+        </resource>
+      </resources>
+    </unitTest>
+
+    <resources>
+      <resource>
+        <directory>${basedir}/java</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+          <include>**/*.xsd</include>
+          <include>**/*.dtd</include>
+          <include>**/*.vm</include>
+          <include>**/*.config</include>
+        </includes>
+      </resource>
+    </resources>
+
+  </build>
+
+</project>
