@@ -51,7 +51,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	private Map<String, Object> components = Collections
 		.synchronizedMap(new HashMap<String, Object>());
 
-	/** holder for component component factorys that implement job interface. */
+	/** holder for component component factories that implement job interface. */
 	private Map<String, Object> jobs = Collections.synchronizedMap(new HashMap<String, Object>());
 
 	/** holder for triggers. */
