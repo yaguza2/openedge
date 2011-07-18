@@ -184,7 +184,7 @@ public class BeforeValidator extends AbstractDateFieldValidator
 		// vergelijk datums
 		if (value instanceof Date)
 		{
-			before = comp.compare(value, compareAfter) >= 0;
+			before = comp.compare((Date) value, compareAfter) >= 0;
 		}
 		else if (value instanceof Calendar)
 		{

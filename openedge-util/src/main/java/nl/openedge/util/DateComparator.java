@@ -40,7 +40,7 @@ import java.util.Date;
  * 
  * @author shofstee
  */
-public class DateComparator implements Comparator
+public class DateComparator implements Comparator<Date>
 {
 
 	// as we use instance variables, this component is not Thread safe.
@@ -54,7 +54,7 @@ public class DateComparator implements Comparator
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public int compare(Object o1, Object o2)
+	public int compare(Date o1, Date o2)
 	{
 		int result = 0;
 
@@ -62,13 +62,9 @@ public class DateComparator implements Comparator
 		{
 			throw new IllegalArgumentException("Cannot compare with null.");
 		}
-		if (!(o1 instanceof Date && o2 instanceof Date))
-		{
-			handleClassCastException(o1, o2);
-		}
 
-		cal1.setTime((Date) o1);
-		cal2.setTime((Date) o2);
+		cal1.setTime(o1);
+		cal2.setTime(o2);
 
 		int yearResult = cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR);
 		int monthResult = cal2.get(Calendar.MONTH) - cal1.get(Calendar.MONTH);
@@ -128,27 +124,4 @@ public class DateComparator implements Comparator
 		}
 		return result;
 	}
-
-	/**
-	 * Throws a ClassCastException with the parameter that is not instanceof Date checks
-	 * o1 then o2.
-	 * 
-	 * @param o1
-	 *            first object
-	 * @param o2
-	 *            second object
-	 */
-	private void handleClassCastException(Object o1, Object o2)
-	{
-		if (!(o1 instanceof Date))
-		{
-			throw new ClassCastException("Cannot convert object " + o1 + " to Date");
-		}
-		else
-		{
-			throw new ClassCastException("Cannot convert object " + o2 + " to Date");
-		}
-
-	}
-
 }
