@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Installing Maven</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+    <section name="Using Maven">
+      <p>
+		As we use Maven as our project build tool, you should have it
+		installed when you want to build OpenEdge Access from source.
+		Learn more about Maven <a target="_new" href="http://maven.apache.org">here</a>
+      </p>
+      
+      <p>
+        The downloaded install archive contains everything required to build
+        OpenEdge Access. The install archive has a single top-level
+        directory named <code>//TODO</code> with all the 
+        project related files beneath that. You can now unpack the install
+        archive.
+      </p>
+
+      <p>
+        The directory layout of OpenEdge Access looks like this:
+      </p>
+        
+      <source><![CDATA[
+      .
+      |-- src
+      |     |-- java
+      |     |-- test
+      |     `-- etc
+      |-- xdocs
+      `-- target
+
+      ]]></source>
+      
+      <p>
+		The above layout conforms to the Maven standard directory layout, 
+		where <code>src/java</code> has the main sources, 
+		<code>src/test</code> has the unit tests and 
+		<code>src/etc</code> has additional sources and documents.
+	  </p>
+      
+      <p>
+		When you have Maven installed properly, you can use the usual
+		commands with this project. You probably want to use
+		<code>maven jar</code> as this builds the jar you need when
+		you want to use this project. The jar will be placed in 
+		<code>\target</code>
+	  </p>
+	
+	</section>
+
+	<section name="Preparing for Quartz">
+      
+	  <p>
+		As the framework wraps as light as possible around Quartz,
+		much of the preparation depends on how you want to use Quartz.
+		It's best to check out 
+		<a target="_new" href="http://www.part.net/quartz.html">Quartz itself</a>.
+	  </p>
+	
+	</section>
+  
+  </body>
+</document>
