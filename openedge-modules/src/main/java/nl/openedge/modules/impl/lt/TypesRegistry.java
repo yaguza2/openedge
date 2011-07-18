@@ -30,6 +30,7 @@
  */
 package nl.openedge.modules.impl.lt;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public final class TypesRegistry
 	private static final int DFT_CMD_SIZE = 9;
 
 	/** default class. */
-	private static Class defaultComponentFactoryClass = SingletonTypeFactory.class;
+	private static Class< ? > defaultComponentFactoryClass = SingletonTypeFactory.class;
 
 	/**
 	 * If true, the default factory will be used for types that are not of any know type.
@@ -69,12 +70,14 @@ public final class TypesRegistry
 	/**
 	 * map of component factories.
 	 */
-	private static Map componentFactories = new HashMap(DFT_TYPE_SIZE);
+	private static Map<String, Class< ? >> componentFactories = new HashMap<String, Class< ? >>(
+		DFT_TYPE_SIZE);
 
 	/**
 	 * map of init commands.
 	 */
-	private static Map initCommandClasses = new HashMap(DFT_CMD_SIZE);
+	private static Map<Serializable, Class< ? >> initCommandClasses =
+		new HashMap<Serializable, Class< ? >>(DFT_CMD_SIZE);
 
 	// initialize defaults
 	static
@@ -143,7 +146,7 @@ public final class TypesRegistry
 	 * @param factoryClass
 	 *            the default component factory
 	 */
-	public static void setDefaultComponentFactory(Class factoryClass)
+	public static void setDefaultComponentFactory(Class< ? > factoryClass)
 	{
 		defaultComponentFactoryClass = factoryClass;
 	}
@@ -167,7 +170,7 @@ public final class TypesRegistry
 		ComponentFactory factory = null;
 		try
 		{
-			Class factoryClass = (Class) componentFactories.get(typeName);
+			Class< ? > factoryClass = componentFactories.get(typeName);
 			factory = (ComponentFactory) factoryClass.newInstance();
 		}
 		catch (InstantiationException e)
@@ -189,7 +192,7 @@ public final class TypesRegistry
 	 * @param componentFactoryClass
 	 *            the class of the component factory
 	 */
-	public static void registerComponentType(String typeName, Class componentFactoryClass)
+	public static void registerComponentType(String typeName, Class< ? > componentFactoryClass)
 	{
 		componentFactories.put(typeName, componentFactoryClass);
 	}
@@ -218,7 +221,7 @@ public final class TypesRegistry
 	public static InitCommand getInitCommand(String commandName) throws ConfigException
 	{
 
-		Class c = (Class) initCommandClasses.get(commandName);
+		Class< ? > c = initCommandClasses.get(commandName);
 		if (c != null)
 		{
 			try
@@ -248,7 +251,7 @@ public final class TypesRegistry
 	 * @param initCommandClass
 	 *            class of the command
 	 */
-	public static void registerInitCommand(Class commandName, Class initCommandClass)
+	public static void registerInitCommand(Class< ? > commandName, Class< ? > initCommandClass)
 	{
 		initCommandClasses.put(commandName, initCommandClass);
 	}
@@ -259,7 +262,7 @@ public final class TypesRegistry
 	 * @param commandName
 	 *            the name of the command
 	 */
-	public static void deRegisterInitCommand(Class commandName)
+	public static void deRegisterInitCommand(Class< ? > commandName)
 	{
 		initCommandClasses.remove(commandName);
 	}
@@ -284,5 +287,4 @@ public final class TypesRegistry
 	{
 		useDefaultFactory = b;
 	}
-
 }

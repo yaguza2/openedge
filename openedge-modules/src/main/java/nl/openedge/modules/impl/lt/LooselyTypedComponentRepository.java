@@ -55,31 +55,14 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 {
 	private static final long serialVersionUID = 1L;
 
-	/** logger. */
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * construct.
-	 */
 	public LooselyTypedComponentRepository()
 	{
-		// nothing here
 	}
 
-	/**
-	 * add one component.
-	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            component config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs
-	 */
 	@Override
-	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
+	protected void addComponent(String name, Class< ? > clazz, Element node) throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
 
@@ -99,24 +82,10 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 		log.info("addedd " + clazz.getName() + " with name: " + name);
 	}
 
-	/**
-	 * get the component factory.
-	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            configuration node
-	 * @return ComponentFactory
-	 * @throws ConfigException
-	 *             when an configuration error occurs
-	 */
 	@Override
-	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
+	protected ComponentFactory getComponentFactory(String name, Class< ? > clazz, Element node)
 			throws ConfigException
 	{
-
 		ComponentFactory factory = null;
 		String typeName = node.getAttributeValue("type");
 
@@ -148,30 +117,18 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 		return factory;
 	}
 
-	/**
-	 * add initialization commands.
-	 * 
-	 * @param factory
-	 *            factory
-	 * @param node
-	 *            config node
-	 * @param clazz
-	 *            component class
-	 * @throws ConfigException
-	 *             when an configuration error occurs
-	 */
 	@Override
-	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+	protected void addInitCommands(ComponentFactory factory, Class< ? > clazz, Element node)
 			throws ConfigException
 	{
 
 		Element cmdNode = node.getChild("init-commands");
 		if (cmdNode != null)
 		{
-			List commands = new ArrayList();
-			List cmdList = cmdNode.getChildren("command");
+			List<Object> commands = new ArrayList<Object>();
+			List< ? > cmdList = cmdNode.getChildren("command");
 
-			for (Iterator i = cmdList.iterator(); i.hasNext();)
+			for (Iterator< ? > i = cmdList.iterator(); i.hasNext();)
 			{
 				Element cnode = (Element) i.next();
 				String commandName = cnode.getTextNormalize();
@@ -183,28 +140,20 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 				// add command to the list
 				commands.add(initCommand);
 
-				InitCommand[] cmds =
-					(InitCommand[]) commands.toArray(new InitCommand[commands.size()]);
+				InitCommand[] cmds = commands.toArray(new InitCommand[commands.size()]);
 
 				if (cmds.length > 0)
 				{
 					factory.setInitCommands(cmds);
 				}
-
 			}
-
 		}
-
 	}
 
-	/**
-	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class,
-	 *      boolean)
-	 */
 	@Override
-	public List getComponentsByType(Class type, boolean exact)
+	public List<Object> getComponentsByType(Class< ? > type, boolean exact)
 	{
-		List sublist = new ArrayList();
+		List<Object> sublist = new ArrayList<Object>();
 
 		if (type == null)
 		{
@@ -213,7 +162,7 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 
 		if (exact)
 		{
-			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
+			for (Iterator< ? > i = getComponents().values().iterator(); i.hasNext();)
 			{
 
 				ComponentFactory factory = (ComponentFactory) i.next();
@@ -225,7 +174,7 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 		}
 		else
 		{
-			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
+			for (Iterator< ? > i = getComponents().values().iterator(); i.hasNext();)
 			{
 
 				ComponentFactory factory = (ComponentFactory) i.next();
@@ -238,5 +187,4 @@ public class LooselyTypedComponentRepository extends AbstractComponentRepository
 
 		return sublist;
 	}
-
 }

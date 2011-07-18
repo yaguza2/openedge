@@ -56,29 +56,12 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 {
 	private static final long serialVersionUID = 1L;
 
-	/** logger. */
 	private static Logger log = LoggerFactory.getLogger(DefaultComponentRepository.class);
 
-	/**
-	 * construct.
-	 */
 	public DefaultComponentRepository()
 	{
-		// nothing here
 	}
 
-	/**
-	 * add one component.
-	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            component config node
-	 * @throws ConfigException
-	 *             when an configuration error occurs when an configuration error occurs
-	 */
 	@Override
 	protected void addComponent(String name, Class< ? > clazz, Element node) throws ConfigException
 	{
@@ -96,36 +79,22 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 		log.info("addedd " + clazz.getName() + " with name: " + name);
 	}
 
-	/**
-	 * get the component factory.
-	 * 
-	 * @param name
-	 *            component name
-	 * @param clazz
-	 *            component class
-	 * @param node
-	 *            configuration node
-	 * @return ComponentFactory
-	 * @throws ConfigException
-	 *             when an configuration error occurs
-	 */
 	@Override
 	protected ComponentFactory getComponentFactory(String name, Class< ? > clazz, Element node)
 			throws ConfigException
 	{
-
 		ComponentFactory factory = null;
 
-		Set baseTypes = TypesRegistry.getBaseTypes();
+		Set< ? > baseTypes = TypesRegistry.getBaseTypes();
 		if (baseTypes == null)
 		{
 			throw new ConfigException("there are no base types registered!");
 		}
 
 		boolean wasFoundOnce = false;
-		for (Iterator j = baseTypes.iterator(); j.hasNext();)
+		for (Iterator< ? > j = baseTypes.iterator(); j.hasNext();)
 		{
-			Class< ? > baseType = (Class) j.next();
+			Class< ? > baseType = (Class< ? >) j.next();
 			if (baseType.isAssignableFrom(clazz))
 			{
 				if (wasFoundOnce) // more than one base type!
@@ -136,7 +105,6 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 				wasFoundOnce = true;
 
 				factory = TypesRegistry.getComponentFactory(baseType);
-
 			}
 		}
 		if (factory == null)
@@ -174,13 +142,13 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	protected void addInitCommands(ComponentFactory factory, Class< ? > clazz, Element node)
 			throws ConfigException
 	{
-		List initCommands = TypesRegistry.getInitCommandTypes();
+		List<Class< ? >> initCommands = TypesRegistry.getInitCommandTypes();
 		if (initCommands != null)
 		{
-			List commands = new ArrayList();
-			for (Iterator j = initCommands.iterator(); j.hasNext();)
+			List<Object> commands = new ArrayList<Object>();
+			for (Iterator<Class< ? >> j = initCommands.iterator(); j.hasNext();)
 			{
-				Class< ? > type = (Class) j.next();
+				Class< ? > type = j.next();
 				if (type.isAssignableFrom(clazz))
 				{
 					// get command for this class
@@ -192,7 +160,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 				}
 			}
 
-			InitCommand[] cmds = (InitCommand[]) commands.toArray(new InitCommand[commands.size()]);
+			InitCommand[] cmds = commands.toArray(new InitCommand[commands.size()]);
 
 			if (cmds.length > 0)
 			{
