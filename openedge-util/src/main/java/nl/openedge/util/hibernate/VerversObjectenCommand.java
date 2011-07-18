@@ -57,6 +57,7 @@ public class VerversObjectenCommand implements HibernateCommand
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractHibernateCommand#execute(net.sf.hibernate.Session)
 	 */
+	@Override
 	public void execute(final Session hibernateSession) throws HibernateException
 	{
 		if (objecten == null || objecten.size() == 0)
@@ -99,6 +100,7 @@ public class VerversObjectenCommand implements HibernateCommand
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer msg = new StringBuffer();

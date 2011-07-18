@@ -96,6 +96,7 @@ public class SerializedAndZippedDeserializerFactory implements DeserializerFacto
 	/**
 	 * @see javax.xml.rpc.encoding.SerializerFactory#getSerializerAs(java.lang.String)
 	 */
+	@Override
 	public Deserializer getDeserializerAs(final String string)
 	{
 		return new SerializedAndZippedDeserializer();
@@ -104,6 +105,7 @@ public class SerializedAndZippedDeserializerFactory implements DeserializerFacto
 	/**
 	 * @see javax.xml.rpc.encoding.SerializerFactory#getSupportedMechanismTypes()
 	 */
+	@Override
 	public Iterator getSupportedMechanismTypes()
 	{
 		if (mechanisms == null)

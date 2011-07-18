@@ -56,6 +56,7 @@ public final class FallbackDateConverter implements Converter, Formatter
 	 *            object to convert
 	 * @see org.apache.commons.beanutils.Converter#convert(java.lang.Class, java.lang.Object)
 	 */
+	@Override
 	public Object convert(Class type, Object value)
 	{
 		if (value == null)
@@ -126,6 +127,7 @@ public final class FallbackDateConverter implements Converter, Formatter
 	 *                if formatting cannot be performed successfully
 	 * @return formatted value
 	 */
+	@Override
 	public String format(Object value, String pattern)
 	{
 		if (value == null)

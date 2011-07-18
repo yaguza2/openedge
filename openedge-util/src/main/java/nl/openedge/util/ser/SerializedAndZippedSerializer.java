@@ -62,6 +62,7 @@ public class SerializedAndZippedSerializer implements Serializer
 	 * @see org.apache.axis.encoding.Serializer#serialize(javax.xml.namespace.QName,
 	 *      org.xml.sax.Attributes, java.lang.Object, org.apache.axis.encoding.SerializationContext)
 	 */
+	@Override
 	public void serialize(final QName name, final Attributes attributes, final Object value,
 			final SerializationContext context) throws IOException
 	{
@@ -87,6 +88,7 @@ public class SerializedAndZippedSerializer implements Serializer
 	/**
 	 * @see javax.xml.rpc.encoding.Serializer#getMechanismType()
 	 */
+	@Override
 	public String getMechanismType()
 	{
 		return Constants.AXIS_SAX;
@@ -96,6 +98,7 @@ public class SerializedAndZippedSerializer implements Serializer
 	 * @see org.apache.axis.encoding.Serializer#writeSchema(java.lang.Class,
 	 *      org.apache.axis.wsdl.fromJava.Types)
 	 */
+	@Override
 	public Element writeSchema(final Class javaType, final Types types) throws Exception
 	{
 		return null;

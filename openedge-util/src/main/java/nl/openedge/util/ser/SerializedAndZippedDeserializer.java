@@ -64,6 +64,7 @@ public class SerializedAndZippedDeserializer extends DeserializerImpl
 	 *      java.lang.String, org.xml.sax.Attributes,
 	 *      org.apache.axis.encoding.DeserializationContext)
 	 */
+	@Override
 	public SOAPHandler onStartChild(final String namespace, final String localName,
 			final String prefix, final Attributes attributes, final DeserializationContext context)
 			throws SAXException
@@ -81,6 +82,7 @@ public class SerializedAndZippedDeserializer extends DeserializerImpl
 	/**
 	 * @see org.apache.axis.encoding.Callback#setValue(java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public void setValue(final Object value, final Object hint)
 	{
 

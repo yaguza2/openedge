@@ -125,6 +125,7 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "SerializedAndZipped {uncompressedDataLength = "
@@ -134,6 +135,7 @@ public final class SerializedAndZipped implements Serializable, Cloneable
 	/**
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	protected Object clone()
 	{
 		try

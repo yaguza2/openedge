@@ -77,6 +77,7 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#getQuery(net.sf.hibernate.Session)
 	 */
+	@Override
 	protected Query getQuery(final Session hibernateSession) throws HibernateException
 	{
 		log.trace("Enter");
@@ -91,6 +92,7 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#getResultaat()
 	 */
+	@Override
 	public List getResultaat()
 	{
 		log.trace("Enter");
@@ -106,6 +108,7 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#setParameters(net.sf.hibernate.Query)
 	 */
+	@Override
 	protected void setParameters(final Query query) throws HibernateException
 	{
 		log.trace("Enter");
@@ -121,6 +124,7 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	 * 
 	 * @see nl.openedge.medischevaria.util.AbstractQueryCommand#setResultaat(net.sf.hibernate.Query)
 	 */
+	@Override
 	protected void setResultaat(final Query query) throws HibernateException
 	{
 		log.trace("Enter");
@@ -131,6 +135,7 @@ public class PagedQueryCommandDecorator extends AbstractQueryCommand
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer msg = new StringBuffer();

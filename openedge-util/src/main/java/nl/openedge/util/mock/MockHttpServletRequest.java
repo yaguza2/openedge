@@ -53,6 +53,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.http.HttpServletRequest#getDateHeader(java.lang.String)
 	 */
+	@Override
 	public long getDateHeader(final String arg0)
 	{
 		return System.currentTimeMillis();
@@ -63,6 +64,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	 * 
 	 * @see javax.servlet.ServletRequest#getLocale()
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return null;
@@ -71,6 +73,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#getAttribute(java.lang.String)
 	 */
+	@Override
 	public Object getAttribute(final String anAttributeName)
 	{
 		return attributes.get(anAttributeName);
@@ -79,6 +82,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#getAttributeNames()
 	 */
+	@Override
 	public Enumeration getAttributeNames()
 	{
 		return new IteratorToEnumeratorDecorator(attributes.keySet().iterator());
@@ -87,6 +91,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#removeAttribute(java.lang.String)
 	 */
+	@Override
 	public void removeAttribute(final String anAttributeToRemove)
 	{
 		attributes.remove(anAttributeToRemove);
@@ -95,6 +100,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	/**
 	 * @see javax.servlet.ServletRequest#setAttribute(java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void setAttribute(final String attributeName, final Object attributeValue)
 	{
 		attributes.put(attributeName, attributeValue);

@@ -60,6 +60,7 @@ public class IteratorToEnumeratorDecorator implements Enumeration
 	/**
 	 * @see java.util.Enumeration#hasMoreElements()
 	 */
+	@Override
 	public boolean hasMoreElements()
 	{
 		return iterator.hasNext();
@@ -68,6 +69,7 @@ public class IteratorToEnumeratorDecorator implements Enumeration
 	/**
 	 * @see java.util.Enumeration#nextElement()
 	 */
+	@Override
 	public Object nextElement()
 	{
 		return iterator.next();

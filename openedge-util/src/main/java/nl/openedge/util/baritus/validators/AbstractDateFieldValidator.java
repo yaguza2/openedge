@@ -184,6 +184,7 @@ public abstract class AbstractDateFieldValidator extends AbstractFieldValidator
 	 * 
 	 * @see nl.openedge.maverick.framework.validation.AbstractFieldValidator#getOverrideValue(java.lang.Object)
 	 */
+	@Override
 	public Object getOverrideValue(Object value)
 	{
 		String result = "";

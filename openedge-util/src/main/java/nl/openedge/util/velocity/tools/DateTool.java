@@ -359,6 +359,7 @@ public final class DateTool
 	/**
 	 * @return the result of {@link #getDate()}as a string
 	 */
+	@Override
 	public String toString()
 	{
 		return getDate().toString();

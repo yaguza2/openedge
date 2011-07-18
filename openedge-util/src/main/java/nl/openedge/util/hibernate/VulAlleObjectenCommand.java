@@ -38,6 +38,7 @@ public class VulAlleObjectenCommand extends AbstractQueryCommand
 	/**
 	 * @see nl.openedge.util.hibernate.AbstractQueryCommand#getQuery(net.sf.hibernate.Session)
 	 */
+	@Override
 	protected Query getQuery(final Session hibernateSession) throws HibernateException
 	{
 		Query query = hibernateSession.createQuery("from " + persistentClass.getName());
@@ -47,6 +48,7 @@ public class VulAlleObjectenCommand extends AbstractQueryCommand
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer msg = new StringBuffer();

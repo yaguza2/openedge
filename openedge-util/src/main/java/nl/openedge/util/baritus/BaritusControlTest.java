@@ -37,6 +37,7 @@ import java.util.Locale;
 import junit.framework.TestCase;
 import nl.openedge.baritus.ConverterRegistry;
 import nl.openedge.baritus.FormBeanCtrl;
+import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.converters.DateLocaleConverter;
 import nl.openedge.util.baritus.converters.FallbackDateConverter;
 import nl.openedge.util.mock.MockHttpServletRequest;
@@ -116,6 +117,7 @@ public abstract class BaritusControlTest extends TestCase
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected final void setUp() throws Exception
 	{
 		this.requestDispatcher = new MockRequestDispatcher();
@@ -124,7 +126,7 @@ public abstract class BaritusControlTest extends TestCase
 		this.servletConfig = new MockServletConfig();
 		this.servletConfig.setServletContext(servletContext);
 		this.session = new MockHttpSession();
-		this.session.setupGetAttribute(FormBeanCtrl.SESSION_KEY_CURRENT_LOCALE, fixedLocale);
+		this.session.setupGetAttribute(FormBeanCtrlBase.SESSION_KEY_CURRENT_LOCALE, fixedLocale);
 		this.session.setupServletContext(servletContext);
 		this.response = new MockHttpServletResponse();
 		this.request = new MockHttpServletRequest();

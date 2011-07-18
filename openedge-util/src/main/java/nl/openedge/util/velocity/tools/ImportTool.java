@@ -132,6 +132,7 @@ public final class ImportTool implements ViewTool
 	 * @throws IllegalArgumentException
 	 *             if the param is not a ViewContext
 	 */
+	@Override
 	public void init(Object obj)
 	{
 
@@ -348,6 +349,7 @@ public final class ImportTool implements ViewTool
 		/** A ServletOutputStream we convey, tied to this Writer. */
 		private ServletOutputStream sos = new ServletOutputStream()
 		{
+			@Override
 			public void write(int b) throws IOException
 			{
 				bos.write(b);
@@ -373,6 +375,7 @@ public final class ImportTool implements ViewTool
 		}
 
 		/** Returns a Writer designed to buffer the output. */
+		@Override
 		public PrintWriter getWriter()
 		{
 			if (isStreamUsed)
@@ -382,6 +385,7 @@ public final class ImportTool implements ViewTool
 		}
 
 		/** Returns a ServletOutputStream designed to buffer the output. */
+		@Override
 		public ServletOutputStream getOutputStream()
 		{
 			if (isWriterUsed)
@@ -391,17 +395,20 @@ public final class ImportTool implements ViewTool
 		}
 
 		/** Has no effect. */
+		@Override
 		public void setContentType(String x)
 		{
 			// ignore
 		}
 
 		/** Has no effect. */
+		@Override
 		public void setLocale(Locale x)
 		{
 			// ignore
 		}
 
+		@Override
 		public void setStatus(int status)
 		{
 			this.status = status;

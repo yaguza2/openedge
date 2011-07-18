@@ -353,6 +353,7 @@ public final class DateFormatHelper
 	 * @throws ParseException
 	 *             when the stringdate could not be parsed
 	 */
+	@Deprecated
 	public static Date parse(String stringDate, boolean fallback) throws ParseException
 	{
 		return fallbackParse(stringDate);
