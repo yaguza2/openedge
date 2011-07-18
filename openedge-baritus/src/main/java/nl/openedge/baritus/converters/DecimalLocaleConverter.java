@@ -115,7 +115,6 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 	 * @exception ConversionException
 	 *                if conversion cannot be performed successfully
 	 */
-	@SuppressWarnings("hiding")
 	@Override
 	protected Object parse(Object value, String pattern) throws ParseException
 	{
@@ -137,7 +136,6 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 	 * @exception IllegalArgumentException
 	 *                if formatting cannot be performed successfully
 	 */
-	@SuppressWarnings("hiding")
 	@Override
 	public String format(Object value, String pattern) throws IllegalArgumentException
 	{
@@ -155,7 +153,6 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 	 *            pattern or null
 	 * @return DecimalFormat formatter instance
 	 */
-	@SuppressWarnings("hiding")
 	protected DecimalFormat getFormat(String pattern)
 	{
 		DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(locale);
@@ -183,7 +180,6 @@ public abstract class DecimalLocaleConverter extends BaseLocaleConverter
 	 * @return Number
 	 * @throws ConversionException
 	 */
-	@SuppressWarnings("hiding")
 	protected Number getNumber(Object value, String pattern) throws ConversionException
 	{
 		if (value instanceof Number)

@@ -98,8 +98,7 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 	 * @exception ConversionException
 	 *                if conversion cannot be performed successfully
 	 */
-	abstract protected Object parse(Object value, @SuppressWarnings("hiding") String pattern)
-			throws ParseException;
+	abstract protected Object parse(Object value, String pattern) throws ParseException;
 
 	/**
 	 * Convert the specified locale-sensitive input object into an output object. The
@@ -127,7 +126,7 @@ public abstract class BaseLocaleConverter implements LocaleConverter, Formatter
 	 * @exception ConversionException
 	 *                if conversion cannot be performed successfully
 	 */
-	public Object convert(Object value, @SuppressWarnings("hiding") String pattern)
+	public Object convert(Object value, String pattern)
 	{
 		return convert(null, value, pattern);
 	}

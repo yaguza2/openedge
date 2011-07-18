@@ -121,8 +121,7 @@ class XSLTransform implements Transform
 	 * @return The jaxp object for the specified path.
 	 * @exception ConfigException
 	 */
-	protected Templates loadTemplate(@SuppressWarnings("hiding") String path,
-			ServletContext servletCtx) throws ConfigException
+	protected Templates loadTemplate(String path, ServletContext servletCtx) throws ConfigException
 	{
 		boolean pathIsFileUrl = false;
 		boolean pathIsOtherUrl = false;

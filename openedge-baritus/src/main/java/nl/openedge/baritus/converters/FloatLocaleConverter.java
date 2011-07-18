@@ -106,7 +106,6 @@ public class FloatLocaleConverter extends DecimalLocaleConverter
 	 * @exception ConversionException
 	 *                if conversion cannot be performed successfully
 	 */
-	@SuppressWarnings("hiding")
 	@Override
 	protected Object parse(Object value, String pattern) throws ParseException
 	{
@@ -134,7 +133,6 @@ public class FloatLocaleConverter extends DecimalLocaleConverter
 	 * @exception ConversionException
 	 *                if conversion cannot be performed successfully
 	 */
-	@SuppressWarnings("hiding")
 	@Override
 	public Object convert(Class< ? > type, Object value, String pattern)
 	{

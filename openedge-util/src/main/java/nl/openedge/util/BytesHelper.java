@@ -59,7 +59,7 @@ public final class BytesHelper
 		int result = 0;
 		for (int i = 0; i < BYTE_LENGTH; i++)
 		{
-			result = (result << BYTE_SHIFT) - Byte.MIN_VALUE + (int) bytes[i];
+			result = (result << BYTE_SHIFT) - Byte.MIN_VALUE + bytes[i];
 		}
 		return result;
 	}
@@ -67,19 +67,20 @@ public final class BytesHelper
 	/**
 	 * convert bytes to short.
 	 * 
-	 * @param bytes bytes to convert
+	 * @param bytes
+	 *            bytes to convert
 	 * @return short given bytes as an int
 	 */
 	public static short toShort(byte[] bytes)
 	{
-		return (short) (((-(short) Byte.MIN_VALUE + (short) bytes[0]) << BYTE_SHIFT)
-				- (short) Byte.MIN_VALUE + (short) bytes[1]);
+		return (short) (((-(short) Byte.MIN_VALUE + bytes[0]) << BYTE_SHIFT) - Byte.MIN_VALUE + bytes[1]);
 	}
 
 	/**
 	 * convert int to bytes.
 	 * 
-	 * @param value int to convert to bytes
+	 * @param value
+	 *            int to convert to bytes
 	 * @return byte[] int as bytes
 	 */
 	public static byte[] toBytes(int value)
@@ -97,7 +98,8 @@ public final class BytesHelper
 	/**
 	 * convert short to bytes.
 	 * 
-	 * @param value short to convert
+	 * @param value
+	 *            short to convert
 	 * @return byte[] short as bytes
 	 */
 	public static byte[] toBytes(short value)

@@ -147,8 +147,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	 *                if conversion cannot be performed successfully
 	 */
 	@Override
-	protected Object parse(Object value, @SuppressWarnings("hiding") String pattern)
-			throws ConversionException
+	protected Object parse(Object value, String pattern) throws ConversionException
 	{
 		DateFormat formatter = getFormat(pattern, locale);
 
@@ -179,8 +178,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	 *      java.lang.String)
 	 */
 	@Override
-	public String format(Object value, @SuppressWarnings("hiding") String pattern)
-			throws IllegalArgumentException
+	public String format(Object value, String pattern) throws IllegalArgumentException
 	{
 		DateFormat format = getFormat(pattern, locale);
 		Date date = null;
@@ -198,7 +196,6 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	/**
 	 * Get date format
 	 */
-	@SuppressWarnings("hiding")
 	private DateFormat getFormat(String pattern, Locale locale)
 	{
 		DateFormat format = null;
@@ -239,7 +236,7 @@ public class DateLocaleConverter extends BaseLocaleConverter
 	 *                if conversion cannot be performed successfully
 	 */
 	@Override
-	public Object convert(Class< ? > type, Object value, @SuppressWarnings("hiding") String pattern)
+	public Object convert(Class< ? > type, Object value, String pattern)
 	{
 		if (value == null)
 		{

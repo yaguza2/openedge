@@ -343,7 +343,6 @@ public final class LoginModuleImpl implements LoginModule, Serializable
 	 * @exception Exception
 	 *                if the validation fails.
 	 */
-	@SuppressWarnings("hiding")
 	protected boolean validate(String username, char[] password) throws Exception
 	{
 		boolean passwordMatch = false;

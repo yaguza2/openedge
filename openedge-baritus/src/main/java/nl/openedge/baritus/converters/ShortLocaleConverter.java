@@ -105,7 +105,6 @@ public class ShortLocaleConverter extends DecimalLocaleConverter
 	 * @exception ConversionException
 	 *                if conversion cannot be performed successfully
 	 */
-	@SuppressWarnings("hiding")
 	@Override
 	public Object convert(Class< ? > type, Object value, String pattern)
 	{

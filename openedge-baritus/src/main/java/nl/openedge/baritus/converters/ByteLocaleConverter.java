@@ -105,8 +105,7 @@ public class ByteLocaleConverter extends DecimalLocaleConverter
 	 *                if conversion cannot be performed successfully
 	 */
 	@Override
-	protected Object parse(Object value, @SuppressWarnings("hiding") String pattern)
-			throws ParseException
+	protected Object parse(Object value, String pattern) throws ParseException
 	{
 		final Number parsed = (Number) super.parse(value, pattern);
 		if (parsed.longValue() != parsed.byteValue())
@@ -132,7 +131,7 @@ public class ByteLocaleConverter extends DecimalLocaleConverter
 	 *                if conversion cannot be performed successfully
 	 */
 	@Override
-	public Object convert(Class< ? > type, Object value, @SuppressWarnings("hiding") String pattern)
+	public Object convert(Class< ? > type, Object value, String pattern)
 	{
 		if (value == null)
 		{
