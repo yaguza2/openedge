@@ -1,11 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ================================================================================
- * Copyright (c) 2004, Open Edge B.V.,  All Rights Reserved.
- */
 package nl.openedge.util.hibernate;
 
 import java.io.IOException;
@@ -24,41 +16,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Helper class to be able to transparantly obtain and configure Hibernate sessions.
+ * Helper class to be able to transparently obtain and configure Hibernate sessions.
  * <p>
- * Before HibernateHelper can be used, HibernateHelper.init() should be called once. After
- * this, you can obtain the current session with HibernateHelper.getSession(); If you use
- * the HibernateFiler from this package, you do not need to (or better you should never)
- * close the session.
+ * Before HibernateHelper can be used, {@link HibernateHelper#init()} should be called
+ * once. After this, you can obtain the current session with
+ * {@link HibernateHelper#getSession()} If you use the {@link HibernateFilter} from this
+ * package, you do not need to (or better you should never) close the session.
  * </p>
  * <p>
- * If you want to close the session, preferably use HibernateHelper.closeSession().
+ * If you want to close the session, preferably use {@link HibernateHelper#closeSession()}
  * </p>
  * <p>
- * Some defaults can be overriden by:
+ * Some defaults can be overridden by:
  * </p>
  * <p>
- * providing hibernatehelper.properties in the classpath root with properties:
+ * providing {@code hibernatehelper.properties} in the class path root with properties:
  * <ul>
- * <li>delegate: the fully classified classname of the delegate implementation. The
- * default implementation is nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl.
- * To override, eg: 'delegate=nl.openedge.util.hibernate.HibernateHelperReloadConfigImpl'.
- * </li>
- * <li>hibernateConfig: the url of the hibernate configuration to use.</li>
+ * <li>delegate: the fully classified class name of the delegate implementation. The
+ * default implementation is
+ * {@code nl.openedge.util.hibernate.HibernateHelperThreadLocaleImpl}. To override, e.g.:
+ * {@code delegate=nl.openedge.util.hibernate.HibernateHelperReloadConfigImpl}.</li>
+ * <li>hibernateConfig: the URL of the Hibernate configuration to use.</li>
  * </ul>
  * </p>
  * <p>
- * These overrides can be overriden by setting environment variables (like -Dfoo=bar).
- * 'hibernatehelper.properties.delegate' for the delegate, and
- * 'hibernatehelper.properties.hibernateConfig' for the hibernate configuration location.
+ * These overrides can be overridden by setting environment variables (like
+ * {@code -Dfoo=bar}). 'hibernatehelper.properties.delegate' for the delegate, and
+ * 'hibernatehelper.properties.hibernateConfig' for the Hibernate configuration location.
  * </p>
  * <p>
- * Setting the config url like: HibernateHelper.setConfigURL(myUrl); Note that this will
- * override the hibernateConfig variable as well.
+ * Setting the configuration URL like: {@code HibernateHelper.setConfigURL(myUrl);} Note
+ * that this will override the hibernateConfig variable as well.
  * </p>
  * <p>
- * By default, the configuration is loaded from the file 'hibernate.cfg.xml' in the
- * classpath root.
+ * By default, the configuration is loaded from the file {@code hibernate.cfg.xml} in the
+ * class path root.
  * 
  * @author Eelco Hillenius
  */
