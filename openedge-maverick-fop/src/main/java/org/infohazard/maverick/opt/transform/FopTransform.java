@@ -1,13 +1,6 @@
 package org.infohazard.maverick.opt.transform;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringWriter;
+import java.io.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -40,45 +33,48 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 
-
 public class FopTransform implements Transform
 {
 	private static Logger log = LoggerFactory.getLogger(FopTransform.class);
+
 	private static Logger fopDriverLog = LoggerFactory.getLogger(Driver.class);
 
 	protected static final String ATTR_OUTPUT = "output";
+
 	protected static final String ATTR_DISPOSITION_TYPE = "disposition-type";
+
 	protected static final String ATTR_FILENAME = "filename";
+
 	protected static final String ATTR_CONFIG = "config";
-	
+
 	protected TransformerFactory tFactory = TransformerFactory.newInstance();
 
 	protected int output = Driver.RENDER_PDF;
-	
+
 	/**
-	 * For Content-Disposition header. Ifthis is set, this transform
-	 * will override any previous value for the Content-Disposition header
-	 * and set it to "attachment; filename={whatever you set for filename}"
+	 * For Content-Disposition header. Ifthis is set, this transform will override any
+	 * previous value for the Content-Disposition header and set it to
+	 * "attachment; filename={whatever you set for filename}"
 	 */
 	protected String filename;
 
-	
 	protected String configPath = null;
 
 	public FopTransform(Element transformNode, ServletConfig servletCfg) throws ConfigException
-	
+
 	{
 		this.setOutput(XML.getValue(transformNode, ATTR_OUTPUT));
 		this.filename = XML.getValue(transformNode, ATTR_FILENAME);
 
 		String path = XML.getValue(transformNode, ATTR_CONFIG);
-		if (path!=null)
+		if (path != null)
 		{
 			this.configPath = servletCfg.getServletContext().getRealPath(path);
 		}
 	}
 
-	public void setOutput(String output) throws ConfigException {
+	public void setOutput(String output) throws ConfigException
+	{
 		if (output != null)
 		{
 			if (output.equalsIgnoreCase("pdf"))
@@ -124,18 +120,15 @@ public class FopTransform implements Transform
 		}
 	}
 
-	/**
-	 */
+	@Override
 	public TransformStep createStep(TransformContext tctx)
-		throws ServletException
 	{
 		return new Step(tctx);
 	}
 
 	protected class Step extends AbstractTransformStep
 	{
-
-		public Step(TransformContext tctx) throws ServletException
+		public Step(TransformContext tctx)
 		{
 			super(tctx);
 		}
@@ -143,6 +136,7 @@ public class FopTransform implements Transform
 		/**
 		 * Funnels output to go(String)
 		 */
+		@Override
 		public void done() throws IOException, ServletException
 		{
 			log.debug("Done being written to");
@@ -160,11 +154,10 @@ public class FopTransform implements Transform
 
 		/**
 		*/
-		public ContentHandler getSAXHandler()
-			throws IOException, ServletException
+		@Override
+		public ContentHandler getSAXHandler() throws IOException, ServletException
 		{
-			log.debug(
-				"Creating TransformerHandler which sends to next step output stream.");
+			log.debug("Creating TransformerHandler which sends to next step output stream.");
 
 			try
 			{
@@ -172,8 +165,7 @@ public class FopTransform implements Transform
 					(SAXTransformerFactory) TransformerFactory.newInstance();
 				TransformerHandler tHandler = saxTFact.newTransformerHandler();
 
-				Result res =
-					new StreamResult(this.getResponse().getOutputStream());
+				Result res = new StreamResult(this.getResponse().getOutputStream());
 				tHandler.setResult(res);
 
 				return tHandler;
@@ -184,20 +176,21 @@ public class FopTransform implements Transform
 			}
 		}
 
+		@Override
 		public void go(String input) throws IOException, ServletException
 		{
 			log.debug("Handling input as String");
-			//read the encoding from the xml file
+			// read the encoding from the xml file
 
-			//find the first occurance of the word "encoding"
+			// find the first occurance of the word "encoding"
 			int start = input.indexOf("encoding");
-			//find the start quote and add 1
-			//(we don't want to include the quote in the string)
-			start = input.indexOf("\"",start)+1;
-			//find the end quote
-			int end = input.indexOf("\"",start);
-			//pull out the encoding
-			String encoding = input.substring(start,end).trim();
+			// find the start quote and add 1
+			// (we don't want to include the quote in the string)
+			start = input.indexOf("\"", start) + 1;
+			// find the end quote
+			int end = input.indexOf("\"", start);
+			// pull out the encoding
+			String encoding = input.substring(start, end).trim();
 
 			log.debug("Reading string with \"" + encoding + "\" encoding.");
 			byte[] bytes = input.getBytes();
@@ -205,12 +198,14 @@ public class FopTransform implements Transform
 			this.go(new InputStreamReader(bais, encoding));
 		}
 
+		@Override
 		public void go(Reader input) throws IOException, ServletException
 		{
 			log.debug("Handling input as Reader");
 			this.go(new InputSource(input));
 		}
 
+		@Override
 		public void go(Source input) throws IOException, ServletException
 		{
 			log.debug("Handling input as Source");
@@ -220,10 +215,9 @@ public class FopTransform implements Transform
 				this.go(is);
 			}
 			else
-			{ //unable to convert input to InputSource
+			{ // unable to convert input to InputSource
 				// Use JAXP 1.1 transform api to make copy of dom to String
-				log.debug(
-					"Unable to handle input as Source, switching to String");
+				log.debug("Unable to handle input as Source, switching to String");
 				try
 				{
 					Transformer trans = tFactory.newTransformer();
@@ -248,19 +242,21 @@ public class FopTransform implements Transform
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			org.apache.avalon.framework.logger.Logger dlog = new Slf4jAvalonLogger(fopDriverLog);
 			MessageHandler.setScreenLogger(dlog);
-			
+
 			try
 			{
 				@SuppressWarnings("unused")
 				Options options = null;
 
-				//load userconfig file if specified
+				// load userconfig file if specified
 				if (configPath != null)
 				{
-					//load the user config file if specified
+					// load the user config file if specified
 					options = new Options(new File(configPath));
-				} else {
-					//try and load the standard options off of the classpath
+				}
+				else
+				{
+					// try and load the standard options off of the classpath
 					options = new Options();
 				}
 				Driver driver = new Driver(input, baos);
@@ -276,25 +272,25 @@ public class FopTransform implements Transform
 			String contentType;
 			switch (output)
 			{
-				case Driver.RENDER_PS :
+				case Driver.RENDER_PS:
 					contentType = "application/postscript";
 					break;
-				case Driver.RENDER_PCL :
+				case Driver.RENDER_PCL:
 					contentType = "application/vnd.hp-PCL";
 					break;
-				case Driver.RENDER_SVG :
+				case Driver.RENDER_SVG:
 					contentType = "image/svg-xml";
 					break;
-				case Driver.RENDER_TXT :
+				case Driver.RENDER_TXT:
 					contentType = "text/txt";
 					break;
-				case Driver.RENDER_XML :
+				case Driver.RENDER_XML:
 					contentType = "text/xml";
 					break;
-				case Driver.RENDER_MIF :
+				case Driver.RENDER_MIF:
 					contentType = "application/vnd.mif";
 					break;
-				default : //case: Driver.RENDER_PDF
+				default: // case: Driver.RENDER_PDF
 					contentType = "application/pdf";
 					break;
 			}
@@ -307,32 +303,33 @@ public class FopTransform implements Transform
 
 			response.setContentType(contentType);
 			response.setContentLength(baos.size());
-			
-			// some IE/ Adobe ActiveX control specific hacks
-            response.setHeader("Expires", "");
-            response.setHeader("Cache-Control", "");
-            response.setHeader("Pragma", "");
 
-            String disposition = null;
-            if (filename != null)
-            {
-                disposition = "attachment; filename=" + filename;
-                if(log.isDebugEnabled())
-                {
-                    log.debug("setting response header Content-Disposition to: " + disposition);
-                }
-                response.setHeader("Content-Disposition", disposition);
-            }
-            else
-            {
-                disposition = "inline; filename=output.pdf"; // filename does nothing really,
-                	// but solves a bug in some IE versions
-                if(log.isDebugEnabled())
-                {
-                    log.debug("setting response header Content-Disposition to: " + disposition);
-                }
-                response.setHeader("Content-Disposition", disposition);
-            }
+			// some IE/ Adobe ActiveX control specific hacks
+			response.setHeader("Expires", "");
+			response.setHeader("Cache-Control", "");
+			response.setHeader("Pragma", "");
+
+			String disposition = null;
+			if (filename != null)
+			{
+				disposition = "attachment; filename=" + filename;
+				if (log.isDebugEnabled())
+				{
+					log.debug("setting response header Content-Disposition to: " + disposition);
+				}
+				response.setHeader("Content-Disposition", disposition);
+			}
+			else
+			{
+				disposition = "inline; filename=output.pdf"; // filename does nothing
+																// really,
+				// but solves a bug in some IE versions
+				if (log.isDebugEnabled())
+				{
+					log.debug("setting response header Content-Disposition to: " + disposition);
+				}
+				response.setHeader("Content-Disposition", disposition);
+			}
 
 			baos.writeTo(out);
 		}
