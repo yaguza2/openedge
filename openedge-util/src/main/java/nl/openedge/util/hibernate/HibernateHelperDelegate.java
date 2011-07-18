@@ -11,9 +11,9 @@ package nl.openedge.util.hibernate;
 import java.net.URL;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
 
 /**
  * Interface for implementing the behaviour of HibernateHelper.
@@ -62,9 +62,9 @@ public interface HibernateHelperDelegate
 	 * @param session
 	 *            hibernate session
 	 * @param actionForCurrentSession
-	 *            one of the constants HibernateHelperThreadLocaleImpl.ACTION_CLOSE close current
-	 *            session HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT disconnect current
-	 *            session
+	 *            one of the constants HibernateHelperThreadLocaleImpl.ACTION_CLOSE close
+	 *            current session HibernateHelperThreadLocaleImpl.ACTION_DISCONNECT
+	 *            disconnect current session
 	 */
 	void setSession(Session session, int actionForCurrentSession);
 
@@ -117,20 +117,21 @@ public interface HibernateHelperDelegate
 	void setInterceptorClass(String className);
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
-	 * new - and thus thread safe - instance will be created for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if
+	 * false, a new - and thus thread safe - instance will be created for session.
 	 * 
 	 * @return boolean
 	 */
 	boolean isSingleInterceptor();
 
 	/**
-	 * If true, only one instance will be created of the interceptor for all sessions, if false, a
-	 * new - and thus thread safe - instance will be created for session.
+	 * If true, only one instance will be created of the interceptor for all sessions, if
+	 * false, a new - and thus thread safe - instance will be created for session.
 	 * 
 	 * @param b
-	 *            If true, only one instance will be created of the interceptor for all sessions, if
-	 *            false, a new - and thus thread safe - instance will be created for session
+	 *            If true, only one instance will be created of the interceptor for all
+	 *            sessions, if false, a new - and thus thread safe - instance will be
+	 *            created for session
 	 */
 	void setSingleInterceptor(boolean b);
 
