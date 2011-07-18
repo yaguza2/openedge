@@ -30,7 +30,6 @@
  */
 package nl.openedge.modules.types.initcommands;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import nl.openedge.modules.ComponentRepository;
@@ -49,30 +48,18 @@ import org.jdom.Element;
  */
 public class ChainedEventCasterInitCommand implements InitCommand, ComponentObserver
 {
-	/** repository instance. */
 	private ComponentRepository componentRepository = null;
 
-	/** whether to execute the init commands. */
 	private boolean executeInitCommands = true;
 
-	/**
-	 * @see nl.openedge.components.types.decorators.InitCommand#init(java.lang.String,
-	 *      org.jdom.Element, nl.openedge.components.ComponentRepository)
-	 */
 	@Override
 	public void init(String componentName, Element componentNode, ComponentRepository cRepo)
-			throws ConfigException
 	{
 		this.componentRepository = cRepo;
 	}
 
-	/**
-	 * populate the component instance.
-	 * 
-	 * @see nl.openedge.components.types.decorators.InitCommand#execute(java.lang.Object)
-	 */
 	@Override
-	public void execute(Object componentInstance) throws InitCommandException, ConfigException
+	public void execute(Object componentInstance) throws ConfigException
 	{
 		if (executeInitCommands)
 		{
@@ -84,30 +71,14 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 			}
 			else
 			{
-				Class clazz = componentInstance.getClass();
+				Class< ? > clazz = componentInstance.getClass();
 				try
 				{
 					Method initMethod =
 						clazz.getMethod("addObserver", new Class[] {ChainedEventObserver.class});
 					initMethod.invoke(componentInstance, new Object[] {this.componentRepository});
 				}
-				catch (SecurityException e)
-				{
-					throw new ConfigException(e);
-				}
-				catch (IllegalArgumentException e)
-				{
-					throw new ConfigException(e);
-				}
-				catch (NoSuchMethodException e)
-				{
-					throw new ConfigException(e);
-				}
-				catch (IllegalAccessException e)
-				{
-					throw new ConfigException(e);
-				}
-				catch (InvocationTargetException e)
+				catch (Exception e)
 				{
 					throw new ConfigException(e);
 				}
@@ -115,16 +86,8 @@ public class ChainedEventCasterInitCommand implements InitCommand, ComponentObse
 		}
 	}
 
-	/**
-	 * fired after all components are (re)loaded.
-	 * 
-	 * @param evt
-	 *            event
-	 */
 	@Override
 	public void modulesLoaded(ComponentsLoadedEvent evt)
 	{
-		// noop
 	}
-
 }
