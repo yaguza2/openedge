@@ -105,7 +105,7 @@ public interface ComponentRepository extends ChainedEventObserver, Serializable
 	 *            interfaces will be taken into account
 	 * @return List list of components. Never null, possibly empty
 	 */
-	List getComponentsByType(Class type, boolean exact);
+	List<Object> getComponentsByType(Class< ? > type, boolean exact);
 
 	/**
 	 * returns all known names.
@@ -115,7 +115,7 @@ public interface ComponentRepository extends ChainedEventObserver, Serializable
 	String[] getComponentNames();
 
 	/**
-	 * get the quartz sceduler.
+	 * get the quartz scheduler.
 	 * 
 	 * @return Scheduler
 	 */

@@ -80,7 +80,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	 *             when an configuration error occurs when an configuration error occurs
 	 */
 	@Override
-	protected void addComponent(String name, Class clazz, Element node) throws ConfigException
+	protected void addComponent(String name, Class< ? > clazz, Element node) throws ConfigException
 	{
 		ComponentFactory factory = getComponentFactory(name, clazz, node);
 
@@ -110,7 +110,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	 *             when an configuration error occurs
 	 */
 	@Override
-	protected ComponentFactory getComponentFactory(String name, Class clazz, Element node)
+	protected ComponentFactory getComponentFactory(String name, Class< ? > clazz, Element node)
 			throws ConfigException
 	{
 
@@ -125,7 +125,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 		boolean wasFoundOnce = false;
 		for (Iterator j = baseTypes.iterator(); j.hasNext();)
 		{
-			Class baseType = (Class) j.next();
+			Class< ? > baseType = (Class) j.next();
 			if (baseType.isAssignableFrom(clazz))
 			{
 				if (wasFoundOnce) // more than one base type!
@@ -171,7 +171,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 	 *             when an configuration error occurs
 	 */
 	@Override
-	protected void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+	protected void addInitCommands(ComponentFactory factory, Class< ? > clazz, Element node)
 			throws ConfigException
 	{
 		List initCommands = TypesRegistry.getInitCommandTypes();
@@ -180,7 +180,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 			List commands = new ArrayList();
 			for (Iterator j = initCommands.iterator(); j.hasNext();)
 			{
-				Class type = (Class) j.next();
+				Class< ? > type = (Class) j.next();
 				if (type.isAssignableFrom(clazz))
 				{
 					// get command for this class
@@ -201,14 +201,10 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 		}
 	}
 
-	/**
-	 * @see nl.openedge.components.ComponentRepository#getModulesByType(java.lang.Class,
-	 *      boolean)
-	 */
 	@Override
-	public List getComponentsByType(Class type, boolean exact)
+	public List<Object> getComponentsByType(Class< ? > type, boolean exact)
 	{
-		List sublist = new ArrayList();
+		List<Object> sublist = new ArrayList<Object>();
 
 		if (type == null)
 		{
@@ -217,9 +213,8 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 
 		if (exact)
 		{
-			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
+			for (Iterator< ? > i = getComponents().values().iterator(); i.hasNext();)
 			{
-
 				ComponentFactory factory = (ComponentFactory) i.next();
 				if (type.equals(factory.getComponentClass()))
 				{
@@ -229,7 +224,7 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 		}
 		else
 		{
-			for (Iterator i = getComponents().values().iterator(); i.hasNext();)
+			for (Iterator< ? > i = getComponents().values().iterator(); i.hasNext();)
 			{
 
 				ComponentFactory factory = (ComponentFactory) i.next();
@@ -242,5 +237,4 @@ public class DefaultComponentRepository extends AbstractComponentRepository
 
 		return sublist;
 	}
-
 }

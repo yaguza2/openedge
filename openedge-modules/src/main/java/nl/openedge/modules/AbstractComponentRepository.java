@@ -1,33 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
 package nl.openedge.modules;
 
 import java.io.IOException;
@@ -78,19 +48,21 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	private static Logger log = LoggerFactory.getLogger(AbstractComponentRepository.class);
 
 	/** holder for component builders. */
-	private Map components = Collections.synchronizedMap(new HashMap());
+	private Map<String, Object> components = Collections
+		.synchronizedMap(new HashMap<String, Object>());
 
 	/** holder for component component factorys that implement job interface. */
-	private Map jobs = Collections.synchronizedMap(new HashMap());
+	private Map<String, Object> jobs = Collections.synchronizedMap(new HashMap<String, Object>());
 
 	/** holder for triggers. */
-	private Map triggers = null;
+	private Map< ? , ? > triggers = null;
 
 	/** quartz scheduler. */
 	private Scheduler scheduler;
 
 	/** observers for component factory events. */
-	private List observers = Collections.synchronizedList(new ArrayList());
+	private List<ComponentRepositoryObserver> observers = Collections
+		.synchronizedList(new ArrayList<ComponentRepositoryObserver>());
 
 	/** servlet context if provided. */
 	private ServletContext servletContext = null;
@@ -307,17 +279,17 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @param componentsNode
 	 *            config node of components
 	 * @param classLoader
-	 *            class loader
+	 *            Class<?> loader
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 * @return components
 	 */
-	protected Map addComponents(Element componentsNode, ClassLoader classLoader)
+	protected Map< ? , ? > addComponents(Element componentsNode, ClassLoader classLoader)
 			throws ConfigException
 	{
 		// iterate components
-		List componentNodes = componentsNode.getChildren("component");
-		for (Iterator i = componentNodes.iterator(); i.hasNext();)
+		List< ? > componentNodes = componentsNode.getChildren("component");
+		for (Iterator< ? > i = componentNodes.iterator(); i.hasNext();)
 		{
 			Element node = (Element) i.next();
 			String name = node.getAttributeValue("name");
@@ -327,7 +299,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 					+ " is used more than once");
 			}
 			String className = node.getAttributeValue("class");
-			Class clazz = null;
+			Class< ? > clazz = null;
 			try
 			{
 				clazz = classLoader.loadClass(className);
@@ -355,7 +327,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 */
-	protected abstract void addComponent(String name, Class clazz, Element node)
+	protected abstract void addComponent(String name, Class< ? > clazz, Element node)
 			throws ConfigException;
 
 	/**
@@ -371,8 +343,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 */
-	protected abstract ComponentFactory getComponentFactory(String name, Class clazz, Element node)
-			throws ConfigException;
+	protected abstract ComponentFactory getComponentFactory(String name, Class< ? > clazz,
+			Element node) throws ConfigException;
 
 	/**
 	 * add initialization commands.
@@ -386,7 +358,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 */
-	protected abstract void addInitCommands(ComponentFactory factory, Class clazz, Element node)
+	protected abstract void addInitCommands(ComponentFactory factory, Class< ? > clazz, Element node)
 			throws ConfigException;
 
 	/**
@@ -395,24 +367,25 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @param schedulerNode
 	 *            scheduler config node
 	 * @param classLoader
-	 *            class loader
+	 *            Class<?> loader
 	 * @return map of jobs
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 */
-	protected Map addTriggers(Element schedulerNode, ClassLoader classLoader)
+	protected Map< ? , ? > addTriggers(Element schedulerNode, ClassLoader classLoader)
 			throws ConfigException
 	{
-		Map workTriggers = Collections.synchronizedMap(new HashMap());
-		List trigs = schedulerNode.getChildren("trigger");
-		for (Iterator i = trigs.iterator(); i.hasNext();)
+		Map<Object, Object> workTriggers =
+			Collections.synchronizedMap(new HashMap<Object, Object>());
+		List< ? > trigs = schedulerNode.getChildren("trigger");
+		for (Iterator< ? > i = trigs.iterator(); i.hasNext();)
 		{
 			Trigger trigger = null;
 			Element triggerNode = (Element) i.next();
 			String name = triggerNode.getAttributeValue("name");
 			String group = triggerNode.getAttributeValue("group");
 			String className = triggerNode.getAttributeValue("class");
-			Class clazz = null;
+			Class< ? > clazz = null;
 
 			try
 			{
@@ -441,10 +414,10 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			// the name will be a combination of:
 			// 'name_jobname', to keep them unique
 			trigger.setGroup(group);
-			List parameters = triggerNode.getChildren("property");
-			Map paramMap = new HashMap();
+			List< ? > parameters = triggerNode.getChildren("property");
+			Map<String, String> paramMap = new HashMap<String, String>();
 			if (parameters != null)
-				for (Iterator j = parameters.iterator(); j.hasNext();)
+				for (Iterator< ? > j = parameters.iterator(); j.hasNext();)
 				{
 					Element pNode = (Element) j.next();
 					paramMap.put(pNode.getAttributeValue("name"), pNode.getAttributeValue("value"));
@@ -474,11 +447,11 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @throws OgnlException
 	 *             on population errors
 	 */
-	private void populate(Object bean, Map parameters) throws OgnlException
+	private void populate(Object bean, Map<String, String> parameters) throws OgnlException
 	{
-		for (Iterator i = parameters.keySet().iterator(); i.hasNext();)
+		for (Iterator<String> i = parameters.keySet().iterator(); i.hasNext();)
 		{
-			String key = (String) i.next();
+			String key = i.next();
 			Object value = parameters.get(key);
 			Ognl.setValue(key, bean, value);
 		}
@@ -490,7 +463,7 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	 * @param schedulerNode
 	 *            config node of scheduler
 	 * @param classLoader
-	 *            class loader
+	 *            Class<?> loader
 	 * @throws ConfigException
 	 *             when an configuration error occurs
 	 */
@@ -499,8 +472,8 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	{
 		// get job excecution map from config
 		Element execNode = schedulerNode.getChild("jobExecutionMap");
-		List execs = execNode.getChildren("job");
-		for (Iterator i = execs.iterator(); i.hasNext();)
+		List< ? > execs = execNode.getChildren("job");
+		for (Iterator< ? > i = execs.iterator(); i.hasNext();)
 		{
 			Element e = (Element) i.next();
 			String triggerName = e.getAttributeValue("trigger");
@@ -563,9 +536,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 			{
 				// a bit of a hack as the implementors of abstract class
 				// org.quartz.Trigger have method setStartTime(Date), whereas
-				// the base class itself lacks this method
+				// the base Class<?> itself lacks this method
 				// set startup to twenty seconds from now
-				Class triggerClass = trigger.getClass();
+				Class< ? extends Trigger> triggerClass = trigger.getClass();
 				Calendar start = new GregorianCalendar();
 				start.setLenient(true);
 				start.add(Calendar.SECOND, DEFAULT_WAIT_UNTIL_SCHEDULER_STARTUP);
@@ -606,9 +579,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		SchedulerStartedEvent evt = new SchedulerStartedEvent(this, theScheduler);
 		synchronized (observers)
 		{
-			for (Iterator i = observers.iterator(); i.hasNext();)
+			for (Iterator<ComponentRepositoryObserver> i = observers.iterator(); i.hasNext();)
 			{
-				ComponentRepositoryObserver mo = (ComponentRepositoryObserver) i.next();
+				ComponentRepositoryObserver mo = i.next();
 				if (mo instanceof SchedulerObserver)
 				{
 					((SchedulerObserver) mo).schedulerStarted(evt);
@@ -625,9 +598,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		ComponentsLoadedEvent evt = new ComponentsLoadedEvent(this);
 		synchronized (observers)
 		{
-			for (Iterator i = observers.iterator(); i.hasNext();)
+			for (Iterator<ComponentRepositoryObserver> i = observers.iterator(); i.hasNext();)
 			{
-				ComponentRepositoryObserver mo = (ComponentRepositoryObserver) i.next();
+				ComponentRepositoryObserver mo = i.next();
 				if (mo instanceof ComponentObserver)
 				{
 					((ComponentObserver) mo).modulesLoaded(evt);
@@ -658,9 +631,9 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 	{
 		synchronized (observers)
 		{
-			for (Iterator i = observers.iterator(); i.hasNext();)
+			for (Iterator<ComponentRepositoryObserver> i = observers.iterator(); i.hasNext();)
 			{
-				ComponentRepositoryObserver mo = (ComponentRepositoryObserver) i.next();
+				ComponentRepositoryObserver mo = i.next();
 				if (mo instanceof ChainedEventObserver)
 				{
 					((ChainedEventObserver) mo).recieveChainedEvent(evt);
@@ -669,9 +642,6 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		}
 	}
 
-	/**
-	 * @see nl.openedge.components.ComponentRepository#getModule(java.lang.String)
-	 */
 	@Override
 	public Object getComponent(String name)
 	{
@@ -684,69 +654,40 @@ public abstract class AbstractComponentRepository implements ComponentRepository
 		return componentFactory.getComponent();
 	}
 
-	/**
-	 * @see nl.openedge.components.ComponentRepository#getScheduler()
-	 */
 	@Override
 	public Scheduler getScheduler()
 	{
 		return scheduler;
 	}
 
-	/**
-	 * @see nl.openedge.modules.ComponentRepository#getServletContext()
-	 */
 	@Override
 	public ServletContext getServletContext()
 	{
 		return servletContext;
 	}
 
-	/**
-	 * @see nl.openedge.components.ComponentRepository#getModuleNames()
-	 */
 	@Override
 	public String[] getComponentNames()
 	{
-		return (String[]) components.keySet().toArray(new String[components.size()]);
+		return components.keySet().toArray(new String[components.size()]);
 	}
 
-	/**
-	 * Get components.
-	 * 
-	 * @return the components.
-	 */
-	public Map getComponents()
+	public Map<String, Object> getComponents()
 	{
 		return components;
 	}
 
-	/**
-	 * Get jobs.
-	 * 
-	 * @return the jobs.
-	 */
-	public Map getJobs()
+	public Map<String, Object> getJobs()
 	{
 		return jobs;
 	}
 
-	/**
-	 * Get observers.
-	 * 
-	 * @return the observers.
-	 */
-	public List getObservers()
+	public List<ComponentRepositoryObserver> getObservers()
 	{
 		return observers;
 	}
 
-	/**
-	 * Get triggers.
-	 * 
-	 * @return the triggers.
-	 */
-	public Map getTriggers()
+	public Map< ? , ? > getTriggers()
 	{
 		return triggers;
 	}

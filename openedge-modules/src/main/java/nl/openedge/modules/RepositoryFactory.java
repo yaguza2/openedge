@@ -61,7 +61,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class RepositoryFactory implements ObjectFactory
 {
-
 	/** Listener instance. */
 	private static final NamingListener NAMING_LISTENER = new NamespaceChangeListener()
 	{
@@ -179,20 +178,10 @@ public final class RepositoryFactory implements ObjectFactory
 
 		try
 		{
-			Class clazz = classLoader.loadClass(implementingClass);
+			Class< ? > clazz = classLoader.loadClass(implementingClass);
 			componentRepository = (ComponentRepository) clazz.newInstance();
 		}
-		catch (ClassNotFoundException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new ConfigException(e);
-		}
-		catch (InstantiationException e)
-		{
-			log.error(e.getMessage(), e);
-			throw new ConfigException(e);
-		}
-		catch (IllegalAccessException e)
+		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
 			throw new ConfigException(e);
@@ -270,8 +259,7 @@ public final class RepositoryFactory implements ObjectFactory
 	 *      Exception
 	 */
 	@Override
-	public Object getObjectInstance(Object reference, Name name, Context ctx, Hashtable env)
-			throws Exception
+	public Object getObjectInstance(Object reference, Name name, Context ctx, Hashtable< ? , ? > env)
 	{
 		log.info("ref: " + reference + ", name: " + name + ", ctx: " + ctx + ", env: " + env);
 
