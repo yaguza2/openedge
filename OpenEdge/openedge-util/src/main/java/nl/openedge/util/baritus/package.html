@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 3.2 Final//NL">
+<html>
+<head>
+<title>nl.openedge.util.baritus package</title>
+</head>
+<body>
+Generic Baritus utility classes.
+<p>
+	<ul>
+		<li>
+			AbstractMockControlTest. Base class for JUnit test cases that
+            can be used to test Baritus controls, Validators etc.
+		</li>
+		<li>
+			BaritusControlTest Abstract class for testing controls in a simulated
+            Baritus/ Maverick/ webapp environment, so that constructs like validators,
+            populators etc can be tested in isolation without much effort. This basecontrol
+            keeps references to things like the formBean, formBeanContext and logical
+            view and overrides some of the propected methods from Baritus with public
+            methods in order to make testing easier.
+		</li>
+	</ul>
+</p>
+</body>
+</html>
