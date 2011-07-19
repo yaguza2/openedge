@@ -39,13 +39,13 @@ import java.util.Iterator;
  * 
  * @author Eelco Hillenius
  */
-public class IteratorToEnumeratorDecorator implements Enumeration
+public class IteratorToEnumeratorDecorator<T> implements Enumeration<T>
 {
 
 	/**
 	 * De gewrapte iterator.
 	 */
-	private Iterator iterator = null;
+	private Iterator<T> iterator = null;
 
 	/**
 	 * Construct met iterator.
@@ -53,7 +53,7 @@ public class IteratorToEnumeratorDecorator implements Enumeration
 	 * @param deIterator
 	 *            de iterator die gewrapt dient te worden
 	 */
-	public IteratorToEnumeratorDecorator(final Iterator deIterator)
+	public IteratorToEnumeratorDecorator(final Iterator<T> deIterator)
 	{
 		this.iterator = deIterator;
 	}
@@ -71,7 +71,7 @@ public class IteratorToEnumeratorDecorator implements Enumeration
 	 * @see java.util.Enumeration#nextElement()
 	 */
 	@Override
-	public Object nextElement()
+	public T nextElement()
 	{
 		return iterator.next();
 	}
