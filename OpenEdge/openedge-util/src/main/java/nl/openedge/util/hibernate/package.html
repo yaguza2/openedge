@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 3.2 Final//NL">
+<html>
+    <head>
+        <title>nl.openedge.util.hibernate package</title>
+    </head>
+    <body>
+        <p>Bevat de hulpklassen om Hibernate te benaderen.</p>
+        <h2>Hibernate raamwerk</h2>
+        <p> Voor het benaderen van Hibernate is een raamwerk ontwikkeld waarmee 
+            met behulp van een aantal design patterns (Command, Template Method 
+            en Decorator) op een flexibele, eenvoudige en consistente manier 
+            database acties uitgevoerd kunnen worden. </p>
+        <p> Als je Hibernate wilt gebruiken om de database te benaderen dien je 
+            een Hibernate commando te maken door van {@link 
+            nl.openedge.util.hibernate.AbstractQueryCommand 
+            AbstractQueryCommand} af te leiden.</p>
+        <p>In de {@link 
+            nl.openedge.util.hibernate.AbstractQueryCommand#AbstractQueryCommand(String) 
+            constructor} moet de naam van de uit te voeren named query 
+            opgegeven worden. Eventuele parameters ten behoeve van de named 
+            query kunnen dan in een overridden {@link 
+            nl.openedge.util.hibernate.AbstractQueryCommand#setParameters(net.sf.hibernate.Query) 
+            setParameters} op de query gezet worden. Het resultaat is uit te 
+            vragen nadat je het commando {@linkplain 
+            nl.openedge.util.hibernate.HibernateHelper#execute(AbstractHibernateCommand) 
+            uitgevoerd} hebt. </p>
+    </body>
+</html>
