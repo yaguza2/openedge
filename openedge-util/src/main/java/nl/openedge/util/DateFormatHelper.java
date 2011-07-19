@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
 public final class DateFormatHelper
 {
 	/** List of formatters. */
-	private static LinkedHashMap formatters = new LinkedHashMap();
+	private static LinkedHashMap<String, DateFormat> formatters = new LinkedHashMap<String, DateFormat>();
 
 	/** The default formatter. */
 	private static SimpleDateFormat defaultFormatter = null;
@@ -287,8 +287,8 @@ public final class DateFormatHelper
 			return null;
 		}
 
-		Iterator formatterIterator = formatters.values().iterator();
-		Iterator keyIterator = formatters.keySet().iterator();
+		Iterator<DateFormat> formatterIterator = formatters.values().iterator();
+		Iterator<String> keyIterator = formatters.keySet().iterator();
 		SimpleDateFormat sdf = null;
 		Date date = null;
 
@@ -297,7 +297,7 @@ public final class DateFormatHelper
 			try
 			{
 				sdf = (SimpleDateFormat) formatterIterator.next();
-				if (stringDate.length() == ((String) keyIterator.next()).length())
+				if (stringDate.length() == keyIterator.next().length())
 				{
 					date = parse(stringDate, sdf);
 				}
@@ -378,7 +378,7 @@ public final class DateFormatHelper
 	public static Date parse(String stringDate, String format) throws CheckException,
 			ParseException
 	{
-		DateFormat df = (DateFormat) formatters.get(format);
+		DateFormat df = formatters.get(format);
 		if (df == null)
 		{
 			df = createSimpleDateFormat(format);
