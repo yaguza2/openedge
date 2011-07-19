@@ -27,6 +27,7 @@ import com.mockobjects.servlet.MockServletContext;
  * 
  * @author Eelco Hillenius
  */
+@SuppressWarnings("all")
 public class ValidationTest
 {
 	private Locale dutch = new Locale("nl", "NL");
@@ -72,7 +73,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
@@ -94,7 +94,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
@@ -116,7 +115,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
@@ -139,7 +137,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
@@ -162,7 +159,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
@@ -185,7 +181,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
@@ -207,7 +202,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.SUCCESS, ctrl.getView());
@@ -229,7 +223,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());
@@ -251,7 +244,6 @@ public class ValidationTest
 		MaverickContext mockMavCtx = new MaverickContext(null, request, response);
 		try
 		{
-			ctrl.init(null);
 			ctrl.go(mockMavCtx);
 			MockBean bean = ctrl.getTestBean();
 			assertEquals(FormBeanCtrlBase.ERROR, ctrl.getView());

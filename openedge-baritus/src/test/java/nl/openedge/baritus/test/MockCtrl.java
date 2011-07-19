@@ -39,9 +39,7 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.population.IgnoreFieldPopulator;
 
-import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.ControllerContext;
-import org.jdom.Element;
 
 /**
  * @author Eelco Hillenius
@@ -54,31 +52,7 @@ public class MockCtrl extends FormBeanCtrlBase
 
 	private String view = SUCCESS;
 
-	/**
-	 * @see nl.openedge.baritus.FormBeanBase#perform(nl.openedge.baritus.FormBeanContext,
-	 *      org.infohazard.maverick.flow.ControllerContext)
-	 */
-	@Override
-	protected String perform(FormBeanContext formBeanContext, ControllerContext cctx)
-			throws Exception
-	{
-		return view;
-	}
-
-	/**
-	 * @see nl.openedge.baritus.FormBeanBase#makeFormBean(org.infohazard.maverick.flow.ControllerContext)
-	 */
-	@Override
-	protected Object makeFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
-	{
-		this.bean = new MockBean();
-		return bean;
-	}
-
-	/**
-	 * @see org.infohazard.maverick.flow.ControllerSingleton#init(org.jdom.Element)
-	 */
-	public void init(Element controllerNode) throws ConfigException
+	public MockCtrl()
 	{
 		ExecutionParams params = getExecutionParams(null);
 		params.setIncludeSessionAttributes(true);
@@ -93,11 +67,24 @@ public class MockCtrl extends FormBeanCtrlBase
 
 		addValidator("toValidate1", new MockFieldValidator());
 		addValidator("toValidate2", new MockFieldValidator()); // test form
-																// toValidate2[..]
+		// toValidate2[..]
 		addValidator("toValidate3[0]", new MockFieldValidator()); // test form
-																	// toValidate3[..]
+		// toValidate3[..]
 
 		addValidator(new MockFormValidator1());
+	}
+
+	@Override
+	protected String perform(FormBeanContext formBeanContext, ControllerContext cctx)
+	{
+		return view;
+	}
+
+	@Override
+	protected Object makeFormBean(FormBeanContext formBeanContext, ControllerContext cctx)
+	{
+		this.bean = new MockBean();
+		return bean;
 	}
 
 	/**
@@ -120,10 +107,6 @@ public class MockCtrl extends FormBeanCtrlBase
 		return view;
 	}
 
-	/**
-	 * @see nl.openedge.baritus.FormBeanBase#getLocaleForRequest(org.infohazard.maverick.flow.ControllerContext,
-	 *      nl.openedge.baritus.FormBeanContext)
-	 */
 	@Override
 	protected Locale getLocaleForRequest(ControllerContext cctx, FormBeanContext formBeanContext)
 	{
@@ -158,5 +141,4 @@ public class MockCtrl extends FormBeanCtrlBase
 		this.view = ERROR;
 		return ERROR;
 	}
-
 }

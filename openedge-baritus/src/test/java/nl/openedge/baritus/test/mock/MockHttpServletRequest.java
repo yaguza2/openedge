@@ -76,7 +76,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 	 * @see javax.servlet.ServletRequest#getAttributeNames()
 	 */
 	@Override
-	public Enumeration getAttributeNames()
+	public Enumeration<String> getAttributeNames()
 	{
 		return new ItEnum(attributes.keySet().iterator());
 	}
@@ -101,7 +101,7 @@ public class MockHttpServletRequest extends com.mockobjects.servlet.MockHttpServ
 
 }
 
-class ItEnum implements Enumeration
+class ItEnum implements Enumeration<String>
 {
 	Iterator<String> i = null;
 
@@ -117,7 +117,7 @@ class ItEnum implements Enumeration
 	}
 
 	@Override
-	public Object nextElement()
+	public String nextElement()
 	{
 		return i.next();
 	}

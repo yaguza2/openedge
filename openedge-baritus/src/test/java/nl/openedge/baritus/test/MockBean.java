@@ -42,6 +42,7 @@ import java.util.Map;
  * @author Eelco Hillenius
  * @author Sander Hofstee
  */
+@SuppressWarnings("all")
 public class MockBean
 {
 	private String testTrimString;
