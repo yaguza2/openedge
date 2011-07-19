@@ -194,6 +194,7 @@ public class GenericComparator<T> implements Comparator<T>
 	/**
 	 * @see Comparator#compare(Object, Object)
 	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public int compare(Object o1, Object o2)
 	{
