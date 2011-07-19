@@ -99,7 +99,8 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 				{
 					Class< ? > targetType = (Class< ? >) context.get(CTX_KEY_CURRENT_TARGET_TYPE);
 					value = context.get(CTX_KEY_CURRENT_TRIED_VALUE);
-					ctrl.setConversionErrorForField(formBeanContext, targetType, name, value, e);
+					ctrl.setConversionErrorForField(cctx, formBeanContext, targetType, name, value,
+						e);
 					ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);
 					success = false;
 				}
@@ -127,7 +128,7 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 		catch (ConversionException e)
 		{
 			Class< ? > targetType = (Class< ? >) context.get(CTX_KEY_CURRENT_TARGET_TYPE);
-			ctrl.setConversionErrorForField(formBeanContext, targetType, name, value, e);
+			ctrl.setConversionErrorForField(cctx, formBeanContext, targetType, name, value, e);
 			ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);
 			success = false;
 		}
