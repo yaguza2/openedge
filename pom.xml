@@ -13,13 +13,10 @@
 	<name>OpenEdge Parent</name>
 	<description>OpenEdge support bibliotheek voor ParnasSys, ooit bedacht door Eelco Hillenius, wordt nu vervangen door Cobra.</description>
 	<modules>
-		<module>openedge-access</module>
 		<module>openedge-baritus</module>
 		<module>openedge-maverick</module>
 		<module>openedge-maverick-fop</module>
 		<module>openedge-modules</module>
-		<module>openedge-modules-impl-mailjob</module>
-		<module>openedge-modules-impl-menumodule</module>
 		<module>openedge-modules-impl-thumbs</module>
 		<module>openedge-util</module>
 	</modules>
