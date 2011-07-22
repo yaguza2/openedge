@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import nl.openedge.modules.ComponentRepository;
 import nl.openedge.modules.RepositoryFactory;
-import nl.openedge.util.hibernate.ConfigException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,14 +302,14 @@ public final class FileImageServlet extends HttpServlet
 			{
 				if (notFoundImage == null)
 				{
-					throw new ConfigException("if failOnNotFound == false, parameter notFoundImage"
-						+ " must be provided");
+					throw new IllegalArgumentException(
+						"if failOnNotFound == false, parameter notFoundImage" + " must be provided");
 				}
 				this.notFoundImageFile =
 					new File(config.getServletContext().getRealPath(notFoundImage));
 				if (!notFoundImageFile.isFile())
 				{
-					throw new ConfigException(notFoundImage
+					throw new IllegalArgumentException(notFoundImage
 						+ " (parameter notFoundImage) is not a file");
 				}
 				else
