@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	$Id: build.xml,v 1.42 2004/06/27 17:42:51 eelco12 Exp $
+	$Source: /cvsroot-fuse/mav/maverick/build.xml,v $
+-->
+
+<project basedir="." default="jar" name="maverick">
+
+	<!-- You may need to configure these locations -->
+	<property name="docbook.dir" value="../docbook-xsl"/>
+
+	<!-- Include other stuff specified by the user -->
+	<property file="build.properties"/>
+	<property file="${user.home}/build.properties"/>
+	
+	<!-- Basic build stuff -->
+	<property name="output.dir" value="build"/>
+
+	<property name="mav.docsrc.dir" value="src/xdocs"/>
+	<property name="mav.javasrc.dir" value="src/java"/>
+	<property name="mav.classes.dir" value="${output.dir}/classes/${ant.project.name}"/>
+
+	<property name="mav.file" value="${ant.project.name}.jar"/>
+	<property name="mav.product" value="${output.dir}/${mav.file}"/>
+	
+	<property name="dist.out.dir" value="dist"/>
+	<property name="dist.docs.dir" value="docs"/>
+	<property name="javadoc.dir" value="${dist.docs.dir}/api"/>
+	
+	<property name="lib.dir" value="lib"/>
+	<property name="tools.dir" value="tools"/>
+	
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<property name="debug" value="on"/>
+	<property name="deprecation" value="off"/>
+
+
+	<target name="clean">
+		<delete dir="${output.dir}"/>
+	</target>
+
+ 	<target name="classes">
+		<mkdir dir="${mav.classes.dir}"/>
+		
+		<javac debug="${debug}" deprecation="${deprecation}" destdir="${mav.classes.dir}" srcdir="${mav.javasrc.dir}">
+			<classpath refid="master-classpath"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="classes">
+		<jar jarfile="${mav.product}">
+			<fileset dir="${mav.classes.dir}">
+				<include name="org/infohazard/**/*.class"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="docs" depends="manual, website">
+	</target>	
+
+	<target name="commondocs">
+		<copy todir="${dist.docs.dir}/images">
+			<fileset dir="${mav.docsrc.dir}/images"/>
+		</copy>
+		
+		<copy file="${tools.dir}/stylesheet.css" todir="${dist.docs.dir}"/>
+	</target>
+
+	<target name="manual" depends="commondocs">
+		<style basedir="${mav.docsrc.dir}"
+				destdir="${dist.docs.dir}"
+				style="${tools.dir}/style-manual.xsl">
+			<include name="maverick-manual.xml" />
+		</style>
+	</target>
+
+	<target name="website" depends="commondocs">
+		<style style="${tools.dir}/style-website.xsl"
+				in="${mav.docsrc.dir}/maverick-manual.xml"
+				out="${dist.docs.dir}/index.html"/>
+	</target>
+	
+	<target name="javadoc">
+		<mkdir dir="${javadoc.dir}"/>
+		
+		<javadoc sourcepath="${mav.javasrc.dir}"
+			destdir="${javadoc.dir}"
+			packagenames="org.infohazard.maverick.*"
+			classpathref="master-classpath"
+			author="true"
+			version="true"
+		/>
+	</target>
+	
+	<target name="examples" depends="friendbook, friendbook2, shunting" />
+	
+	<target name="friendbook" depends="jar">
+		<ant dir="examples/friendbook-jsp" target="war">
+			<property name="output.dir" value="../../${output.dir}" />
+			<property name="maverick.jar.dir" value="../../${output.dir}" />
+			<property name="maverick.lib.dir" value="../../${lib.dir}" />
+		</ant>
+	</target>
+	
+	<target name="friendbook2" depends="jar">
+		<ant dir="examples/friendbook-jsp-fbu" target="war">
+			<property name="output.dir" value="../../${output.dir}" />
+			<property name="maverick.jar.dir" value="../../${output.dir}" />
+			<property name="maverick.lib.dir" value="../../${lib.dir}" />
+		</ant>
+	</target>
+	
+	<target name="shunting" depends="jar">
+		<ant dir="examples/shunting-jsp" target="war">
+			<property name="output.dir" value="../../${output.dir}" />
+			<property name="maverick.jar.dir" value="../../${output.dir}" />
+			<property name="maverick.lib.dir" value="../../${lib.dir}" />
+		</ant>
+	</target>
+	
+	<target name="sandbox" depends="jar">
+		<ant dir="examples/sandbox" target="war">
+			<property name="output.dir" value="../../${output.dir}" />
+			<property name="maverick.jar.dir" value="../../${output.dir}" />
+			<property name="maverick.lib.dir" value="../../${lib.dir}" />
+		</ant>
+	</target>
+	
+	<target name="testcases" depends="jar">
+		<ant dir="examples/testcases" target="war">
+			<property name="output.dir" value="../../${output.dir}" />
+			<property name="maverick.jar.dir" value="../../${output.dir}" />
+			<property name="maverick.lib.dir" value="../../${lib.dir}" />
+		</ant>
+	</target>
+
+	<!--
+		Targets for building the distribution
+	  -->
+	<target name="cleandist" depends="clean">
+		<delete dir="${dist.out.dir}" />
+		<delete dir="${dist.docs.dir}" />
+	</target>
+	
+	<target name="dist">
+		<!-- Start from scratch -->
+		<antcall target="cleandist" />
+		
+		<!-- Build everything -->
+		<antcall target="examples" />
+		
+		<!-- Build docs -->
+		<antcall target="docs" />
+		
+		<!-- Build javadocs -->
+		<antcall target="javadoc" />
+		
+		<!-- Set up the distribution directory -->
+		<copy file="${mav.product}"
+				todir="${dist.out.dir}" />
+
+		<!-- Friendbook Example-->
+		<copy file="${output.dir}/friendbook-jsp.war"
+				todir="${dist.out.dir}" />
+		<copy file="examples/friendbook-jsp/friendbook-jsp-readme.txt"
+				todir="${dist.out.dir}" />
+
+		<!-- Friendbook FormBeanUser Example-->
+		<copy file="${output.dir}/friendbook-jsp-fbu.war"
+				todir="${dist.out.dir}" />
+		<copy file="examples/friendbook-jsp-fbu/friendbook-jsp-fbu-readme.txt"
+				todir="${dist.out.dir}" />
+
+		<!-- Shunting Example-->
+		<copy file="${output.dir}/shunting-jsp.war"
+				todir="${dist.out.dir}" />
+		<copy file="examples/shunting-jsp/shunting-jsp-readme.txt"
+				todir="${dist.out.dir}" />
+
+		<!-- Build final distribution package -->
+		<tstamp />
+		<zip zipfile="${output.dir}/${ant.project.name}-${DSTAMP}.zip" basedir="..">
+			<include name="${ant.project.name}/**" />
+
+			<exclude name="${ant.project.name}/${output.dir}/**" />
+			<exclude name="${ant.project.name}/examples/sandbox/**" />
+			
+			<!-- Strange excludes for Scott's editor -->
+			<exclude name="${ant.project.name}/maverick.*"/>
+			<exclude name="${ant.project.name}/maverick_NET.*"/>
+			<exclude name="${ant.project.name}/codebase.*"/>
+			<exclude name="${ant.project.name}/bin/**"/>
+			<exclude name="${ant.project.name}/obj/**"/>
+		</zip>
+	</target>
+	
+	<target name="package-web" depends="docs, javadoc">
+		<zip zipfile="${output.dir}/${ant.project.name}-website.zip"
+				basedir="${dist.docs.dir}"/>
+	</target>
+
+
+	<!--
+		These targets are just for developer convenience
+	  -->
+	<target name="deploy-fb-j" depends="friendbook">
+		<copy file="${output.dir}/friendbook-jsp.war" todir="/java/jboss-3.0.4/server/default/deploy" />
+	</target>
+
+	<target name="deploy-sh-j" depends="shunting">
+		<copy file="${output.dir}/shunting-jsp.war" todir="/java/jboss-3.0.4/server/default/deploy" />
+	</target>
+
+	<target name="deploy-sa-j" depends="sandbox">
+		<copy file="${output.dir}/sandbox.war" todir="/java/jboss-3.0.4sdf/server/default/deploy" />
+	</target>
+
+</project>
