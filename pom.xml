@@ -46,17 +46,7 @@
 			</dependency>
 			<dependency>
 				<groupId>nl.topicus.onderwijs.openedge</groupId>
-				<artifactId>openedge-access</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>nl.topicus.onderwijs.openedge</groupId>
 				<artifactId>openedge-baritus</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>nl.topicus.onderwijs.openedge</groupId>
-				<artifactId>openedge-mailjob</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -67,11 +57,6 @@
 			<dependency>
 				<groupId>nl.topicus.onderwijs.openedge</groupId>
 				<artifactId>openedge-maverick-fop</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>nl.topicus.onderwijs.openedge</groupId>
-				<artifactId>openedge-menu</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
