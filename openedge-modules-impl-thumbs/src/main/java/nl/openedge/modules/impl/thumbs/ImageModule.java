@@ -42,15 +42,12 @@ import java.util.Iterator;
 
 import javax.activation.DataSource;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.swing.ImageIcon;
 
 import nl.openedge.modules.types.base.SingletonType;
 import nl.openedge.util.ImageInfo;
-
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
  * Module image operations
@@ -180,21 +177,20 @@ public final class ImageModule implements SingletonType
 	{
 		if (img == null)
 			return false;
-		Iterator<ImageWriter> it = ImageIO.getImageWritersByMIMEType("image/jpeg");
-		if (it.hasNext())
+		Iterator<ImageWriter> iter = ImageIO.getImageWritersByMIMEType("image/jpeg");
+		if (iter.hasNext())
 		{
-			ImageWriter ir = it.next();
-			ir.setOutput(ImageIO.createImageOutputStream(os));
-			ir.write(img);
-			ir.dispose();
+			ImageWriter writer = iter.next();
+			ImageWriteParam iwp = writer.getDefaultWriteParam();
+			iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+			iwp.setCompressionQuality(.75f); // an integer between 0 and 1
+			writer.setOutput(ImageIO.createImageOutputStream(os));
+			writer.write(img);
+			writer.dispose();
 		}
 		else
 		{
-			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
-			JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(img);
-			param.setQuality(.75f, false);
-			encoder.setJPEGEncodeParam(param);
-			encoder.encode(img);
+			throw new RuntimeException("geen jpeg encoder beschikbaar");
 		}
 		return true;
 	}
