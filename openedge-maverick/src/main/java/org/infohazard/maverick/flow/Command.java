@@ -25,5 +25,5 @@ public interface Command
 	 * Execute the Command and render the results!
 	 * </p>
 	 */
-	public void go(MaverickContext mctx) throws IOException, ServletException;
+	public String go(MaverickContext mctx) throws IOException, ServletException;
 }

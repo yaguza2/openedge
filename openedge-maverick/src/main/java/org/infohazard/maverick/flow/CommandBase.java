@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.transform.DocumentTransform;
+import org.infohazard.maverick.view.RedirectView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,14 +59,15 @@ abstract class CommandBase implements Command
 	 *
 	 */
 	@Override
-	public void go(MaverickContext mctx) throws IOException, ServletException
+	public String go(MaverickContext mctx) throws IOException, ServletException
 	{
 		Object model = null;
+		String viewName = null;
 
 		try
 		{
 			// There must be a controller class to distinguish between views
-			String viewName = this.controller.go(mctx);
+			viewName = this.controller.go(mctx);
 
 			// Hold on to the model now because chained commands might replace it
 			model = mctx.getModel();
@@ -77,7 +80,26 @@ abstract class CommandBase implements Command
 				throw new ServletException("Controller specified view \"" + viewName
 					+ "\", but no view with that name is defined.");
 
-			target.go(mctx);
+			if (target instanceof ViewWithTransforms)
+			{
+				Transform[] transforms = ((ViewWithTransforms) target).getTransforms();
+				for (Transform t : transforms)
+				{
+					if (t instanceof DocumentTransform)
+					{
+						viewName = (((DocumentTransform) t).getPath());
+						continue;
+					}
+				}
+			}
+			if (target instanceof RedirectView)
+			{
+				viewName = ((RedirectView) target).getTarget();
+			}
+
+			// velocity rendering uitgeschakeld wanneer response niet beschikbaar is
+			if (mctx.getResponse() != null)
+				target.go(mctx);
 		}
 		finally
 		{
@@ -86,6 +108,8 @@ abstract class CommandBase implements Command
 			if (model instanceof ModelLifetime)
 				((ModelLifetime) model).discard();
 		}
+
+		return viewName;
 	}
 
 	/**

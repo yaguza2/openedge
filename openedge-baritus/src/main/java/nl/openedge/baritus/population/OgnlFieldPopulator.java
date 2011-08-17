@@ -5,6 +5,7 @@ import nl.openedge.baritus.FormBeanContext;
 import nl.openedge.baritus.FormBeanCtrlBase;
 import nl.openedge.baritus.LogConstants;
 import nl.openedge.baritus.converters.ConversionException;
+import ognl.ExpressionSyntaxException;
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
 import ognl.OgnlContext;
@@ -88,7 +89,8 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 		}
 		catch (OgnlException e)
 		{
-			if (e instanceof NoSuchPropertyException)
+			// ExpressionSynaxException wordt veroorzaakt door wicket id's
+			if (e instanceof NoSuchPropertyException || e instanceof ExpressionSyntaxException)
 			{
 				// just ignore and log warning
 				populationLog.warn("property '" + name + "' not found for bean " + bean);

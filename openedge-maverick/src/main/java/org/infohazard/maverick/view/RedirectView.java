@@ -30,6 +30,12 @@ public class RedirectView implements View
 	 */
 	protected String target;
 
+	// voor wicket integratie
+	public String getTarget()
+	{
+		return target;
+	}
+
 	/**
 	 * @param target
 	 *            is the URL for the redirect.

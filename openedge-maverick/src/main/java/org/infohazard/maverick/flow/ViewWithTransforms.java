@@ -20,6 +20,12 @@ class ViewWithTransforms implements View
 	/** The transforms associated with the decorated view */
 	protected Transform[] transforms;
 
+	// voor wicket integratie
+	public Transform[] getTransforms()
+	{
+		return transforms;
+	}
+
 	/**
 	 * @param decorate
 	 *            the view to be decorated

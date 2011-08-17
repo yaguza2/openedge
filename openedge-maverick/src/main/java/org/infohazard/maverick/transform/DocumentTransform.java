@@ -22,13 +22,19 @@ import org.slf4j.LoggerFactory;
  * This Transform wraps the input one or more times by putting the output from the
  * previous step in the request attributes.
  */
-class DocumentTransform implements Transform
+public class DocumentTransform implements Transform
 {
 	protected String path;
 
 	protected String wrappedName;
 
 	private static Logger log = LoggerFactory.getLogger(DocumentTransform.class);
+
+	// voor wicket integratie
+	public String getPath()
+	{
+		return path;
+	}
 
 	public DocumentTransform(String path, String wrappedName)
 	{

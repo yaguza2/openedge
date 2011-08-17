@@ -144,7 +144,10 @@ public abstract class FormBeanCtrlBase implements Controller
 		}
 		if (execParams.isNoCache())
 		{
-			doSetNoCache(cctx); // set no cache headers
+			// geen response -> wicket rendering
+			if( cctx.getResponse() != null){
+				doSetNoCache(cctx); // set no cache headers
+			}
 		}
 
 		try

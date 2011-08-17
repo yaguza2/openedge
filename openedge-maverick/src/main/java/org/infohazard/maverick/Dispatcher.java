@@ -368,7 +368,7 @@ public class Dispatcher extends HttpServlet
 			Command reload = new Command()
 			{
 				@Override
-				public void go(MaverickContext mctx) throws ServletException
+				public String go(MaverickContext mctx) throws ServletException
 				{
 					try
 					{
@@ -379,6 +379,7 @@ public class Dispatcher extends HttpServlet
 						log.error(e.getMessage(), e);
 						throw e;
 					}
+					return null;
 				}
 			};
 
@@ -394,12 +395,14 @@ public class Dispatcher extends HttpServlet
 			Command currentConfig = new Command()
 			{
 				@Override
-				public void go(MaverickContext mctx) throws IOException
+				public String go(MaverickContext mctx) throws IOException
 				{
 					XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
 					mctx.getRealResponse().setContentType("text/xml; charset=UTF-8");
 					outputter.output(configDocument, mctx.getRealResponse().getOutputStream());
+
+					return null;
 				}
 			};
 
@@ -422,7 +425,7 @@ public class Dispatcher extends HttpServlet
 	 * null is returned.
 	 * </p>
 	 */
-	protected Command getCommand(String name)
+	public Command getCommand(String name)
 	{
 		Command cmd = this.commands.get(name);
 
