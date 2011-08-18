@@ -74,7 +74,7 @@ import org.slf4j.LoggerFactory;
  * in the configuration file, unmatched requests return 404.
  * </p>
  */
-public class Dispatcher extends HttpServlet
+public class Dispatcher extends HttpServlet implements ServletContextProvider
 {
 	private static final long serialVersionUID = 1L;
 

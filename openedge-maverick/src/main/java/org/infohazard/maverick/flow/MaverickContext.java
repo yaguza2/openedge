@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.infohazard.maverick.Dispatcher;
+import org.infohazard.maverick.ServletContextProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 * Our {@link Dispatcher} instance.
 	 * </p>
 	 */
-	protected Dispatcher dispatcher;
+	protected ServletContextProvider dispatcher;
 
 	/**
 	 * <p>
@@ -111,7 +112,8 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 * HttpServletResponse.
 	 * </p>
 	 */
-	public MaverickContext(Dispatcher disp, HttpServletRequest req, HttpServletResponse res)
+	public MaverickContext(ServletContextProvider disp, HttpServletRequest req,
+			HttpServletResponse res)
 	{
 		this.dispatcher = disp;
 		this.request = req;
@@ -172,7 +174,10 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	@Override
 	public ServletConfig getServletConfig()
 	{
-		return this.dispatcher.getServletConfig();
+		if (dispatcher instanceof Dispatcher)
+			return ((Dispatcher) dispatcher).getServletConfig();
+		else
+			return null;
 	}
 
 	/**
@@ -183,7 +188,7 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	@Override
 	public ServletContext getServletContext()
 	{
-		return this.dispatcher.getServletContext();
+		return dispatcher.getServletContext();
 	}
 
 	/**
@@ -362,15 +367,19 @@ public class MaverickContext implements ControllerContext, ViewContext, Transfor
 	 */
 	protected int determineMaxTransforms()
 	{
-		if (this.dispatcher.getLimitTransformsParam() == null)
-			return Integer.MAX_VALUE;
+		// deze feature wordt niet gebruikt in psys
+		return Integer.MAX_VALUE;
 
-		String maxTransStr = this.request.getParameter(this.dispatcher.getLimitTransformsParam());
-
-		if (maxTransStr == null)
-			return Integer.MAX_VALUE;
-
-		return Integer.parseInt(maxTransStr);
+		// if (this.dispatcher.getLimitTransformsParam() == null)
+		// return Integer.MAX_VALUE;
+		//
+		// String maxTransStr =
+		// this.request.getParameter(this.dispatcher.getLimitTransformsParam());
+		//
+		// if (maxTransStr == null)
+		// return Integer.MAX_VALUE;
+		//
+		// return Integer.parseInt(maxTransStr);
 	}
 
 }
