@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+
+<maverick version="2.0" default-view-type="document" default-transform-type="document">
+
+	<modules>
+		<transform-factory type="fop" provider="org.infohazard.maverick.opt.transform.FopTransformFactory"/>
+		<transform-factory type="xslt" provider="org.infohazard.maverick.transform.XSLTransformFactory"/>
+	</modules>
+
+	<views>
+		<view id="loginRequired" path="loginRequired.jsp">
+			<transform path="trimOutside.jsp"/>
+		</view>
+
+		<view id="loginFailed" path="loginFailed.jsp">
+			<transform path="trimOutside.jsp"/>
+		</view>
+	</views>
+
+	<commands>
+		<command name="welcome">
+			<view path="welcome.jsp">
+				<transform path="trimOutside.jsp"/>
+			</view>
+		</command>
+
+		<command name="signup">
+			<view path="signup.jsp">
+				<transform path="trimOutside.jsp"/>
+			</view>
+		</command>
+
+		<command name="signupSubmit">
+			<controller class="org.infohazard.friendbook.ctl.SignupSubmit"/>
+			
+			<view name="success" type="redirect" path="edit.m"/>
+
+			<view name="error" path="signup.jsp">
+				<transform path="trimOutside.jsp"/>
+			</view>
+		</command>
+
+		<command name="edit">
+			<controller class="org.infohazard.friendbook.ctl.Edit"/>
+
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" path="edit.jsp">
+				<transform path="trimInside.jsp"/>
+			</view>
+		</command>
+
+		<command name="editSubmit">
+			<controller class="org.infohazard.friendbook.ctl.EditSubmit"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" type="redirect" path="friends.m"/>
+		</command>
+
+		<command name="changePassword">
+			<controller class="org.infohazard.friendbook.ctl.ChangePassword"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" path="changePassword.jsp">
+				<transform path="trimInside.jsp"/>
+			</view>
+		</command>
+
+		<command name="changePasswordSubmit">
+			<controller class="org.infohazard.friendbook.ctl.ChangePasswordSubmit"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" type="redirect" path="friends.m"/>
+
+			<view name="error" path="changePassword.jsp">
+				<transform path="trimInside.jsp"/>
+			</view>
+		</command>
+
+		<command name="logout">
+			<controller class="org.infohazard.friendbook.ctl.Logout"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" type="redirect" path="welcome.m"/>
+		</command>
+
+		<command name="friends">
+			<controller class="org.infohazard.friendbook.ctl.Friends"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" path="friends.jsp">
+				<transform path="trimInside.jsp"/>
+			</view>
+
+		</command>
+
+		
+		<command name="friendsPdf">
+			<controller class="org.infohazard.friendbook.ctl.Friends"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" path="/friendsPdf.jsp">
+				<transform type="fop"/>
+			</view>
+		</command>
+
+		<command name="friendsPdf2">
+			<controller class="org.infohazard.friendbook.ctl.Friends"/>
+			
+			<view name="loginRequired" ref="loginRequired"/>
+			<view name="loginFailed" ref="loginFailed"/>
+
+			<view name="success" path="friends.jsp">
+				<transform path="trimInside.jsp"/>
+				<transform type="xslt" path="html_to_fo.xsl"/>
+				<transform type="fop" filename="friends.pdf"/>
+			</view>
+		</command>
+	</commands>
+</maverick>
