@@ -145,7 +145,8 @@ public abstract class FormBeanCtrlBase implements Controller
 		if (execParams.isNoCache())
 		{
 			// geen response -> wicket rendering
-			if( cctx.getResponse() != null){
+			if (cctx.getResponse() != null)
+			{
 				doSetNoCache(cctx); // set no cache headers
 			}
 		}
@@ -332,9 +333,8 @@ public abstract class FormBeanCtrlBase implements Controller
 			ExecutionParams _execParams) throws Exception
 	{
 
-		Map<String, Object> allParameters = new HashMap<String, Object>(); // for use with
-																			// validators
-																			// later on
+		// for use with validators later on
+		Map<String, Object> allParameters = new HashMap<String, Object>();
 
 		// The order in which parameters/ attributes are used for population:
 		// 1. controller parameters (if includeControllerParameters == true)
@@ -382,8 +382,15 @@ public abstract class FormBeanCtrlBase implements Controller
 		@SuppressWarnings("unchecked")
 		Map<String, Object> requestParameterMap = cctx.getRequest().getParameterMap();
 
+		// Filter alle numerieke parameters uit de parameter lijst aangezien deze
+		// specifiek voor Wicket zijn, en OGNL er niet veel mee kan omdat het een niet
+		// geldige Java identifier is.
 		Map<String, Object> reqParameters = new HashMap<String, Object>();
-		reqParameters.putAll(requestParameterMap);
+		for (String key : requestParameterMap.keySet())
+		{
+			if (!key.matches("\\d+"))
+				reqParameters.put(key, requestParameterMap.get(key));
+		}
 		traceParameters(reqParameters, traceMsg, "request parameters");
 		allParameters.putAll(reqParameters);
 
