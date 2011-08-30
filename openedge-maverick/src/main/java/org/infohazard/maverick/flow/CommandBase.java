@@ -95,6 +95,10 @@ abstract class CommandBase implements Command
 			if (target instanceof RedirectView)
 			{
 				viewName = ((RedirectView) target).getTarget();
+				if (viewName.length() == 0 && model instanceof String)
+				{
+					viewName = (String) model;
+				}
 			}
 
 			// velocity rendering uitgeschakeld wanneer response niet beschikbaar is
