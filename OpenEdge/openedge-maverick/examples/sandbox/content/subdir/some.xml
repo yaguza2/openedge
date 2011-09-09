@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<somexml>
+	<sometext>
+		Two plus two is something?
+	</sometext>
+	<prop/>
+	<link>simple.m</link>
+</somexml>

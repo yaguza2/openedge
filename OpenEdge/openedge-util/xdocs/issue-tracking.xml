@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<document>
+  
+  <properties>
+    <author email="turbine-maven-dev@jakarta.apache.org">Maven</author>
+    <title>Issue Tracking</title>
+  </properties>
+
+  <body>
+    <section name="Issue Tracking">
+      <p>
+		Submit your bugs with:<a href="http://financialtools.nl/mantis/" target="_new">
+			Mantis Bugtrack System</a>
+      </p>
+    </section>
+  </body>
+</document>
+
