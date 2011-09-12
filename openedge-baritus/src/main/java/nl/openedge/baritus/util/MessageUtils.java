@@ -1,12 +1,3 @@
-/*
- * $Id: MessageUtils.java,v 1.2 2004-03-29 15:26:51 eelco12 Exp $
- * $Revision: 1.2 $
- * $Date: 2004-03-29 15:26:51 $
- *
- * ====================================================================
- * Copyright (c) 2003
- * All rights reserved.
- */
 package nl.openedge.baritus.util;
 
 import java.text.MessageFormat;

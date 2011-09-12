@@ -1,12 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2005, Topicus B.V.
- * All rights reserved.
- */
 package nl.openedge.access.cache;
 
 

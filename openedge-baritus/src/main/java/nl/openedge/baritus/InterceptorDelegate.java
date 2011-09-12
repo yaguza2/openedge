@@ -1,12 +1,3 @@
-/*
- * $Id: InterceptorDelegate.java,v 1.5 2004-06-22 17:57:24 eelco12 Exp $
- * $Revision: 1.5 $
- * $Date: 2004-06-22 17:57:24 $
- *
- * ====================================================================
- * Copyright (c) 2003
- * All rights reserved.
- */
 package nl.openedge.baritus;
 
 import java.io.IOException;

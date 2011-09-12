@@ -1,12 +1,3 @@
-/*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Promedico ICT B.V.
- * All rights reserved.
- */
 package nl.openedge.util.velocity.tools;
 
 import java.util.HashMap;
