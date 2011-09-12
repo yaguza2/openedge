@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- ********************************************************************
+     $Id: lib.xsl,v 1.1 2004-03-01 10:23:22 eelco12 Exp $
+     ********************************************************************
+
+     This file is part of the XSL DocBook Stylesheet distribution.
+     See ../README or http://nwalsh.com/docbook/xsl/ for copyright
+     and other information.
+
+     This module implements DTD-independent functions
+
+     ******************************************************************** -->
+
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:src="http://nwalsh.com/xmlns/litprog/fragment" exclude-result-prefixes="src" version="1.0">
+
+
+<xsl:template name="dot.count">
+  <!-- Returns the number of "." characters in a string -->
   <xsl:param name="string"/>
   <xsl:param name="count" select="0"/>
   <xsl:choose>
