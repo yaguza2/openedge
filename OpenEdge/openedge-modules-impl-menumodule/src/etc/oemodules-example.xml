@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<components-config>
+	
+	<scheduler properties="/WEB-INF/quartz.properties">
+
+		<trigger name="intervalTrigger" group="DEFAULT"
+				 class="org.quartz.SimpleTrigger">
+			<property name="repeatInterval" value="60000"/>
+			<property name="repeatCount" value="-1"/>	
+		</trigger>
+		
+		<jobExecutionMap>
+			<job trigger="intervalTrigger" component="MailJob" />
+		</jobExecutionMap>
+
+	</scheduler>
+	
+	<components>
+		
+		<component name="MailJob"
+				class="nl.openedge.modules.impl.mailjob.MailJob">
+				
+			<jobDetail group="DEFAULT">
+				<parameter name="mailSessionRef" 
+						   value="java:comp/env/mail/burgerweeshuis"/>
+				<parameter name="mailMQModuleAlias"
+						   value="MailMQModule"/>
+			</jobDetail>
+				
+		</component>
+	
+		<component name="MailMQModule" 
+				class="nl.openedge.modules.impl.mailjob.HibernateMailMQModule">
+			
+			<property name="deleteOnRemove" value="true"/>
+			
+		</component>
+		
+	</components>
+	
+</components-config>

@@ -1,0 +1,47 @@
+
+<project 
+  xmlns:j="jelly:core"
+  xmlns:ant="jelly:ant"
+  xmlns:license="license"
+  xmlns:maven="jelly:maven"
+  xmlns:deploy="deploy"
+  xmlns:resources="resources"
+  xmlns:util="jelly:util"
+  xmlns:doc="doc"
+  xmlns:m="maven">
+
+  <goal name="jar:fsdeploy" prereqs="jar:jar"
+    description="Install the jar in the local repository">
+    
+    <ant:property name="maven.jar.to.deploy" value="${maven.final.name}.jar"/>
+    
+    <ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars"/>
+    <ant:mkdir dir="${jardir__}"/> 
+    <ant:echo>copy ${maven.jar.to.deploy} to ${jardir__}</ant:echo>   
+    <ant:copy 
+      file="${maven.build.dir}/${maven.jar.to.deploy}"
+      todir="${jardir__}"
+      overwrite="true"
+    />
+  </goal>
+  
+  <goal name="jar:fsdeploy-snapshot"
+    description="Install the snapshot jar in the local repository">
+   
+    <maven:snapshot project="${pom}"/> 
+    <j:set var="maven.final.name" value="${snapshotSignature}"/>
+    <j:set var="maven.jar.to.deploy" value="${maven.final.name}.jar"/>
+    <ant:echo>Building snapshot JAR: ${maven.final.name}</ant:echo>   
+    <attainGoal name="jar:jar"/>
+    
+    <ant:property name="jardir__" value="${maven.repo.central.fileserver}/${pom.artifactDirectory}/jars"/>
+    <ant:mkdir dir="${jardir__}"/>    
+    <ant:echo>copy ${maven.jar.to.deploy} as ${pom.artifactId}-SNAPSHOT.jar to ${jardir__}</ant:echo>
+    <ant:copy 
+      file="${maven.build.dir}/${maven.jar.to.deploy}"
+      tofile="${jardir__}/${pom.artifactId}-SNAPSHOT.jar"
+      overwrite="true"
+    />
+  </goal>
+
+</project>
