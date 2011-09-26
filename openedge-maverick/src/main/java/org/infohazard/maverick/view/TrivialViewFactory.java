@@ -12,6 +12,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.xml.transform.Source;
 
+import org.infohazard.maverick.ViewDefinition;
 import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
@@ -94,6 +95,12 @@ public class TrivialViewFactory implements ViewFactory
 					+ vctx.getModel().getClass().getName() + ", only String, "
 					+ "Reader, javax.xml.transform.Source, and org.w3c.dom.Node");
 			}
+		}
+
+		@Override
+		public ViewDefinition getViewDefinition()
+		{
+			return null;
 		}
 	}
 }

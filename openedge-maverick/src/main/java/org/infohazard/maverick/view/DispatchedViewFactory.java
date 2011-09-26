@@ -13,6 +13,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
 import org.infohazard.maverick.flow.ConfigException;
 import org.infohazard.maverick.flow.TransformStep;
 import org.infohazard.maverick.flow.View;
@@ -125,6 +126,12 @@ public class DispatchedViewFactory implements ViewFactory
 				disp.include(vctx.getRequest(), next.getResponse());
 
 			next.done();
+		}
+
+		@Override
+		public ViewDefinition getViewDefinition()
+		{
+			return null;
 		}
 	}
 }

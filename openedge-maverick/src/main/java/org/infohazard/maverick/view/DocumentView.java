@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
 import org.slf4j.Logger;
@@ -96,6 +97,12 @@ public abstract class DocumentView implements View
 			}
 		}
 		vctx.getNextStep().go("");
+	}
+
+	@Override
+	public ViewDefinition getViewDefinition()
+	{
+		return null;
 	}
 
 	/**

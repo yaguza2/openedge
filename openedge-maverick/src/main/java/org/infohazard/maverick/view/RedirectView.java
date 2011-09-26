@@ -11,6 +11,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.infohazard.maverick.ViewDefinition;
+import org.infohazard.maverick.ViewType;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
 
@@ -153,5 +155,11 @@ public class RedirectView implements View
 		url.append(encode(key));
 		url.append("=");
 		url.append(encode(value));
+	}
+
+	@Override
+	public ViewDefinition getViewDefinition()
+	{
+		return new ViewDefinition(ViewType.REDIRECT, target);
 	}
 }

@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
+
 /**
  * Views do the work of actually rendering the model.
  */
@@ -18,4 +20,6 @@ public interface View
 	 * Renders the specified model to the response.
 	 */
 	public void go(ViewContext vctx) throws ServletException, IOException;
+
+	public ViewDefinition getViewDefinition();
 }

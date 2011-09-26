@@ -368,7 +368,7 @@ public class Dispatcher extends HttpServlet implements ServletContextProvider
 			Command reload = new Command()
 			{
 				@Override
-				public String go(MaverickContext mctx) throws ServletException
+				public ViewDefinition go(MaverickContext mctx) throws ServletException
 				{
 					try
 					{
@@ -395,7 +395,7 @@ public class Dispatcher extends HttpServlet implements ServletContextProvider
 			Command currentConfig = new Command()
 			{
 				@Override
-				public String go(MaverickContext mctx) throws IOException
+				public ViewDefinition go(MaverickContext mctx) throws IOException
 				{
 					XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 

@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
+
 /**
  * <p>
  * The Command is the highest entry point of workflow outside of the
@@ -25,5 +27,5 @@ public interface Command
 	 * Execute the Command and render the results!
 	 * </p>
 	 */
-	public String go(MaverickContext mctx) throws IOException, ServletException;
+	public ViewDefinition go(MaverickContext mctx) throws IOException, ServletException;
 }

@@ -9,6 +9,10 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
+import org.infohazard.maverick.ViewType;
+import org.infohazard.maverick.transform.DocumentTransform;
+
 /**
  * ViewWithTransforms is a decorator that sets transforms when rendering a view.
  */
@@ -19,12 +23,6 @@ class ViewWithTransforms implements View
 
 	/** The transforms associated with the decorated view */
 	protected Transform[] transforms;
-
-	// voor wicket integratie
-	public Transform[] getTransforms()
-	{
-		return transforms;
-	}
 
 	/**
 	 * @param decorate
@@ -65,5 +63,20 @@ class ViewWithTransforms implements View
 		((MaverickContext) vctx).setTransforms(this.transforms);
 
 		this.decorated.go(vctx);
+	}
+
+	@Override
+	public ViewDefinition getViewDefinition()
+	{
+		String path = null;
+		for (Transform t : transforms)
+		{
+			if (t instanceof DocumentTransform)
+			{
+				path = (((DocumentTransform) t).getPath());
+				continue;
+			}
+		}
+		return new ViewDefinition(ViewType.VELOCITY, path);
 	}
 }

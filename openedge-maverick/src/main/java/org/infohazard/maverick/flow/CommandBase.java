@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import org.infohazard.maverick.transform.DocumentTransform;
+import org.infohazard.maverick.ViewDefinition;
 import org.infohazard.maverick.view.RedirectView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +59,9 @@ abstract class CommandBase implements Command
 	 *
 	 */
 	@Override
-	public String go(MaverickContext mctx) throws IOException, ServletException
+	public ViewDefinition go(MaverickContext mctx) throws IOException, ServletException
 	{
+		ViewDefinition result = null;
 		Object model = null;
 		String viewName = null;
 
@@ -80,24 +81,14 @@ abstract class CommandBase implements Command
 				throw new ServletException("Controller specified view \"" + viewName
 					+ "\", but no view with that name is defined.");
 
-			if (target instanceof ViewWithTransforms)
-			{
-				Transform[] transforms = ((ViewWithTransforms) target).getTransforms();
-				for (Transform t : transforms)
-				{
-					if (t instanceof DocumentTransform)
-					{
-						viewName = (((DocumentTransform) t).getPath());
-						continue;
-					}
-				}
-			}
+			result = target.getViewDefinition();
+
+			// redirect postprocessen
 			if (target instanceof RedirectView)
 			{
-				viewName = ((RedirectView) target).getTarget();
-				if (viewName.length() == 0 && model instanceof String)
+				if (result.getPath().length() == 0 && model instanceof String)
 				{
-					viewName = (String) model;
+					result.setPath((String) model);
 				}
 			}
 
@@ -113,7 +104,7 @@ abstract class CommandBase implements Command
 				((ModelLifetime) model).discard();
 		}
 
-		return viewName;
+		return result;
 	}
 
 	/**

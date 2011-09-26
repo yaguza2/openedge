@@ -7,6 +7,7 @@ package org.infohazard.maverick.view;
 
 import javax.servlet.ServletConfig;
 
+import org.infohazard.maverick.ViewDefinition;
 import org.infohazard.maverick.flow.View;
 import org.infohazard.maverick.flow.ViewContext;
 import org.infohazard.maverick.flow.ViewFactory;
@@ -52,6 +53,12 @@ public class NullViewFactory implements ViewFactory
 		@Override
 		public void go(ViewContext vctx)
 		{
+		}
+
+		@Override
+		public ViewDefinition getViewDefinition()
+		{
+			return null;
 		}
 	}
 }

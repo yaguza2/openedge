@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
+
 class ViewShunted implements View
 {
 	protected Shunt shunt;
@@ -28,5 +30,11 @@ class ViewShunted implements View
 	{
 		View v = this.shunt.getView(vctx.getRequest());
 		v.go(vctx);
+	}
+
+	@Override
+	public ViewDefinition getViewDefinition()
+	{
+		return null;
 	}
 }

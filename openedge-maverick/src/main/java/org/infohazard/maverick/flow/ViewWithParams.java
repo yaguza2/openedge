@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.infohazard.maverick.ViewDefinition;
+
 /**
  * ViewWithTransforms is a decorator that sets params when rendering a view.
  */
@@ -34,5 +36,11 @@ class ViewWithParams implements View
 		((MaverickContext) vctx).putAllViewParams(this.params);
 
 		this.decorated.go(vctx);
+	}
+
+	@Override
+	public ViewDefinition getViewDefinition()
+	{
+		return null;
 	}
 }
