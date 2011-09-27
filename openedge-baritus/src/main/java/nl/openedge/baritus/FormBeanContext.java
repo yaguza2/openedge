@@ -262,7 +262,9 @@ public final class FormBeanContext implements Map<String, Object>
 		{
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PrintWriter pw = new PrintWriter(bos);
+			pw.print("<pre>");
 			t.printStackTrace(pw);
+			pw.print("</pre>");
 			pw.flush();
 			pw.close();
 			bos.flush();
