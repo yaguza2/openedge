@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+	PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	"http://java.sun.com/dtd/web-app_2_3.dtd"
+>
+
+<web-app>
+
+    <servlet>
+        <servlet-name>JNDITestServlet</servlet-name>
+        <servlet-class>
+            nl.openedge.util.jetty.JNDITestServlet
+        </servlet-class>
+        <load-on-startup>100</load-on-startup>
+    </servlet>
+	
+    <servlet-mapping>
+        <servlet-name>JNDITestServlet</servlet-name>
+        <url-pattern>/servlet/jnditest</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+    <env-entry>
+        <env-entry-name>
+            testEntry
+        </env-entry-name>
+        <env-entry-value>
+            testValue 
+        </env-entry-value>
+        <env-entry-type>
+            java.lang.String
+        </env-entry-type>
+    </env-entry>
+
+</web-app>
