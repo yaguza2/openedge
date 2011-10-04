@@ -77,6 +77,9 @@ class ViewWithTransforms implements View
 				continue;
 			}
 		}
-		return new ViewDefinition(ViewType.VELOCITY, path);
+
+		ViewType type =
+			(path != null && path.endsWith(".m")) ? ViewType.REDIRECT : ViewType.VELOCITY;
+		return new ViewDefinition(type, path);
 	}
 }
