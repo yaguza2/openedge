@@ -4,5 +4,6 @@ public enum ViewType
 {
 	VELOCITY,
 	REDIRECT,
-	REPORT;
+	REPORT,
+	NESTED;
 }

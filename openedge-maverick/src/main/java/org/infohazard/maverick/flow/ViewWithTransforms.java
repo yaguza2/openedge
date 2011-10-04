@@ -78,8 +78,7 @@ class ViewWithTransforms implements View
 			}
 		}
 
-		ViewType type =
-			(path != null && path.endsWith(".m")) ? ViewType.REDIRECT : ViewType.VELOCITY;
+		ViewType type = (path != null && path.endsWith(".m")) ? ViewType.NESTED : ViewType.VELOCITY;
 		return new ViewDefinition(type, path);
 	}
 }
