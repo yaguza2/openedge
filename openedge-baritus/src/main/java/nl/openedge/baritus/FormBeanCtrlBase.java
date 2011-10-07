@@ -385,14 +385,21 @@ public abstract class FormBeanCtrlBase implements Controller
 		// Filter alle numerieke parameters uit de parameter lijst aangezien deze
 		// specifiek voor Wicket zijn, en OGNL er niet veel mee kan omdat het een niet
 		// geldige Java identifier is.
+		// Menu-items hebben (voorlopig?) geen requestparameters nodig
 		Map<String, Object> reqParameters = new HashMap<String, Object>();
+		boolean menuItem = false;
 		for (String key : requestParameterMap.keySet())
 		{
 			if (!key.matches("\\d+"))
 				reqParameters.put(key, requestParameterMap.get(key));
+			if (key.toLowerCase().contains("mainmenuitem")
+				|| (key.toLowerCase().contains("menucontainer")))
+				menuItem = true;
 		}
 		traceParameters(reqParameters, traceMsg, "request parameters");
-		allParameters.putAll(reqParameters);
+
+		if (!menuItem)
+			allParameters.putAll(reqParameters);
 
 		// request attributes
 		if (_execParams.isIncludeRequestAttributes())
