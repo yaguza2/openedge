@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<document>
+
+	<properties>
+		<title>Baritus Changelog</title>
+		<author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+	</properties>
+
+	<body>
+		<section name="Changelog">
+			<p>A short description of changes is given for each release</p>
+
+            <subsection name="1.0.12">
+                <ul>
+                	<li>
+                        Added extra logging, levels: nl.openedge.baritus.interception,
+                        nl.openedge.baritus.executionparams and nl.openedge.baritus.executionparams,
+                        and FormBeanCtrlBase now logs to nl.openedge.baritus.
+                	</li>
+                </ul>
+            </subsection>
+
+            <subsection name="1.0.11">
+                <ul>
+                	<li>
+                        When populating with request parameters and other parameters like request
+                        attributes, the latter override the first. However, prior to this fix, both
+                        levels of population for a given parameter were allways executed. Now, only
+                        the last known value will be used. Thus, if you have request parameter 'myparam'
+                        and request attribute 'myparam' AND the includeRequestAttributes property
+                        of ExecutionParams is set to true, only the request attribute 'myparam' will
+                        be matched against a property on the form bean.
+                	</li>
+                </ul>
+            </subsection>
+
+            <subsection name="1.0.10">
+                <ul>
+                	<li>
+                	    Fixed a small but SERIOUS bug that prevented using a deep copy
+                	    of the ExecutionParams for the current request, but instead
+                	    used the controller instance variable.
+                	</li>
+                </ul>
+            </subsection>
+
+            <subsection name="1.0.9">
+                <ul>
+                	<li>
+                	    Refactored populateAndValidate from FormBeanContext to ExecutionParams.
+                	</li>
+                </ul>
+            </subsection>
+
+			<subsection name="1.0.8">
+				<ul>
+					<li>Interceptors and FlowInterceptors are now the same. From the docs:<br/>
+					 Interceptors can be used to decorate the normal execution. Also, by throwing FlowExceptions, interceptors can
+					 alter the flow of execution. An interceptor can throw a FlowException if it wants Baritus to stop
+					 normal processing and go to the given declared view (using ReturnNowFlowException) such as 'error', 
+					 or dispatch to an arbitrary - non declared - URL (using DispatchNowFlowException) location.						
+					</li>
+				</ul>
+			</subsection>
+	 
+			<subsection name="1.0.7">
+				<ul>
+					<li>Method signature FormBeanCtrlBase.getExecutionParams changes from:
+					getExecutionParams() to getExecutionParams(ControllerContext cctx)</li>
+					<li>The default implementation of getExecutionParams is to make a deep copy
+					of the execution parameters of this control. This copy is saved as a request attribute -
+					that is ignored by the population process - so that its' possibly changed parameters
+					can be used by other (linked) controllers within the same request without having
+					to change the parameters for all request (pre-1.0.7 just gave the reference to
+					the instance variable of the singleton controller).</li>
+					<li>If you want to override the default execution parameters for all requests (i.e. change
+					the instance variable of the execution params, you can use the method 
+					FormBeanCtrlBase.fixExecutionParams(ExecutionParams params). setExecutionParams is removed.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.6">
+				<ul>
+					<li>Small fix concerning PerformException(Flow)Interceptors.</li>
+					<li>A lot of javadoc fixes.</li>
+					<li>Added property executeOtherNonFlowInterceptors to FlowInterceptorResult.</li>
+				</ul>
+			</subsection>
+	
+			<subsection name="1.0.5">
+				<ul>
+					<li>Added execution parameter trimStringInputValues (true by default)
+						that indicates that populators should trim values of type String or String[]
+						before populating/ converting.</li>
+				</ul>
+			</subsection>
+	
+			<subsection name="1.0.4">
+				<ul>
+					<li>removed redundant Locale parameter in ValidationDelegate interface and in some 
+							of the private methods of FormBeanCtrlBase.</li>
+					<li>removed redundant check on override field in DefaultValidatorDelegate.</li>
+					<li>added exception handling and logging for form validators.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.3">
+				<ul>
+					<li>Typo 'stictPopulationMode' should be 'strictPopulationMode', class ExcecutionParams.</li>
+					<li>Fix in OgnlFieldPopulator: conversion was done twice in some cases.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.2">
+				<ul>
+					<li>Removed call back getErrorMessage in Validator interfaces.</li>
+					<li>Added parameter stickPopulationMode.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0.1">
+				<ul>
+					<li>Registries are now public, incl. option to set default populator with PopulatorRegistry.</li>
+					<li>Populators that were registered per field overrule regexpr registrated populators.</li>
+				</ul>
+			</subsection>
+			
+			<subsection name="1.0">
+				<ul>
+					<li>First public SourceForge release.</li>
+				</ul>
+			</subsection>
+
+		</section>
+	</body>
+</document>

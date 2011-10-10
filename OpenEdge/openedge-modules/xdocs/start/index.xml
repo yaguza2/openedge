@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>OpenEdge Modules</title>
+    <author email="eelco.hillenius@openedge.nl">Eelco Hillenius</author>
+  </properties>
+
+  <body>
+
+  <section name="Getting Started with OpenEdge Modules">
+      <p>
+        This document (as well as the others in this section) provide
+        an introduction to OpenEdge Modules and how to use it within a project.
+      </p>
+
+      <subsection name="Overview of the Getting Started Documentation">
+        <table>
+          <tr><th>Document</th><th>Description</th></tr>
+          <tr><td><a href="download.html">Download</a></td>
+            <td>
+              <!-- ?? Before you can start using -->This document
+              provides links to the various distributions available
+			  for OpenEdge Modules.
+            </td>
+          </tr>
+          <tr><td><a href="build.html">Building</a></td>
+            <td>
+              For those who want to build OpenEdge Modules from
+			  source, this document provides step-by-step instructions on the
+			  build process.
+            </td>
+          </tr>
+          <tr><td><a href="use.html">Usage</a></td>
+            <td>
+              This document provides a short tutorial on the usage of
+			  OpenEdge Modules. 
+            </td>
+          </tr>
+          <tr><td><a href="extend.html">Extending</a></td>
+            <td>
+              If you are interested in extending OpenEdge Modules, this document
+			  gives you some hints and how-to's.
+            </td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+
+</body>
+</document>
+

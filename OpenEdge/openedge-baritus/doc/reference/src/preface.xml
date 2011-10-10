@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<preface
+	id="bml.preface">
+
+	<title>
+		Preface
+	</title>
+
+    <para>
+		Baritus is an extension of the mature
+	    web MVC framework Maverick. Maverick is a minimalist framework 
+		which focuses solely on MVC (model 2) logic, allowing you to generate presentation using a variety 
+		of templating and transformation technologies. Read more about Maverick 
+		<ulink url="http://mav.sourceforge.net">here</ulink>.
+    </para>
+	
+	<para>
+		Baritus is an easy to use yet flexible framework that focuses on fine-grained bean 
+		population and validation from HTTP request parameters. Furthermore, Baritus gives you
+		an alternative to frameworks that focus on using XML configuration. Instead, Baritus
+		gives ready-to-use defaults (like using introspection for conversion), 
+		and lets you use Java to configure validation, population and ways to extend or 
+		override the default behaviour.
+	</para>
+	
+	<para>
+		Baritus builds on Maverick, but does not alter it. Baritus provides a base class, 
+		<literal>nl.openedge.baritus.FormBeanCtrl</literal> that is modeled after 
+		<literal>org.infohazard.maverick.ctl.FormBeanUser</literal>
+		from the Maverick project. Like <literal>FormBeanUser</literal>, instances of 
+		<literal>FormBeanCtrl</literal> are singletons (allthough by extending from 
+		<literal>FormBeanCtrlBase</literal> you can use single-use controllers)
+		and use seperate JavaBeans for population.
+	</para>
+	
+</preface>
