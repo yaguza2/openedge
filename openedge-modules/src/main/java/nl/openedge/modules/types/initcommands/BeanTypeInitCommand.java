@@ -26,11 +26,6 @@ public final class BeanTypeInitCommand implements InitCommand
 	/** bean properties for population. */
 	private Map<String, String> properties = null;
 
-	/**
-	 * Prefix voor waarden die in JNDI env. opgezocht moeten worden
-	 */
-	private static final String JNDI_PREFIX = "JNDI:";
-
 	@Override
 	public void init(String componentName, Element componentNode,
 			ComponentRepository componentRepository)
@@ -43,22 +38,29 @@ public final class BeanTypeInitCommand implements InitCommand
 			{
 				Element pElement = (Element) j.next();
 				String value = pElement.getAttributeValue("value");
+				String jndi = pElement.getAttributeValue("jndi");
 
-				if (value != null && value.length() > (JNDI_PREFIX.length() + 1)
-					&& JNDI_PREFIX.equals(value.substring(0, JNDI_PREFIX.length()).toUpperCase()))
+				if (jndi != null && jndi.length() > 0)
 				{
 					try
 					{
 						Context env = (Context) new InitialContext().lookup("java:comp/env");
 						if (env != null)
 						{
-							value = (String) env.lookup(value.substring(JNDI_PREFIX.length()));
+							String jndiValue = (String) env.lookup(jndi);
+							if (jndiValue != null && jndiValue.length() > 0)
+							{
+								// overwrite met jndi indien beschikbaar
+								value = jndiValue;
+							}
 						}
 					}
 					catch (NamingException e)
 					{
+						// ignore - waarde niet beschikbaar
 					}
 				}
+
 				properties.put(pElement.getAttributeValue("name"), value);
 			}
 		}
