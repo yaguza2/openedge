@@ -1,0 +1,15 @@
+<!ELEMENT menu-config (filter*,menu-item+)>
+<!ELEMENT filter (attribute*)>
+	<!ATTLIST filter class CDATA #REQUIRED>
+	<!-- filters worden gebruikt om menu's dynamisch op te bouwen per gebruiker/rechten -->
+<!ELEMENT menu-item (filter*,menu-item*,alias*,attribute*,parameter*)>
+	<!ATTLIST menu-item tag CDATA #REQUIRED>
+	<!ATTLIST menu-item link CDATA #REQUIRED>
+	<!ATTLIST menu-item key CDATA #IMPLIED>
+<!ELEMENT alias EMPTY>
+	<!ATTLIST alias link CDATA #REQUIRED>
+	<!-- alias geeft aan waar het menu opengeklapt moet worden. -->
+<!ELEMENT attribute (#PCDATA)>
+	<!ATTLIST attribute name CDATA #REQUIRED>
+<!ELEMENT parameter (#PCDATA)>
+	<!ATTLIST parameter name CDATA #REQUIRED>
