@@ -110,7 +110,7 @@ public final class OgnlFieldPopulator extends AbstractFieldPopulator
 				{
 					if (params.isStrictPopulationMode())
 					{
-						populationLog.error(e.getMessage(), e);
+						populationLog.error(e.getMessage());
 						value = context.get(CTX_KEY_CURRENT_TRIED_VALUE);
 						formBeanContext.setError(name, e.getMessage());
 						ctrl.setOverrideField(cctx, formBeanContext, name, value, e, null);
