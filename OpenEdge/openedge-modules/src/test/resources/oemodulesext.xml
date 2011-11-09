@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<components-config>
+	
+	<components>
+		
+		<component name="MyTypeTest" 
+				class="nl.openedge.modules.test.MyTypeImpl"/>
+	
+	</components>
+	
+</components-config>
