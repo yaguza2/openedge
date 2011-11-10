@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<components-config>
+
+	<components>
+
+		<component name="ImageModule" class="nl.burgerweeshuis.website.business.ImageModule">
+
+		</component>
+
+		<component name="FileCacheModule" class="nl.openedge.modules.impl.thumbs.ThumbnailFileCacheModule">
+
+			<property name="cacheDirName" value=".thumbcache" />
+			<property name="cacheSuffix" value=".thumb-" />
+
+		</component>
+
+	</components>
+
+</components-config>
