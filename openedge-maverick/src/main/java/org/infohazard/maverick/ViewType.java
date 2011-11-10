@@ -5,5 +5,6 @@ public enum ViewType
 	VELOCITY,
 	REDIRECT,
 	REPORT,
-	NESTED;
+	NESTED,
+	FOP;
 }
