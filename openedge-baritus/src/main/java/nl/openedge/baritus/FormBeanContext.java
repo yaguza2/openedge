@@ -477,6 +477,9 @@ public final class FormBeanContext implements Map<String, Object>
 			}
 		}
 
+		if (displayString != null && displayString.endsWith("\\"))
+			displayString = displayString + " ";
+
 		return displayString;
 	}
 
