@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>nl.topicus.onderwijs</groupId>
 		<artifactId>onderwijs-parent</artifactId>
-		<version>2011.4.38</version>
+		<version>2012.2.9</version>
 	</parent>
 	<groupId>nl.topicus.onderwijs.openedge</groupId>
 	<artifactId>openedge-parent</artifactId>
-	<version>2.0-SNAPSHOT</version>
+	<version>2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>OpenEdge Parent</name>
 	<description>OpenEdge support bibliotheek voor ParnasSys, ooit bedacht door Eelco Hillenius, wordt nu vervangen door Cobra.</description>
@@ -16,8 +16,6 @@
 		<module>openedge-baritus</module>
 		<module>openedge-maverick</module>
 		<module>openedge-maverick-fop</module>
-		<module>openedge-modules</module>
-		<module>openedge-modules-impl-thumbs</module>
 		<module>openedge-util</module>
 	</modules>
 	<dependencyManagement>
@@ -61,16 +59,6 @@
 			</dependency>
 			<dependency>
 				<groupId>nl.topicus.onderwijs.openedge</groupId>
-				<artifactId>openedge-modules</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>nl.topicus.onderwijs.openedge</groupId>
-				<artifactId>openedge-thumbs</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>nl.topicus.onderwijs.openedge</groupId>
 				<artifactId>openedge-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -78,6 +66,11 @@
 				<groupId>velocity-tools</groupId>
 				<artifactId>velocity-tools</artifactId>
 				<version>1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.0.1</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -124,7 +124,7 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @see org.infohazard.maverick.flow.ControllerSingleton#go(org.infohazard.maverick.flow.ControllerContext)
 	 */
 	@Override
-	public final String go(ControllerContext cctx) throws ServletException
+	public String go(ControllerContext cctx) throws ServletException
 	{
 		if (log.isDebugEnabled())
 		{
@@ -379,8 +379,7 @@ public abstract class FormBeanCtrlBase implements Controller
 			allParameters.putAll(parameters);
 		}
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> requestParameterMap = cctx.getRequest().getParameterMap();
+		Map<String, String[]> requestParameterMap = cctx.getRequest().getParameterMap();
 
 		// Filter alle numerieke parameters uit de parameter lijst aangezien deze
 		// specifiek voor Wicket zijn, en OGNL er niet veel mee kan omdat het een niet
@@ -668,7 +667,6 @@ public abstract class FormBeanCtrlBase implements Controller
 	 * @param formBeanContext
 	 *            context with form bean
 	 */
-	@SuppressWarnings("unchecked")
 	private void internalPerformError(ControllerContext cctx, ExecutionParams execParams,
 			FormBeanContext formBeanContext, Throwable e)
 	{
@@ -687,8 +685,10 @@ public abstract class FormBeanCtrlBase implements Controller
 
 		// set overrides for the current request parameters if params allow
 		if (execParams.isSaveReqParamsAsOverrideFieldsOnError())
-			formBeanContext.setOverrideField(cctx.getRequest().getParameterMap());
-
+		{
+			Map<String, String[]> parameterMap = cctx.getRequest().getParameterMap();
+			formBeanContext.setOverrideFields(parameterMap);
+		}
 		traceErrors(formBeanContext);
 	}
 

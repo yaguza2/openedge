@@ -41,7 +41,7 @@ public final class FormBeanContext implements Map<String, Object>
 	private Map<String, String> errors = null;
 
 	/* overriden values as strings */
-	private Map<String, Object> overrideFields = null;
+	private Map<String, Object> overrideFields = new HashMap<String, Object>();
 
 	/* the current controller */
 	private FormBeanCtrlBase controller = null;
@@ -298,10 +298,6 @@ public final class FormBeanContext implements Map<String, Object>
 	 */
 	public void setOverrideField(String name, Object value)
 	{
-		if (overrideFields == null)
-		{
-			overrideFields = new HashMap<String, Object>();
-		}
 		overrideFields.put(name, value);
 	}
 
@@ -318,7 +314,7 @@ public final class FormBeanContext implements Map<String, Object>
 	 */
 	public Object getOverrideField(String name)
 	{
-		return (overrideFields != null) ? overrideFields.get(name) : null;
+		return overrideFields.get(name);
 	}
 
 	/**
@@ -328,24 +324,16 @@ public final class FormBeanContext implements Map<String, Object>
 	 * @param fields
 	 *            map of fields to override the current values.
 	 */
-	public void setOverrideField(Map<String, Object> fields)
+	public void setOverrideFields(Map<String, String[]> fields)
 	{
 		if (fields != null)
 		{
-			if (overrideFields == null)
+			for (Map.Entry<String, String[]> entry : fields.entrySet())
 			{
-				overrideFields = new HashMap<String, Object>();
-				overrideFields.putAll(fields);
-			}
-			else
-			{
-				for (Map.Entry<String, Object> entry : fields.entrySet())
+				String key = entry.getKey();
+				if (!overrideFields.containsKey(key))
 				{
-					String key = entry.getKey();
-					if (!overrideFields.containsKey(key))
-					{
-						overrideFields.put(key, entry.getValue());
-					}
+					overrideFields.put(key, entry.getValue());
 				}
 			}
 		}
