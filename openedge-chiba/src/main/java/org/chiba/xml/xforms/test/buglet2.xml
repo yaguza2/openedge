@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<envelope xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xml:lang="en">
+    <xforms:model>
+        <!--                <xforms:instance />-->
+        <xforms:bind id="buglet" xforms:nodeset="/buglet" xforms:type="string"/>
+        <xforms:bind id="category" xforms:nodeset="/buglet/category" xforms:type="string"/>
+        <xforms:bind id="reference" xforms:nodeset="/buglet/reference" xforms:type="string"/>
+        <xforms:bind id="subject" xforms:nodeset="/buglet/subject" xforms:type="string"/>
+        <xforms:bind id="datum" xforms:nodeset="/buglet/datum" xforms:type="string"/>
+        <xforms:bind id="risk" xforms:nodeset="/buglet/risk" xforms:type="string"/>
+        <xforms:bind id="description" xforms:nodeset="/buglet/description" xforms:type="string"/>
+        <xforms:bind id="see-also" xforms:nodeset="/buglet/see-also/urls/url">
+            <xforms:bind id="url" xforms:nodeset="." xforms:type="string"/>
+        </xforms:bind>
+        <xforms:submission id="save" xforms:replace="all" xforms:action="XFormsServlet" xforms:method="post"/>
+    </xforms:model>
+    <body>
+        <xforms:group id="N40008A" xforms:bind="buglet">
+            <xforms:label id="N40008D">Buglet</xforms:label>
+
+            <table>
+                <tr>
+                    <td>
+                        <xforms:select1 id="N400090" xforms:bind="category" xforms:appearance="minimal">
+                            <xforms:label>Category</xforms:label>
+                            <xforms:help id="N400097">Select a domain where this bug belongs to.</xforms:help>
+                            <xforms:choices id="N40009A">
+                                <xforms:item id="N40009C">
+                                    <xforms:value id="N40009E">Cisco</xforms:value>
+                                    <xforms:label id="N4000A1">Cisco</xforms:label>
+                                </xforms:item>
+                                <xforms:item id="N4000A8">
+                                    <xforms:value id="N4000AA">Linux</xforms:value>
+                                    <xforms:label id="N4000AD">Linux</xforms:label>
+                                </xforms:item>
+                                <xforms:item id="N4000B4">
+                                    <xforms:value id="N4000B6">Solaris</xforms:value>
+                                    <xforms:label id="N4000B9">Solaris</xforms:label>
+                                </xforms:item>
+                            </xforms:choices>
+                        </xforms:select1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <xforms:input id="N4000EE" xforms:bind="reference">
+                            <xforms:label/>
+                            <xforms:help id="N4000F4">
+                                    Points to a resource containing more information to
+                                    this topic. This item will be linked, if a valid
+                                    Url is supplied.
+                            </xforms:help>
+                            <xforms:hint id="N4000F7">Enter a reference-url associated to this bug</xforms:hint>
+                        </xforms:input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <xforms:input id="N4000FB" xforms:bind="subject">
+                            <xforms:label/>
+                        </xforms:input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <xforms:input id="N400102" xforms:bind="datum">
+                            <xforms:label/>
+                        </xforms:input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <xforms:select1 id="N400109" xforms:bind="risk" xforms:appearance="full">
+                            <xforms:label/>
+                            <xforms:hint id="N400110">Select a risk-level for this bug.</xforms:hint>
+                            <xforms:choices id="N400113">
+                                <xforms:item id="N400115">
+                                    <xforms:value id="N400117">1</xforms:value>
+                                    <xforms:label id="N40011A">low</xforms:label>
+                                </xforms:item>
+                                <xforms:item id="N40011E">
+                                    <xforms:value id="N400120">2</xforms:value>
+                                    <xforms:label id="N400123">medium</xforms:label>
+                                </xforms:item>
+                                <xforms:item id="N400127">
+                                    <xforms:value id="N400129">3</xforms:value>
+                                    <xforms:label id="N40012C">high</xforms:label>
+                                </xforms:item>
+                            </xforms:choices>
+                        </xforms:select1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <xforms:input id="N400132" xforms:bind="description">
+                            <xforms:label/>
+                        </xforms:input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <xforms:group>
+                            <xforms:label/>
+                            <center>
+                                <xforms:trigger id="N4000E2">
+                                    <xforms:label xlink:href="images/add_new.gif">Insert after selected</xforms:label>
+                                    <xforms:action id="N4000E7">
+                                        <xforms:insert id="N4000E9" xforms:bind="see-also" xforms:at="xforms:index('N400139')" xforms:position="after"/>
+                                    </xforms:action>
+                                </xforms:trigger>
+                                <xforms:trigger id="N4000EF">
+                                    <xforms:label xlink:href="images/delete.gif">Delete selected</xforms:label>
+                                    <xforms:action id="N4000F4">
+                                        <xforms:delete id="N4000F6" xforms:bind="see-also" xforms:at="xforms:index('N400139')"/>
+                                    </xforms:action>
+                                </xforms:trigger>
+                            </center>
+                            <xforms:repeat id="N400139" xforms:bind="see-also">
+                                <xforms:input id="N40013F" xforms:bind="url">
+                                    <xforms:label id="N400142">Url: </xforms:label>
+                                </xforms:input>
+                            </xforms:repeat>
+                            <br/>
+                            <center>
+                                <xforms:trigger id="N4000E1">
+                                    <xforms:label xlink:href="images/add_new.gif">Insert after selected</xforms:label>
+                                    <xforms:action id="N4000E6">
+                                        <xforms:insert id="N4000E8" xforms:bind="see-also" xforms:at="xforms:index('N400139')" xforms:position="after"/>
+                                    </xforms:action>
+                                </xforms:trigger>
+                                <xforms:trigger id="N4000EF">
+                                    <xforms:label xlink:href="images/delete.gif">Delete selected</xforms:label>
+                                    <xforms:action id="N4000F4">
+                                        <xforms:delete id="N4000F6" xforms:bind="see-also" xforms:at="xforms:index('N400139')"/>
+                                    </xforms:action>
+                                </xforms:trigger>
+                            </center>
+                        </xforms:group>
+                    </td>
+                </tr>
+            </table>
+        </xforms:group>
+        <xforms:submit id="N400148" xforms:submission="save">
+            <xforms:label id="N40014B">save</xforms:label>
+        </xforms:submit>
+        <xforms:submit id="N40014F" xforms:submission="save">
+            <xforms:label id="N400152">debug</xforms:label>
+        </xforms:submit>
+    </body>
+</envelope>

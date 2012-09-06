@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- This xforms auto-generated from SFDL source - do not edit. Example only!! -->
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    >
+
+    <head>
+        <xforms:model id="model1">
+            <xforms:submission id="submit1" xforms:action="http://localhost:8080/chiba-0.9.3/jsp/debug-instance.jsp" xforms:method="post" xforms:replace="all"/>
+
+            <xforms:instance xmlns="">
+                <top>
+                    <middle>
+                        <label>My label</label>
+                        <data>My data</data>
+                    </middle>
+                    <other>
+						My other data
+                        <label>My other label</label>
+                    </other>
+                </top>
+            </xforms:instance>
+
+            <xforms:bind id="top1" nodeset="/top">
+                <xforms:bind id="middle1" nodeset="middle">
+                    <xforms:bind id="label1" nodeset="label"/>
+                    <xforms:bind id="data1" nodeset="data"/>
+                </xforms:bind>
+                <xforms:bind id="other1" nodeset="other">
+                    <xforms:bind id="data2" nodeset="text()"/>
+                    <xforms:bind id="label2" nodeset="label"/>
+                </xforms:bind>
+            </xforms:bind>
+        </xforms:model>
+    </head>
+
+    <body>
+        <xforms:group id="outergroup">
+
+            <span>OK:  Test relative within relative.
+                <br/>
+            </span>
+            <xforms:group id="relativeGroup" ref="/top">
+                <xforms:group id="middleGroup" ref="middle">
+                    <xforms:input ref="data">
+                        <xforms:label ref="../label"/>
+                    </xforms:input>
+                </xforms:group>
+            </xforms:group>
+
+        </xforms:group>
+    </body>
+</html>
+

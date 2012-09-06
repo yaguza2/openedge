@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms" xmlns:xforms="http://www.w3.org/2002/xforms">
+    <head>
+        <xforms:model id="default-model">
+            <xforms:instance id="default-instance">
+                <default-root xmlns="">
+                    <default-parent>
+                        <default-child>default-value</default-child>
+                        <wrong-child>wrong-value</wrong-child>
+                    </default-parent>
+                </default-root>
+            </xforms:instance>
+            <xforms:bind id="bind-1" xforms:nodeset="default-parent">
+                <xforms:bind id="bind-2" xforms:nodeset="default-child"/>
+            </xforms:bind>
+            <xforms:bind id="bind-3" xforms:nodeset="/default-root">
+                <xforms:bind id="bind-4" xforms:nodeset="default-parent">
+                    <xforms:bind id="bind-5" xforms:nodeset="default-child"/>
+                </xforms:bind>
+            </xforms:bind>
+            <xforms:bind id="bind-6" xforms:nodeset="instance('default-instance')/.">
+                <xforms:bind id="bind-7" xforms:nodeset="default-parent">
+                    <xforms:bind id="bind-8" xforms:nodeset="default-child"/>
+                </xforms:bind>
+            </xforms:bind>
+            <xforms:bind id="bind-9" xforms:nodeset="default-parent/default-child"/>
+            <xforms:bind id="bind-10" xforms:nodeset="/default-root/default-parent/default-child"/>
+            <xforms:bind id="bind-11" xforms:nodeset="instance('default-instance')/./default-parent/default-child"/>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group id="C1" xforms:appearance="full">
+            <xforms:label id="C2">UI Bindings: All input controls should say
+                <i>default-value</i>.
+            </xforms:label>
+            <xforms:group id="C3">
+                <xforms:group id="C4" xforms:ref="default-parent">
+                    <xforms:input id="ui-input-1" xforms:ref="default-child">
+                        <xforms:alert id="C6">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                    <xforms:alert id="C5">The specified value is invalid</xforms:alert>
+                </xforms:group>
+            </xforms:group>
+            <xforms:group id="C7" xforms:ref="/default-root">
+                <xforms:group id="C9" xforms:ref="default-parent">
+                    <xforms:input id="ui-input-2" xforms:ref="default-child">
+                        <xforms:alert id="C11">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                    <xforms:alert id="C10">The specified value is invalid</xforms:alert>
+                </xforms:group>
+                <xforms:alert id="C8">The specified value is invalid</xforms:alert>
+            </xforms:group>
+            <xforms:group id="C12" xforms:ref="instance('default-instance')/.">
+                <xforms:group id="C14" xforms:ref="default-parent">
+                    <xforms:input id="ui-input-3" xforms:ref="default-child">
+                        <xforms:alert id="C16">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                    <xforms:alert id="C15">The specified value is invalid</xforms:alert>
+                </xforms:group>
+                <xforms:alert id="C13">The specified value is invalid</xforms:alert>
+            </xforms:group>
+            <xforms:group id="C17">
+                <xforms:input id="ui-input-4" xforms:ref="default-parent/default-child">
+                    <xforms:alert id="C18">The specified value is invalid</xforms:alert>
+                </xforms:input>
+                <xforms:input id="ui-input-5" xforms:ref="/default-root/default-parent/default-child">
+                    <xforms:alert id="C19">The specified value is invalid</xforms:alert>
+                </xforms:input>
+                <xforms:input id="ui-input-6" xforms:ref="instance('default-instance')/./default-parent/default-child">
+                    <xforms:alert id="C20">The specified value is invalid</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+        </xforms:group>
+        <xforms:group id="C21">
+            <xforms:label id="C22">Model Bindings: All input controls should say
+                <i>default-value</i>.
+            </xforms:label>
+            <xforms:group id="C23">
+                <xforms:group id="C24">
+                    <xforms:input id="model-input-1" xforms:bind="bind-2">
+                        <xforms:alert id="C25">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                </xforms:group>
+            </xforms:group>
+            <xforms:group id="C26">
+                <xforms:group id="C27">
+                    <xforms:input id="model-input-2" xforms:bind="bind-5">
+                        <xforms:alert id="C28">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                </xforms:group>
+            </xforms:group>
+            <xforms:group id="C29">
+                <xforms:group id="C30">
+                    <xforms:input id="model-input-3" xforms:bind="bind-8">
+                        <xforms:alert id="C31">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                </xforms:group>
+            </xforms:group>
+            <xforms:group id="C32">
+                <xforms:input id="model-input-4" xforms:bind="bind-9">
+                    <xforms:alert id="C33">The specified value is invalid</xforms:alert>
+                </xforms:input>
+                <xforms:input id="model-input-5" xforms:bind="bind-10">
+                    <xforms:alert id="C34">The specified value is invalid</xforms:alert>
+                </xforms:input>
+                <xforms:input id="model-input-6" xforms:bind="bind-11">
+                    <xforms:alert id="C35">The specified value is invalid</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+        </xforms:group>
+        <xforms:group id="C36">
+            <xforms:label id="C37">Model vs. UI Bindings: All input controls should say
+                <i>default-value</i>.
+            </xforms:label>
+            <xforms:group id="C38">
+                <xforms:group id="C39" xforms:ref="default-parent">
+                    <xforms:input id="mixed-input-1" xforms:bind="bind-2" xforms:ref="wrong-child">
+                        <xforms:alert id="C41">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                    <xforms:alert id="C40">The specified value is invalid</xforms:alert>
+                </xforms:group>
+            </xforms:group>
+            <xforms:group id="C42" xforms:ref="/default-root">
+                <xforms:group id="C44" xforms:ref="default-parent">
+                    <xforms:input id="mixed-input-2" xforms:bind="bind-5" xforms:ref="wrong-child">
+                        <xforms:alert id="C46">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                    <xforms:alert id="C45">The specified value is invalid</xforms:alert>
+                </xforms:group>
+                <xforms:alert id="C43">The specified value is invalid</xforms:alert>
+            </xforms:group>
+            <xforms:group id="C47" xforms:ref="instance('default-instance')/.">
+                <xforms:group id="C49" xforms:ref="default-parent">
+                    <xforms:input id="mixed-input-3" xforms:bind="bind-8" xforms:ref="wrong-child">
+                        <xforms:alert id="C51">The specified value is invalid</xforms:alert>
+                    </xforms:input>
+                    <xforms:alert id="C50">The specified value is invalid</xforms:alert>
+                </xforms:group>
+                <xforms:alert id="C48">The specified value is invalid</xforms:alert>
+            </xforms:group>
+            <xforms:group id="C52">
+                <xforms:input id="mixed-input-4" xforms:bind="bind-9" xforms:ref="default-parent/wrong-child">
+                    <xforms:alert id="C53">The specified value is invalid</xforms:alert>
+                </xforms:input>
+                <xforms:input id="mixed-input-5" xforms:bind="bind-10" xforms:ref="/default-root/default-parent/wrong-child">
+                    <xforms:alert id="C54">The specified value is invalid</xforms:alert>
+                </xforms:input>
+                <xforms:input id="mixed-input-6" xforms:bind="bind-11" xforms:ref="instance('default-instance')/./default-parent/wrong-child">
+                    <xforms:alert id="C55">The specified value is invalid</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: ConfigTest.xml,v 1.9 2004/11/13 01:06:33 joernt Exp $ -->
+<chiba-config>
+    <properties>
+        <property name="test.property" value="test.value"/>
+        <property name="chiba.stylesheets.compiled" value="false"/>
+
+        <property name="chiba.web.dataPrefix" value="d"/>
+        <property name="chiba.web.triggerPrefix" value="t"/>
+        <property name="chiba.ui.initializeDeselectedCases" value="true"/>
+    </properties>
+    <stylesheets>
+        <stylesheet name="test.stylesheet" value="test.value"/>
+    </stylesheets>
+    
+    <!--You can specify an alternate connector factory class-->
+    <connectors factoryClass="test.factory">
+        <uri-resolver scheme="test.scheme" class="test.class"/>
+        <submission-handler scheme="test.scheme" class="test.class"/>
+        <modelitem-calculator scheme="test.scheme" class="test.class"/>
+        <modelitem-validator scheme="test.scheme" class="test.class"/>
+    </connectors>
+    <generators>
+        <generator name="test.generator" class="test.class"/>
+    </generators>
+    <extension-functions>
+        <function namespace="http://exslt.org/regular-expressions" name="test" class="org.galasoft.util.xml.servlet.xforms.exslt.Regexp" java-name="test"/>
+    </extension-functions>
+    
+    <actions>
+        <!--
+        these entries are used by the ActionFactory to instanciate Action-objects
+        from an XForms input document. The attribute 'name' must match the tagname
+        found in the document.
+
+        Attention: no other namespace than XForms is supported by now. This can
+        be easily added when custom actions occurs.
+        -->
+        <action name="dispatch" class="org.chiba.xml.xforms.action.DispatchAction"/>
+        <action name="refresh" class="org.chiba.xml.xforms.action.RefreshAction"/>
+        <action name="recalculate" class="org.chiba.xml.xforms.action.RecalculateAction"/>
+        <action name="revalidate" class="org.chiba.xml.xforms.action.RevalidateAction"/>
+        <action name="setFocus" class="org.chiba.xml.xforms.action.SetFocusAction"/>
+        <action name="loadURI" class="org.chiba.xml.xforms.action.LoadAction"/>
+        <action name="setValue" class="org.chiba.xml.xforms.action.SetValueAction"/>
+        <action name="send" class="org.chiba.xml.xforms.action.SendAction"/>
+        <!-- cause submitInstance actions and xforms:submit trigger same functionality
+        they both here -->
+        <action name="submit" class="org.chiba.xml.xforms.action.SendAction"/>
+        <action name="resetInstance" class="org.chiba.xml.xforms.action.ResetAction"/>
+        <action name="setindex" class="org.chiba.xml.xforms.action.SetIndexAction"/>
+        <action name="insert" class="org.chiba.xml.xforms.action.InsertAction"/>
+        <action name="delete" class="org.chiba.xml.xforms.action.DeleteAction"/>
+        <action name="toggle" class="org.chiba.xml.xforms.action.ToggleAction"/>
+        <action name="script" class="org.chiba.xml.xforms.action.RebuildAction"/>
+        <action name="message" class="org.chiba.xml.xforms.action.MessageAction"/>
+        <!-- custom actions -->
+        <action name="saveToDisk"
+            class="org.chiba.xml.xforms.action.SaveToDiskAction"
+            namespace="http://chiba.sourceforge.net/2003/08/xforms"/>
+
+    </actions>
+</chiba-config>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for output control"/>
+        <meta name="version" content="$Id: OutputTest.xhtml,v 1.2 2004/11/18 15:59:01 unl Exp $"/>
+
+        <xf:model id="model-1">
+            <xf:instance id="instance-1" xmlns="">
+                <data>
+                    <item>1</item>
+                    <item>2</item>
+                </data>
+            </xf:instance>
+            <xf:bind id="bind-1" nodeset="item[2]"/>
+        </xf:model>
+
+    </head>
+    <body>
+        <xf:group>
+            <xf:output id="output-1" ref="item"/>
+            <xf:output id="output-2" bind="bind-1"/>
+            <xf:output id="output-3" value="sum(item)"/>
+            <xf:group ref="item">
+                <xf:output id="output-4" value="sum(../item)"/>
+            </xf:group>
+            <xf:output id="output-5" ref="item" value="sum(item)"/>
+            <xf:output id="output-6" bind="bind-1" value="sum(item)"/>
+            <xf:output id="output-7"/>
+        </xf:group>
+    </body>
+</html>

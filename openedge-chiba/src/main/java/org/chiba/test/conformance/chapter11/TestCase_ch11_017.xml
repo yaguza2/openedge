@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css"?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+  <!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:html2="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    lang="en">
+    <head>
+        <title>Test the FILE Puts are supported</title>
+
+        <xforms:model id="form1">
+            <xforms:instance src="file:TestCase_ch11_017_template.xml"/>
+            <xforms:submission id="restore" method="get" action="file:TestCase_ch11_017_template.xml" replace="instance"/>
+            <xforms:submission id="save" method="put" action="file:TestCase_ch11_017_template.xml" replace="none"/>
+            <xforms:submission id="send" method="post" action="http://xformstest.org/cgi-bin/echo.sh" replace="all"/>
+        </xforms:model>
+
+    </head>
+    <body>
+        <group xmlns="http://www.w3.org/2002/xforms">
+            <label>Test that FILE GET is supported</label>
+            <group>
+                <input ref="employee/name">
+                    <label>Name</label>
+                </input>
+                <input ref="employee/title">
+                    <label>Title</label>
+                </input>
+                <input ref="employee/salary">
+                    <label>Salary</label>
+                </input>
+            </group>
+            <group>
+                <label>Press save and make changes.
+	  Press restore and verify changes gone.  
+	  Press send and verify changes sent.</label>
+                <submit submission="save">
+                    <label>Save</label>
+                    <hint>Click to save data using FILE: protocol</hint>
+                </submit>
+                <submit submission="restore">
+                    <label>Restore</label>
+                    <hint>Click to restore data using FILE: protocol</hint>
+                </submit>
+                <submit submission="send">
+                    <label>Send</label>
+                    <hint>Click to send data using FILE: protocol</hint>
+                </submit>
+            </group>
+        </group>
+    </body>
+    <!-- xml-stylesheet  type="text/css" href="http://webaccess.mozquito.com/data/demo/xform.css" -->
+</html>

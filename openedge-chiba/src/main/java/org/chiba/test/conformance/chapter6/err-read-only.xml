@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+<!ATTLIST section id ID #IMPLIED>
+<!ATTLIST h       id ID #IMPLIED>
+<!ATTLIST div     id ID #IMPLIED>
+<!ATTLIST nl      id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="urn:my"
+    xml:lang="en">
+    <head>
+        <title>Testing Property
+            <code>readonly</code>
+        </title>
+        <xforms:model id="model-001">
+            <xforms:instance xmlns="">
+                <person>
+                    <test-read-only xsi:type="xsd:date">
+          2000</test-read-only>
+                    <name>
+                        <first/>
+                        <middle/>
+                        <last/>
+
+
+                    </name>
+                    <age/>
+                    <is-senior xsi:type="xsd:boolean"/>
+                    <is-minor xsi:type="xsd:boolean"/>
+                </person>
+            </xforms:instance>
+
+
+            <bind nodeset="name"
+                readonly="../test-read-only"/>
+        </xforms:model>
+    </head>
+    <body>
+        <h1>Default type MUST be a string.</h1>
+        <xforms:group model="model-001">
+            <input ref="/person/test-read-only">
+                <label>Master Control For Read-only</label>
+            </input>
+            <p>Styling will indicate read-only  status.</p>
+            <input ref="name/first">
+                <label>First name</label>
+            </input>
+            <input ref="name/middle">
+                <label>Middle name</label>
+            </input>
+            <input ref="name/last">
+                <label>Last name</label>
+            </input>
+
+            <input ref="age">
+                <label>Age</label>
+            </input>
+            <input ref="is-senior">
+                <label>Senior Citizen</label>
+            </input>
+            <input ref="is-minor">
+                <label>Minor</label>
+            </input>
+
+        </xforms:group>
+    </body>
+</html>

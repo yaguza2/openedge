@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section
+	id ID #IMPLIED
+>
+	<!ATTLIST h
+	id ID #IMPLIED
+>
+	<!ATTLIST div
+	id ID #IMPLIED
+>
+	<!ATTLIST nl
+	id ID #IMPLIED
+>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <title>Trigger And Submit </title>
+        <xforms:model id="010_model">
+            <xforms:instance xmlns="">
+                <data>
+                    <has-car xsi:type="xsd:boolean">false</has-car>
+                    <car-details>
+                        <make/>
+                        <license-number/>
+                    </car-details>
+                </data>
+            </xforms:instance>
+            <xforms:bind ref="/data/car-details" relevant="boolean-from-string(/data/has-car)=true()"/>
+            <xforms:submission id="send" method="form-data-post" action="http://example.com/test-xf"/>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>Car Wizard</xforms:label>
+            <xforms:input model="010_model" ref="/data/has-car">
+                <xforms:label>Do you have a car?</xforms:label>
+            </xforms:input>
+            <xforms:trigger model="010_model" ref="/data/car-details">
+                <xforms:label>Disabled by default. Enabled if /data/car-details has
+                 relevant = true().</xforms:label>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:submit submission="send">
+            <xforms:label>Send Data</xforms:label>
+        </xforms:submit>
+        <xforms:submit submission="send" model="010_model" ref="/data/car-details">
+            <xforms:label>Sending data is disabled by default.
+               Enabled if /data/car-details has relevant = true().</xforms:label>
+        </xforms:submit>
+    </body>
+</html>

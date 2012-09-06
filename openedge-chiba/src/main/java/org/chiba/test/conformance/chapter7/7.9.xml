@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:ex="http://example.org"
+    xml:lang="en">
+    <head>
+        <title>Date and Time Functions</title>
+
+        <xforms:model>
+            <xforms:instance>
+                <ex:root>
+                </ex:root>
+            </xforms:instance>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>Date and Time Functions</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">!-- TBD: insert assertion tested here</li>
+        </nl>
+
+        <xforms:output value="now()">
+            <xforms:label>now()</xforms:label>
+            <xforms:hint>Should display current time</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="days-from-date('2002-01-01')">
+            <xforms:label>days-from-date('2002-01-01')</xforms:label>
+            <xforms:hint>Should be 11688</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="days-from-date('1969-12-31')">
+            <xforms:label>days-from-date('1969-12-31')</xforms:label>
+            <xforms:hint>Should be -1</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="seconds-from-dateTime('1971-01-01T00:00:00Z')">
+            <xforms:label>seconds-from-dateTime('1971-01-01T00:00:00Z')</xforms:label>
+            <xforms:hint>Should be 3.1526E7</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="seconds('P1Y2M')">
+            <xforms:label>seconds('P1Y2M')</xforms:label>
+            <xforms:hint>Should be 0</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="seconds('P3DT10H30M1.5S')">
+            <xforms:label>seconds('P3DT10H30M1.5S')</xforms:label>
+            <xforms:hint>Should be 297001.5</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="seconds('3')">
+            <xforms:label>seconds('3')</xforms:label>
+            <xforms:hint>Should be NaN</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="months('P1Y2M')">
+            <xforms:label>months('P1Y2M')</xforms:label>
+            <xforms:hint>Should be 14</xforms:hint>
+        </xforms:output>
+
+        <xforms:output value="months('-P19M')">
+            <xforms:label>months('-P19M')</xforms:label>
+            <xforms:hint>Should be -19</xforms:hint>
+        </xforms:output>
+
+    </body>
+</html>

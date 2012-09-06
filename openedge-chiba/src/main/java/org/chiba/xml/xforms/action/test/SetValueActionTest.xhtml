@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for setvalue action"/>
+        <meta name="version" content="$Id: SetValueActionTest.xhtml,v 1.6 2004/11/03 14:07:59 unl Exp $"/>
+        <xf:model id="model-1">
+            <xf:instance id="instance-1" xmlns="">
+                <data>
+                    <item>value</item>
+                </data>
+            </xf:instance>
+        </xf:model>
+        <xf:model id="model-2">
+            <xf:instance id="instance-2" xmlns="">
+                <data>
+                    <item>value</item>
+                </data>
+            </xf:instance>
+            <xf:bind id="bind-item" nodeset="item"/>
+        </xf:model>
+    </head>
+    <body>
+        <xf:group>
+            <xf:label>Bindings: The input controls should say <i>value</i>.</xf:label>
+            <xf:group>
+                <xf:input id="input-1" ref="item"/>
+                <xf:input id="input-2" bind="bind-item"/>
+                <xf:trigger id="trigger-string-literal">
+                    <xf:label>Set string literal value</xf:label>
+                    <xf:action>
+                        <xf:setvalue ref="item">literal</xf:setvalue>
+                    </xf:action>
+                </xf:trigger>
+                <xf:trigger id="trigger-number-literal">
+                    <xf:label>Set number literal value</xf:label>
+                    <xf:action>
+                        <xf:setvalue ref="item">4711</xf:setvalue>
+                    </xf:action>
+                </xf:trigger>
+                <xf:trigger id="trigger-string-expression">
+                    <xf:label>Set string expression value</xf:label>
+                    <xf:action>
+                        <xf:setvalue ref="item" value="concat('ex', 'press', 'ion')"/>
+                    </xf:action>
+                </xf:trigger>
+                <xf:trigger id="trigger-number-expression">
+                    <xf:label>Set number expression value</xf:label>
+                    <xf:action>
+                        <xf:setvalue ref="item" value="number(4711)"/>
+                    </xf:action>
+                </xf:trigger>
+                <xf:trigger id="trigger-foreign-model">
+                    <xf:label>Set value in different model</xf:label>
+                    <xf:action>
+                        <xf:setvalue model="model-2" ref="item" value="'test'"/>
+                    </xf:action>
+                </xf:trigger>
+                <xf:trigger id="trigger-foreign-model-via-bind">
+                    <xf:label>Set value in different model via Bind</xf:label>
+                    <xf:action>
+                        <xf:setvalue bind="bind-item" value="'test'"/>
+                    </xf:action>
+                </xf:trigger>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

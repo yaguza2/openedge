@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    chiba:stylesheet="html4.xsl">
+    <head>
+        <title>Controls</title>
+        <xforms:model>
+            <xforms:submission id="debug" xforms:replace="all" xforms:action="jsp/debug-instance.jsp" xforms:method="post"/>
+
+            <xforms:instance xmlns="">
+                <form>
+                    <inputvalue>input</inputvalue>
+                    <datevalue></datevalue>
+                    <booleanvalue></booleanvalue>
+                    <upload mediatype="" filename=""></upload>
+                    <range>5</range>
+                </form>
+            </xforms:instance>
+            <xforms:instance id="another">
+                <another/>
+            </xforms:instance>
+            <xforms:bind id="form" xforms:nodeset="/form">
+                <xforms:bind id="datevalue" xforms:nodeset="datevalue" xforms:type="date"/>
+                <xforms:bind id="booleanvalue" xforms:nodeset="booleanvalue" xforms:type="boolean"/>
+            </xforms:bind>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group xforms:ref="/form">
+            <div>
+                <xforms:label>Incarnations of Input control</xforms:label>
+                <xforms:input ref="inputvalue">
+                    <xforms:label>Simple Input</xforms:label>
+                </xforms:input>
+                <xforms:input bind="datevalue">
+                    <xforms:label>Date Input</xforms:label>
+                </xforms:input>
+                <!--
+                <xforms:input bind="booleanvalue">
+                    <xforms:label>Boolean Input</xforms:label>
+                </xforms:input>
+
+                <xforms:upload xforms:ref="upload" mediatype="*">
+                    <xforms:label>Select a file:</xforms:label>
+                    <xforms:filename ref="@filename"/>
+                    <xforms:mediatype ref="@mediatype"/>
+                </xforms:upload>
+                <xforms:range ref="range" start="1" end="10" step="1">
+                    <xforms:label>Select a value</xforms:label>
+                </xforms:range>
+                -->
+            </div>
+        </xforms:group>
+    </body>
+</html>
+

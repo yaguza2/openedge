@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms">
+    <head>
+        <xforms:model functions="chiba:fileSize chiba:fileDate">
+            <xforms:instance>
+                <attachments xmlns="">
+                    <attachment>
+                        <upload>FileFunctionsTest.xml</upload>
+                        <filesize></filesize>
+                        <filedate1/>
+                        <filedate2/>
+                    </attachment>
+                </attachments>
+            </xforms:instance>
+            <xforms:bind nodeset="attachment/filesize" calculate="chiba:fileSize(../upload)"/>
+            <xforms:bind nodeset="attachment/filedate1" calculate="chiba:fileDate(../upload,'')"/>
+            <xforms:bind nodeset="attachment/filedate2" calculate="chiba:fileDate(../upload,'yyyy.MM.dd')"/>
+        </xforms:model>
+    </head>
+    <body>
+    </body>
+</html>

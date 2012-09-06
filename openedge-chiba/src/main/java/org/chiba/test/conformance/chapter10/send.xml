@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="test.css" ?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <style type="text/css">
+			output {width: 4cm;}
+        </style>
+        <title>send</title>
+        <xforms:model id="model1">
+            <xforms:submission id="submission1" method="get" action="http://example.com/"/>
+            <xforms:instance id="instance1" xmlns="">
+                <data>
+                    <child>text</child>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <h>The send Element</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li>All assertions for send</li>
+        </nl>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>Should submit using get to http://example.com/?child=text</xforms:label>
+                <xforms:send submission="submission1" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+
+    </body>
+</html>

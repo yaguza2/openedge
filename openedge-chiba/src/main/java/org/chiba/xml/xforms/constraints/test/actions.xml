@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: actions.xml,v 1.7 2004/08/15 14:14:13 joernt Exp $ -->
+<html xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <head>
+        <title>Actions</title>
+        <xforms:model>
+            <xforms:submission id="save" xforms:replace="all" xforms:action="jsp/debug-instance.jsp" xforms:method="post"/>
+            <xforms:submission id="debug" xforms:replace="instance" xforms:action="jsp/generate-instance.jsp" xforms:method="post"/>
+            <xforms:submission id="exit" xforms:replace="none" xforms:action="jsp/return-instance.jsp" xforms:method="post"/>
+            <!--
+                        <xforms:submission id="form" xforms:replace="form" xforms:action="forms/address.xml" xforms:method="post"/>
+            -->
+            <xforms:instance id="first">
+                <data>
+                    <helloworld hw="test">marks</helloworld>
+                    <repeatdata>
+                        <input>4711</input>
+                    </repeatdata>
+                    <extra>This becomes only relevant (visible) if there are more than 5 entries in the repeat</extra>
+                </data>
+            </xforms:instance>
+            <xforms:instance id="second">
+                <root>
+                    <schnulli>bulli</schnulli>
+                </root>
+            </xforms:instance>
+            <xforms:bind id="N400092" xforms:nodeset="/data/repeatdata/input">
+                <xforms:bind id="N40009F" xforms:nodeset="." xforms:type="integer"/>
+            </xforms:bind>
+            <xforms:bind id="helloworld"
+                xforms:nodeset="/data/helloworld"
+                xforms:type="string"
+                xforms:required="string-length(xforms:instance('second')/root/schnulli) > 4"
+                xforms:constraint="string-length(.) > 5"/>
+            <xforms:bind id="hw"
+                xforms:nodeset="/data/helloworld/@hw"
+                xforms:type="string"
+                xforms:required="true()"/>
+            <xforms:bind id="extra" xforms:nodeset="/data/extra" xforms:relevant="count(../repeatdata/input) > 5"/>
+        </xforms:model>
+        <xforms:model id="messages">
+            <xforms:instance xlink:href="messages.xml">
+                <messages>
+                    <required>This field is required. Please provide a value.</required>
+                    <constraint1>Must be longer than 5 characters</constraint1>
+                </messages>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group id="N400036" xforms:ref="/data">
+            <xforms:label>
+                <h3>XForms Actions</h3>
+                These are examples of XForms Action usage.
+
+            </xforms:label>
+            <xforms:group id="N40003E">
+                <xforms:label id="N400040">rebuild, refresh, recalculate, revalidate</xforms:label>
+                <xforms:trigger id="N400043">
+                    <xforms:label id="N400045">rebuild</xforms:label>
+                    <xforms:action id="N400048">
+                        <xforms:rebuild id="N40004A"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N400043">
+                    <xforms:label id="N400045">refresh</xforms:label>
+                    <xforms:action id="N400048">
+                        <xforms:refresh id="N40004A2"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N40004E">
+                    <xforms:label id="N400050">recalculate</xforms:label>
+                    <xforms:action id="N400053">
+                        <xforms:recalculate id="N400055"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N400059">
+                    <xforms:label id="N40005B">revalidate</xforms:label>
+                    <xforms:action id="N40005E">
+                        <xforms:revalidate id="N400060"/>
+                    </xforms:action>
+                </xforms:trigger>
+            </xforms:group>
+            <xforms:group id="N400065">
+                <xforms:label id="N400068">setValue</xforms:label>
+                Setting values on Instance-Element xforms:instance('N40001A')/data/helloworld
+                <br/>
+                <xforms:trigger id="N40006B">
+                    <xforms:label id="N40006D">setvalue 'Hello'</xforms:label>
+                    <xforms:hint>use setvalue to explicitly set specific values to nodes in the instance.</xforms:hint>
+                    <xforms:action id="N400070">
+                        <xforms:setvalue id="N400072" xforms:ref="helloworld" xforms:value="'Hello'"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N400078">
+                    <xforms:label id="N40007A">setvalue 'World'</xforms:label>
+                    <xforms:action id="N40007D">
+                        <xforms:hint>use setvalue to explicitly set specific values to nodes in the instance.</xforms:hint>
+                        <xforms:setvalue id="N40007F" xforms:ref="helloworld" xforms:value="'World'"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:input id="helloworld-id" xforms:ref="/data/helloworld" xforms:bind="helloworld">
+                    <xforms:label id="N40008A"></xforms:label>
+                    <xforms:alert>must be longer than 5 characters stupid!</xforms:alert>
+                </xforms:input>
+                <br/>
+                Setting values on Instance-Attribute /data/helloworld/@hw
+                <br/>
+                <xforms:trigger id="N40008E">
+                    <xforms:label id="N400090">setvalue 'Hello'</xforms:label>
+                    <xforms:hint>use setvalue to explicitly set specific values to nodes in the instance.</xforms:hint>
+                    <xforms:action id="N400093">
+                        <xforms:setvalue id="N400095" xforms:ref="helloworld/@hw" xforms:value="'Hello'"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N40009B">
+                    <xforms:label id="N40009D">setvalue 'World'</xforms:label>
+                    <xforms:hint>use setvalue to explicitly set specific values to nodes in the instance.</xforms:hint>
+                    <xforms:action id="N4000A0">
+                        <xforms:setvalue id="N4000A2" xforms:ref="helloworld/@hw" xforms:value="'World'"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:input id="helloworld-id2" xforms:ref="/data/helloworld/@hw" xforms:bind="hw">
+                    <xforms:label id="N4000AD"></xforms:label>
+                    <xforms:alert xforms:model="messages" xforms:ref="/messages/required">this should be some kind of hello</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+            <br/>
+            <xforms:group>
+                <xforms:label>Repeat - insert, delete, move top, move bottom</xforms:label>
+                <center>
+                    <xforms:trigger id="N4000E1">
+                        <xforms:label xlink:href="images/add_new.gif">Insert after selected</xforms:label>
+                        <xforms:hint>inserts a new entry in this collection</xforms:hint>
+                        <xforms:action id="N4000E6">
+                            <xforms:insert id="N4000E8" xforms:nodeset="/data/repeatdata/input" xforms:at="xforms:index('repeatid')" xforms:position="after"/>
+                        </xforms:action>
+                    </xforms:trigger>
+                    <xforms:trigger id="N4000EF">
+                        <xforms:label xlink:href="images/delete.gif">Delete selected</xforms:label>
+                        <xforms:hint>deletes selected entry from this collection</xforms:hint>
+                        <xforms:action id="N4000F4">
+                            <xforms:delete id="N4000F6" xforms:nodeset="/data/repeatdata/input" xforms:at="xforms:index('repeatid')"/>
+                        </xforms:action>
+                    </xforms:trigger>
+
+                    <xforms:trigger id="N4000FC">
+                        <xforms:label xlink:href="images/top_new.gif">Top of List</xforms:label>
+                        <xforms:hint>move cursor to top of list</xforms:hint>
+                        <xforms:action id="N400101">
+                            <xforms:setindex id="N400103" xforms:repeat="repeatid" xforms:index="1"/>
+                        </xforms:action>
+                    </xforms:trigger>
+                    <xforms:trigger id="N400109">
+                        <xforms:label xlink:href="images/bottom.gif">Bottom of list</xforms:label>
+                        <xforms:hint>move cursor to bottom of list</xforms:hint>
+                        <xforms:action id="N40010E">
+                            <xforms:setindex id="N400110" xforms:repeat="repeatid" xforms:index="count(../input)"/>
+                        </xforms:action>
+                    </xforms:trigger>
+                </center>
+                <xforms:repeat id="repeatid" xforms:nodeset="/data/repeatdata/input" xforms:bind="N400092">
+                    <xforms:help id="N4000C0">help</xforms:help>
+                    <xforms:hint id="N4000C3">hint</xforms:hint>
+
+
+                    <xforms:input id="N4000C6" xforms:bind="N40009F">
+                        <xforms:label id="N4000CA">repeated input-field: </xforms:label>
+                        <xforms:hint>repeated enty</xforms:hint>
+                    </xforms:input>
+                    <!-- this allows to render an explicit control for selection of repeat-entries.
+                    this may be used in non-scripted environments to allow the user to pick one entry. -->
+                    <xforms:extension>
+                        <chiba:selector/>
+                    </xforms:extension>
+                    <br/>
+                </xforms:repeat>
+
+                <font color="red">
+                    <xforms:output id="extra-output" xforms:bind="extra"/>
+                </font>
+            </xforms:group>
+
+            <xforms:group id="N400117">
+                <xforms:label id="N400119">switch / toggle</xforms:label>
+                <xforms:trigger id="N40011C">
+                    <xforms:label id="N40011E">ON</xforms:label>
+                    <xforms:hint>toggles switch to on</xforms:hint>
+                    <xforms:action id="N400121">
+                        <xforms:toggle id="t1" xforms:case="case1"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N400128">
+                    <xforms:label id="N40012A">OFF</xforms:label>
+                    <xforms:hint>toggles switch to off</xforms:hint>
+                    <xforms:action id="N40012D">
+                        <xforms:toggle id="N40012F" xforms:case="case2"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:switch id="switch">
+                    <xforms:case id="case1" xforms:selected="false">
+                        <h1>
+                            <font color="red">Switch is turned on!</font>
+                        </h1>
+                    </xforms:case>
+                    <xforms:case id="case2" xforms:selected="true">
+                        <br/>Switch is turned off!
+                        <br/>
+                    </xforms:case>
+                </xforms:switch>
+            </xforms:group>
+            <xforms:group id="N400151">
+                <xforms:label id="N400153">Misc</xforms:label>
+                <xforms:trigger id="dispatchbtn">
+                    <xforms:label id="N400159">Dispatch (toggle ON)</xforms:label>
+                    <xforms:hint>dispatches xforms-activate to the 'ON' button</xforms:hint>
+                    <xforms:action id="N40015C">
+                        <xforms:dispatch id="N40015E" xforms:name="DOMActivate" xforms:target="N40011C"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N40017F">
+                    <xforms:label id="N400181">Load**</xforms:label>
+                    <xforms:action id="N400184">
+                        <xforms:load id="N400186" xforms:resource="images/chiba50t.gif"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N40018A">
+                    <xforms:label id="N40018C">Message*</xforms:label>
+                    <xforms:action id="N40018F">
+                        <xforms:message id="N400191" xforms:level="modeless"/>
+                    </xforms:action>
+                </xforms:trigger>
+            </xforms:group>
+            <xforms:group id="N400197">
+                <xforms:label id="N400199">Send, Reset</xforms:label>
+                <xforms:trigger id="N40019C">
+                    <xforms:label id="N40019E">Show new document (replace=all)</xforms:label>
+                    <xforms:hint>shows submitted instance data in a separate JSP page</xforms:hint>
+                    <xforms:action id="N4001A1">
+                        <xforms:send id="N4001A3" xforms:submission="save"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N4001B3">
+                    <xforms:label id="N4001B5">Show returned instance (replace=instance)</xforms:label>
+                    <xforms:hint>imports generated instance data into the current form</xforms:hint>
+                    <xforms:action id="N4001B8">
+                        <xforms:send id="N4001BA" xforms:submission="debug"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="N4001BF">
+                    <xforms:label id="N4001C1">Just send (replace=none)</xforms:label>
+                    <xforms:hint>submits instance data and ignores any response</xforms:hint>
+                    <xforms:action id="N4001C4">
+                        <xforms:send id="N4001C6" xforms:submission="exit"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <!--
+                                <xforms:trigger id="_N4001A8">
+                                    <xforms:label id="_N4001AA">show new form (replace=form)</xforms:label>
+                                    <xforms:hint>sends the instance data and load a new form</xforms:hint>
+                                    <xforms:action id="_N4001AD">
+                                        <xforms:send id="_N4001AF" xforms:submission="form"/>
+                                    </xforms:action>
+                                </xforms:trigger>
+                -->
+                <xforms:trigger id="N4001A8">
+                    <xforms:label id="N4001AA">Reset</xforms:label>
+                    <xforms:hint>reset instance data to original values</xforms:hint>
+                    <xforms:action id="N4001AD">
+                        <xforms:reset id="N4001AF"/>
+                    </xforms:action>
+                </xforms:trigger>
+            </xforms:group>
+        </xforms:group>
+        * these Actions are not implemented yet.
+        <br/>
+        ** these Actions are only partly implemented.
+    </body>
+</html>

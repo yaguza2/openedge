@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for instance factory"/>
+        <meta name="version" content="$Id: InstanceFactoryTest.xml,v 1.2 2004/11/03 14:15:39 unl Exp $"/>
+        <xforms:model xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms">
+            <xforms:instance xmlns="" xmlns:my="http://my">
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+    </body>
+</html>

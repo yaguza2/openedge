@@ -1,0 +1,53 @@
+<envelope xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <xforms:model>
+        <xforms:instance id="N40001A">
+            <catalog>
+                <category type="food">
+                    <articles>
+                        <meat/>
+                        <drink/>
+                    </articles>
+                </category>
+                <category type="entertainment">
+                    <articles>
+                        <cd/>
+                        <books/>
+                        <games/>
+                    </articles>
+                </category>
+                <category type="sports">
+                    <articles>
+                        <streetball/>
+                        <wintersports/>
+                        <skateboarding/>
+                    </articles>
+                </category>
+                <category type="clothes">
+                    <articles>
+                        <women/>
+                        <men/>
+                        <children/>
+                    </articles>
+                </category>
+                <category type="shoes">
+                    <articles>
+                        <women/>
+                        <men/>
+                        <children/>
+                    </articles>
+                </category>
+            </catalog>
+        </xforms:instance>
+    </xforms:model>
+    <xforms:group>
+        <xforms:select xforms:if="select-1" xforms:ref="/catalog">
+            <xforms:itemset xforms:nodeset="category">
+                <xforms:label xforms:ref="@type"/>
+                <xforms:copy xforms:ref="articles"/>
+            </xforms:itemset>
+        </xforms:select>
+    </xforms:group>
+</envelope>

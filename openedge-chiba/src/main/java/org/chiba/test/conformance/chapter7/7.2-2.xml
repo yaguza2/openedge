@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="http://example.com"
+    xml:lang="en">
+    <head>
+        <title>The test is passed if two new output elements show  up with values 4 and 5, and if the output with value 5  is indicated to be invalid.</title>
+
+        <xforms:model id="mymodel">
+            <xforms:instance id="myinstance">
+                <my:E>
+                    <my:F>1</my:F>
+                    <my:F>1</my:F>
+                    <my:F>1</my:F>
+                </my:E>
+            </xforms:instance>
+            <xforms:bind nodeset="my:F" calculate="if(preceding-sibling::my:F, preceding-sibling::my:F[1]+1, 1)"/>
+            <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                targetNamespace="http://example.com/">
+                <xsd:simpleType name="max4">
+                    <xsd:restriction base="xsd:integer">
+                        <xsd:maxInclusive value="4"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+                <xsd:element name="F" type="my:max4"/>
+            </xsd:schema>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>The test is passed if two new output elements show  up with values 4 and 5, and if the output with value 5  is indicated to be invalid.</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">!-- TBD: insert assertion tested here</li>
+        </nl>
+
+        <xforms:repeat nodeset="/my:E/*">
+            <xforms:output ref="."/>
+        </xforms:repeat>
+
+        <xforms:trigger>
+            <xforms:label>Run test</xforms:label>
+            <xforms:action ev:event="xforms-activate">
+                <script type="text/javascript">
+	        var model = document.getElementsById("mymodel");
+	        var instance = model.getInstanceDocument("myinstance");
+			for (var i = 0; i &lt; 2; i++) {
+				var newF = instance.createElementNS("http://example.com", "my:F");
+				instance.lastChild.parentNode.appendChild(newF);
+			}
+			model.rebuild();
+			model.recalculate();
+			model.revalidate();
+			model.refresh();
+                </script>
+            </xforms:action>
+        </xforms:trigger>
+
+    </body>
+</html>

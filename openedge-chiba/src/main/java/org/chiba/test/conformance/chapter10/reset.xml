@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="test.css" ?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <style type="text/css">
+			output {width: 4cm;}
+        </style>
+        <title>reset</title>
+        <xforms:model id="model1">
+            <xforms:submission id="submission1" method="get" action="http://example.com/"/>
+            <xforms:instance id="instance1" xmlns="">
+                <data>
+                    <child>original text</child>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <h>The reset Element</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li>All assertions for reset, first change the value and try to reset using the buttons.</li>
+        </nl>
+        <xforms:group>
+            <xforms:label>The instance:</xforms:label>
+            <xforms:input ref="child">
+                <xforms:label>Value: </xforms:label>
+            </xforms:input>
+            <xforms:trigger>
+                <xforms:label>Change value</xforms:label>
+                <xforms:setvalue ref="child" value="'changed'" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>reset actions with no model attribute or whose specified model does not exist MUST be ignored.</xforms:label>
+                <xforms:reset ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>reset action must fire the xforms-reset event at the specified model.</xforms:label>
+                <xforms:reset model="model1" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+
+
+    </body>
+</html>

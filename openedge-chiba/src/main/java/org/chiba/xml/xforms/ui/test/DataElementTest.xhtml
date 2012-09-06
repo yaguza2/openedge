@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for the data element"/>
+        <meta name="version" content="$Id: DataElementTest.xhtml,v 1.2 2004/11/17 01:35:48 unl Exp $"/>
+
+        <xf:model id="model-1">
+            <xf:instance id="instance-1" xmlns="">
+                <data>
+                    <item xsi:type="xsd:token">value</item>
+                </data>
+            </xf:instance>
+            <xf:bind id="bind-existing" nodeset="item[1]"/>
+            <xf:bind id="bind-missing" nodeset="item[2]"/>
+        </xf:model>
+
+    </head>
+    <body>
+        <xf:group>
+            <xf:input id="input-existing" bind="bind-existing"/>
+            <xf:input id="input-missing" bind="bind-missing"/>
+            <xf:trigger id="delete-existing">
+                <xf:delete nodeset="item" at="1"/>
+            </xf:trigger>
+            <xf:trigger id="insert-missing">
+                <xf:insert nodeset="item" at="1" position="after"/>
+            </xf:trigger>
+        </xf:group>
+    </body>
+</html>

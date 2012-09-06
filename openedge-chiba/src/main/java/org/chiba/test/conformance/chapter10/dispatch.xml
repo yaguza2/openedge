@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="xhtml2.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="http://example.info"
+    xml:lang="en">
+    <head>
+        <title>Dispatch Test</title>
+
+        <xforms:model id="model">
+            <xforms:instance>
+                <my:test>
+                    <my:node1/>
+                    <my:node2/>
+                </my:test>
+            </xforms:instance>
+            <xforms:message level="modal" ev:event="xforms-focus">Event xforms-focus arrived</xforms:message>
+            <xforms:message level="modal" ev:event="my-custom-event">Event my-custom-event arrived</xforms:message>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>Dispatch Test</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">!-- TBD: insert assertion tested here</li>
+        </nl>
+
+        <p>
+            <xforms:trigger>
+                <xforms:label>Dispatch xforms-focus</xforms:label>
+                <xforms:dispatch ev:event="xforms-activate" name="xforms-focus" target="model"/>
+            </xforms:trigger>
+        </p>
+        <p>
+            <xforms:trigger>
+                <xforms:label>Dispatch my-custom-event</xforms:label>
+                <xforms:dispatch ev:event="xforms-activate" name="my-custom-event" target="model"/>
+            </xforms:trigger>
+        </p>
+        <p>If the XForms Actions happen in the proper order, the first output should read "2", and the second "6.28"</p>
+        <!-- TBD: Insert XForms controls, etc. here -->
+        <p>Clicking each button should produce a message that an event was received.</p>
+    </body>
+</html>

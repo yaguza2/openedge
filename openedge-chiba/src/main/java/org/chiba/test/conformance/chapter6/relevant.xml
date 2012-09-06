@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section
+	id ID #IMPLIED
+>
+	<!ATTLIST h
+	id ID #IMPLIED
+>
+	<!ATTLIST div
+	id ID #IMPLIED
+>
+	<!ATTLIST nl
+	id ID #IMPLIED
+>
+	<!-- for the model attribute to work -->
+	<!ATTLIST xforms:model
+	id ID #IMPLIED
+>
+	<!-- for the bind attribute to work -->
+	<!ATTLIST xforms:bind
+	id ID #IMPLIED
+>
+	<!-- for the instance() function to work -->
+	<!ATTLIST xforms:instance
+	id ID #IMPLIED
+>
+	<!-- for submit to work -->
+	<!ATTLIST xforms:submission
+	id ID #IMPLIED
+>
+	<!-- for setfocus and other events to work -->
+	<!ATTLIST xforms:input
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:secret
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:textarea
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:output
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:upload
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:range
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:trigger
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:submit
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:select
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:select1
+	id ID #IMPLIED
+>
+	<!-- for toggle to work -->
+	<!ATTLIST xforms:case
+	id ID #IMPLIED
+>
+	<!-- for repeat stuff to work -->
+	<!ATTLIST xforms:repeat
+	id ID #IMPLIED
+>
+	<!-- (also any element with xforms:repeat-* attributes -->
+	<!ATTLIST table
+	id ID #IMPLIED
+>
+	<!ATTLIST td
+	id ID #IMPLIED
+>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:my="urn:my" xml:lang="en">
+    <head>
+        <title>Testing Property
+            <code>relevant</code>
+        </title>
+        <xforms:model id="model-001">
+            <xforms:instance xmlns="">
+                <person>
+                    <test-relevant>true</test-relevant>
+                    <name>
+                        <first/>
+                        <middle/>
+                        <last/>
+                    </name>
+                    <age/>
+                    <is-senior xsi:type="xsd:boolean"/>
+                    <is-minor xsi:type="xsd:boolean"/>
+                    <health>
+                        <heart/>
+                        <bp>
+                            <diastolic/>
+                            <systolic>45</systolic>
+                        </bp>
+                    </health>
+                </person>
+            </xforms:instance>
+            <xforms:bind nodeset="health/bp/*" type="xsd:integer"/>
+            <xforms:bind nodeset="test-relevant" type="xsd:boolean"/>
+            <xforms:bind nodeset="health" relevant="../is-senior = 'true'"/>
+            <xforms:bind nodeset="is-minor" calculate="../age &lt; 18"/>
+            <xforms:bind nodeset="is-senior" calculate="../age &gt; 65"/>
+            <xforms:bind nodeset="name" relevant="boolean-from-string(../test-relevant)"/>
+        </xforms:model>
+    </head>
+    <body>
+        <h1>Relevant</h1>
+        <xforms:group model="model-001">
+            <xforms:input ref="/person/test-relevant">
+                <label>Master Control For Relevant</label>
+            </xforms:input>
+            <p>Styling will indicate relevant property.</p>
+            <xforms:group ref="name">
+                <xforms:input ref="first">
+                    <xforms:label>First name</xforms:label>
+                </xforms:input>
+                <xforms:input ref="middle">
+                    <xforms:label>Middle name</xforms:label>
+                </xforms:input>
+                <xforms:input ref="last">
+                    <xforms:label>Last name</xforms:label>
+                </xforms:input>
+            </xforms:group>
+            <xforms:input ref="age">
+                <xforms:label>Age</xforms:label>
+            </xforms:input>
+            <xforms:input ref="is-senior">
+                <xforms:label>Senior Citizen</xforms:label>
+            </xforms:input>
+            <xforms:input ref="is-minor">
+                <xforms:label>Minor</xforms:label>
+            </xforms:input>
+            <xforms:group ref="health">
+                <xforms:label>Health Matters</xforms:label>
+                <xforms:input ref="heart">
+                    <xforms:label>Heart Condition</xforms:label>
+                </xforms:input>
+                <xforms:range ref="bp/diastolic" start="0" end="300">
+                    <xforms:label>Diastolic Blood Pressure</xforms:label>
+                </xforms:range>
+                <xforms:range ref="bp/systolic" start="0" end="300">
+                    <xforms:label>Systolic Blood Pressure</xforms:label>
+                </xforms:range>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

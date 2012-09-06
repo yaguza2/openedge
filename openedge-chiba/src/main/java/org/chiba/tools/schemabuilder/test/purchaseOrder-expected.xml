@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html:html xmlns:html="http://www.w3.org/2002/06/xhtml2" xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ev="http://www.w3.org/2001/xml-events">
+    <html:head>
+        <xforms:model xforms:id="model_0">
+            <xforms:instance xforms:id="instance_0">
+                <purchaseOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+            </xforms:instance>
+            <xforms:bind xforms:id="bind_0" xforms:nodeset="/purchaseOrder">
+                <xforms:bind xforms:id="bind_1" xforms:nodeset="@customerId" xforms:required="true()" xforms:type="string"/>
+                <xforms:bind xforms:id="bind_2" xforms:nodeset="headerInformation">
+                    <xforms:bind xforms:id="bind_3" xforms:nodeset="streetAddress" xforms:required="true()" xforms:type="string"/>
+                    <xforms:bind xforms:id="bind_4" xforms:nodeset="state_or_province" xforms:required="true()" xforms:type="string"/>
+                    <xforms:bind xforms:id="bind_5" xforms:nodeset="name" xforms:required="true()" xforms:type="string"/>
+                    <xforms:bind xforms:id="bind_6" xforms:nodeset="rushDelivery" xforms:required="true()" xforms:type="boolean"/>
+                </xforms:bind>
+                <xforms:bind xforms:id="bind_7" xforms:nodeset="phoneNumber">
+                    <xforms:bind xforms:id="bind_8" xforms:nodeset="@customerType" xforms:required="true()" xforms:type="NMTOKEN"/>
+                    <xforms:bind xforms:id="bind_9" xforms:nodeset="areaCode" xforms:required="true()" xforms:type="string"/>
+                    <xforms:bind xforms:id="bind_10" xforms:nodeset="number" xforms:required="true()" xforms:type="nonNegativeInteger"/>
+                    <xforms:bind xforms:constraint="not( . = '[Select1 Long Enum]')" xforms:id="bind_11" xforms:nodeset="longEnum" xforms:required="true()" xforms:type="NMTOKEN"/>
+                    <xforms:bind xforms:id="bind_12" xforms:nodeset="shortEnum" xforms:required="true()" xforms:type="NMTOKEN"/>
+                    <xforms:bind xforms:id="bind_13" xforms:nodeset="longList" xforms:required="true()" xforms:type="NMTOKEN"/>
+                    <xforms:bind xforms:id="bind_14" xforms:nodeset="shortList" xforms:required="true()" xforms:type="NMTOKEN"/>
+                </xforms:bind>
+            </xforms:bind>
+            <xforms:submission xforms:action="" xforms:id="submission_0" xforms:method="post"/>
+        </xforms:model>
+    </html:head>
+    <html:body>
+        <xforms:group xforms:id="group_0">
+            <xforms:label xforms:id="label_0">Purchase Order</xforms:label>
+            <xforms:input xforms:bind="bind_1" xforms:id="input_0">
+                <xforms:label xforms:id="label_1">Customer Id</xforms:label>
+                <xforms:alert xforms:id="alert_0">Please provide a valid value for 'Customer Id'. 'Customer Id' is a required 'String' value.</xforms:alert>
+            </xforms:input>
+            <xforms:group xforms:id="group_1">
+                <xforms:label xforms:id="label_2">Header Information</xforms:label>
+                <xforms:input xforms:bind="bind_3" xforms:id="input_1">
+                    <xforms:label xforms:id="label_3">Street Address</xforms:label>
+                    <xforms:alert xforms:id="alert_1">Please provide a valid value for 'Street Address'. 'Street Address' is a required 'String' value.</xforms:alert>
+                    <xforms:hint xforms:id="hint_0">Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                </xforms:input>
+                <xforms:input xforms:bind="bind_4" xforms:id="input_2">
+                    <xforms:label xforms:id="label_4">State Or Province</xforms:label>
+                    <xforms:alert xforms:id="alert_2">Please provide a valid value for 'State Or Province'. 'State Or Province' is a required 'String' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="bind_5" xforms:id="input_3">
+                    <xforms:label xforms:id="label_5">Name</xforms:label>
+                    <xforms:alert xforms:id="alert_3">Please provide a valid value for 'Name'. 'Name' is a required 'String' value.</xforms:alert>
+                </xforms:input>
+                <xforms:select1 xforms:appearance="full" xforms:bind="bind_6" xforms:id="select1_0">
+                    <xforms:item xforms:id="item_0">
+                        <xforms:label xforms:id="label_6">true</xforms:label>
+                        <xforms:value xforms:id="value_0">true</xforms:value>
+                    </xforms:item>
+                    <xforms:item xforms:id="item_1">
+                        <xforms:label xforms:id="label_7">false</xforms:label>
+                        <xforms:value xforms:id="value_1">false</xforms:value>
+                    </xforms:item>
+                    <xforms:label xforms:id="label_8">Rush Delivery</xforms:label>
+                    <xforms:alert xforms:id="alert_4">Please provide a valid value for 'Rush Delivery'. 'Rush Delivery' is a required 'Boolean' value.</xforms:alert>
+                </xforms:select1>
+            </xforms:group>
+            <xforms:group xforms:id="group_2">
+                <xforms:label xforms:id="label_9">Phone Number</xforms:label>
+                <xforms:select1 xforms:appearance="full" xforms:bind="bind_8" xforms:id="select1_1">
+                    <xforms:label xforms:id="label_10">Customer Type</xforms:label>
+                    <xforms:choices xforms:id="choices_0">
+                        <xforms:item xforms:id="item_2">
+                            <xforms:label xforms:id="label_11">Business Customer</xforms:label>
+                            <xforms:value xforms:id="value_2">BUSINESS_CUSTOMER</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_3">
+                            <xforms:label xforms:id="label_12">Residential Customer</xforms:label>
+                            <xforms:value xforms:id="value_3">RESIDENTIAL_CUSTOMER</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:alert xforms:id="alert_5">Please provide a valid value for 'Customer Type'. 'Customer Type' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:select1>
+                <xforms:input xforms:bind="bind_9" xforms:id="input_4">
+                    <xforms:label xforms:id="label_13">Area Code</xforms:label>
+                    <xforms:alert xforms:id="alert_6">Please provide a valid value for 'Area Code'. 'Area Code' is a required 'String' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="bind_10" xforms:id="input_5">
+                    <xforms:label xforms:id="label_14">Number</xforms:label>
+                    <xforms:alert xforms:id="alert_7">Please provide a valid value for 'Number'. 'Number' is a required 'Non Negative Integer' value.</xforms:alert>
+                </xforms:input>
+                <xforms:select1 xforms:appearance="minimal" xforms:bind="bind_11" xforms:id="select1_2">
+                    <xforms:label xforms:id="label_15">Long Enum</xforms:label>
+                    <xforms:choices xforms:id="choices_1">
+                        <xforms:item xforms:id="item_4">
+                            <xforms:label xforms:id="label_16">[Select1 Long Enum]</xforms:label>
+                            <xforms:value xforms:id="value_4">[Select1 Long Enum]</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_5">
+                            <xforms:label xforms:id="label_17">Eighth Value</xforms:label>
+                            <xforms:value xforms:id="value_5">EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_6">
+                            <xforms:label xforms:id="label_18">Fifth Value</xforms:label>
+                            <xforms:value xforms:id="value_6">FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_7">
+                            <xforms:label xforms:id="label_19">First Value</xforms:label>
+                            <xforms:value xforms:id="value_7">FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_8">
+                            <xforms:label xforms:id="label_20">Fourth Value</xforms:label>
+                            <xforms:value xforms:id="value_8">FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_9">
+                            <xforms:label xforms:id="label_21">Ninth Value</xforms:label>
+                            <xforms:value xforms:id="value_9">NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_10">
+                            <xforms:label xforms:id="label_22">Second Value</xforms:label>
+                            <xforms:value xforms:id="value_10">SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_11">
+                            <xforms:label xforms:id="label_23">Seventh Value</xforms:label>
+                            <xforms:value xforms:id="value_11">SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_12">
+                            <xforms:label xforms:id="label_24">Sixth Value</xforms:label>
+                            <xforms:value xforms:id="value_12">SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_13">
+                            <xforms:label xforms:id="label_25">Tenth Value</xforms:label>
+                            <xforms:value xforms:id="value_13">TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_14">
+                            <xforms:label xforms:id="label_26">Third Value</xforms:label>
+                            <xforms:value xforms:id="value_14">THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:alert xforms:id="alert_8">Please provide a valid value for 'Long Enum'. 'Long Enum' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:select1>
+                <xforms:select1 xforms:appearance="full" xforms:bind="bind_12" xforms:id="select1_3">
+                    <xforms:label xforms:id="label_27">Short Enum</xforms:label>
+                    <xforms:choices xforms:id="choices_2">
+                        <xforms:item xforms:id="item_15">
+                            <xforms:label xforms:id="label_28">First Value</xforms:label>
+                            <xforms:value xforms:id="value_15">FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_16">
+                            <xforms:label xforms:id="label_29">Fourth Value</xforms:label>
+                            <xforms:value xforms:id="value_16">FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_17">
+                            <xforms:label xforms:id="label_30">Second Value</xforms:label>
+                            <xforms:value xforms:id="value_17">SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_18">
+                            <xforms:label xforms:id="label_31">Third Value</xforms:label>
+                            <xforms:value xforms:id="value_18">THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:alert xforms:id="alert_9">Please provide a valid value for 'Short Enum'. 'Short Enum' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:select1>
+                <xforms:select xforms:appearance="compact" xforms:bind="bind_13" xforms:id="select_0">
+                    <xforms:label xforms:id="label_32">Long List</xforms:label>
+                    <xforms:choices xforms:id="choices_3">
+                        <xforms:item xforms:id="item_19">
+                            <xforms:label xforms:id="label_33">Eighth Value</xforms:label>
+                            <xforms:value xforms:id="value_19">EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_20">
+                            <xforms:label xforms:id="label_34">Fifth Value</xforms:label>
+                            <xforms:value xforms:id="value_20">FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_21">
+                            <xforms:label xforms:id="label_35">First Value</xforms:label>
+                            <xforms:value xforms:id="value_21">FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_22">
+                            <xforms:label xforms:id="label_36">Fourth Value</xforms:label>
+                            <xforms:value xforms:id="value_22">FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_23">
+                            <xforms:label xforms:id="label_37">Ninth Value</xforms:label>
+                            <xforms:value xforms:id="value_23">NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_24">
+                            <xforms:label xforms:id="label_38">Second Value</xforms:label>
+                            <xforms:value xforms:id="value_24">SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_25">
+                            <xforms:label xforms:id="label_39">Seventh Value</xforms:label>
+                            <xforms:value xforms:id="value_25">SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_26">
+                            <xforms:label xforms:id="label_40">Sixth Value</xforms:label>
+                            <xforms:value xforms:id="value_26">SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_27">
+                            <xforms:label xforms:id="label_41">Tenth Value</xforms:label>
+                            <xforms:value xforms:id="value_27">TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_28">
+                            <xforms:label xforms:id="label_42">Third Value</xforms:label>
+                            <xforms:value xforms:id="value_28">THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:alert xforms:id="alert_10">Please provide a valid value for 'Long List'. 'Long List' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:select>
+                <xforms:select xforms:appearance="full" xforms:bind="bind_14" xforms:id="select_1">
+                    <xforms:label xforms:id="label_43">Short List</xforms:label>
+                    <xforms:choices xforms:id="choices_4">
+                        <xforms:item xforms:id="item_29">
+                            <xforms:label xforms:id="label_44">First Value</xforms:label>
+                            <xforms:value xforms:id="value_29">FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_30">
+                            <xforms:label xforms:id="label_45">Fourth Value</xforms:label>
+                            <xforms:value xforms:id="value_30">FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_31">
+                            <xforms:label xforms:id="label_46">Second Value</xforms:label>
+                            <xforms:value xforms:id="value_31">SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item xforms:id="item_32">
+                            <xforms:label xforms:id="label_47">Third Value</xforms:label>
+                            <xforms:value xforms:id="value_32">THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:alert xforms:id="alert_11">Please provide a valid value for 'Short List'. 'Short List' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:select>
+            </xforms:group>
+        </xforms:group>
+        <xforms:submit xforms:id="submit_0" xforms:submission="submission_0">
+            <xforms:label xforms:id="label_48">Submit</xforms:label>
+        </xforms:submit>
+    </html:body>
+</html:html>

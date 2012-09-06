@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xml:lang="en">
+    <head>
+        <title>Support for XML Schema built-in data types</title>
+
+        <xforms:model id="M">
+            <xforms:instance xmlns="">
+                <root dummy="">
+
+                    <dateTime xsi:type="xsd:dateTime" plainText="1999-05-31T13:20:00.000-05:00" badVal="A"/>
+                    <time xsi:type="xsd:time" plainText="13:20:00.000-05:00" badVal="A"/>
+                    <date xsi:type="xsd:date" plainText="1999-05-31" badVal="A"/>
+                    <gYearMonth xsi:type="xsd:gYearMonth" plainText="1999-02" badVal="A"/>
+                    <gYear xsi:type="xsd:gYear" plainText="1999" badVal="A"/>
+                    <gMonthDay xsi:type="xsd:gMonthDay" plainText="--05-31" badVal="A"/>
+                    <gDay xsi:type="xsd:gDay" plainText="---31" badVal="A"/>
+                    <gMonth xsi:type="xsd:gMonth" plainText="--05--" badVal="A"/>
+                    <string xsi:type="xsd:string" plainText="Hello, World!" badVal="A 0x0B C"/>
+                    <boolean xsi:type="xsd:boolean" plainText="true" badVal="A"/>
+                    <base64Binary xsi:type="xsd:base64Binary" plainText="Sm9obiBNLiBCb3llcg==" badVal="A"/>
+                    <decimal xsi:type="xsd:decimal" plainText="123" badVal="A"/>
+                    <anyURI xsi:type="xsd:anyURI" plainText="http://example.org" badVal="A 0x0B C"/>
+
+                    <integer xsi:type="xsd:integer" plainText="123" badVal="A"/>
+                    <nonPositiveInteger xsi:type="xsd:nonPositiveInteger" plainText="0" badVal="A"/>
+                    <negativeInteger xsi:type="xsd:negativeInteger" plainText="-2000000000" badVal="A"/>
+                    <long xsi:type="xsd:long" plainText="2000000000" badVal="A"/>
+                    <int xsi:type="xsd:int" plainText="2000000000" badVal="A"/>
+                    <short xsi:type="xsd:short" plainText="32767" badVal="A"/>
+                    <byte xsi:type="xsd:byte" plainText="127" badVal="A"/>
+                    <nonNegativeInteger xsi:type="xsd:nonNegativeInteger" plainText="2000000000" badVal="A"/>
+                    <unsignedLong xsi:type="xsd:unsignedLong" plainText="4000000000" badVal="A"/>
+                    <unsignedInt xsi:type="xsd:unsignedInt" plainText="4000000000" badVal="A"/>
+                    <unsignedShort xsi:type="xsd:unsignedShort" plainText="65535" badVal="A"/>
+                    <unsignedByte xsi:type="xsd:unsignedByte" plainText="255" badVal="A"/>
+                    <positiveInteger xsi:type="xsd:positiveInteger" plainText="123" badVal="A"/>
+
+                    <hexBinary xsi:type="xsd:hexBinary" plainText="0FB7" badVal="WXYZ"/>
+                    <float xsi:type="xsd:float" plainText="3.14" badVal="?"/>
+                    <double xsi:type="xsd:double" plainText="1.61" badVal="?"/>
+                    <QName xsi:type="xsd:QName" plainText="xsd:QName" badVal="?"/>
+                    <NOTATION xsi:type="xsd:NOTATION" plainText="XMLFile" badVal="?"/>
+
+                    <normalizedString xsi:type="xsd:normalizedString" plainText="X" badVal="A    	 A"/>
+                    <token xsi:type="xsd:token" plainText="X" badVal="A    	 A"/>
+                    <language xsi:type="xsd:language" plainText="X" badVal="?"/>
+                    <Name xsi:type="xsd:Name" plainText="X" badVal="1abc"/>
+                    <NCName xsi:type="xsd:NCName" plainText="X" balVal="abc:def"/>
+                    <ID xsi:type="xsd:ID" plainText="X" badVal="1abc"/>
+                    <IDREF xsi:type="xsd:IDREF" plainText="X" badVal="2def"/>
+                    <IDREFS xsi:type="xsd:IDREFS" plainText="X" badVal="1abc 2def"/>
+                    <ENTITY xsi:type="xsd:ENTITY" plainText="ThisFileEntity" badVal="X"/>
+                    <ENTITIES xsi:type="xsd:ENTITIES" plainText="ThisFileEntity" badVal="X"/>
+                    <NMTOKEN xsi:type="xsd:NMTOKEN" plainText="X" badVal="1abc"/>
+                    <NMTOKENS xsi:type="xsd:NMTOKENS" plainText="X" badVal="1abc 2def"/>
+
+                </root>
+            </xforms:instance>
+
+            <!-- Here is the bind that copies the 'plainText' values to
+                    the schema validated values. -->
+
+            <xforms:bind nodeset="/root/*" calculate="./@plainText"/>
+
+            <!-- Here is a 'bogus' submission element. It is not designed
+                    to actually run since a data revalidation error is
+                    supposed to prevent the submission -->
+
+            <xforms:submission action="http://example.org/dummy.jsp" method="post" id="s00"/>
+
+            <!-- Here is the event handler that generates a message reporting
+                    a submit error -->
+
+            <xforms:message level="modal" ev:event="xforms-submit-error">The submission has failed</xforms:message>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>Support for XForms Basic built-in data types</h>
+
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="../chapter5.xml">XForms processors MUST support all XForms Basic built-in types
+	(primitive and derived, marked by asterisk)</li>
+        </nl>
+
+        <!-- This informs the user of the steps necessary to succeed at this test.
+                The ref to the dummy attribute was necessary because some
+                early implementations crashed when an output didn't bind to
+                a node.  This is done as an xforms output to make sure that
+                users of implementations that don't understand html as host
+                language still understand what to do. -->
+
+        <group xmlns="http://www.w3.org/2002/xforms">
+            <output model="M" ref="/root/@dummy">
+                <label>This form contains input fields that are bound to plaintext attributes of instance data.  The attributes are bound by a calculate to schema validated instance nodes.</label>
+            </output>
+            <output model="M" ref="/root/@dummy">
+                <label>The output below each input binds to the validated instance node whose corresponding plaintext is bound to the input.</label>
+            </output>
+            <output model="M" ref="/root/@dummy">
+                <label>When first opened, all outputs should be bound to schema valid instance nodes.  Verify this by pressing the submit button. The implementation should attempt to connect to a bogus URL.</label>
+            </output>
+            <output model="M" ref="/root/@dummy">
+                <label>Then, for each input field, enter the recommended invalid data, then hit submit.  A message box should display to inform you that the submission has failed. </label>
+            </output>
+            <output model="M" ref="/root/@dummy">
+                <label>Once you see the submission failure, restore the good value to the input, then move on to the next input.</label>
+            </output>
+        </group>
+
+        <!-- TBD: Insert XForms controls, etc. here -->
+
+        <group xmlns="http://www.w3.org/2002/xforms">
+
+            <submit submission="s00">
+                <label>Try to submit</label>
+            </submit>
+
+            <repeat model="M" nodeset="/root/*" id="R">
+
+                <!-- These are string inputs that have initial good values
+                    and are changed to bad values to test schema
+                    validation.  We do not bind directly to schema
+                    validated nodes because different implementations
+                    produce different UI elements, some of which make
+                    it impossible to enter bad data. -->
+
+                <input model="M" ref="./@plainText">
+                    <label>Enter a non-
+                        <output value="local-name(..)"/> (change to
+                        <output value="string(../@badVal)"/>)
+                    </label>
+                </input>
+
+                <!-- These are outputs that simply show that the input was indeed
+                    indeed moved from the plainText to the schema validated
+                    nodes. Schema invalidity is also evident in these outputs -->
+
+                <output model="M" ref=".">
+                    <label>The value of
+                        <output value="local-name(.)"/>:
+                    </label>
+                </output>
+            </repeat>
+        </group>
+    </body>
+</html>
+
+

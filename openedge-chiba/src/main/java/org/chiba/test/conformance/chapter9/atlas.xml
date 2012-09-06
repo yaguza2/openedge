@@ -1,0 +1,35 @@
+<atlas>
+    <country country-code="usa">
+        <name>United States Of America</name>
+        <state state-code="ca">
+            <name>California</name>
+            <city city-code="sfo">
+                <name>San Francisco</name>
+            </city>
+            <city city-code="sjc">
+                <name>San Jose</name>
+            </city>
+        </state>
+        <state state-code="ny">
+            <name>New York</name>
+            <city city-code="nyc">
+                <name>New York City</name>
+            </city>
+            <city city-code="buf">
+                <name>Buffalo</name>
+            </city>
+        </state>
+    </country>
+    <country country-code="canada">
+        <name>Canada</name>
+        <state state-code="bc">
+            <name>British Columbia</name>
+            <city city-code="van">
+                <name>Vancouver</name>
+            </city>
+            <city city-code="vic">
+                <name>Victoria</name>
+            </city>
+        </state>
+    </country>
+</atlas>

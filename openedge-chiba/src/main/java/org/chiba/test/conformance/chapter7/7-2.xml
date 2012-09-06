@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="http://example.com"
+    xml:lang="en">
+    <head>
+        <title>Test that use of an undefined function in a binding expression from an input control to an instance node dispatches an xforms-binding-exception<!-- xforms-compute-exception? --></title>
+
+        <xforms:model>
+            <xforms:instance>
+                <my:address>
+                    <my:first>John</my:first>
+                    <my:last>Doe</my:last>
+                    <my:suggestions>
+                        <my:initialpassword>password</my:initialpassword>
+                        <my:initialpassword>secret</my:initialpassword>
+                        <my:initialpassword>mistery</my:initialpassword>
+                    </my:suggestions>
+                </my:address>
+            </xforms:instance>
+
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>Test that use of an undefined function in a  binding expression from an input control to an instance node dispatches an xforms-binding-exception<!-- xforms-compute-exception? --></h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">!-- TBD: insert assertion tested here</li>
+        </nl>
+
+        <xforms:input ref="my:first">
+            <xforms:label>First Name</xforms:label>
+        </xforms:input>
+
+        <xforms:input ref="my:last">
+            <xforms:label>Last Name</xforms:label>
+        </xforms:input>
+
+        <xforms:input ref="my:random(my:suggestions)">
+            <xforms:label>Password</xforms:label>
+        </xforms:input>
+
+    </body>
+</html>

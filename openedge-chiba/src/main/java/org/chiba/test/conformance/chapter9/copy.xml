@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css"?>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:html2="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:my="http://my/">
+    <head>
+        <title>Copy element</title>
+
+        <xforms:model id="cone">
+            <xforms:submission action="http://xformstest.org/cgi-bin/echo.sh" id="submit01" indent="1" method="post"/>
+            <xforms:submission id="submit-file" method2="postxml" localfile="temp2.xml" target2="http://www.hut.fi/"/>
+            <xforms:instance id="main">
+                <my:icecream xmlns="">
+                    <my:flavours/>
+                    <my:flavour/>
+                </my:icecream>
+            </xforms:instance>
+            <xforms:instance id="flavours">
+                <my:flavours xmlns="">
+                    <my:flavour type="v">
+                        <my:description>Vanilla</my:description>
+                    </my:flavour>
+                    <my:flavour type="s">
+                        <my:description>Strawberry</my:description>
+                    </my:flavour>
+                    <my:flavour type="c">
+                        <my:description>Chocolate</my:description>
+                    </my:flavour>
+                </my:flavours>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <group xmlns="http://www.w3.org/2002/xforms">
+            <label>Test that copy element works</label>
+            <group>
+                <label>There should be a select and a select1, which populate complex content based on the user selection, which is then
+				sent to the server. Check that the correct elements are populated (for instance, if vanilla is selected, there should be a my:flavour element in the submission with a my:description child.</label>
+            </group>
+            <group>
+                <xforms:select ref="instance('main')/my:flavours">
+                    <label>Select (multiple selections)</label>
+                    <xforms:itemset nodeset="instance('flavours')/my:flavour">
+                        <xforms:label ref="my:description"/>
+                        <xforms:copy ref="."/>
+                    </xforms:itemset>
+                </xforms:select>
+            </group>
+            <group>
+                <xforms:select1 model="cone" ref="instance('main')/my:flavour">
+                    <label>Select1 (single selection)</label>
+                    <xforms:itemset nodeset="instance('flavours')/my:flavour">
+                        <xforms:label ref="my:description"/>
+                        <xforms:copy ref="."/>
+                    </xforms:itemset>
+                </xforms:select1>
+            </group>
+            <submit submission="submit01">
+                <label>Post Data</label>
+                <hint>Click to post</hint>
+            </submit>
+        </group>
+    </body>
+</html>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for insert action"/>
+        <meta name="version" content="$Id: InsertActionTest.xhtml,v 1.1 2004/08/06 20:38:29 unl Exp $"/>
+        <xf:model id="model-1">
+            <xf:instance xmlns="" id="instance-1">
+                <top>
+                    <middle>
+                        <data>My data 1</data>
+                        <stuff/>
+                    </middle>
+                    <middle>
+                        <data>My data 2</data>
+                        <stuff/>
+                    </middle>
+                    <middle>
+                        <data>My data 3</data>
+                        <stuff/>
+                    </middle>
+                </top>
+            </xf:instance>
+            <xf:bind id="bind-1" nodeset="/top/middle"/>
+            <xf:instance xmlns="" id="instance-2">
+                <top>
+                    <middle>
+                        <data>My data 1</data>
+                        <stuff/>
+                    </middle>
+                    <middle>
+                        <data>My data 2</data>
+                        <stuff/>
+                    </middle>
+                    <middle>
+                        <data>My data 3</data>
+                        <stuff/>
+                    </middle>
+                </top>
+            </xf:instance>
+        </xf:model>
+    </head>
+    <body>
+        <xf:group>
+            <xf:label>Insert variations</xf:label>
+            <xf:repeat id="repeat" nodeset="/top/middle">
+                <xf:input ref="data">
+                    <xf:label>Data</xf:label>
+                </xf:input>
+            </xf:repeat>
+            <xf:trigger id="insert-before-zero">
+                <xf:label>Insert before 0</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="0" position="before"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-before-second">
+                <xf:label>Insert before second</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="2" position="before"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-before-non-existing">
+                <xf:label>Insert before non-existing</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="4" position="before"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-before-float">
+                <xf:label>Insert before float</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="1.5" position="before"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-before-nan">
+                <xf:label>Insert before NaN</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="NaN" position="before"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-after-zero">
+                <xf:label>Insert after 0</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="0" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-after-second">
+                <xf:label>Insert after second</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="2" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-after-non-existing">
+                <xf:label>Insert after non-existing</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="4" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-after-float">
+                <xf:label>Insert after float</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="1.5" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-after-nan">
+                <xf:label>Insert after NaN</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="NaN" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-in-other-instance">
+                <xf:label>Insert in other instance</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="instance('instance-2')/middle" at="2" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-with-predicate">
+                <xf:label>Insert with predicate expression</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle[data='My data 2']" at="1" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-with-index-function">
+                <xf:label>Insert with 'index' function</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="index('repeat')" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-with-last-function">
+                <xf:label>Insert with 'last' function</xf:label>
+                <xf:action>
+                    <xf:insert nodeset="/top/middle" at="last()" position="after"/>
+                </xf:action>
+            </xf:trigger>
+            <xf:trigger id="insert-with-bind">
+                <xf:label>Insert with model binding</xf:label>
+                <xf:action>
+                    <xf:insert bind="bind-1" at="2" position="after"/>
+                </xf:action>
+            </xf:trigger>
+        </xf:group>
+    </body>
+</html>

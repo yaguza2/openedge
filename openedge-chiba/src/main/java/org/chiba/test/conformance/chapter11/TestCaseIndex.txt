@@ -1,0 +1,6 @@
+001-005 - Submit Options Must - HTTP: Post, put, get, etc.
+006-010 - Submit Options Should - HTTPS: Post, put, get, etc.
+011     - Submit Options Should - FILE: Put
+012-014 - Submit Options May - MAILTO: Post, form-data-post, and urlencoded-post
+015     - Single Concurrent Submit
+016     - Cannot Submit Invalid Data

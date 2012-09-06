@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xhtml:html xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xhtml="http://www.w3.org/2002/06/xhtml2">
+    <xhtml:head>
+        <xf:model id="model1" xmlns:xf="http://www.w3.org/2002/xforms">
+            <xf:submission id="submit1" xf:action="stdf-submission://common" xf:method="put" xf:replace="all"/>
+            <xf:instance id="instance1">
+                <jobApplication id="stfms1" jptree:key="form" jptree:usecase="jobApplication" xmlns="" xmlns:jptree="http://www.cucbc.com/2004/01/jptree">
+                    <navigation jptree:ignore="true">
+                        <iscompleted>0</iscompleted>
+                    </navigation>
+                    <label>jobApplication</label>
+                    <hint/>
+                    <help/>
+                    <alert/>
+                    <resume id="stfms1_1" jptree:key="page_resume" jptree:usecase="jobApplication">
+                        <label>page_resume</label>
+                        <hint/>
+                        <help/>
+                        <alert/>
+                        <education-info id="stfms1_1_1" jptree:key="section_education-info" jptree:usecase="jobApplication" maxoccur="5" suppress="false">
+                            <buttons jptree:key="buttons" jptree:step="section_education-info" jptree:usecase="jobApplication">
+                                <add id="stfms1_1_1_A" jptree:key="buttons.add" jptree:step="section_education-info" jptree:usecase="jobApplication">
+                                    <label>buttons.add</label>
+                                    <help/>
+                                </add>
+                            </buttons>
+                            <label>section_education-info</label>
+                            <hint/>
+                            <help/>
+                            <alert/>
+                            <school-name depop="##IGNORE" id="stfms1_1_1_1" jptree:key="school-name" jptree:step="section_education-info" jptree:usecase="jobApplication" maxlen="40" minlen="0" prepop="##IGNORE" regex=".*" required="false" suppress="false">
+                                <value type="token"/>
+                                <label>school-name</label>
+                                <hint/>
+                                <help/>
+                                <alert/>
+                            </school-name>
+                            <location depop="##IGNORE" id="stfms1_1_1_2" jptree:key="location" jptree:step="section_education-info" jptree:usecase="jobApplication" maxlen="40" minlen="0" prepop="##IGNORE" regex=".*" required="false" suppress="false">
+                                <value type="token"/>
+                                <label>location</label>
+                                <hint/>
+                                <help/>
+                                <alert/>
+                            </location>
+                            <completion-date appearance="default" depop="##IGNORE" id="stfms1_1_1_3" jptree:key="completion-date" jptree:step="section_education-info" jptree:usecase="jobApplication" max="P100Y" min="-P120Y" prepop="##IGNORE" required="false" suppress="false">
+                                <value type="date"/>
+                                <label>completion-date</label>
+                                <hint/>
+                                <help/>
+                                <alert/>
+                            </completion-date>
+                            <education-level appearance="dropdown" depop="##IGNORE" id="stfms1_1_1_4" jptree:key="education-level" jptree:step="section_education-info" jptree:usecase="jobApplication" prepop="##IGNORE" prompt="select" required="false" suppress="false" values="hs,cert,coll,bach,mast,doct,prof,voc,other">
+                                <value type="listItem"/>
+                                <item jptree:for_each="../@values" jptree:subkey="@value" value="hs">
+                                    <label>item.hs</label>
+                                </item>
+                                <label>education-level</label>
+                                <hint/>
+                                <help/>
+                                <alert/>
+                            </education-level>
+                            <description depop="##IGNORE" id="stfms1_1_1_5" jptree:key="description" jptree:step="section_education-info" jptree:usecase="jobApplication" maxlen="40" minlen="0" prepop="##IGNORE" regex=".*" required="false" suppress="false">
+                                <value type="token"/>
+                                <label>description</label>
+                                <hint/>
+                                <help/>
+                                <alert/>
+                            </description>
+                        </education-info>
+                        <buttons jptree:key="buttons" jptree:step="page_resume" jptree:usecase="jobApplication">
+                            <hint/>
+                            <alert/>
+                            <continue id="stfms1_1_C" jptree:key="buttons.continue" jptree:step="page_resume" jptree:usecase="jobApplication">
+                                <label>buttons.continue</label>
+                                <help/>
+                            </continue>
+                            <update id="stfms1_1_U" jptree:key="buttons.update" jptree:step="page_resume" jptree:usecase="jobApplication">
+                                <label>buttons.update</label>
+                                <help/>
+                            </update>
+                            <edit id="stfms1_1_E" jptree:key="buttons.edit" jptree:step="page_resume" jptree:usecase="jobApplication">
+                                <label>buttons.edit</label>
+                                <help/>
+                            </edit>
+                        </buttons>
+                    </resume>
+                    <confirm-page id="stfms1_C" jptree:key="confirm-page" jptree:usecase="jobApplication">
+                        <label>confirm-page</label>
+                        <hint/>
+                        <help/>
+                        <alert/>
+                        <buttons jptree:key="confirm-page.buttons" jptree:usecase="jobApplication">
+                            <hint/>
+                            <alert/>
+                            <submit id="stfms1_C_S" jptree:key="buttons.submit" jptree:step="confirm-page" jptree:usecase="jobApplication">
+                                <label>buttons.submit</label>
+                                <help/>
+                            </submit>
+                        </buttons>
+                    </confirm-page>
+                    <types jptree:key="types">
+                        <dates appearances="default,month" jptree:key="dates" jptree:step="types" jptree:usecase="jobApplication">
+                            <appearance jptree:for_each="../@appearances" jptree:subkey="@name" name="default">
+                                <format>sfdmy1</format>
+                                <hint>e.g. dd/mm/yyyy</hint>
+                            </appearance>
+                        </dates>
+                        <strings jptree:key="strings" jptree:step="types" jptree:usecase="jobApplication" maxsize="40" maxsize2="16"/>
+                    </types>
+                </jobApplication>
+            </xf:instance>
+            <xf:bind id="sf_root" xf:nodeset="/jobApplication">
+                <xf:bind id="iscompleted" xf:nodeset="navigation/iscompleted"/>
+                <xf:bind id="sfpg_1" xf:nodeset="resume" xf:relevant="/jobApplication/navigation/iscompleted &gt;= 0">
+                    <xf:bind id="sfsect_stfms1_1_1" xf:nodeset="education-info" xf:relevant="@suppress!=&apos;true&apos;">
+                        <xf:bind id="sfield_" xf:nodeset="buttons" xf:relevant="@suppress!=&apos;true&apos;">
+                            <xf:bind id="sfield_stfms1_1_1_A" xf:nodeset="add" xf:relevant="@suppress!=&apos;true&apos;"/>
+                        </xf:bind>
+                        <xf:bind id="sfield_stfms1_1_1_1" xf:constraint="(string-length(.) &gt;= ../@minlen and string-length(.) &lt;= ../@maxlen and chiba:match(., ../@regex, &apos;&apos;)) or ( string-length(.)=0 and not(../@required) )" xf:nodeset="school-name/value" xf:relevant="../@suppress!=&apos;true&apos;" xf:required="../@required=&apos;true&apos;" xf:type="token"/>
+                        <xf:bind id="sfield_stfms1_1_1_2" xf:constraint="(string-length(.) &gt;= ../@minlen and string-length(.) &lt;= ../@maxlen and chiba:match(., ../@regex, &apos;&apos;)) or ( string-length(.)=0 and not(../@required) )" xf:nodeset="location/value" xf:relevant="../@suppress!=&apos;true&apos;" xf:required="../@required=&apos;true&apos;" xf:type="token"/>
+                        <xf:bind id="sfield_stfms1_1_1_3" xf:constraint="(days-from-date(.) &gt;= days-from-date(../@min) and days-from-date(.) &lt;= days-from-date(../@max)) or ( string-length(.)=0 and not(../@required) )" xf:nodeset="completion-date/value" xf:relevant="../@suppress!=&apos;true&apos;" xf:required="../@required=&apos;true&apos;" xf:type="date"/>
+                        <xf:bind id="sfield_stfms1_1_1_4" xf:constraint="chiba:match(., translate(../@values,&apos;,&apos;,&apos;|&apos;), &apos;&apos;) or ( string-length(.)=0 and not(../@required) )" xf:nodeset="education-level/value" xf:relevant="../@suppress!=&apos;true&apos;" xf:required="../@required=&apos;true&apos;" xf:type="token"/>
+                        <xf:bind id="sfield_stfms1_1_1_5" xf:constraint="(string-length(.) &gt;= ../@minlen and string-length(.) &lt;= ../@maxlen and chiba:match(., ../@regex, &apos;&apos;)) or ( string-length(.)=0 and not(../@required) )" xf:nodeset="description/value" xf:relevant="../@suppress!=&apos;true&apos;" xf:required="../@required=&apos;true&apos;" xf:type="token"/>
+                    </xf:bind>
+                    <xf:bind id="sfbt_1" xf:nodeset="buttons">
+                        <xf:bind id="sfbt_continue1" xf:nodeset="continue" xf:relevant="/jobApplication/navigation/iscompleted &lt; 1"/>
+                        <xf:bind id="sfbt_update1" xf:nodeset="update" xf:relevant="/jobApplication/navigation/iscompleted=1"/>
+                        <xf:bind id="sfbt_edit1" xf:nodeset="edit"/>
+                    </xf:bind>
+                </xf:bind>
+                <xf:bind id="sfpg_2" xf:nodeset="confirm-page" xf:relevant="/jobApplication/navigation/iscompleted &gt;= 1">
+                    <xf:bind id="sfbt_2" xf:nodeset="buttons">
+                        <xf:bind id="sfbt_submit2" xf:nodeset="submit"/>
+                    </xf:bind>
+                </xf:bind>
+            </xf:bind>
+        </xf:model>
+    </xhtml:head>
+    <xhtml:body>
+        <xf:group xf:appearance="stfms1" xf:bind="sf_root" xmlns:xf="http://www.w3.org/2002/xforms">
+            <xf:label xf:ref="label"/>
+            <xf:help xf:ref="help"/>
+            <xf:hint xf:ref="hint"/>
+            <xf:alert xf:ref="alert"/>
+            <xf:switch>
+                <xf:case id="sfcase_1">
+                    <xf:group xf:appearance="stfms1_1" xf:ref="resume">
+                        <xf:label xf:ref="label"/>
+                        <xf:help xf:ref="help"/>
+                        <xf:hint xf:ref="hint"/>
+                        <xf:alert xf:ref="alert"/>
+                        <xf:group xf:appearance="stfms1_1_1" xf:ref="education-info">
+                            <xf:label xf:ref="label"/>
+                            <xf:help xf:ref="help"/>
+                            <xf:hint xf:ref="hint"/>
+                            <xf:alert xf:ref="alert"/>
+                            <xf:repeat xf:bind="sfsect_stfms1_1_1">
+                                <xf:input xf:appearance="stfms1_1_1_1" xf:ref="school-name/value">
+                                    <xf:label xf:ref="../label"/>
+                                    <xf:help xf:ref="../help"/>
+                                    <xf:hint xf:ref="../hint"/>
+                                    <xf:alert xf:ref="../alert"/>
+                                </xf:input>
+                                <xf:input xf:appearance="stfms1_1_1_2" xf:ref="location/value">
+                                    <xf:label xf:ref="../label"/>
+                                    <xf:help xf:ref="../help"/>
+                                    <xf:hint xf:ref="../hint"/>
+                                    <xf:alert xf:ref="../alert"/>
+                                </xf:input>
+                                <xf:input xf:appearance="stfms1_1_1_3" xf:ref="completion-date/value">
+                                    <xf:label xf:ref="../label"/>
+                                    <xf:help xf:ref="../help"/>
+                                    <xf:hint xf:ref="../hint"/>
+                                    <xf:alert xf:ref="../alert"/>
+                                </xf:input>
+                                <xf:select1 xf:appearance="stfms1_1_1_4" xf:ref="education-level/value">
+                                    <xf:label xf:ref="../label"/>
+                                    <xf:help xf:ref="../help"/>
+                                    <xf:hint xf:ref="../hint"/>
+                                    <xf:alert xf:ref="../alert"/>
+                                    <xf:itemset xf:nodeset="../item">
+                                        <xf:value xf:ref="@value"/>
+                                        <xf:label xf:ref="label"/>
+                                    </xf:itemset>
+                                </xf:select1>
+                                <xf:input xf:appearance="stfms1_1_1_5" xf:ref="description/value">
+                                    <xf:label xf:ref="../label"/>
+                                    <xf:help xf:ref="../help"/>
+                                    <xf:hint xf:ref="../hint"/>
+                                    <xf:alert xf:ref="../alert"/>
+                                </xf:input>
+                            </xf:repeat>
+                            <xf:group xf:appearance="minimal">
+                                <xf:trigger id="insert-trigger">
+                                    <xf:label xf:ref="buttons/add/label"/>
+                                    <xf:help xf:ref="buttons/add/help"/>
+                                    <!--									<xf:action>-->
+                                    <xf:insert xf:at="count(../education-info)" xf:model="model1" xf:nodeset="." xf:position="after"/>
+                                    <!--									</xf:action>-->
+                                </xf:trigger>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group xf:appearance="minimal">
+                            <xf:hint xf:ref="buttons/hint"/>
+                            <xf:alert xf:ref="buttons/alert"/>
+                            <xf:trigger xf:appearance="stfms1_1_C" xf:ref="buttons/continue">
+                                <xf:label xf:ref="label"/>
+                                <xf:help xf:ref="help"/>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:setvalue xf:bind="iscompleted" xf:value="&apos;0&apos;"/>
+                                    <xf:recalculate xf:model="model1"/>
+                                    <xf:revalidate xf:model="model1"/>
+                                    <xf:toggle xf:case="sfcase_2"/>
+                                    <xf:setvalue xf:bind="iscompleted" xf:value="&apos;1&apos;"/>
+                                </xf:action>
+                            </xf:trigger>
+                            <xf:trigger xf:appearance="stfms1_1_U" xf:ref="buttons/update">
+                                <xf:label xf:ref="label"/>
+                                <xf:help xf:ref="help"/>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:setvalue xf:bind="iscompleted" xf:value="&apos;1&apos;"/>
+                                    <xf:revalidate xf:model="model1"/>
+                                    <xf:toggle xf:case="sfcase_2"/>
+                                </xf:action>
+                            </xf:trigger>
+                        </xf:group>
+                    </xf:group>
+                </xf:case>
+                <xf:case id="sfcase_2">
+                    <xf:group xf:appearance="stfms1_C" xf:ref="confirm-page">
+                        <xf:label xf:ref="label"/>
+                        <xf:help xf:ref="help"/>
+                        <xf:hint xf:ref="hint"/>
+                        <xf:alert xf:ref="alert"/>
+                        <xf:group xf:appearance="stfms1_1" xf:ref="/jobApplication/resume">
+                            <xf:label xf:ref="label"/>
+                            <xf:help xf:ref="help"/>
+                            <xf:hint xf:ref="hint"/>
+                            <xf:alert xf:ref="alert"/>
+                            <xf:group xf:appearance="stfms1_1_1" xf:ref="education-info">
+                                <xf:label xf:ref="label"/>
+                                <xf:help xf:ref="help"/>
+                                <xf:hint xf:ref="hint"/>
+                                <xf:alert xf:ref="alert"/>
+                                <xf:repeat xf:bind="sfsect_stfms1_1_1">
+                                    <xf:output xf:appearance="stfms1_1_1_1" xf:ref="school-name/value">
+                                        <xf:label xf:ref="../label"/>
+                                    </xf:output>
+                                    <xf:output xf:appearance="stfms1_1_1_2" xf:ref="location/value">
+                                        <xf:label xf:ref="../label"/>
+                                    </xf:output>
+                                    <xf:output xf:appearance="stfms1_1_1_3" xf:ref="completion-date/value">
+                                        <xf:label xf:ref="../label"/>
+                                    </xf:output>
+                                    <xf:output xf:appearance="stfms1_1_1_4" xf:ref="education-level/value">
+                                        <xf:label xf:ref="../label"/>
+                                    </xf:output>
+                                    <xf:output xf:appearance="stfms1_1_1_5" xf:ref="description/value">
+                                        <xf:label xf:ref="../label"/>
+                                    </xf:output>
+                                </xf:repeat>
+                            </xf:group>
+                            <xf:trigger xf:appearance="stfms1_1_E" xf:ref="buttons/edit">
+                                <xf:label xf:ref="label"/>
+                                <xf:help xf:ref="help"/>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:toggle xf:case="sfcase_1"/>
+                                </xf:action>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group xf:appearance="minimal">
+                            <xf:hint xf:ref="buttons/hint"/>
+                            <xf:alert xf:ref="buttons/alert"/>
+                            <xf:submit xf:appearance="stfms1_C" xf:ref="buttons/submit" xf:submission="submit1">
+                                <xf:label xf:ref="label"/>
+                                <xf:help xf:ref="help"/>
+                            </xf:submit>
+                        </xf:group>
+                    </xf:group>
+                </xf:case>
+            </xf:switch>
+        </xf:group>
+    </xhtml:body>
+</xhtml:html>

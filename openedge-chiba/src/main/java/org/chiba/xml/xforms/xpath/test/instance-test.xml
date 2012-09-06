@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns:xforms="http://www.w3.org/2002/xforms">
+    <head>
+        <xforms:model>
+            <xforms:instance xmlns="">
+                <payment>
+                    <test method="cc">
+                        <number>123</number>
+                        <expiry>1</expiry>
+                    </test>
+                </payment>
+            </xforms:instance>
+            <xforms:instance id="first" xmlns="">
+                <data>
+                    <some-dummy>some dummy value</some-dummy>
+                </data>
+            </xforms:instance>
+            <xforms:instance id="second" xmlns="">
+                <another-dummy>another dummy value</another-dummy>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body/>
+</html>

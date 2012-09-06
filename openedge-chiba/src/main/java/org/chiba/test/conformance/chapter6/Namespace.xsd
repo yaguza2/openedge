@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.w3.org/A-namespace"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:an="http://www.example.com/A-namespace"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="my_element" type="xs:negativeInteger"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

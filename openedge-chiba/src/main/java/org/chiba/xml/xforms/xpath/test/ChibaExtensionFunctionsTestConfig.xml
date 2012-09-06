@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: ChibaExtensionFunctionsTestConfig.xml,v 1.5 2004/11/14 02:09:32 joernt Exp $ -->
+<chiba-config>
+    <connectors>
+        <modelitem-calculator scheme="test" class="org.chiba.xml.xforms.xpath.test.ChibaExtensionFunctionsTestCalculator"/>
+        <modelitem-validator scheme="test" class="org.chiba.xml.xforms.xpath.test.ChibaExtensionFunctionsTestValidator"/>
+    </connectors>
+    <extension-functions>
+        <function namespace="http://chiba.sourceforge.net/2003/08/xforms" name="fileDate" class="org.chiba.xml.xforms.xpath.ChibaExtensionFunctions" />
+        <function namespace="http://chiba.sourceforge.net/2003/08/xforms" name="fileSize" class="org.chiba.xml.xforms.xpath.ChibaExtensionFunctions" />
+    </extension-functions>
+</chiba-config>

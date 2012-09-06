@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    chiba:id="allstars"
+    chiba:name="Allstars Demo"
+    chiba:target="requestprocessor.jsp"
+    chiba:css-style="style.css">
+    <xforms:model>
+        <xforms:submission id="save" xforms:target="requestprocessor.jsp"/>
+    </xforms:model>
+    <body>
+        <chiba:form>
+            <xforms:group xforms:box-orient="vertical" chiba:caption-width="200" xforms:ref="allstars">
+                <xforms:caption>vertical group</xforms:caption>
+                <xforms:textbox xforms:ref="test/level2/textfield1">
+                    <xforms:caption>Textfield</xforms:caption>
+                </xforms:textbox>
+                <xforms:textbox xforms:ref="test/textfield2" xforms:height="3">
+                    <xforms:caption>long Text</xforms:caption>
+                </xforms:textbox>
+                <xforms:selectBoolean xforms:ref="wahrheit">
+                    <xforms:caption>Boolean</xforms:caption>
+                </xforms:selectBoolean>
+                <xforms:textbox xforms:ref="testoutput">
+                    <xforms:caption>Output</xforms:caption>
+                </xforms:textbox>
+                <xforms:textbox xforms:ref="password">
+                    <xforms:caption>Password field</xforms:caption>
+                </xforms:textbox>
+                <xforms:select1 xforms:ref="selectonecolor" xforms:selectUI="radioGroup">
+                    <xforms:caption>SingleSelect Radios</xforms:caption>
+                    <xforms:toggle xforms:switch-id="colores"/>
+                    <xforms:choices>
+                        <xforms:item xforms:value="red">red</xforms:item>
+                        <xforms:item xforms:value="green">green</xforms:item>
+                        <xforms:item xforms:value="blue">blue</xforms:item>
+                    </xforms:choices>
+                </xforms:select1>
+                <xforms:select xforms:ref="weekday" xforms:selectUI="listbox" xforms:size="5">
+                    <xforms:caption>MultipleSelect List</xforms:caption>
+                    <xforms:choices>
+                        <xforms:item xforms:value="1">sunday</xforms:item>
+                        <xforms:item xforms:value="2">monday</xforms:item>
+                        <xforms:item xforms:value="3">thuesday</xforms:item>
+                        <xforms:item xforms:value="4">wednesday</xforms:item>
+                        <xforms:item xforms:value="5">thursday</xforms:item>
+                        <xforms:item xforms:value="6">friday</xforms:item>
+                        <xforms:item xforms:value="7">saturday</xforms:item>
+                    </xforms:choices>
+                </xforms:select>
+                <xforms:repeat xforms:nodeset="members/member">
+                    <xforms:caption>Member list</xforms:caption>
+                    <xforms:textbox xforms:ref="surname">
+                        <xforms:caption>Surname</xforms:caption>
+                    </xforms:textbox>
+                    <xforms:repeat xforms:nodeset="prenames/prename">
+                        <xforms:caption>Prenames</xforms:caption>
+                        <xforms:textbox xforms:ref="pname">
+                            <xforms:caption>Name</xforms:caption>
+                        </xforms:textbox>
+                    </xforms:repeat>
+                </xforms:repeat>
+                <xforms:switch id="colores">
+                    <xforms:caption>Color switch</xforms:caption>
+                    <xforms:case chiba:condition="/selectonecolor='red'">
+                        <xforms:group xforms:box-orient="horizontal" xforms:ref="red-box">
+                            <xforms:caption>Red Box</xforms:caption>
+                            <xforms:selectBoolean xforms:ref="red-bright">
+                                <xforms:caption>Bright</xforms:caption>
+                            </xforms:selectBoolean>
+                            <xforms:textbox xforms:ref="red-desc">
+                                <xforms:caption>Description</xforms:caption>
+                            </xforms:textbox>
+                        </xforms:group>
+                    </xforms:case>
+                    <xforms:case chiba:condition="/selectonecolor='green'">
+                        <xforms:group xforms:box-orient="horizontal" xforms:ref="green-box">
+                            <xforms:caption>Green box</xforms:caption>
+                            <xforms:select1 xforms:ref="green-flag">
+                                <xforms:caption>Green's subtypes</xforms:caption>
+                                <xforms:choices>
+                                    <xforms:item xforms:value="bright">Bright</xforms:item>
+                                    <xforms:item xforms:value="dark">Dark</xforms:item>
+                                    <xforms:item xforms:value="spring">Spring</xforms:item>
+                                    <xforms:item xforms:value="meadow">Meadow</xforms:item>
+                                    <xforms:item xforms:value="sea">Sea</xforms:item>
+                                </xforms:choices>
+                            </xforms:select1>
+                        </xforms:group>
+                    </xforms:case>
+                    <xforms:case chiba:condition="/selectonecolor='blue'">
+                        <xforms:repeat xforms:nodeset="blues/blue">
+                            <xforms:caption>Blue connocations</xforms:caption>
+                            <xforms:textbox xforms:ref="connotation">
+                                <xforms:caption>Connotation</xforms:caption>
+                            </xforms:textbox>
+                        </xforms:repeat>
+                    </xforms:case>
+                </xforms:switch>
+            </xforms:group>
+            <xforms:reset xforms:ref="allstars">
+                <xforms:caption>reset</xforms:caption>
+            </xforms:reset>
+            <xforms:submit xforms:to="save" xforms:ref="allstars">
+                <xforms:caption>submit</xforms:caption>
+            </xforms:submit>
+        </chiba:form>
+    </body>
+</envelope>

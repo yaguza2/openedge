@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="basicSchemaTest" xmlns:bs="basicSchemaTest" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <xs:element name="basicSchemaTest" type="bs:basicSchemaTestType">
+        <xs:annotation>
+            <xs:documentation>Comment describing your root element</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:complexType name="basicSchemaTestType">
+        <xs:sequence>
+            <xs:element name="builtInRequiredAttributes" type="bs:builtinRequiredAttributesType"/>
+            <xs:element name="builtInOptionalAttributes" type="bs:builtinOptionalAttributeTypes"/>
+            <xs:element name="builtInRequiredElements" type="bs:builtinRequiredElementsType"/>
+            <xs:element name="builtInOptionalElements" type="bs:builtinOptionalElementsType"/>
+            <xs:element name="enumerationValues" type="bs:enumerationType"/>
+            <xs:element name="listValues" type="bs:listType"/>
+            <xs:element name="repeatingAttributes" type="bs:builtinOptionalAttributeTypes" minOccurs="2" maxOccurs="2"/>
+            <xs:element name="repeatingElements" type="bs:builtinOptionalElementsType" minOccurs="2" maxOccurs="2"/>
+            <xs:element name="complexTypeWithMixedContent" type="bs:complexTypeWithSimpleContentType"/>
+            <xs:element name="repeatingAtomicElement" type="xs:string" maxOccurs="2"/>
+            <xs:element name="anyTypeElement" type="xs:anyType"/>
+            <xs:element name="unboundedAtomicElement" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="fixedAtomicElement" type="xs:integer" fixed="123456"/>
+        </xs:sequence>
+        <xs:attribute name="customerId" type="xs:string" use="required"/>
+        <xs:attribute name="fixedAtomicAttribute" type="xs:integer" use="required" fixed="123456"/>
+    </xs:complexType>
+    <xs:complexType name="builtinRequiredAttributesType">
+        <xs:attribute name="requiredStringValue" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>Enter the street address.</xs:documentation>
+                <xs:documentation>For example, 160 Manitoba Street.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="requiredIntegerValue" type="xs:integer" use="required"/>
+        <xs:attribute name="requiredDecimalValue" type="xs:decimal" use="required"/>
+        <xs:attribute name="requiredBooleanValue" type="xs:boolean" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="builtinOptionalAttributeTypes">
+        <xs:attribute name="stringValue" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>Enter the street address.</xs:documentation>
+                <xs:documentation>For example, 160 Manitoba Street.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="optionalIntegerValue" type="xs:integer" use="optional"/>
+        <xs:attribute name="optionalIDecimalValue" type="xs:decimal" use="optional"/>
+        <xs:attribute name="optionalIBooleanValue" type="xs:boolean" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="builtinRequiredElementsType">
+        <xs:sequence>
+            <xs:element name="stringValue" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Enter the street address.</xs:documentation>
+                    <xs:documentation>For example, 160 Manitoba Street.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="integerValue" type="xs:integer"/>
+            <xs:element name="decimalValue" type="xs:decimal"/>
+            <xs:element name="booleanValue" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="builtinOptionalElementsType">
+        <xs:sequence>
+            <xs:element name="stringValue" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Enter the street address.</xs:documentation>
+                    <xs:documentation>For example, 160 Manitoba Street.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="integerValue" type="xs:integer" minOccurs="0"/>
+            <xs:element name="decimalValue" type="xs:decimal" minOccurs="0"/>
+            <xs:element name="booleanValue" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="enumerationType">
+        <xs:sequence>
+            <xs:element name="shortRequiredEnumeration" type="bs:shortEnumType"/>
+            <xs:element name="longRequiredEnumeration" type="bs:longEnumType"/>
+            <xs:element name="shortOptionalEnumeration" type="bs:shortEnumType" minOccurs="0"/>
+            <xs:element name="longOptionalEnumeration" type="bs:longEnumType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="shortRequiredEnumerationAttrib" type="bs:shortEnumType" use="required"/>
+        <xs:attribute name="longRequiredEnumerationAttrib" type="bs:longEnumType" use="required"/>
+        <xs:attribute name="shortOptionalEnumerationAttrib" type="bs:shortEnumType" use="optional"/>
+        <xs:attribute name="longOptionalEnumerationAttrib" type="bs:longEnumType" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="listType">
+        <xs:sequence>
+            <xs:element name="shortRequiredList" type="bs:shortListType"/>
+            <xs:element name="longRequiredList" type="bs:longListType"/>
+            <xs:element name="shortOptionalList" type="bs:shortListType" minOccurs="0"/>
+            <xs:element name="longOptionalList" type="bs:longListType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="shortRequiredListAttrib" type="bs:shortListType" use="required"/>
+        <xs:attribute name="longRequiredListAttrib" type="bs:longListType" use="required"/>
+        <xs:attribute name="shortOptionalListAttrib" type="bs:shortListType" use="optional"/>
+        <xs:attribute name="longOptionalListAttrib" type="bs:longListType" use="optional"/>
+    </xs:complexType>
+    <xs:simpleType name="longListType">
+        <xs:list itemType="bs:longEnumType"/>
+    </xs:simpleType>
+    <xs:simpleType name="longEnumType">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="FIRST_VALUE"/>
+            <xs:enumeration value="SECOND_VALUE"/>
+            <xs:enumeration value="THIRD_VALUE"/>
+            <xs:enumeration value="FOURTH_VALUE"/>
+            <xs:enumeration value="FIFTH_VALUE"/>
+            <xs:enumeration value="SIXTH_VALUE"/>
+            <xs:enumeration value="SEVENTH_VALUE"/>
+            <xs:enumeration value="EIGHTH_VALUE"/>
+            <xs:enumeration value="NINTH_VALUE"/>
+            <xs:enumeration value="TENTH_VALUE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="shortListType">
+        <xs:list itemType="bs:shortEnumType"/>
+    </xs:simpleType>
+    <xs:simpleType name="shortEnumType">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="FIRST_VALUE"/>
+            <xs:enumeration value="SECOND_VALUE"/>
+            <xs:enumeration value="THIRD_VALUE"/>
+            <xs:enumeration value="FOURTH_VALUE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="complexTypeWithSimpleContentType" mixed="true">
+        <xs:simpleContent>
+            <xs:extension base="xs:integer">
+                <xs:attribute name="integerAttribute" type="xs:integer"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

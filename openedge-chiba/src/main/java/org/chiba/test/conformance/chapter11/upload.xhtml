@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd">-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <head>
+        <style type="text/css">
+			body { font-style: normal; font-weight: 500; background-color: rgb(230,230,230); color: blue;}
+			textarea {height: 180pt;width: 400pt;}
+			input {width: 180pt;}
+			caption {caption-side:top;}
+			caption.comment {caption-side:left;}
+			output.media {width: 80pt;font-weight:normal;}
+			output.filename {width:220pt;font-weight:normal;}
+			
+			output caption {caption-side:left;}
+			selectboolean {caption-side: left;}
+			range {background-color:rgb(230,230,230);}
+			p.headline {background-color:red; color:white;}
+        </style>
+        <xforms:model id="form1">
+            <xforms:submission id="submit_post" method="post" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <xforms:submission id="submit_multipart" method="multipart-post" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <xforms:submission id="submit_formdata" method="form-data-post" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <!--
+            <xforms:submission id="submit_post" method="post" action="http://xdemo.tml.hut.fi:8088/xforms/request"/>
+            <xforms:submission id="submit_multipart" method="multipart-post" action="http://xdemo.tml.hut.fi:8088/xforms/request"/>
+            <xforms:submission id="submit_formdata" method="form-data-post" action="http://xdemo.tml.hut.fi:8088/xforms/request"/>
+            -->
+            <xforms:instance id="instance1" xmlns="">
+                <email>
+                    <to>
+                        <recipient></recipient>
+                    </to>
+                    <subject></subject>
+                    <message>Message read from the instance</message>
+                    <attachments>
+                        <base64 comment="" filename="" mediatype=""></base64>
+                        <hexbin comment="" filename="" mediatype=""></hexbin>
+                        <uri comment="" filename="" mediatype=""></uri>
+                    </attachments>
+                </email>
+            </xforms:instance>
+            <xforms:bind nodeset="attachments/base64" type="xsd:base64Binary"/>
+            <xforms:bind nodeset="attachments/hexbin" type="xsd:hexBinary"/>
+            <xforms:bind nodeset="attachments/uri" type="xsd:anyURI"/>
+        </xforms:model>
+    </head>
+    <body>
+
+
+        <p class="headline">Upload hexbin and base64</p>
+
+        <xforms:group ref="/email/attachments/base64">
+            <xforms:upload ref=".">
+                <xforms:label>Base 64 encoded upload</xforms:label>
+                <xforms:mediatype ref="@mediatype"/>
+                <xforms:filename ref="@filename"/>
+            </xforms:upload>
+            <xforms:output class="filename" ref="@filename">
+                <xforms:label class="filename">Filename</xforms:label>
+            </xforms:output>
+            <xforms:output class="media" ref="@mediatype">
+                <xforms:label class="media">Mime</xforms:label>
+            </xforms:output>
+            <xforms:input class="comment" ref="@comment">
+                <xforms:label class="comment">Comment: </xforms:label>
+            </xforms:input>
+        </xforms:group>
+
+        <xforms:group ref="/email/attachments/hexbin">
+            <xforms:upload ref=".">
+                <xforms:label>HexBin encoded upload</xforms:label>
+                <xforms:mediatype ref="@mediatype"/>
+                <xforms:filename ref="@filename"/>
+            </xforms:upload>
+            <xforms:output class="filename" ref="@filename">
+                <xforms:label class="filename">Filename</xforms:label>
+            </xforms:output>
+            <xforms:output class="media" ref="@mediatype">
+                <xforms:label class="media">Mime</xforms:label>
+            </xforms:output>
+            <xforms:input class="comment" ref="@comment">
+                <xforms:label class="comment">Comment: </xforms:label>
+            </xforms:input>
+        </xforms:group>
+
+        <xforms:group ref="/email/attachments/uri">
+            <xforms:upload ref=".">
+                <xforms:label>URI  encoded upload</xforms:label>
+                <xforms:mediatype ref="@mediatype"/>
+                <xforms:filename ref="@filename"/>
+            </xforms:upload>
+            <xforms:output class="filename" ref="@filename">
+                <xforms:label class="filename">Filename</xforms:label>
+            </xforms:output>
+            <xforms:output class="media" ref="@mediatype">
+                <xforms:label class="media">Mime</xforms:label>
+            </xforms:output>
+            <xforms:input class="comment" ref="@comment">
+                <xforms:label class="comment">Comment: </xforms:label>
+            </xforms:input>
+        </xforms:group>
+
+
+        <p>
+            <xforms:submit submission="submit_post">
+                <xforms:label>POST XML</xforms:label>
+            </xforms:submit>
+        </p>
+        <p>
+            <xforms:submit submission="submit_multipart">
+                <xforms:label>POST multipart/related</xforms:label>
+            </xforms:submit>
+        </p>
+        <p>
+            <xforms:submit submission="submit_formdata">
+                <xforms:label>POST multipart/form-data</xforms:label>
+            </xforms:submit>
+        </p>
+    </body>
+</html>
+

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+<!ATTLIST section id ID #IMPLIED>
+<!ATTLIST h id ID #IMPLIED>
+<!ATTLIST div id ID #IMPLIED>
+<!ATTLIST nl id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events" xml:lang="en"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <head>
+        <title>Respect navindex and accesskey
+    When Determining Navigation Order</title>
+        <xforms:model id="002_model">
+            <xforms:instance xmlns="">
+                <data>
+                    <a xsi:type="xsd:integer">1</a>
+                    <b xsi:type="xsd:string">2</b>
+                    <c xsi:type="xsd:string">First</c>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>Respect navindex and accesskey </xforms:label>
+
+            <xforms:input model="002_model" ref="/data/a"
+                accesskey="a" navindex="3">
+                <xforms:label>Edit value of /data/a </xforms:label>
+                <xforms:help>You can move to this control using access key a
+                </xforms:help>
+                <xforms:hint>Third in navigation order.</xforms:hint>
+                <xforms:alert>
+                    <xforms:output ref="/data/a"/> is not an integer.
+                </xforms:alert>
+            </xforms:input>
+
+            <xforms:input model="002_model" ref="/data/b"
+                accesskey="b" navindex="1">
+                <xforms:label>Edit value of /data/b </xforms:label>
+                <xforms:help>You can move to this control using access key b
+                </xforms:help>
+                <xforms:hint>First in navigation order.</xforms:hint>
+            </xforms:input>
+
+            <xforms:input model="002_model" ref="/data/c"
+                accesskey="c" navindex="2">
+                <xforms:label>Edit value of /data/c</xforms:label>
+                <xforms:help>You can move to this control using access key c
+                </xforms:help>
+                <xforms:hint>Second in navigation order.</xforms:hint>
+            </xforms:input>
+
+            <xforms:secret model="002_model" ref="/data/a">
+                <xforms:label>Value typed is not echoed as you type</xforms:label>
+                <xforms:help>Note that updated value of /data/a shows up in the
+             earlier input control.</xforms:help>
+                <xforms:hint>Moral: control xforms:secret is not a security
+             mechanism.</xforms:hint>
+            </xforms:secret>
+        </xforms:group>
+    </body>
+</html>

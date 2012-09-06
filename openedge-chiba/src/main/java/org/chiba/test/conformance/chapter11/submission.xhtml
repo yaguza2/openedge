@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xfm="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <link rel="stylesheet" type="text/css" href="enter_feedback.css"/>
+        <title>X-Smiles Feedback</title>
+        <xfm:model id="form1">
+            <xfm:submission id="submit_post" method="post" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <xfm:submission id="submit_get" method="get" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <xfm:submission id="submit_put" method="put" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <xfm:submission id="submit_urlencoded-post" method="urlencoded-post" action="http://xformstest.org/cgi-bin/echo.sh"/>
+            <!--
+                        <xfm:submission id="submit_post" method="post" action="http://xdemo.tml.hut.fi:8088/xforms/request" />
+                        <xfm:submission id="submit_get" method="get" action="http://xdemo.tml.hut.fi:8088/xforms/request" />
+                        <xfm:submission id="submit_put" method="put" action="http://xdemo.tml.hut.fi:8088/xforms/request"/>
+                        <xfm:submission id="submit_urlencoded-post" method="urlencoded-post" action="http://xdemo.tml.hut.fi:8088/xforms/request"/>
+                        -->
+            <xfm:schema/>
+            <xfm:instance id="instance1" xmlns="">
+                <feedback>
+                    <sender>
+                        <firstname/>
+                        <lastname/>
+                    </sender>
+                    <date></date>
+                </feedback>
+            </xfm:instance>
+            <xfm:bind ref="/feedback/date" calculate="xfm:now()"/>
+        </xfm:model>
+    </head>
+    <body>
+        <h1>Submission</h1>
+        <p>
+            <xfm:input ref="/feedback/sender/firstname">
+                <xfm:label>FIRST NAME:</xfm:label>
+            </xfm:input>
+        </p>
+        <p>
+            <xfm:input ref="/feedback/sender/lastname">
+                <xfm:label>LAST NAME: </xfm:label>
+            </xfm:input>
+        </p>
+
+        <xfm:submit name="Submit" submission="submit_post">
+            <xfm:hint>Click to submit</xfm:hint>
+            <xfm:label>POST</xfm:label>
+        </xfm:submit>
+        <xfm:submit name="Submit" submission="submit_get">
+            <xfm:hint>Click to submit</xfm:hint>
+            <xfm:label>GET</xfm:label>
+        </xfm:submit>
+        <xfm:submit name="Submit" submission="submit_put">
+            <xfm:hint>Click to submit</xfm:hint>
+            <xfm:label>PUT</xfm:label>
+        </xfm:submit>
+        <xfm:submit name="Submit" submission="submit_urlencoded-post">
+            <xfm:hint>Click to submit</xfm:hint>
+            <xfm:label>urlencoded-post</xfm:label>
+        </xfm:submit>
+    </body>
+</html>

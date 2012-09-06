@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for relevance selection"/>
+        <meta name="version" content="$Id: RelevanceSelectorTest.xhtml,v 1.2 2004/08/15 14:14:12 joernt Exp $"/>
+        <xforms:model>
+            <xforms:instance>
+                <root xmlns="" xmlns:test="http://test.org/ns">
+                    <name id="n-1">name</name>
+                    <paragraph id="p-1">
+                        <content id="c-1">
+							some mixed content 1
+                            <space id="s-1"/>
+                            <input id="i-1">input 1</input>
+							some more mixed content 1
+                        </content>
+                    </paragraph>
+                    <paragraph id="p-2">
+                        <content id="c-2">
+							some mixed content 2
+                            <space id="s-2"/>
+                            <input id="i-2">input 2</input>
+							some more mixed content 2
+                        </content>
+                    </paragraph>
+                </root>
+            </xforms:instance>
+            <xforms:bind id="bind-1" xforms:nodeset="/root/paragraph/content/space" xforms:relevant="false()"/>
+        </xforms:model>
+    </head>
+    <body>
+    </body>
+</html>

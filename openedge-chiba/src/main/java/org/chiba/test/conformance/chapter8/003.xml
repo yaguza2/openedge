@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+<!ATTLIST section id ID #IMPLIED>
+<!ATTLIST h id ID #IMPLIED>
+<!ATTLIST div id ID #IMPLIED>
+<!ATTLIST nl id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <title>May Use Custom Date Picker</title>
+        <xforms:model id="003_model">
+            <xforms:instance xmlns="">
+                <data>
+                    <date-of-birth xsi:type="xsd:date">1997-12-21</date-of-birth>
+                    <confirm xsi:type="xsd:boolean">false</confirm>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>May Use Custom Date Picker</xforms:label>
+            <xforms:output model="003_model" ref="/data/date-of-birth"/>
+            <xforms:input model="003_model" ref="/data/date-of-birth">
+                <xforms:label>Date Of Birth</xforms:label>
+            </xforms:input>
+            <xforms:input model="003_model" ref="/data/confirm">
+                <xforms:label>Confirm  that date of birth is
+                    <xforms:output model="003_model" ref="/data/date-of-birth"/>
+                </xforms:label>
+            </xforms:input>
+        </xforms:group>
+    </body>
+</html>

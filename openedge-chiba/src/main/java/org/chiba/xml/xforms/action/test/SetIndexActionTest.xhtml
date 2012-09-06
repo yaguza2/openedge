@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for setindex action"/>
+        <meta name="version" content="$Id: SetIndexActionTest.xhtml,v 1.4 2004/08/15 14:14:09 joernt Exp $"/>
+        <xforms:model id="model">
+            <xforms:instance id="instance" xmlns="">
+                <data>
+                    <item>first</item>
+                    <item>between</item>
+                    <item>last</item>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>UI Bindings: There should be 3 repeat items with values
+                <i>first</i>,
+                <i>between</i>, and
+                <i>last</i>.
+            </xforms:label>
+            <xforms:group>
+                <xforms:repeat id="repeat" nodeset="item">
+                    <xforms:input id="input" ref="."/>
+                </xforms:repeat>
+                <xforms:trigger id="trigger-before">
+                    <xforms:label>Set index before first</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="0"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-first">
+                    <xforms:label>Set index to first</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="1"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-between">
+                    <xforms:label>Set index between first and last</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="2"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-last">
+                    <xforms:label>Set index to last</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="3"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-after">
+                    <xforms:label>Set index after last</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="4"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-computed">
+                    <xforms:label>Set index to position computed by 'last()'</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="last()"/>
+                    </xforms:action>
+                </xforms:trigger>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

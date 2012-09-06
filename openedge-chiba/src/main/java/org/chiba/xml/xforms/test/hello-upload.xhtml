@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xml:base="http://@baseurl.host@:@baseurl.port@/chiba-@chiba-version@/"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <head>
+        <title>hello</title>
+        <xforms:model id="C-1">
+            <xforms:submission id="debug" action="jsp/debug-instance.jsp" method="post" replace="all"/>
+            <xforms:instance id="C-2" xmlns="">
+                <data>
+                    <name/>
+                    <file path="testpath" contentType="testcontent">testfile</file>
+                    <file2 path="" contentType="">Another file</file2>
+                    <file3 path="" contentType="">A wrong file</file3>
+                    <file4 path="" contentType="">URI stuff</file4>
+                </data>
+            </xforms:instance>
+            <xforms:bind id="bind-name" nodeset="name" required="true()"/>
+            <xforms:bind id="bind1" nodeset="file" type="base64Binary"/>
+            <xforms:bind id="bind2" nodeset="file2" type="hexBinary"/>
+            <xforms:bind id="bind3" nodeset="file3" type="string"/>
+            <xforms:bind id="bind4" nodeset="file4" type="anyURI"/>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group id="C-3" appearance="minimal">
+            <xforms:label id="C-4">Hello</xforms:label>
+            <xforms:input id="name-input" bind="bind-name">
+                <xforms:label id="C-5">Your name: </xforms:label>
+                <xforms:alert id="C-6">Please put your name here</xforms:alert>
+                <xforms:hint id="C-7">Please input your name into this field</xforms:hint>
+            </xforms:input>
+            <xforms:upload id="upload-input" bind="bind1">
+                <xforms:label>Select a file</xforms:label>
+                <xforms:filename ref="attribute::path"/>
+                <xforms:mediatype ref="attribute::contentType"/>
+            </xforms:upload>
+            <xforms:upload id="upload-input-hex" bind="bind2">
+                <xforms:label>Select an hex file</xforms:label>
+                <xforms:filename ref="attribute::path"/>
+                <xforms:mediatype ref="attribute::contentType"/>
+            </xforms:upload>
+            <xforms:upload id="upload-wrong" bind="bind3">
+                <xforms:label>Select a wrong file ;)</xforms:label>
+                <xforms:filename ref="attribute::path"/>
+                <xforms:mediatype ref="attribute::contentType"/>
+            </xforms:upload>
+            <xforms:upload id="upload-uri" bind="bind4">
+                <xforms:label>Select an URI file</xforms:label>
+                <xforms:filename ref="attribute::path"/>
+                <xforms:mediatype ref="attribute::contentType"/>
+            </xforms:upload>
+            <xforms:group id="C-8" appearance="minimal">
+                <xforms:submit id="C-9" submission="debug">
+                    <xforms:label id="C-10">Debug</xforms:label>
+                </xforms:submit>
+                <xforms:trigger id="reset-btn">
+                    <xforms:label id="C-11">Reset</xforms:label>
+                    <xforms:action id="C-12">
+                        <xforms:reset id="reset"/>
+                    </xforms:action>
+                </xforms:trigger>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

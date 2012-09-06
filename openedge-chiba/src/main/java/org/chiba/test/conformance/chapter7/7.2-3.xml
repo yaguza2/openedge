@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="http://example.com"
+    xml:lang="en">
+    <head>
+        <title>Create an instance with nodes A, B, C, D. Let C have a calculate if(A &lt; B, D + 1, D). Create an ECMAScript that modifies only D, then invokes recalculate(), revalidate(), refresh(). Test that the outputs bound to C and D both change. This proves that a full recalculate is run since C is not dependent on what changed (D).</title>
+
+        <xforms:model id="mymodel">
+            <xforms:instance id="myinstance">
+                <my:Z>
+                    <my:A>1</my:A>
+                    <my:B>2</my:B>
+                    <my:C>3</my:C>
+                    <my:D>4</my:D>
+                </my:Z>
+            </xforms:instance>
+            <xforms:bind nodeset="my:C" calculate="if(../my:A &lt; ../my:B, ../my:D+1, ../my:D)"/>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>Create an instance with nodes A, B, C, D. Let C have a calculate if(A &lt; B, D + 1, D). Create an ECMAScript that modifies only D, then invokes recalculate(), revalidate(), refresh(). Test that the outputs bound to C and D both change. This proves that a full recalculate is run since C is not dependent on what changed (D).</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">!-- TBD: insert assertion tested here</li>
+        </nl>
+
+        <xforms:output ref="my:A">
+            <xforms:label>A: </xforms:label>
+            <xforms:hint>Should be 1</xforms:hint>
+        </xforms:output>
+
+        <xforms:output ref="my:B">
+            <xforms:label>B: </xforms:label>
+            <xforms:hint>Should be 2</xforms:hint>
+        </xforms:output>
+
+        <xforms:output ref="my:C">
+            <xforms:label>C: </xforms:label>
+            <xforms:hint>Should be 5 and then 6</xforms:hint>
+        </xforms:output>
+
+        <xforms:output ref="my:D">
+            <xforms:label>D: </xforms:label>
+            <xforms:hint>Should be 4 and then 5</xforms:hint>
+        </xforms:output>
+
+        <xforms:trigger>
+            <xforms:label>Run test</xforms:label>
+            <xforms:action ev:event="xforms-activate">
+                <script type="text/javascript">
+				var model = document.getElementsById("mymodel");
+				var instance = model.getInstanceDocument("myinstance");
+				var D = instance.getElementsByTagNameNS("http://example.com", "D").item(0)
+				var oldValue = parseInt(D.firstChild.nodeValue)
+				var newText = instance.createTextNode(oldValue +1)
+				D.replaceChild(D.firstChild, newText)
+				model.recalculate();
+				model.revalidate();
+				model.refresh();
+                </script>
+            </xforms:action>
+        </xforms:trigger>
+
+    </body>
+</html>

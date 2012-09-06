@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: buglet_xml.xml,v 1.6 2004/08/15 14:14:15 joernt Exp $ -->
+<envelope xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    chiba:stylesheet="dom-browser.xsl"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xml:lang="en">
+    <xforms:model id="buglet-model">
+        <xforms:submission id="debug" xforms:replace="all" xforms:action="jsp/debug-instance.jsp" xforms:method="post"/>
+        <xforms:schema/>
+        <!--		<xforms:instance href="buglet-instance.xml"/> -->
+        <xforms:instance>
+            <buglet>
+                <reported-by>nobody</reported-by>
+                <category>Cisco</category>
+                <reference>http://somewhere.com</reference>
+                <subject>don't know</subject>
+                <datum>01.01.01</datum>
+                <risk>3</risk>
+                <description>what shall i say?</description>
+                <see-also>
+                    <urls>
+                        <url>http://www.hirnbrand.de</url>
+                        <url>http://world.wide.void</url>
+                        <url>https://www.meintresor.daheim</url>
+                    </urls>
+                </see-also>
+            </buglet>
+        </xforms:instance>
+        <xforms:bind id="buglet" xforms:nodeset="/buglet"/>
+        <xforms:bind id="category"
+            xforms:nodeset="/buglet/category"
+            xforms:type="string"
+            xforms:required="true()"/>
+        <xforms:bind id="reference" xforms:nodeset="/buglet/reference" xforms:type="string"/>
+        <xforms:bind id="subject"
+            xforms:nodeset="/buglet/subject"
+            xforms:type="string"
+            xforms:required="true()"/>
+        <xforms:bind id="datum" xforms:nodeset="/buglet/datum" xforms:type="string"/>
+        <xforms:bind id="risk" xforms:nodeset="/buglet/risk" xforms:type="integer"/>
+        <xforms:bind id="description"
+            xforms:nodeset="/buglet/description"
+            xforms:type="string"
+            xforms:required="not(/buglet/reference)"/>
+        <xforms:bind id="see-also" xforms:nodeset="/buglet/see-also/urls/url">
+            <xforms:bind id="url" xforms:nodeset="." xforms:type="anyURI"/>
+        </xforms:bind>
+    </xforms:model>
+    <xforms:model id="messages">
+        <xforms:instance xlink:href="chiba:buglet-messages-de.xml">
+            <messages>
+                <category>Kategorie</category>
+                <reference>Referenz Url</reference>
+                <subject>Betrifft</subject>
+                <date>Datum</date>
+                <risk>Risiko-Level</risk>
+                <high>hoch</high>
+                <medium>mittel</medium>
+                <low>niedrig</low>
+                <description>Beschreibung</description>
+                <see-also>Siehe auch</see-also>
+                <test>this is an output from a different model</test>
+            </messages>
+        </xforms:instance>
+        <xforms:bind id="output-test" xforms:nodeset="/messages/test"/>
+    </xforms:model>
+    <!--    <body>-->
+    <xforms:group id="N40008A" xforms:bind="/buglet">
+        <xforms:label id="N40008D">Buglet</xforms:label>
+        <xforms:select1 id="N400090" xforms:bind="category" xforms:appearance="minimal">
+            <xforms:label id="N400094" xforms:model="messages" xforms:ref="/messages/category">Category</xforms:label>
+            <xforms:hint>Select the category for this bug description</xforms:hint>
+            <xforms:help id="N400097">Select a domain where this bug belongs to.</xforms:help>
+            <xforms:choices id="N40009A">
+                <xforms:item id="N40009C">
+                    <xforms:value id="N40009E">Cisco</xforms:value>
+                    <xforms:label id="N4000A1">Cisco</xforms:label>
+                </xforms:item>
+                <xforms:item id="N4000A8">
+                    <xforms:value id="N4000AA">Linux</xforms:value>
+                    <xforms:label id="N4000AD">Linux</xforms:label>
+                </xforms:item>
+                <xforms:item id="N4000B4">
+                    <xforms:value id="N4000B6">Solaris</xforms:value>
+                    <xforms:label id="N4000B9">Solaris</xforms:label>
+                </xforms:item>
+            </xforms:choices>
+        </xforms:select1>
+        <xforms:input id="N4000EE" xforms:bind="reference">
+            <xforms:label id="N4000F1" xforms:model="messages" xforms:ref="/messages/reference"/>
+            <xforms:hint>URL to reporting resource</xforms:hint>
+            <xforms:help id="N4000F4">
+                    Points to a resource containing more information to
+                    this topic. This item will be linked, if a valid
+                    Url is supplied.
+            </xforms:help>
+            <xforms:hint id="N4000F7">Enter a reference-url associated to this bug</xforms:hint>
+        </xforms:input>
+        <xforms:input id="N4000FB" xforms:bind="subject">
+            <xforms:label id="N4000FE" xforms:model="messages" xforms:ref="/messages/subject"/>
+            <xforms:hint>Input a subject which describes this bug</xforms:hint>
+        </xforms:input>
+        <xforms:input id="N400102" xforms:bind="datum">
+            <xforms:label id="N400105" xforms:model="messages" xforms:ref="/messages/date"/>
+            <xforms:hint>The Date of entry</xforms:hint>
+        </xforms:input>
+        <xforms:select1 id="N400109" xforms:bind="risk" xforms:appearance="full">
+            <xforms:label id="N40010D" xforms:model="messages" xforms:ref="/messages/risk"/>
+            <xforms:hint id="N400110">Select a risk-level for this bug.</xforms:hint>
+            <xforms:choices id="N400113">
+                <xforms:item id="N400115">
+                    <xforms:value id="N400117">1</xforms:value>
+                    <xforms:label id="N40011A" xforms:model="messages" xforms:ref="/messages/low"/>
+                </xforms:item>
+                <xforms:item id="N40011E">
+                    <xforms:value id="N400120">2</xforms:value>
+                    <xforms:label id="N400123" xforms:model="messages" xforms:ref="/messages/medium"/>
+                </xforms:item>
+                <xforms:item id="N400127">
+                    <xforms:value id="N400129">3</xforms:value>
+                    <xforms:label id="N40012C" xforms:model="messages" xforms:ref="/messages/high"/>
+                </xforms:item>
+            </xforms:choices>
+        </xforms:select1>
+        <xforms:input id="N400132" xforms:bind="description">
+            <xforms:label id="N400135" xforms:model="messages" xforms:ref="/messages/description"/>
+            <xforms:hint>Input your description of the bug.</xforms:hint>
+            <xforms:alert>Please describe the bug here</xforms:alert>
+        </xforms:input>
+        <xforms:group>
+            <xforms:label xforms:model="messages" xforms:ref="/messages/see-also"/>
+            <xforms:trigger id="N4000E2">
+                <xforms:label>Insert after selected</xforms:label>
+                <xforms:action id="N4000E7">
+                    <xforms:insert id="N4000E9" xforms:nodeset="see-also/urls/url" xforms:at="xforms:index('N400139')" xforms:position="after"/>
+                </xforms:action>
+            </xforms:trigger>
+            <xforms:trigger id="N4000EF">
+                <xforms:label>Delete selected</xforms:label>
+                <xforms:action id="N4000F4">
+                    <xforms:delete id="N4000F6" xforms:nodeset="see-also/urls/url" xforms:at="xforms:index('N400139')"/>
+                </xforms:action>
+            </xforms:trigger>
+            <xforms:repeat id="N400139" xforms:bind="see-also">
+                <xforms:label id="N40013C" xforms:model="messages" xforms:ref="/messages/see-also"/>
+                <xforms:input id="N40013F" xforms:bind="url">
+                    <xforms:label id="N400142">Url: </xforms:label>
+                    <xforms:hint>Other resource related to this bug.</xforms:hint>
+                </xforms:input>
+            </xforms:repeat>
+        </xforms:group>
+    </xforms:group>
+    <xforms:trigger id="N4001A8">
+        <xforms:label id="N4001AA">reset</xforms:label>
+        <xforms:action id="N4001AD">
+            <xforms:reset id="N4001AF"/>
+        </xforms:action>
+    </xforms:trigger>
+    <xforms:submit id="N40014F" xforms:submission="debug">
+        <xforms:label id="N400152" xforms:src="messages.xml/msgs/debug">debug</xforms:label>
+    </xforms:submit>
+    <xforms:output xforms:bind="output-test"/>
+    <!--    </body>-->
+</envelope>

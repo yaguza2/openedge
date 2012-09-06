@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="test.css" ?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <title>load</title>
+        <xforms:model id="model1">
+            <xforms:instance id="instance1" xmlns="">
+                <data>
+                    <uri>http://www.example.com/frominstance</uri>
+                    <binduri uri="http://www.example.com/frombind"/>
+                </data>
+            </xforms:instance>
+            <xforms:bind id="uribind" ref="binduri/@uri"/>
+        </xforms:model>
+    </head>
+    <body>
+        <h>The load Element</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li>All assertions</li>
+        </nl>
+        <xforms:group>
+            <xforms:label>No resource attribute and no binding attributes, should be ignored</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>With resource attribute, should load as show="replace"</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate" resource="http://www.example.com/resourceattribute"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>With ref attribute, should load</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate" ref="uri"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>With bind attribute, should load</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate" bind="uribind"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>With ref attribute pointing at no nodes, should be ignored</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate" ref="uri.non.existing"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>With resource attribute and show="new". Should load this into new presentation context</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate" resource="load1.xml" show="new"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>With resource attribute and show="replace". Should replace current document</xforms:label>
+            <xforms:trigger>
+                <xforms:label>load</xforms:label>
+                <xforms:load ev:event="DOMActivate" resource="load1.xml" show="replace"/>
+            </xforms:trigger>
+        </xforms:group>
+    </body>
+</html>

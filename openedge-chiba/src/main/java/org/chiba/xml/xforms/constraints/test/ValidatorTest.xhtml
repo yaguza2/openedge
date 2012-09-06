@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for xforms validation"/>
+        <meta name="version" content="$Id: ValidatorTest.xhtml,v 1.6 2004/11/17 16:21:14 unl Exp $"/>
+        <xforms:model id="model-1" xmlns:test="http://test.org/restricted">
+            <xforms:instance id="instance-1" xmlns="">
+                <data>
+                    <nodeset/>
+                    <constraint/>
+                    <readonly/>
+                    <required/>
+                    <relevant/>
+                </data>
+            </xforms:instance>
+            <xforms:bind id="bind-1"
+                nodeset="nodeset"
+                type="test:restricted"
+                constraint="../constraint='true'"
+                readonly="../readonly='true'"
+                required="../required='true'"
+                relevant="../relevant='true'"/>
+            <xs:schema targetNamespace="http://test.org/restricted" elementFormDefault="qualified">
+                <xs:simpleType name="restricted">
+                    <xs:restriction base="xs:integer">
+                        <xs:maxInclusive value="4711"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:schema>
+        </xforms:model>
+        <xforms:model id="model-2">
+            <xforms:instance id="instance-2" xmlns="">
+                <data>
+                    <type-attribute xsi:type="xs:date">2004-11-17</type-attribute>
+                    <type-property>2004-11-17T00:00:00Z</type-property>
+                </data>
+            </xforms:instance>
+            <xforms:bind id="bind-2" nodeset="type-property" type="xs:dateTime"/>
+        </xforms:model>
+    </head>
+    <body>
+        <div>nothing to see ;-)</div>
+    </body>
+</html>

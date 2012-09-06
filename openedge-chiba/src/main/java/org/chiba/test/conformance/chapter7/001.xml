@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+]>
+
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <title>Test for XPath Evaluation Context - Rule 5
+
+        </title>
+        <xforms:model id="ce778" schema="#myschema">
+            <xforms:instance xmlns="" id="ce778i1">
+                <E xmlns="http://example.com/">
+                    <F>1
+
+                    </F>
+                    <F>1
+
+                    </F>
+                    <F>1
+
+                    </F>
+                </E>
+            </xforms:instance>
+            <xsd:schema
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="myschema" targetNamespace="http://example.com/">
+                <xsd:simpleType name="max4">
+                    <xsd:restriction base="xsd:integer">
+                        <xsd:maxInclusive value="4">
+                        </xsd:maxInclusive>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:schema>
+            <xforms:bind
+                xmlns:my="http://example.org/" nodeset="F" calculate="if(preceeding-sibling::node(), preceeding-sibling::node() + 1, 1)" type="my:max4">
+            </xforms:bind>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:trigger>
+            <xforms:label>G
+
+            </xforms:label>
+            <xforms:action ev:event="xforms-activate">
+                <script type="text/javascript">var ME = document.getElementById("ce778"); var
+                    idoc = ME.getInstanceDocument("ce778i1"); <!--
+                            Add two F children to E.
+                            -->
+                    Ee = idoc.documentElement; Fe1 = idoc.createElement("F");
+                    Ee.appendChild(Fe1); Fe2 = idoc.createElement("F"); Ee.appendChild(Fe2);
+                    idoc.rebuild(); idoc.recalculate(); idoc.revalidate(); idoc.refresh();
+
+                </script>
+            </xforms:action>
+        </xforms:trigger>
+        <xforms:group>
+            <xforms:label>After button "G" has been activated, there should be 5 lines of
+                "F:" F: 1, F: 2, F: 3, F: 4, F: 5. F: 5 should be rendered as invalid.
+
+            </xforms:label>
+            <xforms:repeat nodeset="/E" model="ce778">
+                <xforms:output ref="F">
+                    <xforms:label>F:
+
+                    </xforms:label>
+                </xforms:output>
+            </xforms:repeat>
+        </xforms:group>
+    </body>
+</html>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eg xml:space="preserve">
+
+    &lt;?xml version=&quot;1.0&quot;?&gt;
+    &lt;html
+  xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+  xmlns:xforms=&quot;http://www.w3.org/2002/01/xforms&quot;
+  xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+  xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;
+  xmlns:my=&quot;http://commerce.example.com/payment&quot;
+  xmlns:ev=&quot;http://www.w3.org/2001/xml-events&quot; xml:lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+xforms:input.editField {
+      font-weight:bold;font-size:20px;width:500px}
+xforms:label.sectionLabel {
+      font-weight:bold;color:white;background-color:blue}
+xforms:submit {font-family: Arial; font-size: 20px; font-style: bold; color: red;}
+    &lt;/style&gt;
+    &lt;title&gt;Editing Hierarchical Bookmarks Using In An XML Browser&lt;/title&gt;
+    &lt;xforms:model id=&quot;bookmarks&quot;&gt;
+    &lt;!--The bookmarks instance tree is shown inline for
+      the sake of this example.
+XML browser XSmiles would use
+    &lt;xforms:instance xlink:href=&quot;bookmarks.xml&quot;/&gt;.
+--&gt;
+    &lt;xforms:instance xmlns=&quot;&quot;&gt;
+    &lt;bookmarks&gt;
+    &lt;section name=&quot;main&quot;&gt;
+    &lt;bookmark href=&quot;http://www.example.com/xforms/demos.xml&quot; name=&quot;Main page&quot;/&gt;
+    &lt;/section&gt;
+    &lt;section name=&quot;demos&quot;&gt;
+    &lt;bookmark href=&quot;http://www.example.com/demo/fo/images.fo&quot; name=&quot;images&quot;/&gt;
+    &lt;bookmark href=&quot;http://www.example.com/demo/fo/xforms-ecma.xml&quot; name=&quot;xforms-ecma&quot;/&gt;
+    &lt;bookmark href=&quot;http://www.example.com/demo/fo/sip.fo&quot; name=&quot;sip&quot;/&gt;
+    &lt;/section&gt;
+    &lt;section name=&quot;misc&quot;&gt;
+    &lt;bookmark href=&quot;sip:mhonkala@xdemo.tml.hut.fi&quot; name=&quot;call: mhonkala&quot;/&gt;
+    &lt;bookmark href=&quot;sip:tvraman@examples.com&quot; name=&quot;call: tvraman&quot;/&gt;
+    &lt;bookmark href=&quot;http://www.example.com/demo/links.xml&quot; name=&quot;Links&quot;/&gt;
+    &lt;/section&gt;
+    &lt;section name=&quot;XForms&quot;&gt;
+    &lt;bookmark href=&quot;file:/C:/source/xsmiles/demo/xforms/xforms-xmlevents.xml&quot; name=&quot;XML events&quot;/&gt;
+    &lt;bookmark href=&quot;file:/C:/source/xsmiles/demo/xforms/model3.xml&quot; name=&quot;model3&quot;/&gt;
+    &lt;bookmark href=&quot;file:/C:/source/xsmiles/demo/xforms/repeat.fo&quot; name=&quot;repeat + constraints&quot;/&gt;
+    &lt;/section&gt;
+    &lt;/bookmarks&gt;
+    &lt;/xforms:instance&gt;
+    &lt;xforms:submission id=&quot;s01&quot; method=&quot;post&quot; action=&quot;http://www.examples.com/&quot;/&gt;
+    &lt;/xforms:model&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;xforms:repeat nodeset=&quot;bookmarks/section&quot; id=&quot;repeatSections&quot;&gt;
+    &lt;xforms:input ref=&quot;@name&quot; class=&quot;editField&quot;&gt;
+    &lt;xforms:label class=&quot;sectionLabel&quot;&gt;Section&lt;/xforms:label&gt;
+    &lt;/xforms:input&gt;
+    &lt;!-- BOOKMARK REPEAT START --&gt;
+    &lt;xforms:repeat nodeset=&quot;bookmark&quot; id=&quot;repeatBookmarks&quot;&gt;
+    &lt;xforms:input ref=&quot;@name&quot;&gt;
+    &lt;xforms:label&gt;Bookmark name&lt;/xforms:label&gt;
+    &lt;/xforms:input&gt;
+    &lt;xforms:input ref=&quot;@href&quot;&gt;
+    &lt;xforms:label&gt;URL&lt;/xforms:label&gt;
+    &lt;/xforms:input&gt;
+    &lt;/xforms:repeat&gt;
+    &lt;/xforms:repeat&gt;
+    &lt;p&gt;
+    &lt;!-- INSERT BOOKMARK BUTTON --&gt;
+    &lt;xforms:trigger id=&quot;insertbutton&quot;&gt;
+    &lt;xforms:label&gt;Insert bookmark&lt;/xforms:label&gt;
+    &lt;xforms:insert nodeset=&quot;/bookmarks/section[xforms:cursor('repeatSections')]/bookmark&quot; at=&quot;xforms:cursor('repeatBookmarks')&quot; position=&quot;after&quot; ev:event=&quot;xforms:activate&quot;/&gt;
+    &lt;/xforms:trigger&gt;
+    &lt;!-- DELETE BOOKMARK BUTTON --&gt;
+    &lt;xforms:trigger id=&quot;delete&quot;&gt;
+    &lt;xforms:label&gt;Delete bookmark&lt;/xforms:label&gt;
+    &lt;xforms:delete nodeset=&quot;/bookmarks/section[xforms:cursor('repeatSections')]/bookmark&quot; at=&quot;xforms:cursor('repeatBookmarks')&quot; ev:event=&quot;xforms:activate&quot;/&gt;
+    &lt;/xforms:trigger&gt;
+    &lt;/p&gt;
+    &lt;p&gt;
+    &lt;!-- INSERT SECTION BUTTON --&gt;
+    &lt;xforms:trigger id=&quot;insertsectionbutton&quot;&gt;
+    &lt;xforms:label&gt;Insert section&lt;/xforms:label&gt;
+    &lt;xforms:insert nodeset=&quot;/bookmarks/section&quot; at=&quot;xforms:cursor('repeatSections')&quot; position=&quot;after&quot; ev:event=&quot;xforms:activate&quot;/&gt;
+    &lt;/xforms:trigger&gt;
+    &lt;!-- DELETE SECTION BUTTON --&gt;
+    &lt;xforms:trigger id=&quot;deletesectionbutton&quot;&gt;
+    &lt;xforms:label&gt;Delete section&lt;/xforms:label&gt;
+    &lt;xforms:delete nodeset=&quot;/bookmarks/section&quot; at=&quot;xforms:cursor('repeatSections')&quot; ev:event=&quot;xforms:activate&quot;/&gt;
+    &lt;/xforms:trigger&gt;
+    &lt;/p&gt;
+    &lt;!-- SUBMIT BUTTON --&gt;
+    &lt;xforms:submit submission=&quot;s01&quot;&gt;
+    &lt;xforms:label&gt;Save&lt;/xforms:label&gt;
+    &lt;xforms:hint&gt;Click to submit&lt;/xforms:hint&gt;
+    &lt;/xforms:submit&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+
+</eg>

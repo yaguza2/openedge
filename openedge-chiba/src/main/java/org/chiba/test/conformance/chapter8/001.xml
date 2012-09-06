@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xml:lang="en">
+    <head>
+        <title>Display Only Fields That Have UI Controls Bound</title>
+        <xforms:model id="001_model">
+            <xforms:instance xmlns="">
+                <data>
+                    <a xsi:type="xsd:integer">1</a>
+                    <b xsi:type="xsd:string">2</b>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>Must Not Display /data/b</xforms:label>
+            <xforms:output model="001_model" ref="/data/a">
+                <xforms:label>Display Value of /data/a</xforms:label>
+            </xforms:output>
+            <xforms:input model="001_model" ref="/data/a">
+                <xforms:label>Edit value of /data/a</xforms:label>
+            </xforms:input>
+        </xforms:group>
+    </body>
+</html>

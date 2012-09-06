@@ -1,0 +1,453 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+  <!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="urn:my"
+    xml:lang="en">
+    <head>
+        <title>MUST support all XML Schema types supported in an XForm: primitive</title>
+        <link rel="stylesheet" type="text/css" href="../test.css"/>
+        <xforms:model id="model-002">
+            <xforms:instance xmlns="urn:my">
+                <data>
+                    <valid>
+                        <dateTime>1999-05-31T13:20:00-05:00</dateTime>
+                        <time>13:20:00-05:00</time>
+                        <date>1999-05-31</date>
+                        <gYearMonth>1999-05</gYearMonth>
+                        <gYear>1999</gYear>
+                        <gMonthDay>--09-14</gMonthDay>
+                        <gDay>---15</gDay>
+                        <gMonth>--11--</gMonth>
+                        <string>Strings, strings, everywhere.</string>
+                        <boolean>true</boolean>
+                        <base64Binary>WEZvcm1zIFJ1bGVz</base64Binary>
+                        <hexBinary>DEADBEEF</hexBinary>
+                        <float>1267.43233E12</float>
+                        <decimal>12678967.543233</decimal>
+                        <double>INF</double>
+                        <anyURI>http://example.com/data/potato</anyURI>
+                        <QName>ev:event</QName>
+                        <!-- <NOTATION/> -->
+                    </valid>
+                    <invalid>
+                        <dateTime>This is not a valid date</dateTime>
+                        <time>Now is not the time.</time>
+                        <date>Juvember 14</date>
+                        <gYearMonth>I am late for an important date.</gYearMonth>
+                        <gYear>MCMLXII</gYear>
+                        <gMonthDay>OO-II</gMonthDay>
+                        <gDay>32</gDay>
+                        <gMonth>14</gMonth>
+                        <!-- <string/> -->
+                        <boolean>This statement is false.</boolean>
+                        <base64Binary>#1D]/</base64Binary>
+                        <hexBinary>octal</hexBinary>
+                        <float>3+3j</float>
+                        <decimal>-1^-1/2</decimal>
+                        <double>OOF!</double>
+                        <!-- <anyURI/> -->
+                        <QName>::::::</QName>
+                        <!-- <NOTATION/> -->
+                    </invalid>
+                </data>
+            </xforms:instance>
+
+            <xforms:bind nodeset="//my:dateTime" type="xsd:dateTime"/>
+            <xforms:bind nodeset="//my:time" type="xsd:time"/>
+            <xforms:bind nodeset="//my:date" type="xsd:date"/>
+            <xforms:bind nodeset="//my:gYearMonth" type="xsd:gYearMonth"/>
+            <xforms:bind nodeset="//my:gYear" type="xsd:gYear"/>
+            <xforms:bind nodeset="//my:gMonthDay" type="xsd:gMonthDay"/>
+            <xforms:bind nodeset="//my:gDay" type="xsd:gDay"/>
+            <xforms:bind nodeset="//my:gMonth" type="xsd:gMonth"/>
+            <xforms:bind nodeset="//my:string" type="xsd:string"/>
+            <xforms:bind nodeset="//my:boolean" type="xsd:boolean"/>
+            <xforms:bind nodeset="//my:base64Binary" type="xsd:base64Binary"/>
+            <xforms:bind nodeset="//my:hexBinary" type="xsd:hexBinary"/>
+            <xforms:bind nodeset="//my:float" type="xsd:float"/>
+            <xforms:bind nodeset="//my:decimal" type="xsd:decimal"/>
+            <xforms:bind nodeset="//my:double" type="xsd:double"/>
+            <xforms:bind nodeset="//my:anyURI" type="xsd:anyURI"/>
+            <xforms:bind nodeset="//my:QName" type="xsd:QName"/>
+
+        </xforms:model>
+    </head>
+    <body>
+        <h1>MUST support all XML Schema types supported in an XForm: primitive</h1>
+        <xforms:group model="model-002" ref="my:valid">
+            <xforms:label>Valid data according to type</xforms:label>
+            <h2>All data under this group must display as valid</h2>
+
+            <xforms:group>
+                <xforms:label>dateTime</xforms:label>
+                <xforms:output ref="my:dateTime">
+                    <xforms:label>output of dateTime</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:dateTime">
+                    <xforms:label>input for dateTime</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>time</xforms:label>
+                <xforms:output ref="my:time">
+                    <xforms:label>output of time</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:time">
+                    <xforms:label>input for time</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>date</xforms:label>
+                <xforms:output ref="my:date">
+                    <xforms:label>output of date</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:date">
+                    <xforms:label>input for date</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+
+            <xforms:group>
+                <xforms:label>gYearMonth</xforms:label>
+                <xforms:output ref="my:gYearMonth">
+                    <xforms:label>output of gYearMonth</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gYearMonth">
+                    <xforms:label>input for gYearMonth</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gYear</xforms:label>
+                <xforms:output ref="my:gYear">
+                    <xforms:label>output of gYear</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gYear">
+                    <xforms:label>input for gYear</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gMonthDay</xforms:label>
+                <xforms:output ref="my:gMonthDay">
+                    <xforms:label>output of gMonthDay</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gMonthDay">
+                    <xforms:label>input for gMonthDay</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gDay</xforms:label>
+                <xforms:output ref="my:gDay">
+                    <xforms:label>output of gDay</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gDay">
+                    <xforms:label>input for gDay</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gMonth</xforms:label>
+                <xforms:output ref="my:gMonth">
+                    <xforms:label>output of gMonth</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gMonth">
+                    <xforms:label>input for gMonth</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>string</xforms:label>
+                <xforms:output ref="my:string">
+                    <xforms:label>output of string</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:string">
+                    <xforms:label>input for string</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>boolean</xforms:label>
+                <xforms:output ref="my:boolean">
+                    <xforms:label>output of boolean</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:boolean">
+                    <xforms:label>input for boolean</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>base64Binary</xforms:label>
+                <xforms:upload ref="my:base64Binary">
+                    <xforms:label>Upload Value of base64Binary</xforms:label>
+                </xforms:upload>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>hexBinary</xforms:label>
+                <xforms:upload ref="my:hexBinary">
+                    <xforms:label>Upload Value of hexBinary</xforms:label>
+                </xforms:upload>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>float</xforms:label>
+                <xforms:output ref="my:float">
+                    <xforms:label>output of float</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:float">
+                    <xforms:label>input for float</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>decimal</xforms:label>
+                <xforms:output ref="my:decimal">
+                    <xforms:label>output of decimal</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:decimal">
+                    <xforms:label>input for decimal</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>double</xforms:label>
+                <xforms:output ref="my:double">
+                    <xforms:label>output of double</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:double">
+                    <xforms:label>input for double</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>anyURI</xforms:label>
+                <xforms:output ref="my:anyURI">
+                    <xforms:label>output of anyURI</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:anyURI">
+                    <xforms:label>input for anyURI</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>QName</xforms:label>
+                <xforms:output ref="my:QName">
+                    <xforms:label>output of QName</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:QName">
+                    <xforms:label>input for QName</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <!-- NOTATION -->
+
+        </xforms:group>
+
+        <xforms:group model="model-002" ref="my:invalid">
+            <h2>All data under this group must display as invalid</h2>
+            <xforms:label>Invalid data according to type</xforms:label>
+
+            <xforms:group model="model-002">
+                <xforms:label>dateTime</xforms:label>
+                <xforms:output ref="my:dateTime">
+                    <xforms:label>output of invalid dateTime</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:dateTime">
+                    <xforms:label>input for invalid dateTime</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+
+            <xforms:group>
+                <xforms:label>time</xforms:label>
+                <xforms:output ref="my:time">
+                    <xforms:label>output of invalid time</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:time">
+                    <xforms:label>input for invalid time</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+
+            <xforms:group>
+                <xforms:label>date</xforms:label>
+                <xforms:output ref="my:date">
+                    <xforms:label>output of invalid date</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:date">
+                    <xforms:label>input for invalid date</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gYearMonth</xforms:label>
+                <xforms:output ref="my:gYearMonth">
+                    <xforms:label>output of invalid gYearMonth</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gYearMonth">
+                    <xforms:label>input for invalid gYearMonth</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+
+            <xforms:group>
+                <xforms:label>gYear</xforms:label>
+                <xforms:output ref="my:gYear">
+                    <xforms:label>output of invalid gYear</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gYear">
+                    <xforms:label>input for invalid gYear</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gMonthDay</xforms:label>
+                <xforms:output ref="my:gMonthDay">
+                    <xforms:label>output of invalid gMonthDay</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gMonthDay">
+                    <xforms:label>input for invalid gMonthDay</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gDay</xforms:label>
+                <xforms:output ref="my:gDay">
+                    <xforms:label>output of invalid gDay</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gDay">
+                    <xforms:label>input for invalid gDay</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>gMonth</xforms:label>
+                <xforms:output ref="my:gMonth">
+                    <xforms:label>output of invalid gMonth</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:gMonth">
+                    <xforms:label>input for invalid gMonth</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>boolean</xforms:label>
+                <xforms:output ref="my:boolean">
+                    <xforms:label>output of invalid boolean</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:boolean">
+                    <xforms:label>input for invalid boolean</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>base64Binary</xforms:label>
+                <xforms:upload ref="my:base64Binary">
+                    <xforms:label>Upload Value of invalid base64Binary</xforms:label>
+                </xforms:upload>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>hexBinary</xforms:label>
+                <xforms:upload ref="my:hexBinary">
+                    <xforms:label>Upload Value of invalid hexBinary</xforms:label>
+                </xforms:upload>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>float</xforms:label>
+                <xforms:output ref="my:float">
+                    <xforms:label>output of invalid float</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:float">
+                    <xforms:label>input for invalid float</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>decimal</xforms:label>
+                <xforms:output ref="my:decimal">
+                    <xforms:label>output of invalid decimal</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:decimal">
+                    <xforms:label>input for invalid decimal</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>double</xforms:label>
+                <xforms:output ref="my:double">
+                    <xforms:label>output of invalid double</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:double">
+                    <xforms:label>input for invalid double</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>QName</xforms:label>
+                <xforms:output ref="my:QName">
+                    <xforms:label>output of invalid QName</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:QName">
+                    <xforms:label>input for invalid QName</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <!-- anyURI -->      <!-- NOTATION -->      <!--  STRING -->
+
+        </xforms:group>
+
+    </body>
+</html>

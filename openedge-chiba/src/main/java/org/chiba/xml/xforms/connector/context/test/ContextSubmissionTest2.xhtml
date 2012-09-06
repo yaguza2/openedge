@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for chiba bean"/>
+        <meta name="version" content="$Id: ContextSubmissionTest2.xhtml,v 1.1 2004/12/20 00:29:28 joernt Exp $"/>
+        <xforms:model id="model">
+            <xforms:instance id="instance" xmlns="">
+                <data>
+                    <a>value</a>
+                    <b/>
+                    <c/>
+                </data>
+            </xforms:instance>
+            <xforms:submission id="submission" ref="/data/a" action="context:key#asString" replace="none" xmlns="" method="post"/>
+        </xforms:model>
+    </head>
+    <body>
+        <h1>Nothing to see ;-)</h1>
+        <xforms:trigger id="trigger">
+            <xforms:label>test</xforms:label>
+            <xforms:send submission="submission"/>
+        </xforms:trigger>
+    </body>
+</html>

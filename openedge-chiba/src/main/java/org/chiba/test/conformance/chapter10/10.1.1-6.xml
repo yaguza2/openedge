@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+ 	<!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="http://example.com"
+    xml:lang="en">
+    <head>
+        <title>The action Element</title>
+
+        <xforms:model id="mymodel">
+            <xforms:submission id="mysubmission" action="http://example.org" method="post" replace="new"/>
+            <xforms:instance>
+                <my:root>
+                    <my:test>10</my:test>
+                </my:root>
+            </xforms:instance>
+            <xforms:message level="modal" ev:event="xforms-ready">xforms-ready dispatched</xforms:message>
+            <xforms:message level="modal" ev:event="xforms-rebuild">xforms-rebuild dispatched</xforms:message>
+            <xforms:message level="modal" ev:event="xforms-recalculate">xforms-recalculate dispatched</xforms:message>
+            <xforms:message level="modal" ev:event="xforms-revalidate">xforms-revalidate dispatched</xforms:message>
+            <xforms:message level="modal" ev:event="xforms-refresh">xforms-refresh dispatched</xforms:message>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h>The action Element</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">When the insert action has been processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur until &lt;action&gt; processing concludes, at which time the actions MUST occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the delete action has been processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur until &lt;action&gt; processing concludes, at which time the actions MUST occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the setvalue action has been processed, the recalculate,revalidate, and refresh actions MUST NOT occur until &lt;action&gt; processing concludes, at which time the actions MUST occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the setvalue action has been processed, the rebuild action MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the setindex action has been processed, the recalculate,revalidate, and refresh actions MUST NOT occur until &lt;action&gt; processing concludes, at which time the actions MUST occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the setindex action has been processed, the rebuild action MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">reset actions must be processed immediately.</li>
+            <li href="!-- TBD: insert URI to assertion here">If a rebuild,recalculate,revalidate or refresh is flagged to occur and the reset action is processed, the flagged actions MUST NOT occur at the end of &lt;action&gt; processing.</li>
+            <li href="!-- TBD: insert URI to assertion here"></li>
+            <li href="!-- TBD: insert URI to assertion here">When the dispatch action is processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the setfocus action is processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the load action is processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the dispatch action is processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the message action is processed, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur.</li>
+            <li href="!-- TBD: insert URI to assertion here">When the send action is processed, and the current document is *not* replaced, the rebuild,recalculate,revalidate, and refresh actions MUST NOT occur at the end of &lt;action&gt; processing.</li>
+            <li href="!-- TBD: insert URI to assertion here">&lt;action&gt; actions must be processed immediately.</li>
+            <li href="!-- TBD: insert URI to assertion here"></li>
+            <li href="!-- TBD: insert URI to assertion here"></li>
+        </nl>
+
+        <xforms:repeat nodeset="my:test" id="myrepeat">
+            <xforms:input ref=".">
+                <xforms:label>Test input</xforms:label>
+            </xforms:input>
+        </xforms:repeat>
+
+        <xforms:trigger>
+            <xforms:label>Run insert Test</xforms:label>
+            <xforms:hint>The XForms events should be dispatched after the modal message</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:insert nodeset="my:test" at="last()" position="after"/>
+                <xforms:message level="modal">The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should be dispatched after this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run delete Test</xforms:label>
+            <xforms:hint>The XForms events should be dispatched after the modal message</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:delete nodeset="my:test" at="last()"/>
+                <xforms:message level="modal">The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should be dispatched after this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run setvalue Test</xforms:label>
+            <xforms:hint>The XForms events should be dispatched after the modal message</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:setvalue ref="my:test[last()]" value="66"/>
+                <xforms:message level="modal">The xforms-recalculate, xforms-revalidate, xforms-refresh (but not the xforms-rebuild) events should be dispatched after this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run setindex Test</xforms:label>
+            <xforms:hint>The XForms events should be dispatched after the modal message</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:setindex repeat="myrepeat" index="1"/>
+                <xforms:message level="modal">The xforms-recalculate, xforms-revalidate, xforms-refresh (but not the xforms-rebuild) events should be dispatched after this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run reset Test</xforms:label>
+            <xforms:hint>The form should be reset before this message</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:reset model="mymodel"/>
+                <xforms:message level="modal">The form should be reset before this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run reset (2) Test</xforms:label>
+            <xforms:hint>The XForms events should be dispatched before this message</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:setvalue ref="my:test[last()]" value="66"/>
+                <xforms:reset model="mymodel"/>
+                <xforms:message level="modal">The form should be reset and the XForms events should be dispatched before this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run dispatch Test</xforms:label>
+            <xforms:hint>The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should not be triggered by this</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:message level="modal">Only the xforms-ready event should be dispatched after this message.</xforms:message>
+                <xforms:dispatch name="xforms-ready" target="mymodel"/>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run setfocus Test</xforms:label>
+            <xforms:hint>The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should not be triggered by this</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:message level="modal">No event targeted at the model should be dispatched after this message.</xforms:message>
+                <xforms:setfocus control="myrepeat"/>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run load Test</xforms:label>
+            <xforms:hint>The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should not be triggered by this</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:message level="modal">No event targeted at the model should be dispatched after this message.</xforms:message>
+                <xforms:load resource="10.1.1-6.xml" show="new"/>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run message Test</xforms:label>
+            <xforms:hint>The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should not be triggered by this</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:message level="modal">No event targeted at the model should be dispatched after this message.</xforms:message>
+            </xforms:action>
+        </xforms:trigger>
+
+        <xforms:trigger>
+            <xforms:label>Run send Test</xforms:label>
+            <xforms:hint>The xforms-rebuild, xforms-recalculate, xforms-revalidate, xforms-refresh events should not be triggered by this</xforms:hint>
+            <xforms:action ev:event="xforms-activate">
+                <xforms:message level="modal">No event targeted at the model should be dispatched after this message.</xforms:message>
+                <xforms:send submission="mysubmission"/>
+            </xforms:action>
+        </xforms:trigger>
+
+    </body>
+</html>

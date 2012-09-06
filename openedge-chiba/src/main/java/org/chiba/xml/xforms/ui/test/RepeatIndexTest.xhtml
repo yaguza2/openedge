@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for repeat index"/>
+        <meta name="version" content="$Id: RepeatIndexTest.xhtml,v 1.2 2004/08/15 14:14:15 joernt Exp $"/>
+        <xforms:model id="default-model">
+            <xforms:instance id="default-instance">
+                <default-root xmlns="">
+                    <default-collection>
+                        <default-item>default-value</default-item>
+                        <default-item>default-value</default-item>
+                    </default-collection>
+                    <default-collection>
+                        <default-item>default-value</default-item>
+                        <default-item>default-value</default-item>
+                    </default-collection>
+                    <default-collection>
+                        <default-item>default-value</default-item>
+                        <default-item>default-value</default-item>
+                    </default-collection>
+                </default-root>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>UI Bindings: All input controls should say
+                <i>default-value</i>.
+            </xforms:label>
+            <xforms:group>
+                <xforms:repeat id="enclosing-repeat" nodeset="default-collection">
+                    <xforms:repeat id="nested-repeat" nodeset="default-item">
+                        <xforms:input id="input" ref="."/>
+                        <xforms:action id="action"/>
+                    </xforms:repeat>
+                </xforms:repeat>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

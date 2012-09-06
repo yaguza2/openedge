@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<envelope xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    chiba:css-style="ic3i.css" chiba:id="address" chiba:name="Address"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:addr="http://chiba.sourceforge.net/samples/address">
+
+    <xforms:model>
+        <xforms:submission xforms:action="" id="save"/>
+        <xforms:submission
+            xforms:action="http://localhost:8080/chiba-0.6.2/jsp/debug-instance.jsp" id="debug"/>
+        <xforms:bind id="N10006" xforms:nodeset="/addr:address"/>
+        <xforms:bind id="N1001B" xforms:nodeset="/addr:address/addr:gender" xforms:type="string"/>
+        <xforms:bind id="N1003C" xforms:nodeset="/addr:address/addr:firstname"
+            xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="N1004E" xforms:nodeset="/addr:address/addr:lastname"
+            xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="N10060" xforms:nodeset="/addr:address/addr:title" xforms:type="string"/>
+        <xforms:bind id="N10084" xforms:nodeset="/addr:address/addr:company" xforms:type="string"/>
+        <xforms:bind id="N10095" xforms:nodeset="/addr:address/addr:street" xforms:type="string"/>
+        <xforms:bind id="N100A6" xforms:nodeset="/addr:address/addr:city" xforms:type="string"/>
+        <xforms:bind id="N100B7" xforms:nodeset="/addr:address/addr:zip" xforms:type="integer"/>
+        <xforms:bind id="N100C8" xforms:nodeset="/addr:address/addr:country" xforms:type="string"/>
+        <xforms:bind id="N10115" xforms:nodeset="/addr:address/addr:phones">
+            <xforms:bind id="N10121" xforms:nodeset="./addr:phonenumber" xforms:type="string"/>
+            <xforms:bind id="N10132" xforms:nodeset="./@addr:type" xforms:type="string"/>
+        </xforms:bind>
+        <xforms:bind id="N1015D" xforms:nodeset="/addr:address/addr:notes" xforms:type="string"/>
+        <xforms:bind id="N1017A" xforms:nodeset="/addr:address/addr:private"/>
+        <xforms:bind id="N10185"
+            xforms:nodeset="/addr:address/addr:private/addr:birthday" xforms:type="string"/>
+        <xforms:bind id="N10196"
+            xforms:nodeset="/addr:address/addr:private/addr:mail" xforms:type="string"/>
+    </xforms:model>
+    <chiba:form>
+        <xforms:group xforms:bind="N10006" xforms:ref="address">
+            <xforms:label>Address</xforms:label>
+            <xforms:select1 xforms:bind="N1001B" xforms:ref="gender" xforms:appearance="full">
+                <xforms:label>Gender</xforms:label>
+                <xforms:choices>
+                    <xforms:item>
+                        <xforms:label>Male</xforms:label>
+                        <xforms:value>male</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Female</xforms:label>
+                        <xforms:value>female</xforms:value>
+                    </xforms:item>
+                </xforms:choices>
+            </xforms:select1>
+            <xforms:input xforms:bind="N1003C" xforms:ref="firstname">
+                <xforms:label>First Name</xforms:label>
+                <xforms:alert/>
+            </xforms:input>
+            <xforms:input xforms:bind="N1004E" xforms:ref="lastname">
+                <xforms:label>Last Name</xforms:label>
+            </xforms:input>
+            <xforms:select xforms:bind="N10060"
+                xforms:ref="title" xforms:appearance="compact">
+                <xforms:label>Title</xforms:label>
+                <xforms:choices>
+                    <xforms:item>
+                        <xforms:label>Dr</xforms:label>
+                        <xforms:value>dr</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Prof</xforms:label>
+                        <xforms:value>prof</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Dipl.-Ing.</xforms:label>
+                        <xforms:value>dipling</xforms:value>
+                    </xforms:item>
+                </xforms:choices>
+            </xforms:select>
+            <xforms:input xforms:bind="N10084" xforms:ref="company">
+                <xforms:label>Company</xforms:label>
+            </xforms:input>
+            <xforms:input xforms:bind="N10095" xforms:ref="street">
+                <xforms:label>Street</xforms:label>
+            </xforms:input>
+            <xforms:input xforms:bind="N100A6" xforms:ref="city">
+                <xforms:label>City</xforms:label>
+            </xforms:input>
+            <xforms:input xforms:bind="N100B7" xforms:ref="zip">
+                <xforms:label>Zip</xforms:label>
+            </xforms:input>
+            <xforms:select1 xforms:bind="N100C8"
+                xforms:ref="country" xforms:appearance="compact">
+                <xforms:label>Country</xforms:label>
+                <xforms:choices>
+                    <xforms:item>
+                        <xforms:label>Albania</xforms:label>
+                        <xforms:value>albania</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Belgium</xforms:label>
+                        <xforms:value>belgium</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Cuba</xforms:label>
+                        <xforms:value>cuba</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Denmark</xforms:label>
+                        <xforms:value>denmark</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Estonia</xforms:label>
+                        <xforms:value>estonia</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>France</xforms:label>
+                        <xforms:value>france</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Gibraltar</xforms:label>
+                        <xforms:value>gibraltar</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Hungary</xforms:label>
+                        <xforms:value>hungary</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Italy</xforms:label>
+                        <xforms:value>italy</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label>Japan</xforms:label>
+                        <xforms:value>japan</xforms:value>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:label/>
+                        <xforms:value/>
+                    </xforms:item>
+                </xforms:choices>
+            </xforms:select1>
+            <xforms:repeat xforms:bind="N10115" xforms:nodeset="phones">
+                <xforms:label>Phones</xforms:label>
+                <xforms:input xforms:bind="N10121" xforms:ref="phonenumber">
+                    <xforms:label>phonenumber</xforms:label>
+                </xforms:input>
+                <xforms:select1 xforms:bind="N10132"
+                    xforms:ref="type" xforms:appearance="compact">
+                    <xforms:label>Type</xforms:label>
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:label>Home</xforms:label>
+                            <xforms:value>home</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:label>Mobile</xforms:label>
+                            <xforms:value>mobile</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:label>Fax</xforms:label>
+                            <xforms:value>fax</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:label>Other</xforms:label>
+                            <xforms:value>other</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                </xforms:select1>
+            </xforms:repeat>
+            <xforms:textarea xforms:bind="N1015D" xforms:ref="notes">
+                <xforms:label>Notes</xforms:label>
+            </xforms:textarea>
+
+            <xforms:trigger>
+                <xforms:label>save</xforms:label>
+                <xforms:send xforms:submission="save"/>
+            </xforms:trigger>
+
+            <!-- todo: use xforms:submit -->
+
+            <xforms:group xforms:ref="addr:private">
+                <xforms:select1 xforms:ref="@addr:selector">
+                    <xforms:label>Private Adress</xforms:label>
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:label>-- ?? --</xforms:label>
+                            <xforms:value>dummy</xforms:value>
+                            <xforms:toggle case="none"/>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:label>Birthday</xforms:label>
+                            <xforms:value>birthday</xforms:value>
+                            <xforms:toggle case="private"/>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:label>Company Mail</xforms:label>
+                            <xforms:value>mail</xforms:value>
+                            <xforms:toggle case="business"/>
+                        </xforms:item>
+                    </xforms:choices>
+                </xforms:select1>
+                <xforms:switch id="adresstype">
+                    <xforms:case id="none"/>
+                    <xforms:case id="private">
+                        <xforms:input xforms:bind="N10185" xforms:ref="birthday">
+                            <xforms:label>Birthday</xforms:label>
+                            <xforms:alert/>
+                        </xforms:input>
+                    </xforms:case>
+                    <xforms:case id="business">
+                        <xforms:input xforms:bind="N10196" xforms:ref="mail">
+                            <xforms:label>Company Mail</xforms:label>
+                            <xforms:alert/>
+                        </xforms:input>
+                    </xforms:case>
+                </xforms:switch>
+            </xforms:group>
+        </xforms:group>
+    </chiba:form>
+</envelope>

@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+  <!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:my="urn:my"
+    xml:lang="en">
+    <head>
+        <title>MUST support all XML Schema types defined in XForms</title>
+        <link rel="stylesheet" type="text/css" href="../test.css"/>
+        <xforms:model id="model-002">
+            <xforms:instance xmlns="urn:my">
+                <data>
+                    <valid>
+                        <listItem>xyzzy</listItem>
+                        <listItems>xyzzy abcdef ghi</listItems>
+                        <dayTimeDuration>P3DT10H30M1.5S</dayTimeDuration>
+                        <yearMonthDuration>P1Y2M</yearMonthDuration>
+                    </valid>
+                    <invalid>
+                        <listItem>x y z z y</listItem>
+                        <!-- listItems -->
+                        <dayTimeDuration>P1Y2M</dayTimeDuration>
+                        <yearMonthDuration>P3DT10H30M1.5S</yearMonthDuration>
+                    </invalid>
+                </data>
+            </xforms:instance>
+            <xforms:bind nodeset="//my:listItem" type="xforms:listItem"/>
+            <xforms:bind nodeset="//my:listItems" type="xforms:listItems"/>
+            <xforms:bind nodeset="//my:dayTimeDuration" type="xforms:dayTimeDuration"/>
+            <xforms:bind nodeset="//my:yearMonthDuration" type="xforms:yearMonthDuration"/>
+        </xforms:model>
+
+    </head>
+    <body>
+        <h1>MUST support all XML Schema types defined in XForms</h1>
+        <xforms:group model="model-002" ref="my:valid">
+            <h2>All data under this group must display as valid</h2>
+            <xforms:label>Valid data according to type</xforms:label>
+
+            <xforms:group>
+                <xforms:label>listItem</xforms:label>
+                <xforms:output ref="my:listItem">
+                    <xforms:label>output of listItem</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:listItem">
+                    <xforms:label>input for listItem</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>listItems</xforms:label>
+                <xforms:output ref="my:listItems">
+                    <xforms:label>output of listItems</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:listItems">
+                    <xforms:label>input for listItems</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>dayTimeDuration</xforms:label>
+                <xforms:output ref="my:dayTimeDuration">
+                    <xforms:label>output of dayTimeDuration</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:dayTimeDuration">
+                    <xforms:label>input for dayTimeDuration</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>yearMonthDuration</xforms:label>
+                <xforms:output ref="my:yearMonthDuration">
+                    <xforms:label>output of yearMonthDuration</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:yearMonthDuration">
+                    <xforms:label>input for yearMonthDuration</xforms:label>
+                </xforms:input>
+            </xforms:group>
+        </xforms:group>
+
+        <xforms:group model="model-002" ref="my:invalid">
+            <h2>All data under this group must display as invalid</h2>
+            <xforms:label>Invalid data according to type</xforms:label>
+
+            <xforms:group>
+                <xforms:label>listItem</xforms:label>
+                <xforms:output ref="my:listItem">
+                    <xforms:label>output of invalid listItem</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:listItem">
+                    <xforms:label>input for invalid listItem</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <!-- All simple content is valid for listItem. -->
+
+            <xforms:group>
+                <xforms:label>dayTimeDuration</xforms:label>
+                <xforms:output ref="my:dayTimeDuration">
+                    <xforms:label>output of invalid dayTimeDuration</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:dayTimeDuration">
+                    <xforms:label>input for invalid dayTimeDuration</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+            <xforms:group>
+                <xforms:label>yearMonthDuration</xforms:label>
+                <xforms:output ref="my:yearMonthDuration">
+                    <xforms:label>output of invalid yearMonthDuration</xforms:label>
+                </xforms:output>
+                <xforms:input ref="my:yearMonthDuration">
+                    <xforms:label>input for invalid yearMonthDuration</xforms:label>
+                </xforms:input>
+            </xforms:group>
+
+        </xforms:group>
+
+    </body>
+</html>

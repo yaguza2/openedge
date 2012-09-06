@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<envelope xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    chiba:css-style="ic3i.css" chiba:id="address" chiba:name="Address"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:addr="http://chiba.sourceforge.net/samples/address">
+    <xforms:model id="address">
+        <xforms:submission xforms:action="jsp/forms.jsp" xforms:replace="all" id="save" xforms:method="post"/>
+        <xforms:submission xforms:action="jsp/debug-instance.jsp" xforms:replace="all" id="debug" xforms:method="post"/>
+        <xforms:submission xforms:action="XFormsServlet?/forms/address.xml" xforms:replace="all" id="start-over" xforms:method="get"/>
+        <xforms:bind id="N10006" xforms:nodeset="/addr:address"/>
+        <xforms:bind id="N1001B" xforms:nodeset="/addr:address/addr:gender" xforms:type="string"/>
+        <xforms:bind id="N1003C" xforms:nodeset="/addr:address/addr:firstname"
+            xforms:required="true" xforms:type="string"/>
+        <xforms:bind id="N1004E" xforms:nodeset="/addr:address/addr:lastname"
+            xforms:required="true" xforms:type="string"/>
+        <xforms:bind id="N10060" xforms:nodeset="/addr:address/addr:title" xforms:type="string"/>
+        <xforms:bind id="N10084" xforms:nodeset="/addr:address/addr:company" xforms:type="string"/>
+        <xforms:bind id="N10095" xforms:nodeset="/addr:address/addr:street" xforms:type="string"/>
+        <xforms:bind id="N100A6" xforms:nodeset="/addr:address/addr:city" xforms:type="string"/>
+        <xforms:bind id="N100B7" xforms:nodeset="/addr:address/addr:zip" xforms:type="integer"/>
+        <xforms:bind id="N100C8" xforms:nodeset="/addr:address/addr:country" xforms:type="string"/>
+        <xforms:bind id="N10115" xforms:nodeset="/addr:address/addr:phones/addr:phone">
+            <xforms:bind id="N10121" xforms:nodeset="addr:phonenumber" xforms:type="string"/>
+            <xforms:bind id="N10132" xforms:nodeset="addr:type" xforms:type="string"/>
+        </xforms:bind>
+        <xforms:bind id="N1015D" xforms:nodeset="/addr:address/addr:notes" xforms:type="string"/>
+        <xforms:bind id="N1017A" xforms:nodeset="/addr:address/addr:addresstype/addr:type"/>
+        <xforms:bind id="N10185"
+            xforms:nodeset="/addr:address/addr:addresstype/addr:birthday" xforms:type="string"/>
+        <xforms:bind id="N10196"
+            xforms:nodeset="/addr:address/addr:addresstype/addr:mail" xforms:type="string"/>
+
+        <xforms:instance>
+            <addr:address>
+                <addr:gender>male</addr:gender>
+                <addr:title>dr prof</addr:title>
+                <addr:firstname/>
+                <addr:lastname/>
+                <addr:company/>
+                <addr:street/>
+                <addr:city/>
+                <addr:zip/>
+                <addr:country>germany</addr:country>
+                <addr:phones>
+                    <addr:phone>
+                        <addr:phonenumber>030 12345678</addr:phonenumber>
+                        <addr:type>home</addr:type>
+                    </addr:phone>
+                    <addr:phone>
+                        <addr:phonenumber>0173 9876543</addr:phonenumber>
+                        <addr:type>mobile</addr:type>
+                    </addr:phone>
+                    <addr:phone>
+                        <addr:phonenumber>030 12345678</addr:phonenumber>
+                        <addr:type>home</addr:type>
+                    </addr:phone>
+                </addr:phones>
+                <addr:notes/>
+                <addr:addresstype addr:type="private">
+                    <addr:type>private</addr:type>
+                    <addr:mail>nn@nowhere.no</addr:mail>
+                </addr:addresstype>
+            </addr:address>
+        </xforms:instance>
+    </xforms:model>
+    <body>
+        <chiba:form>
+            <xforms:group xforms:bind="N10006" xforms:ref="address">
+                <xforms:label>Address
+                    <br/>
+            This form uses namespaces in its Instance-data.
+
+                </xforms:label>
+                <table border="0">
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="gender-label"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:select1 xforms:bind="N1001B"
+                                xforms:ref="gender" xforms:appearance="full">
+                                <xforms:label id="gender-label">Gender: </xforms:label>
+                                <xforms:choices>
+                                    <xforms:item>
+                                        <xforms:label>Male</xforms:label>
+                                        <xforms:value>male</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Female</xforms:label>
+                                        <xforms:value>female</xforms:value>
+                                    </xforms:item>
+                                </xforms:choices>
+                            </xforms:select1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="f-name"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:input xforms:bind="N1003C" xforms:ref="firstname">
+                                <xforms:label id="f-name">First Name</xforms:label>
+                                <xforms:alert/>
+                            </xforms:input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="l-name"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:input xforms:bind="N1004E" xforms:ref="lastname">
+                                <xforms:label id="l-name">Last Name</xforms:label>
+                            </xforms:input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="title"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:select xforms:bind="N10060" xforms:ref="title" xforms:appearance="full">
+                                <xforms:label id="title">Title</xforms:label>
+                                <xforms:choices>
+                                    <xforms:item>
+                                        <xforms:label>Dr</xforms:label>
+                                        <xforms:value>dr</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Prof</xforms:label>
+                                        <xforms:value>prof</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Dipl.-Ing.</xforms:label>
+                                        <xforms:value>dipling</xforms:value>
+                                    </xforms:item>
+                                </xforms:choices>
+                            </xforms:select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="company"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:input xforms:bind="N10084" xforms:ref="company">
+                                <xforms:label id="company">Company</xforms:label>
+                            </xforms:input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="street"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:input xforms:bind="N10095" xforms:ref="street">
+                                <xforms:label id="street">Street</xforms:label>
+                            </xforms:input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="city-lbl"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:input xforms:bind="N100A6" xforms:ref="city">
+                                <xforms:label id="city-lbl">City</xforms:label>
+                            </xforms:input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="zip-lbl"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:input xforms:bind="N100B7" xforms:ref="zip">
+                                <xforms:label id="zip-lbl">Zip</xforms:label>
+                            </xforms:input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="country-lbl"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:select1 xforms:bind="N100C8"
+                                xforms:ref="country" xforms:appearance="minimal">
+                                <xforms:label id="country-lbl">Country</xforms:label>
+                                <xforms:choices>
+                                    <xforms:item>
+                                        <xforms:label>Albania</xforms:label>
+                                        <xforms:value>albania</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Belgium</xforms:label>
+                                        <xforms:value>belgium</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Cuba</xforms:label>
+                                        <xforms:value>cuba</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Denmark</xforms:label>
+                                        <xforms:value>denmark</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Estonia</xforms:label>
+                                        <xforms:value>estonia</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>France</xforms:label>
+                                        <xforms:value>france</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:item>
+                                            <xforms:label>Germany</xforms:label>
+                                            <xforms:value>germany</xforms:value>
+                                        </xforms:item>
+                                        <xforms:label>Gibraltar</xforms:label>
+                                        <xforms:value>gibraltar</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Hungary</xforms:label>
+                                        <xforms:value>hungary</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Italy</xforms:label>
+                                        <xforms:value>italy</xforms:value>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Japan</xforms:label>
+                                        <xforms:value>japan</xforms:value>
+                                    </xforms:item>
+                                </xforms:choices>
+                            </xforms:select1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- <td bgcolor="silver">&#169;
+                          <xforms:extension>
+                               <chiba:label-copy ref-id="phones-lbl"/>
+                           </xforms:extension>
+                       </td>                   -->
+                        <td bgcolor="lightgrey" colspan="2">
+                            <xforms:group>
+                                <xforms:label id="phones-lbl">Phones</xforms:label>
+                                <center>
+                                    <xforms:trigger id="N4000E1">
+                                        <xforms:label xlink:href="images/add_new.gif">Insert after selected</xforms:label>
+                                        <xforms:action id="N4000E6">
+                                            <xforms:insert id="N4000E8" xforms:nodeset="addr:phones/addr:phone" xforms:at="xforms:index('phones')" xforms:position="after"/>
+                                        </xforms:action>
+                                    </xforms:trigger>
+                                    <xforms:trigger id="N4000EF">
+                                        <xforms:label xlink:href="images/delete.gif">Delete selected</xforms:label>
+                                        <xforms:action id="N4000F4">
+                                            <xforms:delete id="N4000F6" xforms:nodeset="addr:phones/addr:phone" xforms:at="xforms:index('phones')"/>
+                                        </xforms:action>
+                                    </xforms:trigger>
+
+                                    <xforms:trigger id="N4000FC">
+                                        <xforms:label xlink:href="images/top_new.gif">Top of List</xforms:label>
+                                        <xforms:action id="N400101">
+                                            <xforms:setindex id="N400103" xforms:repeat="phones" xforms:cursor="1"/>
+                                        </xforms:action>
+                                    </xforms:trigger>
+                                    <xforms:trigger id="N400109">
+                                        <xforms:label xlink:href="images/bottom.gif">Bottom of list</xforms:label>
+                                        <xforms:action id="N40010E">
+                                            <xforms:setindex id="N400110" xforms:repeat="phones" xforms:cursor="xforms:count('addr:phones/addr:phone')"/>
+                                        </xforms:action>
+                                    </xforms:trigger>
+                                </center>
+                                <table xforms:repeat-bind="N10115" id="phones">
+
+                                    <tr>
+
+                                        <td>
+                                            <xforms:extension>
+                                                <chiba:label-copy ref-id="phtype-lbl"/>
+                                            </xforms:extension>
+                                         /
+                                            <xforms:extension>
+                                                <chiba:label-copy ref-id="ph-number"/>
+                                            </xforms:extension>
+                                        </td>
+                                        <td>
+                                            <xforms:select1 xforms:bind="N10132"
+                                                xforms:ref="type" xforms:appearance="minimal">
+                                                <xforms:label id="phtype-lbl">Type</xforms:label>
+                                                <xforms:choices>
+                                                    <xforms:item>
+                                                        <xforms:label>Home</xforms:label>
+                                                        <xforms:value>home</xforms:value>
+                                                    </xforms:item>
+                                                    <xforms:item>
+                                                        <xforms:label>Mobile</xforms:label>
+                                                        <xforms:value>mobile</xforms:value>
+                                                    </xforms:item>
+                                                    <xforms:item>
+                                                        <xforms:label>Fax</xforms:label>
+                                                        <xforms:value>fax</xforms:value>
+                                                    </xforms:item>
+                                                    <xforms:item>
+                                                        <xforms:label>Other</xforms:label>
+                                                        <xforms:value>other</xforms:value>
+                                                    </xforms:item>
+                                                </xforms:choices>
+                                            </xforms:select1>
+
+                                            <xforms:input xforms:bind="N10121" xforms:ref="phonenumber">
+                                                <xforms:label id="ph-number">Phonenumber</xforms:label>
+                                            </xforms:input>
+
+                                            <xforms:extension>
+                                                <chiba:selector/>
+                                            </xforms:extension>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <td>
+                                            <xforms:extension>
+                                                <chiba:label-copy ref-id="ph-number"/>
+                                            </xforms:extension>
+                                        </td>
+                                        <td>
+                                            <xforms:input xforms:bind="N10121" xforms:ref="phonenumber">
+                                                <xforms:label id="ph-number">Phonenumber</xforms:label>
+                                            </xforms:input>
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td colspan="2" height="5"></td>
+                                    </tr>
+
+                                </table>
+                            </xforms:group>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="silver">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="notes-lbl"/>
+                            </xforms:extension>
+                        </td>
+                        <td>
+                            <xforms:textarea xforms:bind="N1015D" xforms:ref="notes">
+                                <xforms:label id="notes-lbl">Notes</xforms:label>
+                            </xforms:textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <xforms:extension>
+                                <chiba:label-copy ref-id="type-lbl"/>
+                            </xforms:extension>
+                            <xforms:select1 id="type-select"
+                                xforms:ref="@selector"
+                                xforms:appearance="minimal"
+                                xforms:bind="N1017A">
+                                <xforms:label id="type-lbl">Adress Type: </xforms:label>
+                                <xforms:choices>
+                                    <xforms:item>
+                                        <xforms:label>-- ?? --</xforms:label>
+                                        <xforms:value>dummy</xforms:value>
+                                        <xforms:toggle id="none-toggle" case="none"/>>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Private</xforms:label>
+                                        <xforms:value>private</xforms:value>
+                                        <xforms:toggle id="private-toggle" case="private"/>
+                                    </xforms:item>
+                                    <xforms:item>
+                                        <xforms:label>Business</xforms:label>
+                                        <xforms:value>business</xforms:value>
+                                        <xforms:toggle id="business-toggle" case="business"/>
+                                    </xforms:item>
+                                </xforms:choices>
+                            </xforms:select1>
+                            <xforms:trigger id="toggle-btn">
+                                <xforms:label>select</xforms:label>
+                                <xforms:dispatch id="dispatch-toggle" xforms:name="toggle" xforms:target="type-select"/>
+                            </xforms:trigger>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <xforms:switch id="adresstype">
+                                <xforms:case id="none" xforms:selected="true"/>
+                                <xforms:case id="private">
+                                    <xforms:extension>
+                                        <chiba:label-copy ref-id="birth-lbl"/>
+                                    </xforms:extension>
+                                    <xforms:input xforms:bind="N10185" xforms:ref="birthday">
+                                        <xforms:label id="birth-lbl">Birthday </xforms:label>
+                                        <xforms:alert/>
+                                    </xforms:input>
+                                </xforms:case>
+                                <xforms:case id="business">
+                                    <xforms:extension>
+                                        <chiba:label-copy ref-id="company-lbl"/>
+                                    </xforms:extension>
+                                    <xforms:input xforms:bind="N10196" xforms:ref="mail">
+                                        <xforms:label id="company-lbl">Company Mail</xforms:label>
+                                        <xforms:alert/>
+                                    </xforms:input>
+                                </xforms:case>
+                            </xforms:switch>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" bgcolor="darkgray" align="right">
+                            <xforms:trigger id="save-trigger">
+                                <xforms:label>save</xforms:label>
+                                <xforms:send id="act-send" xforms:submission="save"/>
+                            </xforms:trigger>
+                            <xforms:trigger id="debug-trigger">
+                                <xforms:label>debug</xforms:label>
+                                <xforms:send id="act-debug" xforms:submission="debug"/>
+                            </xforms:trigger>
+                            <xforms:trigger id="reset-trigger">
+                                <xforms:label>reset</xforms:label>
+                                <xforms:resetInstance id="act-reset"/>
+                            </xforms:trigger>
+                            <!-- not operational yet cause of lacking get-support
+                            <xforms:trigger id="start-over-trigger">
+                                <xforms:label>start over</xforms:label>
+                                <xforms:send id="act-start-over" xforms:submission="start-over" />
+                            </xforms:trigger>
+                            -->
+                        </td>
+                    </tr>
+                </table>
+            </xforms:group>
+        </chiba:form>
+    </body>
+</envelope>

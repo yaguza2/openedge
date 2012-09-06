@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+
+    <head>
+        <title>Losing Context ?</title>
+        <xf:model id="model1">
+            <xf:instance id="instance1" xmlns="">
+                <data>
+                    <parent>
+                        <child>1</child>
+                    </parent>
+                    <parent>
+                        <child>2</child>
+                    </parent>
+                    <parent>
+                        <child>3</child>
+                    </parent>
+                </data>
+            </xf:instance>
+        </xf:model>
+    </head>
+
+    <body>
+        <xf:group>
+            <xf:label>Losing Context ?</xf:label>
+            <xf:group>
+                <xf:label>Group w/o binding expression</xf:label>
+                <xf:repeat nodeset="parent">
+                    <xf:group>
+                        <xf:output id="output-1" ref="child"/>
+                    </xf:group>
+                </xf:repeat>
+            </xf:group>
+            <xf:group>
+                <xf:label>Group w/ binding expression</xf:label>
+                <xf:repeat nodeset="parent">
+                    <xf:group ref=".">
+                        <xf:output id="output-2" ref="child"/>
+                    </xf:group>
+                </xf:repeat>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

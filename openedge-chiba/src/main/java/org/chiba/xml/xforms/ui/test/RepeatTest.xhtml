@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for repeat structures"/>
+        <meta name="version" content="$Id: RepeatTest.xhtml,v 1.6 2004/08/15 14:14:15 joernt Exp $"/>
+        <xforms:model id="model">
+            <xforms:instance id="instance" xmlns="">
+                <data>
+                    <item>first</item>
+                    <item>between</item>
+                    <item>last</item>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>UI Bindings: There should be 3 repeat items.</xforms:label>
+            <xforms:group>
+                <xforms:repeat id="repeat" nodeset="item">
+                    <xforms:input id="input" ref="."/>
+                    <xforms:output id="output" ref="."/>
+                </xforms:repeat>
+                <xforms:repeat id="repeat-empty" nodeset="empty">
+                    <xforms:input id="input-empty" ref="."/>
+                </xforms:repeat>
+                <xforms:trigger id="trigger-insert-before">
+                    <xforms:label>Insert before</xforms:label>
+                    <xforms:action>
+                        <xforms:insert nodeset="item" at="2" position="before"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-insert-after">
+                    <xforms:label>Insert after</xforms:label>
+                    <xforms:action>
+                        <xforms:insert nodeset="item" at="2" position="after"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-delete-at">
+                    <xforms:label>Delete at</xforms:label>
+                    <xforms:action>
+                        <xforms:delete nodeset="item" at="2"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-delete-all">
+                    <xforms:label>Delete all</xforms:label>
+                    <xforms:action>
+                        <xforms:delete nodeset="item" at="1"/>
+                        <xforms:delete nodeset="item" at="1"/>
+                        <xforms:delete nodeset="item" at="1"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-batch-update">
+                    <xforms:label>Insert and Delete in batch</xforms:label>
+                    <xforms:action>
+                        <xforms:insert nodeset="item" at="1" position="before"/>
+                        <xforms:insert nodeset="item" at="1" position="before"/>
+                        <xforms:delete nodeset="item" at="3"/>
+                        <xforms:delete nodeset="item" at="3"/>
+                    </xforms:action>
+                </xforms:trigger>
+                <xforms:trigger id="trigger-setindex">
+                    <xforms:label>Set index</xforms:label>
+                    <xforms:action>
+                        <xforms:setindex repeat="repeat" index="last()"/>
+                    </xforms:action>
+                </xforms:trigger>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

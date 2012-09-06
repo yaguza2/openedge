@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<data>
+    <helloworld hw="test">marks</helloworld>
+    <repeatdata>
+        <input>10</input>
+        <input>5</input>
+        <input>5</input>
+        <input>20</input>
+        <input>10</input>
+        <input>1</input>
+    </repeatdata>
+    <extra>This becomes only relevant (visible) if there are more than 5 entries in the repeat</extra>
+    <extra/>
+</data>

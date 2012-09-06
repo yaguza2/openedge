@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+<!ATTLIST section id ID #IMPLIED>
+<!ATTLIST h id ID #IMPLIED>
+<!ATTLIST div id ID #IMPLIED>
+<!ATTLIST nl id ID #IMPLIED>
+]>
+<html
+    xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xml:lang="en">
+    <head>
+        <title>Range Controls</title>
+        <xforms:model id="009_model" schema="#mySchema">
+            <xforms:instance xmlns="" xmlns:my="http://example.com/percentage">
+                <data>
+                    <volume xsi:type="my:percentage"/>
+                    <bass xsi:type="my:percentage"/>
+                    <artist xsi:type="xsd:string"/>
+                </data>
+            </xforms:instance>
+            <xsd:schema id="mySchema"
+                targetNamespace="http://example.com/percentage">
+                <xsd:simpleType name="percentage">
+                    <xsd:restriction base="xsd:integer">
+                        <xsd:minInclusive value="0"/>
+                        <xsd:maxInclusive value="100"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:schema>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>Volume Control</xforms:label>
+
+            <xforms:range model="009_model" ref="/data/volume" step="5">
+                <xforms:label>Volume Control</xforms:label>
+            </xforms:range>
+
+            <xforms:range model="009_model" ref="/data/bass"
+                start="-50" end="-25" step="5">
+                <xforms:label>Incorrect Bass Control</xforms:label>
+            </xforms:range>
+
+            <xforms:range model="009_model" ref="/data/artist">
+                <xforms:label>Range cannot bind to string type</xforms:label>
+            </xforms:range>
+
+        </xforms:group>
+    </body>
+</html>

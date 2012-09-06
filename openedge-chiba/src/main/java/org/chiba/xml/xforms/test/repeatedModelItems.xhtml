@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- This xforms auto-generated from SFDL source - do not edit. Example only!! -->
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms"
+    >
+
+    <head>
+        <xforms:model id="model1">
+            <xforms:submission id="submit1" xforms:action="http://localhost:8080/chiba-0.9.3/jsp/debug-instance.jsp" xforms:method="post" xforms:replace="all"/>
+
+            <xforms:instance xmlns="">
+                <data>
+                    <items>
+                        <item>
+                            <a/>
+                            <b/>
+                            <c/>
+                        </item>
+                        <item>
+                            <a>abc</a>
+                            <b>bcd</b>
+                            <c/>
+                        </item>
+                    </items>
+                    <x/>
+                    <y/>
+                    <z/>
+                </data>
+
+            </xforms:instance>
+
+            <xforms:bind id="items-ref" nodeset="items/item">
+                <xforms:bind nodeset="." readonly="false()"/>
+                <xforms:bind id="a-ref" nodeset="a" type="string" relevant="string-length(.) = 3" readonly="false()"/>
+                <xforms:bind id="b-ref" nodeset="b" type="integer" required="false()" relevant="string-length(.) = 3"/>
+                <xforms:bind id="c-ref" nodeset="c" calculate="count(//items/item)"/>
+                <xforms:bind id="d-ref" nodeset="c" readonly="false()" relevant="count(//items/item)"/>
+            </xforms:bind>
+        </xforms:model>
+    </head>
+
+    <body>
+        <xforms:repeat id="outergroup" bind="items-ref">
+            <span>OK:  Test all absolute
+                <br/>
+            </span>
+            <xforms:input bind="a-ref">
+                <xforms:label/>
+            </xforms:input>
+            <xforms:input ref="a">
+                <xforms:label/>
+            </xforms:input>
+        </xforms:repeat>
+        <xforms:trigger id="insert">
+            <xforms:label/>
+            <xforms:insert bind="items-ref" at="last()" position="after"/>
+        </xforms:trigger>
+    </body>
+</html>
+

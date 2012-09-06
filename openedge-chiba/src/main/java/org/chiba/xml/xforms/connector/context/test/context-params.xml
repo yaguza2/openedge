@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<context>
+    <remote-user>Ernesto</remote-user>
+    <user-agent>mozilla</user-agent>
+    <foo.bar>foobar</foo.bar>
+    <abc>
+        <a-value>a</a-value>
+        <b-value>b</b-value>
+        <c-value>c</c-value>
+        <others>
+            <x>x</x>
+            <y>y</y>
+            <z>z</z>
+        </others>
+    </abc>
+</context>

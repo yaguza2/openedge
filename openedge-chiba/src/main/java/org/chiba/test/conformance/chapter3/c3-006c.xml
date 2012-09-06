@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xml:lang="en">
+    <head>
+        <title>Nodeset binding attributes.</title>
+        <xforms:model id="m_001">
+            <xforms:instance id="i_001" xmlns="">
+                <r>
+                    <a>3</a>
+                    <b>7</b>
+                    <c/>
+                    <d/>
+                </r>
+            </xforms:instance>
+            <xforms:bind nodeset="a" id="i-a"/>
+            <xforms:bind nodeset="b" id="i-b"/>
+            <xforms:bind nodeset="c" id="i-c"/>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>No bind or nodeset supplied, nothing bound. What should happen?</xforms:label>
+            <xforms:repeat>
+                <xforms:label>Should see nothing.</xforms:label>
+                <xforms:input ref=".">
+                    <xforms:label>Value (should not be anything):</xforms:label>
+                </xforms:input>
+            </xforms:repeat>
+        </xforms:group>
+    </body>
+</html>

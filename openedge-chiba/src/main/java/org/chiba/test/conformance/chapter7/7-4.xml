@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<html xml:lang="en" xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:my="http://example.org" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <head>
+        <title>Binding expressions tests of position(), last(), count(), index()
+           and property() before and after inserting a new node into instance data.</title>
+        <xforms:model>
+            <xforms:instance id="first">
+                <my:Root xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:my="http://example.org" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <my:Node position="" last=""/>
+                </my:Root>
+            </xforms:instance>
+            <xforms:instance id="results">
+                <results xmlns="">
+                    <count>0</count>
+                </results>
+            </xforms:instance>
+            <xforms:bind nodeset="my:Node/@position" calculate="position()"/>
+            <xforms:bind nodeset="my:Node/@last" calculate="if (position()=last(),'true','false')"/>
+            <xforms:bind nodeset="my:Node" calculate="position()"/>
+            <xforms:bind nodeset="instance('results')/count" calculate="count(instance('first')/my:Node)"/>
+        </xforms:model>
+    </head>
+    <body>
+        <h>Binding expressions tests of position(), last(), count(), index()
+       and property() before and after inserting a new node into instance data.</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li href="!-- TBD: insert URI to assertion here">!-- TBD: insert assertion tested here</li>
+        </nl>
+        <xforms:repeat id="myrepeat" nodeset="my:Node">
+            <xforms:group>
+                <xforms:input ref=".">
+                    <xforms:label>Test Input</xforms:label>
+                </xforms:input>
+                <xforms:output ref="@position">
+                    <xforms:label>Position</xforms:label>
+                </xforms:output>
+                <xforms:output ref="@last">
+                    <xforms:label>Last</xforms:label>
+                </xforms:output>
+            </xforms:group>
+        </xforms:repeat>
+        <xforms:trigger>
+            <xforms:label>Run Test</xforms:label>
+            <xforms:insert at="1" ev:event="xforms-activate" nodeset="my:Node" position="after"/>
+        </xforms:trigger>
+        <xforms:output ref="instance('results')/count">
+            <xforms:label>count()</xforms:label>
+        </xforms:output>
+        <!--
+        <xforms:output ref="my:Node[position()=last()]">
+            <xforms:label>position()=last()</xforms:label>
+        </xforms:output>
+        -->
+        <xforms:output ref="my:Node[index('myrepeat')]">
+            <xforms:label>index()</xforms:label>
+        </xforms:output>
+        <xforms:output value="property('version')">
+            <xforms:label>property('version')</xforms:label>
+        </xforms:output>
+        <xforms:output value="property('conformance-level')">
+            <xforms:label>property('conformance-level')</xforms:label>
+        </xforms:output>
+    </body>
+</html>

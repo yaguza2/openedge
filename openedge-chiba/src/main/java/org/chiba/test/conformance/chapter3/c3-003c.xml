@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xml:lang="en">
+    <head>
+        <title>Single node binding.</title>
+        <xforms:model id="m_001">
+            <xforms:instance id="i_001" xmlns="">
+                <r>
+                    <a xsi:type="xsd:integer">3</a>
+                    <b xsi:type="xsd:integer">7</b>
+                    <c xsi:type="xsd:base64Binary"/>
+                    <d/>
+                    <t1/>
+                    <t2/>
+                </r>
+            </xforms:instance>
+            <xforms:bind nodeset="a" id="i-a"/>
+            <xforms:bind nodeset="b" id="i-b"/>
+            <xforms:bind nodeset="c" id="i-c"/>
+            <xforms:bind nodeset="t1" id="i-t1" relevant="false()"/>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group>
+            <xforms:label>No bind or ref supplied.</xforms:label>
+            <xforms:input>
+                <xforms:label>Input:</xforms:label>
+            </xforms:input>
+            <xforms:secret>
+                <xforms:label>Secret:</xforms:label>
+            </xforms:secret>
+            <xforms:textarea>
+                <xforms:label>Textarea:</xforms:label>
+            </xforms:textarea>
+            <xforms:output>
+                <xforms:label>output:</xforms:label>
+            </xforms:output>
+            <xforms:upload>
+                <xforms:label>upload:</xforms:label>
+            </xforms:upload>
+            <xforms:range>
+                <xforms:label>range:</xforms:label>
+            </xforms:range>
+            <xforms:trigger>
+                <xforms:label>Trigger</xforms:label>
+            </xforms:trigger>
+            <xforms:submit>
+                <xforms:label>Submit</xforms:label>
+            </xforms:submit>
+            <xforms:select1>
+                <xforms:label>Select1:</xforms:label>
+                <xforms:item>
+                    <xforms:label>Three</xforms:label>
+                    <xforms:value>3</xforms:value>
+                </xforms:item>
+                <xforms:item>
+                    <xforms:label>Seven</xforms:label>
+                    <xforms:value>7</xforms:value>
+                </xforms:item>
+            </xforms:select1>
+            <xforms:select>
+                <xforms:label>Select:</xforms:label>
+                <xforms:item>
+                    <xforms:label>Three</xforms:label>
+                    <xforms:value>3</xforms:value>
+                </xforms:item>
+            </xforms:select>
+        </xforms:group>
+    </body>
+</html>

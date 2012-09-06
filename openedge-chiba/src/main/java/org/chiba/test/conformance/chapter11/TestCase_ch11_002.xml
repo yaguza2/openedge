@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css"?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:html2="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    lang="en">
+    <head>
+        <title>Test the HTTP Puts are supported</title>
+
+        <xforms:model id="form1">
+            <!-- TBD: Put in correct action  -->
+            <xforms:submission id="submit01" method="put" action="http://xformstest.org/cgi-bin/echo.sh" indent="1"/>
+            <!-- TBD: Put in correct instance  -->
+            <xforms:instance id="instance1" src="TestCase_ch11_002.xml"/>
+        </xforms:model>
+
+    </head>
+    <body>
+        <group xmlns="http://www.w3.org/2002/xforms">
+            <label>Test that HTTP Puts are supported</label>
+            <group>
+                <label>Select the button and the client should put the data using an HTTP PUT to the localhost.</label>
+            </group>
+            <submit submission="submit01">
+                <label>Put Data</label>
+                <hint>Click to put</hint>
+            </submit>
+        </group>
+    </body>
+    <!-- xml-stylesheet  type="text/css" href="http://webaccess.mozquito.com/data/demo/xform.css" -->
+</html>

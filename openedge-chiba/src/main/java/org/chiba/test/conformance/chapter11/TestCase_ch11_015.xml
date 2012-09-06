@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css"?>
+<!DOCTYPE html [
+	<!ATTLIST section id ID #IMPLIED>
+	<!ATTLIST h       id ID #IMPLIED>
+	<!ATTLIST div     id ID #IMPLIED>
+	<!ATTLIST nl      id ID #IMPLIED>
+
+  <!-- for the model attribute to work -->
+  <!ATTLIST xforms:model id ID #IMPLIED>
+
+  <!-- for the bind attribute to work -->
+
+  <!ATTLIST xforms:bind id ID #IMPLIED>
+
+  <!-- for the instance() function to work -->
+  <!ATTLIST xforms:instance id ID #IMPLIED>
+
+  <!-- for submit to work -->
+  <!ATTLIST xforms:submission id ID #IMPLIED>
+
+  <!-- for setfocus and other events to work -->
+  <!ATTLIST xforms:input id ID #IMPLIED>
+
+  <!ATTLIST xforms:secret id ID #IMPLIED>
+  <!ATTLIST xforms:textarea id ID #IMPLIED>
+  <!ATTLIST xforms:output id ID #IMPLIED>
+  <!ATTLIST xforms:upload id ID #IMPLIED>
+  <!ATTLIST xforms:range id ID #IMPLIED>
+  <!ATTLIST xforms:trigger id ID #IMPLIED>
+  <!ATTLIST xforms:submit id ID #IMPLIED>
+  <!ATTLIST xforms:select id ID #IMPLIED>
+  <!ATTLIST xforms:select1 id ID #IMPLIED>
+
+  <!-- for toggle to work -->
+  <!ATTLIST xforms:case id ID #IMPLIED>
+
+  <!-- for repeat stuff to work -->
+  <!ATTLIST xforms:repeat id ID #IMPLIED>
+
+  <!-- (also any element with xforms:repeat-* attributes -->
+  <!ATTLIST table      id ID #IMPLIED>
+  <!ATTLIST td         id ID #IMPLIED>
+
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:html2="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    lang="en">
+    <head>
+        <title>Test the HTTP multipart-posts are supported</title>
+
+        <xforms:model id="form1">
+            <xforms:submission id="submit01" method="multipart-post" action="http://xformstest.org/cgi-bin/echo.sh" indent="1"/>
+            <xforms:instance id="instance1">
+                <uploadDocument xmlns="">
+                    <title>My Proposal</title>
+                    <author>E. X. Ample</author>
+                    <summary>A proposal for a new project.</summary>
+                    <notes image="">(see handwritten region)</notes>
+                    <keywords>project proposal funding</keywords>
+                    <readonly>false</readonly>
+                    <filename/>
+                    <content/>
+                </uploadDocument>
+            </xforms:instance>
+            <xforms:bind nodeset="notes/@image" type="xsd:anyURI"/>
+            <xforms:bind nodeset="readonly" type="xsd:boolean"/>
+            <xforms:bind nodeset="content" type="xsd:anyURI"/>
+        </xforms:model>
+    </head>
+    <body>
+        <group xmlns="http://www.w3.org/2002/xforms">
+            <label>Test that HTTP multipart-post is supported</label>
+            <group>
+                <label>Select the button and the client should post the data using an HTTP multipart-post to the localhost.</label>
+                <input ref="title">
+                    <label>Title</label>
+                </input>
+                <input ref="summary">
+                    <label>Summary</label>
+                </input>
+                <upload ref="notes/@image" mediatype="image/*">
+                    <label>Upload Handwritten Image</label>
+                </upload>
+                <input ref="keywords">
+                    <label>Keywords</label>
+                </input>
+                <input ref="readonly">
+                    <label>Readonly</label>
+                </input>
+                <upload ref="content">
+                    <label>Upload Document</label>
+                    <filename ref="../filename"/>
+                </upload>
+                <submit submission="submit01">
+                    <label>Post data using multipart-post</label>
+                    <hint>Click to put data using multipart-post</hint>
+                </submit>
+            </group>
+        </group>
+    </body>
+    <!-- xml-stylesheet  type="text/css" href="http://webaccess.mozquito.com/data/demo/xform.css" -->
+</html>

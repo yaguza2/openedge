@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<repeats>
+    <simple-repeat>simple-repeat_0</simple-repeat>
+    <simple-repeat>simple-repeat_1</simple-repeat>
+    <simple-repeat>simple-repeat_2</simple-repeat>
+    <complex-repeat>
+        <test1>aaa_0</test1>
+        <test2>bbb_0</test2>
+    </complex-repeat>
+    <complex-repeat>
+        <test1>aaa_1</test1>
+        <test2>bbb_1</test2>
+    </complex-repeat>
+    <double-repeat>
+        <nested-repeat>xxx_0</nested-repeat>
+        <nested-repeat>yyy_0</nested-repeat>
+        <nested-repeat>zzz_0</nested-repeat>
+    </double-repeat>
+    <double-repeat>
+        <nested-repeat>xxx_1</nested-repeat>
+        <nested-repeat>yyy_1</nested-repeat>
+        <nested-repeat>zzz_1</nested-repeat>
+    </double-repeat>
+    <double-repeat>
+        <nested-repeat>xxx_2</nested-repeat>
+        <nested-repeat>yyy_2</nested-repeat>
+        <nested-repeat>zzz_2</nested-repeat>
+    </double-repeat>
+    <double-repeat>
+        <nested-repeat>xxx_2</nested-repeat>
+        <nested-repeat>yyy_2</nested-repeat>
+        <nested-repeat>zzz_2</nested-repeat>
+    </double-repeat>
+</repeats>

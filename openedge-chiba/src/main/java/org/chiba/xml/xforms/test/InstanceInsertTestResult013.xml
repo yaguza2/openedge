@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<repeats>
+    <simple>first</simple>
+    <simple>last</simple>
+    <complex>
+        <content>first</content>
+    </complex>
+    <complex>
+        <content>last</content>
+    </complex>
+    <enclosing>
+        <nested>first-last</nested>
+        <nested>first-first</nested>
+        <nested>modified</nested>
+    </enclosing>
+    <enclosing>
+        <nested>last-first</nested>
+        <nested>last-last</nested>
+    </enclosing>
+</repeats>

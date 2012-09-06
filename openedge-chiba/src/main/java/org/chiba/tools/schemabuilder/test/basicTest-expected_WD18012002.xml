@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope chiba:css-style="style.css" chiba:id="basicSchemaTest" chiba:name="Basic Schema Test Form" xlink:href="forms/basicSchemaTest.xml" xmlns:chiba="http://chiba.sourceforge.net/2003/08/xforms" xmlns:xforms="http://www.w3.org/2002/01/xforms" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <xforms:model>
+        <xforms:instance>
+            <basicSchemaTest/>
+        </xforms:instance>
+        <xforms:bind id="customerId_0" xforms:ref="basicSchemaTest/@customerId" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="fixedAtomicAttribute_1" xforms:minOccurs="0" xforms:ref="basicSchemaTest/@fixedAtomicAttribute" xforms:required="false()" xforms:type="integer"/>
+        <xforms:bind id="xsi_type_2" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@xsi_type"/>
+        <xforms:bind id="requiredStringValue_3" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredStringValue" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="requiredIntegerValue_4" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="requiredDecimalValue_5" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="requiredBooleanValue_6" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredBooleanValue" xforms:required="true()" xforms:type="boolean"/>
+        <xforms:bind id="additionalRequiredIntegerValue_7" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@additionalRequiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalntegerValue_8" xforms:ref="basicSchemaTest/builtInRequiredAttributes/additionalntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalDecimalValue_9" xforms:ref="basicSchemaTest/builtInRequiredAttributes/additionalDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="anotherlntegerValue_10" xforms:ref="basicSchemaTest/builtInRequiredAttributes/anotherlntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="anotherDecimalValue_11" xforms:ref="basicSchemaTest/builtInRequiredAttributes/anotherDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="requiredStringValue_12" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredStringValue" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="requiredIntegerValue_13" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="requiredDecimalValue_14" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="requiredBooleanValue_15" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@requiredBooleanValue" xforms:required="true()" xforms:type="boolean"/>
+        <xforms:bind id="additionalRequiredIntegerValue_16" xforms:ref="basicSchemaTest/builtInRequiredAttributes/@additionalRequiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalntegerValue_17" xforms:ref="basicSchemaTest/builtInRequiredAttributes/additionalntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalDecimalValue_18" xforms:ref="basicSchemaTest/builtInRequiredAttributes/additionalDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="stringValue_19" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalAttributes/@stringValue" xforms:required="false()" xforms:type="string"/>
+        <xforms:bind id="optionalIntegerValue_20" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalAttributes/@optionalIntegerValue" xforms:required="false()" xforms:type="integer"/>
+        <xforms:bind id="optionalIDecimalValue_21" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalAttributes/@optionalIDecimalValue" xforms:required="false()" xforms:type="decimal"/>
+        <xforms:bind id="optionalIBooleanValue_22" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalAttributes/@optionalIBooleanValue" xforms:required="false()" xforms:type="boolean"/>
+        <xforms:bind id="stringValue_23" xforms:ref="basicSchemaTest/builtInRequiredElements/stringValue" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="integerValue_24" xforms:ref="basicSchemaTest/builtInRequiredElements/integerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="decimalValue_25" xforms:ref="basicSchemaTest/builtInRequiredElements/decimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="booleanValue_26" xforms:ref="basicSchemaTest/builtInRequiredElements/booleanValue" xforms:required="true()" xforms:type="boolean"/>
+        <xforms:bind id="stringValue_27" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalElements/stringValue" xforms:required="false()" xforms:type="string"/>
+        <xforms:bind id="integerValue_28" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalElements/integerValue" xforms:required="false()" xforms:type="integer"/>
+        <xforms:bind id="decimalValue_29" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalElements/decimalValue" xforms:required="false()" xforms:type="decimal"/>
+        <xforms:bind id="booleanValue_30" xforms:minOccurs="0" xforms:ref="basicSchemaTest/builtInOptionalElements/booleanValue" xforms:required="false()" xforms:type="boolean"/>
+        <xforms:bind id="shortRequiredEnumerationAttrib_31" xforms:ref="basicSchemaTest/enumerationValues/@shortRequiredEnumerationAttrib" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longRequiredEnumerationAttrib_32" xforms:isValid="not(basicSchemaTest/enumerationValues/@longRequiredEnumerationAttrib = '[Select Long Required Enumeration Attrib]')" xforms:ref="basicSchemaTest/enumerationValues/@longRequiredEnumerationAttrib" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortOptionalEnumerationAttrib_33" xforms:minOccurs="0" xforms:ref="basicSchemaTest/enumerationValues/@shortOptionalEnumerationAttrib" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longOptionalEnumerationAttrib_34" xforms:isValid="not(basicSchemaTest/enumerationValues/@longOptionalEnumerationAttrib = '[Select Long Optional Enumeration Attrib]')" xforms:minOccurs="0" xforms:ref="basicSchemaTest/enumerationValues/@longOptionalEnumerationAttrib" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortRequiredEnumeration_35" xforms:ref="basicSchemaTest/enumerationValues/shortRequiredEnumeration" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longRequiredEnumeration_36" xforms:isValid="not(basicSchemaTest/enumerationValues/longRequiredEnumeration = '[Select Long Required Enumeration]')" xforms:ref="basicSchemaTest/enumerationValues/longRequiredEnumeration" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortOptionalEnumeration_37" xforms:minOccurs="0" xforms:ref="basicSchemaTest/enumerationValues/shortOptionalEnumeration" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longOptionalEnumeration_38" xforms:isValid="not(basicSchemaTest/enumerationValues/longOptionalEnumeration = '[Select Long Optional Enumeration]')" xforms:minOccurs="0" xforms:ref="basicSchemaTest/enumerationValues/longOptionalEnumeration" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortRequiredListAttrib_39" xforms:ref="basicSchemaTest/listValues/@shortRequiredListAttrib" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longRequiredListAttrib_40" xforms:ref="basicSchemaTest/listValues/@longRequiredListAttrib" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortOptionalListAttrib_41" xforms:minOccurs="0" xforms:ref="basicSchemaTest/listValues/@shortOptionalListAttrib" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longOptionalListAttrib_42" xforms:minOccurs="0" xforms:ref="basicSchemaTest/listValues/@longOptionalListAttrib" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortRequiredList_43" xforms:ref="basicSchemaTest/listValues/shortRequiredList" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longRequiredList_44" xforms:ref="basicSchemaTest/listValues/longRequiredList" xforms:required="true()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="shortOptionalList_45" xforms:minOccurs="0" xforms:ref="basicSchemaTest/listValues/shortOptionalList" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="longOptionalList_46" xforms:minOccurs="0" xforms:ref="basicSchemaTest/listValues/longOptionalList" xforms:required="false()" xforms:type="NMTOKEN"/>
+        <xforms:bind id="stringValue_47" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingAttributes/@stringValue" xforms:required="false()" xforms:type="string"/>
+        <xforms:bind id="optionalIntegerValue_48" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingAttributes/@optionalIntegerValue" xforms:required="false()" xforms:type="integer"/>
+        <xforms:bind id="optionalIDecimalValue_49" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingAttributes/@optionalIDecimalValue" xforms:required="false()" xforms:type="decimal"/>
+        <xforms:bind id="optionalIBooleanValue_50" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingAttributes/@optionalIBooleanValue" xforms:required="false()" xforms:type="boolean"/>
+        <xforms:bind id="stringValue_51" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingElements/stringValue" xforms:required="false()" xforms:type="string"/>
+        <xforms:bind id="integerValue_52" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingElements/integerValue" xforms:required="false()" xforms:type="integer"/>
+        <xforms:bind id="decimalValue_53" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingElements/decimalValue" xforms:required="false()" xforms:type="decimal"/>
+        <xforms:bind id="booleanValue_54" xforms:minOccurs="0" xforms:ref="basicSchemaTest/repeatingElements/booleanValue" xforms:required="false()" xforms:type="boolean"/>
+        <xforms:bind id="xsi_type_55" xforms:ref="basicSchemaTest/inheritenceTest/@xsi_type"/>
+        <xforms:bind id="requiredStringValue_56" xforms:ref="basicSchemaTest/inheritenceTest/@requiredStringValue" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="requiredIntegerValue_57" xforms:ref="basicSchemaTest/inheritenceTest/@requiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="requiredDecimalValue_58" xforms:ref="basicSchemaTest/inheritenceTest/@requiredDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="requiredBooleanValue_59" xforms:ref="basicSchemaTest/inheritenceTest/@requiredBooleanValue" xforms:required="true()" xforms:type="boolean"/>
+        <xforms:bind id="additionalRequiredIntegerValue_60" xforms:ref="basicSchemaTest/inheritenceTest/@additionalRequiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalntegerValue_61" xforms:ref="basicSchemaTest/inheritenceTest/additionalntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalDecimalValue_62" xforms:ref="basicSchemaTest/inheritenceTest/additionalDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="anotherlntegerValue_63" xforms:ref="basicSchemaTest/inheritenceTest/anotherlntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="anotherDecimalValue_64" xforms:ref="basicSchemaTest/inheritenceTest/anotherDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="requiredStringValue_65" xforms:ref="basicSchemaTest/inheritenceTest/@requiredStringValue" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="requiredIntegerValue_66" xforms:ref="basicSchemaTest/inheritenceTest/@requiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="requiredDecimalValue_67" xforms:ref="basicSchemaTest/inheritenceTest/@requiredDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="requiredBooleanValue_68" xforms:ref="basicSchemaTest/inheritenceTest/@requiredBooleanValue" xforms:required="true()" xforms:type="boolean"/>
+        <xforms:bind id="additionalRequiredIntegerValue_69" xforms:ref="basicSchemaTest/inheritenceTest/@additionalRequiredIntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalntegerValue_70" xforms:ref="basicSchemaTest/inheritenceTest/additionalntegerValue" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="additionalDecimalValue_71" xforms:ref="basicSchemaTest/inheritenceTest/additionalDecimalValue" xforms:required="true()" xforms:type="decimal"/>
+        <xforms:bind id="complexTypeWithMixedContent_72" xforms:ref="basicSchemaTest/complexTypeWithMixedContent" xforms:required="true()" xforms:type="integer"/>
+        <xforms:bind id="integerAttribute_73" xforms:minOccurs="0" xforms:ref="basicSchemaTest/complexTypeWithMixedContent/@integerAttribute" xforms:required="false()" xforms:type="integer"/>
+        <xforms:bind id="repeatingAtomicElement_74" xforms:maxOccurs="2" xforms:ref="basicSchemaTest/repeatingAtomicElement" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="anyTypeElement_75" xforms:ref="basicSchemaTest/anyTypeElement" xforms:required="true()"/>
+        <xforms:bind id="unboundedAtomicElement_76" xforms:maxOccurs="unbounded" xforms:ref="basicSchemaTest/unboundedAtomicElement" xforms:required="true()" xforms:type="string"/>
+        <xforms:bind id="fixedAtomicElement_77" xforms:ref="basicSchemaTest/fixedAtomicElement" xforms:required="true()" xforms:type="integer"/>
+        <xforms:submitInfo xforms:action="" id="save"/>
+    </xforms:model>
+    <chiba:form>
+        <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+            <xforms:caption>Basic Schema Test</xforms:caption>
+            <xforms:hint>Comment describing your root element</xforms:hint>
+            <xforms:input xforms:bind="customerId_0">
+                <xforms:caption>Customer Id</xforms:caption>
+                <xforms:alert>Please provide a valid value for 'Customer Id'. 'Customer Id' is a required 'String' value.</xforms:alert>
+            </xforms:input>
+            <xforms:input xforms:bind="fixedAtomicAttribute_1">
+                <xforms:caption>Fixed Atomic Attribute</xforms:caption>
+                <xforms:alert>Please provide a valid value for 'Fixed Atomic Attribute'. 'Fixed Atomic Attribute' is an optional 'Integer' value.</xforms:alert>
+            </xforms:input>
+            <xforms:selectOne xforms:bind="xsi_type_2" xforms:selectUI="radio">
+                <xforms:choices>
+                    <xforms:item>
+                        <xforms:caption>Extendedinheritence Type</xforms:caption>
+                        <xforms:value>extendedinheritenceType</xforms:value>
+                        <xforms:action>
+                            <xforms:toggle xforms:case="xsi_type_2_extendedinheritenceType_case"/>
+                        </xforms:action>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:caption>Inheritence Type</xforms:caption>
+                        <xforms:value>inheritenceType</xforms:value>
+                        <xforms:action>
+                            <xforms:toggle xforms:case="xsi_type_2_inheritenceType_case"/>
+                        </xforms:action>
+                    </xforms:item>
+                </xforms:choices>
+            </xforms:selectOne>
+            <xforms:switch>
+                <xforms:case id="xsi_type_2_extendedinheritenceType_case">
+                    <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                        <xforms:caption>Built In Required Attributes</xforms:caption>
+                        <xforms:input xforms:bind="requiredStringValue_3">
+                            <xforms:caption>Required String Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required String Value'. 'Required String Value' is a required 'String' value.</xforms:alert>
+                            <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredIntegerValue_4">
+                            <xforms:caption>Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Integer Value'. 'Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredDecimalValue_5">
+                            <xforms:caption>Required Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Decimal Value'. 'Required Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredBooleanValue_6">
+                            <xforms:caption>Required Boolean Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Boolean Value'. 'Required Boolean Value' is a required 'Boolean' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalRequiredIntegerValue_7">
+                            <xforms:caption>Additional Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Required Integer Value'. 'Additional Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalntegerValue_8">
+                            <xforms:caption>Additionalnteger Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additionalnteger Value'. 'Additionalnteger Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalDecimalValue_9">
+                            <xforms:caption>Additional Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Decimal Value'. 'Additional Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="anotherlntegerValue_10">
+                            <xforms:caption>Anotherlnteger Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Anotherlnteger Value'. 'Anotherlnteger Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="anotherDecimalValue_11">
+                            <xforms:caption>Another Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Another Decimal Value'. 'Another Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                    </xforms:group>
+                </xforms:case>
+                <xforms:case id="xsi_type_2_inheritenceType_case">
+                    <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                        <xforms:caption>Built In Required Attributes</xforms:caption>
+                        <xforms:input xforms:bind="requiredStringValue_12">
+                            <xforms:caption>Required String Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required String Value'. 'Required String Value' is a required 'String' value.</xforms:alert>
+                            <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredIntegerValue_13">
+                            <xforms:caption>Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Integer Value'. 'Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredDecimalValue_14">
+                            <xforms:caption>Required Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Decimal Value'. 'Required Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredBooleanValue_15">
+                            <xforms:caption>Required Boolean Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Boolean Value'. 'Required Boolean Value' is a required 'Boolean' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalRequiredIntegerValue_16">
+                            <xforms:caption>Additional Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Required Integer Value'. 'Additional Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalntegerValue_17">
+                            <xforms:caption>Additionalnteger Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additionalnteger Value'. 'Additionalnteger Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalDecimalValue_18">
+                            <xforms:caption>Additional Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Decimal Value'. 'Additional Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                    </xforms:group>
+                </xforms:case>
+            </xforms:switch>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Built In Optional Attributes</xforms:caption>
+                <xforms:input xforms:bind="stringValue_19">
+                    <xforms:caption>String Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'String Value'. 'String Value' is an optional 'String' value.</xforms:alert>
+                    <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                </xforms:input>
+                <xforms:input xforms:bind="optionalIntegerValue_20">
+                    <xforms:caption>Optional Integer Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Optional Integer Value'. 'Optional Integer Value' is an optional 'Integer' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="optionalIDecimalValue_21">
+                    <xforms:caption>Optional IDecimal Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Optional IDecimal Value'. 'Optional IDecimal Value' is an optional 'Decimal' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="optionalIBooleanValue_22">
+                    <xforms:caption>Optional IBoolean Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Optional IBoolean Value'. 'Optional IBoolean Value' is an optional 'Boolean' value.</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Built In Required Elements</xforms:caption>
+                <xforms:input xforms:bind="stringValue_23">
+                    <xforms:caption>String Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'String Value'. 'String Value' is a required 'String' value.</xforms:alert>
+                    <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                </xforms:input>
+                <xforms:input xforms:bind="integerValue_24">
+                    <xforms:caption>Integer Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Integer Value'. 'Integer Value' is a required 'Integer' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="decimalValue_25">
+                    <xforms:caption>Decimal Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Decimal Value'. 'Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="booleanValue_26">
+                    <xforms:caption>Boolean Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Boolean Value'. 'Boolean Value' is a required 'Boolean' value.</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Built In Optional Elements</xforms:caption>
+                <xforms:input xforms:bind="stringValue_27">
+                    <xforms:caption>String Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'String Value'. 'String Value' is an optional 'String' value.</xforms:alert>
+                    <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                </xforms:input>
+                <xforms:input xforms:bind="integerValue_28">
+                    <xforms:caption>Integer Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Integer Value'. 'Integer Value' is an optional 'Integer' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="decimalValue_29">
+                    <xforms:caption>Decimal Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Decimal Value'. 'Decimal Value' is an optional 'Decimal' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="booleanValue_30">
+                    <xforms:caption>Boolean Value</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Boolean Value'. 'Boolean Value' is an optional 'Boolean' value.</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Enumeration Values</xforms:caption>
+                <xforms:selectOne xforms:bind="shortRequiredEnumerationAttrib_31" xforms:selectUI="radio">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Required Enumeration Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Required Enumeration Attrib'. 'Short Required Enumeration Attrib' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="longRequiredEnumerationAttrib_32" xforms:selectUI="combobox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>[Select Long Required Enumeration Attrib]</xforms:caption>
+                            <xforms:value>[Select Long Required Enumeration Attrib]</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Required Enumeration Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Required Enumeration Attrib'. 'Long Required Enumeration Attrib' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="shortOptionalEnumerationAttrib_33" xforms:selectUI="radio">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Optional Enumeration Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Optional Enumeration Attrib'. 'Short Optional Enumeration Attrib' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="longOptionalEnumerationAttrib_34" xforms:selectUI="combobox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>[Select Long Optional Enumeration Attrib]</xforms:caption>
+                            <xforms:value>[Select Long Optional Enumeration Attrib]</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Optional Enumeration Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Optional Enumeration Attrib'. 'Long Optional Enumeration Attrib' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="shortRequiredEnumeration_35" xforms:selectUI="radio">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Required Enumeration</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Required Enumeration'. 'Short Required Enumeration' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="longRequiredEnumeration_36" xforms:selectUI="combobox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>[Select Long Required Enumeration]</xforms:caption>
+                            <xforms:value>[Select Long Required Enumeration]</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Required Enumeration</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Required Enumeration'. 'Long Required Enumeration' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="shortOptionalEnumeration_37" xforms:selectUI="radio">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Optional Enumeration</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Optional Enumeration'. 'Short Optional Enumeration' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+                <xforms:selectOne xforms:bind="longOptionalEnumeration_38" xforms:selectUI="combobox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>[Select Long Optional Enumeration]</xforms:caption>
+                            <xforms:value>[Select Long Optional Enumeration]</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Optional Enumeration</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Optional Enumeration'. 'Long Optional Enumeration' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectOne>
+            </xforms:group>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>List Values</xforms:caption>
+                <xforms:selectMany xforms:bind="shortRequiredListAttrib_39" xforms:selectUI="checkbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Required List Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Required List Attrib'. 'Short Required List Attrib' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="longRequiredListAttrib_40" xforms:selectUI="listbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Required List Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Required List Attrib'. 'Long Required List Attrib' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="shortOptionalListAttrib_41" xforms:selectUI="checkbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Optional List Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Optional List Attrib'. 'Short Optional List Attrib' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="longOptionalListAttrib_42" xforms:selectUI="listbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Optional List Attrib</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Optional List Attrib'. 'Long Optional List Attrib' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="shortRequiredList_43" xforms:selectUI="checkbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Required List</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Required List'. 'Short Required List' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="longRequiredList_44" xforms:selectUI="listbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Required List</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Required List'. 'Long Required List' is a required 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="shortOptionalList_45" xforms:selectUI="checkbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Short Optional List</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Short Optional List'. 'Short Optional List' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+                <xforms:selectMany xforms:bind="longOptionalList_46" xforms:selectUI="listbox">
+                    <xforms:choices>
+                        <xforms:item>
+                            <xforms:caption>Eighth Value</xforms:caption>
+                            <xforms:value>EIGHTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fifth Value</xforms:caption>
+                            <xforms:value>FIFTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>First Value</xforms:caption>
+                            <xforms:value>FIRST_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Fourth Value</xforms:caption>
+                            <xforms:value>FOURTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Ninth Value</xforms:caption>
+                            <xforms:value>NINTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Second Value</xforms:caption>
+                            <xforms:value>SECOND_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Seventh Value</xforms:caption>
+                            <xforms:value>SEVENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Sixth Value</xforms:caption>
+                            <xforms:value>SIXTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Tenth Value</xforms:caption>
+                            <xforms:value>TENTH_VALUE</xforms:value>
+                        </xforms:item>
+                        <xforms:item>
+                            <xforms:caption>Third Value</xforms:caption>
+                            <xforms:value>THIRD_VALUE</xforms:value>
+                        </xforms:item>
+                    </xforms:choices>
+                    <xforms:caption>Long Optional List</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Long Optional List'. 'Long Optional List' is an optional 'Nmtoken' value.</xforms:alert>
+                </xforms:selectMany>
+            </xforms:group>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Repeating Attributes</xforms:caption>
+                <xforms:repeat id="repeat_basicSchemaTest/repeatingAttributes" xforms:nodeset="basicSchemaTest/repeatingAttributes">
+                    <xforms:input xforms:bind="stringValue_47">
+                        <xforms:caption>String Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'String Value'. 'String Value' is an optional 'String' value.</xforms:alert>
+                        <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                    </xforms:input>
+                    <xforms:input xforms:bind="optionalIntegerValue_48">
+                        <xforms:caption>Optional Integer Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'Optional Integer Value'. 'Optional Integer Value' is an optional 'Integer' value.</xforms:alert>
+                    </xforms:input>
+                    <xforms:input xforms:bind="optionalIDecimalValue_49">
+                        <xforms:caption>Optional IDecimal Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'Optional IDecimal Value'. 'Optional IDecimal Value' is an optional 'Decimal' value.</xforms:alert>
+                    </xforms:input>
+                    <xforms:input xforms:bind="optionalIBooleanValue_50">
+                        <xforms:caption>Optional IBoolean Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'Optional IBoolean Value'. 'Optional IBoolean Value' is an optional 'Boolean' value.</xforms:alert>
+                    </xforms:input>
+                </xforms:repeat>
+            </xforms:group>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Repeating Elements</xforms:caption>
+                <xforms:repeat id="repeat_basicSchemaTest/repeatingElements" xforms:nodeset="basicSchemaTest/repeatingElements">
+                    <xforms:input xforms:bind="stringValue_51">
+                        <xforms:caption>String Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'String Value'. 'String Value' is an optional 'String' value.</xforms:alert>
+                        <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                    </xforms:input>
+                    <xforms:input xforms:bind="integerValue_52">
+                        <xforms:caption>Integer Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'Integer Value'. 'Integer Value' is an optional 'Integer' value.</xforms:alert>
+                    </xforms:input>
+                    <xforms:input xforms:bind="decimalValue_53">
+                        <xforms:caption>Decimal Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'Decimal Value'. 'Decimal Value' is an optional 'Decimal' value.</xforms:alert>
+                    </xforms:input>
+                    <xforms:input xforms:bind="booleanValue_54">
+                        <xforms:caption>Boolean Value</xforms:caption>
+                        <xforms:alert>Please provide a valid value for 'Boolean Value'. 'Boolean Value' is an optional 'Boolean' value.</xforms:alert>
+                    </xforms:input>
+                </xforms:repeat>
+            </xforms:group>
+            <xforms:selectOne xforms:bind="xsi_type_55" xforms:selectUI="radio">
+                <xforms:choices>
+                    <xforms:item>
+                        <xforms:caption>Extendedinheritence Type</xforms:caption>
+                        <xforms:value>extendedinheritenceType</xforms:value>
+                        <xforms:action>
+                            <xforms:toggle xforms:case="xsi_type_55_extendedinheritenceType_case"/>
+                        </xforms:action>
+                    </xforms:item>
+                    <xforms:item>
+                        <xforms:caption>Inheritence Type</xforms:caption>
+                        <xforms:value>inheritenceType</xforms:value>
+                        <xforms:action>
+                            <xforms:toggle xforms:case="xsi_type_55_inheritenceType_case"/>
+                        </xforms:action>
+                    </xforms:item>
+                </xforms:choices>
+            </xforms:selectOne>
+            <xforms:switch>
+                <xforms:case id="xsi_type_55_extendedinheritenceType_case">
+                    <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                        <xforms:caption>Inheritence Test</xforms:caption>
+                        <xforms:input xforms:bind="requiredStringValue_56">
+                            <xforms:caption>Required String Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required String Value'. 'Required String Value' is a required 'String' value.</xforms:alert>
+                            <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredIntegerValue_57">
+                            <xforms:caption>Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Integer Value'. 'Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredDecimalValue_58">
+                            <xforms:caption>Required Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Decimal Value'. 'Required Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredBooleanValue_59">
+                            <xforms:caption>Required Boolean Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Boolean Value'. 'Required Boolean Value' is a required 'Boolean' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalRequiredIntegerValue_60">
+                            <xforms:caption>Additional Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Required Integer Value'. 'Additional Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalntegerValue_61">
+                            <xforms:caption>Additionalnteger Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additionalnteger Value'. 'Additionalnteger Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalDecimalValue_62">
+                            <xforms:caption>Additional Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Decimal Value'. 'Additional Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="anotherlntegerValue_63">
+                            <xforms:caption>Anotherlnteger Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Anotherlnteger Value'. 'Anotherlnteger Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="anotherDecimalValue_64">
+                            <xforms:caption>Another Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Another Decimal Value'. 'Another Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                    </xforms:group>
+                </xforms:case>
+                <xforms:case id="xsi_type_55_inheritenceType_case">
+                    <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                        <xforms:caption>Inheritence Test</xforms:caption>
+                        <xforms:input xforms:bind="requiredStringValue_65">
+                            <xforms:caption>Required String Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required String Value'. 'Required String Value' is a required 'String' value.</xforms:alert>
+                            <xforms:hint>Enter the street address. For example, 160 Manitoba Street.</xforms:hint>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredIntegerValue_66">
+                            <xforms:caption>Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Integer Value'. 'Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredDecimalValue_67">
+                            <xforms:caption>Required Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Decimal Value'. 'Required Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="requiredBooleanValue_68">
+                            <xforms:caption>Required Boolean Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Required Boolean Value'. 'Required Boolean Value' is a required 'Boolean' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalRequiredIntegerValue_69">
+                            <xforms:caption>Additional Required Integer Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Required Integer Value'. 'Additional Required Integer Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalntegerValue_70">
+                            <xforms:caption>Additionalnteger Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additionalnteger Value'. 'Additionalnteger Value' is a required 'Integer' value.</xforms:alert>
+                        </xforms:input>
+                        <xforms:input xforms:bind="additionalDecimalValue_71">
+                            <xforms:caption>Additional Decimal Value</xforms:caption>
+                            <xforms:alert>Please provide a valid value for 'Additional Decimal Value'. 'Additional Decimal Value' is a required 'Decimal' value.</xforms:alert>
+                        </xforms:input>
+                    </xforms:group>
+                </xforms:case>
+            </xforms:switch>
+            <xforms:group chiba:border="0" chiba:box-align="right" chiba:box-orient="vertical" chiba:caption-width="30%" chiba:width="60%">
+                <xforms:caption>Complex Type With Mixed Content</xforms:caption>
+                <xforms:input xforms:bind="complexTypeWithMixedContent_72">
+                    <xforms:caption>Complex Type With Mixed Content</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Complex Type With Mixed Content'. 'Complex Type With Mixed Content' is a required 'Integer' value.</xforms:alert>
+                </xforms:input>
+                <xforms:input xforms:bind="integerAttribute_73">
+                    <xforms:caption>Integer Attribute</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Integer Attribute'. 'Integer Attribute' is an optional 'Integer' value.</xforms:alert>
+                </xforms:input>
+            </xforms:group>
+            <xforms:repeat id="repeat_basicSchemaTest/repeatingAtomicElement" xforms:nodeset="basicSchemaTest/repeatingAtomicElement">
+                <xforms:input xforms:bind="repeatingAtomicElement_74" xforms:ref=".">
+                    <xforms:caption>Repeating Atomic Element</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Repeating Atomic Element'. 'Repeating Atomic Element' is a required 'String' value.</xforms:alert>
+                </xforms:input>
+            </xforms:repeat>
+            <xforms:textarea chiba:height="3" xforms:bind="anyTypeElement_75">
+                <xforms:caption>Any Type Element</xforms:caption>
+                <xforms:alert>Please provide a valid value for 'Any Type Element'. 'Any Type Element' is a required 'Any Type' value.</xforms:alert>
+            </xforms:textarea>
+            <xforms:repeat id="repeat_basicSchemaTest/unboundedAtomicElement" xforms:nodeset="basicSchemaTest/unboundedAtomicElement">
+                <xforms:input xforms:bind="unboundedAtomicElement_76" xforms:ref=".">
+                    <xforms:caption>Unbounded Atomic Element</xforms:caption>
+                    <xforms:alert>Please provide a valid value for 'Unbounded Atomic Element'. 'Unbounded Atomic Element' is a required 'String' value.</xforms:alert>
+                </xforms:input>
+            </xforms:repeat>
+            <xforms:input xforms:bind="fixedAtomicElement_77">
+                <xforms:caption>Fixed Atomic Element</xforms:caption>
+                <xforms:alert>Please provide a valid value for 'Fixed Atomic Element'. 'Fixed Atomic Element' is a required 'Integer' value.</xforms:alert>
+            </xforms:input>
+        </xforms:group>
+        <xforms:submit xforms:submitInfo="save">
+            <xforms:caption>Submit</xforms:caption>
+        </xforms:submit>
+    </chiba:form>
+</envelope>

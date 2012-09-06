@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../xhtml2.css" ?>
+<!DOCTYPE html [
+<!ATTLIST section id ID #IMPLIED>
+<!ATTLIST h id ID #IMPLIED>
+<!ATTLIST div id ID #IMPLIED>
+<!ATTLIST nl id ID #IMPLIED>
+]>
+<html
+    xmlns="http://www.w3.org/2002/06/xhtml2"
+    xmlns:xforms="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <title>Testing Select </title>
+        <xforms:model id="011_model" schema="#mySchema">
+            <xforms:instance xmlns="">
+                <data>
+                    <primary-card-type xsi:type="card-type">visa</primary-card-type>
+                    <secondary-card-type xsi:type="xsd:string">other</secondary-card-type>
+                    <all-my-card-types xsi:type="list-of-card-types">visa master diners</all-my-card-types>
+                </data>
+            </xforms:instance>
+            <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="mySchema"
+                targetNamespace="http://example.com/">
+                <xsd:simpleType name="card-type">
+                    <xsd:union memberTypes="xsd:string card-names">
+                        <xsd:simpleType name="card-names">
+                            <xsd:restriction base="xsd:string">
+                                <xsd:enumeration value="master"/>
+                                <xsd:enumeration value="visa"/>
+                                <xsd:enumeration value="amex"/>
+                                <xsd:enumeration value="diners"/>
+                            </xsd:restriction>
+                        </xsd:simpleType>
+                    </xsd:union>
+                </xsd:simpleType>
+                <xsd:simpleType name="list-of-card-types">
+                    <xsd:list itemType="xsd:card-type"/>
+                </xsd:simpleType>
+            </xsd:schema>
+
+            <xforms:submission id="send"
+                method="form-data-post"
+                action="http://example.com/test-xf"/>
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:group xmlns="http://www.w3.org/2002/xforms">
+            <label>Credit Card Spy</label>
+            <select1 model="011_model" ref="/data/primary-card-type"
+                appearance="full">
+
+                <label>Closed Selection List For Picking Primary Card Type</label>
+                <choices>
+                    <label>Primary Card must be one of the following.</label>
+                    <item>
+                        <label>Master card</label>
+                        <value>master</value>
+                    </item>
+                    <item>
+                        <label>Visa card</label>
+                        <value>visa</value>
+                    </item>
+                    <item>
+                        <label>American Express</label>
+                        <value>amex</value>
+                    </item>
+                    <item>
+                        <label>Diners Club</label>
+                        <value>diners</value>
+                    </item>
+                </choices>
+            </select1>
+            <select1 model="011_model" ref="/data/secondary-card-type"
+                selection="open" appearance="full">
+                <label>Open Selection List For Picking Secondary  Card Type</label>
+                <choices>
+                    <label>Secondary  Card may  be one of the following.
+                   If your  choice does not appear in this list, you can enter
+                   it using free-form input.</label>
+                    <item>
+                        <label>Master card</label>
+                        <value>master</value>
+                    </item>
+                    <item>
+                        <label>Visa card</label>
+                        <value>visa</value>
+                    </item>
+                    <item>
+                        <label>American Express</label>
+                        <value>amex</value>
+                    </item>
+                    <item>
+                        <label>Diners Club</label>
+                        <value>diners</value>
+                    </item>
+                </choices>
+            </select1>
+
+            <select model="011_model" ref="/data/all-my-card-types"
+                appearance="compact" selection="open">
+                <label>Closed Open List For Specifying All Card Types</label>
+                <choices>
+                    <label>Select from these types.
+                   You can specify other types as well.</label>
+                    <item>
+                        <label>Master card</label>
+                        <value>master</value>
+                    </item>
+                    <item>
+                        <label>Visa card</label>
+                        <value>visa</value>
+                    </item>
+                    <item>
+                        <label>American Express</label>
+                        <value>amex</value>
+                    </item>
+                    <item>
+                        <label>Diners Club</label>
+                        <value>diners</value>
+                    </item>
+                </choices>
+            </select>
+        </xforms:group>
+    </body>
+</html>

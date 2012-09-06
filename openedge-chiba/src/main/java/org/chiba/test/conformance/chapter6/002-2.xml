@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="../test.css" ?>
+<!DOCTYPE html [
+	<!ATTLIST section
+	id ID #IMPLIED
+>
+	<!ATTLIST h
+	id ID #IMPLIED
+>
+	<!ATTLIST div
+	id ID #IMPLIED
+>
+	<!ATTLIST nl
+	id ID #IMPLIED
+>
+	<!-- for the model attribute to work -->
+	<!ATTLIST xforms:model
+	id ID #IMPLIED
+>
+	<!-- for the bind attribute to work -->
+	<!ATTLIST xforms:bind
+	id ID #IMPLIED
+>
+	<!-- for the instance() function to work -->
+	<!ATTLIST xforms:instance
+	id ID #IMPLIED
+>
+	<!-- for submit to work -->
+	<!ATTLIST xforms:submission
+	id ID #IMPLIED
+>
+	<!-- for setfocus and other events to work -->
+	<!ATTLIST xforms:input
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:secret
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:textarea
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:output
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:upload
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:range
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:trigger
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:submit
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:select
+	id ID #IMPLIED
+>
+	<!ATTLIST xforms:select1
+	id ID #IMPLIED
+>
+	<!-- for toggle to work -->
+	<!ATTLIST xforms:case
+	id ID #IMPLIED
+>
+	<!-- for repeat stuff to work -->
+	<!ATTLIST xforms:repeat
+	id ID #IMPLIED
+>
+	<!-- (also any element with xforms:repeat-* attributes -->
+	<!ATTLIST table
+	id ID #IMPLIED
+>
+	<!ATTLIST td
+	id ID #IMPLIED
+>
+]>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:my="urn:my" xml:lang="en">
+    <head>
+        <title>MUST support derived XML Schema types</title>
+        <link rel="stylesheet" type="text/css" href="../test.css"/>
+        <xforms:model id="model-002-2">
+            <xforms:instance id="instance-002-2">
+                <data xmlns="urn:my">
+                    <valid>
+                        <normalizedString>normalizedString</normalizedString>
+                        <token>thisIsAToken</token>
+                        <language>en</language>
+                        <Name>ev:name</Name>
+                        <NCName>name</NCName>
+                        <ID>ss</ID>
+                        <IDREF>model-002-2</IDREF>
+                        <IDREFS>model-002-2 instance-002-2</IDREFS>
+                        <NMTOKEN>name</NMTOKEN>
+                        <NMTOKENS>name1 name2</NMTOKENS>
+                        <integer>259</integer>
+                        <nonPositiveInteger>0</nonPositiveInteger>
+                        <negativeInteger>-1</negativeInteger>
+                        <long>-9223372036854775808</long>
+                        <int>-2147483648</int>
+                        <short>-32768</short>
+                        <byte>-128</byte>
+                        <nonNegativeInteger>0</nonNegativeInteger>
+                        <unsignedLong>18446744073709551615</unsignedLong>
+                        <unsignedInt>4294967295</unsignedInt>
+                        <unsignedShort>65535</unsignedShort>
+                        <unsignedByte>255</unsignedByte>
+                        <positiveInteger>+100000</positiveInteger>
+                    </valid>
+                    <invalid>
+                        <normalizedString>this wasn't normalized	when
+I typed it</normalizedString>
+                        <token>   this  is   not  a
+
+token   </token>
+                        <language>42</language>
+                        <Name>42q</Name>
+                        <NCName>ev:name</NCName>
+                        <ID>259</ID>
+                        <IDREF>259 321</IDREF>
+                        <IDREFS>259 321</IDREFS>
+                        <NMTOKEN>---::::;;=-</NMTOKEN>
+                        <NMTOKENS>-:-:-:;-)</NMTOKENS>
+                        <integer>3.14159</integer>
+                        <nonPositiveInteger>3x3</nonPositiveInteger>
+                        <negativeInteger>0</negativeInteger>
+                        <long>9223372036854775808</long>
+                        <int>2147483648</int>
+                        <short>32768</short>
+                        <byte>128</byte>
+                        <nonNegativeInteger>-1e</nonNegativeInteger>
+                        <unsignedLong>-18446744073709551616</unsignedLong>
+                        <unsignedInt>-4294967296</unsignedInt>
+                        <unsignedShort>-65536</unsignedShort>
+                        <unsignedByte>-256</unsignedByte>
+                        <positiveInteger>-100000</positiveInteger>
+                    </invalid>
+                </data>
+            </xforms:instance>
+            <xforms:bind nodeset="//my:normalizedString" type="xsd:normalizedString"/>
+            <xforms:bind nodeset="//my:token" type="xsd:token"/>
+            <xforms:bind nodeset="//my:language" type="xsd:language"/>
+            <xforms:bind nodeset="//my:Name" type="xsd:Name"/>
+            <xforms:bind nodeset="//my:NCName" type="xsd:NCName"/>
+            <xforms:bind nodeset="//my:ID" type="xsd:ID"/>
+            <xforms:bind nodeset="//my:IDREF" type="xsd:IDREF"/>
+            <xforms:bind nodeset="//my:IDREFS" type="xsd:IDREFS"/>
+            <xforms:bind nodeset="//my:NMTOKEN" type="xsd:NMTOKEN"/>
+            <xforms:bind nodeset="//my:NMTOKENS" type="xsd:NMTOKENS"/>
+            <xforms:bind nodeset="//my:integer" type="xsd:integer"/>
+            <xforms:bind nodeset="//my:nonPositiveInteger" type="xsd:nonPositiveInteger"/>
+            <xforms:bind nodeset="//my:negativeInteger" type="xsd:negativeInteger"/>
+            <xforms:bind nodeset="//my:long" type="xsd:long"/>
+            <xforms:bind nodeset="//my:int" type="xsd:int"/>
+            <xforms:bind nodeset="//my:short" type="xsd:short"/>
+            <xforms:bind nodeset="//my:byte" type="xsd:byte"/>
+            <xforms:bind nodeset="//my:nonNegativeInteger" type="xsd:nonNegativeInteger"/>
+            <xforms:bind nodeset="//my:unsignedLong" type="xsd:unsignedLong"/>
+            <xforms:bind nodeset="//my:unsignedInt" type="xsd:unsignedInt"/>
+            <xforms:bind nodeset="//my:unsignedShort" type="xsd:unsignedShort"/>
+            <xforms:bind nodeset="//my:unsignedByte" type="xsd:unsignedByte"/>
+            <xforms:bind nodeset="//my:positiveInteger" type="xsd:positiveInteger"/>
+        </xforms:model>
+    </head>
+    <body>
+        <h1>MUST support derived XML Schema types</h1>
+        <xforms:group ref="my:valid">
+            <xforms:label>The following should tests must be VALID.</xforms:label>
+            <xforms:input ref="my:normalizedString">
+                <xforms:label>normalizedString </xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:token">
+                <xforms:label>token</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:language">
+                <xforms:label>language</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:Name">
+                <xforms:label>Name</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:NCName">
+                <xforms:label>NCName</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:ID">
+                <xforms:label>ID</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:IDREF">
+                <xforms:label>IDREF</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:IDREFS">
+                <xforms:label>IDREFS</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert> -->
+            </xforms:input>
+            <xforms:input ref="my:ENTITY">
+                <xforms:label>ENTITY</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:ENTITIES">
+                <xforms:label>ENTITIES</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:NMTOKEN">
+                <xforms:label>NMTOKEN</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:NMTOKENS">
+                <xforms:label>NMTOKENS</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:integer">
+                <xforms:label>integer</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:nonPositiveInteger">
+                <xforms:label>nonPositiveInteger</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:negativeInteger">
+                <xforms:label>negativeInteger</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:long">
+                <xforms:label>long</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:int">
+                <xforms:label>int</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:short">
+                <xforms:label>short</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:byte">
+                <xforms:label>byte</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:nonNegativeInteger">
+                <xforms:label>nonNegativeInteger</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedLong">
+                <xforms:label>unsignedLong</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedInt">
+                <xforms:label>unsignedInt</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedShort">
+                <xforms:label>unsignedShort</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedByte">
+                <xforms:label>unsignedByte</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:positiveInteger">
+                <xforms:label>positiveInteger</xforms:label>
+                <xforms:alert>VALID TEST FAILS</xforms:alert>
+            </xforms:input>
+        </xforms:group>
+        <xforms:group ref="my:invalid">
+            <xforms:label>The following should tests must be INVALID.</xforms:label>
+            <xforms:input ref="my:normalizedString">
+                <xforms:label>normalizedString </xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:token">
+                <xforms:label>token</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:language">
+                <xforms:label>language</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:Name">
+                <xforms:label>Name</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:NCName">
+                <xforms:label>NCName</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:ID">
+                <xforms:label>ID</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:IDREF">
+                <xforms:label>IDREF</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:IDREFS">
+                <xforms:label>IDREFS</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert> -->
+            </xforms:input>
+            <xforms:input ref="my:ENTITY">
+                <xforms:label>ENTITY</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:ENTITIES">
+                <xforms:label>ENTITIES</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:NMTOKEN">
+                <xforms:label>NMTOKEN</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:NMTOKENS">
+                <xforms:label>NMTOKENS</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:integer">
+                <xforms:label>integer</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:nonPositiveInteger">
+                <xforms:label>nonPositiveInteger</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:negativeInteger">
+                <xforms:label>negativeInteger</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:long">
+                <xforms:label>long</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:int">
+                <xforms:label>int</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:short">
+                <xforms:label>short</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:byte">
+                <xforms:label>byte</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:nonNegativeInteger">
+                <xforms:label>nonNegativeInteger</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedLong">
+                <xforms:label>unsignedLong</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedInt">
+                <xforms:label>unsignedInt</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedShort">
+                <xforms:label>unsignedShort</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:unsignedByte">
+                <xforms:label>unsignedByte</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+            <xforms:input ref="my:positiveInteger">
+                <xforms:label>positiveInteger</xforms:label>
+                <xforms:alert>INVALIDITY TEST SUCCEEDS</xforms:alert>
+            </xforms:input>
+        </xforms:group>
+    </body>
+</html>

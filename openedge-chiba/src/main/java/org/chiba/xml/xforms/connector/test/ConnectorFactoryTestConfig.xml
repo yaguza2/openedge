@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- $Id: ConnectorFactoryTestConfig.xml,v 1.6 2004/01/28 11:37:11 emillan Exp $ -->
+<chiba-config>
+    <connectors factoryClass="org.chiba.xml.xforms.connector.test.TestConnectorFactory">
+        <modelitem-calculator scheme="test" class="org.chiba.xml.xforms.connector.test.ConnectorFactoryTestCalculator"/>
+        <modelitem-validator scheme="test" class="org.chiba.xml.xforms.connector.test.ConnectorFactoryTestValidator"/>
+        <submission-handler scheme="test" class="org.chiba.xml.xforms.connector.test.ConnectorFactoryTestSubmissionHandler"/>
+        <uri-resolver scheme="test" class="org.chiba.xml.xforms.connector.test.ConnectorFactoryTestURIResolver"/>
+    </connectors>
+</chiba-config>

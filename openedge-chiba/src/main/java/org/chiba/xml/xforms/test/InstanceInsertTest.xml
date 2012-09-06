@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms">
+    <head>
+        <meta name="author" content="unl at users.sourceforge.net"/>
+        <meta name="description" content="test form for instance insert"/>
+        <meta name="version" content="$Id: InstanceInsertTest.xml,v 1.3 2004/08/04 22:51:07 unl Exp $"/>
+        <xforms:model>
+            <xforms:instance xmlns="">
+                <repeats>
+                    <simple>first</simple>
+                    <simple>last</simple>
+                    <complex>
+                        <content>first</content>
+                    </complex>
+                    <complex>
+                        <content>last</content>
+                    </complex>
+                    <enclosing>
+                        <nested>first-first</nested>
+                        <nested>first-last</nested>
+                    </enclosing>
+                    <enclosing>
+                        <nested>last-first</nested>
+                        <nested>last-last</nested>
+                    </enclosing>
+                </repeats>
+            </xforms:instance>
+            <xforms:bind nodeset="/repeats">
+                <xforms:bind id="simple-ref" nodeset="simple" type="listItem"/>
+                <xforms:bind id="complex-content-ref" nodeset="complex/content" type="listItem"/>
+            </xforms:bind>
+
+        </xforms:model>
+    </head>
+    <body>
+        <xforms:trigger id="insert">
+            <xforms:label/>
+            <xforms:insert bind="simple-ref" position="after" at="'1'"/>
+        </xforms:trigger>
+    </body>
+</html>

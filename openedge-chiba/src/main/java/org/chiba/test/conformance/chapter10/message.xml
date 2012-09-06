@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="test.css" ?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <style type="text/css">
+        </style>
+        <title>message</title>
+        <xforms:model id="model1">
+            <xforms:submission id="submission1" method="get" action="http://example.com/"/>
+            <xforms:instance id="instance1" xmlns="">
+                <data>
+                    <child>Message read from the instance!</child>
+                    <processing>Original value read from the instance, for checking the processing</processing>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <h>The message  Element</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li>All assertions for message.</li>
+        </nl>
+        <!-- test removed because the spec does not say this
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-1 : message actions with no [resource|src] and no bind/ref/model and no text MUST be ignored.</xforms:label>
+                <xforms:message level="modeless" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        -->
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-2 : message actions with no level MUST be ignored.</xforms:label>
+                <xforms:message ev:event="DOMActivate">IT IS AN ERROR TO SHOW THIS!</xforms:message>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:label>The instance:</xforms:label>
+            <xforms:input ref="child">
+                <xforms:label>Value: </xforms:label>
+            </xforms:input>
+            <xforms:trigger>
+                <xforms:label>Change value</xforms:label>
+                <xforms:setvalue ref="child" value="'Changed message'" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-3 : a failed [resource|src] link MUST fire the xforms-link-error (you should see a message : 'Caught a link error'!.</xforms:label>
+                <xforms:message src="http://example.com/xxx/some_document_that_does_not_exist.xyz" level="modeless" ev:event="DOMActivate"/>
+                <xforms:message level="modeless" ev:event="xforms-link-error">Caught a link error!</xforms:message>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-4 : message actions with [resource|src] link MUST display the message.</xforms:label>
+                <xforms:message src="messagefile.xml" level="modeless" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:output ref="processing"/>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-5 : message actions with bind/ref/model link MUST display the message.</xforms:label>
+                <xforms:message ref="child" level="modeless" ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-7, 10.1.12-6  : message actions with level="ephemeral" SHOULD allow processing to continue immediately. </xforms:label>
+                <xforms:action ev:event="DOMActivate">
+                    <xforms:message level="ephemeral">message actions with level="ephemeral" SHOULD allow processing to continue immediately and SHOULD NOT require user interaction to remove the disruption from the user's experience.</xforms:message>
+                    <xforms:setvalue ref="processing">Changed during ephemeral processing.</xforms:setvalue>
+                </xforms:action>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-8 : message actions with level="modeless" SHOULD allow processing to continue immediately.</xforms:label>
+                <xforms:action ev:event="DOMActivate">
+                    <xforms:message level="modeless">message actions with level="modeless" SHOULD allow processing to continue immediately.</xforms:message>
+                    <xforms:setvalue ref="processing">Changed during modeless processing.</xforms:setvalue>
+                </xforms:action>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-9 : message actions with level="modal" SHOULD NOT allow processing to continue until the user has explicitly agreed to continue.</xforms:label>
+                <xforms:action ev:event="DOMActivate">
+                    <xforms:message level="modal">message actions with level="modal" SHOULD NOT allow processing to continue until the user has explicitly agreed to continue.</xforms:message>
+                    <xforms:setvalue ref="processing">Changed after modal processing.</xforms:setvalue>
+                </xforms:action>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.12-10 : message actions with level values that are recognized by the user agent MUST be ignored.</xforms:label>
+                <xforms:message level="notreckognized" ev:event="DOMActivate">IT IS AN ERROR TO DISPLAY THIS!</xforms:message>
+            </xforms:trigger>
+        </xforms:group>
+    </body>
+</html>

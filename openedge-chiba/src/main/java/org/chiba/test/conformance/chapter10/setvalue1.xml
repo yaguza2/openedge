@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/css" href="test.css" ?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xml:lang="en">
+    <head>
+        <style type="text/css">
+			output {width: 4cm;}
+        </style>
+        <title>setvalue</title>
+        <xforms:model id="model1">
+            <xforms:instance id="instance1" xmlns="">
+                <data>
+                    <nochild/>
+                    <multipletext>first text child <!-- comment--> second text child</multipletext>
+                    <attribute attr="unchanged"/>
+                    <clear>uncleared</clear>
+                    <text1>unchanged</text1>
+                    <multiple>
+                        <nodes>should change</nodes>
+                        <nodes>should not change</nodes>
+                        <nodes>should not change</nodes>
+                    </multiple>
+                </data>
+            </xforms:instance>
+        </xforms:model>
+    </head>
+    <body>
+        <h>The setvalue Element</h>
+        <p>Assertions tested by this test case:</p>
+        <nl>
+            <li>All assertions for setvalue</li>
+        </nl>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-1 : no model+ref or bind attribute, should be ignored</xforms:label>
+                <xforms:setvalue ev:event="DOMActivate"/>
+            </xforms:trigger>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-2 : setvalue actions pointed at an element with no text node child MUST create a textnode</xforms:label>
+                <xforms:setvalue ref="nochild" value="'new text'" ev:event="DOMActivate"/>
+            </xforms:trigger>
+            <xforms:output ref="nochild">
+                <xforms:label>Current value:</xforms:label>
+            </xforms:output>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-3, 10.1.9-8 : element with multiple text node children MUST replace the first textnode</xforms:label>
+                <xforms:setvalue ref="multipletext" value="'new text'" ev:event="DOMActivate"/>
+            </xforms:trigger>
+            <xforms:output ref="multipletext">
+                <xforms:label>Current value:</xforms:label>
+            </xforms:output>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-4 , 10.1.9-9: pointed at an attribute MUST set the attribute's value</xforms:label>
+                <xforms:setvalue ref="attribute/@attr" value="'new text'" ev:event="DOMActivate">ERROR!</xforms:setvalue>
+            </xforms:trigger>
+            <xforms:output ref="attribute/@attr">
+                <xforms:label>Current value:</xforms:label>
+            </xforms:output>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-6 : no value attribute and no text MUST set the corresponding node to ""</xforms:label>
+                <xforms:setvalue ref="clear" ev:event="DOMActivate"/>
+            </xforms:trigger>
+            <xforms:output ref="clear">
+                <xforms:label>Current value:</xforms:label>
+            </xforms:output>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-7 : with text and no value attribute MUST set the corresponding node to the text</xforms:label>
+                <xforms:setvalue ref="text1" ev:event="DOMActivate">new text</xforms:setvalue>
+            </xforms:trigger>
+            <xforms:output ref="text1">
+                <xforms:label>Current value:</xforms:label>
+            </xforms:output>
+        </xforms:group>
+        <xforms:group>
+            <xforms:trigger>
+                <xforms:label>10.1.9-11 : model+ref pointed at multiple nodes MUST set the first node in the set</xforms:label>
+                <xforms:setvalue ref="multiple/nodes" ev:event="DOMActivate">new text</xforms:setvalue>
+            </xforms:trigger>
+            <xforms:group>
+                <xforms:output ref="multiple/nodes[1]">
+                    <xforms:label>Current value:</xforms:label>
+                </xforms:output>
+                <xforms:output ref="multiple/nodes[2]">
+                    <xforms:label>Current value:</xforms:label>
+                </xforms:output>
+                <xforms:output ref="multiple/nodes[3]">
+                    <xforms:label>Current value:</xforms:label>
+                </xforms:output>
+            </xforms:group>
+        </xforms:group>
+    </body>
+</html>

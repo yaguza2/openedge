@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns:xforms="http://www.w3.org/2002/xforms">
+    <head>
+        <xforms:model>
+            <xforms:instance>
+                <data>
+                    <a>10</a>
+                    <b>10</b>
+                    <c></c>
+                    <d></d>
+                </data>
+            </xforms:instance>
+            <xforms:bind id="1" xforms:nodeset="/data/a"/>
+            <xforms:bind id="2" xforms:nodeset="/data/b"/>
+            <xforms:bind id="3" xforms:nodeset="/data/c"
+                xforms:calculate="/data/a * /data/b"
+                xforms:constraint=". &lt; 100"/>
+            <xforms:bind id="4" xforms:nodeset="/data/d"
+                xforms:calculate="/data/a + /data/b"
+                xforms:constraint=". &lt; 20"/>
+        </xforms:model>
+    </head>
+    <body/>
+</html>
