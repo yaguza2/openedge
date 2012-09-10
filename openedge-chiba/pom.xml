@@ -16,11 +16,11 @@
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>bsf</groupId>
-			<artifactId>bsf</artifactId>
-			<version>2.4.0</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>bsf</groupId> -->
+<!-- 			<artifactId>bsf</artifactId> -->
+<!-- 			<version>2.4.0</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -36,10 +36,7 @@
 		<dependency>
 			<groupId>commons-jxpath</groupId>
 			<artifactId>commons-jxpath</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
+			<version>1.2x</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
@@ -55,14 +52,14 @@
 			<artifactId>log4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xercesImpl</artifactId>
-			<version>2.8.1</version>
-		</dependency>
-		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
 			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

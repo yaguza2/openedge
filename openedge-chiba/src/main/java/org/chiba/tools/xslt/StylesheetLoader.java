@@ -217,12 +217,10 @@ public class StylesheetLoader
 		Transformer transformer;
 		// definieer expliciet het gebruik van xalan, omdat deze (oude)
 		// functionaliteit niet compatible is met de nieuwe default (saxon).
-		// TransformerFactory factory = new
-		// org.apache.xalan.xsltc.trax.SmartTransformerFactoryImpl();
-		TransformerFactory factory = new org.apache.xalan.processor.TransformerFactoryImpl();
-
-		factory.setURIResolver(resolver);
 		// TransformerFactory factory = createTransformerFactory(resolver);
+		TransformerFactory factory = new org.apache.xalan.processor.TransformerFactoryImpl();
+		System.out.println(factory.toString());
+		factory.setURIResolver(resolver);
 
 		if (cat.isDebugEnabled())
 		{
